@@ -31,7 +31,8 @@ final class BackgroundPlaybackManager {
     ///     it staged and ready to play.
     func start(forceNativePlayer: Bool, tag: QueueTagSelection? = nil, video: Video? = nil) async throws {
         if let video {
-            player.setNextVideo(video, .playWhenReady)
+            // not `setNextVideo`: its fade would defer the swap past the `player.video` read below
+            player.setVideoWithoutFade(video, .playWhenReady)
         }
         try enableNativePlayer(force: forceNativePlayer)
         try activateAudioSession()

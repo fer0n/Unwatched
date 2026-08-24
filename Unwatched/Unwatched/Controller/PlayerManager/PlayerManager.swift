@@ -490,6 +490,16 @@ extension PlayerManager {
         }
     }
 
+    /// Swaps the video in without the fade, for a start that has no screen to fade and reads `video` back right
+    /// away (`BackgroundPlaybackManager`): the fade defers the swap, which would leave that caller starting the
+    /// video that was loaded before.
+    @MainActor
+    func setVideoWithoutFade(_ nextVideo: Video, _ source: VideoSource) {
+        transitionPendingSwap = false
+        endVideoTransition()
+        applyVideo(nextVideo, source)
+    }
+
     @MainActor
     private func applyVideo(_ nextVideo: Video?, _ source: VideoSource) {
         updateElapsedTime()

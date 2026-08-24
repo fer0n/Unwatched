@@ -30,6 +30,25 @@
 		816F44C17FD04972B2D4EC07 /* AVPlayerViewModel+NowPlaying.swift in Sources */ = {isa = PBXBuildFile; fileRef = A98F6959E647463E9DA39786 /* AVPlayerViewModel+NowPlaying.swift */; };
 		84CD31F8457AC2C9116601B7 /* InboxCardLayout.swift in Sources */ = {isa = PBXBuildFile; fileRef = 96788AA439F0D955B88A288F /* InboxCardLayout.swift */; };
 		87F24CD0073CD1BC6A37E112 /* StartPlayback.swift in Sources */ = {isa = PBXBuildFile; fileRef = 41F3F1671D8F7A4899C6D9D1 /* StartPlayback.swift */; };
+		88AA40002F2000000000D000 /* StartPlayback.swift in Sources */ = {isa = PBXBuildFile; fileRef = 41F3F1671D8F7A4899C6D9D1 /* StartPlayback.swift */; };
+		88AA40012F2000000000D001 /* AppShortcutsProvider.swift in Sources */ = {isa = PBXBuildFile; fileRef = 887CA9442B52E72700E344EC /* AppShortcutsProvider.swift */; };
+		88AA40022F2000000000D002 /* VideoEntity.swift in Sources */ = {isa = PBXBuildFile; fileRef = 887E82A92CD8FC4600B196EA /* VideoEntity.swift */; };
+		88AA40032F2000000000D003 /* TagEntity.swift in Sources */ = {isa = PBXBuildFile; fileRef = 88AA10212F0000000000A021 /* TagEntity.swift */; };
+		88AA40042F2000000000D004 /* AddYoutubeURL.swift in Sources */ = {isa = PBXBuildFile; fileRef = 887E82A72CD8FC1000B196EA /* AddYoutubeURL.swift */; };
+		88AA40052F2000000000D005 /* NextVideo.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5119A44971DFAF56FFC579D7 /* NextVideo.swift */; };
+		88AA40062F2000000000D006 /* NextVideoChapter.swift in Sources */ = {isa = PBXBuildFile; fileRef = 88F85F4A2E1006D400FB15A1 /* NextVideoChapter.swift */; };
+		88AA40072F2000000000D007 /* PreviousVideoChapter.swift in Sources */ = {isa = PBXBuildFile; fileRef = 88F85F4C2E100AD000FB15A1 /* PreviousVideoChapter.swift */; };
+		88AA40082F2000000000D008 /* AddSubscription.swift in Sources */ = {isa = PBXBuildFile; fileRef = 881EEE542D02F0D40028EAF8 /* AddSubscription.swift */; };
+		88AA40092F2000000000D009 /* GetCurrentVideo.swift in Sources */ = {isa = PBXBuildFile; fileRef = 887E82AB2CD8FC8B00B196EA /* GetCurrentVideo.swift */; };
+		88AA40102F2000000000D010 /* setChapters.swift in Sources */ = {isa = PBXBuildFile; fileRef = 88CD909F2E2BC74400CD756D /* setChapters.swift */; };
+		88AA40112F2000000000D011 /* WatchInUnwatched.swift in Sources */ = {isa = PBXBuildFile; fileRef = 887E82AD2CD8FD2F00B196EA /* WatchInUnwatched.swift */; };
+		88AA40122F2000000000D012 /* SetContinuousPlay.swift in Sources */ = {isa = PBXBuildFile; fileRef = 880882062E564EBF008C38DA /* SetContinuousPlay.swift */; };
+		88AA40132F2000000000D013 /* MediaSuggestionService.swift in Sources */ = {isa = PBXBuildFile; fileRef = 88AA20012F1000000000B001 /* MediaSuggestionService.swift */; };
+		88AA40152F2000000000D015 /* BackgroundPlaybackManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = F6E752B17B521261C873B3BA /* BackgroundPlaybackManager.swift */; };
+		88AA40142F2000000000D014 /* PlayMediaIntentHandler.swift in Sources */ = {isa = PBXBuildFile; fileRef = 88AA20022F1000000000B002 /* PlayMediaIntentHandler.swift */; };
+		88AA20112F1000000000B011 /* MediaSuggestionService.swift in Sources */ = {isa = PBXBuildFile; fileRef = 88AA20012F1000000000B001 /* MediaSuggestionService.swift */; };
+		88AA20122F1000000000B012 /* PlayMediaIntentHandler.swift in Sources */ = {isa = PBXBuildFile; fileRef = 88AA20022F1000000000B002 /* PlayMediaIntentHandler.swift */; };
+		88AA20132F1000000000B013 /* PlayMedia.intentdefinition in Sources */ = {isa = PBXBuildFile; fileRef = 88AA20032F1000000000B003 /* PlayMedia.intentdefinition */; };
 		8800CAFE2B000001000000AB /* PlayerTypeSettingsView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8800CAFE2B000001000000AA /* PlayerTypeSettingsView.swift */; };
 		8800CAFE2B000001000000AC /* PlayerTypeSettingsView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8800CAFE2B000001000000AA /* PlayerTypeSettingsView.swift */; };
 		88014D212E68D339000FAA00 /* getTranscript.swift in Sources */ = {isa = PBXBuildFile; fileRef = 88CD909D2E2BA56300CD756D /* getTranscript.swift */; };
@@ -1022,6 +1041,9 @@
 		3C85E93CAC0494132A399378 /* SpeedPopoverContent.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SpeedPopoverContent.swift; sourceTree = "<group>"; };
 		3F0F611A97CF421FAF1F47ED /* AVPlayerPrefetchManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AVPlayerPrefetchManager.swift; sourceTree = "<group>"; };
 		41F3F1671D8F7A4899C6D9D1 /* StartPlayback.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = StartPlayback.swift; sourceTree = "<group>"; };
+		88AA20012F1000000000B001 /* MediaSuggestionService.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MediaSuggestionService.swift; sourceTree = "<group>"; };
+		88AA20022F1000000000B002 /* PlayMediaIntentHandler.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PlayMediaIntentHandler.swift; sourceTree = "<group>"; };
+		88AA20032F1000000000B003 /* PlayMedia.intentdefinition */ = {isa = PBXFileReference; lastKnownFileType = file.intentdefinition; path = PlayMedia.intentdefinition; sourceTree = "<group>"; };
 		5119A44971DFAF56FFC579D7 /* NextVideo.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NextVideo.swift; sourceTree = "<group>"; };
 		52E18A913E22C7E3181E2950 /* SoftSafeAreaBar.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SoftSafeAreaBar.swift; sourceTree = "<group>"; };
 		5A4E5E0000000000000000A2 /* UnwatchedShareExtension.appex */ = {isa = PBXFileReference; explicitFileType = "wrapper.app-extension"; includeInIndex = 0; path = UnwatchedShareExtension.appex; sourceTree = BUILT_PRODUCTS_DIR; };
@@ -2047,6 +2069,9 @@
 				88CD909F2E2BC74400CD756D /* setChapters.swift */,
 				887E82AD2CD8FD2F00B196EA /* WatchInUnwatched.swift */,
 				880882062E564EBF008C38DA /* SetContinuousPlay.swift */,
+				88AA20012F1000000000B001 /* MediaSuggestionService.swift */,
+				88AA20022F1000000000B002 /* PlayMediaIntentHandler.swift */,
+				88AA20032F1000000000B003 /* PlayMedia.intentdefinition */,
 			);
 			path = "App Intents";
 			sourceTree = "<group>";
@@ -2863,6 +2888,22 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				88AA40152F2000000000D015 /* BackgroundPlaybackManager.swift in Sources */,
+				88AA40002F2000000000D000 /* StartPlayback.swift in Sources */,
+				88AA40012F2000000000D001 /* AppShortcutsProvider.swift in Sources */,
+				88AA40022F2000000000D002 /* VideoEntity.swift in Sources */,
+				88AA40032F2000000000D003 /* TagEntity.swift in Sources */,
+				88AA40042F2000000000D004 /* AddYoutubeURL.swift in Sources */,
+				88AA40052F2000000000D005 /* NextVideo.swift in Sources */,
+				88AA40062F2000000000D006 /* NextVideoChapter.swift in Sources */,
+				88AA40072F2000000000D007 /* PreviousVideoChapter.swift in Sources */,
+				88AA40082F2000000000D008 /* AddSubscription.swift in Sources */,
+				88AA40092F2000000000D009 /* GetCurrentVideo.swift in Sources */,
+				88AA40102F2000000000D010 /* setChapters.swift in Sources */,
+				88AA40112F2000000000D011 /* WatchInUnwatched.swift in Sources */,
+				88AA40122F2000000000D012 /* SetContinuousPlay.swift in Sources */,
+				88AA40132F2000000000D013 /* MediaSuggestionService.swift in Sources */,
+				88AA40142F2000000000D014 /* PlayMediaIntentHandler.swift in Sources */,
 				FE7A00000000000000000001 /* AVPlayerPrefetchManager.swift in Sources */,
 				FE7A00000000000000000002 /* AVPlayerStreamHelpers.swift in Sources */,
 				FE7A00000000000000000003 /* AVPlayerView.swift in Sources */,
@@ -3327,6 +3368,9 @@
 			files = (
 				7ED95D9D12E759FA5FC343C7 /* BackgroundPlaybackManager.swift in Sources */,
 				87F24CD0073CD1BC6A37E112 /* StartPlayback.swift in Sources */,
+				88AA20112F1000000000B011 /* MediaSuggestionService.swift in Sources */,
+				88AA20122F1000000000B012 /* PlayMediaIntentHandler.swift in Sources */,
+				88AA20132F1000000000B013 /* PlayMedia.intentdefinition in Sources */,
 				5A4E5E0000000000000001B1 /* UnwatchedShareExtension/ShareCardView.swift in Sources */,
 				5A4E5E0000000000000001B2 /* UnwatchedShareExtension/ShareAction.swift in Sources */,
 				5A4E5E0000000000000001B3 /* UnwatchedShareExtension/ShareCardModel.swift in Sources */,

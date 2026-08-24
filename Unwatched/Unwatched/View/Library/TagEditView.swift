@@ -95,6 +95,31 @@ struct TagEditView: View {
                         }
                     }
 
+                    // only an `include` tag claims videos of its own, see `Tag.decidingTag`
+                    if tag.mode == .include {
+                        MySection(footer: "continuousPlayTagHelper") {
+                            Picker(selection: $tag.continuousPlay) {
+                                Text("useDefault").tag(Bool?.none)
+                                Text("on").tag(Bool?.some(true))
+                                Text("off").tag(Bool?.some(false))
+                            } label: {
+                                Text("continuousPlay")
+                            }
+                        }
+
+                        #if os(iOS)
+                        MySection(footer: "suggestVideosTagHelper") {
+                            Picker(selection: $tag.suggestVideos) {
+                                Text("useDefault").tag(Bool?.none)
+                                Text("on").tag(Bool?.some(true))
+                                Text("off").tag(Bool?.some(false))
+                            } label: {
+                                Text("suggestVideos")
+                            }
+                        }
+                        #endif
+                    }
+
                     // an untagged tag is defined by the other tags, so it has nothing to pick
                     if tag.mode != .untagged {
                         let taggedVideos = tag.videos ?? []

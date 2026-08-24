@@ -5,6 +5,7 @@
 
 #if os(iOS) || os(visionOS)
 import Foundation
+import Intents
 import WebKit
 import SwiftData
 import OSLog
@@ -23,9 +24,27 @@ class AppDelegate: NSObject, UIApplicationDelegate, UNUserNotificationCenterDele
         notificationCenter.delegate = self
         setupNotificationCategories(notificationCenter)
         SetupView.onLaunch()
+        #if os(iOS)
+        MediaSuggestionService.setup()
+        #endif
         LaunchTrace.mark(LaunchTrace.Phase.didFinishLaunchingEnd)
         return true
     }
+
+    #if os(iOS)
+    /// Who handles a media intent: a tap on one of Unwatched's audio suggestions in Control Center, on the lock
+    /// screen or in the Home app, and "play … in Unwatched" from Siri.
+    func application(_ application: UIApplication, handlerFor intent: INIntent) -> Any? {
+        intent is INPlayMediaIntent ? PlayMediaIntentHandler() : nil
+    }
+
+    func application(
+        _ application: UIApplication,
+        supportedInterfaceOrientationsFor window: UIWindow?
+    ) -> UIInterfaceOrientationMask {
+        OrientationManager.podcastOrientationLocked ? .portrait : .all
+    }
+    #endif
 
     func application(
         _ application: UIApplication,
@@ -38,6 +57,18 @@ class AppDelegate: NSObject, UIApplicationDelegate, UNUserNotificationCenterDele
         )
         sceneConfiguration.delegateClass = SceneDelegate.self
         return sceneConfiguration
+    }
+
+    func application(
+        _ application: UIApplication,
+        handleEventsForBackgroundURLSession identifier: String,
+        completionHandler: @escaping () -> Void
+    ) {
+        guard identifier == Const.podcastDownloadSessionId else {
+            completionHandler()
+            return
+        }
+        PodcastDownloadManager.shared.handleBackgroundEvents(completion: completionHandler)
     }
 
     nonisolated func userNotificationCenter(

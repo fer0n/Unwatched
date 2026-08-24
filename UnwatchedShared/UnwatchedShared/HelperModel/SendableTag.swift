@@ -22,6 +22,12 @@ public struct SendableTag: Sendable, Codable, Hashable {
     /// Raw and optional so an unknown mode doesn't fail the whole decode.
     public var mode: Int?
 
+    /// `nil` means the tag has no opinion, see `Tag.continuousPlay`.
+    public var continuousPlay: Bool?
+
+    /// `nil` means the tag has no opinion, see `Tag.suggestVideos`.
+    public var suggestVideos: Bool?
+
     public init(
         name: String,
         order: Int = Int.max,
@@ -30,7 +36,9 @@ public struct SendableTag: Sendable, Codable, Hashable {
         videoIds: [String]? = nil,
         symbol: String? = nil,
         quickSwitch: Bool? = nil,
-        mode: Int? = nil
+        mode: Int? = nil,
+        continuousPlay: Bool? = nil,
+        suggestVideos: Bool? = nil
     ) {
         self.name = name
         self.order = order
@@ -40,6 +48,8 @@ public struct SendableTag: Sendable, Codable, Hashable {
         self.symbol = symbol
         self.quickSwitch = quickSwitch
         self.mode = mode
+        self.continuousPlay = continuousPlay
+        self.suggestVideos = suggestVideos
     }
 
     /// Membership is re-linked by `UserDataService`, once the rows it names exist.
@@ -50,7 +60,9 @@ public struct SendableTag: Sendable, Codable, Hashable {
             createdDate: createdDate,
             symbol: symbol,
             quickSwitch: quickSwitch ?? true,
-            mode: mode.flatMap(TagMode.init(rawValue:)) ?? .include
+            mode: mode.flatMap(TagMode.init(rawValue:)) ?? .include,
+            continuousPlay: continuousPlay,
+            suggestVideos: suggestVideos
         )
     }
 }

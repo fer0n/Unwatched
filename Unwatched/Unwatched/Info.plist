@@ -19,6 +19,15 @@
 			</array>
 		</dict>
 	</array>
+	<key>INIntentsSupported</key>
+	<array>
+		<string>INPlayMediaIntent</string>
+	</array>
+	<key>INSupportedMediaCategories</key>
+	<array>
+		<string>INMediaCategoryPodcasts</string>
+		<string>INMediaCategoryGeneral</string>
+	</array>
 	<key>ITSAppUsesNonExemptEncryption</key>
 	<false/>
 	<key>NSUbiquitousContainers</key>
@@ -36,6 +45,7 @@
 	<key>NSUserActivityTypes</key>
 	<array>
 		<string>AddVideoIntent</string>
+		<string>INPlayMediaIntent</string>
 	</array>
 	<key>UIApplicationShortcutItems</key>
 	<array>

@@ -47,6 +47,12 @@ public final class Tag: CustomStringConvertible, Exportable {
     /// Whether the queue's tag button steps through this tag.
     public var quickSwitch: Bool = true
 
+    /// What continuous play is set to when playback moves into this tag; `nil` leaves the global setting alone.
+    public var continuousPlay: Bool?
+
+    /// Whether this tag's videos may be offered as audio suggestions; `nil` follows the global setting.
+    public var suggestVideos: Bool?
+
     /// Raw so a value the app doesn't know reads as `include` instead of failing the store.
     public var _mode: Int? = TagMode.include.rawValue
     public var mode: TagMode {
@@ -60,7 +66,9 @@ public final class Tag: CustomStringConvertible, Exportable {
         createdDate: Date? = .now,
         symbol: String? = nil,
         quickSwitch: Bool = true,
-        mode: TagMode = .include
+        mode: TagMode = .include,
+        continuousPlay: Bool? = nil,
+        suggestVideos: Bool? = nil
     ) {
         self.name = name
         self.order = order
@@ -68,6 +76,8 @@ public final class Tag: CustomStringConvertible, Exportable {
         self.symbol = symbol
         self.quickSwitch = quickSwitch
         self._mode = mode.rawValue
+        self.continuousPlay = continuousPlay
+        self.suggestVideos = suggestVideos
     }
 
     /// The tags a channel or video can be added to.
@@ -91,6 +101,24 @@ public final class Tag: CustomStringConvertible, Exportable {
 
     private static func covered<T>(_ tags: [Tag], _ members: KeyPath<Tag, [T]?>) -> [T] {
         tags.filter { $0.mode == .include }.flatMap { $0[keyPath: members] ?? [] }
+    }
+
+    /// The tag whose continuous play setting a video follows.
+    public static func continuousPlayTag(for video: Video) -> Tag? {
+        decidingTag(for: video, \.continuousPlay)
+    }
+
+    /// The tag that decides whether a video is offered as an audio suggestion.
+    public static func suggestVideosTag(for video: Video) -> Tag? {
+        decidingTag(for: video, \.suggestVideos)
+    }
+
+    /// The tag whose opinion on a setting a video follows: the video's own tags before its channel's, lowest order
+    /// first.
+    private static func decidingTag(for video: Video, _ setting: KeyPath<Tag, Bool?>) -> Tag? {
+        ((video.tags ?? []) + (video.subscription?.tags ?? []))
+            .filter { $0.mode == .include && $0[keyPath: setting] != nil }
+            .min { $0.order < $1.order }
     }
 
     public func covers(_ subscription: Subscription?) -> Bool {
@@ -140,7 +168,9 @@ public final class Tag: CustomStringConvertible, Exportable {
             videoIds: (videos ?? []).map(\.youtubeId),
             symbol: symbol,
             quickSwitch: quickSwitch,
-            mode: mode.rawValue
+            mode: mode.rawValue,
+            continuousPlay: continuousPlay,
+            suggestVideos: suggestVideos
         )
     }
 }
