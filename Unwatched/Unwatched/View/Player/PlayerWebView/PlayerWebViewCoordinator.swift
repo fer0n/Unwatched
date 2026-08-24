@@ -10,19 +10,26 @@ import UnwatchedShared
 
 class PlayerWebViewCoordinator: NSObject, WKNavigationDelegate, WKScriptMessageHandler {
     let parent: PlayerWebView
+    /// Whether this coordinator's web view has left the hierarchy.
+    private(set) var retired = false
     var zoomWorkaroundActive = false
     var updateTimeCounter: Int = 0
     var statsTimeCounter: Int = 0
-    /// Mode currently live in the page, so `handleUIMode` only pushes on an actual change.
-    var appliedUIMode: PlayerWebView.UIMode?
 
     init(_ parent: PlayerWebView) {
         self.parent = parent
     }
 
     @MainActor
+    func retire() {
+        retired = true
+    }
+
+    @MainActor
     func webViewWebContentProcessDidTerminate(_ webView: WKWebView) {
         Log.info("webViewWebContentProcessDidTerminate")
+        // reloading a page nothing shows any more would only take the player's state with it
+        guard !retired else { return }
         parent.player.isLoading = Date()
         parent.loadWebContent(webView)
     }
@@ -44,8 +51,16 @@ class PlayerWebViewCoordinator: NSObject, WKNavigationDelegate, WKScriptMessageH
     }
 
     @MainActor func webView(_ webView: WKWebView, didFinish navigation: WKNavigation) {
+        guard !retired else {
+            // its view is gone: initialising it, clearing `isLoading` or — worst — consuming the auto-start would all
+            // be done on the player's behalf by a page nobody can see
+            Log.info("didFinish: page already dismantled")
+            return
+        }
+        // everything below is for this page, so it has to be the one commands reach
+        parent.backend.takeOver(webView)
         let uiMode = parent.uiMode
-        appliedUIMode = uiMode
+        parent.backend.appliedUIMode = uiMode
         let options = PlayerWebView.initScriptOptions(
             startAt: parent.player.getStartPosition(),
             uiMode: uiMode,
@@ -59,6 +74,8 @@ class PlayerWebViewCoordinator: NSObject, WKNavigationDelegate, WKScriptMessageH
         }
         parent.player.isLoading = nil
         parent.player.handleAutoStart(webView.url)
+        // the switch's own play may have been spent on the web view this page took over from
+        parent.backend.ensurePlaying()
     }
 }
 
@@ -66,7 +83,7 @@ class PlayerWebViewCoordinator: NSObject, WKNavigationDelegate, WKScriptMessageH
 extension PlayerWebViewCoordinator: UIScrollViewDelegate {
     func scrollViewDidEndZooming(_ scrollView: UIScrollView, with view: UIView?, atScale scale: CGFloat) {
         if scale <= 1 && !zoomWorkaroundActive {
-            guard let webView = parent.webViewState.webView else {
+            guard let webView = parent.backend.webView else {
                 Log.error("scrollViewDidEndZooming: no webView")
                 return
             }

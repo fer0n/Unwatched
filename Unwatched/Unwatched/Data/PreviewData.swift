@@ -61,4 +61,23 @@ extension PlayerManager {
         player.isPlaying = false
         return player
     }
+
+    @MainActor
+    static func getTheDailyPodcastDummy() -> PlayerManager {
+        let player = PlayerManager()
+        player.video = Video(
+            title: "The Daily: Why Food Prices Are Still So High",
+            url: URL(string: "https://www.nytimes.com/column/the-daily"),
+            youtubeId: "podcast-the-daily-preview",
+            thumbnailUrl: URL(string: "https://image.simplecastcdn.com/images/4f9f4ad8-7fbe-4f56-9f36-780d6d38d9f1/4f9f4ad8-7fbe-4f56-9f36-780d6d38d9f1/3000x3000/the-daily-artwork.jpg"),
+            publishedDate: .now,
+            duration: 1_680,
+            videoDescription: "The Daily podcast by The New York Times.",
+            mediaUrl: URL(string: "https://example.com/the-daily-preview.mp3"),
+            isAudioOnly: true
+        )
+        player.currentTime = 220
+        player.isPlaying = false
+        return player
+    }
 }

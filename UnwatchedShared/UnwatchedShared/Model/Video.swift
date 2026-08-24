@@ -24,6 +24,8 @@ public final class Video: VideoData, CustomStringConvertible, Exportable {
 
     public var tags: [Tag]? = []
 
+    /// This video's identity, and what queue entries, chapters, stats and the image cache are all keyed by — a
+    /// YouTube id for a video, a `pod-…` hash of the RSS guid for a podcast episode (see `PodcastService.episodeId`).
     public var youtubeId: String = UUID().uuidString
 
     public var title: String = "-"
@@ -44,8 +46,25 @@ public final class Video: VideoData, CustomStringConvertible, Exportable {
     public var isYtShort: Bool?
     public var bookmarkedDate: Date?
 
+    public var mediaUrl: URL?
+    public var isAudioOnly: Bool?
+    /// Set once the episode's enclosure is on disk; see `PodcastDownloadManager`.
+    public var downloadedDate: Date?
+    /// Podcasting 2.0 `podcast:chapters` JSON, fetched the first time the episode plays.
+    public var chaptersUrl: URL?
+
     public var createdDate: Date?
     public var isNew: Bool = false
+
+    /// The user re-enabled this video's skipped intro by hand.
+    public var keepIntro: Bool?
+
+    /// The same for the skipped outro, see `Subscription.skipOutroSeconds`.
+    public var keepOutro: Bool?
+
+    /// Bumped whenever this video's chapters change without SwiftData noticing — see `chaptersDidChange`.
+    @Transient
+    public var chapterRevision: Int = 0
 
     public var subscriptionData: (any SubscriptionData)? {
         return subscription
@@ -65,17 +84,36 @@ public final class Video: VideoData, CustomStringConvertible, Exportable {
     }
 
     /// Every chapter of this video, whether it's backed by a row or parsed from the description.
-    ///
-    /// Rows win when they exist: they're either a SponsorBlock merge or something the user
-    /// edited, and both describe the video better than a fresh parse would.
     public var sortedChapterData: [SendableChapter] {
+        // the edits the rows themselves don't announce, see `chapterRevision`
+        _ = chapterRevision
         // the row check comes first because it's the cheap one: `getSortedChapters` sorts and
         // reads the key-value store, and this runs inside view bodies
-        guard hasChapterRows else {
-            return derivedChapters
-        }
-        let stored = Video.getSortedChapters(mergedChapters, chapters)
-        return stored.isEmpty ? derivedChapters : stored.map(\.toExport)
+        let computed: [SendableChapter] = {
+            guard hasChapterRows else {
+                return derivedChapters
+            }
+            let stored = Video.getSortedChapters(mergedChapters, chapters)
+            return stored.isEmpty ? derivedChapters : stored.map(\.toExport)
+        }()
+        let withoutAutoSkipped = ChapterService.applyAutoSkip(
+            to: computed,
+            titles: subscription?.autoSkipChapterTitles
+        )
+        let withoutIntro = ChapterService.applySkipIntro(
+            withoutAutoSkipped,
+            skipIntroSeconds: subscription?.skipIntroSeconds,
+            videoDuration: duration,
+            videoId: youtubeId,
+            keepIntro: keepIntro == true
+        )
+        return ChapterService.applySkipOutro(
+            withoutIntro,
+            skipOutroSeconds: subscription?.skipOutroSeconds,
+            videoDuration: duration,
+            videoId: youtubeId,
+            keepOutro: keepOutro == true
+        )
     }
 
     /// This video's own chapters, excluding any SponsorBlock merge — the input the merge is built
@@ -92,13 +130,12 @@ public final class Video: VideoData, CustomStringConvertible, Exportable {
         !(chapters?.isEmpty ?? true) || !(mergedChapters?.isEmpty ?? true)
     }
 
-    /// Parsed from the description rather than stored as rows. Only videos whose chapters have
-    /// been edited keep `Chapter` rows, and those take precedence.
-    ///
-    /// Goes through `getSortedChapters` like stored chapters do: the parse comes back in
-    /// description order, which is usually but not always chronological.
+    /// Cached rather than stored as rows.
     public var derivedChapters: [SendableChapter] {
-        let parsed = ChapterService.derivedChapters(
+        let cached: [SendableChapter]? = isPodcast
+            ? ChapterService.fetchedChapters(youtubeId: youtubeId, duration: duration)
+            : nil
+        let parsed = cached ?? ChapterService.derivedChapters(
             youtubeId: youtubeId,
             videoDescription: videoDescription,
             duration: duration
@@ -169,11 +206,19 @@ public final class Video: VideoData, CustomStringConvertible, Exportable {
             isYtShort: isYtShort,
             videoDescription: videoDescription,
             bookmarkedDate: bookmarkedDate,
+            mediaUrl: mediaUrl,
+            isAudioOnly: isAudioOnly,
+            chaptersUrl: chaptersUrl,
             createdDate: createdDate,
             hasInboxEntry: inboxEntry != nil,
             queueEntry: queueEntry?.toExport,
             isNew: isNew,
             )
+    }
+
+    /// Tells everything reading `sortedChapterData` that this video's chapters changed.
+    public func chaptersDidChange() {
+        chapterRevision &+= 1
     }
 
     public var toExportWithSubscription: SendableVideo? {
@@ -197,6 +242,9 @@ public final class Video: VideoData, CustomStringConvertible, Exportable {
                 deferDate: Date? = nil,
                 isYtShort: Bool? = nil,
                 bookmarkedDate: Date? = nil,
+                mediaUrl: URL? = nil,
+                isAudioOnly: Bool? = nil,
+                chaptersUrl: URL? = nil,
                 createdDate: Date? = .now,
                 isNew: Bool = false,
                 ) {
@@ -215,6 +263,9 @@ public final class Video: VideoData, CustomStringConvertible, Exportable {
         self.deferDate = deferDate
         self.isYtShort = isYtShort
         self.bookmarkedDate = bookmarkedDate
+        self.mediaUrl = mediaUrl
+        self.isAudioOnly = isAudioOnly
+        self.chaptersUrl = chaptersUrl
         self.createdDate = createdDate
         self.isNew = isNew
     }

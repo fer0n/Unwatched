@@ -25,6 +25,19 @@ extension PlayerManager {
         }
     }
 
+    /// Whatever plays takes the top spot of the *whole* queue, not just the slice it came from: "add to top" inserts
+    /// below the playing video, undo restores around it and the unfiltered list shows it first.
+    @MainActor
+    func moveToTopOfQueue(_ video: Video?) {
+        guard let video,
+              let entry = video.queueEntry,
+              let context = video.modelContext,
+              !QueueFilter.all.isTopOfQueue(order: entry.order, context) else {
+            return
+        }
+        VideoService.insertQueueEntries(videos: [video], modelContext: context)
+    }
+
     @MainActor
     func isTopOfQueue(order: Int?, _ context: ModelContext) -> Bool {
         queueFilter(context).isTopOfQueue(order: order, context)

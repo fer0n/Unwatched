@@ -51,6 +51,23 @@ struct SubscriptionService {
         try await repo.addSubscriptionWithoutRSS(info)
     }
 
+    static func isPodcastSubscribed(_ feedUrl: URL) -> Task<Bool, Never> {
+        Task.detached {
+            let repo = SubscriptionActor()
+            return await repo.isPodcastSubscribed(feedUrl)
+        }
+    }
+
+    static func subscribeToPodcast(_ sub: SendableSubscription) async throws {
+        let repo = SubscriptionActor()
+        try await repo.subscribeToPodcast(sub)
+    }
+
+    static func unsubscribeFromPodcast(_ feedUrl: URL) async throws {
+        let repo = SubscriptionActor()
+        try await repo.unsubscribeFromPodcast(feedUrl)
+    }
+
     static func getAllFeedUrls() async throws -> [(title: String, link: URL?)] {
         let repo = SubscriptionActor()
         return try await repo.getAllFeedUrls()

@@ -22,7 +22,23 @@ public protocol VideoData {
     var url: URL? { get }
     var persistentId: PersistentIdentifier? { get }
 
+    /// Direct stream URL.
+    var mediaUrl: URL? { get }
+    var isAudioOnly: Bool? { get }
+    var downloadedDate: Date? { get }
+
     var sortedChapterData: [SendableChapter] { get }
     var subscriptionData: (any SubscriptionData)? { get }
     var hasInboxEntry: Bool? { get }
+}
+
+public extension VideoData {
+    var isPodcast: Bool {
+        mediaUrl != nil
+    }
+
+    /// The image to show for this video.
+    var displayThumbnailUrl: URL? {
+        thumbnailUrl ?? subscriptionData?.thumbnailUrl
+    }
 }

@@ -46,6 +46,7 @@ struct ChannelPreviewView: View {
                 ChannelHeaderView(
                     title: sub.displayTitle,
                     imageUrl: sub.thumbnailUrl ?? channelImageUrl,
+                    isPodcast: sub.isPodcast,
                     userName: sub.youtubeUserName,
                     author: sub.author,
                     videoCount: videos.isEmpty ? nil : videos.count,

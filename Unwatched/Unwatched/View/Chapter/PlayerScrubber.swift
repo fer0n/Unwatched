@@ -72,7 +72,8 @@ struct PlayerScrubber: View {
             if !inlineTime {
                 HStack {
                     Text(formattedCurrentTime)
-                        .animation(nil, value: UUID())
+                        // the elapsed time jumps a second at a time; animating it smears the digits
+                        .animation(nil, value: formattedCurrentTime)
                         .matchedGeometryEffect(id: "currentTime", in: namespace)
 
                     Spacer()
@@ -88,7 +89,7 @@ struct PlayerScrubber: View {
             HStack {
                 if inlineTime {
                     Text(formattedCurrentTime)
-                        .animation(nil, value: UUID())
+                        .animation(nil, value: formattedCurrentTime)
                         .foregroundStyle(timeColor)
                         .font(.caption.monospacedDigit())
                         .fixedSize()

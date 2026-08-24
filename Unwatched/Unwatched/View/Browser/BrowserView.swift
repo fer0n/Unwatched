@@ -25,7 +25,6 @@ struct BrowserView: View, KeyboardReadable {
     var safeArea = true
     var hideYoutubeChrome = false
 
-    var ytBrowserTip = YtBrowserTip()
     var addButtonTip = AddButtonTip()
 
     let size: Double = 20
@@ -138,14 +137,6 @@ struct BrowserView: View, KeyboardReadable {
                             .padding(.horizontal, supportsSplitView ? 110 : 0)
                             .frame(maxWidth: .infinity)
 
-                            if subscriptionText == nil && browserManager.firstPageLoaded {
-                                TipView(ytBrowserTip)
-                                    .padding(.horizontal)
-                                    #if os(macOS)
-                                    .tipBackground(Color.automaticWhite)
-                                #endif
-                            }
-
                             Spacer()
                                 .frame(height: (enableBottomPadding ? 60 : 0)
                                         + (safeArea
@@ -250,7 +241,6 @@ struct BrowserView: View, KeyboardReadable {
 
     func handleAddSubButton() {
         addButtonTip.invalidate(reason: .actionPerformed)
-        ytBrowserTip.invalidate(reason: .actionPerformed)
         Task {
             await handleSubscriptionChange(browserManager.info)
         }

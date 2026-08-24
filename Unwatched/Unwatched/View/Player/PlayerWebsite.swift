@@ -41,7 +41,7 @@ struct PlayerWebsite: View {
             HStack {
                 if !hideMiniPlayer {
                     ThumbnailPlaceholder(
-                        imageUrl: player.video?.thumbnailUrl,
+                        imageUrl: player.video?.displayThumbnailUrl,
                         hideMiniPlayer: hideMiniPlayer,
                         handleMiniPlayerTap: handleMiniPlayerTap
                     )

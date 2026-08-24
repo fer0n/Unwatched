@@ -76,7 +76,7 @@ struct OnboardingChannelRow: View {
             }
         }
         .frame(width: Self.avatarSize, height: Self.avatarSize)
-        .clipShape(Circle())
+        .channelImageClip(isPodcast: false)
     }
 }
 

@@ -55,8 +55,7 @@ struct ContentView: View {
                 }
             }
             .menuViewSheet(
-                allowPlayerControlHeight: !player.embeddingDisabled
-                    && player.videoAspectRatio > Const.tallestAspectRatio,
+                allowPlayerControlHeight: !player.limitHeight,
                 landscapeFullscreen: landscapeFullscreen,
                 disableSheet: bigScreen,
                 proxy: proxy
@@ -76,6 +75,25 @@ struct ContentView: View {
         .environment(NavigationManager.getDummy(true))
         .environment(Alerter())
         .environment(PlayerManager.getDummy())
+        .environment(ImageCacheManager())
+        .environment(RefreshManager())
+        .environment(SheetPositionReader.shared)
+        .environment(TinyUndoManager())
+        .modifier(CustomAlerter())
+        #if os(macOS) || os(visionOS)
+        .environment(NavigationTitleManager())
+        #endif
+        .appNotificationOverlay()
+}
+
+#Preview("Podcast") {
+    let player = PlayerManager.getTheDailyPodcastDummy()
+
+    return ContentView()
+        .modelContainer(DataProvider.previewContainer)
+        .environment(NavigationManager.getDummy(true))
+        .environment(Alerter())
+        .environment(player)
         .environment(ImageCacheManager())
         .environment(RefreshManager())
         .environment(SheetPositionReader.shared)

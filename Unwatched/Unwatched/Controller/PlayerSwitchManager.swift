@@ -7,12 +7,8 @@ import SwiftUI
 import OSLog
 import UnwatchedShared
 
-/// Keeps the outgoing player playing while the incoming one loads, so switching between the
-/// native and the web player doesn't leave a gap.
-///
-/// `Const.playerType` is what the user picked, `activeType` is what's on screen; they only differ
-/// while a native ↔ web switch warms up. The web variants share one page (see
-/// `PlayerWebView.UIMode`), so those never warm up.
+/// Keeps the outgoing player playing while the incoming one loads, so switching between the native and the web player
+/// doesn't leave a gap.
 @MainActor
 @Observable
 final class PlayerSwitchManager {
@@ -25,7 +21,8 @@ final class PlayerSwitchManager {
     /// How long the adopted page may stay covered while it gets going.
     private static let takeOverTimeout: Double = 3
 
-    private(set) var activeType: PlayerTypeSetting
+    /// What the setting resolves to, once a warming switch has committed.
+    private(set) var selectedType: PlayerTypeSetting
     private(set) var target: PlayerTypeSetting?
     /// A warmed web page is taking over from the native player: it covers itself with the
     /// thumbnail until it plays, and the outgoing player leaves the audio session alone.
@@ -33,6 +30,11 @@ final class PlayerSwitchManager {
 
     @ObservationIgnored private var warmupTask: Task<Void, Never>?
     @ObservationIgnored private var takeOverTask: Task<Void, Never>?
+
+    /// What's on screen: a podcast episode has no YouTube page to embed and always plays natively.
+    var activeType: PlayerTypeSetting {
+        PlayerManager.shared.video?.isPodcast == true ? .native : selectedType
+    }
 
     var isSwitching: Bool {
         target != nil
@@ -44,24 +46,24 @@ final class PlayerSwitchManager {
     }
 
     private init() {
-        activeType = PlayerTypeSetting.stored
+        selectedType = PlayerTypeSetting.stored
     }
 
     /// Entry point for every `Const.playerType` change, and for catching up on one that was made
     /// while no player view was around to notice it.
     func handleSettingChanged() {
         let type = PlayerTypeSetting.stored
-        guard type != target, target != nil || type != activeType else {
+        guard type != target, target != nil || type != selectedType else {
             return
         }
         stopWarmup()
 
         let player = PlayerManager.shared
-        guard type.usesWebPlayer != activeType.usesWebPlayer,
-              player.video != nil,
+        guard type.usesWebPlayer != selectedType.usesWebPlayer,
+              player.video?.isPodcast == false,
               player.isPlaying,
               player.isLoading == nil else {
-            activeType = type
+            selectedType = type
             return
         }
 
@@ -84,7 +86,7 @@ final class PlayerSwitchManager {
         }
         Log.info("playerSwitch: cancelled \(target.rawValue)")
         stopWarmup()
-        UserDefaults.standard.set(activeType.rawValue, forKey: Const.playerType)
+        UserDefaults.standard.set(selectedType.rawValue, forKey: Const.playerType)
     }
 
     /// Uncovering is driven by `player.unstarted`; the timeout is only there for a takeover that
@@ -107,7 +109,7 @@ final class PlayerSwitchManager {
             return
         }
         stopWarmup()
-        activeType = target
+        selectedType = target
     }
 
     private func commit(_ type: PlayerTypeSetting) {
@@ -129,7 +131,7 @@ final class PlayerSwitchManager {
         if handoverPause {
             player.previousIsPlaying = true
         }
-        activeType = type
+        selectedType = type
     }
 
     private func stopWarmup() {

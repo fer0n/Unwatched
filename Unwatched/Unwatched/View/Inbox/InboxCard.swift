@@ -69,10 +69,48 @@ struct InboxCard: View, Equatable {
     }
 
     private var thumbnail: some View {
+        Color.clear
+            .frame(width: layout.mediaSize.width, height: layout.mediaSize.height)
+            .overlay {
+                if squareArtwork {
+                    ArtworkBackdrop(urls: content.imageUrls)
+                }
+            }
+            .overlay { artwork }
+            .clipped()
+            .overlay(alignment: .bottomTrailing) {
+                if video.duration != nil || video.isYtShort == true || video.noDuration == true {
+                    VideoListItemDurationOverlay(
+                        video: video,
+                        videoDuration: video.duration,
+                        roughDuration: nil,
+                        radius: durationRadius,
+                        padding: durationPadding,
+                        font: .system(size: durationFontSize)
+                    )
+                    .padding(10)
+                }
+            }
+            .contentShape(Rectangle())
+            .onTapGesture(perform: playVideo)
+            .accessibilityElement()
+            .accessibilityLabel("play")
+            .accessibilityAddTraits(.isButton)
+            .accessibilityAction(.default, playVideo)
+    }
+
+    /// Podcast cover art is square, the same as in the video lists: it keeps its own shape in the card's video-shaped
+    /// slot instead of being cropped to fill it.
+    private var squareArtwork: Bool {
+        video.isAudioOnly == true
+    }
+
+    private var artwork: some View {
         CachedImageView(urls: content.imageUrls) { image in
             // 4:3 thumbnails have black bars baked in, fill 16:9 first to crop them off
             Color.clear
-                .aspectRatio(Const.defaultVideoAspectRatio, contentMode: .fill)
+                .aspectRatio(squareArtwork ? 1 : Const.defaultVideoAspectRatio,
+                             contentMode: squareArtwork ? .fit : .fill)
                 .overlay {
                     image
                         .resizable()
@@ -81,27 +119,6 @@ struct InboxCard: View, Equatable {
         } placeholder: {
             Color.backgroundColor
         }
-        .frame(width: layout.mediaSize.width, height: layout.mediaSize.height)
-        .clipped()
-        .overlay(alignment: .bottomTrailing) {
-            if video.duration != nil || video.isYtShort == true || video.noDuration == true {
-                VideoListItemDurationOverlay(
-                    video: video,
-                    videoDuration: video.duration,
-                    roughDuration: nil,
-                    radius: durationRadius,
-                    padding: durationPadding,
-                    font: .system(size: durationFontSize)
-                )
-                .padding(10)
-            }
-        }
-        .contentShape(Rectangle())
-        .onTapGesture(perform: playVideo)
-        .accessibilityElement()
-        .accessibilityLabel("play")
-        .accessibilityAddTraits(.isButton)
-        .accessibilityAction(.default, playVideo)
     }
 
     private var title: some View {
@@ -200,8 +217,8 @@ struct InboxCard: View, Equatable {
             self.details = details
 
             imageUrls = [
-                UrlService.getImageUrl(video.thumbnailUrl, .large),
-                UrlService.getImageUrl(video.thumbnailUrl, .medium)
+                UrlService.getImageUrl(video.displayThumbnailUrl, .large),
+                UrlService.getImageUrl(video.displayThumbnailUrl, .medium)
             ]
             chapterCount = (video.chapters?.count ?? 0) + (video.mergedChapters?.count ?? 0)
         }

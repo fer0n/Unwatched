@@ -113,8 +113,7 @@ struct VideoListItemMoreMenuView: View {
     }
 
     var shareUrl: URL? {
-        let url = UrlService.getShortenedUrl(videoData.youtubeId)
-        return URL(string: url)
+        UrlService.getShareUrl(videoData).flatMap(URL.init(string:))
     }
 }
 

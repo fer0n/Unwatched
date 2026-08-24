@@ -15,7 +15,7 @@ struct VideoGridItem: View {
 
     var body: some View {
         VStack(alignment: .leading) {
-            CachedImageView(imageUrl: video.thumbnailUrl) { image in
+            CachedImageView(imageUrl: video.displayThumbnailUrl) { image in
                 image
                     .resizable()
                     .aspectRatio(contentMode: .fill)

@@ -9,7 +9,6 @@ import UnwatchedShared
 struct MenuViewSheet: ViewModifier {
     @Environment(NavigationManager.self) var navManager
     @Environment(\.colorScheme) var colorScheme
-    @Environment(PlayerManager.self) var player
 
     var allowPlayerControlHeight: Bool
     var landscapeFullscreen: Bool
@@ -22,7 +21,7 @@ struct MenuViewSheet: ViewModifier {
         content
             .sheet(isPresented: disableSheet ? .constant(false) : $navManager.showMenu) {
                 ZStack {
-                    MenuView(showCancelButton: landscapeFullscreen && player.video != nil)
+                    MenuView()
                         .transparentNavBarWorkaround()
                         .menuSheetDetents(
                             allowPlayerControlHeight: allowPlayerControlHeight,

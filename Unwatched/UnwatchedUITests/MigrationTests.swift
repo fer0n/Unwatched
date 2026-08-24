@@ -302,6 +302,48 @@ final class MigrationTests: XCTestCase {
         }
     }
 
+    /// V1p14 -> V1p15 also adds the podcast columns to `Video`/`Subscription` and `skipIntroSeconds` to
+    /// `Subscription`.
+    func testDataSurvivesMigrationFromV1p14() throws {
+        let url = storeURL()
+        try autoreleasepool {
+            let context = ModelContext(try container(UnwatchedSchemaV1p14.self, at: url))
+            let subscription = UnwatchedSchemaV1p14.Subscription(
+                link: URL(string: "https://youtube.com/feed"),
+                title: "Channel",
+                youtubeChannelId: "channel-1"
+            )
+            context.insert(subscription)
+
+            let video = UnwatchedSchemaV1p14.Video(
+                title: "Video",
+                url: URL(string: "https://youtu.be/abc"),
+                youtubeId: "abc",
+                duration: 120
+            )
+            video.subscription = subscription
+            context.insert(video)
+            context.insert(UnwatchedSchemaV1p14.QueueEntry(video: video, order: 0))
+            try context.save()
+        }
+
+        try autoreleasepool {
+            let context = ModelContext(try migrate(url))
+            let video = try XCTUnwrap(try context.fetch(FetchDescriptor<Video>()).first)
+            XCTAssertEqual(video.youtubeId, "abc")
+            XCTAssertEqual(video.subscription?.title, "Channel")
+            XCTAssertNil(video.mediaUrl)
+            XCTAssertNil(video.chaptersUrl)
+            XCTAssertNil(video.keepIntro)
+            XCTAssertEqual(try context.fetch(FetchDescriptor<QueueEntry>()).count, 1)
+
+            let subscription = try XCTUnwrap(try context.fetch(FetchDescriptor<Subscription>()).first)
+            XCTAssertNotEqual(subscription.isPodcast, true)
+            XCTAssertNil(subscription.skipIntroSeconds)
+            XCTAssertEqual(try context.fetch(FetchDescriptor<Tag>()).count, 0)
+        }
+    }
+
     // MARK: - Image cache store
 
     func testCachedImageMigratesFromEveryHistoricVersion() throws {

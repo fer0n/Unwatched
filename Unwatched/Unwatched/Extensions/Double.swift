@@ -47,6 +47,11 @@ extension Double {
         return self
     }
 
+    /// Whether two ratios describe the same shape.
+    func isNearlySameAspectRatio(as other: Double) -> Bool {
+        abs(self - other) < 0.01
+    }
+
     /// Whether this can be handed to layout: `.aspectRatio(_:contentMode:)` turns NaN or infinity
     /// into NaN sizes, which CALayer rejects with an uncatchable `CALayerInvalidGeometry` exception.
     var isUsableAspectRatio: Bool {

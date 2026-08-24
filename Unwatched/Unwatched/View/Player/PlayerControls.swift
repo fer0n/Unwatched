@@ -36,6 +36,29 @@ struct PlayerControls: View {
             && !compactSize
     }
 
+    /// The show's name and the fullscreen button above the scrubber.
+    var showSubscriptionRow: Bool {
+        showRotateFullscreen && !player.embeddingDisabled && !player.isAudioOnly
+    }
+
+    /// An audio episode has no video to fill the player, so its cover art takes whatever height the controls give up.
+    var compressLayout: Bool {
+        player.isAudioOnly && !compactSize && !horizontalLayout
+    }
+
+    @ViewBuilder
+    func controlsSpacer(max maxHeight: CGFloat) -> some View {
+        if compressLayout {
+            // fixed, not capped: PlayerControls measures itself into this page's minHeight, so a
+            // spacer that can still give under a tight proposal reopens that self-referential loop
+            // and the controls jitter a few points as the sheet moves. See player-controls-minheight-layout-loop.
+            Spacer()
+                .frame(height: maxHeight)
+        } else {
+            Spacer()
+        }
+    }
+
     var body: some View {
         let layout = compactSize
             ? AnyLayout(HStackLayout(spacing: 20))
@@ -46,7 +69,7 @@ struct PlayerControls: View {
             : AnyLayout(VStackLayout(spacing: 0))
         ZStack {
             outerLayout {
-                if showRotateFullscreen && !player.embeddingDisabled && !player.isTallAspectRatio {
+                if showSubscriptionRow && !player.isTallAspectRatio {
                     HStack(alignment: .center, spacing: 0) {
                         InteractiveSubscriptionTitle(
                             subscription: player.video?.subscription,
@@ -71,7 +94,7 @@ struct PlayerControls: View {
                     .padding(.horizontal, Const.iOS26_1 ? 5 : 0)
                 }
 
-                if showRotateFullscreen && !player.embeddingDisabled && player.isTallAspectRatio {
+                if showSubscriptionRow && player.isTallAspectRatio {
                     HStack(alignment: .center, spacing: 0) {
                         InteractiveSubscriptionTitle(
                             subscription: player.video?.subscription,
@@ -97,7 +120,7 @@ struct PlayerControls: View {
                 }
 
                 if !player.embeddingDisabled && !compactSize && !player.isTallAspectRatio {
-                    Spacer()
+                    controlsSpacer(max: 6)
                 }
 
                 ChapterMiniControlView(
@@ -110,7 +133,7 @@ struct PlayerControls: View {
                 .padding(.horizontal)
 
                 if !player.embeddingDisabled && !compactSize && !player.isTallAspectRatio {
-                    Spacer()
+                    controlsSpacer(max: 26)
                 }
 
                 layout {
@@ -149,7 +172,7 @@ struct PlayerControls: View {
                 .frame(maxWidth: 800)
 
                 if !player.embeddingDisabled && !compactSize && !player.isTallAspectRatio {
-                    Spacer()
+                    controlsSpacer(max: 16)
                 }
                 if !compactSize {
                     Button {

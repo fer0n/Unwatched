@@ -107,7 +107,10 @@ extension VideoActor {
         var imagesToBeDeleted = [URL]()
         for video in videos {
             if let oldVideo = subVideosDict[video.youtubeId] {
-                if oldVideo.updatedDate != video.updatedDate {
+                // a podcast episode's `updatedDate` is its publication date and never moves, so
+                // that guard alone would mean an existing episode is never looked at again — and
+                // its media URL, chapters and artwork do change in the feed
+                if oldVideo.updatedDate != video.updatedDate || video.isPodcast {
                     if let url = updateVideoAndGetImageToDelete(oldVideo, video) {
                         imagesToBeDeleted.append(url)
                     }
@@ -136,16 +139,35 @@ extension VideoActor {
         }
     }
 
+    /// Only writes what actually changed: this now runs on every refresh for a podcast, and an unconditional
+    /// assignment would dirty every episode each time for iCloud to sync back.
     func updateVideoAndGetImageToDelete(_ video: Video, _ updatedVideo: SendableVideo) -> URL? {
         Log.info("updateExistingVideo: \(video.title)")
-        video.title = updatedVideo.title
-        video.updatedDate = updatedVideo.updatedDate
+        if video.title != updatedVideo.title {
+            video.title = updatedVideo.title
+        }
+        if video.updatedDate != updatedVideo.updatedDate {
+            video.updatedDate = updatedVideo.updatedDate
+        }
 
         var deleteImage: URL?
-        if video.thumbnailUrl != updatedVideo.thumbnailUrl
-            && updatedVideo.thumbnailUrl != nil {
+        // a podcast episode is also allowed to lose its image: a feed that stops giving an item its
+        // own `<itunes:image>` means the show's cover from now on, and episodes imported before the
+        // parser stopped copying that cover onto them clear here on the next refresh
+        let mayClearThumbnail = updatedVideo.thumbnailUrl != nil || updatedVideo.isPodcast
+        if video.thumbnailUrl != updatedVideo.thumbnailUrl && mayClearThumbnail {
             deleteImage = video.thumbnailUrl
             video.thumbnailUrl = updatedVideo.thumbnailUrl
+        }
+
+        if video.isPodcast, let mediaUrl = updatedVideo.mediaUrl {
+            // hosts do move episodes between CDNs; the stored URL is the only way to play it
+            if video.mediaUrl != mediaUrl {
+                video.mediaUrl = mediaUrl
+            }
+            if video.chaptersUrl != updatedVideo.chaptersUrl {
+                video.chaptersUrl = updatedVideo.chaptersUrl
+            }
         }
 
         if video.videoDescription != updatedVideo.videoDescription {
@@ -533,6 +555,8 @@ extension VideoActor {
         for video in checkVideos {
             guard !seenYouTubeIds.contains(video.youtubeId) else { continue }
             seenYouTubeIds.insert(video.youtubeId)
+            // podcast durations come from the feed, or from the player once it opens the stream
+            guard !video.isPodcast else { continue }
 
             if shouldFetchDurationForVideo(video, cutoffDate: staleCutoffDate) {
                 toFetchVideos.append(video)

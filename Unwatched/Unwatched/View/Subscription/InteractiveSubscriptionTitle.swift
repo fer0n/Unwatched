@@ -31,7 +31,7 @@ struct InteractiveSubscriptionTitle: View, Equatable {
                             Color.clear
                         }
                         .frame(width: 30, height: 30)
-                        .clipShape(Circle())
+                        .channelImageClip(isPodcast: sub.isPodcast)
                     }
                     Text(sub.displayTitle)
                     if let icon = getSubscriptionSystemName {
@@ -59,6 +59,35 @@ struct InteractiveSubscriptionTitle: View, Equatable {
     }
 
     func openSubscription(_ sub: Subscription) {
+        OpenSubscriptionAction(
+            navManager: navManager,
+            player: player,
+            sheetPos: sheetPos,
+            sizeClass: sizeClass,
+            dismiss: dismiss
+        ).open(sub)
+    }
+
+    static func == (lhs: InteractiveSubscriptionTitle, rhs: InteractiveSubscriptionTitle) -> Bool {
+        lhs.subscription?.isArchived == rhs.subscription?.isArchived
+            && lhs.subscription?.title == rhs.subscription?.title
+            && lhs.subscription?.thumbnailUrl == rhs.subscription?.thumbnailUrl
+            && lhs.subscription?.isPodcast == rhs.subscription?.isPodcast
+            && lhs.showImage == rhs.showImage
+    }
+}
+
+/// Opening a subscription from the player: push it into the menu's navigation stack and bring the menu up over the
+/// player.
+@MainActor
+struct OpenSubscriptionAction {
+    let navManager: NavigationManager
+    let player: PlayerManager
+    let sheetPos: SheetPositionReader
+    let sizeClass: UserInterfaceSizeClass?
+    let dismiss: DismissAction
+
+    func open(_ sub: Subscription) {
         dismiss()
         if sheetPos.isMinimumSheet && !Device.isBigScreen(sizeClass) {
             Task {
@@ -70,12 +99,5 @@ struct InteractiveSubscriptionTitle: View, Equatable {
         }
         navManager.videoDetail = nil
         player.setShowMenu()
-    }
-
-    static func == (lhs: InteractiveSubscriptionTitle, rhs: InteractiveSubscriptionTitle) -> Bool {
-        lhs.subscription?.isArchived == rhs.subscription?.isArchived
-            && lhs.subscription?.title == rhs.subscription?.title
-            && lhs.subscription?.thumbnailUrl == rhs.subscription?.thumbnailUrl
-            && lhs.showImage == rhs.showImage
     }
 }

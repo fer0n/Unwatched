@@ -14,40 +14,39 @@ public struct CachedImageView<Content, Content2>: View where Content: View, Cont
     @Environment(ImageCacheManager.self) var cacheManager
 
     var imageUrls: [URL]
+    var maxPixelSize: CGFloat
     private let contentImage: ((Image) -> Content)
     private let placeholder: (() -> Content2)
     @State var image: PlatformImage?
 
     /// Creates a cached image view that tries to load images from the provided URLs in order.
-    ///
-    /// - Parameters:
-    ///   - urls: Image URLs that will be tried in order until one loads successfully.
-    ///   - content: A closure that creates the content of this stack.
-    ///   - placeholder: A closure that creates the placeholder view while the image is loading.
     public init(
         urls: [URL?],
+        maxPixelSize: CGFloat = Const.maxDecodedImagePixelSize,
         @ViewBuilder content: @escaping (Image) -> Content,
         @ViewBuilder placeholder: @escaping () -> Content2
     ) {
         let imageUrls = urls.compactMap { $0 }
         self.imageUrls = imageUrls
+        self.maxPixelSize = maxPixelSize
         self.contentImage = content
         self.placeholder = placeholder
         // loading is asynchronous even for an already decoded image, a view recreated around one
         // would blank for a frame
         _image = State(
             initialValue: imageUrls.lazy
-                .compactMap { ImageService.decodedImageCache[$0.absoluteString] }
+                .compactMap { ImageService.decodedImageCache[ImageService.decodedCacheKey(url: $0, maxPixelSize: maxPixelSize)] }
                 .first
         )
     }
 
     public init(
         imageUrl: URL?,
+        maxPixelSize: CGFloat = Const.maxDecodedImagePixelSize,
         @ViewBuilder content: @escaping (Image) -> Content,
         @ViewBuilder placeholder: @escaping () -> Content2
     ) {
-        self.init(urls: [imageUrl], content: content, placeholder: placeholder)
+        self.init(urls: [imageUrl], maxPixelSize: maxPixelSize, content: content, placeholder: placeholder)
     }
 
     public var body: some View {
@@ -70,11 +69,16 @@ public struct CachedImageView<Content, Content2>: View where Content: View, Cont
                 await loadImage()
             }
         }
+        .onChange(of: maxPixelSize) {
+            Task {
+                await loadImage()
+            }
+        }
     }
-    
+
     func loadImage() async {
         for url in imageUrls {
-            let task = ImageService.getImage(url, cacheManager)
+            let task = ImageService.getImage(url, cacheManager, maxPixelSize: maxPixelSize)
             if let taskResult = try? await task.value {
                 let (taskImage, info) = taskResult
                 image = taskImage

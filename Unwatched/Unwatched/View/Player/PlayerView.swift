@@ -36,6 +36,9 @@ struct PlayerView: View {
     var enableHideControls: Bool
     var sleepTimerVM: SleepTimerViewModel
     var compactSize: Bool
+    /// The player sits inside a page of the paging scroll view rather than above it (see
+    /// `VideoPlayer.usePodcastLayout`), so paging must not be mistaken for teardown.
+    var pagedInline: Bool = false
 
     var body: some View {
         ZStack(alignment: .top) {
@@ -71,7 +74,8 @@ struct PlayerView: View {
                         showOverlay: landscapeFullscreen
                             || (!sheetPos.isMinimumSheet && navManager.showMenu)
                             || navManager.playerTab == .chapterDescription,
-                        landscapeFullscreen: landscapeFullscreen
+                        landscapeFullscreen: landscapeFullscreen,
+                        pagedInline: pagedInline
                     )
                     .environment(\.layoutDirection, .leftToRight)
                 } else if !player.embeddingDisabled {
@@ -130,9 +134,6 @@ struct PlayerView: View {
             // initial: catches a setting change made while no player view was around
             .onChange(of: playerType, initial: true) {
                 switchManager.handleSettingChanged()
-            }
-            .onChange(of: player.video?.youtubeId) {
-                switchManager.handleVideoChanged()
             }
             .overlay {
                 if player.video != nil && switchManager.activeType != .native {
@@ -264,7 +265,6 @@ struct PlayerView: View {
             player.autoSetNextVideo(.continuousPlay, modelContext)
         } else {
             player.pause()
-            player.seekAbsolute = nil
             player.setVideoEnded(true)
         }
     }

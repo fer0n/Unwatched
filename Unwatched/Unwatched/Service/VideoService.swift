@@ -424,22 +424,44 @@ extension VideoService {
             } else {
                 model = video.createVideo()
                 modelContext.insert(model)
-                associateSubscription(
-                    model,
-                    channelId: video.youtubeChannelId,
-                    feedTitle: video.feedTitle ?? video.subscription?.title,
-                    modelContext: modelContext
-                )
+                if let show = video.subscription, show.isPodcast {
+                    associatePodcast(model, show: show, modelContext: modelContext)
+                } else {
+                    associateSubscription(
+                        model,
+                        channelId: video.youtubeChannelId,
+                        feedTitle: video.feedTitle ?? video.subscription?.title,
+                        modelContext: modelContext
+                    )
+                }
                 try? modelContext.save()
             }
             // Search results carry no description; fetch it (InnerTube, then Data API) in the
             // background so it's present for every action and player type.
-            if model.videoDescription?.isEmpty ?? true {
+            if !model.isPodcast, model.videoDescription?.isEmpty ?? true {
                 fetchDescriptionInBg(youtubeId: model.youtubeId)
             }
             return model
         }
         return nil
+    }
+
+    /// The podcast equivalent of `associateSubscription`: shows are matched on their feed URL.
+    private static func associatePodcast(
+        _ video: Video,
+        show: SendableSubscription,
+        modelContext: ModelContext
+    ) {
+        guard let feedUrl = show.link else { return }
+        let fetch = FetchDescriptor<Subscription>(predicate: #Predicate { $0.isPodcast == true })
+        if let existing = (try? modelContext.fetch(fetch))?.first(where: { $0.link == feedUrl }) {
+            existing.videos?.append(video)
+            return
+        }
+        let sub = show.createSubscription()
+        sub.isArchived = true
+        modelContext.insert(sub)
+        sub.videos?.append(video)
     }
 
     /// Links a (just-materialised) video to its channel's subscription, creating an

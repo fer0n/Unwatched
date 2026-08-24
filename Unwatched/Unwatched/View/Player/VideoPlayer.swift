@@ -41,16 +41,14 @@ struct VideoPlayer: View {
             }
             #endif
 
-            PlayerView(autoHideVM: $autoHideVM,
-                       landscapeFullscreen: landscapeFullscreen,
-                       enableHideControls: enableHideControls,
-                       sleepTimerVM: sleepTimerVM,
-                       compactSize: compactSize)
-                .zIndex(1)
-                .layoutPriority(2)
-                #if os(visionOS)
-                .modifier(PlayerControlsOrnamentModifier(autoHideVM: $autoHideVM))
-            #endif
+            if !usePodcastLayout {
+                playerView(enableHideControls: enableHideControls)
+                    .zIndex(1)
+                    .layoutPriority(2)
+                    #if os(visionOS)
+                    .modifier(PlayerControlsOrnamentModifier(autoHideVM: $autoHideVM))
+                #endif
+            }
 
             #if !os(visionOS)
             if !layoutMode.isFullscreen && !isFakePip {
@@ -73,6 +71,11 @@ struct VideoPlayer: View {
                                       enableHideControls: enableHideControls,
                                       hideControls: hideControls,
                                       sleepTimerVM: sleepTimerVM,
+                                      inlinePlayer: usePodcastLayout
+                                        ? playerView(enableHideControls: enableHideControls,
+                                                     pagedInline: true)
+                                        : nil,
+                                      hideMiniPlayer: hideMiniPlayer,
                                       autoHideVM: $autoHideVM,
                                       )
                 }
@@ -100,6 +103,29 @@ struct VideoPlayer: View {
                 autoHideVM.setKeepVisible(isVisible, "hover")
             }
         )
+    }
+
+    func playerView(enableHideControls: Bool, pagedInline: Bool = false) -> PlayerView {
+        PlayerView(autoHideVM: $autoHideVM,
+                   landscapeFullscreen: landscapeFullscreen,
+                   enableHideControls: enableHideControls,
+                   sleepTimerVM: sleepTimerVM,
+                   compactSize: compactSize,
+                   pagedInline: pagedInline)
+    }
+
+    /// An audio episode's cover art is part of the first page instead of sitting above both: swiping to the
+    /// description carries it off and leaves the mini player behind.
+    var usePodcastLayout: Bool {
+        #if os(iOS)
+        player.isAudioOnly
+            && !compactSize
+            && !horizontalLayout
+            && !layoutMode.isFullscreen
+            && !isFakePip
+        #else
+        false
+        #endif
     }
 
     var squishyPadding: some View {
@@ -231,4 +257,53 @@ struct VideoPlayer: View {
     //        } label: {
     //            Text(verbatim: "switch")
     //        }
+}
+
+private struct VideoPlayerSheetStatePreview: View {
+    @State private var navManager = NavigationManager.getDummy(true)
+    @State private var player = PlayerManager.getTheDailyPodcastDummy()
+    @State private var sheetPos = SheetPositionReader()
+    @State private var swipedAbove = true
+
+    var body: some View {
+        VideoPlayer(compactSize: false,
+                    horizontalLayout: false,
+                    landscapeFullscreen: false,
+                    hideControls: false)
+            .modelContainer(DataProvider.previewContainer)
+            .environment(navManager)
+            .environment(player)
+            .environment(ImageCacheManager())
+            .environment(RefreshManager())
+            .environment(sheetPos)
+            .environment(TinyUndoManager())
+            .tint(Color.neutralAccentColor)
+            .preferredColorScheme(.dark)
+            .overlay(alignment: .topTrailing) {
+                Button(swipedAbove ? "swipedAbove: on" : "swipedAbove: off") {
+                    swipedAbove.toggle()
+                    applySheetState()
+                }
+                .buttonStyle(.borderedProminent)
+                .padding()
+            }
+            .onAppear {
+                applySheetState()
+            }
+    }
+
+    private func applySheetState() {
+        withAnimation {
+            if swipedAbove {
+                sheetPos.setLargeSheet()
+            } else {
+                sheetPos.setDetentVideoPlayer()
+                sheetPos.setSwipedBelow(true)
+            }
+        }
+    }
+}
+
+#Preview("Podcast / Audio Only - The Daily (swipedAbove toggle)") {
+    VideoPlayerSheetStatePreview()
 }

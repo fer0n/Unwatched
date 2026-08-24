@@ -44,6 +44,34 @@ import UnwatchedShared
         isLoading = false
     }
 
+    func setIsPodcastSubscribed(_ feedUrl: URL) async {
+        isLoading = true
+        isSubscribedSuccess = await SubscriptionService.isPodcastSubscribed(feedUrl).value
+        isLoading = false
+    }
+
+    func togglePodcastSubscription(_ sub: SendableSubscription) async {
+        guard let feedUrl = sub.link else { return }
+        let wasSubscribed = isSubscribedSuccess == true
+        isSubscribedSuccess = nil
+        isLoading = true
+        do {
+            if wasSubscribed {
+                try await SubscriptionService.unsubscribeFromPodcast(feedUrl)
+                isSubscribedSuccess = false
+            } else {
+                try await SubscriptionService.subscribeToPodcast(sub)
+                isSubscribedSuccess = true
+                hasNewSubscriptions = true
+            }
+        } catch {
+            Log.error("podcast subscription error: \(error)")
+            errorMessage = error.localizedDescription
+            isSubscribedSuccess = wasSubscribed
+        }
+        isLoading = false
+    }
+
     func getSubscriptionSystemName(video: Video?) -> String? {
         guard let video else {
             return nil

@@ -75,7 +75,7 @@ struct NewVideosNotificationInfo {
             for (index, info) in infos.enumerated() {
                 guard let video = info.video,
                       video.thumbnailData == nil,
-                      let imageUrl = video.thumbnailUrl else {
+                      let imageUrl = video.displayThumbnailUrl else {
                     Log.info("No video/imageUrl when trying to load image data")
                     continue
                 }

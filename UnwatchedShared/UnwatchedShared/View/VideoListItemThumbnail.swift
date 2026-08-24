@@ -27,12 +27,37 @@ public struct VideoListItemThumbnail: View {
         self.fixedSize = size
         self.largeThumbnail = largeThumbnail
         self.imageUrls = [
-            ThumbnailUrlService.getImageUrl(video.thumbnailUrl, largeThumbnail ? .large : .small),
-            ThumbnailUrlService.getImageUrl(video.thumbnailUrl, .medium)
+            ThumbnailUrlService.getImageUrl(video.displayThumbnailUrl, largeThumbnail ? .large : .small),
+            ThumbnailUrlService.getImageUrl(video.displayThumbnailUrl, .medium)
         ]
     }
 
     public var body: some View {
+        if squareArtwork {
+            // the slot the rest of the list uses, so rows keep lining up, with the art centred in the space that
+            // leaves it and the cover's own background filling the rest.
+            slot
+                .overlay { ArtworkBackdrop(urls: imageUrls) }
+                .overlay { artwork }
+                .overlay {
+                    VideoListItemThumbnailOverlay(
+                        video: video,
+                        videoDuration: config.videoDuration
+                    )
+                }
+                .clipShape(RoundedRectangle(cornerRadius: Const.videoCornerRadius))
+        } else {
+            artwork
+        }
+    }
+
+    /// Podcast cover art is square: filling a 16:9 thumbnail with it cuts off the top and the bottom, so it keeps its
+    /// own shape and only the space around it is given up.
+    private var squareArtwork: Bool {
+        video.isAudioOnly == true
+    }
+
+    private var artwork: some View {
         CachedImageView(urls: imageUrls) { image in
             sized(Color.clear)
                 .overlay {
@@ -44,12 +69,26 @@ public struct VideoListItemThumbnail: View {
             sized(Color.insetBackgroundColor)
         }
         .overlay {
-            VideoListItemThumbnailOverlay(
-                video: video,
-                videoDuration: config.videoDuration
-            )
+            // in the square-artwork case this is drawn over the full slot instead, see `body`
+            if !squareArtwork {
+                VideoListItemThumbnailOverlay(
+                    video: video,
+                    videoDuration: config.videoDuration
+                )
+            }
         }
         .clipShape(RoundedRectangle(cornerRadius: Const.videoCornerRadius))
+    }
+
+    @ViewBuilder
+    private var slot: some View {
+        if let fixedSize {
+            Color.clear
+                .frame(width: fixedSize.width, height: fixedSize.height)
+        } else {
+            Color.clear
+                .aspectRatio(Const.defaultVideoAspectRatio, contentMode: .fit)
+        }
     }
 
     /// Without a fixed size the thumbnail fills the available width and derives its height from
@@ -58,7 +97,10 @@ public struct VideoListItemThumbnail: View {
     /// their content.
     @ViewBuilder
     private func sized(_ content: Color) -> some View {
-        if let fixedSize {
+        if squareArtwork {
+            content
+                .aspectRatio(1, contentMode: .fit)
+        } else if let fixedSize {
             content
                 .frame(width: fixedSize.width, height: fixedSize.height)
         } else {

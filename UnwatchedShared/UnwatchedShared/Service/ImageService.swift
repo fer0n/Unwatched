@@ -63,15 +63,20 @@ public struct ImageService {
 
     public static func storeImages(_ images: [(url: URL, data: Data)]) {
         Task.detached {
-            let container = DataProvider.shared.localCacheContainer
-            let context = ModelContext(container)
-
-            for (url, data) in images {
-                let image = CachedImage(url, imageData: data)
-                context.insert(image)
-            }
-            try? context.save()
+            await saveImages(images)
         }
+    }
+
+    /// The awaitable form, for a caller that hands the URL straight on to a view.
+    public static func saveImages(_ images: [(url: URL, data: Data)]) async {
+        let container = DataProvider.shared.localCacheContainer
+        let context = ModelContext(container)
+
+        for (url, data) in images {
+            let image = CachedImage(url, imageData: data)
+            context.insert(image)
+        }
+        try? context.save()
     }
 
     public static func deleteImages(_ urls: [URL]) {
@@ -132,6 +137,18 @@ public struct ImageService {
             Log.info("cleanupImages: \(count) images older than \(days) days")
             try context.save()
         }
+    }
+
+    /// The bytes behind an image URL — what the cache holds, or a fresh download.
+    public static func imageData(for url: URL) async -> Data? {
+        let cached = await Task.detached {
+            let context = ModelContext(DataProvider.shared.localCacheContainer)
+            return getCachedImage(for: url, context)?.imageData
+        }.value
+        if let cached {
+            return cached
+        }
+        return try? await loadImageData(url: url)
     }
 
     public static func loadImageData(url: URL) async throws -> Data {
@@ -273,9 +290,18 @@ public struct ImageService {
         return false
     }
 
+    /// Cache key for a decoded image: the same URL decoded at two different sizes (the mini player's 107×60pt slot
+    /// vs.
+    public static func decodedCacheKey(url: URL, maxPixelSize: CGFloat) -> String {
+        "\(url.absoluteString)#\(Int(maxPixelSize))"
+    }
+
     /// Decodes off the main thread, so neither the view update nor the render pass has to.
-    private static func decodeAndCache(_ data: Data, _ key: String) -> PlatformImage? {
-        guard let image = PlatformImage(data: data)?.readyForDisplay() else { return nil }
+    private static func decodeAndCache(_ data: Data, _ key: String, _ maxPixelSize: CGFloat) -> PlatformImage? {
+        guard let image = PlatformImage(
+            downsampling: data,
+            maxPixelSize: maxPixelSize
+        )?.readyForDisplay() else { return nil }
         decodedImageCache[key] = image
         return image
     }
@@ -283,16 +309,18 @@ public struct ImageService {
     @MainActor
     public static func getImage(
         _ url: URL,
-        _ cacheManager: ImageCacheManager
+        _ cacheManager: ImageCacheManager,
+        maxPixelSize: CGFloat = Const.maxDecodedImagePixelSize
     ) -> Task<(PlatformImage?, ImageCacheInfo), Error> {
-        let key = url.absoluteString
-        let cacheInfo = cacheManager[key]
+        let dataKey = url.absoluteString
+        let decodedKey = decodedCacheKey(url: url, maxPixelSize: maxPixelSize)
+        let cacheInfo = cacheManager[dataKey]
         let decodedImageCache = ImageService.decodedImageCache
 
         return Task.detached {
             // load from memory
             if let cacheInfo {
-                return (decodedImageCache[key] ?? decodeAndCache(cacheInfo.data, key), cacheInfo)
+                return (decodedImageCache[decodedKey] ?? decodeAndCache(cacheInfo.data, decodedKey, maxPixelSize), cacheInfo)
             }
 
             // fetch from DB
@@ -307,7 +335,7 @@ public struct ImageService {
                     persistImage: false,
                     persistColor: false
                 )
-                return (decodedImageCache[key] ?? decodeAndCache(imageData, key), imageInfo)
+                return (decodedImageCache[decodedKey] ?? decodeAndCache(imageData, decodedKey, maxPixelSize), imageInfo)
             }
 
             // fetch online
@@ -317,7 +345,7 @@ public struct ImageService {
                 data: imageData,
                 persistImage: true
             )
-            return (decodeAndCache(imageData, key), imageInfo)
+            return (decodeAndCache(imageData, decodedKey, maxPixelSize), imageInfo)
         }
     }
 

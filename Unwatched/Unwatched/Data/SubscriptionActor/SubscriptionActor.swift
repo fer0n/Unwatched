@@ -222,6 +222,41 @@ actor SubscriptionActor: SharedContextActor {
         try modelContext.save()
     }
 
+    // MARK: - Podcasts
+
+    /// Podcast shows are matched on their feed URL: there's no channel id to key them by.
+    func getPodcast(_ feedUrl: URL) -> Subscription? {
+        let fetch = FetchDescriptor<Subscription>(predicate: #Predicate { $0.isPodcast == true })
+        let subs = try? modelContext.fetch(fetch)
+        return subs?.first { $0.link == feedUrl }
+    }
+
+    func isPodcastSubscribed(_ feedUrl: URL) -> Bool {
+        getPodcast(feedUrl)?.isArchived == false
+    }
+
+    func subscribeToPodcast(_ sendableSub: SendableSubscription) throws {
+        guard let feedUrl = sendableSub.link else {
+            throw SubscriptionError.noInfoFoundToSubscribeTo
+        }
+        if let existing = getPodcast(feedUrl) {
+            unarchive(existing)
+        } else {
+            var sub = sendableSub
+            sub.isPodcast = true
+            modelContext.insert(sub.createSubscription())
+        }
+        try modelContext.save()
+    }
+
+    func unsubscribeFromPodcast(_ feedUrl: URL) throws {
+        guard let sub = getPodcast(feedUrl) else {
+            return
+        }
+        try deleteSubscriptions([sub])
+        try modelContext.save()
+    }
+
     func getAllFeedUrls() throws -> [(title: String, link: URL?)] {
         let predicate = #Predicate<Subscription> { $0.isArchived == false }
         let fetchDescriptor = FetchDescriptor<Subscription>(predicate: predicate)

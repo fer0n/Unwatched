@@ -46,5 +46,27 @@ import UnwatchedShared
         Log.info("ChangeOrientation to \(orientation)")
         shared.hasLeftEmpty = orientation == .landscapeLeft
     }
+
+    /// Whether rotation is currently restricted to portrait because a podcast is the current video.
+    @MainActor
+    private(set) static var podcastOrientationLocked = false
+
+    /// Podcasts have no picture worth rotating for, and unlike video, an audio episode keeps playing in the
+    /// background/pocket, where accidental accelerometer-driven rotation just jitters the sheet.
+    @MainActor
+    static func updatePodcastOrientationLock() {
+        guard UIDevice.isIphone else { return }
+        let locked = PlayerManager.shared.isAudioOnly
+        guard locked != podcastOrientationLocked else { return }
+        podcastOrientationLocked = locked
+
+        guard let windowScene = UIApplication.shared.connectedScenes.first as? UIWindowScene else {
+            return
+        }
+        windowScene.windows.first?.rootViewController?.setNeedsUpdateOfSupportedInterfaceOrientations()
+        if locked {
+            windowScene.requestGeometryUpdate(.iOS(interfaceOrientations: .portrait))
+        }
+    }
 }
 #endif

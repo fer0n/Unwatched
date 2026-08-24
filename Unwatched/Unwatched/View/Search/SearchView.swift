@@ -9,13 +9,14 @@ import OSLog
 import UnwatchedShared
 
 private extension View {
-    /// Library matches open the regular detail view; YouTube-only channels get the preview.
-    /// The macOS wrapper draws the pane header — without it the pushed view renders blank.
+    /// Library matches open the regular detail view; channels and podcasts that aren't added yet get a preview.
     func searchSubscriptionDestination(_ modelContext: ModelContext) -> some View {
         navigationDestination(for: SendableSubscription.self) { sub in
             ZStack {
                 if sub.persistentId != nil {
                     SendableSubscriptionDetailView(sub, modelContext)
+                } else if sub.isPodcast {
+                    PodcastPreviewView(sub)
                 } else {
                     ChannelPreviewView(sub)
                 }
@@ -34,6 +35,8 @@ private extension View {
 /// results using the same `VideoListItem` rows as the rest of the app. Tapping a
 /// result (or its queue/swipe actions) materialises it into the library on demand.
 struct SearchView: View {
+    private static let collapsedPodcastCount = 3
+
     @AppStorage(Const.searchAlwaysUseYoutube) var searchAlwaysUseYoutube: Bool = false
 
     @Environment(\.modelContext) private var modelContext
@@ -43,6 +46,7 @@ struct SearchView: View {
     @State private var vm = SearchVM()
     @State private var showBrowserFallback = false
     @State private var hasAppearedOnce = false
+    @State private var showAllPodcasts = false
     @FocusState private var searchFocused: Bool
 
     var body: some View {
@@ -91,6 +95,9 @@ struct SearchView: View {
             if newValue.isEmpty {
                 vm.clear()
             }
+        }
+        .onChange(of: vm.activeQuery) {
+            showAllPodcasts = false
         }
         .onChange(of: searchFocused) { _, focused in
             if focused {
@@ -236,6 +243,12 @@ struct SearchView: View {
                 }
             }
 
+            if !vm.podcastResults.isEmpty {
+                section(.podcasts) {
+                    podcastRows
+                }
+            }
+
             if !vm.youtubeResults.isEmpty || !vm.youtubeChannelResults.isEmpty {
                 section(.youtube) {
                     youtubeChannelRows(vm.youtubeChannelResults)
@@ -259,7 +272,7 @@ struct SearchView: View {
     /// Sections are only labelled once something local matched — a lone "YouTube"
     /// header above a plain search would just be noise.
     var showSectionHeaders: Bool {
-        !vm.localResults.isEmpty
+        !vm.localResults.isEmpty || !vm.podcastResults.isEmpty
     }
 
     /// The label is an ordinary row rather than a `Section` header: a plain list pins
@@ -282,6 +295,39 @@ struct SearchView: View {
                     .myListRowBackground()
             }
             content()
+        }
+    }
+
+    /// Podcast hits are a sidebar to the search, not its subject: only a few show until asked.
+    @ViewBuilder
+    var podcastRows: some View {
+        let shown = showAllPodcasts
+            ? vm.podcastResults
+            : Array(vm.podcastResults.prefix(Self.collapsedPodcastCount))
+
+        ForEach(shown, id: \.link) { sub in
+            NavigationLink(value: sub) {
+                SearchSubscriptionListItem(subscription: sub)
+            }
+        }
+        .myListRowBackground()
+
+        if !showAllPodcasts && vm.podcastResults.count > Self.collapsedPodcastCount {
+            Button {
+                withAnimation { showAllPodcasts = true }
+            } label: {
+                HStack(spacing: 4) {
+                    Text("showMoreResults")
+                    Image(systemName: "chevron.down")
+                }
+                .font(.subheadline)
+                .fontWeight(.medium)
+                .padding(.vertical, 5)
+            }
+            .buttonStyle(.plain)
+            .foregroundStyle(.secondary)
+            .listRowSeparator(.hidden)
+            .myListRowBackground()
         }
     }
 

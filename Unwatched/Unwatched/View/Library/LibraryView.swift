@@ -15,7 +15,6 @@ struct LibraryView: View {
 
     @State var subManager = SubscribeManager()
     @State private var editedTag: TagEdit?
-    var showCancelButton: Bool = false
 
     var body: some View {
         let topListItemId = NavigationManager.getScrollId("library")
@@ -38,9 +37,6 @@ struct LibraryView: View {
                 }
                 .myNavigationTitle("library")
                 .toolbar {
-                    if showCancelButton {
-                        DismissToolbarButton()
-                    }
                     #if os(iOS) || os(visionOS)
                     settingsToolbarButton
                     #endif

@@ -11,23 +11,25 @@ struct VideoDetailThumbnail: View {
 
     let video: Video
 
+    private var isAudioOnly: Bool { video.isAudioOnly == true }
+
     var body: some View {
         CachedImageView(
             urls: [
-                UrlService.getImageUrl(video.thumbnailUrl, .large),
-                UrlService.getImageUrl(video.thumbnailUrl, .medium)
+                UrlService.getImageUrl(video.displayThumbnailUrl, .large),
+                UrlService.getImageUrl(video.displayThumbnailUrl, .medium)
             ]
         ) { image in
             Color.clear
-                .aspectRatio(Const.defaultVideoAspectRatio, contentMode: .fit)
+                .aspectRatio(isAudioOnly ? 1 : Const.defaultVideoAspectRatio, contentMode: .fit)
                 .overlay {
                     image
                         .resizable()
-                        .scaledToFill()
+                        .aspectRatio(contentMode: isAudioOnly ? .fit : .fill)
                 }
         } placeholder: {
             Color.insetBackgroundColor
-                .aspectRatio(Const.defaultVideoAspectRatio, contentMode: .fit)
+                .aspectRatio(isAudioOnly ? 1 : Const.defaultVideoAspectRatio, contentMode: .fit)
         }
         .clipShape(
             .rect(

@@ -6,13 +6,11 @@
 import SwiftUI
 import UnwatchedShared
 
-/// Shared visual header for a channel/subscription: big condensed title, circular
-/// image, and the channel meta line. Used by both the persisted subscription detail
-/// (`SubscriptionInfoDetails`) and the non-persisted Search channel preview so they
-/// look identical.
+/// Shared visual header for a channel/subscription: big condensed title, avatar image, and the channel meta line.
 struct ChannelHeaderView: View {
     let title: String
     let imageUrl: URL?
+    var isPodcast: Bool = false
     var userName: String?
     var author: String?
     var videoCount: Int?
@@ -49,7 +47,7 @@ struct ChannelHeaderView: View {
             if hasImage {
                 avatar
                     .frame(width: 80, height: 80)
-                    .clipShape(Circle())
+                    .channelImageClip(isPodcast: isPodcast)
             }
 
             VStack(alignment: .leading, spacing: hasImage ? 5 : 0) {

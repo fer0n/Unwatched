@@ -37,6 +37,13 @@ struct UrlService {
         "https://youtu.be/\(youtubeId)" + (timestamp.map { "?t=\(Int($0))" } ?? "")
     }
 
+    /// The link to share for a video.
+    static func getShareUrl(_ video: any VideoData, timestamp: Double? = nil) -> String? {
+        video.isPodcast
+            ? video.url?.absoluteString
+            : getShortenedUrl(video.youtubeId, timestamp: timestamp)
+    }
+
     static func getEmailUrl(title: String? = nil, body: String) -> URL {
         let subject = title != nil ? "subject=\(title ?? "")&" : ""
         return URL(string: "mailto:unwatched@icloud.com?\(subject)body=\n\n\(body)")!

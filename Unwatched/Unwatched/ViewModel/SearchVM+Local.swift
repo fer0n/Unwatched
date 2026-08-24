@@ -77,6 +77,8 @@ extension SearchVM {
         )
         if source == .youtube {
             rerunActiveSearch()
+        } else if source == .podcasts {
+            searchPodcasts()
         } else {
             // Local sources are matched in the store — no need to hit the API again.
             searchLocal()

@@ -8,10 +8,8 @@ import SwiftData
 import UnwatchedShared
 
 struct QueueTabItemView: View {
-    let showCancelButton: Bool
-
     var body: some View {
-        QueueView(showCancelButton: showCancelButton)
+        QueueView()
             .modifier(QueueTabItemViewModifier())
     }
 }

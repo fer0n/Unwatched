@@ -8,10 +8,8 @@ import SwiftData
 import UnwatchedShared
 
 struct InboxTabItemView: View {
-    let showCancelButton: Bool
-
     var body: some View {
-        InboxView(showCancelButton: showCancelButton)
+        InboxView()
             .modifier(InboxTabItemViewModifier())
     }
 }

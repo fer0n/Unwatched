@@ -183,6 +183,7 @@ struct CleanupService {
             Log.error("Failed to delete everything")
         }
 
+        await PodcastDownloadManager.shared.deleteAllDownloads()
         _ = ImageService.deleteAllImages()
         _ = TranscriptService.deleteCache()
         _ = ChapterService.deleteAllDerivedChapters()
@@ -378,8 +379,13 @@ actor CleanupActor: SharedContextActor {
             return
         }
         // grouped, not `getDuplicates`, so each duplicate is paired with its keeper
-        let grouped = Dictionary(grouping: subs, by: {
-            ($0.youtubeChannelId ?? "") + ($0.youtubePlaylistId ?? "")
+        let grouped = Dictionary(grouping: subs, by: { sub -> String in
+            // podcasts carry neither id: keyed by anything else they would all collapse into one group and every show
+            // but one would be deleted
+            if sub.isPodcast {
+                return "podcast:" + (sub.link?.absoluteString ?? "\(sub.persistentModelID.hashValue)")
+            }
+            return (sub.youtubeChannelId ?? "") + (sub.youtubePlaylistId ?? "")
         })
         var removedCount = 0
         for (_, group) in grouped where group.count > 1 {
@@ -582,6 +588,13 @@ extension CleanupActor {
         }
         if keeper.deferDate == nil, let deferDate = duplicate.deferDate {
             keeper.deferDate = deferDate
+        }
+        // a chapter edit like the rows below, it just has no row of its own
+        if keeper.keepIntro == nil, let keepIntro = duplicate.keepIntro {
+            keeper.keepIntro = keepIntro
+        }
+        if keeper.keepOutro == nil, let keepOutro = duplicate.keepOutro {
+            keeper.keepOutro = keepOutro
         }
         moveEntries(from: duplicate, to: keeper)
         moveChapters(from: duplicate, to: keeper)

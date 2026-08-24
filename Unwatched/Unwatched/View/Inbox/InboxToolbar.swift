@@ -68,14 +68,9 @@ struct InboxAppearanceToolbarButton: ToolbarContent {
 }
 
 struct InboxToolbar: ViewModifier {
-    var showCancelButton: Bool = false
-
     func body(content: Content) -> some View {
         content
             .toolbar {
-                if showCancelButton {
-                    DismissToolbarButton()
-                }
                 UndoToolbarButton()
                 ToolbarSpacerWorkaround()
                 InboxAppearanceToolbarButton()
@@ -85,8 +80,8 @@ struct InboxToolbar: ViewModifier {
 }
 
 extension View {
-    func inboxToolbar(_ showCancelButton: Bool = false) -> some View {
-        modifier(InboxToolbar(showCancelButton: showCancelButton))
+    func inboxToolbar() -> some View {
+        modifier(InboxToolbar())
     }
 }
 

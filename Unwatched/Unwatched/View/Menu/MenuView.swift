@@ -15,13 +15,8 @@ struct MenuView: View {
 
     @AppStorage(Const.showTabBarLabels) var showTabBarLabels = true
 
-    var showCancelButton = false
     var showTabBar = true
     var isSidebar = false
-
-    var shouldShowCancelButton: Bool {
-        return false
-    }
 
     var body: some View {
         @Bindable var navManager = navManager
@@ -31,19 +26,19 @@ struct MenuView: View {
                 handleTabChanged(newValue, proxy)
             }) {
                 Tab(value: NavigationTab.queue) {
-                    QueueTabItemView(showCancelButton: showCancelButton)
+                    QueueTabItemView()
                 } label: {
                     QueueTabLabel()
                 }
 
                 Tab(value: NavigationTab.inbox) {
-                    InboxTabItemView(showCancelButton: showCancelButton)
+                    InboxTabItemView()
                 } label: {
                     InboxTabLabel()
                 }
 
                 Tab(value: NavigationTab.library) {
-                    LibraryView(showCancelButton: shouldShowCancelButton)
+                    LibraryView()
                 } label: {
                     MenuTabLabel(image: Image(systemName: "books.vertical"), tag: .library)
                 }
@@ -147,7 +142,7 @@ struct MenuView: View {
 }
 
 #Preview {
-    MenuView(showCancelButton: false)
+    MenuView()
         .modelContainer(DataProvider.previewContainer)
         .environment(NavigationManager.getDummy())
         .environment(RefreshManager())

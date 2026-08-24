@@ -13,7 +13,6 @@ struct QueueView: View {
 
     @Query(sort: \Tag.order) private var tags: [Tag]
     @State private var showAll = false
-    var showCancelButton: Bool = false
 
     var selectedTag: Tag? {
         navManager.queueTag.tag(in: tags)
@@ -31,8 +30,7 @@ struct QueueView: View {
             filter: QueueFilter(navManager.queueTag, tags),
             title: title,
             tag: selectedTag,
-            showAll: $showAll,
-            showCancelButton: showCancelButton
+            showAll: $showAll
         )
         // a tag deleted on another device leaves the selection pointing at nothing
         .onChange(of: tags, initial: true) {

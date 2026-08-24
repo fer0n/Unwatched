@@ -32,8 +32,8 @@ extension ShareCardView {
         } label: {
             CachedImageView(
                 urls: [
-                    ThumbnailUrlService.getImageUrl(video.thumbnailUrl, .large),
-                    ThumbnailUrlService.getImageUrl(video.thumbnailUrl, .medium)
+                    ThumbnailUrlService.getImageUrl(video.displayThumbnailUrl, .large),
+                    ThumbnailUrlService.getImageUrl(video.displayThumbnailUrl, .medium)
                 ]
             ) { image in
                 Color.clear

@@ -207,11 +207,10 @@ enum PlayerShortcut: String, CaseIterable {
                 NavigationManager.shared.openUrlInApp(.url(url))
             }
         case .openInExternalBrowser:
-            if let video = PlayerManager.shared.video {
-                let urlText = UrlService.getShortenedUrl(video.youtubeId, timestamp: PlayerManager.shared.currentTime)
-                if let url = URL(string: urlText) {
-                    UrlService.open(url)
-                }
+            if let video = PlayerManager.shared.video,
+               let urlText = UrlService.getShareUrl(video, timestamp: PlayerManager.shared.currentTime),
+               let url = URL(string: urlText) {
+                UrlService.open(url)
             }
         }
     }

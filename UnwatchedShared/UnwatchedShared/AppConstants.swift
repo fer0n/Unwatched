@@ -3,6 +3,7 @@
 //  Unwatched
 //
 
+import CoreMedia
 import Foundation
 import UniformTypeIdentifiers
 import SwiftUI
@@ -57,6 +58,9 @@ public struct Const {
     public static let maxVideoIdsPerRequest = 50
     public static let tapDestination = "tapDestination"
     public static let defaultVideoAspectRatio: Double = 16/9
+
+    /// Longest edge, in pixels, that a cached thumbnail/cover is decoded at.
+    public static let maxDecodedImagePixelSize: CGFloat = 1200
     public static let videoAspectRatios: [Double] = [18/9, 4/3]
     
     /// Video thumbnail list item corner radius
@@ -67,7 +71,6 @@ public struct Const {
     
     public static let consideredWideAspectRatio: Double = 18/9
     public static let consideredTallAspectRatio: Double = 1
-    public static let tallestAspectRatio: Double = 0.7
     public static let maxYtShortsDuration: Double = 60 * 3
     public static let aspectRatioTolerance: Double = 0.1
     public static let secondsConsideredCloseToEnd: CGFloat = 18
@@ -134,11 +137,53 @@ public struct Const {
     /// Same for subscriptions added during onboarding, lower so a first inbox stays skimmable
     public static let triageOnboardingSubs = 3
 
+    /// Episodes kept from a podcast feed.
+    public static let podcastEpisodeLimit = 50
+
+    /// Hours of queue that can be kept downloaded; 0 is off, -1 unlimited
+    public static let podcastDownloadHourOptions = [0, 5, 10, 50, 100, -1]
+    public static let podcastDownloadKeepDayOptions = [0, 1, 7]
+
+    public static let podcastDownloadSessionId = bundleId + ".podcastDownloads"
+
+    // "Trim silence" shortens each pause in the composition the episode plays from, rather than running the player
+    // faster through it.
+
+    /// How much of a pause at either end is left at its original length.
+    public static let silenceGuardBand: Double = 0.15
+
+    /// Shortest a pause is allowed to become, and the share of itself a longer one keeps — a long pause cut to the
+    /// same length as a short one loses the beat the speaker put there.
+    public static let silenceTargetPause: Double = 0.4
+    public static let silenceKeepFraction: Double = 0.35
+    /// What has to be left between the guard bands, so a scaled range never rounds away to nothing.
+    public static let silenceMinimumInterior: Double = 0.05
+
+    /// Shortest run of quiet that counts as a pause, and the least it has to save to be worth a segment in the
+    /// composition.
+    public static let silenceMinimumPause: Double = 0.4
+    public static let silenceMinimumSaving: Double = 0.15
+
+    /// Bumped whenever a change would make a stored scan's pause list wrong to reuse — a lower detection floor, a
+    /// different threshold.
+    public static let silenceScanVersion = 2
+
+    /// Range the scan's own threshold is held to, in dBFS, in case an episode's levels have only one hump for Otsu's
+    /// method to split (see `SilenceScanner.silenceThreshold`).
+    public static let silenceThresholdFloorDb: Double = -60
+    public static let silenceThresholdCeilingDb: Double = -30
+
+    /// Fine enough that a boundary lands on a sample rather than on a 600th of a second.
+    public static let silenceTimescale: CMTimeScale = 44_100
+
     public static let autoRefreshIntervalSeconds: Double = 10 * 60
 
-    /// Share of subscriptions whose feed fetch has to fail in the same refresh before the
-    /// reload button shows its failed state — stand-in until failures are tracked per subscription.
+    /// Share of subscriptions whose feed fetch has to fail in the same refresh before the reload button shows its
+    /// failed state.
     public static let refreshFailedThreshold: Double = 0.5
+
+    /// Consecutive failed refreshes before a feed is flagged to the user, see `SubscriptionData.hasFeedIssue`.
+    public static let subscriptionFailureThreshold = 3
 
     public static let earliestBackgroundBeginSeconds: Double = 30 * 60
     public static let backgroundAppRefreshId = "com.pentlandFirth.Unwatched.refreshVideos"
@@ -245,6 +290,8 @@ public struct Const {
     public static let chaptersSF = "checklist.checked"
 
     public static let youtubeSF = "play.rectangle.fill"
+    public static let podcastSF = "waveform"
+    public static let downloadedSF = "arrow.down"
     public static let viewOnYouTubeSF = "arrow.up.right"
 
     public static let nextChapterSF = "chevron.right.2"
@@ -292,9 +339,16 @@ public struct Const {
     public static let autoClearNew = "autoClearNew"
     public static let playbackSpeed = "playbackSpeed"
     public static let continuousPlay = "continuousPlay"
+    public static let suggestVideos = "suggestVideos"
     public static let autoRefresh = "refreshOnStartup"
     public static let enableLogging = "enableLogging"
     public static let originalAudio = "originalAudio"
+    public static let trimSilence = "trimSilence"
+    public static let trimSilenceTier = "trimSilenceTier"
+    /// Running total of seconds trimmed, added up as they're played rather than as episodes are
+    /// scanned (see `accumulateSecondsSaved`) — never reset, since it's meant to answer "how much
+    /// has this saved me" over the setting's whole lifetime, not for one episode or session.
+    public static let trimSilenceSecondsSaved = "trimSilenceSecondsSaved"
     public static let playBrowserVideosInApp = "playBrowserVideosInApp"
     public static let inboxFullDismissedDate = "inboxFullDismissedDate"
     public static let inboxTipHiddenPermanently = "inboxTipHiddenPermanently"
@@ -383,6 +437,12 @@ public struct Const {
     public static let playerType = "playerType"
     public static let previousPlayerType = "previousPlayerType"
     public static let pipAutoEnable = "pipAutoEnable"
+
+    /// Hours of unplayed queue kept downloaded ahead: 0 off, -1 unlimited
+    public static let podcastDownloadLimitHours = "podcastDownloadLimitHours"
+    /// Days a downloaded episode is kept after it's been watched; 0 deletes it right away
+    public static let podcastDownloadKeepDays = "podcastDownloadKeepDays"
+    public static let podcastDownloadOnCellular = "podcastDownloadOnCellular"
 
     public static let shareExtensionAction = "shareExtensionAction"
     public static let shareExtensionAskedToRemember = "shareExtensionAskedToRemember"

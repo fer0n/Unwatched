@@ -15,6 +15,7 @@ import UnwatchedShared
 final class SearchVM {
     var query: String = ""
     var results: [SendableVideo] = []
+    var podcastResults: [SendableSubscription] = []
     private(set) var suggestions: [String] = []
     private(set) var recentSearches: [String] = []
     private(set) var isSearching = false
@@ -30,7 +31,7 @@ final class SearchVM {
 
     var hasSearched: Bool { !activeQuery.isEmpty }
 
-    var hasAnyResults: Bool { !results.isEmpty || !localResults.isEmpty }
+    var hasAnyResults: Bool { !results.isEmpty || !localResults.isEmpty || !podcastResults.isEmpty }
 
     /// Upload-date filter for the search. Changing it re-runs the active search so
     /// results update immediately (mirrors YouTube's "Upload date" search filter).
@@ -49,6 +50,7 @@ final class SearchVM {
     private var filter = SearchFilter.default
     private var nextPageToken: String?
     @ObservationIgnored private var searchTask: Task<Void, Never>?
+    @ObservationIgnored private var podcastTask: Task<Void, Never>?
     @ObservationIgnored var localTask: Task<Void, Never>?
     @ObservationIgnored var avatarTask: Task<Void, Never>?
     @ObservationIgnored private var suggestionsTask: Task<Void, Never>?
@@ -78,6 +80,7 @@ final class SearchVM {
         suggestions = []
 
         searchLocal()
+        searchPodcasts()
 
         guard enabledSources.contains(.youtube) else {
             withAnimation {
@@ -111,6 +114,23 @@ final class SearchVM {
                 nextPageToken = nil
                 errorMessage = String(localized: "searchFailed")
                 isSearching = false
+            }
+        }
+    }
+
+    /// Podcast shows for the active query, from the podcast directory.
+    func searchPodcasts() {
+        podcastTask?.cancel()
+        guard enabledSources.contains(.podcasts) else {
+            podcastResults = []
+            return
+        }
+        let query = activeQuery
+        podcastTask = Task {
+            let found = (try? await PodcastSearchService.search(query)) ?? []
+            if Task.isCancelled || query != activeQuery { return }
+            withAnimation {
+                podcastResults = found
             }
         }
     }
@@ -249,6 +269,7 @@ final class SearchVM {
 
     func clear() {
         searchTask?.cancel()
+        podcastTask?.cancel()
         suggestionsTask?.cancel()
         localTask?.cancel()
         avatarTask?.cancel()
@@ -256,6 +277,7 @@ final class SearchVM {
         query = ""
         activeQuery = ""
         results = []
+        podcastResults = []
         suggestions = []
         nextPageToken = nil
         errorMessage = nil

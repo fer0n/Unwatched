@@ -26,7 +26,7 @@ struct SearchSubscriptionListItem: View {
                     .foregroundStyle(.secondary)
             }
             .frame(width: imageSize, height: imageSize)
-            .clipShape(Circle())
+            .channelImageClip(isPodcast: subscription.isPodcast)
 
             VStack(alignment: .leading, spacing: 2) {
                 Text(subscription.displayTitle)

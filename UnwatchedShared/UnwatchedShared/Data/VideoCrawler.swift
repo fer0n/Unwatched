@@ -7,13 +7,17 @@ import Foundation
 import OSLog
 
 public struct VideoCrawler {
-    public static func parseFeedUrl(_ url: URL, limitVideos: Int?) async throws -> RSSParserDelegate {
+    public static func fetchFeedData(_ url: URL) async throws -> Data {
         let (data, response) = try await URLSession.shared.data(from: url)
 
-        if let httpResponse = response as? HTTPURLResponse, !(200...299).contains(httpResponse.statusCode) {
+        guard response.isSuccessfulHttp else {
             throw URLError(.badServerResponse)
         }
+        return data
+    }
 
+    public static func parseFeedUrl(_ url: URL, limitVideos: Int?) async throws -> RSSParserDelegate {
+        let data = try await fetchFeedData(url)
         let delegate = parseFeedData(data: data, limitVideos: limitVideos)
         guard hasUsableResult(delegate) else {
             throw VideoCrawlerError.failedToParse
@@ -37,7 +41,18 @@ public struct VideoCrawler {
     }
 
     public static func loadVideosFromRSS(url: URL) async throws -> [SendableVideo] {
-        let rssParserDelegate = try await self.parseFeedUrl(url, limitVideos: nil)
+        let data = try await fetchFeedData(url)
+        if PodcastFeedParser.isPodcastFeed(data) {
+            return try PodcastService.parseFeed(
+                data,
+                feedUrl: url,
+                limitEpisodes: Const.podcastEpisodeLimit
+            ).episodes
+        }
+        let rssParserDelegate = parseFeedData(data: data, limitVideos: nil)
+        guard hasUsableResult(rssParserDelegate) else {
+            throw VideoCrawlerError.failedToParse
+        }
         return rssParserDelegate.videos.map {
             var video = $0
             if let url = $0.url {
@@ -50,7 +65,14 @@ public struct VideoCrawler {
 
     public static func loadSubscriptionFromRSS(feedUrl: URL) async throws -> SendableSubscription {
         Log.info("loadSubscriptionFromRSS \(feedUrl)")
-        let rssParserDelegate = try await self.parseFeedUrl(feedUrl, limitVideos: 0)
+        let data = try await fetchFeedData(feedUrl)
+        if PodcastFeedParser.isPodcastFeed(data) {
+            return try PodcastService.parseFeed(data, feedUrl: feedUrl, limitEpisodes: 1).subscription
+        }
+        let rssParserDelegate = parseFeedData(data: data, limitVideos: 0)
+        guard hasUsableResult(rssParserDelegate) else {
+            throw VideoCrawlerError.failedToParse
+        }
         if var subscriptionInfo = rssParserDelegate.subscriptionInfo {
             subscriptionInfo.link = feedUrl
             if let playlistId = YoutubeUrlParser.getPlaylistId(from: feedUrl.absoluteString) {

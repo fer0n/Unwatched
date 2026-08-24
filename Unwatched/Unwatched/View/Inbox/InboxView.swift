@@ -14,14 +14,12 @@ struct InboxView: View {
 
     @Environment(NavigationManager.self) private var navManager
 
-    var showCancelButton: Bool = false
-
     var body: some View {
         @Bindable var navManager = navManager
 
         NavigationStack(path: $navManager.presentedSubscriptionInbox) {
             // the query's sort order is fixed when it's created, recreate it when the order changes
-            InboxContent(oldestFirst: oldestFirst, showCancelButton: showCancelButton)
+            InboxContent(oldestFirst: oldestFirst)
         }
         .tint(.neutralAccentColor)
     }
@@ -37,8 +35,6 @@ private struct InboxContent: View {
 
     @Query var inboxEntries: [InboxEntry]
 
-    let showCancelButton: Bool
-
     /// shared with `InboxCardStack` so the title can fade as the front card is dragged towards it
     @State private var cardSwipe = InboxCardSwipe()
 
@@ -46,9 +42,8 @@ private struct InboxContent: View {
         OnboardingInboxTip(appearance: inboxAppearance)
     }
 
-    init(oldestFirst: Bool, showCancelButton: Bool) {
+    init(oldestFirst: Bool) {
         _inboxEntries = Query(InboxContent.descriptor(oldestFirst), animation: .default)
-        self.showCancelButton = showCancelButton
     }
 
     var body: some View {
@@ -84,7 +79,7 @@ private struct InboxContent: View {
                 throttle: .weekly
             )
         }
-        .inboxToolbar(showCancelButton)
+        .inboxToolbar()
         .myNavigationTitle("inbox", titleOpacity: { cardSwipe.titleOpacity }, titleAccessory: titleCount)
         .sendableSubscriptionDestination()
         .myTint()
@@ -153,6 +148,7 @@ private struct InboxContent: View {
                             arrowEdge: .top,
                             isActive: entry.id == inboxEntries.first?.id
                         )
+                        .tipBackgroundInteraction(.enabled)
                     } else {
                         EmptyEntry(entry)
                     }

@@ -30,20 +30,17 @@ struct QueueListView: View {
     let title: LocalizedStringKey
     let tag: Tag?
     @Binding var showAll: Bool
-    var showCancelButton: Bool
 
     init(
         filter: QueueFilter,
         title: LocalizedStringKey,
         tag: Tag?,
-        showAll: Binding<Bool>,
-        showCancelButton: Bool
+        showAll: Binding<Bool>
     ) {
         self.filter = filter
         self.title = title
         self.tag = tag
         _showAll = showAll
-        self.showCancelButton = showCancelButton
         _queue = Query(
             filter.descriptor(limit: showAll.wrappedValue ? nil : Const.queueFetchLimit),
             animation: .default
@@ -150,9 +147,6 @@ struct QueueListView: View {
             .myNavigationTitle(title, principal: { QueueTagTitle(title: title) })
             .sendableSubscriptionDestination()
             .toolbar {
-                if showCancelButton {
-                    DismissToolbarButton()
-                }
                 ToolbarSpacerWorkaround()
                 #if !os(iOS)
                 // the title isn't a view here, so the switcher needs a button of its own

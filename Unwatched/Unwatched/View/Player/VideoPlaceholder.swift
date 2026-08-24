@@ -16,10 +16,10 @@ struct VideoPlaceholder: View {
     var body: some View {
         Rectangle()
             .fill(landscapeFullscreen ? .black : Color.playerBackgroundColor)
-            .aspectRatio(player.videoAspectRatio, contentMode: .fit)
+            .aspectRatio(player.surfaceAspectRatio, contentMode: .fit)
             .frame(maxWidth: .infinity)
             .background(backgroundTapRecognizer)
-            .animation(.default, value: player.videoAspectRatio)
+            .animation(.default, value: player.surfaceAspectRatio)
             .edgesIgnoringSafeArea(.all)
             .clipShape(RoundedRectangle(
                         cornerRadius: Const.videoPlayerCornerRadius,

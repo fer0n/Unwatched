@@ -118,7 +118,7 @@ struct PlayerEmbedded: View {
             // the custom UI has no use for it outside a takeover, and it loads an image
             if !customUI || switchManager.isTakingOver {
                 ThumbnailPlaceholder(
-                    imageUrl: player.video?.thumbnailUrl,
+                    imageUrl: player.video?.displayThumbnailUrl,
                     hideMiniPlayer: hideMiniPlayer,
                     handleMiniPlayerTap: handleMiniPlayerTap
                 )

@@ -10,7 +10,7 @@ extension View {
     /// Black cover the player fades through when it swaps to the next video.
     func transitionCover(_ covered: Bool) -> some View {
         overlay {
-            RoundedRectangle(cornerRadius: Const.videoPlayerCornerRadius, style: .continuous)
+            Rectangle()
                 .fill(.black)
                 .opacity(covered ? 1 : 0)
                 .allowsHitTesting(false)
@@ -20,6 +20,8 @@ extension View {
 }
 
 struct ThumbnailPlaceholder: View {
+    @Environment(\.displayScale) private var displayScale
+
     var imageUrl: URL?
     var hideMiniPlayer: Bool
     var handleMiniPlayerTap: () -> Void
@@ -43,7 +45,7 @@ struct ThumbnailPlaceholder: View {
 
     @ViewBuilder
     private var imageView: some View {
-        CachedImageView(imageUrl: imageUrl) { image in
+        CachedImageView(imageUrl: imageUrl, maxPixelSize: maxPixelSize) { image in
             image
                 .resizable()
                 .aspectRatio(contentMode: .fill)
@@ -52,5 +54,13 @@ struct ThumbnailPlaceholder: View {
         } placeholder: {
             Color.backgroundColor
         }
+    }
+
+    /// The mini player's 107pt slot gets its own decode instead of sharing the open player's much
+    /// bigger one: `CachedImageView`'s decoded-image cache is keyed by URL *and* size, but without
+    /// requesting a smaller size here, both views would still ask for (and share) the same
+    /// oversized decode, which is what caused the mini player's downscale artifacts.
+    private var maxPixelSize: CGFloat {
+        hideMiniPlayer ? Const.maxDecodedImagePixelSize : ceil(107 * displayScale)
     }
 }

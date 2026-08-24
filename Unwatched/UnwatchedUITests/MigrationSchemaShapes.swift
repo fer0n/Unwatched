@@ -9,12 +9,7 @@ import UnwatchedShared
 
 // swiftlint:disable line_length
 
-/// Recorded shapes of every shipped schema version. These describe stores that already exist on
-/// disk, so a change here is only ever correct when a genuinely new version is appended — editing
-/// an existing entry means some installed store can no longer be matched to its stamped version.
-///
-/// To append a new version, temporarily re-add the recorder that produced this (see git history
-/// for `testRecordShapes`) rather than hand-editing.
+/// Recorded shapes of every schema version.
 extension MigrationTests {
     static let expectedShapes: [String: [String: [String]]] = [
         "1.0.0": [
@@ -127,12 +122,12 @@ extension MigrationTests {
             "WatchTimeEntry": ["channelId", "date", "watchTime"]
         ],
         "1.15.0": [
-            "Chapter": ["category", "duration", "endTime", "isActive", "link", "mergedChapterVideo", "startTime", "title", "video"],
+            "Chapter": ["category", "duration", "endTime", "imageUrl", "isActive", "link", "mergedChapterVideo", "startTime", "title", "video"],
             "InboxEntry": ["date", "video", "youtubeId"],
             "QueueEntry": ["order", "video", "youtubeId"],
-            "Subscription": ["_shortsSetting", "_videoPlacement", "allowOnMatch", "author", "customAspectRatio", "customSpeedSetting", "filterText", "isArchived", "link", "mostRecentVideoDate", "subscribedDate", "tags", "thumbnailUrl", "title", "videos", "youtubeChannelId", "youtubePlaylistId", "youtubeUserName"],
-            "Tag": ["_mode", "createdDate", "name", "order", "quickSwitch", "subscriptions", "symbol", "videos"],
-            "Video": ["apiUpdatedDate", "bookmarkedDate", "chapters", "createdDate", "deferDate", "duration", "elapsedSeconds", "inboxEntry", "isNew", "isYtShort", "mergedChapters", "noDuration", "publishedDate", "queueEntry", "sponserBlockUpdateDate", "subscription", "tags", "thumbnailUrl", "title", "updatedDate", "url", "videoDescription", "watchedDate", "youtubeChannelId", "youtubeId"],
+            "Subscription": ["_shortsSetting", "_videoPlacement", "allowOnMatch", "author", "autoSkipChapterTitles", "customAspectRatio", "customSpeedSetting", "failedFetchCount", "filterText", "isArchived", "isPodcast", "lastFetchErrorMessage", "lastFetchFailedDate", "link", "mostRecentVideoDate", "skipIntroSeconds", "skipOutroSeconds", "subscribedDate", "tags", "thumbnailUrl", "title", "videos", "youtubeChannelId", "youtubePlaylistId", "youtubeUserName"],
+            "Tag": ["_mode", "continuousPlay", "createdDate", "name", "order", "quickSwitch", "subscriptions", "suggestVideos", "symbol", "videos"],
+            "Video": ["apiUpdatedDate", "bookmarkedDate", "chapters", "chaptersUrl", "createdDate", "deferDate", "downloadedDate", "duration", "elapsedSeconds", "inboxEntry", "isAudioOnly", "isNew", "isYtShort", "keepIntro", "keepOutro", "mediaUrl", "mergedChapters", "noDuration", "publishedDate", "queueEntry", "sponserBlockUpdateDate", "subscription", "tags", "thumbnailUrl", "title", "updatedDate", "url", "videoDescription", "watchedDate", "youtubeChannelId", "youtubeId"],
             "WatchTimeEntry": ["channelId", "date", "watchTime"]
         ]
     ]

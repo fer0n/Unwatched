@@ -301,6 +301,8 @@ public enum APIError: LocalizedError {
     /// before it can be played. Unlike `unavailable`, retrying with the same credentials
     /// will not succeed — the user must authenticate first.
     case signInRequired
+    /// Thrown when the video is a premiere or live stream that hasn't started yet.
+    case scheduled(Date?)
 
     public var errorDescription: String? {
         switch self {
@@ -313,6 +315,9 @@ public enum APIError: LocalizedError {
             return "This video is age-restricted or requires sign in to watch."
         case .ipBlocked:
             return "YouTube is temporarily blocking this network. Disable your VPN, try a different VPN server, or wait a few minutes and retry."
+        case .scheduled(let date):
+            guard let date else { return "This video hasn't started yet." }
+            return "This video starts \(date.formatted(date: .abbreviated, time: .shortened))."
         }
     }
 }

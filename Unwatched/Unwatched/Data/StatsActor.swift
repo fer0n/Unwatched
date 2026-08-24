@@ -30,8 +30,9 @@ actor StatsActor: SharedContextActor {
 
         var channelNames: [String: String] = [:]
         for sub in subscriptions {
-            if let channelId = sub.youtubeChannelId {
-                channelNames[channelId] = sub.title
+            // podcasts have no channel id and are keyed by their feed instead
+            if let key = sub.isPodcast ? sub.subscriptionKey : sub.youtubeChannelId {
+                channelNames[key] = sub.title
             }
         }
 
@@ -87,6 +88,9 @@ actor StatsActor: SharedContextActor {
         var videoFetch = FetchDescriptor<Video>(predicate: #Predicate { $0.youtubeId == videoId })
         videoFetch.fetchLimit = 1
         guard let video = try modelContext.fetch(videoFetch).first else { return nil }
+        if let subscription = video.subscription, subscription.isPodcast {
+            return subscription.subscriptionKey
+        }
         return video.subscription?.youtubeChannelId ?? video.youtubeChannelId
     }
 

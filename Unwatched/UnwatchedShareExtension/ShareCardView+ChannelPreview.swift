@@ -34,7 +34,7 @@ extension ShareCardView {
                 .foregroundStyle(.tertiary)
         }
         .frame(width: 90, height: 90)
-        .clipShape(Circle())
+        .channelImageClip(isPodcast: sub.isPodcast)
     }
 
     /// Liquid glass capsule, same recipe as the video detail sheet's Subscribe/Subscribed button
@@ -62,7 +62,7 @@ extension ShareCardView {
 
     var channelPreviewSkeleton: some View {
         VStack(spacing: 14) {
-            Circle()
+            ChannelImageShape()
                 .fill(Color.shareSheetInsetBackground)
                 .frame(width: 90, height: 90)
             Text("loading")

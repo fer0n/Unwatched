@@ -207,6 +207,7 @@ public enum UnwatchedMigrationPlan: SchemaMigrationPlan {
         toVersion: UnwatchedSchemaV1p14.self
     )
 
+    /// Adds `Tag`, the podcast columns on `Video`/`Subscription` and `skipIntroSeconds`.
     public static let migrateV1p14toV1p15 = MigrationStage.lightweight(
         fromVersion: UnwatchedSchemaV1p14.self,
         toVersion: UnwatchedSchemaV1p15.self

@@ -30,10 +30,13 @@ struct CopyUrlOptions: View {
     @ViewBuilder
     var options: some View {
         copyUrlButton
-        copyUrlTimestampButton
-        copyPlaylistUrlButton
-        Divider()
-        copyChannelUrlButton
+        // the rest are YouTube URLs; a podcast episode only has its own page
+        if !video.isPodcast {
+            copyUrlTimestampButton
+            copyPlaylistUrlButton
+            Divider()
+            copyChannelUrlButton
+        }
     }
 
     @ViewBuilder
@@ -73,8 +76,7 @@ struct CopyUrlOptions: View {
     @ViewBuilder
     var copyUrlButton: some View {
         Button {
-            let text = UrlService.getShortenedUrl(video.youtubeId)
-            copyUrl(text, "video")
+            copyUrl(UrlService.getShareUrl(video) ?? "", "video")
         } label: {
             Label("video", systemImage: "play.rectangle.fill")
                 .fontWeight(.black)

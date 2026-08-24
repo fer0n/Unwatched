@@ -113,7 +113,7 @@ struct PlayerScrubberOverlay: View {
     @Environment(\.horizontalSizeClass) private var sizeClass: UserInterfaceSizeClass?
 
     var body: some View {
-        if !Device.isBigScreen(sizeClass) {
+        if !Device.isBigScreen(sizeClass) && player.video?.isAudioOnly != true {
             pillStack
                 .padding(.bottom, 30)
                 .opacity(vm.showScrubber ? 1 : 0)

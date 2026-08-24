@@ -51,13 +51,14 @@ struct PipButton: View {
             )
     }
 
-    /// Off iOS only the native player has a PiP path: the embedded player's own PiP is driven by
-    /// JS that reports back through `canPlayPip`.
+    /// Off iOS only the native player has a PiP path: the embedded player's own PiP is driven by JS that reports back
+    /// through `canPlayPip`.
     var isAvailable: Bool {
+        guard player.video?.isAudioOnly != true else { return false }
         #if os(iOS)
-        true
+        return true
         #else
-        playerType == .native && AVPictureInPictureController.isPictureInPictureSupported()
+        return playerType == .native && AVPictureInPictureController.isPictureInPictureSupported()
         #endif
     }
 

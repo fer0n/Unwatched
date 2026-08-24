@@ -527,6 +527,26 @@ extension InnerTubeAPI {
 
     // MARK: - Private player helpers
 
+    /// The start time of an upcoming premiere / live stream.
+    static func parseScheduledStart(from json: [String: Any]) -> Date? {
+        if let slate = ((((json["playabilityStatus"] as? [String: Any])?["liveStreamability"]
+                            as? [String: Any])?["liveStreamabilityRenderer"]
+                            as? [String: Any])?["offlineSlate"]
+                            as? [String: Any])?["liveStreamOfflineSlateRenderer"] as? [String: Any],
+           let raw = slate["scheduledStartTime"],
+           let seconds = (raw as? String).flatMap({ Double($0) }) ?? (raw as? Double) {
+            return Date(timeIntervalSince1970: seconds)
+        }
+        if let timestamp = (((json["microformat"] as? [String: Any])?["playerMicroformatRenderer"]
+                            as? [String: Any])?["liveBroadcastDetails"]
+                            as? [String: Any])?["startTimestamp"] as? String {
+            let formatter = ISO8601DateFormatter()
+            formatter.formatOptions = [.withInternetDateTime, .withFractionalSeconds]
+            return formatter.date(from: timestamp) ?? ISO8601DateFormatter().date(from: timestamp)
+        }
+        return nil
+    }
+
     private func parsePlayerInfo(from json: [String: Any], videoId: String) throws -> PlayerInfo {
         let videoDetails = json["videoDetails"] as? [String: Any]
         let title = videoDetails?["title"] as? String ?? ""
@@ -553,6 +573,14 @@ extension InnerTubeAPI {
         if streamingData == nil, playabilityStatus != "OK" {
             let reason = playabilityReason ?? "This video is unavailable (\(playabilityStatus))"
             tubeLog.error("❌ parsePlayerInfo: unplayable — \(reason, privacy: .public)")
+            // A premiere / live stream that hasn't started is not a failure to resolve: the caller offers to defer
+            // the video to its start time instead of showing an error.
+            let isUpcoming = videoDetails?["isUpcoming"] as? Bool ?? false
+            if playabilityStatus == "LIVE_STREAM_OFFLINE" || isUpcoming {
+                let start = Self.parseScheduledStart(from: json)
+                tubeLog.notice("parsePlayerInfo: scheduled — starts \(start.map { ISO8601DateFormatter().string(from: $0) } ?? "unknown", privacy: .public)")
+                throw APIError.scheduled(start)
+            }
             // Sign-in / age-gate: checked before IP-block so the caller shows "Sign In" not "Try Again".
             let signInStatuses: Set<String> = ["LOGIN_REQUIRED", "AGE_VERIFICATION_REQUIRED", "AGE_CHECK_REQUIRED"]
             if signInStatuses.contains(playabilityStatus) {

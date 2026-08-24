@@ -44,6 +44,7 @@ extension Const {
         Const.fullscreenControlsSetting: FullscreenControls.autoHide.rawValue,
         Const.preferPlayerType: false,
         Const.originalAudio: true,
+        Const.trimSilence: false,
         Const.backgroundPlayback: true,
         Const.hideMenuOnPlay: false,
         Const.returnToQueue: true,
@@ -60,6 +61,7 @@ extension Const {
         Const.swipeGestureRight: true,
 
         Const.autoAirplayHD: false,
+        Const.suggestVideos: false,
         Const.playBrowserVideosInApp: false,
         Const.surroundingEffect: true,
 
@@ -85,6 +87,11 @@ extension Const {
         Const.autoDeleteWatchedVideos: 0,
         Const.autoDeleteOrphanedVideos: 0,
         Const.autoDeleteInboxVideosLimit: 0,
+
+        // Podcast downloads
+        Const.podcastDownloadLimitHours: 0,
+        Const.podcastDownloadKeepDays: 1,
+        Const.podcastDownloadOnCellular: false,
 
         // Premium
         Const.unwatchedPremiumAcknowledged: false,
