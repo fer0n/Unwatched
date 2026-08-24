@@ -13,6 +13,7 @@ struct PlayerActionsRow: View {
     static let maxFillWidth: CGFloat = 370
 
     @AppStorage(Const.preferPlayerType) var preferPlayerType: Bool = false
+    @Environment(PlayerManager.self) var player
 
     let maxSpacing: CGFloat
     let minSpacing: CGFloat
@@ -42,7 +43,11 @@ struct PlayerActionsRow: View {
                 isTransparent: false
             )
 
-            PipButton()
+            if player.isAudioOnly {
+                TrimSilenceButton()
+            } else {
+                PipButton()
+            }
             #if os(iOS)
             AirPlayButton()
             #endif

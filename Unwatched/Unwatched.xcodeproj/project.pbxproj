@@ -90,6 +90,8 @@
 		88146F512C74EDDC00704B91 /* SharedContextActorTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 88146F502C74EDDC00704B91 /* SharedContextActorTests.swift */; };
 		8816A2002CCD0D19001FE63E /* PipButton.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8816A1FF2CCD0D19001FE63E /* PipButton.swift */; };
 		8816A2012CCD0D19001FE63E /* PipButton.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8816A1FF2CCD0D19001FE63E /* PipButton.swift */; };
+		88628B30637618A6EEA3A100 /* TrimSilenceButton.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8894520C3FA4E6AE1C405FB6 /* TrimSilenceButton.swift */; };
+		88F1B9E4F6C0BBF1871ECD3F /* TrimSilenceButton.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8894520C3FA4E6AE1C405FB6 /* TrimSilenceButton.swift */; };
 		8816A2FD2CCD5125001FE63E /* PageControl.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8816A2FC2CCD5125001FE63E /* PageControl.swift */; };
 		8816A2FE2CCD5125001FE63E /* PageControl.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8816A2FC2CCD5125001FE63E /* PageControl.swift */; };
 		8816E3912FEB16D0004EB1ED /* InnerTubeAPI+Metadata.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8816E3902FEB16D0004EB1ED /* InnerTubeAPI+Metadata.swift */; };
@@ -612,6 +614,7 @@
 		88AA10022F0000000000A002 /* MigrationTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 88AA10012F0000000000A001 /* MigrationTests.swift */; };
 		88AA10082F0000000000A008 /* QueueFilterTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 88AA10072F0000000000A007 /* QueueFilterTests.swift */; };
 		FE1000FF000000000000C012 /* PodcastFeedParserTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = FE1000FF000000000000C011 /* PodcastFeedParserTests.swift */; };
+		FE1000FF000000000000D012 /* SilenceTrimTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = FE1000FF000000000000D011 /* SilenceTrimTests.swift */; };
 		FE1000FF000000000000E012 /* PlayerBackendDispatchTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = FE1000FF000000000000E011 /* PlayerBackendDispatchTests.swift */; };
 		88AA10042F0000000000A004 /* MigrationSchemaShapes.swift in Sources */ = {isa = PBXBuildFile; fileRef = 88AA10032F0000000000A003 /* MigrationSchemaShapes.swift */; };
 		88AA10062F0000000000A006 /* SettingsMigrationTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 88AA10052F0000000000A005 /* SettingsMigrationTests.swift */; };
@@ -1064,6 +1067,7 @@
 		88146F3E2C74EDDC00704B90 /* ChapterService+SponserBlock.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "ChapterService+SponserBlock.swift"; sourceTree = "<group>"; };
 		88146F502C74EDDC00704B91 /* SharedContextActorTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SharedContextActorTests.swift; sourceTree = "<group>"; };
 		8816A1FF2CCD0D19001FE63E /* PipButton.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PipButton.swift; sourceTree = "<group>"; };
+		8894520C3FA4E6AE1C405FB6 /* TrimSilenceButton.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TrimSilenceButton.swift; sourceTree = "<group>"; };
 		8816A2FC2CCD5125001FE63E /* PageControl.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PageControl.swift; sourceTree = "<group>"; };
 		8816E3902FEB16D0004EB1ED /* InnerTubeAPI+Metadata.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "InnerTubeAPI+Metadata.swift"; sourceTree = "<group>"; };
 		8816E3A12FEB16D0004EB1ED /* InnerTubeAPI+Storyboard.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "InnerTubeAPI+Storyboard.swift"; sourceTree = "<group>"; };
@@ -1313,6 +1317,7 @@
 		88AA10012F0000000000A001 /* MigrationTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MigrationTests.swift; sourceTree = "<group>"; };
 		88AA10072F0000000000A007 /* QueueFilterTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = QueueFilterTests.swift; sourceTree = "<group>"; };
 		FE1000FF000000000000C011 /* PodcastFeedParserTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PodcastFeedParserTests.swift; sourceTree = "<group>"; };
+		FE1000FF000000000000D011 /* SilenceTrimTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SilenceTrimTests.swift; sourceTree = "<group>"; };
 		FE1000FF000000000000E011 /* PlayerBackendDispatchTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PlayerBackendDispatchTests.swift; sourceTree = "<group>"; };
 		88AA10032F0000000000A003 /* MigrationSchemaShapes.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MigrationSchemaShapes.swift; sourceTree = "<group>"; };
 		88AA10052F0000000000A005 /* SettingsMigrationTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SettingsMigrationTests.swift; sourceTree = "<group>"; };
@@ -1750,6 +1755,7 @@
 				88AA10012F0000000000A001 /* MigrationTests.swift */,
 				88AA10072F0000000000A007 /* QueueFilterTests.swift */,
 				FE1000FF000000000000C011 /* PodcastFeedParserTests.swift */,
+				FE1000FF000000000000D011 /* SilenceTrimTests.swift */,
 				FE1000FF000000000000E011 /* PlayerBackendDispatchTests.swift */,
 				88AA10032F0000000000A003 /* MigrationSchemaShapes.swift */,
 				88AA10052F0000000000A005 /* SettingsMigrationTests.swift */,
@@ -1792,6 +1798,7 @@
 				881F57442C4A8C6E00559BF9 /* RotateOrientationButton.swift */,
 				88DB36912D561B55007CF5F8 /* DescriptionButton.swift */,
 				8816A1FF2CCD0D19001FE63E /* PipButton.swift */,
+				8894520C3FA4E6AE1C405FB6 /* TrimSilenceButton.swift */,
 				8808D8242B4B02E300B4FF11 /* SpeedHelper.swift */,
 				88FA62D72B8485EA00924959 /* PlayButton.swift */,
 				88E83E4D2D5D403D00F596A9 /* ReloadPlayerButton.swift */,
@@ -2922,6 +2929,7 @@
 				88AA10022F0000000000A002 /* MigrationTests.swift in Sources */,
 				88AA10082F0000000000A008 /* QueueFilterTests.swift in Sources */,
 				FE1000FF000000000000C012 /* PodcastFeedParserTests.swift in Sources */,
+				FE1000FF000000000000D012 /* SilenceTrimTests.swift in Sources */,
 				FE1000FF000000000000E012 /* PlayerBackendDispatchTests.swift in Sources */,
 				88AA10042F0000000000A004 /* MigrationSchemaShapes.swift in Sources */,
 				88AA10062F0000000000A006 /* SettingsMigrationTests.swift in Sources */,
@@ -2994,6 +3002,7 @@
 				889AF94A2C50ECF5001CEDE6 /* SubscriptionDetailView.swift in Sources */,
 				88E589B42D06FB2B008C4F31 /* ProgressBarChapterIndicators.swift in Sources */,
 				8816A2012CCD0D19001FE63E /* PipButton.swift in Sources */,
+				88F1B9E4F6C0BBF1871ECD3F /* TrimSilenceButton.swift in Sources */,
 				88DD147C2E7E9878007BA1F4 /* MiniPlayerContent.swift in Sources */,
 				889AF94B2C50ECF5001CEDE6 /* ChapterMiniControlView.swift in Sources */,
 				889AF94C2C50ECF5001CEDE6 /* SubscriptionListItem.swift in Sources */,
@@ -3464,6 +3473,7 @@
 				884CC88D2DC3890F00FC59DF /* QueueTabItemView.swift in Sources */,
 				888B09202E2382AA0014C66C /* TranscriptParser.swift in Sources */,
 				8816A2002CCD0D19001FE63E /* PipButton.swift in Sources */,
+				88628B30637618A6EEA3A100 /* TrimSilenceButton.swift in Sources */,
 				888D492A2E2251D0007902CF /* TranscriptDescriptionSelection.swift in Sources */,
 				884777362D21509F0044E812 /* AnyCodable.swift in Sources */,
 				88F3AA812C99870F0030B2EA /* Chapter.swift in Sources */,

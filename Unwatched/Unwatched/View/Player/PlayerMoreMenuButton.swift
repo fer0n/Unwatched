@@ -79,6 +79,7 @@ struct PlayerMoreMenuContent: View {
     @AppStorage(Const.playerType) var playerType: PlayerTypeSetting = .youtubeEmbedded
     @AppStorage(Const.browserDisplayMode) var browserDisplayMode: BrowserDisplayMode = .inApp
     @AppStorage(Const.preferPlayerType) var preferPlayerType: Bool = false
+    @AppStorage(Const.trimSilence) var trimSilence: Bool = false
 
     @Environment(\.modelContext) var modelContext
     @Environment(NavigationManager.self) var navManager
@@ -104,7 +105,7 @@ struct PlayerMoreMenuContent: View {
                 Menu {
                     ForEach(player.availableAudioLanguages, id: \.code) { lang in
                         Button {
-                            player.selectedAudioLanguage = lang.code
+                            player.setAudioLanguage(lang.code)
                             Signal.log("Player.MoreMenu", parameters: ["action": "audioLanguage"])
                         } label: {
                             if lang.code == player.selectedAudioLanguage {
@@ -123,7 +124,7 @@ struct PlayerMoreMenuContent: View {
                 Menu {
                     ForEach(player.availableVideoQualities, id: \.height) { quality in
                         Button {
-                            player.selectedVideoQuality = quality.height
+                            player.setVideoQuality(quality.height)
                             Signal.log("Player.MoreMenu", parameters: ["action": "videoQuality"])
                         } label: {
                             if quality.height == player.selectedVideoQuality {
@@ -135,6 +136,18 @@ struct PlayerMoreMenuContent: View {
                     }
                 } label: {
                     Label("videoQuality", systemImage: "film.fill")
+                }
+            }
+
+            // an episode is where it does anything: a YouTube stream has no track to tap.
+            if player.video?.isPodcast == true, !player.isAudioOnly {
+                // through the player rather than straight to `@AppStorage`: the engine has to rebuild its
+                // composition, and nothing watches the setting on its behalf
+                Toggle(isOn: Binding(
+                    get: { trimSilence },
+                    set: { player.setTrimSilence($0) }
+                )) {
+                    Label("trimSilence", systemImage: "waveform")
                 }
             }
 
@@ -160,7 +173,8 @@ struct PlayerMoreMenuContent: View {
             )
 
             Divider()
-            if !preferPlayerType && !inlineItems.contains(.playerType) {
+            // a podcast episode plays natively whatever the setting says
+            if !preferPlayerType, !inlineItems.contains(.playerType), player.video?.isPodcast != true {
                 Menu {
                     PlayerTypeMenuContent()
                 } label: {

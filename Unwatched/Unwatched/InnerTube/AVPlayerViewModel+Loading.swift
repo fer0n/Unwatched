@@ -8,19 +8,18 @@ extension AVPlayerViewModel {
 
     // MARK: - Entry point
 
-    /// Loads and plays `videoId`. Mirrors SmartTubeIOS's playback strategy adapted for Unwatched:
-    ///   1. Fast path — a cached WKWebView HLS URL from a prior extraction / prefetch.
-    ///   2. `primaryRace` — the iOS client, with a WKWebView extraction started alongside it
-    ///      (Unwatched's lightweight stand-in for upstream's BotGuard race; needs no extra
-    ///      infrastructure). iOS HLS plays immediately; the extraction is never waited for.
-    ///   3. `exhaustiveRetry` — the 3-attempt loop that fetches ~6 InnerTube clients in parallel,
-    ///      plays the first HLS to arrive, then adaptive in priority order, then muxed.
-    ///
-    /// `useAndroidFallback` is retained for the mid-playback recovery path; when set, the front
-    /// race is skipped and we go straight to the exhaustive parallel retry.
+    /// Loads and plays `videoId`.
     @MainActor
     func fetchAndPlay(videoId: String, useAndroidFallback: Bool = false) async {
         Log.info("[AVPlayerView] fetchAndPlay: \(videoId) android=\(useAndroidFallback)")
+
+        if let video = player.video, let mediaUrl = video.mediaUrl {
+            await playDirectMedia(
+                url: PodcastDownloadStore.playbackUrl(for: video) ?? mediaUrl,
+                videoId: videoId
+            )
+            return
+        }
 
         if !useAndroidFallback,
            let cached = WKHLSManager.shared.validEntry(for: videoId) {
@@ -38,12 +37,50 @@ extension AVPlayerViewModel {
         await exhaustiveRetry(videoId: videoId)
     }
 
+    // MARK: - Direct media (podcast episodes)
+
+    /// Podcast episodes ship with a stream URL, so there's nothing to resolve and nothing to fall back to: the
+    /// enclosure either plays or the episode is unavailable.
+    @MainActor
+    func playDirectMedia(url: URL, videoId: String) async {
+        Log.info("[AVPlayerView] direct media: \(videoId)")
+        var trimmed: (AVPlayerItem, SilenceMap)?
+        if let video = player.video {
+            trimmed = await trimmedComposition(for: url, video: video)
+        }
+        silenceMap = trimmed?.1
+        let item = trimmed?.0 ?? AVPlayerItem(url: url)
+        if await playPodcastItem(item, url: url, videoId: videoId, isTrimmed: trimmed != nil) {
+            return
+        }
+
+        guard !Task.isCancelled, player.video?.youtubeId == videoId else { return }
+        player.isLoading = nil
+        loadError = item.error ?? VideoError.noVideoUrl
+        clearPendingReposition()
+    }
+
     // MARK: - Primary race (iOS client HLS vs WKWebView extraction)
 
-    /// Starts WKWebView HLS extraction in parallel with the iOS client fetch. If iOS returns HLS,
-    /// that plays immediately and the extractor is cancelled. Otherwise playback falls through to
-    /// `exhaustiveRetry` at once and the extraction is left running to upgrade the stream in place
-    /// (see `cacheWebViewExtractionWhenDone`). Returns `true` if a stream reached `.readyToPlay`.
+    /// A premiere or live stream that hasn't started has nothing to resolve, on any client.
+    @MainActor
+    func handleScheduledVideo(_ error: Error, videoId: String) -> Bool {
+        guard case APIError.scheduled(let date) = error else { return false }
+        guard player.video?.youtubeId == videoId else { return true }
+        Log.info("[AVPlayerView] scheduled video \(videoId): starts \(date?.formatted() ?? "unknown")")
+        player.isLoading = nil
+        player.pause()
+        clearPendingReposition()
+        if let date {
+            player.deferVideoDate = date
+        } else {
+            // no start time to pre-fill; the selector opens on its own default
+            NavigationManager.shared.showDeferDateSelector = true
+        }
+        return true
+    }
+
+    /// Starts WKWebView HLS extraction in parallel with the iOS client fetch.
     @MainActor
     func primaryRace(videoId: String) async -> Bool {
         let webViewTask = Task { await YouTubeWebViewHLSExtractor.shared.extractHLSURL(videoId: videoId) }
@@ -58,7 +95,7 @@ extension AVPlayerViewModel {
             YouTubeWebViewHLSExtractor.shared.cancel()
             webViewTask.cancel()
             Log.error("[AVPlayerView] primary iOS fetch failed: \(videoId) — \(error.localizedDescription)")
-            return false
+            return handleScheduledVideo(error, videoId: videoId)
         }
 
         if info.hlsURL != nil {
@@ -85,13 +122,8 @@ extension AVPlayerViewModel {
     /// way, so the next play of the same video starts on HLS via `fetchAndPlay`'s fast path.
     static let webViewLateSwapMaxAge: Double = 20
 
-    /// Keeps the WKWebView extraction started by `primaryRace` alive after playback has moved on:
-    /// its URL is cached for the next play, and — while playback is still on the 360p muxed
-    /// fallback — swapped in live.
-    ///
-    /// Worth a mid-playback swap because for videos no InnerTube client serves HLS for, this is
-    /// the only route above 360p: `backgroundQualityUpgrade` asks TVEmbedded and MWEB and comes
-    /// back empty on exactly those videos.
+    /// Keeps the WKWebView extraction started by `primaryRace` alive after playback has moved on: its URL is cached
+    /// for the next play, and — while playback is still on the 360p muxed fallback — swapped in live.
     @MainActor
     func cacheWebViewExtractionWhenDone(_ task: Task<URL?, Never>, videoId: String) {
         webViewCacheTask?.cancel()
@@ -158,6 +190,7 @@ extension AVPlayerViewModel {
         enum FetchOutcome: @unchecked Sendable {
             case result(FetchResult)
             case ipBlocked(Error)
+            case scheduled(Error)
         }
 
         let api = self.api
@@ -169,6 +202,7 @@ extension AVPlayerViewModel {
             var pendingNonHLS: [FetchResult] = []
             var androidInfoForMuxed: PlayerInfo?
             var ipBlockError: Error?
+            var scheduledError: Error?
             var played = false
 
             // Fire all clients concurrently. Each fetch survives transient network blips via
@@ -198,6 +232,7 @@ extension AVPlayerViewModel {
                         return .result(FetchResult(priority: 4, client: "iOS", info: info))
                     } catch {
                         if case APIError.ipBlocked = error { return .ipBlocked(error) }
+                        if case APIError.scheduled = error { return .scheduled(error) }
                         return nil
                     }
                 }
@@ -209,6 +244,7 @@ extension AVPlayerViewModel {
                         return .result(FetchResult(priority: 5, client: "Android", info: info))
                     } catch {
                         if case APIError.ipBlocked = error { return .ipBlocked(error) }
+                        if case APIError.scheduled = error { return .scheduled(error) }
                         return nil
                     }
                 }
@@ -223,6 +259,10 @@ extension AVPlayerViewModel {
                     switch outcome {
                     case .ipBlocked(let err):
                         ipBlockError = err
+                        group.cancelAll()
+                        return
+                    case .scheduled(let err):
+                        scheduledError = err
                         group.cancelAll()
                         return
                     case .result(let r):
@@ -245,6 +285,9 @@ extension AVPlayerViewModel {
 
             if played { return }
 
+            if let scheduledError, handleScheduledVideo(scheduledError, videoId: videoId) {
+                return
+            }
             if let ipBlockError {
                 Log.error("[AVPlayerView] IP blocked during parallel fetch: \(videoId)")
                 player.isLoading = nil
@@ -553,9 +596,11 @@ extension AVPlayerViewModel {
         player.availableVideoQualities = qualities
         if !audioTracks.isEmpty {
             player.availableAudioLanguages = audioTracks.map { (code: $0.languageCode, name: $0.name) }
-            player.selectedAudioLanguage = audioTracks.first(where: \.isOriginal)?.languageCode
-                ?? audioTracks.first?.languageCode
-                ?? ""
+            player.reportAudioLanguage(
+                audioTracks.first(where: \.isOriginal)?.languageCode
+                    ?? audioTracks.first?.languageCode
+                    ?? ""
+            )
         }
         return await attemptItem(item, videoId: videoId)
     }
@@ -564,11 +609,14 @@ extension AVPlayerViewModel {
 
     static let minResumePosition: Double = 0.5
 
+    /// How far ahead of the playhead a podcast enclosure keeps downloading.
+    static let podcastForwardBuffer: Double = 600
+
     /// The pinned target while the playhead is still on its way there, the live clock otherwise.
     @MainActor
     var resumePosition: Double {
         if let pinned = seekAnchor.time ?? pendingSeekToTime { return pinned }
-        return avPlayer.currentTime().seconds
+        return currentFileTime()
     }
 
     /// Swaps in a replacement item, pinning the position it has to resume at until
@@ -596,7 +644,7 @@ extension AVPlayerViewModel {
         lastObservedTime = time
         if player.currentTime != time { player.currentTime = time }
         updateNowPlayingInfo(elapsed: time)
-        let target = CMTime(seconds: time, preferredTimescale: 600)
+        let target = CMTime(seconds: playerTime(time), preferredTimescale: 600)
         let landed: Bool = await withCheckedContinuation { (cont: CheckedContinuation<Bool, Never>) in
             let resumer = ResumeOnce(cont)
             Task { @MainActor in
@@ -616,7 +664,7 @@ extension AVPlayerViewModel {
             return
         }
         // a target past the seekable range is clamped: publish where it ended up, not where it went
-        let actual = await Self.readCurrentTime(from: avPlayer)
+        let actual = fileTime(await Self.readCurrentTime(from: avPlayer))
         if landed, !actual.isNaN, !actual.isInfinite, abs(actual - time) > 1 {
             lastObservedTime = actual
             player.currentTime = actual
@@ -725,7 +773,9 @@ extension AVPlayerViewModel {
         player.handleAutoStart(nil)
         syncPlayPause(persistTime: false)
         updateNowPlayingInfo()
-        let dur = avPlayer.currentItem?.duration.seconds
+        // the file's own length: with a pause-shortened composition the item is minutes shorter, and the duration
+        // everything outside the player uses is the episode's
+        let dur = silenceMap?.fileDuration ?? avPlayer.currentItem?.duration.seconds
         if let dur, !dur.isNaN, !dur.isInfinite, dur > 0, let video = player.video {
             VideoService.updateDuration(video, duration: dur)
             ChapterService.updateDuration(video, duration: dur)
@@ -781,6 +831,13 @@ extension AVPlayerViewModel {
     /// `QualityRecoveryPolicy` wiring. Guarded by `hasRetriedPlayback` to avoid loops.
     @MainActor
     func handleItemFailure(item: AVPlayerItem, videoId: String) {
+        // nothing to recover to: the enclosure URL is the only stream a podcast episode has
+        guard player.video?.mediaUrl == nil else {
+            player.isLoading = nil
+            loadError = item.error
+            clearPendingReposition()
+            return
+        }
         guard !hasRetriedPlayback else {
             Log.error("[AVPlayerView] retry already attempted, giving up: \(videoId)")
             player.isLoading = nil
@@ -800,7 +857,7 @@ extension AVPlayerViewModel {
             clearPendingReposition()
         case .revertToAuto:
             Log.info("[AVPlayerView] quality \(player.selectedVideoQuality)p failed — reverting to Auto and retrying: \(videoId)")
-            player.selectedVideoQuality = 0
+            player.reportVideoQuality(0)
             reExhaust(videoId: videoId)
         case .retry403Recovery:
             Log.info("[AVPlayerView] HTTP 403 — re-fetching fresh streams: \(videoId)")
@@ -833,9 +890,9 @@ extension AVPlayerViewModel {
 
     // MARK: - Helpers
 
-    /// Picks the UA matching the URL's signing client (the `c=` query param), so the CDN
-    /// accepts adaptive/muxed segment requests. Mirrors SmartTubeIOS's per-URL UA selection.
-    static func userAgent(forStreamURL url: URL) -> String {
+    /// Picks the UA matching the URL's signing client (the `c=` query param), so the CDN accepts adaptive/muxed
+    /// segment requests.
+    nonisolated static func userAgent(forStreamURL url: URL) -> String {
         let client = URLComponents(url: url, resolvingAgainstBaseURL: false)?
             .queryItems?.first(where: { $0.name == "c" })?.value?.uppercased() ?? ""
         switch client {
@@ -856,13 +913,133 @@ extension AVPlayerViewModel {
 
     // MARK: - Playback sync
 
+    /// Assigning `rate` starts playback on whatever is buffered, overriding `automaticallyWaitsToMinimizeStalling`; a
+    /// progressive podcast enclosure then plays for a few seconds, runs dry and goes quiet.
+    @MainActor
+    func startAtCurrentSpeed() {
+        let rate = Float(player.playbackSpeed)
+        if avPlayer.automaticallyWaitsToMinimizeStalling {
+            // `defaultRate` also changes the rate of playback already running
+            avPlayer.defaultRate = rate
+            avPlayer.play()
+        } else {
+            avPlayer.rate = rate
+        }
+    }
+
+    // MARK: - Trim silence
+
+    /// An item whose pauses are shortened, with the map from its clock to the episode's — or nil when this episode
+    /// isn't one that can be trimmed.
+    @MainActor
+    func trimmedComposition(
+        for url: URL, video: VideoData, waitForScan: Bool = false
+    ) async -> (AVPlayerItem, SilenceMap)? {
+        guard UserDefaults.standard.bool(forKey: Const.trimSilence), url.isFileURL else {
+            return nil
+        }
+        let youtubeId = video.youtubeId
+        var found = SilenceScanActor.existing(for: video)
+        if found == nil {
+            guard waitForScan else {
+                SilenceScanActor.scanInBackground(youtubeId: youtubeId, url: url)
+                return nil
+            }
+            found = await SilenceScanActor.shared.scanIfNeeded(youtubeId: youtubeId, url: url)
+        }
+        guard let scan = found else {
+            return nil
+        }
+        guard !scan.pauses.isEmpty,
+              let (composition, map) = await SilenceComposition.make(url: url, scan: scan, tier: .current) else {
+            return nil
+        }
+        return (AVPlayerItem(asset: composition), map)
+    }
+
+    /// Applies a change to the setting to what's already playing: it's otherwise only read while an item loads, and
+    /// toggling it from the player's menu shouldn't send the episode back to the start.
+    @MainActor
+    func applyTrimSilence() {
+        Task { await handleTrimSilenceChange() }
+    }
+
+    func handleTrimSilenceChange() async {
+        guard let video = player.video,
+              let mediaUrl = video.mediaUrl,
+              avPlayer.currentItem != nil else {
+            return
+        }
+        let videoId = video.youtubeId
+        let url = PodcastDownloadStore.playbackUrl(for: video) ?? mediaUrl
+
+        // the episode keeps playing while this runs, which is why the position is read afterwards
+        let trimmed = await trimmedComposition(for: url, video: video, waitForScan: true)
+        guard player.video?.youtubeId == videoId else { return }
+        // read against the map still installed, before the replacement's takes over below
+        pendingSeekToTime = resumePosition
+        silenceMap = trimmed?.1
+        let item = trimmed?.0 ?? AVPlayerItem(url: url)
+        _ = await playPodcastItem(item, url: url, videoId: videoId, isTrimmed: trimmed != nil)
+    }
+
+    /// Installs an episode's item, and gives up the trimming rather than the episode: a composition that won't turn
+    /// ready is retried as the plain file, from the position it was going to.
+    @MainActor
+    private func playPodcastItem(
+        _ item: AVPlayerItem, url: URL, videoId: String, isTrimmed: Bool
+    ) async -> Bool {
+        let target = pendingSeekToTime
+        if await attemptItem(item, videoId: videoId, timeout: 30) {
+            // only once playing: asking for the same buffer up front would hold the start back
+            item.preferredForwardBufferDuration = Self.podcastForwardBuffer
+            return true
+        }
+        guard isTrimmed, !Task.isCancelled, player.video?.youtubeId == videoId else { return false }
+
+        Log.warning("[AVPlayerView] trimmed composition wouldn't play, using the file: \(videoId)")
+        silenceMap = nil
+        pendingSeekToTime = target
+        let plain = AVPlayerItem(url: url)
+        guard await attemptItem(plain, videoId: videoId, timeout: 30) else { return false }
+        plain.preferredForwardBufferDuration = Self.podcastForwardBuffer
+        return true
+    }
+
+    @MainActor
+    func clearSilenceMap() {
+        silenceMap = nil
+    }
+
+    // MARK: - Time mapping
+    // The player runs on the shortened timeline; everything else — chapters, the scrubber, the saved position, the
+    // stats, the lock screen — runs on the episode's.
+
+    /// Where the player's clock is in the episode.
+    @MainActor
+    func fileTime(_ playerTime: Double) -> Double {
+        silenceMap?.fileTime(playerTime) ?? playerTime
+    }
+
+    /// Where a position in the episode is on the player's clock.
+    @MainActor
+    func playerTime(_ fileTime: Double) -> Double {
+        silenceMap?.playerTime(fileTime) ?? fileTime
+    }
+
+    /// The playhead, in the episode's time.
+    @MainActor
+    func currentFileTime() -> Double {
+        fileTime(avPlayer.currentTime().seconds)
+    }
+
     @MainActor
     func syncPlayPause(persistTime: Bool = true) {
         if player.isPlaying {
             // `handleReadyToPlay` starts playback once the reposition has landed
             guard pendingSeekToTime == nil else { return }
             PlayerAudioSession.activate()
-            avPlayer.rate = Float(player.playbackSpeed)
+            startAtCurrentSpeed()
         } else {
             avPlayer.pause()
             if persistTime {
@@ -870,7 +1047,6 @@ extension AVPlayerViewModel {
             }
         }
     }
-
 
     /// Reads the player clock off the main thread: `AVPlayer.currentTime()` blocks for tens of
     /// milliseconds right after a rate change, which would stall the pause the user just asked for.
@@ -880,8 +1056,10 @@ extension AVPlayerViewModel {
         // a pause mid-reposition would write the position being left behind over `elapsedSeconds`
         let pinned = seekAnchor.time ?? pendingSeekToTime
         Task { @MainActor [weak self] in
-            let time = if let pinned { pinned } else { await Self.readCurrentTime(from: avp) }
-            guard let self, !time.isNaN, !time.isInfinite else { return }
+            // the pin is already in the episode's time; the player's own clock is not
+            let raw = if let pinned { pinned } else { await Self.readCurrentTime(from: avp) }
+            guard let self, !raw.isNaN, !raw.isInfinite else { return }
+            let time = pinned == nil ? fileTime(raw) : raw
             lastObservedTime = time
             player.updateElapsedTime(time)
             if let videoId = player.video?.youtubeId {

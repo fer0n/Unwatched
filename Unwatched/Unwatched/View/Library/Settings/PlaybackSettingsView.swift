@@ -15,9 +15,12 @@ struct PlaybackSettingsView: View {
     @AppStorage(Const.rotateOnPlay) var rotateOnPlay: Bool = false
     @AppStorage(Const.autoAirplayHD) var autoAirplayHD: Bool = false
     @AppStorage(Const.originalAudio) var originalAudio: Bool = true
+    @AppStorage(Const.trimSilence) var trimSilence: Bool = false
+    @AppStorage(Const.trimSilenceTier) var trimSilenceTier: TrimSilenceTier = .medium
     @AppStorage(Const.playBrowserVideosInApp) var playBrowserVideosInApp: Bool = false
     @AppStorage(Const.playerType) var playerType: PlayerTypeSetting = .youtubeEmbedded
     @AppStorage(Const.preferPlayerType) var preferPlayerType: Bool = false
+    @AppStorage(Const.suggestVideos) var suggestVideos: Bool = false
     @Environment(PlayerManager.self) var player
 
     var body: some View {
@@ -70,6 +73,28 @@ struct PlaybackSettingsView: View {
                     #endif
                 }
 
+                MySection(footer: "trimSilenceHelper") {
+                    Toggle(isOn: Binding(
+                        get: { trimSilence },
+                        set: { player.setTrimSilence($0) }
+                    )) {
+                        Text("trimSilence")
+                    }
+
+                    if trimSilence {
+                        Picker("trimSilenceTier", selection: Binding(
+                            get: { trimSilenceTier },
+                            set: { player.setTrimSilenceTier($0) }
+                        )) {
+                            ForEach(TrimSilenceTier.allCases, id: \.self) { tier in
+                                Text(tier.description)
+                                    .tag(tier)
+                            }
+                        }
+                        .pickerStyle(.menu)
+                    }
+                }
+
                 MySection(footer: "continuousPlayHelper") {
                     Toggle(isOn: $player.isRepeating) {
                         Text("loopVideo")
@@ -117,6 +142,12 @@ struct PlaybackSettingsView: View {
                 MySection(footer: "autoAirplayHDHelper") {
                     Toggle(isOn: $autoAirplayHD) {
                         Text("autoAirplayHD")
+                    }
+                }
+
+                MySection(footer: "suggestVideosHelper") {
+                    Toggle(isOn: $suggestVideos) {
+                        Text("suggestVideos")
                     }
                 }
                 #endif
