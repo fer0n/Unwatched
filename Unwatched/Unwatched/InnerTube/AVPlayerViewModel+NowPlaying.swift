@@ -33,25 +33,24 @@ extension AVPlayerViewModel {
         guard !commandsSetUp else { return }
         commandsSetUp = true
 
-        let theAVPlayer = avPlayer
         let thePlayer = player
         let center = MPRemoteCommandCenter.shared()
 
         center.playCommand.isEnabled = true
         center.playCommand.addTarget { _ in
-            Task { @MainActor in thePlayer.isPlaying = true }
+            Task { @MainActor in thePlayer.play() }
             return .success
         }
 
         center.pauseCommand.isEnabled = true
         center.pauseCommand.addTarget { _ in
-            Task { @MainActor in thePlayer.isPlaying = false }
+            Task { @MainActor in thePlayer.pause() }
             return .success
         }
 
         center.togglePlayPauseCommand.isEnabled = true
         center.togglePlayPauseCommand.addTarget { _ in
-            Task { @MainActor in thePlayer.isPlaying.toggle() }
+            Task { @MainActor in thePlayer.isPlaying ? thePlayer.pause() : thePlayer.play() }
             return .success
         }
 
@@ -59,10 +58,7 @@ extension AVPlayerViewModel {
         center.skipForwardCommand.preferredIntervals = [15]
         center.skipForwardCommand.addTarget { event in
             let interval = (event as? MPSkipIntervalCommandEvent)?.interval ?? 15
-            let target = theAVPlayer.currentTime().seconds + interval
-            theAVPlayer.seek(to: CMTime(seconds: target, preferredTimescale: 600),
-                             toleranceBefore: .zero, toleranceAfter: .zero)
-            Self.patchElapsedTime(target)
+            Task { @MainActor in Self.skip(by: interval) }
             return .success
         }
 
@@ -70,40 +66,44 @@ extension AVPlayerViewModel {
         center.skipBackwardCommand.preferredIntervals = [15]
         center.skipBackwardCommand.addTarget { event in
             let interval = (event as? MPSkipIntervalCommandEvent)?.interval ?? 15
-            let target = max(0, theAVPlayer.currentTime().seconds - interval)
-            theAVPlayer.seek(to: CMTime(seconds: target, preferredTimescale: 600),
-                             toleranceBefore: .zero, toleranceAfter: .zero)
-            Self.patchElapsedTime(target)
+            Task { @MainActor in Self.skip(by: -interval) }
             return .success
         }
 
         // Headphone inline remotes and AirPods send next/previous track, not skip.
         center.nextTrackCommand.isEnabled = true
         center.nextTrackCommand.addTarget { _ in
-            let target = theAVPlayer.currentTime().seconds + 15
-            theAVPlayer.seek(to: CMTime(seconds: target, preferredTimescale: 600),
-                             toleranceBefore: .zero, toleranceAfter: .zero)
-            Self.patchElapsedTime(target)
+            Task { @MainActor in Self.skip(by: 15) }
             return .success
         }
 
         center.previousTrackCommand.isEnabled = true
         center.previousTrackCommand.addTarget { _ in
-            let target = max(0, theAVPlayer.currentTime().seconds - 15)
-            theAVPlayer.seek(to: CMTime(seconds: target, preferredTimescale: 600),
-                             toleranceBefore: .zero, toleranceAfter: .zero)
-            Self.patchElapsedTime(target)
+            Task { @MainActor in Self.skip(by: -15) }
             return .success
         }
 
         center.changePlaybackPositionCommand.isEnabled = true
         center.changePlaybackPositionCommand.addTarget { event in
             guard let e = event as? MPChangePlaybackPositionCommandEvent else { return .commandFailed }
-            theAVPlayer.seek(to: CMTime(seconds: e.positionTime, preferredTimescale: 600),
-                             toleranceBefore: .zero, toleranceAfter: .zero)
-            Self.patchElapsedTime(e.positionTime)
+            Task { @MainActor in Self.seek(toEpisodeTime: e.positionTime) }
             return .success
         }
+    }
+
+    /// The lock screen is given the episode's own timeline — that's the elapsed time and duration it's sent — so its
+    /// commands are answered in it too, and a skip covers the same ground there as it does in the app.
+    @MainActor
+    private static func skip(by interval: Double) {
+        seek(toEpisodeTime: max(0, AVPlayerViewModel.shared.currentFileTime() + interval))
+    }
+
+    @MainActor
+    private static func seek(toEpisodeTime time: Double) {
+        let vm = AVPlayerViewModel.shared
+        vm.avPlayer.seek(to: CMTime(seconds: vm.playerTime(time), preferredTimescale: 600),
+                         toleranceBefore: .zero, toleranceAfter: .zero)
+        patchElapsedTime(time)
     }
 
     func teardownRemoteCommands() {
@@ -129,7 +129,7 @@ extension AVPlayerViewModel {
             return
         }
 
-        let raw = elapsedOverride ?? lastObservedTime ?? avPlayer.currentTime().seconds
+        let raw = elapsedOverride ?? lastObservedTime ?? currentFileTime()
         let elapsed = (raw.isNaN || raw.isInfinite) ? 0.0 : raw
         var info: [String: Any] = [
             MPMediaItemPropertyTitle: video.title,
@@ -151,21 +151,36 @@ extension AVPlayerViewModel {
         MPNowPlayingInfoCenter.default().nowPlayingInfo = info
     }
 
-    func fetchArtwork(for video: Video) {
-        let videoId = video.youtubeId
-        // Prefer maxresdefault (1280×720, 16:9) to avoid the black letterbox bars
-        // that appear in hqdefault (480×360, 4:3).
-        let candidates: [URL] = [
-            UrlService.getImageUrl(video.thumbnailUrl, .max),
-            video.thumbnailUrl
-        ].compactMap { $0 }
+    @MainActor
+    func handleChapterChanged() {
+        fetchArtwork()
+    }
+
+    /// The lock screen shows what the player shows, chapter artwork included, so this re-runs whenever
+    /// `PlayerManager.displayArtworkUrl` changes rather than once per video.
+    @MainActor
+    func fetchArtwork() {
+        let urls = player.displayArtworkUrls.compactMap { $0 }
+        guard urls != fetchedArtworkUrls else { return }
+        fetchedArtworkUrls = urls
+        guard !urls.isEmpty else {
+            artworkImage = nil
+            updateNowPlayingInfo()
+            return
+        }
+        // Prefer maxresdefault (1280×720, 16:9) to avoid the black letterbox bars that appear in hqdefault (480×360,
+        // 4:3).
+        var seen = Set<URL>()
+        let candidates = urls
+            .flatMap { [UrlService.getImageUrl($0, .max), $0] }
+            .compactMap { $0 }
+            .filter { seen.insert($0).inserted }
         Task {
             for url in candidates {
-                guard let (data, response) = try? await URLSession.shared.data(from: url),
-                      (response as? HTTPURLResponse)?.statusCode == 200,
+                guard let data = await ImageService.imageData(for: url),
                       let image = PlatformImage(data: data) else { continue }
                 await MainActor.run {
-                    guard player.video?.youtubeId == videoId else { return }
+                    guard player.displayArtworkUrls.compactMap({ $0 }) == urls else { return }
                     artworkImage = image
                     updateNowPlayingInfo()
                 }

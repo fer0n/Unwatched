@@ -1431,6 +1431,219 @@ final class ChapterServiceTests: XCTestCase {
         let similarity = ChapterService.chaptersSimilarity(chapters1, chapters2)
         XCTAssertEqual(similarity, 1.0)
     }
+
+    // MARK: - applySkipIntro
+
+    func testApplySkipIntro_nilSecondsIsNoOp() {
+        let chapters: [SendableChapter] = [.init(0, to: 30, "Intro")]
+        XCTAssertEqual(
+            ChapterService.applySkipIntro(chapters, skipIntroSeconds: nil, videoDuration: nil),
+            chapters
+        )
+    }
+
+    func testApplySkipIntro_zeroSecondsIsNoOp() {
+        let chapters: [SendableChapter] = [.init(0, to: 30, "Intro")]
+        XCTAssertEqual(
+            ChapterService.applySkipIntro(chapters, skipIntroSeconds: 0, videoDuration: nil),
+            chapters
+        )
+    }
+
+    func testApplySkipIntro_emptyChaptersOpenEnded() {
+        let result = ChapterService.applySkipIntro([], skipIntroSeconds: 20, videoDuration: nil)
+        XCTAssertEqual(result.count, 2)
+        XCTAssertEqual(result[0].startTime, 0)
+        XCTAssertEqual(result[0].endTime, 20)
+        XCTAssertFalse(result[0].isActive)
+        XCTAssertEqual(result[1].startTime, 20)
+        XCTAssertNil(result[1].endTime)
+        XCTAssertTrue(result[1].isActive)
+    }
+
+    func testApplySkipIntro_emptyChaptersWithDuration() {
+        let result = ChapterService.applySkipIntro([], skipIntroSeconds: 20, videoDuration: 100)
+        XCTAssertEqual(result.count, 2)
+        XCTAssertEqual(result[1].startTime, 20)
+        XCTAssertEqual(result[1].endTime, 100)
+    }
+
+    func testApplySkipIntro_chapterFullyInsideIntroIsDropped() {
+        let chapters: [SendableChapter] = [
+            .init(0, to: 15, "Cold open"),
+            .init(15, to: 60, "Main")
+        ]
+        let result = ChapterService.applySkipIntro(chapters, skipIntroSeconds: 20, videoDuration: nil)
+        // the 0-15 chapter is fully inside the skip window and is dropped, "Main" starts exactly at the boundary once
+        // clamped, so no gap filler is needed
+        XCTAssertEqual(result.count, 2)
+        XCTAssertEqual(result[0].startTime, 0)
+        XCTAssertEqual(result[0].endTime, 20)
+        XCTAssertFalse(result[0].isActive)
+        XCTAssertEqual(result[1].startTime, 20)
+        XCTAssertEqual(result[1].title, "Main")
+    }
+
+    func testApplySkipIntro_chapterStraddlingBoundaryIsTruncated() {
+        let chapters: [SendableChapter] = [.init(0, to: 40, "Intro segment", category: .sponsor)]
+        let result = ChapterService.applySkipIntro(chapters, skipIntroSeconds: 20, videoDuration: nil)
+        XCTAssertEqual(result.count, 2)
+        XCTAssertEqual(result[1].startTime, 20)
+        XCTAssertEqual(result[1].endTime, 40)
+        XCTAssertEqual(result[1].title, "Intro segment")
+        XCTAssertEqual(result[1].category, .sponsor)
+    }
+
+    func testApplySkipIntro_chapterAlreadyStartingAtBoundaryNeedsNoFiller() {
+        let chapters: [SendableChapter] = [.init(20, to: 60, "Main")]
+        let result = ChapterService.applySkipIntro(chapters, skipIntroSeconds: 20, videoDuration: nil)
+        XCTAssertEqual(result.count, 2)
+        XCTAssertEqual(result[1].startTime, 20)
+        XCTAssertEqual(result[1].title, "Main")
+    }
+
+    func testApplySkipIntro_gapBetweenIntroAndNextChapterIsFilled() {
+        let chapters: [SendableChapter] = [.init(45, to: 60, "Main")]
+        let result = ChapterService.applySkipIntro(chapters, skipIntroSeconds: 20, videoDuration: nil)
+        XCTAssertEqual(result.count, 3)
+        XCTAssertEqual(result[1].startTime, 20)
+        XCTAssertEqual(result[1].endTime, 45)
+        XCTAssertTrue(result[1].isActive)
+        XCTAssertEqual(result[2].startTime, 45)
+    }
+
+    func testApplySkipIntro_marksAndStampsTheGeneratedIntro() {
+        let chapters: [SendableChapter] = [.init(0, to: 60, "Main")]
+        let result = ChapterService.applySkipIntro(
+            chapters, skipIntroSeconds: 20, videoDuration: 60, videoId: "abc"
+        )
+        XCTAssertTrue(result[0].isIntro)
+        XCTAssertEqual(result[0].videoId, "abc", "otherwise every video's intro shares a chapterId")
+        XCTAssertEqual(result[0].duration, 20, "the list shows a time label like any other chapter")
+        XCTAssertFalse(result[1].isIntro)
+    }
+
+    /// The per-video override: same chapters either way, so re-enabling doesn't reshape the list.
+    func testApplySkipIntro_keepIntroOnlyLeavesTheIntroActive() {
+        let chapters: [SendableChapter] = [.init(0, to: 15, "Cold open"), .init(15, to: 60, "Main")]
+        let skipped = ChapterService.applySkipIntro(chapters, skipIntroSeconds: 20, videoDuration: 60)
+        let kept = ChapterService.applySkipIntro(
+            chapters, skipIntroSeconds: 20, videoDuration: 60, keepIntro: true
+        )
+
+        XCTAssertTrue(kept[0].isActive)
+        XCTAssertEqual(kept.map(\.startTime), skipped.map(\.startTime))
+        XCTAssertEqual(kept.map(\.endTime), skipped.map(\.endTime))
+        XCTAssertEqual(kept.dropFirst().map(\.isActive), skipped.dropFirst().map(\.isActive))
+    }
+
+    func testApplySkipIntro_truncatedChapterDurationMatchesItsNewRange() {
+        let chapters: [SendableChapter] = [.init(0, to: 40, "Straddling")]
+        let result = ChapterService.applySkipIntro(chapters, skipIntroSeconds: 20, videoDuration: 40)
+        XCTAssertEqual(result[1].startTime, 20)
+        XCTAssertEqual(result[1].duration, 20, "the first 20s belong to the intro now")
+    }
+
+    func testApplySkipIntro_secondsPastDurationIsNoOp() {
+        // requested skip clamps to `videoDuration - chapterTimeTolerance`, which is <= 0 for a video shorter than the
+        // tolerance itself — too short to skip into at all
+        let chapters: [SendableChapter] = [.init(0, to: 1, "Only chapter")]
+        let result = ChapterService.applySkipIntro(chapters, skipIntroSeconds: 30, videoDuration: 1)
+        XCTAssertEqual(result, chapters)
+    }
+
+    // MARK: - applySkipOutro
+
+    func testApplySkipOutro_nilSecondsIsNoOp() {
+        let chapters: [SendableChapter] = [.init(0, to: 60, "Main")]
+        XCTAssertEqual(
+            ChapterService.applySkipOutro(chapters, skipOutroSeconds: nil, videoDuration: 60),
+            chapters
+        )
+    }
+
+    /// There's no end to measure back from, so the chapters are left as they are.
+    func testApplySkipOutro_nilDurationIsNoOp() {
+        let chapters: [SendableChapter] = [.init(0, to: 60, "Main")]
+        XCTAssertEqual(
+            ChapterService.applySkipOutro(chapters, skipOutroSeconds: 20, videoDuration: nil),
+            chapters
+        )
+    }
+
+    func testApplySkipOutro_emptyChaptersAreFilledUpToTheOutro() {
+        let result = ChapterService.applySkipOutro([], skipOutroSeconds: 20, videoDuration: 100)
+        XCTAssertEqual(result.count, 2)
+        XCTAssertEqual(result[0].startTime, 0)
+        XCTAssertEqual(result[0].endTime, 80)
+        XCTAssertTrue(result[0].isActive)
+        XCTAssertEqual(result[1].startTime, 80)
+        XCTAssertEqual(result[1].endTime, 100)
+        XCTAssertFalse(result[1].isActive)
+    }
+
+    func testApplySkipOutro_chapterFullyInsideOutroIsDropped() {
+        let chapters: [SendableChapter] = [
+            .init(0, to: 85, "Main"),
+            .init(85, to: 100, "Credits")
+        ]
+        let result = ChapterService.applySkipOutro(chapters, skipOutroSeconds: 20, videoDuration: 100)
+        XCTAssertEqual(result.count, 2)
+        XCTAssertEqual(result[0].title, "Main")
+        XCTAssertEqual(result[0].endTime, 80)
+        XCTAssertEqual(result[1].startTime, 80)
+        XCTAssertFalse(result[1].isActive)
+    }
+
+    func testApplySkipOutro_chapterStraddlingBoundaryIsTruncated() {
+        let chapters: [SendableChapter] = [.init(0, to: 40, "First"), .init(40, to: 100, "Second")]
+        let result = ChapterService.applySkipOutro(chapters, skipOutroSeconds: 20, videoDuration: 100)
+        XCTAssertEqual(result.count, 3)
+        XCTAssertEqual(result[1].title, "Second")
+        XCTAssertEqual(result[1].endTime, 80)
+        XCTAssertEqual(result[1].duration, 40, "the last 20s belong to the outro now")
+    }
+
+    func testApplySkipOutro_gapBeforeTheOutroIsFilled() {
+        let chapters: [SendableChapter] = [.init(0, to: 40, "First")]
+        let result = ChapterService.applySkipOutro(chapters, skipOutroSeconds: 20, videoDuration: 100)
+        XCTAssertEqual(result.count, 3)
+        XCTAssertEqual(result[1].startTime, 40)
+        XCTAssertEqual(result[1].endTime, 80)
+        XCTAssertTrue(result[1].isActive)
+        XCTAssertEqual(result[2].startTime, 80)
+    }
+
+    func testApplySkipOutro_marksAndStampsTheGeneratedOutro() {
+        let chapters: [SendableChapter] = [.init(0, to: 100, "Main")]
+        let result = ChapterService.applySkipOutro(
+            chapters, skipOutroSeconds: 20, videoDuration: 100, videoId: "abc"
+        )
+        XCTAssertTrue(result[1].isOutro)
+        XCTAssertEqual(result[1].videoId, "abc", "otherwise every video's outro shares a chapterId")
+        XCTAssertEqual(result[1].duration, 20, "the list shows a time label like any other chapter")
+        XCTAssertFalse(result[0].isOutro)
+    }
+
+    func testApplySkipOutro_keepOutroOnlyLeavesTheOutroActive() {
+        let chapters: [SendableChapter] = [.init(0, to: 85, "Main"), .init(85, to: 100, "Credits")]
+        let skipped = ChapterService.applySkipOutro(chapters, skipOutroSeconds: 20, videoDuration: 100)
+        let kept = ChapterService.applySkipOutro(
+            chapters, skipOutroSeconds: 20, videoDuration: 100, keepOutro: true
+        )
+
+        XCTAssertTrue(kept[kept.count - 1].isActive)
+        XCTAssertEqual(kept.map(\.startTime), skipped.map(\.startTime))
+        XCTAssertEqual(kept.map(\.endTime), skipped.map(\.endTime))
+        XCTAssertEqual(kept.dropLast().map(\.isActive), skipped.dropLast().map(\.isActive))
+    }
+
+    /// A skip that covers the whole video leaves nothing to play, so it's ignored.
+    func testApplySkipOutro_secondsPastDurationIsNoOp() {
+        let chapters: [SendableChapter] = [.init(0, to: 30, "Only chapter")]
+        let result = ChapterService.applySkipOutro(chapters, skipOutroSeconds: 60, videoDuration: 30)
+        XCTAssertEqual(result, chapters)
+    }
 }
 
 final class ChapterReconcileTests: XCTestCase {
@@ -1704,6 +1917,29 @@ final class ChapterReconcileTests: XCTestCase {
         let descriptor = FetchDescriptor<Video>(predicate: #Predicate { $0.youtubeId == youtubeId })
         let reloaded = try? fresh.fetch(descriptor).first
         XCTAssertEqual(reloaded?.chapters?.first?.endTime, 70)
+    }
+
+    /// The generated intro starts at 0 like the video's own first chapter, so matching it by start time would hand
+    /// back — and toggle — the wrong row.
+    @MainActor
+    func testMaterializeRefusesTheGeneratedIntro() {
+        let context = DataProvider.newContext()
+        let own = [Chapter(title: "Chapter 1", time: 0, endTime: 60, category: nil)]
+        let video = makeVideo(owning: own, in: context)
+
+        let intro = SendableChapter(
+            title: "skipIntro",
+            startTime: 0,
+            endTime: 20,
+            isActive: false,
+            category: .generated,
+            isIntro: true
+        )
+
+        XCTAssertNil(
+            ChapterService.materialize(intro, of: video),
+            "a row here is the video's own first chapter, and toggling it would disable that"
+        )
     }
 }
 
@@ -2069,4 +2305,132 @@ CHAPTERS
         )
     }
 }
+
+/// Podcast chapters are fetched, not parsed, but they stay out of the synced store exactly like a video's description
+/// chapters: cached until the user edits them.
+final class PodcastChapterCacheTests: XCTestCase {
+
+    private var youtubeId = ""
+    private var created = [Video]()
+
+    private static let fetched: [SendableChapter] = [
+        .init(0, to: 0, "Cold open"),
+        .init(120, to: 0, "The main thing"),
+        .init(900, to: 0, "Sign-off")
+    ]
+
+    override func setUp() {
+        super.setUp()
+        youtubeId = "podcastChapterTest-\(UUID().uuidString.prefix(8))"
+    }
+
+    override func tearDown() {
+        ChapterService.invalidateDerivedChapters(youtubeId: youtubeId)
+        for video in created where !video.isDeleted {
+            guard let context = video.modelContext else { continue }
+            for chapter in (video.chapters ?? []) + (video.mergedChapters ?? []) {
+                context.delete(chapter)
+            }
+            context.delete(video)
+            try? context.save()
+        }
+        created.removeAll()
+        super.tearDown()
+    }
+
+    /// `mediaUrl` is what makes a `Video` a podcast episode.
+    private func makeEpisode(
+        duration: Double? = 1200,
+        description: String? = nil,
+        in context: ModelContext
+    ) -> Video {
+        let video = Video(
+            title: "episode",
+            url: nil,
+            youtubeId: youtubeId,
+            duration: duration,
+            videoDescription: description,
+            mediaUrl: URL(string: "https://example.com/\(youtubeId).mp3")
+        )
+        context.insert(video)
+        try? context.save()
+        created.append(video)
+        return video
+    }
+
+    func testCachedChaptersAreShownWithoutWritingRows() {
+        let context = DataProvider.newContext()
+        let video = makeEpisode(in: context)
+
+        ChapterService.cachePodcastChapters(Self.fetched, youtubeId: youtubeId)
+
+        let shown = video.sortedChapterData
+        XCTAssertEqual(shown.map(\.startTime), [0, 120, 900])
+        XCTAssertEqual(shown.map(\.title), ["Cold open", "The main thing", "Sign-off"])
+        XCTAssertTrue(video.chapters?.isEmpty ?? true, "caching may not write a single row")
+    }
+
+    /// End times are applied on read, so the duration the file reports once it loads wins over the one the feed
+    /// advertised.
+    func testEndTimesFollowTheVideosDuration() {
+        let context = DataProvider.newContext()
+        let video = makeEpisode(in: context)
+        ChapterService.cachePodcastChapters(Self.fetched, youtubeId: youtubeId)
+
+        XCTAssertEqual(video.sortedChapterData.last?.endTime, 1200)
+
+        video.duration = 1500
+        XCTAssertEqual(video.sortedChapterData.last?.endTime, 1500,
+                       "a corrected duration has to reach the last chapter")
+        XCTAssertEqual(video.sortedChapterData.first?.endTime, 120, "the rest are unaffected")
+    }
+
+    /// Only shows that ship no chapters of their own fall through to timestamps in the notes.
+    func testFetchedChaptersWinOverTheDescription() {
+        let context = DataProvider.newContext()
+        let video = makeEpisode(description: "0:00 From the notes\n5:00 Second", in: context)
+
+        XCTAssertEqual(video.sortedChapterData.map(\.title), ["From the notes", "Second"])
+
+        ChapterService.cachePodcastChapters(Self.fetched, youtubeId: youtubeId)
+
+        XCTAssertEqual(video.sortedChapterData.map(\.startTime), [0, 120, 900])
+    }
+
+    func testAnEpisodeWithoutCachedChaptersHasNone() {
+        let context = DataProvider.newContext()
+        let video = makeEpisode(in: context)
+
+        XCTAssertTrue(video.sortedChapterData.isEmpty)
+        XCTAssertNil(ChapterService.fetchedChapters(youtubeId: youtubeId, duration: 1200))
+    }
+
+    /// The first edit is where an episode's chapters become rows, same as a video's.
+    @MainActor
+    func testTheFirstEditMaterializesTheCachedChapters() {
+        let context = DataProvider.newContext()
+        let video = makeEpisode(in: context)
+        ChapterService.cachePodcastChapters(Self.fetched, youtubeId: youtubeId)
+
+        let toggled = video.sortedChapterData[1]
+        let row = ChapterService.materialize(toggled, of: video)
+
+        XCTAssertNotNil(row, "the chapter the user acted on has to end up with a row")
+        XCTAssertEqual(row?.startTime, 120)
+        XCTAssertEqual(video.chapters?.count, 3, "the whole set becomes rows, not just the one")
+        XCTAssertTrue(video.chapters?.allSatisfy { $0.video != nil } ?? false)
+
+        row?.isActive = false
+        try? context.save()
+
+        let shown = video.sortedChapterData
+        XCTAssertEqual(shown.count, 3, "the rows are what's read from here on")
+        XCTAssertEqual(shown.filter { !$0.isActive }.map(\.startTime), [120])
+        XCTAssertNil(
+            ChapterService.fetchedChapters(youtubeId: youtubeId, duration: 1200),
+            "the cached copy goes, so it can't drift from the rows"
+        )
+    }
+}
+
 // swiftlint:enable all

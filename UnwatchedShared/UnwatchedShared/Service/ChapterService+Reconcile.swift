@@ -60,6 +60,8 @@ extension ChapterService {
 
         if hasChanges {
             attach(result, to: video, merged: merged)
+            // rows reused in place are edited, not re-attached: see `Video.chapterRevision`
+            video.chaptersDidChange()
         }
         return (result, hasChanges)
     }

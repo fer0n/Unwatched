@@ -15,6 +15,7 @@ struct ChapterDescriptionView: View {
     @Environment(TinyUndoManager.self) private var undoManager
 
     @State var hapticToggle = false
+    @State var transcriptVM = TranscriptView.ViewModel()
 
     static let buttonSize: CGFloat = 46
     @ScaledMetric(wrappedValue: buttonSize) private var buttonSizeScaled: CGFloat
@@ -52,20 +53,46 @@ struct ChapterDescriptionView: View {
                         .padding(.bottom, 5)
                     }
 
-                    ChapterSettingsMenu(video: player.video)
+                    if showGenerateTranscript {
+                        // no transcript means no chapters can be generated and nothing for the transcript tab to
+                        // show, so the picker/menu give way to just the button
+                        GenerateTranscriptButton(video: video, viewModel: $transcriptVM)
+                            .padding(.top, hasChapters ? 10 : 0)
+                            .transition(.opacity)
 
-                    Spacer()
-                        .frame(height: 10)
+                        Spacer()
+                            .frame(height: 10)
 
-                    TranscriptDescriptionSelection(
-                        video: video,
-                        isCurrentVideo: video.youtubeId == player.video?.youtubeId,
-                        scrollProxy: proxy
-                    )
+                        DescriptionDetailView(description: video.videoDescription)
+                    } else {
+                        let hasTranscript = TranscriptDescriptionSelection.canHaveTranscript(
+                            video,
+                            isCurrentVideo: isCurrentVideo,
+                            transcriptUrl: player.transcriptUrl
+                        )
+
+                        Group {
+                            if hasTranscript {
+                                ChapterSettingsMenu(video: player.video)
+
+                                Spacer()
+                                    .frame(height: 10)
+                            }
+
+                            TranscriptDescriptionSelection(
+                                video: video,
+                                isCurrentVideo: isCurrentVideo,
+                                scrollProxy: proxy,
+                                transcriptVM: $transcriptVM
+                            )
+                        }
+                        .transition(.opacity)
+                    }
                 }
                 .padding(.horizontal, showThumbnail ? 15 : isCompact ? 10 : 20)
                 .padding(.top, showThumbnail ? 15 : isCompact ? 15 : 30)
                 .frame(idealWidth: 500, maxWidth: 800, alignment: .leading)
+                .animation(.easeInOut, value: showGenerateTranscript)
 
                 Spacer()
                     .frame(height: bottomSpacer)
@@ -73,30 +100,21 @@ struct ChapterDescriptionView: View {
                 Spacer()
                     .frame(maxWidth: .infinity)
             }
+            .task(id: video.youtubeId) {
+                // checked eagerly (not just on opening the transcript tab) since a podcast episode without one hides
+                // chapters/description/transcript entirely in favor of the generate-transcript button
+                guard video.isPodcast, TranscriptService.canGenerateTranscript else { return }
+                await transcriptVM.handleTranscriptLoading(video, nil)
+            }
             .onAppear {
-                if hasChapters && player.video?.youtubeId == video.youtubeId {
-                    if scrollToCurrent {
-                    } else if navManager.scrollToCurrentChapter {
-                        navManager.scrollToCurrentChapter = false
-                    } else {
-                        return
-                    }
-                    var chapter = player.currentChapter
-                    var anchor: UnitPoint = .center
-
-                    if let current = player.currentChapter,
-                       let index = video.sortedChapterData.firstIndex(where: {
-                        $0.chapterId == current.chapterId
-                       }),
-                       index > 0 {
-                        chapter = video.sortedChapterData[index - 1]
-                        anchor = .top
-                    }
-                    proxy.scrollTo(
-                        chapter?.chapterId,
-                        anchor: anchor
-                    )
-                }
+                scrollToChapterIfNeeded(hasChapters: hasChapters, proxy: proxy)
+            }
+            .onChange(of: navManager.playerTab) {
+                // The podcast layout keeps both player pages permanently mounted (see
+                // `PlayerContentView.livePages`), so switching to this page never re-triggers
+                // `onAppear` the way the video's `TabView` does — this is what makes a title
+                // tap scroll to the current chapter for podcasts too.
+                scrollToChapterIfNeeded(hasChapters: hasChapters, proxy: proxy)
             }
             .if(showActions) { view in
                 Group {
@@ -220,6 +238,18 @@ struct ChapterDescriptionView: View {
         video.inboxEntry != nil || video.queueEntry != nil
     }
 
+    var isCurrentVideo: Bool {
+        video.youtubeId == player.video?.youtubeId
+    }
+
+    /// A podcast episode that has no transcript at all — not one that was published, not one generated before — hides
+    /// chapters/description/transcript in favor of just the button.
+    var showGenerateTranscript: Bool {
+        video.isPodcast
+            && TranscriptService.canGenerateTranscript
+            && transcriptVM.transcript?.isEmpty == true
+    }
+
     func playVideo() {
         VideoService.insertQueueEntries(videos: [video], modelContext: modelContext)
         player.playVideo(video)
@@ -272,6 +302,33 @@ struct ChapterDescriptionView: View {
             return true
         }
         return adding && player.isQueueEmpty(modelContext)
+    }
+
+    func scrollToChapterIfNeeded(hasChapters: Bool, proxy: ScrollViewProxy) {
+        guard hasChapters && player.video?.youtubeId == video.youtubeId else {
+            return
+        }
+        if scrollToCurrent {
+        } else if navManager.scrollToCurrentChapter {
+            navManager.scrollToCurrentChapter = false
+        } else {
+            return
+        }
+        var chapter = player.currentChapter
+        var anchor: UnitPoint = .center
+
+        if let current = player.currentChapter,
+           let index = video.sortedChapterData.firstIndex(where: {
+            $0.chapterId == current.chapterId
+           }),
+           index > 0 {
+            chapter = video.sortedChapterData[index - 1]
+            anchor = .top
+        }
+        proxy.scrollTo(
+            chapter?.chapterId,
+            anchor: anchor
+        )
     }
 
     func onTitleTap() {

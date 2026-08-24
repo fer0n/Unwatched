@@ -35,10 +35,13 @@ struct GetTranscript: AppIntent {
             transcriptUrl = PlayerManager.shared.transcriptUrl
         }
 
-        let transcript = try await TranscriptService.getTranscript(
-            from: transcriptUrl,
-            youtubeId: video.youtubeId
-        )
+        // a podcast episode has no caption url; its transcript is one it was given earlier or one the show publishes
+        let transcript = video.isPodcast
+            ? await TranscriptService.podcastTranscript(for: video).value
+            : try await TranscriptService.getTranscript(
+                from: transcriptUrl,
+                youtubeId: video.youtubeId
+            )
         if transcript.isEmpty {
             throw TranscriptError.emptyTranscript
         }
@@ -66,6 +69,7 @@ enum TranscriptError: Error, CustomLocalizedStringResourceConvertible, Localized
     case notFound
     case noUrl
     case emptyTranscript
+    case noAudio
 
     var localizedStringResource: LocalizedStringResource {
         switch self {
@@ -75,6 +79,8 @@ enum TranscriptError: Error, CustomLocalizedStringResourceConvertible, Localized
             return "noTranscriptUrl"
         case .emptyTranscript:
             return "emptyTranscript"
+        case .noAudio:
+            return "noEpisodeAudio"
         }
     }
 

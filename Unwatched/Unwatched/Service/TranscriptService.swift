@@ -3,6 +3,7 @@
 //  Unwatched
 //
 
+import Foundation
 import UnwatchedShared
 import SwiftData
 
@@ -39,7 +40,7 @@ struct TranscriptService {
         return analyseBreaks(transcripts)
     }
 
-    private static func analyseBreaks(_ transcripts: [TranscriptEntry]) -> [TranscriptEntry] {
+    static func analyseBreaks(_ transcripts: [TranscriptEntry]) -> [TranscriptEntry] {
         let paragraphPauseThreshold = 0.3
         var updatedTranscripts = transcripts
         guard updatedTranscripts.count > 1 else { return updatedTranscripts }
@@ -63,6 +64,124 @@ struct TranscriptService {
         }
         return updatedTranscripts
     }
+
+    // MARK: - Generating
+
+    /// The transcript an episode already has: one that's been generated before, or the one the show publishes itself.
+    @MainActor
+    static func podcastTranscript(for video: Video) -> Task<[TranscriptEntry], Never> {
+        let youtubeId = video.youtubeId
+        let feedUrl = video.subscription?.link
+        let cacheContainer = DataProvider.shared.localCacheContainer
+
+        return Task.detached {
+            let repo = TranscriptActor(modelContainer: cacheContainer)
+            if let cached = await repo.getTranscript(for: youtubeId) {
+                return cached
+            }
+            guard let feedUrl else { return [] }
+
+            switch await PodcastService.fetchTranscript(feedUrl: feedUrl, episodeId: youtubeId) {
+            case .found(let entries):
+                let cleaned = analyseBreaks(entries)
+                await repo.cacheTranscript(cleaned, for: youtubeId)
+                return cleaned
+            case .notPublished:
+                // remembered, so opening the tab again doesn't re-read the feed.
+                await repo.cacheTranscript([], for: youtubeId)
+                return []
+            case .unreachable:
+                return []
+            }
+        }
+    }
+
+    /// Whether a transcript can be produced for an episode that doesn't have one yet.
+    static var canGenerateTranscript: Bool {
+        #if os(tvOS)
+        return false
+        #else
+        return SpeechTranscriptService.isSupported
+        #endif
+    }
+
+    /// Produces a transcript for a podcast episode and caches it, after which it loads like any other transcript.
+    @MainActor
+    static func generateTranscript(
+        for video: Video,
+        progress: @escaping @Sendable (_ fraction: Double) -> Void
+    ) -> Task<[TranscriptEntry], Error> {
+        let youtubeId = video.youtubeId
+        let mediaUrl = video.mediaUrl
+        let feedUrl = video.subscription?.link
+        let isDownloaded = video.downloadedDate != nil
+        let cacheContainer = DataProvider.shared.localCacheContainer
+
+        return Task.detached {
+            let repo = TranscriptActor(modelContainer: cacheContainer)
+
+            // the feed gets one more look: it's cheap next to transcribing, and a show that published a transcript
+            // since the tab was last opened is worth catching
+            if let feedUrl,
+               case .found(let published) = await PodcastService.fetchTranscript(feedUrl: feedUrl,
+                                                                                 episodeId: youtubeId) {
+                Log.info("using the feed's own transcript for \(youtubeId)")
+                let cleaned = analyseBreaks(published)
+                await repo.cacheTranscript(cleaned, for: youtubeId)
+                return cleaned
+            }
+
+            #if os(tvOS)
+            throw TranscriptError.noUrl
+            #else
+            progress(0.02)
+            let (fileUrl, isTemporary) = try await audioFile(youtubeId: youtubeId, mediaUrl: mediaUrl,
+                                                             isDownloaded: isDownloaded)
+            defer {
+                if isTemporary {
+                    try? FileManager.default.removeItem(at: fileUrl)
+                }
+            }
+
+            let entries = try await SpeechTranscriptService.transcribe(fileUrl: fileUrl) { fraction in
+                // the leading slice covers fetching the audio and installing the speech model, neither of which
+                // reports progress of its own
+                progress(0.1 + fraction * 0.9)
+            }
+            let cleaned = analyseBreaks(entries)
+            await repo.cacheTranscript(cleaned, for: youtubeId)
+            return cleaned
+            #endif
+        }
+    }
+
+    #if !os(tvOS)
+    /// The episode as a local file, which is what `SpeechAnalyzer` reads.
+    private static func audioFile(
+        youtubeId: String,
+        mediaUrl: URL?,
+        isDownloaded: Bool
+    ) async throws -> (url: URL, isTemporary: Bool) {
+        if isDownloaded, let downloaded = PodcastDownloadStore.downloadedFile(for: youtubeId) {
+            return (downloaded, false)
+        }
+        guard let mediaUrl else {
+            throw TranscriptError.noAudio
+        }
+        Log.info("downloading \(youtubeId) to transcribe it")
+        let (temporary, response) = try await URLSession.shared.download(from: mediaUrl)
+        guard response.isSuccessfulHttp else {
+            try? FileManager.default.removeItem(at: temporary)
+            throw TranscriptError.noAudio
+        }
+        // the downloaded file has no extension, and AVAudioFile needs one to pick a reader
+        let fileExtension = mediaUrl.pathExtension.isEmpty ? "mp3" : mediaUrl.pathExtension
+        let destination = temporary.appendingPathExtension(fileExtension)
+        try? FileManager.default.removeItem(at: destination)
+        try FileManager.default.moveItem(at: temporary, to: destination)
+        return (destination, true)
+    }
+    #endif
 
     public static func deleteCache() -> Task<(), Error> {
         return Task {

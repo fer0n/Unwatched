@@ -56,11 +56,9 @@ struct ChapterList: View {
                     .tint(foregroundColor)
                     .contextMenu {
                         Button("copyUrl", systemImage: Const.copySF) {
-                            let text = UrlService.getShortenedUrl(
-                                video.youtubeId,
-                                timestamp: chapter.startTime,
-                                )
-                            ClipboardService.set(text)
+                            if let text = UrlService.getShareUrl(video, timestamp: chapter.startTime) {
+                                ClipboardService.set(text)
+                            }
                         }
                     }
                     .accessibilityActions {
@@ -86,11 +84,35 @@ struct ChapterList: View {
         guard !chapter.isActive || guardPremium() else {
             return
         }
+        if chapter.isIntro || chapter.isOutro {
+            if chapter.isIntro {
+                video.keepIntro = !(video.keepIntro ?? false)
+            } else {
+                video.keepOutro = !(video.keepOutro ?? false)
+            }
+            try? video.modelContext?.save()
+            if video == player.video {
+                player.handleChapterChange()
+            }
+            return
+        }
+        // enabling something only the channel's auto-skip list turned off needs no row
+        if !chapter.isActive, video.subscription?.autoSkips(chapter.title) == true {
+            video.subscription?.setAutoSkip(chapter.title, false)
+            chapterDidChange()
+            return
+        }
         guard let row = ChapterService.materialize(chapter, of: video) else {
             Log.warning("toggleChapter: no row for \(chapter)")
             return
         }
-        row.isActive.toggle()
+        row.isActive = !chapter.isActive
+        video.subscription?.setAutoSkip(chapter.title, !row.isActive)
+        chapterDidChange()
+    }
+
+    private func chapterDidChange() {
+        video.chaptersDidChange()
         try? video.modelContext?.save()
         if video == player.video {
             player.handleChapterChange()

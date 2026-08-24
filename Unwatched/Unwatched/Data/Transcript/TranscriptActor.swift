@@ -33,6 +33,16 @@ import UnwatchedShared
             return
         }
 
+        // A generated transcript replaces whatever is cached — including the empty entry that
+        // stands for "this video has no transcript", which is what a podcast episode starts out
+        // with once its description tab has been opened.
+        let existing = FetchDescriptor<Transcript>(
+            predicate: #Predicate<Transcript> { $0.youtubeId == youtubeId }
+        )
+        for transcript in (try? modelContext.fetch(existing)) ?? [] {
+            modelContext.delete(transcript)
+        }
+
         let transcriptCache = Transcript(youtubeId, data: encoded)
         modelContext.insert(transcriptCache)
         try? modelContext.save()

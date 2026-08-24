@@ -12,11 +12,33 @@ struct TranscriptDescriptionSelection: View {
     let video: Video
     let isCurrentVideo: Bool
     let scrollProxy: ScrollViewProxy
+    @Binding var transcriptVM: TranscriptView.ViewModel
 
     @State var selection: DescriptionContentType = .description
-    @State var transcriptVM = TranscriptView.ViewModel()
 
     var body: some View {
+        if !hasTranscript {
+            DescriptionDetailView(description: video.videoDescription)
+        } else {
+            selection(for: video)
+        }
+    }
+
+    var hasTranscript: Bool {
+        Self.canHaveTranscript(video, isCurrentVideo: isCurrentVideo, transcriptUrl: player.transcriptUrl)
+    }
+
+    /// A video the player has already reported as having no captions never gets any either, so the tab and the
+    /// chapter tools built on a transcript aren't worth offering for it.
+    static func canHaveTranscript(_ video: Video, isCurrentVideo: Bool, transcriptUrl: String?) -> Bool {
+        if video.isPodcast {
+            return true
+        }
+        return !(isCurrentVideo && transcriptUrl == "")
+    }
+
+    @ViewBuilder
+    func selection(for video: Video) -> some View {
         CapsuleSegmentedControl(
             selection: $selection,
             items: [
@@ -43,6 +65,7 @@ struct TranscriptDescriptionSelection: View {
             DescriptionDetailView(description: video.videoDescription)
         } else {
             TranscriptView(
+                video: video,
                 transcriptUrl: isCurrentVideo ? player.transcriptUrl : nil,
                 youtubeId: video.youtubeId,
                 viewModel: $transcriptVM,

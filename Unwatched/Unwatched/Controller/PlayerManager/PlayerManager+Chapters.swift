@@ -122,6 +122,7 @@ extension PlayerManager {
         withAnimation {
             currentChapter = current
         }
+        backend.handleChapterChanged()
 
         // set end time; prepare jump
         if let nextStart = next?.startTime {
@@ -211,6 +212,14 @@ extension PlayerManager {
         Log.info("handleChapterRefresh")
         ChapterService.filterChapters(in: video)
 
+        if let video, video.isPodcast {
+            ChapterService.loadPodcastChapters(for: video)
+            // the rows may already be there (a second refresh, or chapters from the feed): without this nothing picks
+            // the current one until playback crosses a chapter boundary
+            handleChapterChange()
+            return
+        }
+
         let settingOn = NSUbiquitousKeyValueStore.default.bool(forKey: Const.mergeSponsorBlockChapters)
         if !settingOn {
             return
@@ -226,7 +235,10 @@ extension PlayerManager {
         let duration = video?.duration
         if let mergedChapters = video?.mergedChapters {
             ChapterService.skipSponsorBlockSegments(in: mergedChapters)
+            video?.chaptersDidChange()
             self.handleChapterChange()
+            // the engine draws its own markers, and the set it has is now out of date
+            self.backend.setChapterMarkers(force: false)
         }
 
         Task {
@@ -252,6 +264,7 @@ extension PlayerManager {
                 Log.error("Error while merging chapters: \(error)")
             }
             self.handleChapterChange()
+            self.backend.setChapterMarkers(force: false)
         }
     }
 

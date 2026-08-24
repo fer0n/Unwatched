@@ -13,6 +13,7 @@ public final class Chapter: ChapterData, CustomStringConvertible {
     public var isActive = true
     public var category: ChapterCategory?
     public var link: URL?
+    public var imageUrl: URL?
 
     public var persistentId: PersistentIdentifier? {
         persistentModelID
@@ -29,7 +30,8 @@ public final class Chapter: ChapterData, CustomStringConvertible {
         endTime: Double? = nil,
         isActive: Bool? = nil,
         category: ChapterCategory? = nil,
-        link: URL? = nil
+        link: URL? = nil,
+        imageUrl: URL? = nil
     ) {
         self.title = title
         self.startTime = time
@@ -38,6 +40,7 @@ public final class Chapter: ChapterData, CustomStringConvertible {
         self.isActive = isActive ?? true
         self.category = category
         self.link = link
+        self.imageUrl = imageUrl
     }
 
     public static func getDummy() -> Chapter {
@@ -53,6 +56,7 @@ public final class Chapter: ChapterData, CustomStringConvertible {
             isActive: isActive,
             category: category,
             link: link,
+            imageUrl: imageUrl,
             videoId: videoId,
             persistentId: persistentId
         )
@@ -67,7 +71,7 @@ public struct SendableChapter: ChapterData, Sendable, CustomStringConvertible, H
     /// `videoId` is the cache key and gets stamped back on read; `persistentId` refers to a row
     /// in a different store and would be meaningless once decoded.
     private enum CodingKeys: String, CodingKey {
-        case title, startTime, endTime, duration, isActive, category, link
+        case title, startTime, endTime, duration, isActive, category, link, imageUrl
     }
 
     public var title: String?
@@ -77,8 +81,19 @@ public struct SendableChapter: ChapterData, Sendable, CustomStringConvertible, H
     public var isActive: Bool = true
     public var category: ChapterCategory?
     public var link: URL?
+
+    /// Artwork for this chapter alone — a podcast's `podcast:chapters` `img`, a Podlove marker's `image`, or the
+    /// picture in the episode file's own chapter frame.
+    public var imageUrl: URL?
+
     public var videoId: String?
     public var persistentId: PersistentIdentifier?
+
+    /// The generated chapter covering a subscription's skipped intro, see `ChapterService.applySkipIntro`.
+    public var isIntro: Bool = false
+
+    /// The counterpart at the end, see `ChapterService.applySkipOutro` and `Video.keepOutro`.
+    public var isOutro: Bool = false
 
     public var description: String {
         "\(startTime)-\(endTime, default: "nil"): \(title ?? category?.description ?? "-")"
@@ -92,7 +107,8 @@ public struct SendableChapter: ChapterData, Sendable, CustomStringConvertible, H
             endTime: endTime,
             isActive: isActive,
             category: category,
-            link: link
+            link: link,
+            imageUrl: imageUrl
         )
     }
 
@@ -101,13 +117,15 @@ public struct SendableChapter: ChapterData, Sendable, CustomStringConvertible, H
         to endTime: Double? = nil,
         _ title: String? = nil,
         category: ChapterCategory? = nil,
-        link: URL? = nil
+        link: URL? = nil,
+        imageUrl: URL? = nil
     ) {
         self.startTime = startTime
         self.endTime = endTime
         self.title = title
         self.category = category
         self.link = link
+        self.imageUrl = imageUrl
     }
 
     public init(
@@ -118,8 +136,11 @@ public struct SendableChapter: ChapterData, Sendable, CustomStringConvertible, H
         isActive: Bool? = nil,
         category: ChapterCategory? = nil,
         link: URL? = nil,
+        imageUrl: URL? = nil,
         videoId: String? = nil,
-        persistentId: PersistentIdentifier? = nil
+        persistentId: PersistentIdentifier? = nil,
+        isIntro: Bool = false,
+        isOutro: Bool = false
     ) {
         self.title = title
         self.startTime = startTime
@@ -128,7 +149,10 @@ public struct SendableChapter: ChapterData, Sendable, CustomStringConvertible, H
         self.isActive = isActive ?? true
         self.category = category
         self.link = link
+        self.imageUrl = imageUrl
         self.videoId = videoId
         self.persistentId = persistentId
+        self.isIntro = isIntro
+        self.isOutro = isOutro
     }
 }

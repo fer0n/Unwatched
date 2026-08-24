@@ -15,9 +15,6 @@ public extension ChapterService {
     static let derivedChapterCache = DerivedChapterCache()
 
     /// Chapters for a video, parsed from its description.
-    ///
-    /// Nothing here touches the synced store — these chapters exist only in memory and in the
-    /// local cache until something materializes them into `Chapter` rows.
     static func derivedChapters(
         youtubeId: String,
         videoDescription: String?,
@@ -62,19 +59,52 @@ public extension ChapterService {
         return chapters
     }
 
-    /// Drops both cache layers for a video, e.g. once its chapters have been materialized into
-    /// rows and the derived copy would only be a second, diverging source.
+    /// Chapters that were fetched rather than parsed: a podcast episode's, from the feed's inline Podlove markers,
+    /// its `podcast:chapters` file, or the episode's own ID3 frames.
+    static func fetchedChapters(youtubeId: String, duration: Double?) -> [SendableChapter]? {
+        if let cached = derivedChapterCache[youtubeId] {
+            // a memoized parse means there's nothing fetched for this one; the store already said so
+            guard cached.isFetched else { return nil }
+            return updateDurationAndEndTime(in: cached.chapters, videoDuration: duration)
+        }
+        guard let stored = loadCached(youtubeId: youtubeId, hash: fetchedSourceHash) else {
+            return nil
+        }
+        derivedChapterCache[youtubeId] = DerivedChapters(
+            source: nil, duration: nil, chapters: stored, isFetched: true
+        )
+        return updateDurationAndEndTime(in: stored, videoDuration: duration)
+    }
+
+    /// Caches what was fetched for a podcast episode, replacing whatever was cached for it before.
+    static func cachePodcastChapters(_ chapters: [SendableChapter], youtubeId: String) {
+        var chapters = chapters.sorted { $0.startTime < $1.startTime }
+        for index in chapters.indices {
+            chapters[index].videoId = youtubeId
+        }
+        derivedChapterCache[youtubeId] = DerivedChapters(
+            source: nil, duration: nil, chapters: chapters, isFetched: true
+        )
+        store(chapters, youtubeId: youtubeId, hash: fetchedSourceHash)
+    }
+
+    /// Marks a cache entry as fetched rather than parsed.
+    private static var fetchedSourceHash: String { "fetched" }
+
+    /// Drops both cache layers for a video, e.g.
     static func invalidateDerivedChapters(youtubeId: String) {
         derivedChapterCache[youtubeId] = nil
 
-        let context = ModelContext(DataProvider.shared.localCacheContainer)
-        var fetch = FetchDescriptor<CachedChapters>(predicate: #Predicate {
-            $0.youtubeId == youtubeId
-        })
-        fetch.fetchLimit = 1
-        guard let existing = try? context.fetch(fetch).first else { return }
-        context.delete(existing)
-        try? context.save()
+        cacheWriteQueue.sync {
+            let context = ModelContext(DataProvider.shared.localCacheContainer)
+            var fetch = FetchDescriptor<CachedChapters>(predicate: #Predicate {
+                $0.youtubeId == youtubeId
+            })
+            fetch.fetchLimit = 1
+            guard let existing = try? context.fetch(fetch).first else { return }
+            context.delete(existing)
+            try? context.save()
+        }
     }
 
     /// Drops the whole derived-chapter cache, for the "delete everything" paths — same role as
@@ -159,13 +189,18 @@ public extension ChapterService {
         return chapters
     }
 
+    /// Serial, and shared with `invalidateDerivedChapters`: writes are made off the caller because
+    /// reads happen inside view bodies, and an invalidate that overtook a store in flight would
+    /// leave the entry it was meant to remove.
+    private static let cacheWriteQueue = DispatchQueue(label: "com.pentlandFirth.derivedChapterCache")
+
     private static func store(_ chapters: [SendableChapter], youtubeId: String, hash: String) {
         guard let data = try? JSONEncoder().encode(chapters) else {
             Log.error("store: couldn't encode chapters for \(youtubeId)")
             return
         }
 
-        Task.detached {
+        cacheWriteQueue.async {
             let context = ModelContext(DataProvider.shared.localCacheContainer)
             var fetch = FetchDescriptor<CachedChapters>(predicate: #Predicate {
                 $0.youtubeId == youtubeId
@@ -193,8 +228,23 @@ public struct DerivedChapters: Sendable {
     public let duration: Double?
     public let chapters: [SendableChapter]
 
+    /// Fetched for a podcast episode instead of parsed from a description — see `ChapterService.fetchedChapters`.
+    public let isFetched: Bool
+
+    public init(
+        source: String?,
+        duration: Double?,
+        chapters: [SendableChapter],
+        isFetched: Bool = false
+    ) {
+        self.source = source
+        self.duration = duration
+        self.chapters = chapters
+        self.isFetched = isFetched
+    }
+
     public func matches(_ description: String?, _ duration: Double?) -> Bool {
-        source == description && self.duration == duration
+        !isFetched && source == description && self.duration == duration
     }
 }
 

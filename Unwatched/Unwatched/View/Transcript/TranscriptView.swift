@@ -9,6 +9,7 @@ import UnwatchedShared
 struct TranscriptView: View {
     @Environment(PlayerManager.self) var player
 
+    let video: Video
     let transcriptUrl: String?
     let youtubeId: String
 
@@ -58,7 +59,7 @@ struct TranscriptView: View {
                     .frame(height: 300)
                     .task(id: refreshId) {
                         await viewModel.handleTranscriptLoading(
-                            youtubeId,
+                            video,
                             transcriptUrl
                         )
                     }
@@ -109,6 +110,9 @@ struct TranscriptView: View {
     var transcriptStatus: LocalizedStringKey {
         if viewModel.isLoading {
             return "loadingTranscript"
+        }
+        if video.isPodcast {
+            return "noTranscriptYet"
         }
         if isCurrentVideo {
             if player.transcriptUrl == "" {
@@ -161,6 +165,17 @@ extension TranscriptView {
         }
         var text = DebouncedText()
         var isLoading = false
+        var isGenerating = false
+        var generationProgress: Double = 0
+        var generationError: String?
+
+        @ObservationIgnored
+        private var generationTask: Task<Void, Never>?
+
+        /// Held separately: the transcription runs detached, so cancelling the task that awaits it would otherwise
+        /// leave it transcribing the whole episode with nobody listening.
+        @ObservationIgnored
+        private var transcriptionTask: Task<[TranscriptEntry], Error>?
 
         @ObservationIgnored
         var transcriptYoutubeId: String = ""
@@ -224,10 +239,57 @@ extension TranscriptView {
         }
 
         @MainActor
+        func generateTranscript(for video: Video) {
+            guard !isGenerating else { return }
+            isGenerating = true
+            generationProgress = 0
+            generationError = nil
+
+            let youtubeId = video.youtubeId
+            let task = TranscriptService.generateTranscript(for: video) { fraction in
+                Task { @MainActor [weak self] in
+                    self?.generationProgress = fraction
+                }
+            }
+            transcriptionTask = task
+
+            generationTask = Task { [weak self] in
+                defer {
+                    self?.isGenerating = false
+                    self?.generationTask = nil
+                    self?.transcriptionTask = nil
+                }
+                do {
+                    let entries = try await task.value
+                    withAnimation {
+                        self?.transcript = entries
+                    }
+                    self?.transcriptYoutubeId = youtubeId
+                } catch is CancellationError {
+                    return
+                } catch {
+                    Log.error("generateTranscript: \(error.localizedDescription)")
+                    self?.generationError = error.localizedDescription
+                    self?.generationProgress = 0
+                }
+            }
+        }
+
+        @MainActor
+        func cancelGeneration() {
+            transcriptionTask?.cancel()
+            generationTask?.cancel()
+            transcriptionTask = nil
+            generationTask = nil
+            isGenerating = false
+        }
+
+        @MainActor
         func handleTranscriptLoading(
-            _ youtubeId: String,
+            _ video: Video,
             _ transcriptUrl: String?
         ) async {
+            let youtubeId = video.youtubeId
             if youtubeId != transcriptYoutubeId && transcript != nil {
                 transcript = nil
             }
@@ -239,10 +301,16 @@ extension TranscriptView {
             isLoading = true
             defer { isLoading = false }
 
-            transcript = try? await TranscriptService.getTranscript(
-                from: transcriptUrl,
-                youtubeId: youtubeId,
-                )
+            if video.isPodcast {
+                // an episode has no captions to fetch, but it may have one it was given earlier or one the show
+                // publishes itself
+                transcript = await TranscriptService.podcastTranscript(for: video).value
+            } else {
+                transcript = try? await TranscriptService.getTranscript(
+                    from: transcriptUrl,
+                    youtubeId: youtubeId,
+                    )
+            }
             Log.info("Transcript loaded for \(youtubeId): \(transcript?.count ?? 0) entries")
             transcriptYoutubeId = youtubeId
         }

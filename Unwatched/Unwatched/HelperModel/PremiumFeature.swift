@@ -43,6 +43,7 @@ enum PremiumFeature: String, CaseIterable {
          playBrowserVideosInApp,
          seeVideoDuration,
          generateChaptersFromTranscript,
+         generateTranscript,
          chapterFilter,
          customTheme,
          statistics
@@ -61,6 +62,8 @@ enum PremiumFeature: String, CaseIterable {
             return String(localized: "seeVideoDurationTitle")
         case .generateChaptersFromTranscript:
             return String(localized: "generateChaptersFromTranscript")
+        case .generateTranscript:
+            return String(localized: "generateTranscriptTitle")
         case .customTheme:
             return String(localized: "customTheme")
         case .statistics:
@@ -82,6 +85,8 @@ enum PremiumFeature: String, CaseIterable {
             return "clock.fill"
         case .generateChaptersFromTranscript:
             return "sparkles.2"
+        case .generateTranscript:
+            return "text.quote"
         case .customTheme:
             return "paintbrush.fill"
         case .statistics:
