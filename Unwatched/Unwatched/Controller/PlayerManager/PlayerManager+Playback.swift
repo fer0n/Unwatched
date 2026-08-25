@@ -585,9 +585,10 @@ extension PlayerManager {
         isAudioOnly ? 1 : videoAspectRatio
     }
 
-    /// Whether the episode brought an image of its own.
+    /// Whether the current artwork is the episode's own rather than the subscription's: either the episode's
+    /// thumbnail or the current chapter's own image.
     var hasEpisodeArtwork: Bool {
-        isAudioOnly && video?.thumbnailUrl != nil
+        isAudioOnly && (video?.thumbnailUrl != nil || currentChapter?.imageUrl != nil)
     }
 
     /// What the player surface and the lock screen show, in the order they're tried: the current chapter's own image

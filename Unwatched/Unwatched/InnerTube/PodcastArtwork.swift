@@ -38,21 +38,22 @@ private enum PodcastArtworkLayout {
     static let artInset: CGFloat = 10
     /// Gap between the cover art's edge and the badge.
     static let badgeGap: CGFloat = 12
-    static let badgeImageSize: CGFloat = 30
-    static let badgeInnerInset: CGFloat = 6
+    static let badgeImageSize: CGFloat = 45
+    /// A touch rounder than the standard channel image shape (`ChannelImageShape.cornerFactor`), since the badge
+    /// has no other chrome to soften its corners.
+    static let badgeImageCornerFactor: CGFloat = ChannelImageShape.cornerFactor + 0.04
 
-    /// Concentric with the badge image it holds.
-    static var badgeCornerRadius: CGFloat {
-        badgeImageSize * ChannelImageShape.cornerFactor + badgeInnerInset
+    static var badgeImageCornerRadius: CGFloat {
+        badgeImageSize * badgeImageCornerFactor
     }
 
     /// Concentric with the badge sitting `badgeGap` inside the art.
     static var artCornerRadius: CGFloat {
-        badgeCornerRadius + badgeGap
+        badgeImageCornerRadius + badgeGap
     }
 }
 
-/// The show's cover and name over an episode's own artwork, standing in for the subscription row that the podcast
+/// The show's cover over an episode's own artwork, standing in for the subscription row that the podcast
 /// controls leave out.
 struct PodcastSubscriptionBadge: View {
     @Environment(\.displayScale) private var displayScale
@@ -60,42 +61,33 @@ struct PodcastSubscriptionBadge: View {
     let subscription: Subscription
 
     private let imageSize = PodcastArtworkLayout.badgeImageSize
-    private let inset = PodcastArtworkLayout.badgeInnerInset
 
-    /// Concentric with the cover it holds: the image's own rounding plus the gap between the two, which keeps the
-    /// curves parallel instead of letting the outer one run tighter or wider.
+    /// The image itself, not an inset within it — the glass has nothing to show but the cover.
     private var cornerRadius: CGFloat {
-        imageSize * ChannelImageShape.cornerFactor + inset
+        PodcastArtworkLayout.badgeImageCornerRadius
     }
 
     var body: some View {
-        HStack(spacing: 6) {
-            if let thumbnailUrl = subscription.thumbnailUrl {
-                CachedImageView(
-                    imageUrl: thumbnailUrl,
-                    maxPixelSize: ceil(imageSize * displayScale)
-                ) { image in
-                    image
-                        .resizable()
-                        .aspectRatio(contentMode: .fill)
-                } placeholder: {
-                    Color.clear
-                }
-                .frame(width: imageSize, height: imageSize)
-                .channelImageClip(isPodcast: subscription.isPodcast)
+        // Without a cover there's nothing left to show, so the glass would just be an empty tile.
+        if let thumbnailUrl = subscription.thumbnailUrl {
+            CachedImageView(
+                imageUrl: thumbnailUrl,
+                maxPixelSize: ceil(imageSize * displayScale)
+            ) { image in
+                image
+                    .resizable()
+                    .aspectRatio(contentMode: .fill)
+            } placeholder: {
+                Color.clear
             }
-
-            Text(subscription.displayTitle)
-                .font(.subheadline)
-                .fontWeight(.medium)
-                .fontWidth(.condensed)
-                .lineLimit(1)
+            .frame(width: imageSize, height: imageSize)
+            .clipShape(subscription.isPodcast
+                        ? AnyShape(RoundedRectangle(cornerRadius: cornerRadius, style: .continuous))
+                        : AnyShape(Circle()))
+            .glassEffect(.regular, in: .rect(cornerRadius: cornerRadius, style: .continuous))
+            .padding(PodcastArtworkLayout.artInset + PodcastArtworkLayout.badgeGap)
+            .allowsHitTesting(false)
         }
-        .padding(.trailing, 10)
-        .padding(inset)
-        .glassEffect(.regular, in: .rect(cornerRadius: cornerRadius, style: .continuous))
-        .padding(PodcastArtworkLayout.artInset + PodcastArtworkLayout.badgeGap)
-        .allowsHitTesting(false)
     }
 }
 
