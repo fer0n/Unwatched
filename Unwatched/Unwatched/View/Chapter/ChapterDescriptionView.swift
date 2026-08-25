@@ -53,11 +53,23 @@ struct ChapterDescriptionView: View {
                         .padding(.bottom, 5)
                     }
 
+                    let hasTranscript = TranscriptDescriptionSelection.canHaveTranscript(
+                        video,
+                        isCurrentVideo: isCurrentVideo,
+                        transcriptUrl: player.transcriptUrl
+                    )
+
+                    if hasTranscript || hasChapters {
+                        ChapterSettingsMenu(video: player.video)
+
+                        Spacer()
+                            .frame(height: 10)
+                    }
+
                     if showGenerateTranscript {
-                        // no transcript means no chapters can be generated and nothing for the transcript tab to
-                        // show, so the picker/menu give way to just the button
+                        // no transcript means no chapters can be generated, so the picker gives way to just the
+                        // button — the settings menu above still stands when chapters already exist regardless
                         GenerateTranscriptButton(video: video, viewModel: $transcriptVM)
-                            .padding(.top, hasChapters ? 10 : 0)
                             .transition(.opacity)
 
                         Spacer()
@@ -65,27 +77,12 @@ struct ChapterDescriptionView: View {
 
                         DescriptionDetailView(description: video.videoDescription)
                     } else {
-                        let hasTranscript = TranscriptDescriptionSelection.canHaveTranscript(
-                            video,
+                        TranscriptDescriptionSelection(
+                            video: video,
                             isCurrentVideo: isCurrentVideo,
-                            transcriptUrl: player.transcriptUrl
+                            scrollProxy: proxy,
+                            transcriptVM: $transcriptVM
                         )
-
-                        Group {
-                            if hasTranscript {
-                                ChapterSettingsMenu(video: player.video)
-
-                                Spacer()
-                                    .frame(height: 10)
-                            }
-
-                            TranscriptDescriptionSelection(
-                                video: video,
-                                isCurrentVideo: isCurrentVideo,
-                                scrollProxy: proxy,
-                                transcriptVM: $transcriptVM
-                            )
-                        }
                         .transition(.opacity)
                     }
                 }
@@ -243,7 +240,7 @@ struct ChapterDescriptionView: View {
     }
 
     /// A podcast episode that has no transcript at all — not one that was published, not one generated before — hides
-    /// chapters/description/transcript in favor of just the button.
+    /// the description/transcript picker in favor of just the button.
     var showGenerateTranscript: Bool {
         video.isPodcast
             && TranscriptService.canGenerateTranscript
@@ -317,12 +314,12 @@ struct ChapterDescriptionView: View {
         var chapter = player.currentChapter
         var anchor: UnitPoint = .center
 
+        // one row of context above the current chapter, taken from the list's own order
+        let listed = video.orderedChapterData
         if let current = player.currentChapter,
-           let index = video.sortedChapterData.firstIndex(where: {
-            $0.chapterId == current.chapterId
-           }),
+           let index = listed.firstIndex(where: { $0.chapterId == current.chapterId }),
            index > 0 {
-            chapter = video.sortedChapterData[index - 1]
+            chapter = listed[index - 1]
             anchor = .top
         }
         proxy.scrollTo(

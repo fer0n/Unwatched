@@ -90,7 +90,8 @@ extension ChapterService {
         return Set(current.map(ObjectIdentifier.init)) == Set(chapters.map(ObjectIdentifier.init))
     }
 
-    /// Rewrites every field a freshly created `Chapter` would have carried.
+    /// Rewrites every field a freshly created `Chapter` would have carried, except `order`: rows are
+    /// paired by position, so a refresh leaves the slot the user dragged this one into alone.
     private static func overwrite(_ chapter: Chapter, with sendable: SendableChapter) {
         chapter.title = sendable.title
         chapter.startTime = sendable.startTime

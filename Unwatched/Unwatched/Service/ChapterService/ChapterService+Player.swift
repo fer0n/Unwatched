@@ -53,11 +53,32 @@ extension ChapterService {
             // rows now describe this video; a derived copy alongside them would only drift
             invalidateDerivedChapters(youtubeId: video.youtubeId)
         }
+        // these are different chapters, so whatever slots the old ones were dragged into mean nothing
+        clearChapterOrder(of: video)
         try? context.save()
 
-        if video.youtubeId == PlayerManager.shared.video?.youtubeId {
+        notifyPlayer(of: video, refresh: true)
+    }
+
+    /// Hands the player a video it is already showing, so an edit to its chapters reaches playback.
+    @MainActor
+    private static func notifyPlayer(of video: Video, refresh: Bool = false) {
+        guard video.youtubeId == PlayerManager.shared.video?.youtubeId else {
+            return
+        }
+        if refresh {
             PlayerManager.shared.video = video
             PlayerManager.shared.handleChapterRefresh(forceRefresh: true)
+        } else {
+            PlayerManager.shared.handleChapterChange()
+        }
+        // the page seeks by the chapters it was handed, so an edit has to reach it too
+        PlayerManager.shared.backend.setChapterMarkers(force: false)
+    }
+
+    private static func clearChapterOrder(of video: Video) {
+        for row in video.allChapterRows where row.order != nil {
+            row.order = nil
         }
     }
 
@@ -110,9 +131,7 @@ extension ChapterService {
             }
             // the cache publishes nothing of its own, and neither does the player
             video.chaptersDidChange()
-            if video.youtubeId == PlayerManager.shared.video?.youtubeId {
-                PlayerManager.shared.handleChapterRefresh(forceRefresh: true)
-            }
+            notifyPlayer(of: video, refresh: true)
         }
     }
 
@@ -153,6 +172,78 @@ extension ChapterService {
         return reconciled.chapters.first { $0.startTime == chapter.startTime }
     }
 
+    /// Puts a video's chapters into the order the user dragged them into. Ordering is an edit like
+    /// toggling one off, so it materializes the video's rows the same way — see `materialize`.
+    ///
+    /// - Parameter chapters: every chapter of the video, in the new order.
+    @MainActor
+    static func setChapterOrder(_ chapters: [SendableChapter], of video: Video) {
+        guard let context = video.modelContext else {
+            Log.warning("setChapterOrder: video has no context")
+            return
+        }
+
+        var rows = [Chapter]()
+        var taken = Set<ObjectIdentifier>()
+        var materialized = false
+
+        // the generated intro/outro have no row and don't move, see `inPlaybackOrder`
+        for chapter in chapters where !chapter.isIntro && !chapter.isOutro {
+            var row: Chapter? = chapter.persistentId.flatMap { context.existingModel(for: $0) }
+            if row == nil {
+                if !materialized {
+                    // nothing has edited this video yet: one pass turns its whole derived set into rows
+                    reconcileChapters(video.ownChapterData, for: video)
+                    invalidateDerivedChapters(youtubeId: video.youtubeId)
+                    materialized = true
+                }
+                row = unclaimedRow(for: chapter, of: video, taken: taken)
+            }
+            guard let row, taken.insert(ObjectIdentifier(row)).inserted else {
+                Log.warning("setChapterOrder: no row for \(chapter)")
+                continue
+            }
+            rows.append(row)
+        }
+
+        for (index, row) in rows.enumerated() where row.order != index {
+            row.order = index
+        }
+        video.chaptersDidChange()
+        try? context.save()
+
+        notifyPlayer(of: video)
+    }
+
+    /// A chapter the user dragged carries no row of its own; `taken` keeps two of them that look
+    /// alike from claiming the same one.
+    @MainActor
+    private static func unclaimedRow(
+        for chapter: SendableChapter,
+        of video: Video,
+        taken: Set<ObjectIdentifier>
+    ) -> Chapter? {
+        let candidates = (video.chapters ?? []).filter { !taken.contains(ObjectIdentifier($0)) }
+        // by title where the start times don't line up — a skipped intro shifts the first
+        // chapter's start, and the derived chapter the user dragged carries the shifted one
+        return candidates.first { $0.startTime == chapter.startTime }
+            ?? candidates.first { $0.title != nil && $0.title == chapter.title }
+    }
+
+    /// Drops a custom chapter order, leaving everything else about the chapters alone.
+    @MainActor
+    static func resetChapterOrder(for video: Video) {
+        guard let context = video.modelContext else {
+            Log.warning("resetChapterOrder: video has no context")
+            return
+        }
+        clearChapterOrder(of: video)
+        video.chaptersDidChange()
+        try? context.save()
+
+        notifyPlayer(of: video)
+    }
+
     /// Puts a video's chapters back to what its description says, dropping whatever was edited into them.
     @MainActor
     static func restoreChapters(for video: Video) {
@@ -175,9 +266,6 @@ extension ChapterService {
         video.chaptersDidChange()
         try? context.save()
 
-        if video.youtubeId == PlayerManager.shared.video?.youtubeId {
-            PlayerManager.shared.video = video
-            PlayerManager.shared.handleChapterRefresh(forceRefresh: true)
-        }
+        notifyPlayer(of: video, refresh: true)
     }
 }

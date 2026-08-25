@@ -2328,7 +2328,7 @@ final class PodcastChapterCacheTests: XCTestCase {
         ChapterService.invalidateDerivedChapters(youtubeId: youtubeId)
         for video in created where !video.isDeleted {
             guard let context = video.modelContext else { continue }
-            for chapter in (video.chapters ?? []) + (video.mergedChapters ?? []) {
+            for chapter in video.allChapterRows {
                 context.delete(chapter)
             }
             context.delete(video)
@@ -2430,6 +2430,199 @@ final class PodcastChapterCacheTests: XCTestCase {
             ChapterService.fetchedChapters(youtubeId: youtubeId, duration: 1200),
             "the cached copy goes, so it can't drift from the rows"
         )
+    }
+}
+
+final class ChapterOrderTests: XCTestCase {
+
+    private var youtubeId = ""
+    private var created = [Video]()
+
+    override func setUp() {
+        super.setUp()
+        youtubeId = "chapterOrderTest-\(UUID().uuidString.prefix(8))"
+    }
+
+    override func tearDown() {
+        ChapterService.invalidateDerivedChapters(youtubeId: youtubeId)
+        for video in created where !video.isDeleted {
+            guard let context = video.modelContext else { continue }
+            for chapter in video.allChapterRows {
+                context.delete(chapter)
+            }
+            context.delete(video)
+            try? context.save()
+        }
+        created.removeAll()
+        super.tearDown()
+    }
+
+    private func makeVideo(in context: ModelContext) -> Video {
+        let video = Video(
+            title: "My Video",
+            url: nil,
+            youtubeId: youtubeId,
+            duration: 300,
+            videoDescription: "0:00 First\n1:00 Second\n2:00 Third"
+        )
+        context.insert(video)
+        try? context.save()
+        created.append(video)
+        return video
+    }
+
+    // MARK: - inPlaybackOrder
+
+    func testChaptersWithoutAnOrderAreLeftAlone() {
+        let chapters: [SendableChapter] = [.init(0, to: 60, "First"), .init(60, to: 120, "Second")]
+
+        XCTAssertEqual(ChapterService.inPlaybackOrder(chapters).map(\.title), ["First", "Second"])
+    }
+
+    func testChaptersFollowTheirOrder() {
+        let chapters: [SendableChapter] = [
+            SendableChapter(title: "First", startTime: 0, order: 2),
+            SendableChapter(title: "Second", startTime: 60, order: 0),
+            SendableChapter(title: "Third", startTime: 120, order: 1)
+        ]
+
+        XCTAssertEqual(
+            ChapterService.inPlaybackOrder(chapters).map(\.title),
+            ["Second", "Third", "First"]
+        )
+    }
+
+    /// A chapter that arrived after the reorder has no order of its own.
+    func testUnorderedChaptersGoLast() {
+        let chapters: [SendableChapter] = [
+            SendableChapter(title: "First", startTime: 0, order: 1),
+            SendableChapter(title: "Second", startTime: 60),
+            SendableChapter(title: "Third", startTime: 120, order: 0)
+        ]
+
+        XCTAssertEqual(
+            ChapterService.inPlaybackOrder(chapters).map(\.title),
+            ["Third", "First", "Second"]
+        )
+    }
+
+    func testIntroAndOutroStayWhereTheyAre() {
+        let chapters: [SendableChapter] = [
+            SendableChapter(title: "Intro", startTime: 0, isIntro: true),
+            SendableChapter(title: "First", startTime: 30, order: 1),
+            SendableChapter(title: "Second", startTime: 60, order: 0),
+            SendableChapter(title: "Outro", startTime: 120, isOutro: true)
+        ]
+
+        XCTAssertEqual(
+            ChapterService.inPlaybackOrder(chapters).map(\.title),
+            ["Intro", "Second", "First", "Outro"],
+            "the generated chapters cover the ends of the video and can't be moved out of them"
+        )
+    }
+
+    // MARK: - setChapterOrder
+
+    /// Reordering is an edit like toggling one off: it's what gives a video its rows.
+    @MainActor
+    func testReorderingMaterializesTheChapters() {
+        let context = DataProvider.newContext()
+        let video = makeVideo(in: context)
+
+        XCTAssertTrue(video.chapters?.isEmpty ?? true, "the description alone writes no rows")
+
+        var reordered = video.orderedChapterData
+        reordered.move(fromOffsets: IndexSet(integer: 2), toOffset: 0)
+        ChapterService.setChapterOrder(reordered, of: video)
+
+        XCTAssertEqual(video.chapters?.count, 3, "the whole set becomes rows, not just the one moved")
+        XCTAssertEqual(video.orderedChapterData.map(\.title), ["Third", "First", "Second"])
+        XCTAssertEqual(
+            video.sortedChapterData.map(\.title), ["First", "Second", "Third"],
+            "the timeline itself doesn't move"
+        )
+        XCTAssertTrue(video.hasCustomChapterOrder)
+    }
+
+    @MainActor
+    func testReorderingTwiceKeepsOneOrderPerChapter() {
+        let context = DataProvider.newContext()
+        let video = makeVideo(in: context)
+
+        var reordered = video.orderedChapterData
+        reordered.move(fromOffsets: IndexSet(integer: 2), toOffset: 0)
+        ChapterService.setChapterOrder(reordered, of: video)
+
+        reordered = video.orderedChapterData
+        reordered.move(fromOffsets: IndexSet(integer: 0), toOffset: 3)
+        ChapterService.setChapterOrder(reordered, of: video)
+
+        XCTAssertEqual(video.orderedChapterData.map(\.title), ["First", "Second", "Third"])
+        XCTAssertEqual(
+            (video.chapters ?? []).compactMap(\.order).sorted(), [0, 1, 2],
+            "every row carries its own slot"
+        )
+    }
+
+    @MainActor
+    func testResettingTheOrderKeepsEverythingElse() {
+        let context = DataProvider.newContext()
+        let video = makeVideo(in: context)
+
+        var reordered = video.orderedChapterData
+        reordered.move(fromOffsets: IndexSet(integer: 2), toOffset: 0)
+        ChapterService.setChapterOrder(reordered, of: video)
+
+        let row = video.sortedChapters.first { $0.title == "Second" }
+        row?.isActive = false
+        ChapterService.resetChapterOrder(for: video)
+
+        XCTAssertFalse(video.hasCustomChapterOrder)
+        XCTAssertEqual(video.orderedChapterData.map(\.title), ["First", "Second", "Third"])
+        XCTAssertEqual(video.chapters?.count, 3, "resetting the order doesn't drop the rows")
+        XCTAssertEqual(
+            video.sortedChapterData.filter { !$0.isActive }.map(\.title), ["Second"],
+            "what was toggled off stays off"
+        )
+    }
+
+    /// Generated chapters replace the set wholesale, so the slots the old ones were dragged into
+    /// would land on chapters that have nothing to do with them.
+    @MainActor
+    func testGeneratingChaptersDropsTheOrder() {
+        let context = DataProvider.newContext()
+        let video = makeVideo(in: context)
+
+        var reordered = video.orderedChapterData
+        reordered.move(fromOffsets: IndexSet(integer: 2), toOffset: 0)
+        ChapterService.setChapterOrder(reordered, of: video)
+
+        ChapterService.insertChapters(
+            [.init(0, to: 100, "Intro"), .init(100, to: 200, "Middle"), .init(200, to: 300, "End")],
+            for: video
+        )
+
+        XCTAssertFalse(video.hasCustomChapterOrder)
+        XCTAssertEqual(video.orderedChapterData.map(\.title), ["Intro", "Middle", "End"])
+    }
+
+    /// A refresh pairs rows with the incoming chapters by position, so the slot the user dragged a
+    /// row into is still that row's slot afterwards.
+    @MainActor
+    func testARefreshKeepsTheOrder() {
+        let context = DataProvider.newContext()
+        let video = makeVideo(in: context)
+
+        var reordered = video.orderedChapterData
+        reordered.move(fromOffsets: IndexSet(integer: 2), toOffset: 0)
+        ChapterService.setChapterOrder(reordered, of: video)
+
+        ChapterService.reconcileChapters(
+            [.init(0, to: 60, "First"), .init(60, to: 120, "Second renamed"), .init(120, to: 300, "Third")],
+            for: video
+        )
+
+        XCTAssertEqual(video.orderedChapterData.map(\.title), ["Third", "First", "Second renamed"])
     }
 }
 

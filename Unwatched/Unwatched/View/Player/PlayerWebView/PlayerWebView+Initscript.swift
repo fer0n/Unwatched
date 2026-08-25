@@ -1074,7 +1074,8 @@ extension PlayerWebView {
                 showCaptionsTemporarily(Math.abs(seekRel));
             }
             const start = seekBase();
-            if (seekRel >= 0 || !window.hasInactiveChapters || !window.unwatchedChapters || window.unwatchedChapters.length === 0) {
+            const smartSeek = window.hasInactiveChapters || window.hasReorderedChapters;
+            if (seekRel >= 0 || !smartSeek || !window.unwatchedChapters || window.unwatchedChapters.length === 0) {
                 if (video.duration) {
                      applySeekTarget(Math.max(0, Math.min(start + seekRel, video.duration - 0.2)));
                 } else {
@@ -1086,32 +1087,42 @@ extension PlayerWebView {
             let remaining = -seekRel;
             let cursor = start;
             const chapters = window.unwatchedChapters;
+            const chapterEnd = (chapter) => chapter.endTime >= 0
+                ? chapter.endTime
+                : (video.duration || chapter.startTime);
 
             let idx = -1;
-            for (let i = chapters.length - 1; i >= 0; i--) {
-                if (chapters[i].startTime <= cursor) {
+            for (let i = 0; i < chapters.length; i++) {
+                if (chapters[i].startTime <= cursor
+                    && (idx < 0 || chapters[i].startTime > chapters[idx].startTime)) {
                     idx = i;
-                    break;
                 }
+            }
+            if (idx < 0) {
+                applySeekTarget(Math.max(0, start + seekRel));
+                return;
             }
 
-            while (remaining > 0 && idx >= 0) {
+            let startOfPlayback = chapters[idx].startTime;
+            while (idx >= 0) {
                 const chapter = chapters[idx];
-                if (!chapter.isActive) {
-                    cursor = chapter.startTime;
-                    idx--;
-                    continue;
+                if (chapter.isActive) {
+                    const available = Math.max(0, cursor - chapter.startTime);
+                    if (remaining <= available) {
+                        applySeekTarget(cursor - remaining);
+                        return;
+                    }
+                    remaining -= available;
+                    startOfPlayback = chapter.startTime;
                 }
-                const available = Math.max(0, cursor - chapter.startTime);
-                if (remaining <= available) {
-                    applySeekTarget(cursor - remaining);
-                    return;
-                }
-                remaining -= available;
-                cursor = chapter.startTime;
                 idx--;
+                if (idx < 0) {
+                    break;
+                }
+                // the previous chapter in the order is entered at its end on the timeline
+                cursor = chapterEnd(chapters[idx]);
             }
-            applySeekTarget(Math.max(0, cursor - remaining));
+            applySeekTarget(Math.max(0, startOfPlayback));
         }
 
         function handleDoubleTapSeek(event) {

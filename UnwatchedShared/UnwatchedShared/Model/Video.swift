@@ -116,6 +116,22 @@ public final class Video: VideoData, CustomStringConvertible, Exportable {
         )
     }
 
+    /// Every chapter, in the order they play — see `ChapterService.inPlaybackOrder`. Anything that
+    /// reasons about the timeline (the current chapter, markers, the scrubber) wants `sortedChapterData`.
+    public var orderedChapterData: [SendableChapter] {
+        ChapterService.inPlaybackOrder(sortedChapterData)
+    }
+
+    /// Whether the user has dragged this video's chapters into an order of their own.
+    public var hasCustomChapterOrder: Bool {
+        Video.getSortedChapters(mergedChapters, chapters).contains { $0.order != nil }
+    }
+
+    /// Both row sets: what an edit reaches for when it has to touch every row this video owns.
+    public var allChapterRows: [Chapter] {
+        (chapters ?? []) + (mergedChapters ?? [])
+    }
+
     /// This video's own chapters, excluding any SponsorBlock merge — the input the merge is built
     /// from, and what an edit materializes into rows.
     public var ownChapterData: [SendableChapter] {

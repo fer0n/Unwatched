@@ -83,3 +83,95 @@ extension View {
             .appNotificationOverlay()
     }
 }
+
+/// Whether `reorderContainer` is there to do the reordering, see `View.reorderContainerIfAvailable`.
+var systemReorderingAvailable: Bool {
+    if #available(iOS 27, macOS 27, visionOS 27, *) {
+        return true
+    }
+    return false
+}
+
+extension View {
+    /// `reorderContainer` flattened to "put this one in front of that one", `nil` meaning the end.
+    /// Nothing below iOS 27, where `reorderable(id:canReorder:dropTarget:onDrop:)` stands in for it.
+    @ViewBuilder
+    func reorderContainerIfAvailable<Item, ItemID: Hashable & Sendable>(
+        for item: Item.Type,
+        itemID: KeyPath<Item, ItemID>,
+        move: @escaping (_ source: ItemID, _ before: ItemID?) -> Void
+    ) -> some View {
+        if #available(iOS 27, macOS 27, visionOS 27, *) {
+            reorderContainer(for: item, itemID: itemID) { difference in
+                guard let source = difference.sources.first else { return }
+                switch difference.destination.position {
+                case .before(let target):
+                    move(source, target)
+                case .end:
+                    move(source, nil)
+                }
+            }
+        } else {
+            self
+        }
+    }
+
+    /// Which item a drag is carrying, `nil` once it's over or not started. Only reports a lifted
+    /// drag: hiding the row any earlier would take the drag preview's snapshot with it.
+    @ViewBuilder
+    func onDraggedItemChange<ItemID: Hashable>(
+        of type: ItemID.Type,
+        perform action: @escaping (ItemID?) -> Void
+    ) -> some View {
+        if #available(iOS 27, macOS 27, visionOS 27, *) {
+            onDragSessionUpdated { session in
+                guard case .active = session.phase else {
+                    action(nil)
+                    return
+                }
+                action(session.draggedItemIDs(for: type).first)
+            }
+        } else {
+            self
+        }
+    }
+
+    /// Drag to reorder for a `LazyVStack` below iOS 27, which has neither `onMove` nor a reorder
+    /// container. An item is dragged by `id` and dropped onto the row whose place it should take.
+    /// Named apart from SwiftUI's own `reorderable()` so neither shadows the other.
+    @ViewBuilder
+    func legacyReorderable(
+        id: String,
+        canReorder: Bool,
+        dropTarget: Binding<String?>,
+        onDrop: @escaping (String) -> Bool
+    ) -> some View {
+        self.if(canReorder && !systemReorderingAvailable) { view in
+            view
+                .draggable(id)
+                .dropDestination(for: String.self) { items, _ in
+                    dropTarget.wrappedValue = nil
+                    guard let dropped = items.first, dropped != id else { return false }
+                    return onDrop(dropped)
+                } isTargeted: { isTargeted in
+                    if isTargeted {
+                        dropTarget.wrappedValue = id
+                    } else if dropTarget.wrappedValue == id {
+                        dropTarget.wrappedValue = nil
+                    }
+                }
+        }
+    }
+}
+
+extension DynamicViewContent {
+    /// Marks the rows of a `reorderContainerIfAvailable` container as the ones that move.
+    @ViewBuilder
+    func reorderableIfAvailable() -> some View {
+        if #available(iOS 27, macOS 27, visionOS 27, *) {
+            reorderable()
+        } else {
+            self
+        }
+    }
+}

@@ -14,18 +14,15 @@ struct ChapterSettingsMenu: View {
 
     var body: some View {
         Menu {
-            Button {
-                guard let video else {
-                    Log.warning("restoreChapters: No video")
-                    return
+            if video?.hasCustomChapterOrder == true {
+                videoButton("resetChapterOrder", systemImage: "arrow.up.arrow.down") {
+                    ChapterService.resetChapterOrder(for: $0)
                 }
-                withAnimation {
-                    ChapterService.restoreChapters(for: video)
-                }
-            } label: {
-                Label("restoreChapters", systemImage: "arrow.uturn.backward")
             }
-            .tint(Color.automaticBlack)
+
+            videoButton("restoreChapters", systemImage: "arrow.uturn.backward") {
+                ChapterService.restoreChapters(for: $0)
+            }
 
             Section {
                 CloudAiButton(dismissOnPaywall: true) {
@@ -69,6 +66,25 @@ struct ChapterSettingsMenu: View {
                 appNotificationVM.show(message, isError: true)
             }
         }
+    }
+
+    private func videoButton(
+        _ title: LocalizedStringKey,
+        systemImage: String,
+        action: @escaping (Video) -> Void
+    ) -> some View {
+        Button {
+            guard let video else {
+                Log.warning("ChapterSettingsMenu: No video")
+                return
+            }
+            withAnimation {
+                action(video)
+            }
+        } label: {
+            Label(title, systemImage: systemImage)
+        }
+        .tint(Color.automaticBlack)
     }
 }
 

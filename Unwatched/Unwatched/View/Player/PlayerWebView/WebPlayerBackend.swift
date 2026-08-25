@@ -248,6 +248,7 @@ import UnwatchedShared
         Log.info("CHAPTERMARKERS")
         let script = PlayerWebView.setChapterMarkersScript(
             chapters: video.sortedChapterData,
+            playbackOrder: video.orderedChapterData,
             videoDuration: video.duration ?? 0,
             enableLogging: UserDefaults.standard.bool(forKey: Const.enableLogging)
         )

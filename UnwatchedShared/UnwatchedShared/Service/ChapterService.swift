@@ -282,9 +282,39 @@ public struct ChapterService {
             .filter { !$0.isEmpty }
     }
 
+    /// The order chapters play in: what the user dragged them into, the incoming start-time order
+    /// everywhere else. The generated intro/outro stay at the ends, and a chapter that arrived after
+    /// the reorder carries no order and goes last.
+    public static func inPlaybackOrder(_ chapters: [SendableChapter]) -> [SendableChapter] {
+        guard chapters.contains(where: { $0.order != nil }) else {
+            return chapters
+        }
+        var intro = [SendableChapter]()
+        var outro = [SendableChapter]()
+        var rest = [(offset: Int, chapter: SendableChapter)]()
+
+        for (offset, chapter) in chapters.enumerated() {
+            if chapter.isIntro {
+                intro.append(chapter)
+            } else if chapter.isOutro {
+                outro.append(chapter)
+            } else {
+                rest.append((offset, chapter))
+            }
+        }
+
+        let sorted = rest.sorted { lhs, rhs in
+            let left = lhs.chapter.order ?? Int.max
+            let right = rhs.chapter.order ?? Int.max
+            return left == right ? lhs.offset < rhs.offset : left < right
+        }
+        return intro + sorted.map(\.chapter) + outro
+    }
+
+    /// The order is in there because the page seeks by it, see `PlayerWebView.setChapterMarkersScript`.
     public static func getChaptersHash(from chapters: [SendableChapter], duration: Double?) -> String {
         let combinedString = chapters.map { chapter in
-            "\(chapter.startTime)-\(chapter.isActive ? "1" : "0")"
+            "\(chapter.startTime)-\(chapter.isActive ? "1" : "0")-\(chapter.order.map(String.init) ?? "-")"
         }.joined(separator: ";")
         return "\(combinedString)-\(duration ?? 0)"
     }

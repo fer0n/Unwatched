@@ -89,6 +89,21 @@ extension PlayerManager {
             return
         }
 
+        if let jump = chapterOrderJump(at: time, in: video) {
+            switch jump {
+            case .chapter(let chapter):
+                Log.info("chapter order: jump to \(chapter)")
+                setChapter(chapter)
+            case .finished:
+                Log.info("chapter order: nothing left to play")
+                if let duration = video.duration, time < duration - Const.seekToEndBuffer {
+                    seek(to: duration)
+                }
+                cancelTimeMonitoring()
+            }
+            return
+        }
+
         // current chapter
         guard let current = extractCurrentChapter(at: time) else {
             Log.info("extractCurrentChapter failed")
@@ -96,13 +111,13 @@ extension PlayerManager {
             return
         }
 
-        // next chapter
+        // the timeline gives the end time, the user's order what plays next
         let next = chapters.first(where: { chapter in
             chapter.startTime > current.startTime
         })
-        let nextActive = chapters.first(where: { chapter in
-            chapter.startTime > current.startTime && chapter.isActive
-        })
+        let ordered = video.orderedChapterData
+        let position = ordered.firstIndex(where: { $0.startTime == current.startTime })
+        let nextActive = position.flatMap { ordered.dropFirst($0 + 1).first(where: \.isActive) }
         nextChapter = nextActive
         if !current.isActive {
             if let nextActive {
@@ -114,10 +129,7 @@ extension PlayerManager {
         }
 
         // previous chapter
-        let previous = chapters.last(where: { chapter in
-            chapter.startTime < current.startTime && chapter.isActive
-        })
-        previousChapter = previous
+        previousChapter = position.flatMap { ordered.prefix($0).last(where: \.isActive) }
 
         withAnimation {
             currentChapter = current
@@ -125,8 +137,14 @@ extension PlayerManager {
         backend.handleChapterChanged()
 
         // set end time; prepare jump
-        if let nextStart = next?.startTime {
-            let nextEndTime = max(nextStart, current.endTime ?? 0)
+        let boundary: Double? = {
+            if let nextStart = next?.startTime {
+                return max(nextStart, current.endTime ?? 0)
+            }
+            // the last chapter on the timeline still has to hand over when the order carries on past it
+            return nextActive != nil ? current.endTime : nil
+        }()
+        if let nextEndTime = boundary {
             currentEndTime = nextEndTime
 
             // use the max playback speed to avoid refreshing for every speed change
@@ -148,6 +166,45 @@ extension PlayerManager {
             Log.info("no more chapters")
             cancelTimeMonitoring()
         }
+    }
+
+    /// What the custom order says to play once the chapter that just ended is over — see
+    /// `ChapterService.inPlaybackOrder`. `nil` unless the playhead just ran out of the chapter it
+    /// was in and into whatever follows that on the timeline; anything else is a seek.
+    @MainActor
+    private func chapterOrderJump(at time: Double, in video: Video) -> ChapterOrderJump? {
+        // a chapter running out overshoots its end by at most one monitor tick, a seek lands anywhere
+        guard video.hasCustomChapterOrder,
+              let previous = currentChapter,
+              let endTime = previous.endTime,
+              abs(time - endTime) <= Const.chapterTimeTolerance else {
+            return nil
+        }
+
+        let atTime = extractCurrentChapter(at: time)
+        let timeNext = video.sortedChapterData.first(where: { $0.startTime > previous.startTime })
+        guard atTime?.startTime == timeNext?.startTime else {
+            return nil
+        }
+
+        let ordered = video.orderedChapterData
+        guard let position = ordered.firstIndex(where: { $0.startTime == previous.startTime }) else {
+            return nil
+        }
+        guard let successor = ordered.dropFirst(position + 1).first(where: \.isActive) else {
+            return .finished
+        }
+        guard successor.startTime != atTime?.startTime else {
+            // playback ran into it by itself
+            return nil
+        }
+        return .chapter(successor)
+    }
+
+    private enum ChapterOrderJump {
+        case chapter(SendableChapter)
+        /// The last chapter of the order is over, whatever else the timeline still holds.
+        case finished
     }
 
     @MainActor
@@ -268,43 +325,44 @@ extension PlayerManager {
         }
     }
 
-    /// When seeking backward over inactive chapters, skips them entirely so the user
-    /// only consumes time in active chapters. Mirrors the JS `smartSeekRelative` logic.
+    /// Seeking backward walks the chapters the way they play, skipping inactive ones.
+    /// Mirrors the JS `smartSeekRelative` logic.
     @MainActor
     func chapterAwareSeekTarget(from base: Double, offset: Double) -> Double {
-        guard offset < 0,
-              let chapters = video?.sortedChapterData,
-              chapters.contains(where: { !$0.isActive }) else {
+        guard offset < 0, let video else {
+            return base + offset
+        }
+        let chapters = video.orderedChapterData
+        guard chapters.contains(where: { !$0.isActive }) || video.hasCustomChapterOrder else {
+            return base + offset
+        }
+
+        guard var idx = chapters.indices
+                .filter({ chapters[$0].startTime <= base })
+                .max(by: { chapters[$0].startTime < chapters[$1].startTime }) else {
             return base + offset
         }
 
         var remaining = -offset
         var cursor = base
+        var startOfPlayback = chapters[idx].startTime
 
-        var idx = -1
-        for pos in stride(from: chapters.count - 1, through: 0, by: -1) {
-            if chapters[pos].startTime <= cursor {
-                idx = pos
-                break
-            }
-        }
-
-        while remaining > 0 && idx >= 0 {
+        while idx >= 0 {
             let chapter = chapters[idx]
-            guard chapter.isActive else {
-                cursor = chapter.startTime
-                idx -= 1
-                continue
+            if chapter.isActive {
+                let available = max(0, cursor - chapter.startTime)
+                if remaining <= available {
+                    return cursor - remaining
+                }
+                remaining -= available
+                startOfPlayback = chapter.startTime
             }
-            let available = max(0, cursor - chapter.startTime)
-            if remaining <= available {
-                return cursor - remaining
-            }
-            remaining -= available
-            cursor = chapter.startTime
             idx -= 1
+            guard idx >= 0 else { break }
+            // the previous chapter in the order is entered at its end on the timeline
+            cursor = chapters[idx].endTime ?? video.duration ?? chapters[idx].startTime
         }
-        return max(0, cursor - remaining)
+        return startOfPlayback
     }
 
     @MainActor

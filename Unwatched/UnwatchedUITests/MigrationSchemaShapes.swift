@@ -122,7 +122,7 @@ extension MigrationTests {
             "WatchTimeEntry": ["channelId", "date", "watchTime"]
         ],
         "1.15.0": [
-            "Chapter": ["category", "duration", "endTime", "imageUrl", "isActive", "link", "mergedChapterVideo", "startTime", "title", "video"],
+            "Chapter": ["category", "duration", "endTime", "imageUrl", "isActive", "link", "mergedChapterVideo", "order", "startTime", "title", "video"],
             "InboxEntry": ["date", "video", "youtubeId"],
             "QueueEntry": ["order", "video", "youtubeId"],
             "Subscription": ["_shortsSetting", "_videoPlacement", "allowOnMatch", "author", "autoSkipChapterTitles", "customAspectRatio", "customSpeedSetting", "failedFetchCount", "filterText", "isArchived", "isPodcast", "lastFetchErrorMessage", "lastFetchFailedDate", "link", "mostRecentVideoDate", "skipIntroSeconds", "skipOutroSeconds", "subscribedDate", "tags", "thumbnailUrl", "title", "videos", "youtubeChannelId", "youtubePlaylistId", "youtubeUserName"],

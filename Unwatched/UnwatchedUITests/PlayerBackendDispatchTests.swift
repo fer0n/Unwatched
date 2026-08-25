@@ -334,6 +334,136 @@ final class PlayerBackendDispatchTests: XCTestCase {
 
         XCTAssertEqual(spy.withoutRateChanges.first, .stop)
     }
+
+    // MARK: - Custom chapter order
+
+    /// Timeline A(0-60) B(60-120) C(120-180), dragged into A, C, B.
+    private func makeReorderedVideo() -> Video {
+        let video = makeVideo(duration: 180)
+        let rows = [
+            Chapter(title: "A", time: 0, duration: 60, endTime: 60, order: 0),
+            Chapter(title: "B", time: 60, duration: 60, endTime: 120, order: 2),
+            Chapter(title: "C", time: 120, duration: 60, endTime: 180, order: 1)
+        ]
+        rows.forEach { context.insert($0) }
+        video.chapters = rows
+        return video
+    }
+
+    private func setPlayhead(_ video: Video, chapter: String, time: Double) {
+        player.video = video
+        player.currentChapter = video.sortedChapterData.first { $0.title == chapter }
+        player.currentTime = time
+        spy.commands.removeAll()
+    }
+
+    func testAChapterRunningOutJumpsToItsSuccessorInTheOrder() {
+        let video = makeReorderedVideo()
+        setPlayhead(video, chapter: "A", time: 60)
+
+        player.handleChapterChange()
+
+        XCTAssertEqual(spy.withoutRateChanges, [.seek(120)])
+    }
+
+    /// The playhead only follows the order where it ran out of a chapter. Scrubbing lands anywhere,
+    /// and used to be redirected because it satisfied the same "past the end of the last chapter" check.
+    func testSeekingIntoTheNextChapterIsLeftAlone() {
+        let video = makeReorderedVideo()
+        setPlayhead(video, chapter: "A", time: 90)
+
+        player.handleChapterChange()
+
+        XCTAssertEqual(spy.withoutRateChanges, [])
+        XCTAssertEqual(player.currentChapter?.title, "B")
+    }
+
+    func testTheLastChapterOfTheOrderEndsTheVideo() {
+        let video = makeReorderedVideo()
+        setPlayhead(video, chapter: "B", time: 120)
+
+        player.handleChapterChange()
+
+        XCTAssertEqual(spy.withoutRateChanges, [.seek(180 - Const.seekToEndBuffer)])
+    }
+
+    /// The chapter after this one on the timeline is also the one the order wants: nothing to jump to.
+    func testAnOrderThatMatchesTheTimelineJustPlaysOn() {
+        let video = makeVideo(duration: 180)
+        let rows = [
+            Chapter(title: "A", time: 0, duration: 60, endTime: 60, order: 0),
+            Chapter(title: "B", time: 60, duration: 60, endTime: 120, order: 1),
+            Chapter(title: "C", time: 120, duration: 60, endTime: 180, order: 2)
+        ]
+        rows.forEach { context.insert($0) }
+        video.chapters = rows
+        setPlayhead(video, chapter: "A", time: 60)
+
+        player.handleChapterChange()
+
+        XCTAssertEqual(spy.withoutRateChanges, [])
+        XCTAssertEqual(player.currentChapter?.title, "B")
+    }
+
+    // MARK: - Seeking backward through the order
+
+    /// Back out of C lands in A, which played before it, not in B, which sits before it on the
+    /// timeline and plays last.
+    func testSeekingBackwardFollowsTheOrder() {
+        let video = makeReorderedVideo()
+        setPlayhead(video, chapter: "C", time: 125)
+
+        _ = player.seek(backward: true, 10)
+
+        XCTAssertEqual(spy.withoutRateChanges, [.seek(55)])
+    }
+
+    /// A seek that stays inside the chapter it started in doesn't care about the order.
+    func testSeekingBackwardWithinAChapterIsPlain() {
+        let video = makeReorderedVideo()
+        setPlayhead(video, chapter: "C", time: 150)
+
+        _ = player.seek(backward: true, 10)
+
+        XCTAssertEqual(spy.withoutRateChanges, [.seek(140)])
+    }
+
+    /// The first chapter of the order is where playback began: a seek reaching past it stops there.
+    func testSeekingBackwardPastTheFirstChapterOfTheOrderStops() {
+        let video = makeReorderedVideo()
+        setPlayhead(video, chapter: "C", time: 125)
+
+        _ = player.seek(backward: true, 300)
+
+        XCTAssertEqual(spy.withoutRateChanges, [.seek(0)])
+    }
+
+    /// Forward is left alone: it has never skipped anything.
+    func testSeekingForwardIsPlain() {
+        let video = makeReorderedVideo()
+        setPlayhead(video, chapter: "C", time: 150)
+
+        _ = player.seek(backward: false, 10)
+
+        XCTAssertEqual(spy.withoutRateChanges, [.seek(160)])
+    }
+
+    /// Without an order of the user's own, a backward seek still skips the chapters that are off.
+    func testSeekingBackwardStillSkipsInactiveChapters() {
+        let video = makeVideo(duration: 180)
+        let rows = [
+            Chapter(title: "A", time: 0, duration: 60, endTime: 60),
+            Chapter(title: "B", time: 60, duration: 60, endTime: 120, isActive: false),
+            Chapter(title: "C", time: 120, duration: 60, endTime: 180)
+        ]
+        rows.forEach { context.insert($0) }
+        video.chapters = rows
+        setPlayhead(video, chapter: "C", time: 125)
+
+        _ = player.seek(backward: true, 10)
+
+        XCTAssertEqual(spy.withoutRateChanges, [.seek(55)])
+    }
 }
 
 /// Which web view the embedded player sends its commands to.

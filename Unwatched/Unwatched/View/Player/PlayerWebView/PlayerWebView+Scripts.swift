@@ -223,8 +223,10 @@ extension PlayerWebView {
 
     // swiftlint:disable function_body_length
     /// Override YouTube chapter indicators with custom chapters
+    /// - Parameter playbackOrder: the chapters in the order they play, which is what seeking walks.
     static func setChapterMarkersScript(
         chapters: [SendableChapter],
+        playbackOrder: [SendableChapter],
         videoDuration: Double,
         enableLogging: Bool) -> String {
         // Convert chapters to a JSON array of objects with startTime, endTime and isActive properties
@@ -241,9 +243,21 @@ extension PlayerWebView {
                 """
         }.joined(separator: ", ")
 
+        let seekChaptersData = playbackOrder.map { chapter in
+            """
+            {
+            "startTime": \(chapter.startTime),
+            "endTime": \(chapter.endTime ?? -1),
+            "isActive": \(chapter.isActive)
+            }
+            """
+        }.joined(separator: ", ")
+        let isReordered = playbackOrder.map(\.startTime) != chapters.map(\.startTime)
+
         return """
-        window.unwatchedChapters = [\(chaptersData)];
+        window.unwatchedChapters = [\(seekChaptersData)];
         window.hasInactiveChapters = window.unwatchedChapters.some(c => !c.isActive);
+        window.hasReorderedChapters = \(isReordered);
         function findYouTubeProgressBar() {
           // First check for the new YouTube chapters progress bar
           let chapteredProgressBar = document.querySelector(

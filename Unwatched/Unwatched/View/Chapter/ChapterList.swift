@@ -11,6 +11,9 @@ struct ChapterList: View {
     @Environment(\.modelContext) var modelContext
     @Environment(PlayerManager.self) var player
 
+    @State private var dropTarget: String?
+    @State private var draggingId: String?
+
     var video: Video
     var isCompact = false
     var isTransparent = false
@@ -44,6 +47,20 @@ struct ChapterList: View {
                             .opacity(isTransparent ? 0.7 : 1)
                     )
                     .id(chapter.chapterId)
+                    .opacity(draggingId == chapter.chapterId ? 0 : 1)
+                    .overlay {
+                        if !systemReorderingAvailable, dropTarget == chapter.chapterId {
+                            RoundedRectangle(cornerRadius: ChapterList.itemRadius)
+                                .stroke(Color.neutralAccentColor, lineWidth: 2)
+                        }
+                    }
+                    .legacyReorderable(
+                        id: chapter.chapterId,
+                        canReorder: canReorder(chapter),
+                        dropTarget: $dropTarget
+                    ) { id in
+                        moveChapter(id, onto: chapter)
+                    }
                     .onTapGesture {
                         if !chapter.isActive {
                             toggleChapter(chapter)
@@ -68,18 +85,95 @@ struct ChapterList: View {
                         Button(chapter.isActive ? "disable" : "enable") {
                             toggleChapter(chapter)
                         }
+                        if canReorder(chapter) {
+                            Button("moveUp") {
+                                moveChapter(chapter, by: -1)
+                            }
+                            Button("moveDown") {
+                                moveChapter(chapter, by: 1)
+                            }
+                        }
                     }
                     .accessibilityElement(children: .combine)
                 }
+                .reorderableIfAvailable()
+            }
+            .reorderContainerIfAvailable(for: SendableChapter.self, itemID: \.chapterId) { id, target in
+                moveChapter(id, before: target)
+            }
+            .onDraggedItemChange(of: String.self) { id in
+                draggingId = id
             }
         }
     }
 
     var chapters: [SendableChapter] {
-        video.sortedChapterData
+        video.orderedChapterData
     }
 
-    /// Toggling is the one action that needs a row — see `ChapterService.materialize`.
+    /// The generated intro/outro cover the start and the end of the video by definition, so they
+    /// stay where they are — see `ChapterService.inPlaybackOrder`.
+    func canReorder(_ chapter: SendableChapter) -> Bool {
+        !chapter.isIntro && !chapter.isOutro
+    }
+
+    /// Drops the chapter carrying `id` into `target`'s slot. Like toggling, reordering is an edit
+    /// that gives the video `Chapter` rows — see `ChapterService.setChapterOrder`.
+    @discardableResult
+    func moveChapter(_ id: String, onto target: SendableChapter) -> Bool {
+        let current = chapters
+        guard let from = current.firstIndex(where: { $0.chapterId == id }),
+              let to = current.firstIndex(where: { $0.chapterId == target.chapterId }) else {
+            return false
+        }
+        return moveChapter(current, from: from, to: to)
+    }
+
+    /// Puts the chapter carrying `id` in front of `target`, or last when there is none — what
+    /// `reorderContainer` reports.
+    func moveChapter(_ id: String, before target: String?) {
+        let current = chapters
+        guard let from = current.firstIndex(where: { $0.chapterId == id }) else {
+            return
+        }
+        let insertAt = target.flatMap { id in current.firstIndex { $0.chapterId == id } } ?? current.count
+        // the slot the moved chapter vacates shifts everything after it down one
+        let to = insertAt > from ? insertAt - 1 : insertAt
+        // the generated intro/outro hold the ends, so a drop past them lands alongside instead
+        let leading = current.prefix { !canReorder($0) }.count
+        let trailing = current.reversed().prefix { !canReorder($0) }.count
+        moveChapter(current, from: from, to: min(max(to, leading), current.count - 1 - trailing))
+    }
+
+    func moveChapter(_ chapter: SendableChapter, by offset: Int) {
+        let current = chapters
+        guard let from = current.firstIndex(where: { $0.chapterId == chapter.chapterId }) else {
+            return
+        }
+        moveChapter(current, from: from, to: from + offset)
+    }
+
+    @discardableResult
+    private func moveChapter(_ current: [SendableChapter], from: Int, to: Int) -> Bool {
+        guard from != to,
+              current.indices.contains(from),
+              current.indices.contains(to),
+              canReorder(current[from]),
+              canReorder(current[to]),
+              guardPremium() else {
+            return false
+        }
+        var reordered = current
+        withAnimation {
+            let moved = reordered.remove(at: from)
+            reordered.insert(moved, at: to)
+            ChapterService.setChapterOrder(reordered, of: video)
+        }
+        Signal.log("Chapter.Reorder")
+        return true
+    }
+
+    /// Toggling, like reordering, is an action that needs a row — see `ChapterService.materialize`.
     func toggleChapter(_ chapter: SendableChapter) {
         guard !chapter.isActive || guardPremium() else {
             return
@@ -116,6 +210,8 @@ struct ChapterList: View {
         try? video.modelContext?.save()
         if video == player.video {
             player.handleChapterChange()
+            // the page seeks by the chapters it was handed, so the edit has to reach it too
+            player.backend.setChapterMarkers(force: false)
         }
     }
 

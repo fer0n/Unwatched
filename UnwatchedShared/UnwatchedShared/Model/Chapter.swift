@@ -15,6 +15,9 @@ public final class Chapter: ChapterData, CustomStringConvertible {
     public var link: URL?
     public var imageUrl: URL?
 
+    /// Where the user dragged this chapter to — see `ChapterService.inPlaybackOrder`.
+    public var order: Int?
+
     public var persistentId: PersistentIdentifier? {
         persistentModelID
     }
@@ -31,7 +34,8 @@ public final class Chapter: ChapterData, CustomStringConvertible {
         isActive: Bool? = nil,
         category: ChapterCategory? = nil,
         link: URL? = nil,
-        imageUrl: URL? = nil
+        imageUrl: URL? = nil,
+        order: Int? = nil
     ) {
         self.title = title
         self.startTime = time
@@ -41,6 +45,7 @@ public final class Chapter: ChapterData, CustomStringConvertible {
         self.category = category
         self.link = link
         self.imageUrl = imageUrl
+        self.order = order
     }
 
     public static func getDummy() -> Chapter {
@@ -58,7 +63,8 @@ public final class Chapter: ChapterData, CustomStringConvertible {
             link: link,
             imageUrl: imageUrl,
             videoId: videoId,
-            persistentId: persistentId
+            persistentId: persistentId,
+            order: order
         )
     }
 
@@ -68,8 +74,8 @@ public final class Chapter: ChapterData, CustomStringConvertible {
 }
 
 public struct SendableChapter: ChapterData, Sendable, CustomStringConvertible, Hashable, Codable {
-    /// `videoId` is the cache key and gets stamped back on read; `persistentId` refers to a row
-    /// in a different store and would be meaningless once decoded.
+    /// `videoId` is the cache key and gets stamped back on read; `persistentId` and `order` only
+    /// mean something on a row, and this caches chapters as they are before anything edits them.
     private enum CodingKeys: String, CodingKey {
         case title, startTime, endTime, duration, isActive, category, link, imageUrl
     }
@@ -88,6 +94,9 @@ public struct SendableChapter: ChapterData, Sendable, CustomStringConvertible, H
 
     public var videoId: String?
     public var persistentId: PersistentIdentifier?
+
+    /// The row's `Chapter.order`, see `ChapterService.inPlaybackOrder`.
+    public var order: Int?
 
     /// The generated chapter covering a subscription's skipped intro, see `ChapterService.applySkipIntro`.
     public var isIntro: Bool = false
@@ -108,7 +117,8 @@ public struct SendableChapter: ChapterData, Sendable, CustomStringConvertible, H
             isActive: isActive,
             category: category,
             link: link,
-            imageUrl: imageUrl
+            imageUrl: imageUrl,
+            order: order
         )
     }
 
@@ -139,6 +149,7 @@ public struct SendableChapter: ChapterData, Sendable, CustomStringConvertible, H
         imageUrl: URL? = nil,
         videoId: String? = nil,
         persistentId: PersistentIdentifier? = nil,
+        order: Int? = nil,
         isIntro: Bool = false,
         isOutro: Bool = false
     ) {
@@ -152,6 +163,7 @@ public struct SendableChapter: ChapterData, Sendable, CustomStringConvertible, H
         self.imageUrl = imageUrl
         self.videoId = videoId
         self.persistentId = persistentId
+        self.order = order
         self.isIntro = isIntro
         self.isOutro = isOutro
     }
