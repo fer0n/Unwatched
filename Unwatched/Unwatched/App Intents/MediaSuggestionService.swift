@@ -91,30 +91,19 @@ enum MediaSuggestionService {
     }
 
     private static func playIntent(for video: Video) async -> INPlayMediaIntent {
-        let episodeArtwork = await artwork(for: video.displayThumbnailUrl)
         let item = INMediaItem(
             identifier: video.youtubeId,
             title: video.title,
             type: itemType,
-            artwork: episodeArtwork,
+            artwork: await artwork(for: video.displayThumbnailUrl),
             artist: video.subscription?.author ?? video.subscription?.displayTitle
         )
-        var show: INMediaItem?
-        if let subscription = video.subscription, let key = subscription.subscriptionKey {
-            // the show is what the Control Center row is titled after, so it needs a cover of its own
-            let showArtwork = subscription.thumbnailUrl == video.displayThumbnailUrl
-                ? episodeArtwork
-                : await artwork(for: subscription.thumbnailUrl)
-            show = INMediaItem(
-                identifier: key,
-                title: subscription.displayTitle,
-                type: .podcastShow,
-                artwork: showArtwork
-            )
-        }
+        // No `mediaContainer`: a container is what Control Center titles the suggestion after, which put the show
+        // there and left the episode nowhere. Without one it uses the item, so the episode is the title and the
+        // show — the item's `artist` — the line under it.
         return INPlayMediaIntent(
             mediaItems: [item],
-            mediaContainer: show,
+            mediaContainer: nil,
             playShuffled: false,
             playbackRepeatMode: .none,
             // "resume" rather than "play" for anything already started
