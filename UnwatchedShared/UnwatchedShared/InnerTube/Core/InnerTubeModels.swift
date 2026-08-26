@@ -301,6 +301,9 @@ public enum APIError: LocalizedError {
     /// before it can be played. Unlike `unavailable`, retrying with the same credentials
     /// will not succeed — the user must authenticate first.
     case signInRequired
+    /// Thrown when the video is age-gated. Unlike `signInRequired`, this is definitive: no
+    /// unauthenticated InnerTube client can serve it, so trying further clients is wasted work.
+    case ageRestricted
     /// Thrown when the video is a premiere or live stream that hasn't started yet.
     case scheduled(Date?)
 
@@ -313,6 +316,8 @@ public enum APIError: LocalizedError {
         case .invalidURL(let endpoint): return "Could not build URL for endpoint: \(endpoint)"
         case .signInRequired:
             return "This video is age-restricted or requires sign in to watch."
+        case .ageRestricted:
+            return "This video is age-restricted. Sign in to YouTube to watch it."
         case .ipBlocked:
             return "YouTube is temporarily blocking this network. Disable your VPN, try a different VPN server, or wait a few minutes and retry."
         case .scheduled(let date):

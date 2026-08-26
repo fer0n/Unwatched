@@ -334,24 +334,20 @@ extension PlayerWebViewCoordinator {
     func handleError(_ payload: String?, youtube: Bool = false) {
         Log.error("video player error: \(payload ?? "Unknown")")
 
-        guard youtube, !parent.player.embeddingDisabled else {
+        // Only the embedded player reports errors — the init script's checker is behind
+        // `if (!isNonEmbedding)` — and it re-checks up to 10s after load. So once a fallback is
+        // up, any further error is the replaced embed still talking.
+        guard youtube, !parent.player.embeddingDisabled, !retired else {
             return
         }
 
         #if os(iOS)
+        // the embed's error text is localized, so only the native player's InnerTube fetch can say
+        // *why* this failed — and hand an age gate on to the YouTube page from there
         switchToNativePlayer()
         #else
-        parent.player.isLoading = Date()
-        parent.player.previousIsPlaying = parent.player.videoSource == .userInteraction
-            ? true
-            : parent.player.isPlaying
-
-        parent.player.videoSource = .errorSwap
-
-        withAnimation {
-            parent.player.pause()
-            parent.player.embeddingDisabled = true
-        }
+        Log.info("videoPlayer: embedded error, switching to the YouTube page")
+        parent.player.swapToWebsitePlayer()
         #endif
     }
 

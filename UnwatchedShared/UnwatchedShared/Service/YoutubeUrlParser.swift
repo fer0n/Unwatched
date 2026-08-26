@@ -15,15 +15,24 @@ public enum YoutubeUrlParser {
     public static func getYoutubeId(from url: URL) -> String? {
         let string = url.absoluteString
 
-        // https://m.youtube.com/shorts/jH_QIBtX1gY
         // https://www.youtube.com/watch?v=epBbbysk5cU
         // https://www.youtube.com/watch/?v=epBbbysk5cU
-        // https://piped.video/watch?v=VZIm_2MgdeA
-        // https://m.youtube.com/watch?v=Sa-FI9exq8o&pp=ygUTRGV2aWwgR2VvcmdpYSBjb3Zlcg%3D%3D
-        let regex
-            = #"(?:https\:\/\/)?(?:www\.)?(?:m\.)?(?:\S+\.\S+\/(?:(?:watch\/?\?v=)|(?:shorts\/))([^\s\/\?\&\n]+))"#
-        if string.contains("watch?v=") || string.contains("watch/?v=") || string.contains("shorts/"),
-           let res = firstCapture(in: string, regex: regex) {
+        // https://www.youtube.com/watch?app=desktop&v=Gm_TfuohxkU  (`v` isn't always first)
+        if let components = URLComponents(url: url, resolvingAgainstBaseURL: false) {
+            let path = components.path.hasSuffix("/")
+                ? String(components.path.dropLast())
+                : components.path
+            if path.hasSuffix("/watch"),
+               let id = components.queryItems?.first(where: { $0.name == "v" })?.value,
+               !id.isEmpty {
+                return id
+            }
+        }
+
+        // https://m.youtube.com/shorts/jH_QIBtX1gY
+        let shortsRegex = #"(?:https\:\/\/)?(?:www\.)?(?:m\.)?(?:\S+\.\S+\/shorts\/([^\s\/\?\&\n]+))"#
+        if string.contains("shorts/"),
+           let res = firstCapture(in: string, regex: shortsRegex) {
             return res
         }
 

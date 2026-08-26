@@ -41,7 +41,7 @@ struct PlayerWebView: PlatformViewRepresentable {
     }
 
     func makeView(_ coordinator: PlayerWebViewCoordinator) -> WKWebView {
-        if let warmed = WebPlayerWarmup.shared.takeWebView(for: player.video?.youtubeId) {
+        if let warmed = WebPlayerWarmup.shared.takeWebView(for: player.video?.youtubeId, type: playerType) {
             return adopt(warmed, coordinator)
         }
 

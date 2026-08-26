@@ -581,20 +581,25 @@ extension InnerTubeAPI {
                 tubeLog.notice("parsePlayerInfo: scheduled — starts \(start.map { ISO8601DateFormatter().string(from: $0) } ?? "unknown", privacy: .public)")
                 throw APIError.scheduled(start)
             }
-            // Sign-in / age-gate: checked before IP-block so the caller shows "Sign In" not "Try Again".
-            let signInStatuses: Set<String> = ["LOGIN_REQUIRED", "AGE_VERIFICATION_REQUIRED", "AGE_CHECK_REQUIRED"]
-            if signInStatuses.contains(playabilityStatus) {
-                throw APIError.signInRequired
-            }
+            // Age-gate / sign-in: checked before IP-block so the caller shows "Sign In" not "Try Again".
+            // An age gate is singled out because it names the reason; "sign in to confirm you're not
+            // a bot" is bot detection and stays `signInRequired`.
             let lowerReason = reason.lowercased()
-            let signInKeywords = ["sign in", "age-restricted", "age restricted", "18+", "age verification"]
-            if signInKeywords.contains(where: { lowerReason.contains($0) }) {
+            let ageStatuses: Set<String> = ["AGE_VERIFICATION_REQUIRED", "AGE_CHECK_REQUIRED"]
+            let ageKeywords = [
+                "confirm your age", "age-restricted", "age restricted",
+                "18+", "age verification", "inappropriate for some users"
+            ]
+            if ageStatuses.contains(playabilityStatus)
+                || ageKeywords.contains(where: { lowerReason.contains($0) }) {
+                throw APIError.ageRestricted
+            }
+            if playabilityStatus == "LOGIN_REQUIRED" || lowerReason.contains("sign in") {
                 throw APIError.signInRequired
             }
             // Check for IP-block signals before throwing the generic unavailable error.
-            let lower = lowerReason
             let ipBlockKeywords = ["your ip", "ip address", "vpn", "proxy", "bot", "sign in to confirm"]
-            if ipBlockKeywords.contains(where: { lower.contains($0) }) {
+            if ipBlockKeywords.contains(where: { lowerReason.contains($0) }) {
                 throw APIError.ipBlocked(reason)
             }
             throw APIError.unavailable(reason)

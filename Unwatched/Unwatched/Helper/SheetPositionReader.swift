@@ -52,6 +52,9 @@ import UnwatchedShared
             do {
                 // debounce changes
                 try await Task.sleep(for: .milliseconds(100))
+                // what `PlayerContentView` reserves on the way back from landscape, where it can't
+                // read this object without subscribing to the animation below
+                UserDefaults.standard.set(height, forKey: Const.playerControlHeight)
 
                 // workaround: without task, sheet disappear animation breaks
                 // when video aspect ratio is different for the new video

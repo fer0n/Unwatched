@@ -31,12 +31,23 @@ struct PlayerContentView: View {
     @State private var scrolledPage: ControlNavigationTab?
     @Binding var autoHideVM: AutoHideVM
 
+    /// Stands in until the controls have measured themselves in *this* instance: rotating to
+    /// landscape tears the view down, and without a reservation the website player takes the whole
+    /// column first and the controls then measure at zero and never come back.
+    /// The persisted height, not `SheetPositionReader`'s — reading the observable one here would
+    /// tie every frame of its height animation to this view.
+    private var reservedControlHeight: CGFloat? {
+        guard player.limitHeight || compactSize else { return nil }
+        let stored = UserDefaults.standard.double(forKey: Const.playerControlHeight)
+        return stored > 0 ? stored : nil
+    }
+
     var body: some View {
         @Bindable var navManager = navManager
 
         ZStack {
             pages
-                .frame(minHeight: minHeight)
+                .frame(minHeight: minHeight ?? reservedControlHeight)
                 .sensoryFeedback(Const.sensoryFeedback, trigger: navManager.playerTab)
                 .onSizeChange { size in
                     SheetPositionReader.shared.playerContentViewHeight = size.height

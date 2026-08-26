@@ -44,6 +44,9 @@ final class WebPlayerWarmup: NSObject {
     @MainActor private var videoId: String?
     @MainActor private var warmed: Warmed?
     @MainActor private var options: PlayerWebView.InitScriptOptions?
+    /// Which page the warmed view actually loaded. A page warmed as the embed can't stand in
+    /// for the full-website fallback (or the reverse): they're different URLs.
+    @MainActor private var warmedType: PlayerType?
     @MainActor private var failed = false
     /// A page that finishes loading after `warmUp` returned is too late to be waited for.
     @MainActor private var finished = false
@@ -69,11 +72,14 @@ final class WebPlayerWarmup: NSObject {
         self.videoId = videoId
         options = PlayerWebView.initScriptOptions(startAt: startAt, uiMode: uiMode, player: player)
 
+        let type = setting.webPlayerType(embeddingDisabled: player.embeddingDisabled)
+        warmedType = type
+
         guard PlayerWebView.loadPlayer(
             webView: webView,
             youtubeId: videoId,
             startAt: startAt,
-            type: setting.webPlayerType(embeddingDisabled: player.embeddingDisabled)
+            type: type
         ) else {
             cancel()
             return false
@@ -172,8 +178,8 @@ final class WebPlayerWarmup: NSObject {
 
     /// Hands the warmed page to `PlayerWebView`, which takes over its delegates from here.
     @MainActor
-    func takeWebView(for videoId: String?) -> Warmed? {
-        guard let warmed, let videoId, videoId == self.videoId else {
+    func takeWebView(for videoId: String?, type: PlayerType) -> Warmed? {
+        guard let warmed, let videoId, videoId == self.videoId, type == warmedType else {
             // a warmed page is playing by now, and nothing else will come to adopt it
             cancel()
             return nil
@@ -207,6 +213,7 @@ final class WebPlayerWarmup: NSObject {
         videoId = nil
         warmed = nil
         options = nil
+        warmedType = nil
         startedWhileLivePlaying = false
     }
 

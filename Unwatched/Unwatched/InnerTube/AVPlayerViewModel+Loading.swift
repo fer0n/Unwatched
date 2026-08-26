@@ -4,6 +4,13 @@ import SwiftUI
 import UnwatchedShared
 import WebKit
 
+/// One row of `AVPlayerViewModel.retryClients`.
+struct RetryClient: Sendable {
+    let priority: Int
+    let name: String
+    let fetch: @Sendable (InnerTubeAPI, String) async throws -> PlayerInfo
+}
+
 extension AVPlayerViewModel {
 
     // MARK: - Entry point
@@ -61,24 +68,6 @@ extension AVPlayerViewModel {
     }
 
     // MARK: - Primary race (iOS client HLS vs WKWebView extraction)
-
-    /// A premiere or live stream that hasn't started has nothing to resolve, on any client.
-    @MainActor
-    func handleScheduledVideo(_ error: Error, videoId: String) -> Bool {
-        guard case APIError.scheduled(let date) = error else { return false }
-        guard player.video?.youtubeId == videoId else { return true }
-        Log.info("[AVPlayerView] scheduled video \(videoId): starts \(date?.formatted() ?? "unknown")")
-        player.isLoading = nil
-        player.pause()
-        clearPendingReposition()
-        if let date {
-            player.deferVideoDate = date
-        } else {
-            // no start time to pre-fill; the selector opens on its own default
-            NavigationManager.shared.showDeferDateSelector = true
-        }
-        return true
-    }
 
     /// Starts WKWebView HLS extraction in parallel with the iOS client fetch.
     @MainActor
@@ -176,6 +165,16 @@ extension AVPlayerViewModel {
 
     // MARK: - Exhaustive parallel retry
 
+    /// Priority is lower = preferred when several clients come back with adaptive-only streams.
+    static let retryClients: [RetryClient] = [
+        RetryClient(priority: 1, name: "MWEB", fetch: { try await $0.fetchPlayerInfoMWEB(videoId: $1) }),
+        RetryClient(priority: 2, name: "TVEmbedded", fetch: { try await $0.fetchPlayerInfoTVEmbedded(videoId: $1) }),
+        RetryClient(priority: 3, name: "WebSafari", fetch: { try await $0.fetchPlayerInfoWebSafari(videoId: $1) }),
+        RetryClient(priority: 4, name: "iOS", fetch: { try await $0.fetchPlayerInfo(videoId: $1) }),
+        RetryClient(priority: 5, name: "Android", fetch: { try await $0.fetchPlayerInfoAndroid(videoId: $1) }),
+        RetryClient(priority: 6, name: "AndroidVR", fetch: { try await $0.fetchPlayerInfoAndroidVR(videoId: $1) }),
+    ]
+
     /// The new spine, mirroring SmartTubeIOS `exhaustiveRetry`'s attempt loop (lines 241-454):
     /// repeat up to 3 times, each attempt firing all clients in parallel. HLS results are played
     /// immediately as they arrive (first success wins); adaptive-only results are queued and tried
@@ -191,6 +190,14 @@ extension AVPlayerViewModel {
             case result(FetchResult)
             case ipBlocked(Error)
             case scheduled(Error)
+            case ageRestricted(Error)
+        }
+
+        @Sendable func verdict(_ error: Error) -> FetchOutcome? {
+            if case APIError.ageRestricted = error { return .ageRestricted(error) }
+            if case APIError.ipBlocked = error { return .ipBlocked(error) }
+            if case APIError.scheduled = error { return .scheduled(error) }
+            return nil
         }
 
         let api = self.api
@@ -203,55 +210,22 @@ extension AVPlayerViewModel {
             var androidInfoForMuxed: PlayerInfo?
             var ipBlockError: Error?
             var scheduledError: Error?
+            var ageError: Error?
             var played = false
 
-            // Fire all clients concurrently. Each fetch survives transient network blips via
-            // retryWithBackoff; iOS/Android additionally surface APIError.ipBlocked.
-            // Priority (lower = preferred): MWEB, TVEmbedded, WebSafari, iOS, Android, AndroidVR.
+            // each fetch survives transient network blips via retryWithBackoff
             await withTaskGroup(of: Optional<FetchOutcome>.self) { group in
-                group.addTask {
-                    (try? await retryWithBackoff(label: "MWEB[\(attempt)]") {
-                        try await api.fetchPlayerInfoMWEB(videoId: videoId)
-                    }).map { .result(FetchResult(priority: 1, client: "MWEB", info: $0)) }
-                }
-                group.addTask {
-                    (try? await retryWithBackoff(label: "TVEmbedded[\(attempt)]") {
-                        try await api.fetchPlayerInfoTVEmbedded(videoId: videoId)
-                    }).map { .result(FetchResult(priority: 2, client: "TVEmbedded", info: $0)) }
-                }
-                group.addTask {
-                    (try? await retryWithBackoff(label: "WebSafari[\(attempt)]") {
-                        try await api.fetchPlayerInfoWebSafari(videoId: videoId)
-                    }).map { .result(FetchResult(priority: 3, client: "WebSafari", info: $0)) }
-                }
-                group.addTask {
-                    do {
-                        let info = try await retryWithBackoff(label: "iOS[\(attempt)]") {
-                            try await api.fetchPlayerInfo(videoId: videoId)
+                for client in Self.retryClients {
+                    group.addTask {
+                        do {
+                            let info = try await retryWithBackoff(label: "\(client.name)[\(attempt)]") {
+                                try await client.fetch(api, videoId)
+                            }
+                            return .result(FetchResult(priority: client.priority, client: client.name, info: info))
+                        } catch {
+                            return verdict(error)
                         }
-                        return .result(FetchResult(priority: 4, client: "iOS", info: info))
-                    } catch {
-                        if case APIError.ipBlocked = error { return .ipBlocked(error) }
-                        if case APIError.scheduled = error { return .scheduled(error) }
-                        return nil
                     }
-                }
-                group.addTask {
-                    do {
-                        let info = try await retryWithBackoff(label: "Android[\(attempt)]") {
-                            try await api.fetchPlayerInfoAndroid(videoId: videoId)
-                        }
-                        return .result(FetchResult(priority: 5, client: "Android", info: info))
-                    } catch {
-                        if case APIError.ipBlocked = error { return .ipBlocked(error) }
-                        if case APIError.scheduled = error { return .scheduled(error) }
-                        return nil
-                    }
-                }
-                group.addTask {
-                    (try? await retryWithBackoff(label: "AndroidVR[\(attempt)]") {
-                        try await api.fetchPlayerInfoAndroidVR(videoId: videoId)
-                    }).map { .result(FetchResult(priority: 6, client: "AndroidVR", info: $0)) }
                 }
 
                 for await maybe in group {
@@ -265,6 +239,9 @@ extension AVPlayerViewModel {
                         scheduledError = err
                         group.cancelAll()
                         return
+                    case .ageRestricted(let err):
+                        // TVEmbedded and AndroidVR can still serve an age gate: let them finish
+                        ageError = err
                     case .result(let r):
                         if r.client == "Android" { androidInfoForMuxed = r.info }
                         if r.info.hlsURL != nil {
@@ -285,6 +262,9 @@ extension AVPlayerViewModel {
 
             if played { return }
 
+            if let ageError, handleAgeRestrictedVideo(ageError, videoId: videoId) {
+                return
+            }
             if let scheduledError, handleScheduledVideo(scheduledError, videoId: videoId) {
                 return
             }
@@ -1038,6 +1018,9 @@ extension AVPlayerViewModel {
         if player.isPlaying {
             // `handleReadyToPlay` starts playback once the reposition has landed
             guard pendingSeekToTime == nil else { return }
+            // until the new item is installed the player still holds the previous video, and
+            // starting here would resume that behind the one being loaded
+            guard player.isLoading == nil, loadedVideoId == player.video?.youtubeId else { return }
             PlayerAudioSession.activate()
             startAtCurrentSpeed()
         } else {

@@ -63,7 +63,7 @@ final class PlayerSwitchManager {
               player.video?.isPodcast == false,
               player.isPlaying,
               player.isLoading == nil else {
-            selectedType = type
+            settle(on: type)
             return
         }
 
@@ -131,7 +131,15 @@ final class PlayerSwitchManager {
         if handoverPause {
             player.previousIsPlaying = true
         }
+        settle(on: type)
+    }
+
+    /// Puts `type` on screen and points it at the current video. The cue is the only trigger a
+    /// switch that lands *after* the video was set gets — the incoming player's `onChange` already
+    /// fired and was skipped for not being current. Both engines drop it if they're on the video.
+    private func settle(on type: PlayerTypeSetting) {
         selectedType = type
+        PlayerManager.shared.backend.cueVideo()
     }
 
     private func stopWarmup() {

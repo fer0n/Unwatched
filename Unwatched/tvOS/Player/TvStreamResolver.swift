@@ -64,7 +64,7 @@ enum TvPlaybackError: LocalizedError {
 
     init(_ error: Error?) {
         switch error as? APIError {
-        case .signInRequired:
+        case .signInRequired, .ageRestricted:
             self = .signInRequired
         case .unavailable(let reason), .ipBlocked(let reason):
             self = .unavailable(reason)

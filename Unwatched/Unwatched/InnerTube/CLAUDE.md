@@ -66,6 +66,7 @@ Unwatched/Unwatched/InnerTube/
     YTHLSProxyLoader.swift, YouTubeWebViewHLSExtractor.swift
   AVPlayerView.swift          ← Unwatched-owned
   AVPlayerViewModel.swift     ← Unwatched-owned
+  AVPlayerViewModel+Fallback.swift ← Unwatched-owned (unplayable-verdict handling)
   WKHLSManager.swift          ← Unwatched-owned
   InnerTubeAPI+Metadata.swift ← Unwatched-owned (extension; not upstream)
   PlayerViewControllerRepresentable.swift  ← UIKit + AppKit hosts
@@ -146,11 +147,17 @@ method's parameter and result types must be public as well.
   `formatDuration` in `TimeFormatting.swift`, which doesn't exist in Unwatched).
 
 **`InnerTubeModels.swift`:** `PlayerInfo` carries an extra `originalAudioLanguage: String`
-field not in upstream — preserve it in the struct and in `applyingPoToken(_:)`.
+field not in upstream — preserve it in the struct and in `applyingPoToken(_:)`. `APIError` also
+carries the Unwatched-only `ageRestricted` case (alongside `ipBlocked`/`scheduled`) — preserve it
+and its `errorDescription`.
 
 **`InnerTubeAPI+Player.swift`:** keep `import NaturalLanguage` and the
 `originalAudioLanguage` detection block inside `parsePlayerInfo` (uses
-`NLLanguageRecognizer` on title+description). Keep `ITVideo(` constructor calls.
+`NLLanguageRecognizer` on title+description). Keep `ITVideo(` constructor calls. Keep the
+age-gate branch in `parsePlayerInfo`'s unplayable block, which throws `APIError.ageRestricted`
+*before* the `signInRequired` check: an age gate is definitive on every unauthenticated client,
+whereas "sign in to confirm you're not a bot" is per-client and must stay `signInRequired` so the
+retry loop keeps going.
 
 ---
 
@@ -192,6 +199,12 @@ Supporting pieces, all in `+Loading.swift`:
   timeout); equivalent of upstream's `attemptURL`.
 - Each fetch wrapped in **`retryWithBackoff`** (transient `URLError` survival).
 - **`APIError.ipBlocked`** from iOS/Android short-circuits the whole loop.
+  **`APIError.ageRestricted`** (see `verdict(_:)`) is recorded but does *not* cancel the group —
+  TVEmbedded and AndroidVR can still serve an age gate — and is only acted on once every client
+  has come back empty.
+- **`+Fallback.swift`** holds what happens then: `handleScheduledVideo` and
+  `handleAgeRestrictedVideo`, the latter handing off to the YouTube page when the native player
+  is only standing in for a failed embed.
 - **`handleItemFailure`** routes mid-playback `.failed` through
   **`qualityRecoveryAction`** (403/quality-cap/H.264 decode → re-`exhaustiveRetry`;
   else surface the error).

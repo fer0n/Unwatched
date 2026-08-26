@@ -436,6 +436,9 @@ public struct Const {
 
     public static let playerType = "playerType"
     public static let previousPlayerType = "previousPlayerType"
+    /// Transient, not a user setting: marks that `playerType` holds a fallback pick rather than
+    /// the user's own, so it can be put back on the next video.
+    public static let nativeFallbackActive = "nativeFallbackActive"
     public static let pipAutoEnable = "pipAutoEnable"
 
     /// Hours of unplayed queue kept downloaded ahead: 0 off, -1 unlimited

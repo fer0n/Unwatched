@@ -199,14 +199,13 @@ final class AVPlayerViewModel: PlayerBackend {
 
     @MainActor
     func loadVideoIfNeeded() {
-        let videoId = player.video?.youtubeId
-        Log.info("loadVideo: \(videoId)")
         // a player switch still reaches here: the outgoing subtree gets one update with the new video
         guard PlayerSwitchManager.shared.nativeIsCurrent else {
             Log.info("loadVideo: skipped, the native player is no longer current")
             return
         }
-        guard let videoId, videoId != loadedVideoId else { return }
+        guard let videoId = player.video?.youtubeId, videoId != loadedVideoId else { return }
+        Log.info("loadVideo: \(videoId)")
         loadedVideoId = videoId
         // otherwise the lock screen shows the empty player's zero for the whole load
         lastObservedTime = player.getStartPosition()
