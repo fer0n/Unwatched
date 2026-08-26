@@ -95,8 +95,8 @@ struct TagEditView: View {
                         }
                     }
 
-                    // only an `include` tag claims videos of its own, see `Tag.decidingTag`
-                    if tag.mode == .include {
+                    // an `exclude` tag's videos are also every other tag's, so none of them could follow it alone
+                    if tag.mode != .exclude {
                         MySection(footer: "continuousPlayTagHelper") {
                             Picker(selection: $tag.continuousPlay) {
                                 Text("useDefault").tag(Bool?.none)

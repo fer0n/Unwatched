@@ -376,4 +376,67 @@ final class FilteredQueueWriteTests: XCTestCase {
 
         XCTAssertEqual(ids(.all), ["music-1", "sideloaded"])
     }
+
+    // MARK: - which tag decides a video's playback settings
+
+    /// The same slice the filter gives an `untagged` tag has to decide its videos' settings.
+    func testUntaggedTagDecidesForWhatNoTagCovers() throws {
+        let untaggedTag = Tag(name: "Rest", order: 2, mode: .untagged, continuousPlay: true)
+        context.insert(untaggedTag)
+        try context.save()
+
+        XCTAssertEqual(Tag.continuousPlayTag(for: video("music-1")), untaggedTag)
+        XCTAssertEqual(Tag.continuousPlayTag(for: video("sideloaded")), untaggedTag)
+    }
+
+    func testIncludeTagKeepsItsVideosOutOfTheUntaggedTag() throws {
+        techTag.continuousPlay = false
+        let untaggedTag = Tag(name: "Rest", order: 2, mode: .untagged, continuousPlay: true)
+        context.insert(untaggedTag)
+        try context.save()
+
+        XCTAssertEqual(Tag.continuousPlayTag(for: video("tech-1")), techTag)
+    }
+
+    /// Covered is covered: an `include` tag without an opinion still keeps its videos out of the leftovers.
+    func testIncludeTagWithoutASettingDoesNotFallBackToTheUntaggedTag() throws {
+        let untaggedTag = Tag(name: "Rest", order: 2, mode: .untagged, continuousPlay: true)
+        context.insert(untaggedTag)
+        try context.save()
+
+        XCTAssertNil(Tag.continuousPlayTag(for: video("tech-1")))
+    }
+
+    /// Tagging a video on its own covers it, the same as the filter reads it.
+    func testIndividuallyTaggedVideoLeavesTheUntaggedTag() throws {
+        techTag.videos = [video("sideloaded")]
+        let untaggedTag = Tag(name: "Rest", order: 2, mode: .untagged, suggestVideos: false)
+        context.insert(untaggedTag)
+        try context.save()
+
+        XCTAssertNil(Tag.suggestVideosTag(for: video("sideloaded")))
+        XCTAssertEqual(Tag.suggestVideosTag(for: video("music-1")), untaggedTag)
+    }
+
+    /// An `exclude` tag holds what it leaves out, so it must not count as covering it.
+    func testExcludeTagDoesNotTakeVideosOutOfTheUntaggedTag() throws {
+        let excluding = Tag(name: "No Music", order: 2, mode: .exclude, continuousPlay: false)
+        context.insert(excluding)
+        excluding.subscriptions = [music]
+        let untaggedTag = Tag(name: "Rest", order: 3, mode: .untagged, continuousPlay: true)
+        context.insert(untaggedTag)
+        try context.save()
+
+        XCTAssertEqual(Tag.continuousPlayTag(for: video("music-1")), untaggedTag)
+    }
+
+    func testLowestOrderUntaggedTagWins() throws {
+        let second = Tag(name: "Rest B", order: 3, mode: .untagged, continuousPlay: false)
+        let first = Tag(name: "Rest A", order: 2, mode: .untagged, continuousPlay: true)
+        context.insert(second)
+        context.insert(first)
+        try context.save()
+
+        XCTAssertEqual(Tag.continuousPlayTag(for: video("music-1")), first)
+    }
 }

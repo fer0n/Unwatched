@@ -116,9 +116,20 @@ public final class Tag: CustomStringConvertible, Exportable {
     /// The tag whose opinion on a setting a video follows: the video's own tags before its channel's, lowest order
     /// first.
     private static func decidingTag(for video: Video, _ setting: KeyPath<Tag, Bool?>) -> Tag? {
-        ((video.tags ?? []) + (video.subscription?.tags ?? []))
-            .filter { $0.mode == .include && $0[keyPath: setting] != nil }
+        let claiming = ((video.tags ?? []) + (video.subscription?.tags ?? [])).filter { $0.mode == .include }
+        return (claiming.isEmpty ? untaggedTags(for: video) : claiming)
+            .filter { $0[keyPath: setting] != nil }
             .min { $0.order < $1.order }
+    }
+
+    /// The `untagged` tags a video falls into, which is all of them once no `include` tag claims it — the same slice
+    /// `QueueFilter` gives them. Fetched rather than read off the video: a tag that holds nothing of its own is not
+    /// reachable through the video's relationships.
+    private static func untaggedTags(for video: Video) -> [Tag] {
+        guard let context = video.modelContext else { return [] }
+        let untagged = TagMode.untagged.rawValue
+        let descriptor = FetchDescriptor<Tag>(predicate: #Predicate<Tag> { $0._mode == untagged })
+        return (try? context.fetch(descriptor)) ?? []
     }
 
     public func covers(_ subscription: Subscription?) -> Bool {
