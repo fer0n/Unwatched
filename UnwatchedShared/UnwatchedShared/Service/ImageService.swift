@@ -84,7 +84,7 @@ public struct ImageService {
             let imageContainer = DataProvider.shared.localCacheContainer
             let context = ModelContext(imageContainer)
             for url in urls {
-                decodedImageCache[url.absoluteString] = nil
+                decodedImageCache.removeAll(url: url.absoluteString)
                 if let image = getCachedImage(for: url, context) {
                     context.delete(image)
                 }
@@ -130,7 +130,7 @@ public struct ImageService {
             let count = images.count
             for image in images {
                 if let imageUrl = image.imageUrl {
-                    decodedImageCache[imageUrl.absoluteString] = nil
+                    decodedImageCache.removeAll(url: imageUrl.absoluteString)
                 }
                 context.delete(image)
             }
@@ -293,18 +293,31 @@ public struct ImageService {
     /// Cache key for a decoded image: the same URL decoded at two different sizes (the mini player's 107×60pt slot
     /// vs.
     public static func decodedCacheKey(url: URL, maxPixelSize: CGFloat) -> String {
-        "\(url.absoluteString)#\(Int(maxPixelSize))"
+        DecodedImageCache.key(url.absoluteString, Int(maxPixelSize))
     }
 
     /// Decodes off the main thread, so neither the view update nor the render pass has to.
-    private static func decodeAndCache(_ data: Data, _ key: String, _ maxPixelSize: CGFloat) -> PlatformImage? {
-        guard let image = PlatformImage(
-            downsampling: data,
-            maxPixelSize: maxPixelSize
-        )?.readyForDisplay() else { return nil }
-        decodedImageCache[key] = image
+    ///
+    /// Reading the source is what costs — an episode's 3000px cover takes the same tens of milliseconds whether the
+    /// result wanted is 1200px or 135px — so a bigger decode of the same URL that's already in the cache is scaled
+    /// down instead of decoding again.
+    private static func decodeAndCache(_ data: Data, _ url: URL, _ maxPixelSize: CGFloat) -> PlatformImage? {
+        let dataKey = url.absoluteString
+        let image: PlatformImage?
+        if let bigger = decodedImageCache.smallestAtLeast(url: dataKey, maxPixelSize: Int(maxPixelSize)) {
+            image = bigger.scaledDown(maxPixelSize: maxPixelSize)
+        } else {
+            image = PlatformImage(downsampling: data, maxPixelSize: maxPixelSize)?.readyForDisplay()
+        }
+        guard let image else { return nil }
+        decodedImageCache.store(image, url: dataKey, maxPixelSize: Int(maxPixelSize))
         return image
     }
+
+    /// One task per URL-and-size in flight, so the views that want the same picture share a decode rather than each
+    /// paying for their own. Two of them do ask at once — the player surface and the mini bar for an audio episode —
+    /// and a second decode of a 3000px cover is tens of milliseconds thrown away.
+    @MainActor private static var inFlight = [String: Task<(PlatformImage?, ImageCacheInfo), Error>]()
 
     @MainActor
     public static func getImage(
@@ -314,13 +327,16 @@ public struct ImageService {
     ) -> Task<(PlatformImage?, ImageCacheInfo), Error> {
         let dataKey = url.absoluteString
         let decodedKey = decodedCacheKey(url: url, maxPixelSize: maxPixelSize)
+        if let running = inFlight[decodedKey] {
+            return running
+        }
         let cacheInfo = cacheManager[dataKey]
         let decodedImageCache = ImageService.decodedImageCache
 
-        return Task.detached {
+        let task = Task.detached {
             // load from memory
             if let cacheInfo {
-                return (decodedImageCache[decodedKey] ?? decodeAndCache(cacheInfo.data, decodedKey, maxPixelSize), cacheInfo)
+                return (decodedImageCache[decodedKey] ?? decodeAndCache(cacheInfo.data, url, maxPixelSize), cacheInfo)
             }
 
             // fetch from DB
@@ -335,7 +351,7 @@ public struct ImageService {
                     persistImage: false,
                     persistColor: false
                 )
-                return (decodedImageCache[decodedKey] ?? decodeAndCache(imageData, decodedKey, maxPixelSize), imageInfo)
+                return (decodedImageCache[decodedKey] ?? decodeAndCache(imageData, url, maxPixelSize), imageInfo)
             }
 
             // fetch online
@@ -345,8 +361,15 @@ public struct ImageService {
                 data: imageData,
                 persistImage: true
             )
-            return (decodeAndCache(imageData, decodedKey, maxPixelSize), imageInfo)
+            return (decodedImageCache[decodedKey] ?? decodeAndCache(imageData, url, maxPixelSize), imageInfo)
         }
+
+        inFlight[decodedKey] = task
+        Task { @MainActor in
+            _ = try? await task.value
+            inFlight[decodedKey] = nil
+        }
+        return task
     }
 
     @MainActor

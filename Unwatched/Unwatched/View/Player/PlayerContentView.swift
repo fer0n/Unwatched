@@ -240,10 +240,12 @@ private struct InlineMiniPlayer: View {
     var body: some View {
         MiniPlayerLayout(hideMiniPlayer: false, handleMiniPlayerTap: goToControls) {
             // decoded at the size it's drawn at, not the full player's: scaling cover art down from 1400px+ in the
-            // render pass aliases (see `PodcastArtwork`)
+            // render pass aliases (see `PodcastArtwork`). The budget is the mini *bar*'s rather than this slot's,
+            // slightly over-sampled here, so that both share one decode — an episode cover is a 3000px JPEG and
+            // reading it costs the same tens of milliseconds at any output size.
             CachedImageView(
                 imageUrl: player.video?.displayThumbnailUrl,
-                maxPixelSize: ceil(Self.imageSize * displayScale)
+                maxPixelSize: ceil(Const.playerAboveSheetHeight * displayScale)
             ) { image in
                 image
                     .resizable()

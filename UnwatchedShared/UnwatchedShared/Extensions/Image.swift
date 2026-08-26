@@ -150,6 +150,17 @@ public extension UIImage {
     func readyForDisplay() -> UIImage {
         preparingForDisplay() ?? self
     }
+
+    /// Scales an already-decoded image down, for when a smaller size of the same picture is wanted and re-reading
+    /// the source would cost a full decode.
+    func scaledDown(maxPixelSize: CGFloat) -> UIImage? {
+        guard let cgImage else { return nil }
+        let side = CGFloat(max(cgImage.width, cgImage.height))
+        guard side > maxPixelSize else { return self }
+        let scale = maxPixelSize / side
+        let target = CGSize(width: CGFloat(cgImage.width) * scale, height: CGFloat(cgImage.height) * scale)
+        return preparingThumbnail(of: target)
+    }
 }
 #endif
 
@@ -187,6 +198,30 @@ public extension NSImage {
     }
 
     func readyForDisplay() -> NSImage { self }
+
+    /// Scales an already-decoded image down, for when a smaller size of the same picture is wanted and re-reading
+    /// the source would cost a full decode.
+    func scaledDown(maxPixelSize: CGFloat) -> NSImage? {
+        guard let cgImage = cgImage(forProposedRect: nil, context: nil, hints: nil) else { return nil }
+        let side = CGFloat(max(cgImage.width, cgImage.height))
+        guard side > maxPixelSize else { return self }
+        let scale = maxPixelSize / side
+        let width = Int((CGFloat(cgImage.width) * scale).rounded())
+        let height = Int((CGFloat(cgImage.height) * scale).rounded())
+        guard let context = CGContext(
+            data: nil,
+            width: width,
+            height: height,
+            bitsPerComponent: 8,
+            bytesPerRow: 0,
+            space: cgImage.colorSpace ?? CGColorSpaceCreateDeviceRGB(),
+            bitmapInfo: CGImageAlphaInfo.premultipliedLast.rawValue
+        ) else { return nil }
+        context.interpolationQuality = .high
+        context.draw(cgImage, in: CGRect(x: 0, y: 0, width: width, height: height))
+        guard let scaled = context.makeImage() else { return nil }
+        return NSImage(cgImage: scaled, size: NSSize(width: width, height: height))
+    }
 }
 
 #endif
