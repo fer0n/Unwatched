@@ -46,6 +46,8 @@ public struct Const {
     public static let deniedFeedback = SensoryFeedback.error
 
     public static let playerAboveSheetHeight: CGFloat = 75
+    /// Widest the player's button rows may get: roughly an iPhone 16 Pro's content width, wider screens center them
+    public static let playerRowMaxWidth: CGFloat = 370
     public static let minSheetDetent: CGFloat = 75
     public static let backupType = UTType("com.pentlandFirth.unwatchedbackup")
 

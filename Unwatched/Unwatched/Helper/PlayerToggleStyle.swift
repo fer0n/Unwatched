@@ -23,7 +23,7 @@ struct PlayerToggleStyle: ToggleStyle {
 
 struct PlayerToggleModifier: ViewModifier {
     static let baseSmallSize: CGFloat = 43
-    static let baseNormalSize: CGFloat = 55
+    static let baseNormalSize: CGFloat = 60
 
     let isOn: Bool
     var isSmall: Bool = false
@@ -40,7 +40,7 @@ struct PlayerToggleModifier: ViewModifier {
             #if os(macOS)
             .font(.headline)
             #else
-            .font(isSmall ? .headline : .title2)
+            .font(isSmall ? .headline : .title)
             #endif
             .fontWeight(.regular)
             .frame(width: size, height: size)

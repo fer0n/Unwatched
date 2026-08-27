@@ -147,19 +147,21 @@ struct PlayerControls: View {
                     )
 
                     HStack(spacing: hasSmallControls ? speedSpacing : nil) {
-                        WatchedButton(isSmall: hasSmallControls)
+                        SeekButton(forward: false, isSmall: hasSmallControls)
                             .frame(maxWidth: compactSize ? nil : .infinity)
 
                         PlayerControlsPlayButton(size: playButtonSize)
+                            .frame(maxWidth: compactSize ? nil : .infinity)
 
-                        NextVideoButton(isSmall: hasSmallControls)
+                        SeekButton(forward: true, isSmall: hasSmallControls)
                             .frame(maxWidth: compactSize ? nil : .infinity)
 
                         if enableHideControls {
-                            HideControlsButton(isSmall: hasSmallControls)
+                            HideControlsButton(isSmall: true)
                         }
                     }
-                    .padding(.horizontal, compactSize ? 0 : 10)
+                    .padding(.horizontal, compactSize ? 0 : 20)
+                    .frame(maxWidth: compactSize ? nil : Const.playerRowMaxWidth)
 
                     if player.isTallAspectRatio {
                         // make sure play button vertical spacing is equal
