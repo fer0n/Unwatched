@@ -10677,6 +10677,74 @@
         }
       }
     },
+    "markWatchedOnEnded" : {
+      "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Am Ende als gesehen markieren"
+          }
+        },
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Mark Watched on Finish"
+          }
+        },
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Marcar como visto al finalizar"
+          }
+        },
+        "fr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Marquer comme vu à la fin"
+          }
+        },
+        "pl" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Oznacz jako obejrzane po zakończeniu"
+          }
+        }
+      }
+    },
+    "markWatchedOnEndedHelper" : {
+      "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Markiert ein Video automatisch als gesehen und lädt das nächste in der Warteschlange, wenn die Wiedergabe endet."
+          }
+        },
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Automatically marks a video as watched and loads the next one in the queue when it finishes playing."
+          }
+        },
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Marca automáticamente un video como visto y carga el siguiente de la cola cuando termina de reproducirse."
+          }
+        },
+        "fr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Marque automatiquement une vidéo comme vue et charge la suivante de la file d’attente lorsque la lecture se termine."
+          }
+        },
+        "pl" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Automatycznie oznacza wideo jako obejrzane i wczytuje następne w kolejce po zakończeniu odtwarzania."
+          }
+        }
+      }
+    },
     "minimalBackupsHelper" : {
       "localizations" : {
         "de" : {

@@ -263,6 +263,8 @@ struct PlayerView: View {
                 )
             }
             player.autoSetNextVideo(.continuousPlay, modelContext)
+        } else if Const.markWatchedOnEnded.bool ?? true {
+            player.markVideoWatched(showMenu: false)
         } else {
             player.pause()
             player.setVideoEnded(true)

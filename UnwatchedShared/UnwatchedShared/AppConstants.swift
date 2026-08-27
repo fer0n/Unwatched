@@ -341,6 +341,7 @@ public struct Const {
     public static let autoClearNew = "autoClearNew"
     public static let playbackSpeed = "playbackSpeed"
     public static let continuousPlay = "continuousPlay"
+    public static let markWatchedOnEnded = "markWatchedOnEnded"
     public static let suggestVideos = "suggestVideos"
     public static let autoRefresh = "refreshOnStartup"
     public static let enableLogging = "enableLogging"

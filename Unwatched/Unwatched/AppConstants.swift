@@ -49,6 +49,7 @@ extension Const {
         Const.hideMenuOnPlay: false,
         Const.returnToQueue: true,
         Const.rotateOnPlay: false,
+        Const.markWatchedOnEnded: true,
         Const.temporarySpeedUp: Const.speedMax,
         Const.temporarySlowDown: Const.speedMin,
         Const.playVideoFullscreen: false,

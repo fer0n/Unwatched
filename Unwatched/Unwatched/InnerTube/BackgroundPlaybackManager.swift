@@ -110,8 +110,12 @@ final class BackgroundPlaybackManager {
         let continuousPlay = UserDefaults.standard.bool(forKey: Const.continuousPlay)
         Log.info("backgroundPlayback: videoEnded, continuousPlay: \(continuousPlay)")
         guard continuousPlay else {
-            player.pause()
-            player.setVideoEnded(true)
+            if Const.markWatchedOnEnded.bool ?? true {
+                player.markVideoWatched(showMenu: false)
+            } else {
+                player.pause()
+                player.setVideoEnded(true)
+            }
             return
         }
         let modelContext = DataProvider.mainContext

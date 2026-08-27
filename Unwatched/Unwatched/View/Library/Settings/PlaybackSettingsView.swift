@@ -9,6 +9,7 @@ import UnwatchedShared
 struct PlaybackSettingsView: View {
     @AppStorage(Const.fullscreenControlsSetting) var fullscreenControlsSetting: FullscreenControls = .autoHide
     @AppStorage(Const.continuousPlay) var continuousPlay: Bool = false
+    @AppStorage(Const.markWatchedOnEnded) var markWatchedOnEnded: Bool = true
     @AppStorage(Const.hideMenuOnPlay) var hideMenuOnPlay: Bool = false
     @AppStorage(Const.playVideoFullscreen) var playVideoFullscreen: Bool = false
     @AppStorage(Const.returnToQueue) var returnToQueue: Bool = true
@@ -102,6 +103,12 @@ struct PlaybackSettingsView: View {
 
                     Toggle(isOn: $continuousPlay) {
                         Text("continuousPlay")
+                    }
+                }
+
+                MySection(footer: "markWatchedOnEndedHelper") {
+                    Toggle(isOn: $markWatchedOnEnded) {
+                        Text("markWatchedOnEnded")
                     }
                 }
 
