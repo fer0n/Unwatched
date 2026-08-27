@@ -29,7 +29,7 @@ struct WatchHistoryView: View {
             }
         }
         .concentricMacWorkaround()
-        .myNavigationTitle("watched")
+        .myNavigationTitle("history")
         .paneToolbar {
             ShowStatsItem()
         }

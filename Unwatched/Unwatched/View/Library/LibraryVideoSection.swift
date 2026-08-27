@@ -11,7 +11,7 @@ struct LibraryVideoSection: View {
     var body: some View {
         MySection("videos", hasPadding: false) {
             NavigationLink(value: LibraryDestination.watchHistory) {
-                LibraryNavListItem("watched",
+                LibraryNavListItem("history",
                                    systemName: "checkmark")
             }
             NavigationLink(value: LibraryDestination.bookmarkedVideos) {
