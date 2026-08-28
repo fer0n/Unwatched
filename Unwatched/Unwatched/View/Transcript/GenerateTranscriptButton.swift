@@ -49,7 +49,8 @@ struct GenerateTranscriptButton: View {
         }
     }
 
-    /// The base tint with a noticeably lighter sweep grown to `generationProgress`, anchored left.
+    /// The base tint with a noticeably lighter sweep grown to `generationProgress`, anchored left. Once the
+    /// sweep has run to the end it fades back into the base instead of blinking away with the button.
     var progressFill: some View {
         GeometryReader { geo in
             ZStack(alignment: .leading) {
@@ -57,9 +58,11 @@ struct GenerateTranscriptButton: View {
                 Color.insetBackgroundColor
                     .mix(with: .white, by: 0.25)
                     .frame(width: geo.size.width * viewModel.generationProgress)
+                    .opacity(viewModel.isFadingOutProgress ? 0 : 1)
             }
         }
         .animation(.linear(duration: 0.3), value: viewModel.generationProgress)
+        .animation(.easeOut(duration: 0.4), value: viewModel.isFadingOutProgress)
     }
 }
 

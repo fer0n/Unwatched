@@ -169,6 +169,9 @@ extension TranscriptView {
         var generationProgress: Double = 0
         var generationError: String?
 
+        /// Set once the sweep has reached the end, so the button can dissolve the fill before it's swapped out.
+        var isFadingOutProgress = false
+
         @ObservationIgnored
         private var generationTask: Task<Void, Never>?
 
@@ -243,6 +246,7 @@ extension TranscriptView {
             guard !isGenerating else { return }
             isGenerating = true
             generationProgress = 0
+            isFadingOutProgress = false
             generationError = nil
 
             let youtubeId = video.youtubeId
@@ -261,6 +265,7 @@ extension TranscriptView {
                 }
                 do {
                     let entries = try await task.value
+                    await self?.finishProgress()
                     withAnimation {
                         self?.transcript = entries
                     }
@@ -273,6 +278,16 @@ extension TranscriptView {
                     self?.generationProgress = 0
                 }
             }
+        }
+
+        /// Runs the sweep out to the end, then starts fading it away. Returns once the fade is far enough along
+        /// that swapping the button for the transcript reads as one continuous motion rather than a cut.
+        @MainActor
+        private func finishProgress() async {
+            generationProgress = 1
+            try? await Task.sleep(for: .seconds(0.25))
+            isFadingOutProgress = true
+            try? await Task.sleep(for: .seconds(0.15))
         }
 
         @MainActor
