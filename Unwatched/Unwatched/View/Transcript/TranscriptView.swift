@@ -280,8 +280,7 @@ extension TranscriptView {
             }
         }
 
-        /// Runs the sweep out to the end, then starts fading it away. Returns once the fade is far enough along
-        /// that swapping the button for the transcript reads as one continuous motion rather than a cut.
+        /// Runs the sweep out to the end and starts fading it, so the swap that follows reads as one motion.
         @MainActor
         private func finishProgress() async {
             generationProgress = 1

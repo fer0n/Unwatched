@@ -134,9 +134,10 @@ extension PlayerWebView {
         return "document.elementFromPoint(window.innerWidth / 2, window.innerHeight / 2)?.click();"
     }
 
+    /// The page's `video` global is null until the element has been found again after a rebuild.
     static func pauseScript() -> String {
         """
-        video.pause();
+        (video ?? document.querySelector('video'))?.pause();
         """
     }
 

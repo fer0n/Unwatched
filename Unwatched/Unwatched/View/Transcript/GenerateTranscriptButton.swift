@@ -49,8 +49,7 @@ struct GenerateTranscriptButton: View {
         }
     }
 
-    /// The base tint with a noticeably lighter sweep grown to `generationProgress`, anchored left. Once the
-    /// sweep has run to the end it fades back into the base instead of blinking away with the button.
+    /// The base tint with a noticeably lighter sweep grown to `generationProgress`, anchored left.
     var progressFill: some View {
         GeometryReader { geo in
             ZStack(alignment: .leading) {

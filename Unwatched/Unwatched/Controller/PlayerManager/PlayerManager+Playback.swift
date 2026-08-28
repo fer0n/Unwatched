@@ -170,7 +170,24 @@ extension PlayerManager {
     @MainActor
     func pause() {
         stoppedPlaying()
+        cancelPendingAutoStart()
         backend.pause()
+    }
+
+    /// A page still loading can't be paused, and its pending auto-start would undo the tap once it finishes.
+    @MainActor
+    private func cancelPendingAutoStart() {
+        guard isLoading != nil else { return }
+        switch videoSource {
+        case .userInteraction, .playWhenReady, .continuousPlay:
+            videoSource = nil
+        case .hotSwap, .errorSwap:
+            previousIsPlaying = false
+        case .nextUp, .none:
+            break
+        @unknown default:
+            break
+        }
     }
 
     /// The engine reporting that it started on its own — the page's own controls, an interruption ending,

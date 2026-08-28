@@ -185,6 +185,50 @@ final class PlayerBackendDispatchTests: XCTestCase {
         XCTAssertEqual(spy.withoutRateChanges, [.pause])
     }
 
+    /// Pausing while the page is still loading used to be undone by the auto-start that runs once it finishes.
+    func testPauseWhileLoadingCancelsThePendingAutoStart() {
+        player.isLoading = Date()
+        player.videoSource = .userInteraction
+
+        player.pause()
+        spy.commands.removeAll()
+
+        player.isLoading = nil
+        player.handleAutoStart(nil)
+
+        XCTAssertEqual(spy.withoutRateChanges, [])
+        XCTAssertFalse(player.isPlaying)
+    }
+
+    /// The same for a player switch, which starts again only if it was playing before.
+    func testPauseWhileLoadingCancelsAHotSwapResume() {
+        player.isLoading = Date()
+        player.previousIsPlaying = true
+        player.videoSource = .hotSwap
+
+        player.pause()
+        spy.commands.removeAll()
+
+        player.isLoading = nil
+        player.handleAutoStart(nil)
+
+        XCTAssertEqual(spy.withoutRateChanges, [])
+        XCTAssertFalse(player.isPlaying)
+    }
+
+    /// Nothing is loading, so the pause is a plain pause and a later start is unaffected.
+    func testPauseWhileLoadedLeavesTheSourceAlone() {
+        player.videoSource = .userInteraction
+
+        player.pause()
+        spy.commands.removeAll()
+
+        player.handleAutoStart(nil)
+
+        XCTAssertEqual(spy.withoutRateChanges, [.play])
+        XCTAssertTrue(player.isPlaying)
+    }
+
     // MARK: - Picture in picture
 
     func testSetPipCommandsTheEngine() {

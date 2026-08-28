@@ -26,17 +26,22 @@ import UnwatchedShared
     /// The in-flight attempt to get the page playing; see `startPlayback(on:)`.
     @ObservationIgnored private var startTask: Task<Void, Never>?
 
+    /// The in-flight attempt to get the page to stop; see `confirmPause(on:)`.
+    @ObservationIgnored private var pauseTask: Task<Void, Never>?
+
     /// How many start attempts are running.
     @ObservationIgnored private var startsInFlight = 0
 
-    /// How many times to re-click before giving up, and how long to give each click to take.
+    /// How many times to re-send a command before giving up, and how long to give each one to take.
     private static let playAttempts = 4
-    private static let playRetryDelay: Double = 0.5
+    private static let pauseAttempts = 2
+    private static let retryDelay: Double = 0.5
 
     /// Forgets what the page had; the next command set re-establishes it.
     @MainActor
     func resetAppliedState() {
         startTask?.cancel()
+        pauseTask?.cancel()
         loadedVideoId = nil
         appliedChaptersHash = nil
         appliedUIMode = nil
@@ -46,6 +51,7 @@ import UnwatchedShared
     @MainActor
     func handleVideoChanged() {
         startTask?.cancel()
+        pauseTask?.cancel()
         appliedChaptersHash = nil
     }
 
@@ -77,6 +83,7 @@ import UnwatchedShared
     func play() {
         guard let webView = commandTarget("PLAY") else { return }
         startTask?.cancel()
+        pauseTask?.cancel()
         startsInFlight += 1
         startTask = Task { [weak self] in
             await self?.startPlayback(on: webView)
@@ -106,7 +113,7 @@ import UnwatchedShared
             await PlayerWebView.awaitViewport(webView)
         }
         for attempt in 0...Self.playAttempts {
-            guard !Task.isCancelled, stillWantsToPlay(webView) else { return }
+            guard !Task.isCancelled, stillWants(true, on: webView) else { return }
             Log.info(attempt == 0 ? "PLAY" : "PLAY: didn't take, attempt \(attempt + 1)")
             PlayerWebView.evaluateJavaScript(
                 webView,
@@ -114,8 +121,8 @@ import UnwatchedShared
                     ? PlayerWebView.playScript(unstarted: player.unstarted)
                     : PlayerWebView.retryPlayScript(unstarted: player.unstarted)
             )
-            try? await Task.sleep(for: .seconds(Self.playRetryDelay))
-            guard !Task.isCancelled, stillWantsToPlay(webView) else { return }
+            try? await Task.sleep(for: .seconds(Self.retryDelay))
+            guard !Task.isCancelled, stillWants(true, on: webView) else { return }
             guard await PlayerWebView.evaluateIsNotPlaying(webView) else { return }
         }
         Log.warning("PLAY: page never started")
@@ -123,22 +130,41 @@ import UnwatchedShared
 
     /// The retry stops the moment the user changes their mind, or the page it was aimed at is gone.
     @MainActor
-    private func stillWantsToPlay(_ webView: WKWebView) -> Bool {
-        player.isPlaying && self.webView === webView && player.isLoading == nil
+    private func stillWants(_ playing: Bool, on webView: WKWebView) -> Bool {
+        player.isPlaying == playing && self.webView === webView && player.isLoading == nil
     }
 
+    /// A pause can be swallowed the way a click can — the page rebuilds its media element, an ad player takes
+    /// over — leaving it playing on while the button already says paused, so it is confirmed and re-sent.
     @MainActor
     func pause() {
         startTask?.cancel()
+        pauseTask?.cancel()
         guard let webView = commandTarget("PAUSE") else { return }
         Log.info("PAUSE")
         PlayerWebView.evaluateJavaScript(webView, PlayerWebView.pauseScript())
+        pauseTask = Task { [weak self] in
+            await self?.confirmPause(on: webView)
+        }
+    }
+
+    @MainActor
+    private func confirmPause(on webView: WKWebView) async {
+        for attempt in 1...Self.pauseAttempts {
+            try? await Task.sleep(for: .seconds(Self.retryDelay))
+            guard !Task.isCancelled, stillWants(false, on: webView) else { return }
+            guard await !PlayerWebView.evaluateIsNotPlaying(webView) else { return }
+            guard stillWants(false, on: webView) else { return }
+            Log.info("PAUSE: didn't take, attempt \(attempt + 1)")
+            PlayerWebView.evaluateJavaScript(webView, PlayerWebView.pauseScript())
+        }
     }
 
     /// Ungated: a reload has to silence the old page, and by then `isLoading` is already set again.
     @MainActor
     func stop() {
         startTask?.cancel()
+        pauseTask?.cancel()
         guard let webView else { return }
         Log.info("STOP")
         webView.pauseAllMediaPlayback()
@@ -185,6 +211,7 @@ import UnwatchedShared
         Log.info("web player: page taking over")
         // aimed at the view being replaced, and that page is not the one to start
         startTask?.cancel()
+        pauseTask?.cancel()
         webView = view
         // what this page is actually showing, so an unchanged video isn't cued again
         loadedVideoId = view.url.flatMap { UrlService.getYoutubeIdFromUrl(url: $0) }

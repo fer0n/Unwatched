@@ -294,6 +294,11 @@ final class FilteredQueueWriteTests: XCTestCase {
         filter.videos(context).map(\.youtubeId)
     }
 
+    private func video(_ youtubeId: String) -> Video {
+        let fetch = FetchDescriptor<Video>(predicate: #Predicate { $0.youtubeId == youtubeId })
+        return (try? context.fetch(fetch))?.first ?? Video(title: youtubeId, url: nil, youtubeId: youtubeId)
+    }
+
     func testReorderInsideTagLeavesEveryOtherEntryInPlace() throws {
         try VideoActor.moveQueueEntry(
             from: IndexSet(integer: 1),
