@@ -4089,40 +4089,6 @@
         }
       }
     },
-    "continuousPlayTagHelper" : {
-      "localizations" : {
-        "de" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Wird gesetzt, sobald ein Video dieses Tags startet. Danach lässt es sich jederzeit von Hand ändern."
-          }
-        },
-        "en" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Applied when a video of this tag starts playing. It can still be changed by hand afterwards."
-          }
-        },
-        "es" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Se aplica cuando empieza a reproducirse un vídeo de esta etiqueta. Después puedes cambiarlo manualmente."
-          }
-        },
-        "fr" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Appliqué au lancement d'une vidéo de ce tag. Vous pouvez toujours le modifier manuellement ensuite."
-          }
-        },
-        "pl" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Ustawiane, gdy zaczyna się odtwarzać film z tym tagiem. Później nadal można to zmienić ręcznie."
-          }
-        }
-      }
-    },
     "continuousPlayHelper" : {
       "localizations" : {
         "de" : {
@@ -4221,6 +4187,40 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "Ciągłe odtwarzanie włączone"
+          }
+        }
+      }
+    },
+    "continuousPlayTagHelper" : {
+      "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Wird gesetzt, sobald ein Video dieses Tags startet. Danach lässt es sich jederzeit von Hand ändern."
+          }
+        },
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Applied when a video of this tag starts playing. It can still be changed by hand afterwards."
+          }
+        },
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Se aplica cuando empieza a reproducirse un vídeo de esta etiqueta. Después puedes cambiarlo manualmente."
+          }
+        },
+        "fr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Appliqué au lancement d'une vidéo de ce tag. Vous pouvez toujours le modifier manuellement ensuite."
+          }
+        },
+        "pl" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Ustawiane, gdy zaczyna się odtwarzać film z tym tagiem. Później nadal można to zmienić ręcznie."
           }
         }
       }
@@ -9085,7 +9085,6 @@
       }
     },
     "importFromYoutube" : {
-      "extractionState" : "stale",
       "localizations" : {
         "de" : {
           "stringUnit" : {
@@ -12915,40 +12914,6 @@
         }
       }
     },
-    "on" : {
-      "localizations" : {
-        "de" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "An"
-          }
-        },
-        "en" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "On"
-          }
-        },
-        "es" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Encendido"
-          }
-        },
-        "fr" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Activé"
-          }
-        },
-        "pl" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Włączone"
-          }
-        }
-      }
-    },
     "offlineDownloadsFaqA" : {
       "localizations" : {
         "de" : {
@@ -13081,6 +13046,40 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "OK"
+          }
+        }
+      }
+    },
+    "on" : {
+      "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "An"
+          }
+        },
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "On"
+          }
+        },
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Encendido"
+          }
+        },
+        "fr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Activé"
+          }
+        },
+        "pl" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Włączone"
           }
         }
       }

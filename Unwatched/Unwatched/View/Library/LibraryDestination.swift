@@ -30,6 +30,9 @@ extension View {
                     case .importSubscriptions:
                         ImportSubscriptionsView(importButtonPadding: true)
                             .myNavigationTitle("importSubscriptions")
+                    case .importOpml(let url):
+                        ImportSubscriptionsView(importButtonPadding: true, opmlUrl: url)
+                            .myNavigationTitle("importSubscriptions")
                     case .debug:
                         DebugView()
                     case .settingsNotifications:
@@ -78,6 +81,7 @@ enum LibraryDestination: Codable, Hashable {
          settingsAppearance,
          settingsPlayback,
          importSubscriptions,
+         importOpml(URL),
          debug,
          help,
          filter,

@@ -18,16 +18,9 @@ extension SubscriptionActor {
         var subState = SubscriptionState(title: sub.title)
 
         if sub.isPodcast, let feedUrl = sub.link {
-            if let existing = getPodcast(feedUrl) {
-                if unarchiveSubIfAvailable {
-                    unarchive(existing)
-                }
-                subState.title = existing.title
-                subState.alreadyAdded = true
-                return (subState, nil)
-            }
-            subState.success = true
-            return (subState, sub)
+            var (podcastState, verified) = await loadPodcastInfo(from: feedUrl, unarchiveSubIfAvailable)
+            podcastState.title = podcastState.title ?? sub.title
+            return (podcastState, verified)
         }
 
         if let title = getTitleIfSubscriptionExists(

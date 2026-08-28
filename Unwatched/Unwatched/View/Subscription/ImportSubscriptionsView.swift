@@ -23,10 +23,12 @@ struct ImportSubscriptionsView: View {
     @State private var editMode = NSTableView.SelectionHighlightStyle.regular
     #endif
     @State private var isLoading = false
+    @State private var fileLoaded = false
     @State private var searchString = ""
     @State private var loadSubStatesTask: Task<[SubscriptionState], Error>?
 
     var importButtonPadding = false
+    var opmlUrl: URL?
     var onSuccess: (() -> Void)?
 
     var filteredSubs: [SendableSubscription] {
@@ -43,7 +45,11 @@ struct ImportSubscriptionsView: View {
     var body: some View {
         VStack {
             if sendableSubs.isEmpty {
-                ExportImportTutorial(showFileImporter: $showFileImporter)
+                if opmlUrl != nil && !fileLoaded {
+                    ProgressView()
+                } else {
+                    ExportImportTutorial(showFileImporter: $showFileImporter)
+                }
             } else if isLoading {
                 ProgressView {
                     Text("importing \(selection.count) subscriptions")
@@ -123,6 +129,11 @@ struct ImportSubscriptionsView: View {
             allowedContentTypes: [.plainText, .opml, .xml],
             onCompletion: handleFileImport
         )
+        .task {
+            if let opmlUrl {
+                readFile(opmlUrl)
+            }
+        }
         .onDisappear {
             if !subStates.isEmpty {
                 onSuccess?()
@@ -187,28 +198,33 @@ struct ImportSubscriptionsView: View {
 
     func readFile(_ file: URL) {
         Task.detached(priority: .userInitiated) {
-            do {
-                let isSecureAccess = file.startAccessingSecurityScopedResource()
-                let content = try String(contentsOf: file)
-                let isXML = file.pathExtension.lowercased() == "opml"
-                    || content.trimmingCharacters(in: .whitespaces).hasPrefix("<")
-                let parsed: [SendableSubscription]
-                if isXML {
-                    parsed = Self.parseOPML(content)
-                } else {
-                    let rows = content.components(separatedBy: "\n")
-                    parsed = Self.parseRows(rows)
-                }
+            let parsed = Self.parseFile(file)
+            await MainActor.run {
+                sendableSubs = parsed
+                selection = Set(parsed)
+                fileLoaded = true
+            }
+        }
+    }
+
+    nonisolated static func parseFile(_ file: URL) -> [SendableSubscription] {
+        do {
+            let isSecureAccess = file.startAccessingSecurityScopedResource()
+            defer {
                 if isSecureAccess {
                     file.stopAccessingSecurityScopedResource()
                 }
-                await MainActor.run {
-                    sendableSubs = parsed
-                    selection = Set(parsed)
-                }
-            } catch {
-                Log.error("Failed to read file: \(error)")
             }
+            let content = try String(contentsOf: file)
+            let isXML = file.pathExtension.lowercased() == "opml"
+                || content.trimmingCharacters(in: .whitespaces).hasPrefix("<")
+            if isXML {
+                return parseOPML(content)
+            }
+            return parseRows(content.components(separatedBy: "\n"))
+        } catch {
+            Log.error("Failed to read file: \(error)")
+            return []
         }
     }
 

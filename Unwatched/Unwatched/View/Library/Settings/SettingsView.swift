@@ -11,6 +11,7 @@ struct SettingsView: View {
     @Environment(NavigationManager.self) var navManager
     @AppStorage(Const.themeColor) var theme = ThemeColor()
     @State private var isLoggedIntoYoutube = false
+    @State private var showOpmlImporter = false
 
     var body: some View {
         ZStack {
@@ -76,8 +77,17 @@ struct SettingsView: View {
                         isLoggedIntoYoutube = await BrowserManager.shared.isLoggedIntoYoutube()
                     }
 
-                    NavigationLink(value: LibraryDestination.importSubscriptions) {
-                        Label("importSubscriptions", systemImage: "square.and.arrow.down.fill")
+                    Menu {
+                        Button("importFromYoutube") {
+                            navManager.presentedLibrary.append(LibraryDestination.importSubscriptions)
+                        }
+                        Button {
+                            showOpmlImporter = true
+                        } label: {
+                            Text(verbatim: "OPML")
+                        }
+                    } label: {
+                        LibraryNavListItem("importSubscriptions", systemName: "square.and.arrow.down.fill")
                     }
                     ExportSubscriptionsShareLink {
                         LibraryNavListItem("exportSubscriptions", systemName: "square.and.arrow.up.fill")
@@ -159,6 +169,22 @@ struct SettingsView: View {
             }
             .myNavigationTitle("settings")
             .myTint()
+            .fileImporter(
+                isPresented: $showOpmlImporter,
+                allowedContentTypes: [.opml, .xml],
+                onCompletion: handleOpmlImport
+            )
+        }
+    }
+}
+
+extension SettingsView {
+    func handleOpmlImport(_ result: Result<URL, any Error>) {
+        switch result {
+        case .success(let url):
+            navManager.presentedLibrary.append(LibraryDestination.importOpml(url))
+        case .failure(let error):
+            Log.info("\(error.localizedDescription)")
         }
     }
 }

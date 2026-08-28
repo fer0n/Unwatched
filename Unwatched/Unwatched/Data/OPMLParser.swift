@@ -26,11 +26,14 @@ class OPMLParser: NSObject, XMLParserDelegate {
                 attributes: [String: String] = [:]) {
         guard elementName == "outline",
               let xmlUrl = attributes["xmlUrl"],
-              let url = URLComponents(string: xmlUrl),
-              let channelId = url.queryItems?.first(where: { $0.name == "channel_id" })?.value else {
+              let components = URLComponents(string: xmlUrl) else {
             return
         }
-        let title = attributes["title"] ?? attributes["text"] ?? channelId
-        result.append(SendableSubscription(title: title, youtubeChannelId: channelId))
+        let title = attributes["title"] ?? attributes["text"]
+        if let channelId = components.queryItems?.first(where: { $0.name == "channel_id" })?.value {
+            result.append(SendableSubscription(title: title ?? channelId, youtubeChannelId: channelId))
+        } else if let feedUrl = components.url {
+            result.append(SendableSubscription(link: feedUrl, title: title ?? xmlUrl, isPodcast: true))
+        }
     }
 }
