@@ -25,7 +25,7 @@ struct PlayerScrubber: View {
         height: CGFloat? = nil,
         inlineTime: Bool = false,
         translucent: Bool = false,
-        glassEffect: Bool = true,
+        showBackground: Bool = true,
         fillColor: Color = .foregroundGray,
         trackColor: Color = .white,
         timeColor: Color = .secondary,
@@ -36,7 +36,7 @@ struct PlayerScrubber: View {
         self.inlineTime = inlineTime
         self.scrubberHeight = height ?? 20
         self.translucent = translucent
-        self.glassEffect = glassEffect
+        self.showBackground = showBackground
         self.fillColor = fillColor
         self.trackColor = trackColor
         self.timeColor = timeColor
@@ -47,7 +47,7 @@ struct PlayerScrubber: View {
 
     let inlineTime: Bool
     let translucent: Bool
-    let glassEffect: Bool
+    let showBackground: Bool
     let fillColor: Color
     let trackColor: Color
     let timeColor: Color
@@ -136,8 +136,8 @@ struct PlayerScrubber: View {
                 .hoverEffect()
                 #else
                 .apply {
-                if glassEffect {
-                $0.glassEffect(.regular, in: clipShape)
+                if showBackground {
+                $0.playerControlBackground(in: clipShape)
                 } else {
                 $0
                 }

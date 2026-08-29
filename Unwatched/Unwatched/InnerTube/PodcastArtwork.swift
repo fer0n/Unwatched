@@ -84,7 +84,7 @@ struct PodcastSubscriptionBadge: View {
             .clipShape(subscription.isPodcast
                         ? AnyShape(RoundedRectangle(cornerRadius: cornerRadius, style: .continuous))
                         : AnyShape(Circle()))
-            .glassEffect(.regular, in: .rect(cornerRadius: cornerRadius, style: .continuous))
+            .playerControlBackground(in: .rect(cornerRadius: cornerRadius, style: .continuous))
             .padding(PodcastArtworkLayout.artInset + PodcastArtworkLayout.badgeGap)
             .allowsHitTesting(false)
         }

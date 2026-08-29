@@ -154,7 +154,7 @@ struct PlayerScrubberOverlay: View {
                 height: 15,
                 inlineTime: true,
                 translucent: true,
-                glassEffect: false,
+                showBackground: false,
                 fillColor: .primary,
                 trackColor: .secondary,
                 timeColor: .primary,

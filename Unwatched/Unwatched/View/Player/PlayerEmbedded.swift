@@ -31,6 +31,9 @@ struct PlayerEmbedded: View {
 
     @State private var switchManager = PlayerSwitchManager.shared
 
+    /// 16:9 at the mini player's height.
+    private static let miniPlayerWidth: CGFloat = PlayerView.miniPlayerHeight * 16 / 9
+
     #if os(iOS)
     @State private var scrubberVM = PlayerScrubberOverlayVM()
     @State private var videoZoom: CGFloat = 1.0
@@ -45,8 +48,8 @@ struct PlayerEmbedded: View {
             }
             .frame(maxHeight: landscapeFullscreen && !hideMiniPlayer ? .infinity : nil)
             .frame(maxWidth: !landscapeFullscreen && !hideMiniPlayer ? .infinity : nil)
-            .frame(width: !hideMiniPlayer ? 107 : nil,
-                   height: !hideMiniPlayer ? 60 : nil)
+            .frame(width: !hideMiniPlayer ? Self.miniPlayerWidth : nil,
+                   height: !hideMiniPlayer ? PlayerView.miniPlayerHeight : nil)
             .padding(.leading, !hideMiniPlayer ? PlayerView.miniPlayerHorizontalPadding : 0)
             #if os(macOS)
             .padding(.horizontal, isFakePip ? 0 : 5)

@@ -49,7 +49,7 @@ struct PlayerToggleModifier: ViewModifier {
             .background(background.padding(-5))
             .clipShape(Circle())
             #if !os(visionOS)
-            .glassEffect(in: Circle())
+            .playerControlBackground(in: Circle())
         #endif
     }
 

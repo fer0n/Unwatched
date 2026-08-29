@@ -142,6 +142,8 @@
 		881F57452C4A8C6E00559BF9 /* RotateOrientationButton.swift in Sources */ = {isa = PBXBuildFile; fileRef = 881F57442C4A8C6E00559BF9 /* RotateOrientationButton.swift */; };
 		8821534D2FC03C3000167AEE /* AVPlayerViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8821534B2FC03C3000167AEE /* AVPlayerViewModel.swift */; };
 		8821534E2FC03C3000167AEE /* PlayerViewControllerRepresentable.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8821534C2FC03C3000167AEE /* PlayerViewControllerRepresentable.swift */; };
+		882153612FC03C6900167AEF /* PlayerTabChange.swift in Sources */ = {isa = PBXBuildFile; fileRef = 882153602FC03C6900167AEF /* PlayerTabChange.swift */; };
+		882153622FC03C6900167AEF /* PlayerTabChange.swift in Sources */ = {isa = PBXBuildFile; fileRef = 882153602FC03C6900167AEF /* PlayerTabChange.swift */; };
 		882153512FC03C6900167AEE /* MiniPlayerLayout.swift in Sources */ = {isa = PBXBuildFile; fileRef = 882153502FC03C6900167AEE /* MiniPlayerLayout.swift */; };
 		882153522FC03C6900167AEE /* MiniPlayerLayout.swift in Sources */ = {isa = PBXBuildFile; fileRef = 882153502FC03C6900167AEE /* MiniPlayerLayout.swift */; };
 		8823EB782B5519C60010A12F /* SubStateOverview.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8823EB772B5519C60010A12F /* SubStateOverview.swift */; };
@@ -1128,6 +1130,7 @@
 		881F57442C4A8C6E00559BF9 /* RotateOrientationButton.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RotateOrientationButton.swift; sourceTree = "<group>"; };
 		8821534B2FC03C3000167AEE /* AVPlayerViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AVPlayerViewModel.swift; sourceTree = "<group>"; };
 		8821534C2FC03C3000167AEE /* PlayerViewControllerRepresentable.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PlayerViewControllerRepresentable.swift; sourceTree = "<group>"; };
+		882153602FC03C6900167AEF /* PlayerTabChange.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PlayerTabChange.swift; sourceTree = "<group>"; };
 		882153502FC03C6900167AEE /* MiniPlayerLayout.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MiniPlayerLayout.swift; sourceTree = "<group>"; };
 		8823EB772B5519C60010A12F /* SubStateOverview.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SubStateOverview.swift; sourceTree = "<group>"; };
 		88250C602B49273100174C8D /* Date.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Date.swift; sourceTree = "<group>"; };
@@ -1818,6 +1821,7 @@
 			isa = PBXGroup;
 			children = (
 				882153502FC03C6900167AEE /* MiniPlayerLayout.swift */,
+				882153602FC03C6900167AEF /* PlayerTabChange.swift */,
 				88BE6C322B724C0F00456777 /* PlayerWebView */,
 				889924762C484766001185A6 /* FullscreenControls */,
 				88D438A82B45B27600482F29 /* VideoPlayer.swift */,
@@ -3250,6 +3254,7 @@
 				88ABDF442D64F0A400DBD7F8 /* CustomSettingsToggleStyle.swift in Sources */,
 				CD93E71B2E23AA4A00FF6447 /* GeneratedChapters.swift in Sources */,
 				882153512FC03C6900167AEE /* MiniPlayerLayout.swift in Sources */,
+				882153612FC03C6900167AEF /* PlayerTabChange.swift in Sources */,
 				883A0F752E5F7333000CE416 /* RequiresPremiumActionMac.swift in Sources */,
 				889AF8F92C50ECCA001CEDE6 /* PlayerManager+Chapters.swift in Sources */,
 				88AA10A22F0000000000A0A2 /* PlayerManager+Queue.swift in Sources */,
@@ -3635,6 +3640,7 @@
 				88B0C1622C427940006D2423 /* PlayerView.swift in Sources */,
 				8802F8512C6950A3008A7778 /* HideShortsTip.swift in Sources */,
 				882153522FC03C6900167AEE /* MiniPlayerLayout.swift in Sources */,
+				882153622FC03C6900167AEF /* PlayerTabChange.swift in Sources */,
 				8899246D2C480112001185A6 /* HandleVideoListItemTap.swift in Sources */,
 				887AC8CC2B49584400512852 /* WatchHistoryView.swift in Sources */,
 				88C572332B53C8BD002FF07E /* SettingsView.swift in Sources */,

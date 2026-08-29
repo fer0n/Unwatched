@@ -6,6 +6,8 @@
 import SwiftUI
 
 extension View {
+    /// Still glass where the player's controls are flat: overlays *over* the video, gone by the
+    /// time the player's pages move.
     func backgroundTransparentEffect<S>(fallback: Material, shape: S = Circle()) -> some View where S: Shape {
         self
             #if os(visionOS)

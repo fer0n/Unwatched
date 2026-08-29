@@ -97,7 +97,7 @@ struct PlayButton: View {
                 .fontWeight(.black)
         }
         #if !os(visionOS)
-        .glassEffect(in: Circle())
+        .playerControlBackground(in: Circle())
         #endif
     }
 }

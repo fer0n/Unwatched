@@ -106,11 +106,9 @@ struct ChapterDescriptionView: View {
             .onAppear {
                 scrollToChapterIfNeeded(hasChapters: hasChapters, proxy: proxy)
             }
-            .onChange(of: navManager.playerTab) {
-                // The podcast layout keeps both player pages permanently mounted (see
-                // `PlayerContentView.livePages`), so switching to this page never re-triggers
-                // `onAppear` the way the video's `TabView` does — this is what makes a title
-                // tap scroll to the current chapter for podcasts too.
+            // the podcast layout keeps both player pages mounted (see `PlayerContentView.livePages`),
+            // so switching to this one never re-triggers `onAppear`
+            .onPlayerTabChange {
                 scrollToChapterIfNeeded(hasChapters: hasChapters, proxy: proxy)
             }
             .if(showActions) { view in
@@ -373,7 +371,7 @@ private extension View {
         #if os(visionOS)
         background(.ultraThinMaterial, in: .circle)
         #else
-        glassEffect(.regular.interactive(), in: .circle)
+        playerControlBackground(in: .circle)
         #endif
     }
 }

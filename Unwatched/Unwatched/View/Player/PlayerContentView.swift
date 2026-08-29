@@ -48,7 +48,7 @@ struct PlayerContentView: View {
         ZStack {
             pages
                 .frame(minHeight: minHeight ?? reservedControlHeight)
-                .sensoryFeedback(Const.sensoryFeedback, trigger: navManager.playerTab)
+                .playerTabHaptic()
                 .onSizeChange { size in
                     SheetPositionReader.shared.playerContentViewHeight = size.height
                 }
@@ -148,7 +148,7 @@ struct PlayerContentView: View {
             guard let scrolledPage, scrolledPage != navManager.playerTab else { return }
             navManager.playerTab = scrolledPage
         }
-        .onChange(of: navManager.playerTab) {
+        .onPlayerTabChange {
             guard scrolledPage != navManager.playerTab else { return }
             withAnimation {
                 scrolledPage = navManager.playerTab
@@ -224,45 +224,5 @@ struct PlayerContentView: View {
         hidePlayerPageIndicator
             ? Const.minSheetDetent
             : Const.minSheetDetent + fadeOutHeight
-    }
-}
-
-/// The mini player at the top of the description page, standing in for the cover art that swiped away with the first
-/// page.
-private struct InlineMiniPlayer: View {
-    @Environment(PlayerManager.self) var player
-    @Environment(\.displayScale) private var displayScale
-
-    var goToControls: () -> Void
-
-    private static let imageSize: CGFloat = 60
-
-    var body: some View {
-        MiniPlayerLayout(hideMiniPlayer: false, handleMiniPlayerTap: goToControls) {
-            // decoded at the size it's drawn at, not the full player's: scaling cover art down from 1400px+ in the
-            // render pass aliases (see `PodcastArtwork`). The budget is the mini *bar*'s rather than this slot's,
-            // slightly over-sampled here, so that both share one decode — an episode cover is a 3000px JPEG and
-            // reading it costs the same tens of milliseconds at any output size.
-            CachedImageView(
-                imageUrl: player.video?.displayThumbnailUrl,
-                maxPixelSize: ceil(Const.playerAboveSheetHeight * displayScale)
-            ) { image in
-                image
-                    .resizable()
-                    .aspectRatio(contentMode: .fill)
-            } placeholder: {
-                Image(systemName: Const.podcastSF)
-                    .foregroundStyle(.secondary)
-            }
-            .frame(width: Self.imageSize, height: Self.imageSize)
-            .background(Color.playerBackgroundColor)
-            .clipShape(RoundedRectangle(
-                cornerRadius: Const.videoPlayerCornerRadius,
-                style: .continuous
-            ))
-            .padding(.leading, PlayerView.miniPlayerHorizontalPadding)
-            .contentShape(Rectangle())
-            .onTapGesture(perform: goToControls)
-        }
     }
 }

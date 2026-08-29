@@ -6,6 +6,8 @@
 import SwiftUI
 import UnwatchedShared
 
+/// The buttons overlaid on the video in landscape and portrait fullscreen. They keep their glass:
+/// nothing here is on screen while the player's pages move.
 struct PlayerControlButtonStyle: ViewModifier {
     @Environment(\.isEnabled) var isEnabled
     @Environment(\.playerControlsSecondary) var secondary

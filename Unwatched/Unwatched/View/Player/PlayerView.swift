@@ -71,9 +71,7 @@ struct PlayerView: View {
                         handleSwipe: handleSwipe,
                         hideMiniPlayer: hideMiniPlayer,
                         handleMiniPlayerTap: handleMiniPlayerTap,
-                        showOverlay: landscapeFullscreen
-                            || (!sheetPos.isMinimumSheet && navManager.showMenu)
-                            || navManager.playerTab == .chapterDescription,
+                        showOverlay: showFullscreenOverlay,
                         landscapeFullscreen: landscapeFullscreen,
                         pagedInline: pagedInline
                     )
@@ -365,7 +363,18 @@ struct PlayerView: View {
         }
     }
 
+    /// Paged inline (an audio episode) draws the artwork layout, which has no fullscreen overlay
+    /// to show. Reading `playerTab` for a value nobody uses made this view depend on the tab, so
+    /// switching pages rebuilt the whole player surface.
+    var showFullscreenOverlay: Bool {
+        guard !pagedInline else { return false }
+        return landscapeFullscreen
+            || (!sheetPos.isMinimumSheet && navManager.showMenu)
+            || navManager.playerTab == .chapterDescription
+    }
+
     static let miniPlayerHorizontalPadding: CGFloat = 15
+    static let miniPlayerHeight: CGFloat = 60
 }
 
 #Preview {

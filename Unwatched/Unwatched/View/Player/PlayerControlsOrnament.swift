@@ -88,7 +88,7 @@ struct PlayerControlsOrnament: View {
                 PlayerScrubber(
                     inlineTime: true,
                     translucent: true,
-                    glassEffect: false,
+                    showBackground: false,
                     fillColor: .white
                 )
                 .frame(width: 400)

@@ -102,16 +102,19 @@ struct AVPlayerView: View {
         }
     }
 
-    private var miniPlayerHeight: CGFloat { 60 }
-
     /// Only as wide as what's shown: square cover art in a 16:9 box left it padded with black.
     private var miniPlayerWidth: CGFloat {
-        miniPlayerHeight * surfaceAspectRatio
+        PlayerView.miniPlayerHeight * surfaceAspectRatio
     }
+
+    /// The art keeps its own animation so the layout around it can go without one.
+    private static let artworkResize: Animation = .bouncy(duration: 0.3)
 
     @ViewBuilder
     private var playerLayout: some View {
-        MiniPlayerLayout(hideMiniPlayer: hideMiniPlayer, handleMiniPlayerTap: handleMiniPlayerTap) {
+        MiniPlayerLayout(hideMiniPlayer: hideMiniPlayer,
+                         handleMiniPlayerTap: handleMiniPlayerTap,
+                         animatesLayout: !plainArtwork) {
             if plainArtwork {
                 artworkLayout
             } else if hideMiniPlayer {
@@ -158,7 +161,7 @@ struct AVPlayerView: View {
                     }
             } else {
                 videoPlayerView
-                    .frame(width: miniPlayerWidth, height: miniPlayerHeight)
+                    .frame(width: miniPlayerWidth, height: PlayerView.miniPlayerHeight)
                     .transitionCover(player.transitionCovered)
                     .padding(.leading, PlayerView.miniPlayerHorizontalPadding)
                     .overlay {
@@ -174,7 +177,7 @@ struct AVPlayerView: View {
     private var artworkLayout: some View {
         videoPlayerView
             .frame(width: hideMiniPlayer ? nil : miniPlayerWidth,
-                   height: hideMiniPlayer ? nil : miniPlayerHeight)
+                   height: hideMiniPlayer ? nil : PlayerView.miniPlayerHeight)
             .transitionCover(player.transitionCovered)
             .allowsHitTesting(false)
             .overlay {
@@ -201,6 +204,9 @@ struct AVPlayerView: View {
                 }
             }
             .padding(.leading, hideMiniPlayer ? 0 : PlayerView.miniPlayerHorizontalPadding)
+            // Scoped to the art rather than wrapping the whole player, and shorter: an animated
+            // frame re-runs layout for its enclosing tree once per frame for the length of the curve.
+            .animation(Self.artworkResize, value: hideMiniPlayer)
     }
 
     var body: some View {

@@ -42,7 +42,8 @@ struct PlayerLoadingTimeout: View {
                     .foregroundStyle(Color.automaticBlack, Color.backgroundColor)
                     .fontWeight(.regular)
                     #if !os(visionOS)
-                    .glassEffect()
+                    // over the video, not on screen while the player's pages move
+                    .glassEffect(.regular, in: Capsule())
                 #endif
             }
             .buttonStyle(.plain)

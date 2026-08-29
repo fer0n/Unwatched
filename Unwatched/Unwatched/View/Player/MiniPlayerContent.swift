@@ -40,7 +40,7 @@ struct MiniPlayerContent: View {
                     .foregroundStyle(.automaticWhite, .automaticBlack)
                     #else
                     .foregroundStyle(.automaticBlack, .clear)
-                    .glassEffect(.regular.interactive(), in: Circle())
+                    .playerControlBackground(in: Circle())
                     #endif
                     .fontWeight(.black)
             }
@@ -48,15 +48,8 @@ struct MiniPlayerContent: View {
             seekButton(forward: true)
         }
 
-        #if os(visionOS)
         stack
             .padding(.trailing, PlayerView.miniPlayerHorizontalPadding)
-        #else
-        GlassEffectContainer {
-            stack
-        }
-        .padding(.trailing, PlayerView.miniPlayerHorizontalPadding)
-        #endif
     }
 
     /// Skipping an ad or a sponsor is the one thing the mini player is used for while it's collapsed, and reaching it
@@ -72,7 +65,7 @@ struct MiniPlayerContent: View {
                 .background(Circle().fill(Color.automaticBlack))
                 #else
                 .foregroundStyle(.automaticBlack)
-                .glassEffect(.regular.interactive(), in: Circle())
+                .playerControlBackground(in: Circle())
                 #endif
                 .frame(width: 38, height: 44)
                 .contentShape(Rectangle())

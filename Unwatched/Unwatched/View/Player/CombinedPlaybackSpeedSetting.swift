@@ -158,7 +158,7 @@ struct InlineSpeedControl: View {
         .frame(height: height)
         .speedSelectionBackground(isTransparent: isTransparent)
         #if !os(visionOS)
-        .glassEffect(in: Capsule())
+        .playerControlBackground(in: Capsule())
         #endif
         .fixedSize(horizontal: true, vertical: false)
     }
