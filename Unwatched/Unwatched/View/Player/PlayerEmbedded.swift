@@ -42,7 +42,9 @@ struct PlayerEmbedded: View {
     #endif
 
     var body: some View {
-        MiniPlayerLayout(hideMiniPlayer: hideMiniPlayer, handleMiniPlayerTap: handleMiniPlayerTap) {
+        MiniPlayerLayout(hideMiniPlayer: hideMiniPlayer,
+                         handleMiniPlayerTap: handleMiniPlayerTap,
+                         miniPlayerWidth: Self.miniPlayerWidth) {
             ZStack {
                 webPlayer
             }

@@ -114,7 +114,8 @@ struct AVPlayerView: View {
     private var playerLayout: some View {
         MiniPlayerLayout(hideMiniPlayer: hideMiniPlayer,
                          handleMiniPlayerTap: handleMiniPlayerTap,
-                         animatesLayout: !plainArtwork) {
+                         animatesLayout: !plainArtwork,
+                         miniPlayerWidth: miniPlayerWidth) {
             if plainArtwork {
                 artworkLayout
             } else if hideMiniPlayer {
