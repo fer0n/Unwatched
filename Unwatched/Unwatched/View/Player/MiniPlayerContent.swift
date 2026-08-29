@@ -19,28 +19,44 @@ struct MiniPlayerContent: View {
             .onTapGesture(perform: handleMiniPlayerTap)
             .lineLimit(2)
 
-        seekButton(forward: false)
+        buttons
+    }
 
-        CorePlayButton(
-            circleVariant: true,
-            enableHaptics: true,
-            enableHelperPopup: false,
-            ) { image in
-            image
-                .resizable()
-                .frame(width: 45, height: 45)
-                .symbolRenderingMode(.palette)
-                #if os(visionOS)
-                .foregroundStyle(.automaticWhite, .automaticBlack)
-                #else
-                .foregroundStyle(.automaticBlack, .clear)
-                .glassEffect(.regular.interactive(), in: Circle())
-                #endif
-                .fontWeight(.black)
+    @ViewBuilder
+    private var buttons: some View {
+        let stack = HStack {
+            seekButton(forward: false)
+
+            CorePlayButton(
+                circleVariant: true,
+                enableHaptics: true,
+                enableHelperPopup: false,
+                ) { image in
+                image
+                    .resizable()
+                    .frame(width: 45, height: 45)
+                    .symbolRenderingMode(.palette)
+                    #if os(visionOS)
+                    .foregroundStyle(.automaticWhite, .automaticBlack)
+                    #else
+                    .foregroundStyle(.automaticBlack, .clear)
+                    .glassEffect(.regular.interactive(), in: Circle())
+                    #endif
+                    .fontWeight(.black)
+            }
+
+            seekButton(forward: true)
         }
 
-        seekButton(forward: true)
+        #if os(visionOS)
+        stack
             .padding(.trailing, PlayerView.miniPlayerHorizontalPadding)
+        #else
+        GlassEffectContainer {
+            stack
+        }
+        .padding(.trailing, PlayerView.miniPlayerHorizontalPadding)
+        #endif
     }
 
     /// Skipping an ad or a sponsor is the one thing the mini player is used for while it's collapsed, and reaching it
