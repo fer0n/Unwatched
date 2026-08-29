@@ -29,8 +29,11 @@ import UnwatchedShared
     /// The in-flight attempt to get the page to stop; see `confirmPause(on:)`.
     @ObservationIgnored private var pauseTask: Task<Void, Never>?
 
-    /// How many start attempts are running.
-    @ObservationIgnored private var startsInFlight = 0
+    /// Which start attempt is still running, so `ensurePlaying` stays out of its way. A cancelled attempt drops
+    /// out of this right away: unwinding it takes until its current sleep or JS call comes back, and until then it
+    /// would look like a start that is still coming for a page it has already been taken off.
+    @ObservationIgnored private var runningStart: Int?
+    @ObservationIgnored private var startGeneration = 0
 
     /// How many times to re-send a command before giving up, and how long to give each one to take.
     private static let playAttempts = 4
@@ -40,7 +43,7 @@ import UnwatchedShared
     /// Forgets what the page had; the next command set re-establishes it.
     @MainActor
     func resetAppliedState() {
-        startTask?.cancel()
+        cancelStart()
         pauseTask?.cancel()
         loadedVideoId = nil
         appliedChaptersHash = nil
@@ -50,7 +53,7 @@ import UnwatchedShared
     /// Called when the player moves to a different video, whether or not a page is on screen.
     @MainActor
     func handleVideoChanged() {
-        startTask?.cancel()
+        cancelStart()
         pauseTask?.cancel()
         appliedChaptersHash = nil
     }
@@ -81,26 +84,40 @@ import UnwatchedShared
     /// media, which is also why this can't be a JS-side loop.
     @MainActor
     func play() {
-        guard let webView = commandTarget("PLAY") else { return }
-        startTask?.cancel()
+        // before the guard: a play that can't be dispatched still ends the attempt that came before it, and a
+        // start left on the books would block the `ensurePlaying` that has to make up for this one being dropped
+        cancelStart()
         pauseTask?.cancel()
-        startsInFlight += 1
+        guard let webView = commandTarget("PLAY") else { return }
+        startGeneration += 1
+        let generation = startGeneration
+        runningStart = generation
         startTask = Task { [weak self] in
             await self?.startPlayback(on: webView)
-            self?.startsInFlight -= 1
+            guard let self, runningStart == generation else { return }
+            runningStart = nil
         }
+    }
+
+    /// Drops the in-flight start attempt, both the task and the record of it: whatever comes next is the one
+    /// that decides whether the page plays.
+    @MainActor
+    private func cancelStart() {
+        startTask?.cancel()
+        startTask = nil
+        runningStart = nil
     }
 
     /// Brings a page that has just become the live one in line with what the player says it is doing.
     @MainActor
     func ensurePlaying() {
-        guard startsInFlight == 0,
+        guard runningStart == nil,
               player.isPlaying,
               (player.backend as AnyObject) === self,
               let webView = commandTarget("ENSURE PLAYING") else { return }
         Task { [weak self] in
             guard await PlayerWebView.evaluateIsNotPlaying(webView) else { return }
-            guard let self, webView === self.webView, player.isPlaying, startsInFlight == 0 else { return }
+            guard let self, webView === self.webView, player.isPlaying, runningStart == nil else { return }
             Log.info("PLAY: the page never got the switch's play")
             play()
         }
@@ -138,7 +155,7 @@ import UnwatchedShared
     /// over — leaving it playing on while the button already says paused, so it is confirmed and re-sent.
     @MainActor
     func pause() {
-        startTask?.cancel()
+        cancelStart()
         pauseTask?.cancel()
         guard let webView = commandTarget("PAUSE") else { return }
         Log.info("PAUSE")
@@ -163,7 +180,7 @@ import UnwatchedShared
     /// Ungated: a reload has to silence the old page, and by then `isLoading` is already set again.
     @MainActor
     func stop() {
-        startTask?.cancel()
+        cancelStart()
         pauseTask?.cancel()
         guard let webView else { return }
         Log.info("STOP")
@@ -210,7 +227,7 @@ import UnwatchedShared
         guard webView !== view else { return }
         Log.info("web player: page taking over")
         // aimed at the view being replaced, and that page is not the one to start
-        startTask?.cancel()
+        cancelStart()
         pauseTask?.cancel()
         webView = view
         // what this page is actually showing, so an unchanged video isn't cued again
