@@ -39,6 +39,8 @@ import UnwatchedShared
     private static let playAttempts = 4
     private static let pauseAttempts = 2
     private static let retryDelay: Double = 0.5
+    /// Rounds a page that has taken the click gets to load its stream, on top of the click attempts.
+    private static let playWaits = 8
 
     /// Forgets what the page had; the next command set re-establishes it.
     @MainActor
@@ -81,7 +83,8 @@ import UnwatchedShared
     ///
     /// So the click is confirmed and repeated here. The script's own `setTimeout` retries can't do
     /// this: only a fresh `evaluateJavaScript` carries the user gesture WebKit requires to start
-    /// media, which is also why this can't be a JS-side loop.
+    /// media, which is also why this can't be a JS-side loop. A click that landed on a page that is
+    /// merely slow to load is waited out rather than repeated — see `evaluateStartTook`.
     @MainActor
     func play() {
         // before the guard: a play that can't be dispatched still ends the attempt that came before it, and a
@@ -125,19 +128,36 @@ import UnwatchedShared
 
     @MainActor
     private func startPlayback(on webView: WKWebView) async {
+        var gateOnPlayerState = false
         if player.unstarted {
             // returns immediately once sized, so this costs nothing in the normal case
             await PlayerWebView.awaitViewport(webView)
+            gateOnPlayerState = await PlayerWebView.evaluateIsUnstartedMode(webView)
         }
-        for attempt in 0...Self.playAttempts {
+        var clicks = 0
+        var waits = 0
+        while true {
             guard !Task.isCancelled, stillWants(true, on: webView) else { return }
-            Log.info(attempt == 0 ? "PLAY" : "PLAY: didn't take, attempt \(attempt + 1)")
-            PlayerWebView.evaluateJavaScript(
-                webView,
-                attempt == 0
-                    ? PlayerWebView.playScript(unstarted: player.unstarted)
-                    : PlayerWebView.retryPlayScript(unstarted: player.unstarted)
-            )
+            var startTook = false
+            if gateOnPlayerState, clicks > 0 {
+                startTook = await PlayerWebView.evaluateStartTook(webView)
+                guard !Task.isCancelled, stillWants(true, on: webView) else { return }
+            }
+            if startTook {
+                guard waits < Self.playWaits else { break }
+                waits += 1
+                Log.info("PLAY: the click took, waiting for the page")
+            } else {
+                guard clicks <= Self.playAttempts else { break }
+                Log.info(clicks == 0 ? "PLAY" : "PLAY: didn't take, attempt \(clicks + 1)")
+                PlayerWebView.evaluateJavaScript(
+                    webView,
+                    clicks == 0
+                        ? PlayerWebView.playScript(unstarted: player.unstarted)
+                        : PlayerWebView.retryPlayScript(unstarted: player.unstarted)
+                )
+                clicks += 1
+            }
             try? await Task.sleep(for: .seconds(Self.retryDelay))
             guard !Task.isCancelled, stillWants(true, on: webView) else { return }
             guard await PlayerWebView.evaluateIsNotPlaying(webView) else { return }

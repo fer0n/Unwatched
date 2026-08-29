@@ -174,6 +174,32 @@ struct PlayerWebView: PlatformViewRepresentable {
         await evaluateBool(view, "(() => { const v = document.querySelector('video'); return !v || v.paused; })()")
     }
 
+    /// Whether the page's player is sitting at its poster, which is where a play click has something to hit.
+    @MainActor
+    static func evaluateIsUnstartedMode(_ view: WKWebView) async -> Bool {
+        await evaluateBool(
+            view,
+            "!!document.querySelector('#movie_player')?.classList.contains('unstarted-mode')"
+        )
+    }
+
+    /// Whether the page's own player has taken a start and is loading its stream. Nothing plays yet, but the
+    /// poster the click hit is gone, so clicking again reaches the player itself and toggles the start back off.
+    /// The player picks up `buffering-mode`/`playing-mode` within ~50ms of a click that took, well before
+    /// `unstarted-mode` clears. False for a page that can't be read, which keeps the retry clicking.
+    @MainActor
+    static func evaluateStartTook(_ view: WKWebView) async -> Bool {
+        await evaluateBool(view, """
+            (() => {
+                const player = document.querySelector('#movie_player');
+                if (player?.classList.contains('playing-mode')) { return true; }
+                if (player?.classList.contains('buffering-mode')) { return true; }
+                const video = document.querySelector('video');
+                return !!video && video.readyState > 0;
+            })()
+            """)
+    }
+
     @MainActor
     static func evaluateBool(_ view: WKWebView, _ script: String) async -> Bool {
         let result = try? await view.evaluateJavaScript(script)
