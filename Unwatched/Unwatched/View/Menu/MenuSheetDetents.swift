@@ -56,13 +56,13 @@ struct MenuSheetDetents: ViewModifier {
             .interactiveDismissDisabled(
                 (!landscapeFullscreen && !player.tallFullscreenActive) || player.video == nil
             )
-            .disabled(
-                sheetPos.isMinimumSheet
+            .allowsHitTesting(
+                !(sheetPos.isMinimumSheet
                     && !navManager.hasSheetOpen
                     && !navManager.showBrowser
                     && !landscapeFullscreen
                     && !navManager.showPremiumOffer
-                    && player.video != nil
+                    && player.video != nil)
             )
             .sensoryFeedback(Const.sensoryFeedback, trigger: sheetPos.selectedDetent) { old, new in
                 ![old, new].contains(.height(sheetPos.maxSheetHeight))
