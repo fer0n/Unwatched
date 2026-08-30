@@ -55,17 +55,17 @@ extension AVPlayerViewModel {
         }
 
         center.skipForwardCommand.isEnabled = true
-        center.skipForwardCommand.preferredIntervals = [15]
+        center.skipForwardCommand.preferredIntervals = [NSNumber(value: thePlayer.userSeekSeconds)]
         center.skipForwardCommand.addTarget { event in
-            let interval = (event as? MPSkipIntervalCommandEvent)?.interval ?? 15
+            let interval = (event as? MPSkipIntervalCommandEvent)?.interval ?? thePlayer.userSeekSeconds
             Task { @MainActor in Self.skip(by: interval) }
             return .success
         }
 
         center.skipBackwardCommand.isEnabled = true
-        center.skipBackwardCommand.preferredIntervals = [15]
+        center.skipBackwardCommand.preferredIntervals = [NSNumber(value: thePlayer.userSeekSeconds)]
         center.skipBackwardCommand.addTarget { event in
-            let interval = (event as? MPSkipIntervalCommandEvent)?.interval ?? 15
+            let interval = (event as? MPSkipIntervalCommandEvent)?.interval ?? thePlayer.userSeekSeconds
             Task { @MainActor in Self.skip(by: -interval) }
             return .success
         }
@@ -73,13 +73,13 @@ extension AVPlayerViewModel {
         // Headphone inline remotes and AirPods send next/previous track, not skip.
         center.nextTrackCommand.isEnabled = true
         center.nextTrackCommand.addTarget { _ in
-            Task { @MainActor in Self.skip(by: 15) }
+            Task { @MainActor in Self.skip(by: thePlayer.userSeekSeconds) }
             return .success
         }
 
         center.previousTrackCommand.isEnabled = true
         center.previousTrackCommand.addTarget { _ in
-            Task { @MainActor in Self.skip(by: -15) }
+            Task { @MainActor in Self.skip(by: -thePlayer.userSeekSeconds) }
             return .success
         }
 
