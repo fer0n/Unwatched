@@ -53,6 +53,9 @@ public final class Tag: CustomStringConvertible, Exportable {
     /// Whether this tag's videos may be offered as audio suggestions; `nil` follows the global setting.
     public var suggestVideos: Bool?
 
+    /// How far a seek moves within this tag's videos; `nil` follows the global setting.
+    public var seekSeconds: Double?
+
     /// Raw so a value the app doesn't know reads as `include` instead of failing the store.
     public var _mode: Int? = TagMode.include.rawValue
     public var mode: TagMode {
@@ -68,7 +71,8 @@ public final class Tag: CustomStringConvertible, Exportable {
         quickSwitch: Bool = true,
         mode: TagMode = .include,
         continuousPlay: Bool? = nil,
-        suggestVideos: Bool? = nil
+        suggestVideos: Bool? = nil,
+        seekSeconds: Double? = nil
     ) {
         self.name = name
         self.order = order
@@ -78,6 +82,7 @@ public final class Tag: CustomStringConvertible, Exportable {
         self._mode = mode.rawValue
         self.continuousPlay = continuousPlay
         self.suggestVideos = suggestVideos
+        self.seekSeconds = seekSeconds
     }
 
     /// The tags a channel or video can be added to.
@@ -113,9 +118,14 @@ public final class Tag: CustomStringConvertible, Exportable {
         decidingTag(for: video, \.suggestVideos)
     }
 
+    /// The tag whose seek duration a video follows.
+    public static func seekSecondsTag(for video: Video) -> Tag? {
+        decidingTag(for: video, \.seekSeconds)
+    }
+
     /// The tag whose opinion on a setting a video follows: the video's own tags before its channel's, lowest order
     /// first.
-    private static func decidingTag(for video: Video, _ setting: KeyPath<Tag, Bool?>) -> Tag? {
+    private static func decidingTag<Value>(for video: Video, _ setting: KeyPath<Tag, Value?>) -> Tag? {
         let claiming = ((video.tags ?? []) + (video.subscription?.tags ?? [])).filter { $0.mode == .include }
         return (claiming.isEmpty ? untaggedTags(for: video) : claiming)
             .filter { $0[keyPath: setting] != nil }
@@ -181,7 +191,8 @@ public final class Tag: CustomStringConvertible, Exportable {
             quickSwitch: quickSwitch,
             mode: mode.rawValue,
             continuousPlay: continuousPlay,
-            suggestVideos: suggestVideos
+            suggestVideos: suggestVideos,
+            seekSeconds: seekSeconds
         )
     }
 }

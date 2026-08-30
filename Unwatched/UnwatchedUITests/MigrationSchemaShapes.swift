@@ -126,7 +126,7 @@ extension MigrationTests {
             "InboxEntry": ["date", "video", "youtubeId"],
             "QueueEntry": ["order", "video", "youtubeId"],
             "Subscription": ["_shortsSetting", "_videoPlacement", "allowOnMatch", "author", "autoSkipChapterTitles", "customAspectRatio", "customSpeedSetting", "failedFetchCount", "filterText", "isArchived", "isPodcast", "lastFetchErrorMessage", "lastFetchFailedDate", "link", "mostRecentVideoDate", "skipIntroSeconds", "skipOutroSeconds", "subscribedDate", "tags", "thumbnailUrl", "title", "videos", "youtubeChannelId", "youtubePlaylistId", "youtubeUserName"],
-            "Tag": ["_mode", "continuousPlay", "createdDate", "name", "order", "quickSwitch", "subscriptions", "suggestVideos", "symbol", "videos"],
+            "Tag": ["_mode", "continuousPlay", "createdDate", "name", "order", "quickSwitch", "seekSeconds", "subscriptions", "suggestVideos", "symbol", "videos"],
             "Video": ["apiUpdatedDate", "bookmarkedDate", "chapters", "chaptersUrl", "createdDate", "deferDate", "downloadedDate", "duration", "elapsedSeconds", "inboxEntry", "isAudioOnly", "isNew", "isYtShort", "keepIntro", "keepOutro", "mediaUrl", "mergedChapters", "noDuration", "publishedDate", "queueEntry", "sponserBlockUpdateDate", "subscription", "tags", "thumbnailUrl", "title", "updatedDate", "url", "videoDescription", "watchedDate", "youtubeChannelId", "youtubeId"],
             "WatchTimeEntry": ["channelId", "date", "watchTime"]
         ]

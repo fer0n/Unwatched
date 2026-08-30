@@ -257,7 +257,12 @@ extension PlayerManager {
         seek(backward: true, seconds ?? userSeekSeconds)
     }
 
+    @MainActor
     var userSeekSeconds: Double {
+        video.flatMap(Tag.seekSecondsTag(for:))?.seekSeconds ?? Self.defaultSeekSeconds
+    }
+
+    static var defaultSeekSeconds: Double {
         UserDefaults.standard.value(forKey: Const.doubleTapSeekDuration) as? Double ?? Const.seekSeconds
     }
 

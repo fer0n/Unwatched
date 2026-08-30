@@ -4527,6 +4527,40 @@
         }
       }
     },
+    "customSeekDuration" : {
+      "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Eigene Sprungdauer"
+          }
+        },
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Custom Seek Duration"
+          }
+        },
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Duración de salto personalizada"
+          }
+        },
+        "fr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Durée d'avance personnalisée"
+          }
+        },
+        "pl" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Własny czas przewijania"
+          }
+        }
+      }
+    },
     "customSpeedSetting" : {
       "localizations" : {
         "de" : {
@@ -18561,6 +18595,40 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "Przewiń do przodu (%llds)"
+          }
+        }
+      }
+    },
+    "seekSecondsTagHelper" : {
+      "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Gilt für Videos dieses Tags anstelle der globalen Einstellung."
+          }
+        },
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Applies to videos of this tag instead of the global setting."
+          }
+        },
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Se aplica a los vídeos de esta etiqueta en lugar del ajuste global."
+          }
+        },
+        "fr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "S'applique aux vidéos de ce tag à la place du réglage global."
+          }
+        },
+        "pl" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Dotyczy filmów z tym tagiem zamiast ustawienia globalnego."
           }
         }
       }

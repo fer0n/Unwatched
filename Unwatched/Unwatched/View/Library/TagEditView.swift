@@ -107,6 +107,18 @@ struct TagEditView: View {
                             }
                         }
 
+                        MySection(footer: "seekSecondsTagHelper") {
+                            Toggle(isOn: hasCustomSeekSeconds) {
+                                Text("customSeekDuration")
+                            }
+
+                            if let seconds = tag.seekSeconds {
+                                Stepper(value: customSeekSeconds, in: 1...120, step: 1) {
+                                    LabeledContent("seekBy", value: "\(Int(seconds))s")
+                                }
+                            }
+                        }
+
                         #if os(iOS)
                         MySection(footer: "suggestVideosTagHelper") {
                             Picker(selection: $tag.suggestVideos) {
@@ -187,6 +199,20 @@ struct TagEditView: View {
             }
             save()
         }
+    }
+
+    private var hasCustomSeekSeconds: Binding<Bool> {
+        Binding(
+            get: { tag.seekSeconds != nil },
+            set: { value in withAnimation { tag.seekSeconds = value ? PlayerManager.defaultSeekSeconds : nil } }
+        )
+    }
+
+    private var customSeekSeconds: Binding<Double> {
+        Binding(
+            get: { tag.seekSeconds ?? PlayerManager.defaultSeekSeconds },
+            set: { tag.seekSeconds = $0 }
+        )
     }
 
     private var trimmedName: String {

@@ -61,8 +61,6 @@ extension PlayerWebView {
         #endif
         let playbackId = UUID().uuidString
         UserDefaults.standard.set(playbackId, forKey: Const.playbackId)
-        let seekSeconds = UserDefaults.standard.value(forKey: Const.doubleTapSeekDuration) as? Double
-            ?? Const.seekSeconds
 
         return InitScriptOptions(
             playbackSpeed: player.playbackSpeed,
@@ -75,7 +73,7 @@ extension PlayerWebView {
             enableLogging: UserDefaults.standard.bool(forKey: Const.enableLogging),
             originalAudio: UserDefaults.standard.bool(forKey: Const.originalAudio),
             playbackId: playbackId,
-            seekSeconds: seekSeconds,
+            seekSeconds: player.userSeekSeconds,
             uiMode: uiMode
         )
     }
