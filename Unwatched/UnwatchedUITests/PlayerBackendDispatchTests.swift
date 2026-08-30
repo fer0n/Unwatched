@@ -229,6 +229,29 @@ final class PlayerBackendDispatchTests: XCTestCase {
         XCTAssertTrue(player.isPlaying)
     }
 
+    // MARK: - Launch restore
+
+    #if os(iOS)
+    func testRestoredVideoDoesNotSwitchToTheNativePlayer() {
+        let defaults = UserDefaults.standard
+        let previousType = defaults.string(forKey: Const.playerType)
+        let previousInBackground = BackgroundMonitor.inBackground
+        defer {
+            defaults.set(previousType, forKey: Const.playerType)
+            defaults.set(false, forKey: Const.nativeFallbackActive)
+            BackgroundMonitor.inBackground = previousInBackground
+        }
+        defaults.set(PlayerTypeSetting.youtubeEmbedded.rawValue, forKey: Const.playerType)
+        defaults.set(false, forKey: Const.nativeFallbackActive)
+        BackgroundMonitor.inBackground = true
+
+        player.switchToNativeForBackgroundPlayback(.restore)
+
+        XCTAssertEqual(PlayerTypeSetting.stored, .youtubeEmbedded)
+        XCTAssertFalse(player.nativeFallbackActive)
+    }
+    #endif
+
     // MARK: - Picture in picture
 
     func testSetPipCommandsTheEngine() {

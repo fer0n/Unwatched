@@ -10,4 +10,5 @@ public enum VideoSource: Sendable {
     case hotSwap
     case errorSwap
     case playWhenReady
+    case restore
 }

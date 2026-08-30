@@ -80,7 +80,7 @@ extension PlayerManager {
                 play()
                 starting = true
             }
-        case .nextUp:
+        case .nextUp, .restore:
             break
         case .userInteraction:
             play()
@@ -183,7 +183,7 @@ extension PlayerManager {
             videoSource = nil
         case .hotSwap, .errorSwap:
             previousIsPlaying = false
-        case .nextUp, .none:
+        case .nextUp, .restore, .none:
             break
         @unknown default:
             break

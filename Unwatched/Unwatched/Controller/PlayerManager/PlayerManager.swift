@@ -369,7 +369,7 @@ import UnwatchedShared
         }
         #endif
         Log.info("restoreVideo")
-        loadTopmostVideoFromQueue()
+        loadTopmostVideoFromQueue(source: .restore)
     }
 
     @MainActor
