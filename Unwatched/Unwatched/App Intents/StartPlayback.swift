@@ -14,16 +14,12 @@ struct StartPlayback: AudioPlaybackIntent {
     static var title: LocalizedStringResource { "startPlayback" }
     static let description = IntentDescription("startPlaybackDescription")
 
-    @Parameter(title: "forceNativePlayer", description: "forceNativePlayerDescription", default: false)
-    var forceNativePlayer: Bool
-
     @Parameter(title: "playTag", description: "playTagDescription")
     var tag: TagEntity?
 
     static var parameterSummary: some ParameterSummary {
         Summary("startPlayback") {
             \.$tag
-            \.$forceNativePlayer
         }
     }
 
@@ -39,7 +35,6 @@ struct StartPlayback: AudioPlaybackIntent {
     private func startPlayback() async throws {
         #if os(iOS)
         try await BackgroundPlaybackManager.shared.start(
-            forceNativePlayer: forceNativePlayer,
             tag: try tag?.selection()
         )
         Signal.playbackStarted("shortcut")

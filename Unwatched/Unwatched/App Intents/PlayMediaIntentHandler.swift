@@ -37,12 +37,7 @@ final class PlayMediaIntentHandler: NSObject, INPlayMediaIntentHandling {
     private func start(_ intent: INPlayMediaIntent) async throws {
         let video = video(for: intent)
         Log.info("playMediaIntent: playing \(video?.youtubeId ?? "the top of the queue")")
-        // only what was offered on that basis in the first place, see `isSuggestable`
-        let forceNativePlayer = video.map(MediaSuggestionService.canForceNativePlayer(for:)) ?? false
-        try await BackgroundPlaybackManager.shared.start(
-            forceNativePlayer: forceNativePlayer,
-            video: video
-        )
+        try await BackgroundPlaybackManager.shared.start(video: video)
     }
 
     /// What the tap named. Unknown or deleted media falls back to the show it came from, and a show with nothing

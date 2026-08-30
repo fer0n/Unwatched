@@ -7455,74 +7455,6 @@
         }
       }
     },
-    "forceNativePlayer" : {
-      "localizations" : {
-        "de" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Nativen Player erzwingen"
-          }
-        },
-        "en" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Force Native Player"
-          }
-        },
-        "es" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Forzar reproductor nativo"
-          }
-        },
-        "fr" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Forcer le lecteur natif"
-          }
-        },
-        "pl" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Wymuś natywny odtwarzacz"
-          }
-        }
-      }
-    },
-    "forceNativePlayerDescription" : {
-      "localizations" : {
-        "de" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Stellt den Player-Typ auf nativ um, falls er es nicht schon ist."
-          }
-        },
-        "en" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Switches the player type to native if it isn’t already."
-          }
-        },
-        "es" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Cambia el tipo de reproductor a nativo si aún no lo es."
-          }
-        },
-        "fr" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Bascule le type de lecteur sur natif s’il ne l’est pas déjà."
-          }
-        },
-        "pl" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Zmienia typ odtwarzacza na natywny, jeśli jeszcze nim nie jest."
-          }
-        }
-      }
-    },
     "forceOriginalAudio" : {
       "localizations" : {
         "de" : {
@@ -20700,31 +20632,31 @@
         "de" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Video abspielen"
+            "value" : "Play"
           }
         },
         "en" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Play Video"
+            "value" : "Play"
           }
         },
         "es" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Reproducir video"
+            "value" : "Reproducir"
           }
         },
         "fr" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Lire la vidéo"
+            "value" : "Lecture"
           }
         },
         "pl" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Odtwórz film"
+            "value" : "Odtwarzaj"
           }
         }
       }

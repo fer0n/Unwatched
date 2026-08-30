@@ -29,12 +29,12 @@ final class BackgroundPlaybackManager {
     ///   - video: what to play, or `nil` for the top of the queue. Loaded before anything else can
     ///     fail, so a caller that can fall back to the foreground (`PlayMediaIntentHandler`) finds
     ///     it staged and ready to play.
-    func start(forceNativePlayer: Bool, tag: QueueTagSelection? = nil, video: Video? = nil) async throws {
+    func start(tag: QueueTagSelection? = nil, video: Video? = nil) async throws {
         if let video {
             // not `setNextVideo`: its fade would defer the swap past the `player.video` read below
             player.setVideoWithoutFade(video, .playWhenReady)
         }
-        try enableNativePlayer(force: forceNativePlayer)
+        try enableNativePlayer()
         try activateAudioSession()
         if let tag, tag != player.playbackTag {
             player.playbackTag = tag
@@ -88,16 +88,18 @@ final class BackgroundPlaybackManager {
         }
     }
 
-    private func enableNativePlayer(force: Bool) throws {
+    private func enableNativePlayer() throws {
         // a podcast episode plays natively whatever the setting says
         guard PlayerTypeSetting.stored != .native, player.video?.isPodcast != true else {
             return
         }
-        guard force else {
+        guard PlayerManager.nativeFallbackEnabled else {
             throw BackgroundPlaybackError.nativePlayerRequired
         }
         Log.info("backgroundPlayback: switching to the native player")
+        UserDefaults.standard.set(PlayerTypeSetting.stored.rawValue, forKey: Const.previousPlayerType)
         UserDefaults.standard.set(PlayerTypeSetting.native.rawValue, forKey: Const.playerType)
+        player.nativeFallbackActive = true
         PlayerSwitchManager.shared.handleSettingChanged()
     }
 
