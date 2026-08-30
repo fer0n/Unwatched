@@ -173,14 +173,6 @@ extension TranscriptView {
         var isFadingOutProgress = false
 
         @ObservationIgnored
-        private var generationTask: Task<Void, Never>?
-
-        /// Held separately: the transcription runs detached, so cancelling the task that awaits it would otherwise
-        /// leave it transcribing the whole episode with nobody listening.
-        @ObservationIgnored
-        private var transcriptionTask: Task<[TranscriptEntry], Error>?
-
-        @ObservationIgnored
         var transcriptYoutubeId: String = ""
 
         @ObservationIgnored
@@ -241,41 +233,51 @@ extension TranscriptView {
             return result
         }
 
+        /// Starts generating a transcript for `video` — or, if one is already running (kicked off from a
+        /// Shortcut, say), just lets `watchGeneration` pick it up.
         @MainActor
         func generateTranscript(for video: Video) {
-            guard !isGenerating else { return }
             isGenerating = true
             generationProgress = 0
             isFadingOutProgress = false
             generationError = nil
+            TranscriptService.GenerationCoordinator.shared.generate(for: video)
+        }
 
+        /// Mirrors the shared coordinator's state for `video` for as long as this task runs, so this
+        /// screen reflects a generation regardless of who started it, and loads the result once it lands.
+        @MainActor
+        func watchGeneration(for video: Video) async {
+            let coordinator = TranscriptService.GenerationCoordinator.shared
             let youtubeId = video.youtubeId
-            let task = TranscriptService.generateTranscript(for: video) { fraction in
-                Task { @MainActor [weak self] in
-                    self?.generationProgress = fraction
-                }
-            }
-            transcriptionTask = task
+            var handledFinishedVersion = coordinator.finishedYoutubeId == youtubeId ? coordinator.finishedVersion : -1
 
-            generationTask = Task { [weak self] in
-                defer {
-                    self?.isGenerating = false
-                    self?.generationTask = nil
-                    self?.transcriptionTask = nil
-                }
-                do {
-                    let entries = try await task.value
-                    await self?.finishProgress()
-                    withAnimation {
-                        self?.transcript = entries
+            while true {
+                if coordinator.youtubeId == youtubeId {
+                    if coordinator.isGenerating && !isGenerating {
+                        isFadingOutProgress = false
                     }
-                    self?.transcriptYoutubeId = youtubeId
-                } catch is CancellationError {
-                    return
+                    isGenerating = coordinator.isGenerating
+                    generationProgress = coordinator.progress
+                    generationError = coordinator.error
+                }
+
+                if coordinator.finishedYoutubeId == youtubeId && coordinator.finishedVersion != handledFinishedVersion {
+                    handledFinishedVersion = coordinator.finishedVersion
+                    if coordinator.error == nil {
+                        await finishProgress()
+                        let entries = await TranscriptService.podcastTranscript(for: video).value
+                        withAnimation {
+                            transcript = entries
+                        }
+                        transcriptYoutubeId = youtubeId
+                    }
+                }
+
+                do {
+                    try await Task.sleep(for: .milliseconds(150))
                 } catch {
-                    Log.error("generateTranscript: \(error.localizedDescription)")
-                    self?.generationError = error.localizedDescription
-                    self?.generationProgress = 0
+                    return
                 }
             }
         }
@@ -287,15 +289,6 @@ extension TranscriptView {
             try? await Task.sleep(for: .seconds(0.25))
             isFadingOutProgress = true
             try? await Task.sleep(for: .seconds(0.15))
-        }
-
-        @MainActor
-        func cancelGeneration() {
-            transcriptionTask?.cancel()
-            generationTask?.cancel()
-            transcriptionTask = nil
-            generationTask = nil
-            isGenerating = false
         }
 
         @MainActor

@@ -4,6 +4,7 @@
 //
 
 import Foundation
+import Observation
 import UnwatchedShared
 import SwiftData
 
@@ -188,6 +189,70 @@ struct TranscriptService {
         return (destination, true)
     }
     #endif
+
+    // MARK: - Generation coordination
+
+    /// The single on-device transcript generation running at a time, tracked outside any one view's state
+    /// so a generation kicked off elsewhere — a Shortcut, say — is visible to whichever transcript UI is
+    /// currently open for that episode.
+    @Observable final class GenerationCoordinator {
+        static let shared = GenerationCoordinator()
+        private init() {}
+
+        private(set) var youtubeId: String?
+        private(set) var progress: Double = 0
+        private(set) var isGenerating = false
+        private(set) var error: String?
+
+        /// Bumped when a generation finishes, so a view that already has a (possibly empty) transcript
+        /// loaded for this episode knows the cache changed and it should reload.
+        private(set) var finishedYoutubeId: String?
+        private(set) var finishedVersion = 0
+
+        @ObservationIgnored
+        private var activeTask: Task<[TranscriptEntry], Error>?
+
+        /// Starts generating a transcript for `video`, or returns the task already running for it.
+        @MainActor
+        @discardableResult
+        func generate(for video: Video) -> Task<[TranscriptEntry], Error> {
+            if isGenerating, youtubeId == video.youtubeId, let activeTask {
+                return activeTask
+            }
+
+            let id = video.youtubeId
+            youtubeId = id
+            progress = 0
+            error = nil
+            isGenerating = true
+
+            let task = TranscriptService.generateTranscript(for: video) { [weak self] fraction in
+                Task { @MainActor in
+                    guard self?.youtubeId == id else { return }
+                    self?.progress = fraction
+                }
+            }
+            activeTask = task
+
+            Task { [weak self] in
+                do {
+                    _ = try await task.value
+                } catch is CancellationError {
+                } catch {
+                    if self?.youtubeId == id {
+                        self?.error = error.localizedDescription
+                    }
+                }
+                guard let self, self.youtubeId == id else { return }
+                self.isGenerating = false
+                self.activeTask = nil
+                self.finishedYoutubeId = id
+                self.finishedVersion += 1
+            }
+
+            return task
+        }
+    }
 
     public static func deleteCache() -> Task<(), Error> {
         return Task {

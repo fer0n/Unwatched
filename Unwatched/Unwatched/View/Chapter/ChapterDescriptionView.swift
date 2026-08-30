@@ -102,6 +102,9 @@ struct ChapterDescriptionView: View {
                 // chapters/description/transcript entirely in favor of the generate-transcript button
                 guard video.isPodcast, TranscriptService.canGenerateTranscript else { return }
                 await transcriptVM.handleTranscriptLoading(video, nil)
+                // kept running for the lifetime of this screen so a generation started elsewhere — a Shortcut,
+                // say — still shows its progress here and loads the result once it lands
+                await transcriptVM.watchGeneration(for: video)
             }
             .onAppear {
                 scrollToChapterIfNeeded(hasChapters: hasChapters, proxy: proxy)

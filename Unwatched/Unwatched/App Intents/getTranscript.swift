@@ -51,7 +51,7 @@ struct GetTranscript: AppIntent {
             )
 
         if transcript.isEmpty && video.isPodcast && generateIfNecessary && TranscriptService.canGenerateTranscript {
-            transcript = try await TranscriptService.generateTranscript(for: video) { _ in }.value
+            transcript = try await TranscriptService.GenerationCoordinator.shared.generate(for: video).value
         }
         if transcript.isEmpty {
             throw TranscriptError.emptyTranscript
