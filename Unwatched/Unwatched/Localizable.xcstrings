@@ -3205,6 +3205,36 @@
         }
       }
     },
+    "chapterMode" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Existing Chapters"
+          }
+        }
+      }
+    },
+    "chapterModeDescription" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Replace: the timestamps become the video's chapters.\n\nMerge: every line is a segment given as a time range, with an optional category and title, e.g.:\n\n00:35 - 01:20 sponsor\n05:00 - 05:30 selfpromo: Merch\n12:00 - 13:30 Interview\n\nCategories: sponsor, selfpromo, interaction, intro, outro, preview, filler, music_offtopic, chapter. Sponsor and selfpromo segments are shown and skipped according to the SponsorBlock settings; a segment without a category is merged in as a plain chapter."
+          }
+        }
+      }
+    },
+    "chapterModeType" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Chapter Mode"
+          }
+        }
+      }
+    },
     "chapters" : {
       "localizations" : {
         "de" : {
@@ -10744,6 +10774,16 @@
         }
       }
     },
+    "mergeIntoChapters" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Merge into Existing"
+          }
+        }
+      }
+    },
     "minimalBackupsHelper" : {
       "localizations" : {
         "de" : {
@@ -11992,6 +12032,16 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "Żaden film w kolejce nie ma tego tagu."
+          }
+        }
+      }
+    },
+    "noSegmentsFound" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "No segments found. Merging expects one time range per line, e.g. “00:35 - 01:20 sponsor”."
           }
         }
       }
@@ -16788,6 +16838,16 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "Napraw"
+          }
+        }
+      }
+    },
+    "replaceChapters" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Replace Existing"
           }
         }
       }

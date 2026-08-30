@@ -42,6 +42,39 @@ extension ChapterService {
         try? context.save()
     }
 
+    /// Merges segments that didn't come from SponsorBlock — what the `mergeChapters` shortcut hands over, and
+    /// the only way a podcast episode gets sponsor segments at all — the same way SponsorBlock's own are merged.
+    ///
+    /// The video's own chapters are left as they are; the result goes into `mergedChapters`, so running this
+    /// again replaces the previous segments instead of splitting the chapters a second time.
+    @MainActor
+    @discardableResult
+    static func mergeSegments(_ segments: [SendableChapter], into video: Video) -> Bool {
+        guard let context = video.modelContext else {
+            Log.warning("mergeSegments: video has no context")
+            return false
+        }
+
+        let cleanedSegments = cleanExternalChapters(segments)
+        guard !cleanedSegments.isEmpty else {
+            return false
+        }
+
+        let videoChapters = video.ownChapterData
+        Log.info("mergeSegments, old: \(videoChapters)")
+
+        var newChapters = videoChapters.isEmpty
+            ? generateChapters(from: cleanedSegments, videoDuration: video.duration)
+            : mergeSponsorSegments(videoChapters, sponsorSegments: cleanedSegments, duration: video.duration)
+        skipSponsorBlockSegments(in: &newChapters)
+        Log.info("mergeSegments, new: \(newChapters)")
+
+        updateIfNeeded(newChapters, video)
+        try? context.save()
+        notifyPlayer(of: video)
+        return true
+    }
+
     @MainActor
     static func insertChapters(_ chapters: [SendableChapter], for video: Video) {
         guard let context = video.modelContext else {
