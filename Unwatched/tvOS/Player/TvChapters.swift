@@ -22,7 +22,7 @@ enum TvChapters {
                 return nil
             }
             return AVTimedMetadataGroup(
-                items: [titleItem(chapter.title ?? label(for: chapter.category))],
+                items: [titleItem(chapterTitle(chapter))],
                 timeRange: CMTimeRange(
                     start: CMTime(seconds: chapter.startTime, preferredTimescale: 600),
                     end: CMTime(seconds: end, preferredTimescale: 600)
@@ -31,6 +31,18 @@ enum TvChapters {
         }
 
         return markers.isEmpty ? [] : [AVNavigationMarkersGroup(title: nil, timedNavigationMarkers: markers)]
+    }
+
+    private static func chapterTitle(_ chapter: SendableChapter) -> String {
+        switch chapter.category {
+        case .sponsor, .selfpromo:
+            guard let title = chapter.title, !title.isEmpty else {
+                return label(for: chapter.category)
+            }
+            return "\(label(for: chapter.category)) \(title)"
+        default:
+            return chapter.title ?? label(for: chapter.category)
+        }
     }
 
     private static func titleItem(_ title: String) -> AVMetadataItem {
