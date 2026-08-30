@@ -32,7 +32,7 @@ extension PlayerManager {
     @MainActor
     func extractCurrentChapter(at time: Double) -> SendableChapter? {
         return video?.sortedChapterData.first(where: { chapter in
-            return chapter.startTime <= time && time < (chapter.endTime ?? 0)
+            return chapter.startTime <= time && time < (chapter.endTime ?? .infinity)
         })
     }
 
