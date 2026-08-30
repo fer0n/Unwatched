@@ -22,6 +22,7 @@ struct PlaybackSettingsView: View {
     @AppStorage(Const.playerType) var playerType: PlayerTypeSetting = .youtubeEmbedded
     @AppStorage(Const.preferPlayerType) var preferPlayerType: Bool = false
     @AppStorage(Const.suggestVideos) var suggestVideos: Bool = false
+    @AppStorage(Const.nativePlayerFallback) var nativePlayerFallback: Bool = true
     @Environment(PlayerManager.self) var player
 
     var body: some View {
@@ -46,6 +47,17 @@ struct PlaybackSettingsView: View {
                         Text("preferPlayerType")
                     }
                 }
+
+                #if os(iOS)
+                MySection(footer: "nativePlayerFallbackHelper") {
+                    Toggle(isOn: $nativePlayerFallback) {
+                        Text("nativePlayerFallback")
+                    }
+                }
+                .onChange(of: nativePlayerFallback) {
+                    MediaSuggestionService.refreshSuggestions()
+                }
+                #endif
 
                 if Device.supportsFullscreenControls {
                     MySection(footer: "showFullscreenControlsHelper") {

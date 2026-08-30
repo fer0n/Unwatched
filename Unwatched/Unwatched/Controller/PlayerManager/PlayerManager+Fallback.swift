@@ -18,6 +18,11 @@ extension PlayerManager {
         set { UserDefaults.standard.set(newValue, forKey: Const.nativeFallbackActive) }
     }
 
+    /// Master switch for every stand-in below; off means never moving off the picked player.
+    static var nativeFallbackEnabled: Bool {
+        Const.nativePlayerFallback.bool ?? true
+    }
+
     /// Swaps the embedded iframe for the full youtube.com watch page, staying on the web player.
     /// `resetVideoIndependentValues` clears `embeddingDisabled` again on the next video.
     ///
@@ -40,6 +45,8 @@ extension PlayerManager {
     @MainActor
     func revertNativeFallback() {
         guard nativeFallbackActive else { return }
+        // still needed there, so it holds until the first video change back in the foreground
+        guard !BackgroundMonitor.inBackground else { return }
         nativeFallbackActive = false
         // a player the user picked since stands
         guard PlayerTypeSetting.stored == .native else { return }
@@ -50,6 +57,25 @@ extension PlayerManager {
         // than deactivated; skipped when the new video plays natively anyway (a podcast episode).
         guard !PlayerSwitchManager.shared.nativeIsCurrent else { return }
         AVPlayerViewModel.shared.cleanup()
+    }
+
+    /// Hands a video set in the background to the native player: the web player is a `WKWebView`
+    /// and can't load a new one without a screen, so continuous play would go quiet.
+    /// `.playWhenReady` is left out — `BackgroundPlaybackManager` switches itself.
+    @MainActor
+    func switchToNativeForBackgroundPlayback(_ source: VideoSource?) {
+        guard BackgroundMonitor.inBackground,
+              Self.nativeFallbackEnabled,
+              source == .continuousPlay || source == .nextUp || source == .userInteraction,
+              PlayerTypeSetting.stored != .native,
+              video?.isPodcast != true else {
+            return
+        }
+        Log.info("nativeFallback: background video change, switching to the native player")
+        UserDefaults.standard.set(PlayerTypeSetting.stored.rawValue, forKey: Const.previousPlayerType)
+        UserDefaults.standard.set(PlayerTypeSetting.native.rawValue, forKey: Const.playerType)
+        nativeFallbackActive = true
+        PlayerSwitchManager.shared.handleSettingChanged()
     }
     #endif
 }

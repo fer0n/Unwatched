@@ -344,23 +344,26 @@ extension PlayerWebViewCoordinator {
         #if os(iOS)
         // the embed's error text is localized, so only the native player's InnerTube fetch can say
         // *why* this failed — and hand an age gate on to the YouTube page from there
-        switchToNativePlayer()
-        #else
+        if switchToNativePlayer() { return }
+        #endif
         Log.info("videoPlayer: embedded error, switching to the YouTube page")
         parent.player.swapToWebsitePlayer()
-        #endif
     }
 
     #if os(iOS)
     /// `PlayerView` only renders `.native` on iOS, so other platforms keep the website fallback.
-    private func switchToNativePlayer() {
+    /// Returns whether it took the error; `false` leaves it to the caller's website swap.
+    private func switchToNativePlayer() -> Bool {
         let current = PlayerTypeSetting.stored
-        guard current != .native else { return }
+        // already there: the erroring embed is on its way out
+        guard current != .native else { return true }
+        guard PlayerManager.nativeFallbackEnabled else { return false }
         Log.info("videoPlayer: embedded error, switching to the native player")
         UserDefaults.standard.set(current.rawValue, forKey: Const.previousPlayerType)
         UserDefaults.standard.set(PlayerTypeSetting.native.rawValue, forKey: Const.playerType)
         parent.player.nativeFallbackActive = true
         PlayerSwitchManager.shared.handleSettingChanged()
+        return true
     }
     #endif
 

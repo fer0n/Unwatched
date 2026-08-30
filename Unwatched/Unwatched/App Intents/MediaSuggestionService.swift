@@ -31,11 +31,18 @@ enum MediaSuggestionService {
     /// A tap in Control Center starts playback with no screen to draw into, which only the native player can do (see
     /// `BackgroundPlaybackManager`).
     static func isSuggestable(_ video: Video) -> Bool {
-        video.isPodcast || PlayerTypeSetting.stored == .native || suggestVideos(for: video)
+        video.isPodcast || PlayerTypeSetting.stored == .native || canForceNativePlayer(for: video)
     }
 
-    /// Whether a suggestion for this video may switch the player to the native one, which is what
-    /// `Const.suggestVideos` allows — a tag of the video or of its channel can override it.
+    /// Whether a suggestion for this video may switch the player to the native one: the video has to be offered on
+    /// that basis in the first place, and `Const.nativePlayerFallback` has to allow moving off the picked player at
+    /// all.
+    static func canForceNativePlayer(for video: Video) -> Bool {
+        PlayerManager.nativeFallbackEnabled && suggestVideos(for: video)
+    }
+
+    /// Whether videos of this kind are offered at all, which is what `Const.suggestVideos` allows — a tag of the
+    /// video or of its channel can override it.
     static func suggestVideos(for video: Video) -> Bool {
         Tag.suggestVideosTag(for: video)?.suggestVideos
             ?? UserDefaults.standard.bool(forKey: Const.suggestVideos)

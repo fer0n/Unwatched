@@ -343,6 +343,7 @@ public struct Const {
     public static let continuousPlay = "continuousPlay"
     public static let markWatchedOnEnded = "markWatchedOnEnded"
     public static let suggestVideos = "suggestVideos"
+    public static let nativePlayerFallback = "nativePlayerFallback"
     public static let autoRefresh = "refreshOnStartup"
     public static let enableLogging = "enableLogging"
     public static let originalAudio = "originalAudio"

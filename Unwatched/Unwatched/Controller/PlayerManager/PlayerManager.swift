@@ -188,6 +188,10 @@ import UnwatchedShared
             return
         }
         resetVideoIndependentValues()
+        #if os(iOS)
+        // after the reset, whose `revertNativeFallback` would undo it
+        switchToNativeForBackgroundPlayback(videoSource)
+        #endif
         // before the cue: it settles which player is up, and so which URL variant to load.
         PlayerSwitchManager.shared.handleVideoChanged()
         // the engine that's up loads it; one that isn't will on its own once it comes up

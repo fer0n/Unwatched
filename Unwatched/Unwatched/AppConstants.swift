@@ -63,6 +63,7 @@ extension Const {
 
         Const.autoAirplayHD: false,
         Const.suggestVideos: false,
+        Const.nativePlayerFallback: true,
         Const.playBrowserVideosInApp: false,
         Const.surroundingEffect: true,
 

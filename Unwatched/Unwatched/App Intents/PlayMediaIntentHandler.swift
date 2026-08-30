@@ -38,7 +38,7 @@ final class PlayMediaIntentHandler: NSObject, INPlayMediaIntentHandling {
         let video = video(for: intent)
         Log.info("playMediaIntent: playing \(video?.youtubeId ?? "the top of the queue")")
         // only what was offered on that basis in the first place, see `isSuggestable`
-        let forceNativePlayer = video.map(MediaSuggestionService.suggestVideos(for:)) ?? false
+        let forceNativePlayer = video.map(MediaSuggestionService.canForceNativePlayer(for:)) ?? false
         try await BackgroundPlaybackManager.shared.start(
             forceNativePlayer: forceNativePlayer,
             video: video
