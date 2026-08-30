@@ -49,7 +49,7 @@ struct PlayerToggleModifier: ViewModifier {
             .background(background.padding(-5))
             .clipShape(Circle())
             #if !os(visionOS)
-            .playerControlBackground(in: Circle())
+            .modifier(OptionalPlayerControlBackground(isEnabled: backgroundColor == nil))
         #endif
     }
 
@@ -69,6 +69,20 @@ struct PlayerToggleModifier: ViewModifier {
             Color.neutralAccentColor
         } else {
             Color.backgroundColor
+        }
+    }
+}
+
+/// Skips the flat `playerControlBackground` when a caller passes its own `backgroundColor`
+/// (e.g. `.clear` in the ended overlay) so an outer `glassEffect` can show through.
+private struct OptionalPlayerControlBackground: ViewModifier {
+    let isEnabled: Bool
+
+    func body(content: Content) -> some View {
+        if isEnabled {
+            content.playerControlBackground(in: Circle())
+        } else {
+            content
         }
     }
 }
