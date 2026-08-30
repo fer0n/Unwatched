@@ -24,7 +24,7 @@ struct SetChapters: AppIntent {
     @Parameter(title: "chapterMode", description: "chapterModeDescription", default: .replace)
     var mode: SetChaptersMode
 
-    @Parameter(title: "youtubeVideoUrl")
+    @Parameter(title: "mediaUrl")
     var videoUrl: URL?
 
     @MainActor

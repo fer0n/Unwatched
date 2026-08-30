@@ -14,7 +14,11 @@ struct GetTranscript: AppIntent {
         "\(LocalizedStringResource("getTranscriptDescription")) \(LocalizedStringResource("requiresUnwatchedPremium"))"
     )
 
-    @Parameter(title: "youtubeVideoUrl")
+    // a cached/published transcript resolves quickly and can stay backgrounded; only generating one
+    // runs long enough to need the foreground (backgrounded App Intents get killed after ~30s)
+    static var supportedModes: IntentModes { [.background, .foreground(.dynamic)] }
+
+    @Parameter(title: "mediaUrl")
     var videoUrl: URL?
 
     @Parameter(title: "includeTimestamps", description: "includeTimestampsDescription")
@@ -51,6 +55,12 @@ struct GetTranscript: AppIntent {
             )
 
         if transcript.isEmpty && video.isPodcast && generateIfNecessary && TranscriptService.canGenerateTranscript {
+            if systemContext.currentMode == .background {
+                guard systemContext.currentMode.canContinueInForeground else {
+                    throw TranscriptError.emptyTranscript
+                }
+                try await continueInForeground(alwaysConfirm: false)
+            }
             transcript = try await TranscriptService.GenerationCoordinator.shared.generate(for: video).value
         }
         if transcript.isEmpty {

@@ -614,8 +614,14 @@ extension VideoService {
     @MainActor
     static func getVideoOrCurrent(_ videoUrl: URL?) throws -> Video {
         if let videoUrl {
-            guard let youtubeId = UrlService.getYoutubeIdFromUrl(url: videoUrl),
-                  let loadedVideo = VideoService.getVideo(for: youtubeId) else {
+            if let youtubeId = UrlService.getYoutubeIdFromUrl(url: videoUrl),
+               let loadedVideo = VideoService.getVideo(for: youtubeId) {
+                return loadedVideo
+            }
+            // podcast episodes are shared via their own page url (see UrlService.getShareUrl)
+            let context = DataProvider.mainContext
+            let fetch = FetchDescriptor<Video>(predicate: #Predicate { $0.url == videoUrl })
+            guard let loadedVideo = try? context.fetch(fetch).first else {
                 throw VideoError.noVideoFound
             }
             return loadedVideo
