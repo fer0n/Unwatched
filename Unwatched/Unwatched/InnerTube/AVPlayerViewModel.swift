@@ -242,7 +242,9 @@ final class AVPlayerViewModel: PlayerBackend {
                 await MainActor.run {
                     switch interruption {
                     // commands, not reports: the engine has to actually stop and restart
-                    case .began: player.pause()
+                    case .began:
+                        PlayerAudioSession.noteDeactivatedBySystem()
+                        player.pause()
                     case .endedShouldResume: player.play()
                     case .ended: break
                     }
@@ -261,8 +263,15 @@ final class AVPlayerViewModel: PlayerBackend {
                     guard player.isLoading == nil,
                           seekAnchor.time == nil,
                           player.isPlaying != isNowPlaying else { return }
-                    // AVPlayer telling us what it did; commanding it back would be an echo
-                    isNowPlaying ? player.reportPlaying() : player.reportPaused()
+                    // AVPlayer telling us what it did; commanding it back would be an echo. A rate we didn't ask
+                    // for (PiP's transport, an auto-resume after a stall) skipped `syncPlayPause`, so nothing
+                    // claimed the session it is playing on.
+                    if isNowPlaying {
+                        PlayerAudioSession.activateForReportedPlayback(audioOnly: player.isAudioOnly)
+                        player.reportPlaying()
+                    } else {
+                        player.reportPaused()
+                    }
                 }
             }
         }
@@ -283,6 +292,8 @@ final class AVPlayerViewModel: PlayerBackend {
         // the outgoing episode's shortened timeline must not be read against the incoming one
         clearSilenceMap()
 
+        // before the commands and the now playing info below, which a non-playback session gets ignored for
+        PlayerAudioSession.configure(audioOnly: player.isAudioOnly)
         setupRemoteCommandsIfNeeded()
         artworkImage = nil
         fetchedArtworkUrls = []
@@ -494,25 +505,125 @@ enum PlayerAudioSession {
         case ended
     }
 
-    /// `setCategory` is a cross-process call that costs milliseconds every time, so it only
-    /// runs when the session isn't already configured the way playback needs it.
-    static func activate() {
-        #if !os(macOS)
+    #if !os(macOS)
+    /// What the session was last *successfully* put into: reading the live category back can't tell one we set from
+    /// one we failed to set, since a throwing `setCategory` leaves the previous one in place.
+    @MainActor private static var configured: (category: AVAudioSession.Category, mode: AVAudioSession.Mode)?
+    @MainActor private static var activated = false
+    @MainActor private static var resetObserver: NSObjectProtocol?
+
+    /// A media services reset wipes the session without an interruption notification, leaving `activated` stale-true.
+    @MainActor
+    private static func observeMediaServicesResetIfNeeded() {
+        guard resetObserver == nil else { return }
+        resetObserver = NotificationCenter.default.addObserver(
+            forName: AVAudioSession.mediaServicesWereResetNotification, object: nil, queue: .main
+        ) { _ in
+            MainActor.assumeIsolated {
+                Log.error("audio session: media services were reset")
+                configured = nil
+                activated = false
+            }
+        }
+    }
+
+    private static func wantedMode(audioOnly: Bool) -> AVAudioSession.Mode {
+        audioOnly ? .spokenAudio : .moviePlayback
+    }
+
+    private static func describe(_ session: AVAudioSession) -> String {
+        "category: \(session.category.rawValue), mode: \(session.mode.rawValue)"
+    }
+    #endif
+
+    /// Puts the session into the category playback needs without claiming it. Runs before the remote commands and
+    /// `MPNowPlayingInfoCenter` are written: what an app on `.soloAmbient` — where every app starts — publishes there
+    /// is dropped, its audio doesn't survive backgrounding, and nothing holds off the idle timer.
+    @MainActor
+    @discardableResult
+    static func configure(audioOnly: Bool) -> Bool {
+        #if os(macOS)
+        return true
+        #else
         let session = AVAudioSession.sharedInstance()
-        if session.category != .playback || session.mode != .spokenAudio {
-            try? session.setCategory(.playback, mode: .spokenAudio)
+        let mode = wantedMode(audioOnly: audioOnly)
+        // `setCategory` is a cross-process call costing milliseconds
+        guard configured?.category != .playback || configured?.mode != mode else {
+            return true
         }
         do {
-            try session.setActive(true)
+            try session.setCategory(.playback, mode: mode)
         } catch {
-            Log.error("audio session activation failed: \(error.localizedDescription)")
+            configured = nil
+            activated = false
+            Log.error("audio session setCategory FAILED: \(error.localizedDescription), on \(describe(session))")
+            return false
         }
+        // an unsupported mode falls back without throwing
+        guard session.category == .playback, session.mode == mode else {
+            configured = nil
+            activated = false
+            Log.error("audio session did not take \(mode.rawValue), now \(describe(session))")
+            return false
+        }
+        configured = (.playback, mode)
+        activated = false
+        observeMediaServicesResetIfNeeded()
+        Log.info("audio session configured: \(describe(session))")
+        return true
         #endif
     }
 
+    /// Configures and claims the session. Must succeed before the engine is told to play.
+    @MainActor
+    @discardableResult
+    static func activate(audioOnly: Bool) -> Bool {
+        #if os(macOS)
+        return true
+        #else
+        guard configure(audioOnly: audioOnly) else { return false }
+        guard !activated else { return true }
+        let session = AVAudioSession.sharedInstance()
+        do {
+            try session.setActive(true)
+        } catch {
+            activated = false
+            Log.error("audio session setActive(true) FAILED: \(error.localizedDescription), \(describe(session))")
+            return false
+        }
+        activated = true
+        Log.info("audio session active: \(describe(session))")
+        return true
+        #endif
+    }
+
+    /// Claims the session for a rate the engine started on its own, which never went through `syncPlayPause`.
+    @MainActor
+    static func activateForReportedPlayback(audioOnly: Bool) {
+        #if !os(macOS)
+        guard !activated else { return }
+        Log.info("audio session: playback started without a command, activating late")
+        activate(audioOnly: audioOnly)
+        #endif
+    }
+
+    @MainActor
+    static func noteDeactivatedBySystem() {
+        #if !os(macOS)
+        activated = false
+        #endif
+    }
+
+    @MainActor
     static func deactivate() {
         #if !os(macOS)
-        try? AVAudioSession.sharedInstance().setActive(false, options: .notifyOthersOnDeactivation)
+        activated = false
+        do {
+            try AVAudioSession.sharedInstance().setActive(false, options: .notifyOthersOnDeactivation)
+            Log.info("audio session deactivated")
+        } catch {
+            Log.error("audio session setActive(false) failed: \(error.localizedDescription)")
+        }
         #endif
     }
 

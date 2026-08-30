@@ -1021,7 +1021,7 @@ extension AVPlayerViewModel {
             // until the new item is installed the player still holds the previous video, and
             // starting here would resume that behind the one being loaded
             guard player.isLoading == nil, loadedVideoId == player.video?.youtubeId else { return }
-            PlayerAudioSession.activate()
+            PlayerAudioSession.activate(audioOnly: player.isAudioOnly)
             startAtCurrentSpeed()
         } else {
             avPlayer.pause()

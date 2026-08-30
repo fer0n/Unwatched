@@ -78,12 +78,8 @@ final class BackgroundPlaybackManager {
     /// Up front, so being barred from playing in the background fails here rather than as a
     /// 20 second wait for a player that was never allowed to start.
     private func activateAudioSession() throws {
-        let session = AVAudioSession.sharedInstance()
-        do {
-            try session.setCategory(.playback, mode: .spokenAudio)
-            try session.setActive(true)
-        } catch {
-            Log.error("backgroundPlayback: audio session unavailable — \(error.localizedDescription)")
+        guard PlayerAudioSession.activate(audioOnly: player.isAudioOnly) else {
+            Log.error("backgroundPlayback: audio session unavailable")
             throw BackgroundPlaybackError.couldNotStart
         }
     }
