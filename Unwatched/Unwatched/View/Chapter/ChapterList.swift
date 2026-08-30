@@ -190,18 +190,7 @@ struct ChapterList: View {
             }
             return
         }
-        // enabling something only the channel's auto-skip list turned off needs no row
-        if !chapter.isActive, video.subscription?.autoSkips(chapter.title) == true {
-            video.subscription?.setAutoSkip(chapter.title, false)
-            chapterDidChange()
-            return
-        }
-        guard let row = ChapterService.materialize(chapter, of: video) else {
-            Log.warning("toggleChapter: no row for \(chapter)")
-            return
-        }
-        row.isActive = !chapter.isActive
-        video.subscription?.setAutoSkip(chapter.title, !row.isActive)
+        ChapterService.setChapterActive(!chapter.isActive, chapter, of: video)
         chapterDidChange()
     }
 

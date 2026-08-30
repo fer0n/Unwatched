@@ -161,4 +161,64 @@ final class ChapterMaterializeTests: XCTestCase {
         XCTAssertEqual(derived.count, 5, "five chapters parsed from the description")
         XCTAssertEqual(derived.map(\.startTime), [0, 21, 152, 224, 281])
     }
+
+    /// A chapter of a subscribed video is turned off twice over: its row, and the channel's
+    /// auto-skip list. Turning it back on used to clear only the list, leaving the row inactive —
+    /// the tap registered and nothing on screen changed.
+    @MainActor
+    func testDisablingThenReenablingAChapterOfASubscribedVideo() throws {
+        let context = DataProvider.newContext()
+        let video = try makeVideo(in: context)
+        let subscription = Subscription(
+            link: URL(string: "https://www.youtube.com/feeds/videos.xml?channel_id=\(youtubeId)"),
+            title: "\(youtubeId)-sub"
+        )
+        context.insert(subscription)
+        video.subscription = subscription
+        try context.save()
+
+        let second = try XCTUnwrap(video.sortedChapterData.first { $0.startTime == 21 })
+        ChapterService.setChapterActive(false, second, of: video)
+
+        let afterDisable = try XCTUnwrap(video.sortedChapterData.first { $0.startTime == 21 })
+        XCTAssertFalse(afterDisable.isActive, "disabling has to stick")
+        XCTAssertEqual(subscription.autoSkipChapterTitles, ["second"], "and reach the channel's list")
+
+        ChapterService.setChapterActive(true, afterDisable, of: video)
+
+        let afterEnable = try XCTUnwrap(video.sortedChapterData.first { $0.startTime == 21 })
+        XCTAssertTrue(afterEnable.isActive, "re-enabling has to stick")
+        XCTAssertNil(subscription.autoSkipChapterTitles, "and clear the channel's list")
+
+        for row in video.allChapterRows { context.delete(row) }
+        context.delete(subscription)
+        try? context.save()
+    }
+
+    /// The other half: a chapter the auto-skip list alone turned off comes back without a row.
+    @MainActor
+    func testEnablingAnAutoSkippedChapterNeedsNoRow() throws {
+        let context = DataProvider.newContext()
+        let video = try makeVideo(in: context)
+        let subscription = Subscription(
+            link: URL(string: "https://www.youtube.com/feeds/videos.xml?channel_id=\(youtubeId)"),
+            title: "\(youtubeId)-sub",
+            autoSkipChapterTitles: ["second"]
+        )
+        context.insert(subscription)
+        video.subscription = subscription
+        try context.save()
+
+        let second = try XCTUnwrap(video.sortedChapterData.first { $0.startTime == 21 })
+        XCTAssertFalse(second.isActive, "the channel's list turns it off")
+
+        ChapterService.setChapterActive(true, second, of: video)
+
+        XCTAssertEqual(video.sortedChapterData.first { $0.startTime == 21 }?.isActive, true)
+        XCTAssertTrue(video.allChapterRows.isEmpty, "nothing had to be materialized")
+
+        for row in video.allChapterRows { context.delete(row) }
+        context.delete(subscription)
+        try? context.save()
+    }
 }
