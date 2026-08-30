@@ -1135,31 +1135,31 @@
         "de" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Alle Videos"
+            "value" : "Alle Medien"
           }
         },
         "en" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "All Videos"
+            "value" : "All Media"
           }
         },
         "es" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Todos los videos"
+            "value" : "Toda la multimedia"
           }
         },
         "fr" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Toutes les vidéos"
+            "value" : "Tous les médias"
           }
         },
         "pl" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Wszystkie filmy"
+            "value" : "Wszystkie multimedia"
           }
         }
       }
@@ -1680,31 +1680,31 @@
         "de" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Inbox-Videos"
+            "value" : "Inbox-Medien"
           }
         },
         "en" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Inbox Videos"
+            "value" : "Inbox Media"
           }
         },
         "es" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Videos en la bandeja"
+            "value" : "Multimedia en la bandeja"
           }
         },
         "fr" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Vidéos dans la boîte de réception"
+            "value" : "Médias dans la boîte de réception"
           }
         },
         "pl" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Filmy w skrzynce"
+            "value" : "Multimedia w skrzynce"
           }
         }
       }
@@ -1714,31 +1714,31 @@
         "de" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Gelöschte Videos"
+            "value" : "Gelöschte Medien"
           }
         },
         "en" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Cleared Videos"
+            "value" : "Cleared Media"
           }
         },
         "es" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Vídeos eliminados"
+            "value" : "Multimedia eliminada"
           }
         },
         "fr" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Vidéos effacées"
+            "value" : "Médias effacés"
           }
         },
         "pl" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Wyczyszczone filmy"
+            "value" : "Wyczyszczone multimedia"
           }
         }
       }
@@ -1748,31 +1748,31 @@
         "de" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Angesehene Videos"
+            "value" : "Angesehene Medien"
           }
         },
         "en" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Watched Videos"
+            "value" : "Watched Media"
           }
         },
         "es" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Vídeos vistos"
+            "value" : "Multimedia vista"
           }
         },
         "fr" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Vidéos regardées"
+            "value" : "Médias regardés"
           }
         },
         "pl" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Obejrzane filmy"
+            "value" : "Obejrzane multimedia"
           }
         }
       }
@@ -3546,31 +3546,31 @@
         "de" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Alle Videos entfernen"
+            "value" : "Alle Medien entfernen"
           }
         },
         "en" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Clear all Videos"
+            "value" : "Clear all Media"
           }
         },
         "es" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Borrar todos los videos"
+            "value" : "Borrar toda la multimedia"
           }
         },
         "fr" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Effacer toutes les vidéos"
+            "value" : "Effacer tous les médias"
           }
         },
         "pl" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Wyczyść wszystkie filmy"
+            "value" : "Wyczyść wszystkie multimedia"
           }
         }
       }
@@ -6201,31 +6201,31 @@
         "de" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Video zur Warteschlange hinzufügen"
+            "value" : "Medien zur Warteschlange hinzufügen"
           }
         },
         "en" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Add Videos To Queue"
+            "value" : "Add Media To Queue"
           }
         },
         "es" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Agregar videos a la cola"
+            "value" : "Agregar contenido multimedia a la cola"
           }
         },
         "fr" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Ajouter des vidéos à la file d'attente"
+            "value" : "Ajouter des médias à la file d'attente"
           }
         },
         "pl" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Dodaj filmy do kolejki"
+            "value" : "Dodaj multimedia do kolejki"
           }
         }
       }
@@ -6950,31 +6950,31 @@
         "de" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Ausgeschlossene Videos"
+            "value" : "Ausgeschlossene Medien"
           }
         },
         "en" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Excluded Videos"
+            "value" : "Excluded Media"
           }
         },
         "es" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Videos excluidos"
+            "value" : "Contenido multimedia excluido"
           }
         },
         "fr" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Vidéos exclues"
+            "value" : "Médias exclus"
           }
         },
         "pl" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Wykluczone filmy"
+            "value" : "Wykluczone multimedia"
           }
         }
       }
@@ -9901,31 +9901,31 @@
         "de" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Unwichtige Videos einschließen"
+            "value" : "Unwichtige Medien einschließen"
           }
         },
         "en" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Include Unimportant Videos"
+            "value" : "Include Unimportant Media"
           }
         },
         "es" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Incluir videos no importantes"
+            "value" : "Incluir contenido multimedia no importante"
           }
         },
         "fr" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Inclure les vidéos sans importance"
+            "value" : "Inclure les médias sans importance"
           }
         },
         "pl" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Uwzględnij nieistotne filmy"
+            "value" : "Uwzględnij nieistotne multimedia"
           }
         }
       }
@@ -10003,31 +10003,31 @@
         "de" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Videos behalten"
+            "value" : "Medien behalten"
           }
         },
         "en" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Keep Videos"
+            "value" : "Keep Media"
           }
         },
         "es" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Conservar vídeos"
+            "value" : "Conservar multimedia"
           }
         },
         "fr" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Conserver les vidéos"
+            "value" : "Conserver les médias"
           }
         },
         "pl" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Zachowaj filmy"
+            "value" : "Zachowaj multimedia"
           }
         }
       }
@@ -12830,31 +12830,31 @@
         "de" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Keine Videos Gefunden"
+            "value" : "Keine Medien Gefunden"
           }
         },
         "en" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "No Videos Found"
+            "value" : "No Media Found"
           }
         },
         "es" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "No se encontraron videos"
+            "value" : "No se encontró multimedia"
           }
         },
         "fr" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Aucune vidéo trouvée"
+            "value" : "Aucun média trouvé"
           }
         },
         "pl" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Nie znaleziono filmów"
+            "value" : "Nie znaleziono multimediów"
           }
         }
       }
@@ -19952,31 +19952,31 @@
         "de" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "App Icon Kennzeichen für neue Videos"
+            "value" : "App Icon Kennzeichen für neue Medien"
           }
         },
         "en" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "App Icon Badge for new Videos"
+            "value" : "App Icon Badge for new Media"
           }
         },
         "es" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Insignia de icono de la aplicación para nuevos videos"
+            "value" : "Insignia de icono de la aplicación para nuevo contenido multimedia"
           }
         },
         "fr" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Badge d'icône d'application pour les nouvelles vidéos"
+            "value" : "Badge d'icône d'application pour les nouveaux médias"
           }
         },
         "pl" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Ikona aplikacji z liczbą nowych filmów"
+            "value" : "Ikona aplikacji z liczbą nowych multimediów"
           }
         }
       }
@@ -20054,31 +20054,31 @@
         "de" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Tab Bar Kennzeichen bei neuen Videos"
+            "value" : "Tab Bar Kennzeichen bei neuen Medien"
           }
         },
         "en" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Tab Bar Badge for new Videos"
+            "value" : "Tab Bar Badge for new Media"
           }
         },
         "es" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Insignia de la barra de pestañas para nuevos videos"
+            "value" : "Insignia de la barra de pestañas para nuevo contenido multimedia"
           }
         },
         "fr" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Badge de barre d'onglets pour les nouvelles vidéos"
+            "value" : "Badge de barre d'onglets pour les nouveaux médias"
           }
         },
         "pl" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Znacznik na pasku nawigacji dla nowych filmów"
+            "value" : "Znacznik na pasku nawigacji dla nowych multimediów"
           }
         }
       }
@@ -21108,31 +21108,31 @@
         "de" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Videos vorschlagen"
+            "value" : "Medien vorschlagen"
           }
         },
         "en" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Suggest Videos"
+            "value" : "Suggest Media"
           }
         },
         "es" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Sugerir vídeos"
+            "value" : "Sugerir multimedia"
           }
         },
         "fr" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Suggérer des vidéos"
+            "value" : "Suggérer des médias"
           }
         },
         "pl" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Proponuj filmy"
+            "value" : "Proponuj multimedia"
           }
         }
       }
@@ -24515,31 +24515,31 @@
         "de" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Videos"
+            "value" : "Medien"
           }
         },
         "en" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Videos"
+            "value" : "Media"
           }
         },
         "es" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Videos"
+            "value" : "Multimedia"
           }
         },
         "fr" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Vidéos"
+            "value" : "Médias"
           }
         },
         "pl" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Filmy"
+            "value" : "Multimedia"
           }
         }
       }
@@ -24651,31 +24651,31 @@
         "de" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Videos"
+            "value" : "Medien"
           }
         },
         "en" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Videos"
+            "value" : "Media"
           }
         },
         "es" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Videos"
+            "value" : "Multimedia"
           }
         },
         "fr" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Vidéos"
+            "value" : "Médias"
           }
         },
         "pl" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Filmy"
+            "value" : "Multimedia"
           }
         }
       }
