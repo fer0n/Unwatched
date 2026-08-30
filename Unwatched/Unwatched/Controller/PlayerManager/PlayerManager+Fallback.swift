@@ -41,22 +41,37 @@ extension PlayerManager {
 
     #if os(iOS)
     /// Puts the player type back to what the user picked after the native player stood in for a
-    /// failed embed: a new video reloads either player anyway, so the fallback doesn't carry over.
+    /// failed embed. Returns whether it actually swapped the player back.
     @MainActor
-    func revertNativeFallback() {
-        guard nativeFallbackActive else { return }
+    @discardableResult
+    func revertNativeFallback() -> Bool {
+        guard nativeFallbackActive else { return false }
         // still needed there, so it holds until the first video change back in the foreground
-        guard !BackgroundMonitor.inBackground else { return }
+        guard !BackgroundMonitor.inBackground else { return false }
         nativeFallbackActive = false
         // a player the user picked since stands
-        guard PlayerTypeSetting.stored == .native else { return }
+        guard PlayerTypeSetting.stored == .native else { return false }
         UserDefaults.standard.set(PlayerTypeSetting.storedPrevious.rawValue, forKey: Const.playerType)
         PlayerSwitchManager.shared.handleSettingChanged()
         // nothing commanded the native player to stop, so it would keep playing the previous video
         // behind the page. Ordered after the switch, so the audio session is handed over rather
         // than deactivated; skipped when the new video plays natively anyway (a podcast episode).
-        guard !PlayerSwitchManager.shared.nativeIsCurrent else { return }
-        AVPlayerViewModel.shared.cleanup()
+        if !PlayerSwitchManager.shared.nativeIsCurrent {
+            AVPlayerViewModel.shared.cleanup()
+        }
+        return true
+    }
+
+    /// The same revert at launch, where there is no player to swap yet and no `PlayerSwitchManager`
+    /// to notify — it reads the restored setting when it first comes up. Run before the video is.
+    @MainActor
+    static func revertNativeFallbackOnLaunch() {
+        let defaults = UserDefaults.standard
+        guard defaults.bool(forKey: Const.nativeFallbackActive) else { return }
+        defaults.set(false, forKey: Const.nativeFallbackActive)
+        guard PlayerTypeSetting.stored == .native else { return }
+        Log.info("nativeFallback: reverting on launch")
+        defaults.set(PlayerTypeSetting.storedPrevious.rawValue, forKey: Const.playerType)
     }
 
     /// Hands a video set in the background to the native player: the web player is a `WKWebView`

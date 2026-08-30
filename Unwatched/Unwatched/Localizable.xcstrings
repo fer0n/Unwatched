@@ -11265,31 +11265,31 @@
         "de" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Erlaubt der App, auf den nativen Player umzustellen, wenn der gewählte nicht abspielen kann: ein aus dem Kontrollzentrum gestartetes Video, ein neues Video, das im Hintergrund geladen wird, und ein Video, das der eingebettete Player ablehnt. Mit dem nächsten Video kehrt der gewählte Player zurück."
+            "value" : "Erlaubt der App, auf den nativen Player umzustellen, wenn der gewählte nicht abspielen kann: ein aus dem Kontrollzentrum gestartetes Video, ein neues Video, das im Hintergrund geladen wird, und ein Video, das der eingebettete Player ablehnt. Der gewählte Player kehrt mit dem nächsten Video zurück, beim Neuladen des Players und beim nächsten App-Start."
           }
         },
         "en" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Lets the app switch to the native player when the picked one can't play: a video started from Control Center, a new video loading while the app is in the background, and a video the embedded player refuses. The picked player comes back with the next video."
+            "value" : "Lets the app switch to the native player when the picked one can't play: a video started from Control Center, a new video loading while the app is in the background, and a video the embedded player refuses. The picked player comes back with the next video, when the player is reloaded, and on the next app start."
           }
         },
         "es" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Permite que la app cambie al reproductor nativo cuando el elegido no puede reproducir: un vídeo iniciado desde el Centro de control, un vídeo nuevo que se carga con la app en segundo plano y un vídeo que el reproductor incrustado rechaza. El reproductor elegido vuelve con el siguiente vídeo."
+            "value" : "Permite que la app cambie al reproductor nativo cuando el elegido no puede reproducir: un vídeo iniciado desde el Centro de control, un vídeo nuevo que se carga con la app en segundo plano y un vídeo que el reproductor incrustado rechaza. El reproductor elegido vuelve con el siguiente vídeo, al recargar el reproductor y al iniciar la app de nuevo."
           }
         },
         "fr" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Permet à l'app de basculer sur le lecteur natif quand celui choisi ne peut pas lire : une vidéo lancée depuis le centre de contrôle, une nouvelle vidéo chargée quand l'app est en arrière-plan, et une vidéo que le lecteur intégré refuse. Le lecteur choisi revient avec la vidéo suivante."
+            "value" : "Permet à l'app de basculer sur le lecteur natif quand celui choisi ne peut pas lire : une vidéo lancée depuis le centre de contrôle, une nouvelle vidéo chargée quand l'app est en arrière-plan, et une vidéo que le lecteur intégré refuse. Le lecteur choisi revient avec la vidéo suivante, au rechargement du lecteur et au prochain démarrage de l'app."
           }
         },
         "pl" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Pozwala aplikacji przełączyć się na natywny odtwarzacz, gdy wybrany nie może odtwarzać: film uruchomiony z Centrum sterowania, nowy film wczytywany, gdy aplikacja działa w tle, oraz film odrzucony przez odtwarzacz osadzony. Wybrany odtwarzacz wraca przy następnym filmie."
+            "value" : "Pozwala aplikacji przełączyć się na natywny odtwarzacz, gdy wybrany nie może odtwarzać: film uruchomiony z Centrum sterowania, nowy film wczytywany, gdy aplikacja działa w tle, oraz film odrzucony przez odtwarzacz osadzony. Wybrany odtwarzacz wraca przy następnym filmie, po przeładowaniu odtwarzacza i przy następnym uruchomieniu aplikacji."
           }
         }
       }

@@ -351,6 +351,10 @@ import UnwatchedShared
     /// Attempts to keep playing as seamlessly as possible
     @MainActor
     func hotReloadPlayer() {
+        #if os(iOS)
+        // putting the picked player back is the reload
+        if revertNativeFallback() { return }
+        #endif
         // before the swap: otherwise the outgoing page plays on unheard until it's torn down
         backend.stop()
         handleHotSwap()

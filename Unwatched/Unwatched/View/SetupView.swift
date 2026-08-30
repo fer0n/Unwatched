@@ -203,6 +203,9 @@ struct SetupView: View {
 
     static func onLaunch() {
         Log.info("setupVideo")
+        #if os(iOS)
+        PlayerManager.revertNativeFallbackOnLaunch()
+        #endif
         PlayerManager.shared.restoreNowPlayingVideo()
         PodcastDownloadManager.shared.onEpisodeDownloaded = { youtubeId in
             ChapterService.loadPodcastChapters(youtubeId: youtubeId)
