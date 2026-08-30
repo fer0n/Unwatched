@@ -20,6 +20,13 @@ struct GetTranscript: AppIntent {
     @Parameter(title: "includeTimestamps", description: "includeTimestampsDescription")
     var includeTimestamps: Bool?
 
+    @Parameter(
+        title: "generateTranscriptIfNecessary",
+        description: "generateTranscriptIfNecessaryDescription",
+        default: true
+    )
+    var generateIfNecessary: Bool
+
     @MainActor
     func perform() async throws -> some IntentResult & ReturnsValue<String> {
         Signal.log("Shortcut.GetTranscript")
@@ -36,12 +43,16 @@ struct GetTranscript: AppIntent {
         }
 
         // a podcast episode has no caption url; its transcript is one it was given earlier or one the show publishes
-        let transcript = video.isPodcast
+        var transcript = video.isPodcast
             ? await TranscriptService.podcastTranscript(for: video).value
             : try await TranscriptService.getTranscript(
                 from: transcriptUrl,
                 youtubeId: video.youtubeId
             )
+
+        if transcript.isEmpty && video.isPodcast && generateIfNecessary && TranscriptService.canGenerateTranscript {
+            transcript = try await TranscriptService.generateTranscript(for: video) { _ in }.value
+        }
         if transcript.isEmpty {
             throw TranscriptError.emptyTranscript
         }
