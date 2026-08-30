@@ -68,6 +68,46 @@ struct TagVideosView: View {
     }
 }
 
+/// The videos a tag names one by one, as a regular video list.
+struct TaggedVideosList: View {
+    @State private var videoListVM = VideoListVM(listId: "taggedVideos")
+
+    let title: LocalizedStringKey
+    let tag: Tag
+
+    var body: some View {
+        let videoIds = (tag.videos ?? []).map(\.youtubeId)
+
+        ZStack {
+            MyBackgroundColor()
+
+            if videoIds.isEmpty {
+                ContentUnavailableView("noVideosYet",
+                                       systemImage: tag.displaySymbol,
+                                       description: Text("noVideosForTagDescription"))
+            } else {
+                VideosViewAsync(
+                    videoListVM: $videoListVM,
+                    sorting: [SortDescriptor<Video>(\.publishedDate, order: .reverse)],
+                    filter: Self.filter(videoIds)
+                )
+            }
+        }
+        .concentricMacWorkaround()
+        .myNavigationTitle(title)
+        .onChange(of: videoIds) { _, newIds in
+            videoListVM.filter = Self.filter(newIds)
+            Task {
+                await videoListVM.updateData(force: true)
+            }
+        }
+    }
+
+    private static func filter(_ videoIds: [String]) -> Predicate<Video>? {
+        VideoListView.getVideoFilter(subscriptionIds: [], addedVideoIds: videoIds)
+    }
+}
+
 /// One value so the view can watch it for changes in a single `onChange`.
 struct TagMembership: Equatable {
     var subscriptionIds: [PersistentIdentifier] = []

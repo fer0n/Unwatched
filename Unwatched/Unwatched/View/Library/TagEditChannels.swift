@@ -85,27 +85,25 @@ private struct ChannelRow: View {
     }
 }
 
-/// The videos the tag names one by one. Only ever shows what is already there: adding happens
-/// from a video's own menu, where the user is looking at the video rather than at a list of every
-/// video the app knows.
+/// The videos the tag names on top of its channels, behind a count. Only ever shows what is already
+/// there: adding happens from a video's own menu, where the user is looking at the video rather than
+/// at a list of every video the app knows.
 struct TaggedVideosSection: View {
     let title: LocalizedStringKey
+    let tag: Tag
     let videos: [Video]
-    let remove: (Video) -> Void
 
     var body: some View {
-        MySection(title) {
-            ForEach(videos, id: \.persistentModelID) { video in
-                Button {
-                    remove(video)
-                } label: {
-                    HStack {
-                        Text(video.title)
-                            .lineLimit(2)
-                            .foregroundStyle(Color.neutralAccentColor)
-                        Spacer()
-                        Image(systemName: Const.checkmarkSF)
-                    }
+        MySection {
+            NavigationLink {
+                TaggedVideosList(title: title, tag: tag)
+            } label: {
+                HStack {
+                    Text(title)
+                        .foregroundStyle(Color.neutralAccentColor)
+                    Spacer()
+                    Text(verbatim: "\(videos.count)")
+                        .foregroundStyle(Color.secondary)
                 }
             }
         }

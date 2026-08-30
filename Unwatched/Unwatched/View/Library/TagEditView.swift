@@ -126,8 +126,8 @@ struct TagEditView: View {
                         if !taggedVideos.isEmpty {
                             TaggedVideosSection(
                                 title: tag.mode == .exclude ? "excludedVideos" : "videos",
-                                videos: taggedVideos,
-                                remove: removeVideo
+                                tag: tag,
+                                videos: taggedVideos
                             )
                         }
 
@@ -246,13 +246,6 @@ struct TagEditView: View {
         if !isNew {
             save()
         }
-    }
-
-    private func removeVideo(_ video: Video) {
-        withAnimation {
-            tag.setCovers(video: video, false)
-        }
-        save()
     }
 
     private func create() {
