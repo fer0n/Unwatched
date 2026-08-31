@@ -30,6 +30,11 @@ final class AVPlayerViewModel: PlayerBackend {
     @ObservationIgnored var presentationSizeObserver: NSKeyValueObservation?
     @ObservationIgnored var interruptionObserverTask: Task<Void, Never>?
     @ObservationIgnored var rateObserverTask: Task<Void, Never>?
+    @ObservationIgnored var stallRecoveryTask: Task<Void, Never>?
+    @ObservationIgnored var stallCheckTask: Task<Void, Never>?
+    @ObservationIgnored var stallObserverTask: Task<Void, Never>?
+    /// When the current item last reported a stall; see `isRecentStall`.
+    @ObservationIgnored var lastStalledAt: Date?
     @ObservationIgnored var timeObserverToken: Any?
     @ObservationIgnored var timeObserverTickCount = 0
     @ObservationIgnored var statsTickCount = 0
@@ -234,6 +239,7 @@ final class AVPlayerViewModel: PlayerBackend {
         webViewCacheTask?.cancel()
         interruptionObserverTask?.cancel()
         rateObserverTask?.cancel()
+        cancelStallHandling()
         startTimeObserver()
 
         interruptionObserverTask = Task {
@@ -260,8 +266,14 @@ final class AVPlayerViewModel: PlayerBackend {
                 let isNowPlaying = avPlayer.rate != 0
                 await MainActor.run {
                     // the pause `installItem` makes to reposition isn't the user's
-                    guard player.isLoading == nil,
-                          seekAnchor.time == nil,
+                    guard player.isLoading == nil else { return }
+                    // the engine running out of data isn't the user pausing — and it happens while a seek
+                    // out of the buffered range is still outstanding, so this comes before the anchor guard
+                    if !isNowPlaying, player.isPlaying, isRecentStall {
+                        recoverFromStall()
+                        return
+                    }
+                    guard seekAnchor.time == nil,
                           player.isPlaying != isNowPlaying else { return }
                     // AVPlayer telling us what it did; commanding it back would be an echo. A rate we didn't ask
                     // for (PiP's transport, an auto-resume after a stall) skipped `syncPlayPause`, so nothing
@@ -275,6 +287,8 @@ final class AVPlayerViewModel: PlayerBackend {
                 }
             }
         }
+
+        startStallObserver()
 
         player.isLoading = Date()
         // `embeddingDisabled` is a YouTube-web concept; clear any stale `true` carried over from a
@@ -368,6 +382,7 @@ final class AVPlayerViewModel: PlayerBackend {
                 // also when unfinished: an anchor still pointing here was superseded by nothing
                 if anchor.time == time { anchor.time = nil }
             }
+            checkForStallAfterSeek()
         }
         // Keep the scrubber in sync immediately (see applyRelativeSeek).
         player.currentTime = time
@@ -424,6 +439,7 @@ final class AVPlayerViewModel: PlayerBackend {
         endObserverTask?.cancel()
         interruptionObserverTask?.cancel()
         rateObserverTask?.cancel()
+        cancelStallHandling()
         avPlayer.pause()
         teardownRemoteCommands()
         clearPendingReposition()
