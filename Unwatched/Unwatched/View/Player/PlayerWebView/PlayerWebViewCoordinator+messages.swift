@@ -260,6 +260,8 @@ extension PlayerWebViewCoordinator {
     }
 
     func handlePlay() {
+        // a tap inside the YouTube page starts playback without going through `WebPlayerBackend.play()`
+        PlayerAudioSession.configure()
         updateUnstarted()
         parent.player.reportPlaying()
         #if os(iOS)

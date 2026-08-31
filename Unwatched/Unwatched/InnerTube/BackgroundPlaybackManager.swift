@@ -78,7 +78,7 @@ final class BackgroundPlaybackManager {
     /// Up front, so being barred from playing in the background fails here rather than as a
     /// 20 second wait for a player that was never allowed to start.
     private func activateAudioSession() throws {
-        guard PlayerAudioSession.activate(audioOnly: player.isAudioOnly) else {
+        guard PlayerAudioSession.activate() else {
             Log.error("backgroundPlayback: audio session unavailable")
             throw BackgroundPlaybackError.couldNotStart
         }

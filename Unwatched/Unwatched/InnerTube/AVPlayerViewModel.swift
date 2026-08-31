@@ -267,7 +267,7 @@ final class AVPlayerViewModel: PlayerBackend {
                     // for (PiP's transport, an auto-resume after a stall) skipped `syncPlayPause`, so nothing
                     // claimed the session it is playing on.
                     if isNowPlaying {
-                        PlayerAudioSession.activateForReportedPlayback(audioOnly: player.isAudioOnly)
+                        PlayerAudioSession.activateForReportedPlayback()
                         player.reportPlaying()
                     } else {
                         player.reportPaused()
@@ -293,7 +293,7 @@ final class AVPlayerViewModel: PlayerBackend {
         clearSilenceMap()
 
         // before the commands and the now playing info below, which a non-playback session gets ignored for
-        PlayerAudioSession.configure(audioOnly: player.isAudioOnly)
+        PlayerAudioSession.configure()
         setupRemoteCommandsIfNeeded()
         artworkImage = nil
         fetchedArtworkUrls = []
@@ -527,9 +527,9 @@ enum PlayerAudioSession {
         }
     }
 
-    private static func wantedMode(audioOnly: Bool) -> AVAudioSession.Mode {
-        audioOnly ? .spokenAudio : .moviePlayback
-    }
+    /// AirPods' Conversation Awareness pauses `.spokenAudio` when you start talking and only ducks
+    /// anything else, which is worth more than `.moviePlayback`'s output processing.
+    private static let wantedMode: AVAudioSession.Mode = .spokenAudio
 
     private static func describe(_ session: AVAudioSession) -> String {
         "category: \(session.category.rawValue), mode: \(session.mode.rawValue)"
@@ -541,12 +541,12 @@ enum PlayerAudioSession {
     /// is dropped, its audio doesn't survive backgrounding, and nothing holds off the idle timer.
     @MainActor
     @discardableResult
-    static func configure(audioOnly: Bool) -> Bool {
+    static func configure() -> Bool {
         #if os(macOS)
         return true
         #else
         let session = AVAudioSession.sharedInstance()
-        let mode = wantedMode(audioOnly: audioOnly)
+        let mode = wantedMode
         // `setCategory` is a cross-process call costing milliseconds
         guard configured?.category != .playback || configured?.mode != mode else {
             return true
@@ -577,11 +577,11 @@ enum PlayerAudioSession {
     /// Configures and claims the session. Must succeed before the engine is told to play.
     @MainActor
     @discardableResult
-    static func activate(audioOnly: Bool) -> Bool {
+    static func activate() -> Bool {
         #if os(macOS)
         return true
         #else
-        guard configure(audioOnly: audioOnly) else { return false }
+        guard configure() else { return false }
         guard !activated else { return true }
         let session = AVAudioSession.sharedInstance()
         do {
@@ -599,11 +599,11 @@ enum PlayerAudioSession {
 
     /// Claims the session for a rate the engine started on its own, which never went through `syncPlayPause`.
     @MainActor
-    static func activateForReportedPlayback(audioOnly: Bool) {
+    static func activateForReportedPlayback() {
         #if !os(macOS)
         guard !activated else { return }
         Log.info("audio session: playback started without a command, activating late")
-        activate(audioOnly: audioOnly)
+        activate()
         #endif
     }
 
