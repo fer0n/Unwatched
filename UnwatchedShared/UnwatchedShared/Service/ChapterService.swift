@@ -69,8 +69,15 @@ public struct ChapterService {
                     link = urlAndRest.1
                 }
 
+                let (category, categoryTitle) = splitCategory(from: title)
+
                 if let time = timeToSeconds(timeString) {
-                    let chapter = SendableChapter(title: title, startTime: time, link: link)
+                    let chapter = SendableChapter(
+                        title: category == .chapter ? title : categoryTitle,
+                        startTime: time,
+                        category: category == .chapter ? nil : category,
+                        link: link
+                    )
                     chapters.append(chapter)
                 }
             }

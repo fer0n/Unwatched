@@ -80,7 +80,7 @@ public extension ChapterService {
 
     /// Reads the category off the front of what follows the times, longest match first, so
     /// `music offtopic: outro theme` doesn't come back as the two-word title of a `.musicOfftopic`.
-    private static func splitCategory(from rest: String) -> (ChapterCategory, String?) {
+    static func splitCategory(from rest: String) -> (ChapterCategory, String?) {
         let rest = trimSeparators(rest)
         guard !rest.isEmpty else { return (.chapter, nil) }
 
