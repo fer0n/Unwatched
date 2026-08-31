@@ -570,6 +570,15 @@ extension PlayerWebView {
             if (!tracks || !Array.isArray(tracks)) {
                 return null;
             }
+            // Structural check first: YouTube marks the original (non-dubbed) audio track
+            // with an id ending in the magic suffix ".4" (e.g. "en.4", "en-US.4"), regardless
+            // of the track's display name or the page's locale/player variant. Falling back to
+            // matching localized display-name text (below) is what breaks under AirPlay HD's
+            // desktop embed page and for videos whose track names don't match a known word.
+            const byId = tracks.find(track => typeof track?.id === "string" && /\.4$/.test(track.id));
+            if (byId) {
+                return byId;
+            }
             let languageFieldName = null;
             for (const track of tracks) {
                 if (!track || typeof track !== "object") {
