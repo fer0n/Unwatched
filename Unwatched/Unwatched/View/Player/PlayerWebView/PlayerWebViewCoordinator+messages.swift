@@ -62,6 +62,8 @@ extension PlayerWebViewCoordinator {
             handleFullscreen()
         case "transcriptUrl":
             handleTranscriptUrl(payload)
+        case "originalAudioTrack":
+            handleOriginalAudioTrack(payload)
         case "resize":
             handleResize()
         default:
@@ -83,6 +85,13 @@ extension PlayerWebViewCoordinator {
         } else {
             parent.player.transcriptUrl = ""
         }
+    }
+
+    func handleOriginalAudioTrack(_ payload: String?) {
+        guard let payload, !payload.isEmpty, let videoId = parent.player.video?.youtubeId else {
+            return
+        }
+        parent.player.resolvedAudioTrackByVideoId[videoId] = payload
     }
 
     func handleFullscreen() {

@@ -47,6 +47,7 @@ extension PlayerWebView {
         let fullscreenTitle: String
         let enableLogging: Bool
         let originalAudio: Bool
+        let preferredAudioTrackId: String?
         let playbackId: String
         let seekSeconds: Double
         let uiMode: UIMode
@@ -72,6 +73,7 @@ extension PlayerWebView {
             fullscreenTitle: "\(String(localized: "toggleFullscreen")) (f)",
             enableLogging: UserDefaults.standard.bool(forKey: Const.enableLogging),
             originalAudio: UserDefaults.standard.bool(forKey: Const.originalAudio),
+            preferredAudioTrackId: player.video?.youtubeId.flatMap { player.resolvedAudioTrackByVideoId[$0] },
             playbackId: playbackId,
             seekSeconds: player.userSeekSeconds,
             uiMode: uiMode
@@ -103,6 +105,7 @@ extension PlayerWebView {
         const timerInterval = \(Const.elapsedTimeMonitorSeconds * 1000);
         const enableLogging = \(options.enableLogging);
         const originalAudio = \(options.originalAudio);
+        const preferredAudioTrackId = \(options.preferredAudioTrackId.map { "\"\($0)\"" } ?? "null");
         const playbackId = "\(options.playbackId)";
         const seekSeconds = \(options.seekSeconds);
 
@@ -634,19 +637,23 @@ extension PlayerWebView {
                 retryHandleAudioTrack(attempt);
                 return;
             }
-            const originalTrack = getOriginalTrack(tracks);
+            // If a prior load of this same video already worked out which track id is the
+            // original one, trust that over re-guessing: this page (e.g. AirPlay HD's desktop
+            // embed) may expose tracks less clearly than the one that resolved it originally.
+            const originalTrack = (preferredAudioTrackId
+                && tracks.find(track => track?.id === preferredAudioTrackId))
+                || getOriginalTrack(tracks);
             if (!originalTrack) {
                 retryHandleAudioTrack(attempt);
                 return;
             }
             if (`${originalTrack}` === `${currentTrack}`) {
+                sendMessage('originalAudioTrack', originalTrack.id);
                 return;
             }
             player.setAudioTrack(originalTrack).then((isAudioTrackSet) => {
                 if (isAudioTrackSet) {
-                    if (enableLogging) {
-                        sendMessage('originalAudioTrack', originalTrack.name);
-                    }
+                    sendMessage('originalAudioTrack', originalTrack.id);
                 } else {
                     retryHandleAudioTrack(attempt);
                 }
