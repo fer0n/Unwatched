@@ -262,16 +262,21 @@ extension VideoActor {
         return filtered
     }
 
+    /// The videos a triage pass would place: capped the first time a subscription loads, cut off at
+    /// what it has already seen otherwise. Podcasts run this before inserting anything, so a show's
+    /// back catalogue never becomes `Video` rows — it stays in `PodcastEpisodeCache`.
+    func triageCandidates<T: VideoData>(_ videos: [T], sub: Subscription) -> [T] {
+        guard let cutOffDate = sub.mostRecentVideoDate else {
+            let newSubLimit = sub.isPodcast ? Const.podcastTriageNewSubs : Const.triageNewSubs
+            return Array(videos.prefix(firstTimeVideoLimit ?? newSubLimit))
+        }
+        return videos.filter { ($0.publishedDate ?? .distantPast) > cutOffDate }
+    }
+
     func triageSubscriptionVideos(_ sub: Subscription,
                                   videos: [Video],
                                   defaultPlacement: DefaultVideoPlacement) -> [Video] {
-        let isFirstTimeLoading = sub.mostRecentVideoDate == nil
-        let limitVideos = isFirstTimeLoading ? (firstTimeVideoLimit ?? Const.triageNewSubs) : nil
-
-        var videosToAdd = limitVideos == nil ? videos : Array(videos.prefix(limitVideos!))
-        if let cutOffDate = sub.mostRecentVideoDate {
-            videosToAdd = videosToAdd.filter { ($0.publishedDate ?? .distantPast) > cutOffDate }
-        }
+        var videosToAdd = triageCandidates(videos, sub: sub)
         videosToAdd = getFilteredByVideoTitleText(videosToAdd, sub, defaultPlacement)
 
         var placement = sub.videoPlacement

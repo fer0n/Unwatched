@@ -191,7 +191,7 @@ struct PodcastPreviewView: View {
         defer { isLoading = false }
 
         do {
-            let feed = try await PodcastService.loadFeed(feedUrl, limitEpisodes: Const.podcastEpisodeLimit)
+            let feed = try await PodcastService.loadFeed(feedUrl, limitEpisodes: Const.podcastPreviewEpisodeLimit)
             showDescription = feed.showDescription
             // the show travels with every episode: it's what a queued episode gets attached to
             episodes = feed.episodes.map {

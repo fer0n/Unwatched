@@ -66,6 +66,8 @@ struct SubscriptionDetailView: View {
 
                     SubscriptionTitleFitlerPreview(subscription: subscription)
                         .listRowSeparator(.hidden)
+                } else if subscription.isPodcast {
+                    PodcastEpisodeListView(subscription: subscription)
                 } else {
                     VideoListView(subscriptionId: subscription.persistentModelID)
                 }

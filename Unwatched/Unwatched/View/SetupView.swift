@@ -177,7 +177,11 @@ struct SetupView: View {
             deleteOrphanedOlderThan: dueCleanupSetting(Const.autoDeleteOrphanedVideos) {
                 cleanupInterval(forDays: $0)
             },
-            inboxLimit: dueCleanupSetting(Const.autoDeleteInboxVideosLimit) { _ in .weekly }
+            inboxLimit: dueCleanupSetting(Const.autoDeleteInboxVideosLimit) { _ in .weekly },
+            deleteStatelessPodcastEpisodes: UserDefaults.standard.shouldPerform(
+                Const.cleanupPodcastEpisodes, interval: .weekly
+            ),
+            protecting: PlayerManager.shared.video?.persistentId
         )
 
         HistoryMaintenance.pruneConsumedHistoryIfDue()

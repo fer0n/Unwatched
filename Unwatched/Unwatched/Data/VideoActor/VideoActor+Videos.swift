@@ -286,7 +286,8 @@ actor VideoActor: SharedContextActor {
 
         cacheImages(for: videos, subModel)
 
-        let videoModels = insertVideoModels(from: videos, to: subModel)
+        let toInsert = subModel.isPodcast ? triageCandidates(videos, sub: subModel) : videos
+        let videoModels = insertVideoModels(from: toInsert, to: subModel)
         let addedVideos = triageSubscriptionVideos(subModel,
                                                    videos: videoModels,
                                                    defaultPlacement: defaultPlacement)

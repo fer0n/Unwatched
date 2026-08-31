@@ -130,14 +130,17 @@ struct CleanupService {
         video.sponserBlockUpdateDate = nil
     }
 
-    /// Runs the due auto-delete jobs one after another, so three passes don't fetch the same
-    /// videos at once for no benefit.
+    /// Runs the due auto-delete jobs one after another, so they don't fetch the same videos at once
+    /// for no benefit.
     static func runScheduledCleanup(
         deleteWatchedOlderThan watchedDays: Int?,
         deleteOrphanedOlderThan orphanedDays: Int?,
-        inboxLimit: Int?
+        inboxLimit: Int?,
+        deleteStatelessPodcastEpisodes: Bool = false,
+        protecting protectedId: PersistentIdentifier? = nil
     ) {
-        if watchedDays == nil && orphanedDays == nil && inboxLimit == nil {
+        if watchedDays == nil && orphanedDays == nil && inboxLimit == nil
+            && !deleteStatelessPodcastEpisodes {
             return
         }
         Task.detached {
@@ -150,6 +153,9 @@ struct CleanupService {
             }
             if let inboxLimit {
                 _ = await actor.clearOldInboxEntries(keep: inboxLimit)
+            }
+            if deleteStatelessPodcastEpisodes {
+                await actor.deleteStatelessPodcastEpisodes(protecting: protectedId)
             }
         }
     }
@@ -184,6 +190,7 @@ struct CleanupService {
         }
 
         await PodcastDownloadManager.shared.deleteAllDownloads()
+        PodcastEpisodeCache.deleteAll()
         _ = ImageService.deleteAllImages()
         _ = TranscriptService.deleteCache()
         _ = ChapterService.deleteAllDerivedChapters()
@@ -565,6 +572,43 @@ actor CleanupActor: SharedContextActor {
 
     func sortWatchTimeEntries(_ entries: [WatchTimeEntry]) -> [WatchTimeEntry] {
         entries.sorted { $0.watchTime > $1.watchTime }
+    }
+}
+
+// MARK: Podcasts
+extension CleanupActor {
+    /// Drops podcast episode rows the user no longer has any state on; the episode itself stays in
+    /// `PodcastEpisodeCache`. Unlike `deleteOrphanedVideos` nothing is protected per subscription,
+    /// only the age gate: recreating a row costs a delete and an insert on every device.
+    func deleteStatelessPodcastEpisodes(
+        olderThan days: Int = Const.podcastStatelessRowGraceDays,
+        protecting protectedId: PersistentIdentifier? = nil
+    ) {
+        let cutoff = Calendar.current.date(byAdding: .day, value: -days, to: .now) ?? .now
+        let fetch = FetchDescriptor<Video>(predicate: #Predicate {
+            $0.mediaUrl != nil && $0.watchedDate == nil && $0.bookmarkedDate == nil
+        })
+        guard let videos = try? modelContext.fetch(fetch) else { return }
+        let toDelete = videos.filter {
+            ($0.createdDate ?? .distantFuture) < cutoff
+                && isStateless($0)
+                && $0.persistentModelID != protectedId
+        }
+        guard !toDelete.isEmpty else { return }
+        for video in toDelete {
+            CleanupService.deleteVideo(video, modelContext)
+        }
+        try? modelContext.save()
+        Log.info("deleteStatelessPodcastEpisodes: deleted \(toDelete.count) rows")
+    }
+
+    private func isStateless(_ video: Video) -> Bool {
+        guard video.inboxEntry == nil, video.queueEntry == nil else { return false }
+        guard video.deferDate == nil, video.downloadedDate == nil else { return false }
+        guard video.keepIntro == nil, video.keepOutro == nil else { return false }
+        guard (video.elapsedSeconds ?? 0) <= 0 else { return false }
+        guard video.allChapterRows.isEmpty else { return false }
+        return video.tags?.isEmpty ?? true
     }
 }
 

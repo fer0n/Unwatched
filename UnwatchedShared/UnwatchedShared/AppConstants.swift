@@ -139,8 +139,28 @@ public struct Const {
     /// Same for subscriptions added during onboarding, lower so a first inbox stays skimmable
     public static let triageOnboardingSubs = 3
 
-    /// Episodes kept from a podcast feed.
-    public static let podcastEpisodeLimit = 50
+    /// Episodes triaged from a new podcast subscription; lower than `triageNewSubs` because the
+    /// rest of the catalogue is in `PodcastEpisodeCache`.
+    public static let podcastTriageNewSubs = 3
+
+    /// Episodes parsed from a podcast feed on a regular refresh, enough to triage what's new.
+    public static let podcastRefreshEpisodeLimit = 20
+
+    /// Episodes parsed from a feed when caching a show's catalogue, see `PodcastEpisodeCache`.
+    public static let podcastEpisodeCacheLimit = 500
+
+    /// Episodes a show's list renders before paging in more.
+    public static let podcastEpisodePageSize = 20
+
+    /// Cached episodes a library search can turn up alongside the stored videos.
+    public static let podcastEpisodeSearchLimit = 50
+
+    /// Episodes listed for a show that isn't in the library yet.
+    public static let podcastPreviewEpisodeLimit = 50
+
+    /// How long a podcast episode's `Video` row survives after the user's last state on it went
+    /// away, see `deleteStatelessPodcastEpisodes`.
+    public static let podcastStatelessRowGraceDays = 30
 
     /// Hours of queue that can be kept downloaded; 0 is off, -1 unlimited
     public static let podcastDownloadHourOptions = [0, 5, 10, 50, 100, -1]
@@ -362,6 +382,7 @@ public struct Const {
     public static let autoDeleteWatchedVideos = "autoDeleteWatchedVideos"
     public static let autoDeleteOrphanedVideos = "autoDeleteOrphanedVideos"
     public static let autoDeleteInboxVideosLimit = "autoDeleteInboxVideosLimit"
+    public static let cleanupPodcastEpisodes = "cleanupPodcastEpisodes"
 
     /// Persisted history tokens, keyed by model type name
     public static let historyTokens = "historyTokens"

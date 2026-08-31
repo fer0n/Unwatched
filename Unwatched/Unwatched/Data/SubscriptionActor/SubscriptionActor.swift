@@ -306,6 +306,9 @@ actor SubscriptionActor: SharedContextActor {
 
     private func deleteSubscriptions(_ subscriptions: [Subscription]) throws {
         for subscription in subscriptions {
+            if subscription.isPodcast, let feedUrl = subscription.link {
+                PodcastEpisodeCache.delete(feedUrl: feedUrl)
+            }
             var hasVideosLeft = false
             for video in subscription.videos ?? [] {
                 if video.queueEntry == nil &&

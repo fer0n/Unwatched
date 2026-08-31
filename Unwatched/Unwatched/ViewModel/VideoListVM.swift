@@ -15,6 +15,13 @@ import OSLog
     @MainActor
     var videos = [SendableVideo]()
 
+    @ObservationIgnored @MainActor
+    private var cachedEpisodeMatches = [SendableVideo]()
+
+    /// Paging offset for the stored rows alone: `videos` can also hold cached episodes.
+    @ObservationIgnored @MainActor
+    private var loadedVideoCount = 0
+
     @MainActor
     var isLoading = true
 
@@ -36,7 +43,54 @@ import OSLog
     func setSearchText(_ searchText: String) {
         filter = VideoListView.getVideoFilter(searchText: searchText)
         Task {
+            cachedEpisodeMatches = await loadCachedEpisodeMatches(searchText)
             await updateData(force: true)
+        }
+    }
+
+    /// Podcast episodes only exist as `Video` rows once the user acts on one, so a library search
+    /// has to look through `PodcastEpisodeCache` as well to find the rest of a show's catalogue.
+    @MainActor
+    private func loadCachedEpisodeMatches(_ searchText: String) async -> [SendableVideo] {
+        guard !searchText.isEmpty else { return [] }
+        let matches = await Task.detached {
+            PodcastEpisodeCache.search(searchText, limit: Const.podcastEpisodeSearchLimit)
+        }.value
+        guard !matches.isEmpty else { return [] }
+
+        let shows = podcastShowsByFeedUrl()
+        return matches.compactMap { match in
+            guard let show = shows[match.feedUrl] else { return nil }
+            var episode = match.episode
+            episode.subscription = show
+            return episode
+        }
+    }
+
+    @MainActor
+    private func podcastShowsByFeedUrl() -> [URL: SendableSubscription] {
+        let fetch = FetchDescriptor<Subscription>(predicate: #Predicate { $0.isPodcast == true })
+        let subs = (try? DataProvider.mainContext.fetch(fetch)) ?? []
+        var result = [URL: SendableSubscription]()
+        for sub in subs {
+            if let link = sub.link {
+                result[link] = sub.toExport
+            }
+        }
+        return result
+    }
+
+    @MainActor
+    private func mergeCachedEpisodes() {
+        guard !cachedEpisodeMatches.isEmpty else { return }
+        var known = Set(videos.map(\.youtubeId))
+        var merged = videos
+        for episode in cachedEpisodeMatches where !known.contains(episode.youtubeId) {
+            known.insert(episode.youtubeId)
+            merged.append(episode)
+        }
+        videos = merged.sorted {
+            ($0.publishedDate ?? .distantPast) > ($1.publishedDate ?? .distantPast)
         }
     }
 
@@ -55,12 +109,14 @@ import OSLog
             limit ?? initialBatchSize
         )
 
+        loadedVideoCount = skip == 0 ? newVideos.count : loadedVideoCount + newVideos.count
         withAnimation {
             if skip != 0 {
                 videos.append(contentsOf: newVideos)
             } else {
                 videos = newVideos
             }
+            mergeCachedEpisodes()
         }
     }
 
@@ -90,7 +146,7 @@ import OSLog
                 Log.warning("updateVideo failed: no model found; removing video")
                 withAnimation {
                     if let index = videos.firstIndex(where: { $0.persistentId == persistentId }) {
-                        videos.remove(at: index)
+                        removeVideo(at: index)
                     }
                 }
                 return
@@ -99,7 +155,7 @@ import OSLog
             withAnimation {
                 if let index = videos.firstIndex(where: { $0.persistentId == persistentId }) {
                     if let filter, !((try? filter.evaluate(updatedVideo)) ?? false) {
-                        videos.remove(at: index)
+                        removeVideo(at: index)
                     } else if let sendable = updatedVideo.toExportWithSubscription {
                         videos[index] = sendable
                     }
@@ -112,6 +168,14 @@ import OSLog
                 }
             }
         }
+    }
+
+    @MainActor
+    private func removeVideo(at index: Int) {
+        if videos[index].persistentId != nil {
+            loadedVideoCount -= 1
+        }
+        videos.remove(at: index)
     }
 
     @MainActor
@@ -155,7 +219,7 @@ import OSLog
             return
         }
 
-        let skip = videos.count
+        let skip = loadedVideoCount
         let limit = pageSize
 
         Task {

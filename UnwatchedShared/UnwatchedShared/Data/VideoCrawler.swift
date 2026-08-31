@@ -43,11 +43,13 @@ public struct VideoCrawler {
     public static func loadVideosFromRSS(url: URL) async throws -> [SendableVideo] {
         let data = try await fetchFeedData(url)
         if PodcastFeedParser.isPodcastFeed(data) {
-            return try PodcastService.parseFeed(
+            let episodes = try PodcastService.parseFeed(
                 data,
                 feedUrl: url,
-                limitEpisodes: Const.podcastEpisodeLimit
+                limitEpisodes: Const.podcastRefreshEpisodeLimit
             ).episodes
+            PodcastEpisodeCache.store(episodes, feedUrl: url)
+            return episodes
         }
         let rssParserDelegate = parseFeedData(data: data, limitVideos: nil)
         guard hasUsableResult(rssParserDelegate) else {
@@ -61,6 +63,20 @@ public struct VideoCrawler {
             }
             return video
         }
+    }
+
+    /// Parses a podcast feed in full into the local episode cache, for the show's list to page through.
+    @discardableResult
+    public static func backfillPodcastEpisodes(feedUrl: URL) async throws -> Int {
+        let data = try await fetchFeedData(feedUrl)
+        guard PodcastFeedParser.isPodcastFeed(data) else { return 0 }
+        let episodes = try PodcastService.parseFeed(
+            data,
+            feedUrl: feedUrl,
+            limitEpisodes: Const.podcastEpisodeCacheLimit
+        ).episodes
+        PodcastEpisodeCache.store(episodes, feedUrl: feedUrl, replaceExisting: true)
+        return episodes.count
     }
 
     public static func loadSubscriptionFromRSS(feedUrl: URL) async throws -> SendableSubscription {
