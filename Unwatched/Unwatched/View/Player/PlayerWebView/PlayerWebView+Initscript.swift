@@ -600,34 +600,56 @@ extension PlayerWebView {
                     }
                 }
             }
-            sendError("No original audio track found");
         }
 
-        async function handleAudioTrack() {
+        // Retries: under AirPlay HD (desktop embed page) the audio track list can still be
+        // empty right at loadedmetadata, and YouTube may only settle on a (possibly dubbed)
+        // default track a moment later. A single check right away misses that, so keep
+        // checking for a few seconds instead of giving up after one attempt. This does not
+        // delay playback — it runs fire-and-forget alongside it.
+        const audioTrackRetryDelaysMs = [500, 1000, 2000, 4000];
+        function handleAudioTrack(attempt = 0) {
             const player = document.getElementById("movie_player");
-            const tracks = player.getAvailableAudioTracks();
-            const currentTrack = player.getAudioTrack();
-            const captionTrack = getCaptionTrack(currentTrack);
-            const transcriptUrl = captionTrack?.url;
-            sendMessage("transcriptUrl", transcriptUrl ?? "");
+            const tracks = player?.getAvailableAudioTracks();
+            const currentTrack = player?.getAudioTrack();
+
+            if (attempt === 0) {
+                const captionTrack = getCaptionTrack(currentTrack);
+                sendMessage("transcriptUrl", captionTrack?.url ?? "");
+            }
 
             if (!originalAudio) {
                 return;
             }
-
             if (!tracks || !currentTrack) {
+                retryHandleAudioTrack(attempt);
                 return;
             }
             const originalTrack = getOriginalTrack(tracks);
-            if (originalTrack) {
-                if (`${originalTrack}` === `${currentTrack}`) {
-                    return;
-                }
-                const isAudioTrackSet = await player.setAudioTrack(originalTrack);
-                if (isAudioTrackSet && enableLogging) {
-                    sendMessage('originalAudioTrack', originalTrack.name);
-                }
+            if (!originalTrack) {
+                retryHandleAudioTrack(attempt);
+                return;
             }
+            if (`${originalTrack}` === `${currentTrack}`) {
+                return;
+            }
+            player.setAudioTrack(originalTrack).then((isAudioTrackSet) => {
+                if (isAudioTrackSet) {
+                    if (enableLogging) {
+                        sendMessage('originalAudioTrack', originalTrack.name);
+                    }
+                } else {
+                    retryHandleAudioTrack(attempt);
+                }
+            });
+        }
+
+        function retryHandleAudioTrack(attempt) {
+            if (attempt >= audioTrackRetryDelaysMs.length) {
+                sendError("No original audio track found");
+                return;
+            }
+            setTimeout(() => handleAudioTrack(attempt + 1), audioTrackRetryDelaysMs[attempt]);
         }
 
         function getCaptionTrack(currentTrack) {
