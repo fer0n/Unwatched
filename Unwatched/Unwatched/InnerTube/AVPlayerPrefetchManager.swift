@@ -20,6 +20,8 @@ final class AVPlayerPrefetchManager {
         /// loaded (manifest/variant playlists, moov, live connections, cached segments).
         let asset: AVURLAsset
         let playerInfo: PlayerInfo?
+        /// Which InnerTube client `playerInfo` came from; `nil` when `playerInfo` is nil.
+        let client: String?
         let headers: [String: String]
         let originalAudioLanguage: String
         let isWebViewHLS: Bool
@@ -240,7 +242,7 @@ extension AVPlayerPrefetchManager {
             let asset = AVURLAsset(url: hlsURL, options: ["AVURLAssetHTTPHeaderFieldsKey": headers])
             Log.info("[AVPlayerView] prefetch built asset (HLS/\(hit.client)): \(videoId)")
             return PrefetchResult(videoId: videoId, asset: asset,
-                                  playerInfo: hit.info, headers: headers,
+                                  playerInfo: hit.info, client: hit.client, headers: headers,
                                   originalAudioLanguage: hit.info.originalAudioLanguage,
                                   isWebViewHLS: false, isMuxed: false, masterURL: nil, nSolver: nil,
                                   poToken: nil, proxyLoader: nil, audioTracks: [],
@@ -260,7 +262,7 @@ extension AVPlayerPrefetchManager {
                                    options: ["AVURLAssetHTTPHeaderFieldsKey": ["User-Agent": userAgent]])
             Log.info("[AVPlayerView] prefetch built asset (muxed/\(hit.client)): \(videoId)")
             return PrefetchResult(videoId: videoId, asset: asset,
-                                  playerInfo: hit.info, headers: [:],
+                                  playerInfo: hit.info, client: hit.client, headers: [:],
                                   originalAudioLanguage: hit.info.originalAudioLanguage,
                                   isWebViewHLS: false, isMuxed: true, masterURL: nil, nSolver: nil,
                                   poToken: nil, proxyLoader: nil, audioTracks: [],
@@ -344,7 +346,7 @@ extension AVPlayerPrefetchManager {
         let audioTracks = parseHLSAudioLanguages(from: manifestText)
         Log.info("[AVPlayerView] prefetch built asset (wkHLS): \(videoId)")
         return PrefetchResult(videoId: videoId, asset: asset,
-                              playerInfo: playerInfo, headers: [:],
+                              playerInfo: playerInfo, client: nil, headers: [:],
                               originalAudioLanguage: originalAudioLanguage,
                               isWebViewHLS: true, isMuxed: false, masterURL: url, nSolver: nSolver,
                               poToken: poToken, proxyLoader: proxyLoader, audioTracks: audioTracks,

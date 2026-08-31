@@ -336,7 +336,7 @@ extension AVPlayerViewModel {
                 // rqh=1 stalls loadTracks unless the client is CDN-exempt (AndroidVR).
                 Log.info("[AVPlayerView] \(label): adaptive URLs are rqh=1 and client not CDN-exempt — skipping composition")
             } else {
-                if await playAdaptiveComposition(videoId: videoId, info: info) { return true }
+                if await playAdaptiveComposition(videoId: videoId, info: info, client: client) { return true }
                 if Task.isCancelled || player.video?.youtubeId != videoId { return false }
             }
         }
@@ -370,7 +370,7 @@ extension AVPlayerViewModel {
         isUsingWebViewHLS = false
         muxedFallbackStartedAt = nil
         player.availableVideoQualities = qualities
-        applyTranscriptUrl(from: info)
+        applyTranscriptUrl(from: info, client: client)
         applyAspectRatioFromFormats(info)
 
         return await attemptItem(item, videoId: videoId)
@@ -379,7 +379,7 @@ extension AVPlayerViewModel {
     /// Composes a video-only + audio-only adaptive stream pair via `AVMutableComposition`.
     /// VP9 is excluded (decode failures on some Apple hardware) and H.264 preferred.
     @MainActor
-    func playAdaptiveComposition(videoId: String, info: PlayerInfo) async -> Bool {
+    func playAdaptiveComposition(videoId: String, info: PlayerInfo, client: String) async -> Bool {
         let videoURL: URL? = {
             let candidates = info.formats.filter {
                 $0.mimeType.hasPrefix("video/mp4") &&
@@ -459,7 +459,7 @@ extension AVPlayerViewModel {
             isUsingWebViewHLS = false
             muxedFallbackStartedAt = nil
             player.availableVideoQualities = qualities
-            applyTranscriptUrl(from: info)
+            applyTranscriptUrl(from: info, client: client)
             applyAspectRatioFromFormats(info)
             return await attemptItem(item, videoId: videoId)
         } catch {
@@ -490,7 +490,7 @@ extension AVPlayerViewModel {
         isUsingWebViewHLS = false
         muxedFallbackStartedAt = Date()
         player.availableVideoQualities = qualities
-        applyTranscriptUrl(from: info)
+        applyTranscriptUrl(from: info, client: client)
         applyAspectRatioFromFormats(info)
 
         return await attemptItem(item, videoId: videoId)

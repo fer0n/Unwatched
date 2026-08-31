@@ -55,6 +55,7 @@ final class AVPlayerViewModel: PlayerBackend {
     @ObservationIgnored var fetchedArtworkUrls: [URL] = []
     @ObservationIgnored var seekAnchor = SeekAnchor()
     @ObservationIgnored var currentPlayerInfo: PlayerInfo?
+    @ObservationIgnored var transcriptConfirmationVideoId: String?
     @ObservationIgnored var currentHLSHeaders: [String: String] = [:]
     @ObservationIgnored var isUsingComposition = false
     @ObservationIgnored var isUsingWebViewHLS = false
@@ -502,7 +503,7 @@ final class AVPlayerViewModel: PlayerBackend {
             )
         }
         if let info = pre.playerInfo {
-            applyTranscriptUrl(from: info)
+            applyTranscriptUrl(from: info, client: pre.client ?? "iOS")
             applyAspectRatioFromFormats(info)
         }
         // Fresh item from the warmed asset — see `PrefetchResult.asset`.
