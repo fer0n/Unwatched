@@ -314,7 +314,19 @@
         }
       }
     },
+    "^[%lld syncable entry](inflect: true)" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "^[%lld syncable entry](inflect: true)"
+          }
+        }
+      }
+    },
     "^[%lld video](inflect: true) available" : {
+      "extractionState" : "stale",
       "localizations" : {
         "de" : {
           "stringUnit" : {
@@ -344,17 +356,6 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "^[%lld Film](inflect: true) dostępny"
-          }
-        }
-      }
-    },
-    "^[%lld syncable entry](inflect: true)" : {
-      "extractionState" : "manual",
-      "localizations" : {
-        "en" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "^[%lld syncable entry](inflect: true)"
           }
         }
       }

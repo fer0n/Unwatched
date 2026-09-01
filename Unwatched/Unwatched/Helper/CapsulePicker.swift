@@ -39,6 +39,22 @@ struct CapsulePicker<T: Hashable>: View {
     }
 }
 
+/// The single-line label of a capsule button: an icon and a value on one line.
+struct CapsuleLabel<Icon: View>: View {
+    var text: String
+    @ViewBuilder var icon: Icon
+
+    var body: some View {
+        HStack(spacing: 3) {
+            icon
+            Text(text)
+        }
+        .fontWidth(.condensed)
+        .fontWeight(.semibold)
+        .padding(10)
+    }
+}
+
 struct CapsuleMenuLabel: View {
     var systemImage: String
     var menuLabel: LocalizedStringKey

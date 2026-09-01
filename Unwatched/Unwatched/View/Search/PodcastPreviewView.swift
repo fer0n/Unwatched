@@ -103,8 +103,10 @@ struct PodcastPreviewView: View {
         return ScrollView(.horizontal, showsIndicators: false) {
             HStack {
                 subscribeButton
+                    .frame(maxHeight: .infinity)
 
                 SubscriptionTagsSetting(subscription: subscription)
+                    .frame(maxHeight: .infinity)
                     .opacity(isSubscribed ? 1 : 0)
                     .disabled(!isSubscribed)
                     .allowsHitTesting(isSubscribed)
@@ -119,20 +121,16 @@ struct PodcastPreviewView: View {
         Button {
             Task { await subManager.togglePodcastSubscription(show) }
         } label: {
-            HStack(spacing: 3) {
+            CapsuleLabel(text: subManager.isSubscribedSuccess == true
+                            ? String(localized: "subscribed")
+                            : String(localized: "subscribe")) {
                 if subManager.isLoading {
                     ProgressView()
                 } else {
                     Image(systemName: subManager.isSubscribedSuccess == true ? "checkmark" : "plus")
                         .contentTransition(.symbolEffect(.replace))
                 }
-                Text(subManager.isSubscribedSuccess == true
-                        ? String(localized: "subscribed")
-                        : String(localized: "subscribe"))
             }
-            .fontWidth(.condensed)
-            .fontWeight(.semibold)
-            .padding(10)
         }
         .buttonStyle(CapsuleButtonStyle())
         .disabled(subManager.isLoading || show.link == nil)

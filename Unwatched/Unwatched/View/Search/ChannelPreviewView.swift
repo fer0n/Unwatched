@@ -175,20 +175,16 @@ struct ChannelPreviewView: View {
                 Button {
                     Task { await toggleSubscribe() }
                 } label: {
-                    HStack(spacing: 3) {
+                    CapsuleLabel(text: subManager.isSubscribedSuccess == true
+                                    ? String(localized: "subscribed")
+                                    : String(localized: "subscribe")) {
                         if subManager.isLoading {
                             ProgressView()
                         } else {
                             Image(systemName: subManager.isSubscribedSuccess == true ? "checkmark" : "plus")
                                 .contentTransition(.symbolEffect(.replace))
                         }
-                        Text(subManager.isSubscribedSuccess == true
-                                ? String(localized: "subscribed")
-                                : String(localized: "subscribe"))
                     }
-                    .fontWidth(.condensed)
-                    .fontWeight(.semibold)
-                    .padding(10)
                 }
                 .buttonStyle(CapsuleButtonStyle())
                 .disabled(subManager.isLoading || (sub.youtubeChannelId == nil && sub.youtubePlaylistId == nil))

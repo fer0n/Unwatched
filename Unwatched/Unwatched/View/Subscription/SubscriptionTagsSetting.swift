@@ -49,11 +49,9 @@ struct SubscriptionTagsSetting: View {
             }
         } label: {
             let assigned = assignedTags
-            CapsuleMenuLabel(
-                systemImage: assigned.count == 1 ? assigned[0].displaySymbol : Const.filterTagSF,
-                menuLabel: "tags",
-                text: label(assigned)
-            )
+            CapsuleLabel(text: label(assigned)) {
+                Image(systemName: assigned.count == 1 ? assigned[0].displaySymbol : Const.filterTagSF)
+            }
         }
         .buttonStyle(CapsuleButtonStyle(primary: false))
         .sheet(item: $newTag) { edit in
