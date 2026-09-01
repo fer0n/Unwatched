@@ -20643,31 +20643,31 @@
         "de" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "SponsorBlock Kapitel"
+            "value" : "Kapitel abrufen"
           }
         },
         "en" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "SponsorBlock Chapters"
+            "value" : "Fetch Chapters"
           }
         },
         "es" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Capítulos de SponsorBlock"
+            "value" : "Obtener capítulos"
           }
         },
         "fr" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Chapitres SponsorBlock"
+            "value" : "Récupérer les chapitres"
           }
         },
         "pl" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Rozdziały SponsorBlock"
+            "value" : "Pobierz rozdziały"
           }
         }
       }
@@ -20711,31 +20711,31 @@
         "de" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Falls verfügbar, werden SponsorBlock-Kapitel angezeigt. Wenn ein Video bereits Kapitel hat, werden je nach Einstellung unten weiterhin passende Segmente ergänzt. Hat ein Video keine Kapitel, werden stattdessen die SponsorBlock-Kapitel verwendet."
+            "value" : "Ruft SponsorBlock-Kapitel für YouTube-Videos automatisch ab: Sie werden je nach den Einstellungen unten in die Kapitel des Videos eingefügt oder eigenständig verwendet, falls es keine hat. Bereits vorhandene Kapitel werden weiterhin angezeigt, auch wenn dies deaktiviert ist – die Einstellung wirkt sich nur darauf aus, ob neue abgerufen werden."
           }
         },
         "en" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "If available, SponsorBlock chapters will be shown. When a video already has chapters, matching segments will still be added based on the settings below. If a video has no chapters, SponsorBlock chapters will be used instead."
+            "value" : "Automatically fetches SponsorBlock chapters for YouTube videos: merged into a video's chapters based on the settings below, or used on their own if it has none. Any chapters that already exist keep showing even if this is off — it only affects whether new ones get fetched."
           }
         },
         "es" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Si está disponible, se mostrarán los capítulos de SponsorBlock. Si un vídeo ya tiene capítulos, se añadirán igualmente los segmentos correspondientes según los ajustes de abajo. Si no tiene capítulos, se usarán los de SponsorBlock en su lugar."
+            "value" : "Obtiene automáticamente los capítulos de SponsorBlock para vídeos de YouTube: se combinan con los capítulos del vídeo según los ajustes de abajo, o se usan por sí solos si no tiene ninguno. Los capítulos que ya existen se siguen mostrando aunque esto esté desactivado; el ajuste solo afecta a si se obtienen otros nuevos."
           }
         },
         "fr" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Si disponible, les chapitres SponsorBlock seront affichés. Si une vidéo possède déjà des chapitres, les segments correspondants seront quand même ajoutés selon les réglages ci-dessous. Si elle n’a aucun chapitre, ceux de SponsorBlock seront utilisés à la place."
+            "value" : "Récupère automatiquement les chapitres SponsorBlock pour les vidéos YouTube : ils sont fusionnés avec les chapitres de la vidéo selon les réglages ci-dessous, ou utilisés seuls si elle n’en a aucun. Les chapitres déjà existants continuent de s’afficher même si c’est désactivé ; ce réglage ne concerne que la récupération de nouveaux chapitres."
           }
         },
         "pl" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Jeśli dostępne, zostaną wyświetlone rozdziały SponsorBlock. Jeśli wideo ma już rozdziały, pasujące segmenty zostaną mimo to dodane zgodnie z ustawieniami poniżej. Jeśli wideo nie ma rozdziałów, zostaną użyte rozdziały SponsorBlock."
+            "value" : "Automatycznie pobiera rozdziały SponsorBlock dla filmów z YouTube: są łączone z rozdziałami filmu zgodnie z ustawieniami poniżej lub używane samodzielnie, jeśli film ich nie ma. Rozdziały, które już istnieją, nadal się wyświetlają, nawet jeśli to ustawienie jest wyłączone — wpływa ono tylko na pobieranie nowych."
           }
         }
       }
