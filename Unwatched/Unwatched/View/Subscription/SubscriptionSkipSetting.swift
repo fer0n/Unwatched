@@ -16,7 +16,7 @@ enum SkipEdge {
     }
 
     var systemImage: String {
-        self == .intro ? "forward.end.circle" : "forward.to.line.circle"
+        self == .intro ? "forward.end.circle" : "arrow.forward.to.line.circle"
     }
 
     var seconds: ReferenceWritableKeyPath<Subscription, Double?> {
