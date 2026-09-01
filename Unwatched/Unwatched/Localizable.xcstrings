@@ -348,6 +348,17 @@
         }
       }
     },
+    "^[%lld syncable entry](inflect: true)" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "^[%lld syncable entry](inflect: true)"
+          }
+        }
+      }
+    },
     "$browserPlaybackFooter" : {
       "localizations" : {
         "de" : {

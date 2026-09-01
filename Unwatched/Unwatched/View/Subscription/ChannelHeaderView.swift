@@ -65,6 +65,7 @@ struct ChannelHeaderView: View {
                         }
                 }
 
+                #if DEBUG
                 if let availableVideosText {
                     let hasOtherInfos = userName != nil || hasImage || author != nil
                     Text(availableVideosText)
@@ -73,6 +74,7 @@ struct ChannelHeaderView: View {
                         .foregroundStyle(.secondary)
                         .padding(.leading, hasOtherInfos ? 0 : 10)
                 }
+                #endif
             }
         }
         .padding(.bottom, 10)
@@ -97,7 +99,7 @@ struct ChannelHeaderView: View {
     private var availableVideosText: String? {
         guard let videoCount else { return nil }
         return String(
-            AttributedString(localized: "^[\(videoCount) video](inflect: true) available").characters
+            AttributedString(localized: "^[\(videoCount) syncable entry](inflect: true)").characters
         )
     }
 }
