@@ -42,6 +42,8 @@
 		88AA40072F2000000000D007 /* PreviousVideoChapter.swift in Sources */ = {isa = PBXBuildFile; fileRef = 88F85F4C2E100AD000FB15A1 /* PreviousVideoChapter.swift */; };
 		88AA40082F2000000000D008 /* AddSubscription.swift in Sources */ = {isa = PBXBuildFile; fileRef = 881EEE542D02F0D40028EAF8 /* AddSubscription.swift */; };
 		88AA40092F2000000000D009 /* GetCurrentVideo.swift in Sources */ = {isa = PBXBuildFile; fileRef = 887E82AB2CD8FC8B00B196EA /* GetCurrentVideo.swift */; };
+		FE8A33BC936977DFEC5CE9B6 /* TranscriptError.swift in Sources */ = {isa = PBXBuildFile; fileRef = 12DD3D7D2C5077368D185474 /* TranscriptError.swift */; };
+		07896B6B2697D19AC3F00AEB /* TranscriptResult.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1AA236FA6C1832F0339BC5A6 /* TranscriptResult.swift */; };
 		88AA40102F2000000000D010 /* setChapters.swift in Sources */ = {isa = PBXBuildFile; fileRef = 88CD909F2E2BC74400CD756D /* setChapters.swift */; };
 		88AA40112F2000000000D011 /* WatchInUnwatched.swift in Sources */ = {isa = PBXBuildFile; fileRef = 887E82AD2CD8FD2F00B196EA /* WatchInUnwatched.swift */; };
 		88AA40122F2000000000D012 /* SetContinuousPlay.swift in Sources */ = {isa = PBXBuildFile; fileRef = 880882062E564EBF008C38DA /* SetContinuousPlay.swift */; };
@@ -370,6 +372,8 @@
 		887E82AA2CD8FC4600B196EA /* VideoEntity.swift in Sources */ = {isa = PBXBuildFile; fileRef = 887E82A92CD8FC4600B196EA /* VideoEntity.swift */; };
 		88AA10222F0000000000A022 /* TagEntity.swift in Sources */ = {isa = PBXBuildFile; fileRef = 88AA10212F0000000000A021 /* TagEntity.swift */; };
 		887E82AC2CD8FC8B00B196EA /* GetCurrentVideo.swift in Sources */ = {isa = PBXBuildFile; fileRef = 887E82AB2CD8FC8B00B196EA /* GetCurrentVideo.swift */; };
+		8C6068DF254F0F53C84845B9 /* TranscriptError.swift in Sources */ = {isa = PBXBuildFile; fileRef = 12DD3D7D2C5077368D185474 /* TranscriptError.swift */; };
+		465F2A4BAB2911DE30EE8B61 /* TranscriptResult.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1AA236FA6C1832F0339BC5A6 /* TranscriptResult.swift */; };
 		887E82AE2CD8FD2F00B196EA /* WatchInUnwatched.swift in Sources */ = {isa = PBXBuildFile; fileRef = 887E82AD2CD8FD2F00B196EA /* WatchInUnwatched.swift */; };
 		887E82B02CD8FD8800B196EA /* Notification.swift in Sources */ = {isa = PBXBuildFile; fileRef = 887E82AF2CD8FD8500B196EA /* Notification.swift */; };
 		887E82B12CD8FD8800B196EA /* Notification.swift in Sources */ = {isa = PBXBuildFile; fileRef = 887E82AF2CD8FD8500B196EA /* Notification.swift */; };
@@ -1281,6 +1285,8 @@
 		887E82A92CD8FC4600B196EA /* VideoEntity.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = VideoEntity.swift; sourceTree = "<group>"; };
 		88AA10212F0000000000A021 /* TagEntity.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TagEntity.swift; sourceTree = "<group>"; };
 		887E82AB2CD8FC8B00B196EA /* GetCurrentVideo.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = GetCurrentVideo.swift; sourceTree = "<group>"; };
+		12DD3D7D2C5077368D185474 /* TranscriptError.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TranscriptError.swift; sourceTree = "<group>"; };
+		1AA236FA6C1832F0339BC5A6 /* TranscriptResult.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TranscriptResult.swift; sourceTree = "<group>"; };
 		887E82AD2CD8FD2F00B196EA /* WatchInUnwatched.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = WatchInUnwatched.swift; sourceTree = "<group>"; };
 		887E82AF2CD8FD8500B196EA /* Notification.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Notification.swift; sourceTree = "<group>"; };
 		887EB2DD2CFE167600F9D517 /* MenuSheetDetents.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MenuSheetDetents.swift; sourceTree = "<group>"; };
@@ -2106,6 +2112,8 @@
 				88F85F4C2E100AD000FB15A1 /* PreviousVideoChapter.swift */,
 				881EEE542D02F0D40028EAF8 /* AddSubscription.swift */,
 				887E82AB2CD8FC8B00B196EA /* GetCurrentVideo.swift */,
+				12DD3D7D2C5077368D185474 /* TranscriptError.swift */,
+				1AA236FA6C1832F0339BC5A6 /* TranscriptResult.swift */,
 				88CD909D2E2BA56300CD756D /* getTranscript.swift */,
 				88CD909F2E2BC74400CD756D /* setChapters.swift */,
 				887E82AD2CD8FD2F00B196EA /* WatchInUnwatched.swift */,
@@ -2944,6 +2952,8 @@
 				88AA40072F2000000000D007 /* PreviousVideoChapter.swift in Sources */,
 				88AA40082F2000000000D008 /* AddSubscription.swift in Sources */,
 				88AA40092F2000000000D009 /* GetCurrentVideo.swift in Sources */,
+				FE8A33BC936977DFEC5CE9B6 /* TranscriptError.swift in Sources */,
+				07896B6B2697D19AC3F00AEB /* TranscriptResult.swift in Sources */,
 				88AA40102F2000000000D010 /* setChapters.swift in Sources */,
 				88AA40112F2000000000D011 /* WatchInUnwatched.swift in Sources */,
 				88AA40122F2000000000D012 /* SetContinuousPlay.swift in Sources */,
@@ -3703,6 +3713,8 @@
 				881EEE552D02F0D40028EAF8 /* AddSubscription.swift in Sources */,
 				88373C0F2C8AF60600ACBB3B /* NextChapterButton.swift in Sources */,
 				887E82AC2CD8FC8B00B196EA /* GetCurrentVideo.swift in Sources */,
+				8C6068DF254F0F53C84845B9 /* TranscriptError.swift in Sources */,
+				465F2A4BAB2911DE30EE8B61 /* TranscriptResult.swift in Sources */,
 				88EE64BF2E64A1B700A3DD36 /* ContextMenuAction.swift in Sources */,
 				8804A3EF2B8B88A000D3F4F1 /* VideoListItemDetails.swift in Sources */,
 				CD6681462F1D8B9200E8DA73 /* BackgroundTransparentEffect.swift in Sources */,
