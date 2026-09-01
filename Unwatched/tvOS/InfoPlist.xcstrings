@@ -13,7 +13,7 @@
         },
         "en" : {
           "stringUnit" : {
-            "state" : "new",
+            "state" : "translated",
             "value" : "Unwatched"
           }
         },
@@ -49,7 +49,7 @@
         },
         "en" : {
           "stringUnit" : {
-            "state" : "new",
+            "state" : "translated",
             "value" : "UnwatchedTV"
           }
         },
