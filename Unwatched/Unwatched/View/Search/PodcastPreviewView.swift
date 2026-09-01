@@ -136,6 +136,7 @@ struct PodcastPreviewView: View {
         }
         .buttonStyle(CapsuleButtonStyle())
         .disabled(subManager.isLoading || show.link == nil)
+        .subscribeErrorPopover(subManager)
     }
 
     @ViewBuilder

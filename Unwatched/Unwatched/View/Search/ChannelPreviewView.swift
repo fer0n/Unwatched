@@ -192,6 +192,7 @@ struct ChannelPreviewView: View {
                 }
                 .buttonStyle(CapsuleButtonStyle())
                 .disabled(subManager.isLoading || (sub.youtubeChannelId == nil && sub.youtubePlaylistId == nil))
+                .subscribeErrorPopover(subManager)
 
                 if browserDisplayMode != .disabled, let youtubeUrl {
                     Button {
@@ -293,6 +294,8 @@ struct ChannelPreviewView: View {
         guard sub.youtubeChannelId != nil || sub.youtubePlaylistId != nil else { return }
         if subManager.isSubscribedSuccess == true {
             await subManager.unsubscribe(subscriptionInfo)
+        } else if !isLoading && !loadFailed && subscriptionInfo.title != nil {
+            await subManager.addWithoutRSS(subscriptionInfo)
         } else {
             await subManager.addSubscription(subscriptionInfo)
         }
