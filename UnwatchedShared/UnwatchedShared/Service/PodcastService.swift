@@ -100,6 +100,7 @@ public enum PodcastService {
         episodeId: String
     ) async -> [SendableChapter]? {
         let asset = AVURLAsset(url: mediaUrl)
+        var found: [SendableChapter]?
         do {
             let groups = try await asset.loadChapterMetadataGroups(
                 bestMatchingPreferredLanguages: Locale.preferredLanguages
@@ -131,7 +132,7 @@ public enum PodcastService {
                 )
             }
             if chapters.count > 1 {
-                return ChapterService.updateDurationAndEndTime(
+                found = ChapterService.updateDurationAndEndTime(
                     in: chapters.sorted { $0.startTime < $1.startTime },
                     videoDuration: duration
                 )
@@ -140,11 +141,33 @@ public enum PodcastService {
             Log.info("embedded chapter groups unavailable: \(error.localizedDescription)")
         }
 
-        // AVFoundation only reads chapter tracks (MPEG-4).
-        guard let tagged = await ID3ChapterReader.chapters(from: mediaUrl, episodeId: episodeId) else {
-            return nil
+        // AVFoundation reads chapter tracks (MPEG-4) — and an MP3's `CHAP` marks, but not the pictures inside
+        // them, so a set that came back without artwork is worth reading out of the tag directly.
+        guard found?.contains(where: { $0.imageUrl != nil }) != true,
+              let tagged = await ID3ChapterReader.chapters(from: mediaUrl, episodeId: episodeId),
+              found == nil || tagged.contains(where: { $0.imageUrl != nil }) else {
+            return found
         }
         return ChapterService.updateDurationAndEndTime(in: tagged, videoDuration: duration)
+    }
+
+    /// The artwork of `source` moved onto the chapters it lines up with, matched by start time. A show that
+    /// maintains a `podcast:chapters` file often puts the pictures only in the episode file itself.
+    public static func mergingImages(
+        from source: [SendableChapter],
+        into chapters: [SendableChapter],
+        tolerance: Double = 1
+    ) -> [SendableChapter] {
+        chapters.map { chapter in
+            guard chapter.imageUrl == nil else { return chapter }
+            let match = source
+                .filter { abs($0.startTime - chapter.startTime) <= tolerance && $0.imageUrl != nil }
+                .min { abs($0.startTime - chapter.startTime) < abs($1.startTime - chapter.startTime) }
+            guard let imageUrl = match?.imageUrl else { return chapter }
+            var merged = chapter
+            merged.imageUrl = imageUrl
+            return merged
+        }
     }
 
     /// The inline Podlove markers an item carries, re-read from the feed.

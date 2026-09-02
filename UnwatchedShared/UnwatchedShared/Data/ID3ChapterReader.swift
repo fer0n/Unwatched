@@ -163,8 +163,7 @@ public enum ID3ChapterReader {
         let rest = Array(payload.dropFirst())
         guard let mimeEnd = rest.firstIndex(of: 0), mimeEnd + 1 < rest.count else { return nil }
         let afterType = Array(rest.dropFirst(mimeEnd + 2))
-        let terminator: [UInt8] = encoding == 1 || encoding == 2 ? [0, 0] : [0]
-        guard let split = firstRange(of: terminator, in: afterType) else { return nil }
+        guard let split = textTerminator(after: encoding, in: afterType) else { return nil }
         let image = afterType.dropFirst(split.upperBound)
         return image.isEmpty ? nil : Data(image)
     }
@@ -208,14 +207,13 @@ public enum ID3ChapterReader {
     private static func decodeUserUrl(_ payload: [UInt8]) -> String? {
         guard let encoding = payload.first else { return nil }
         let rest = Array(payload.dropFirst())
-        let terminator: [UInt8] = encoding == 1 || encoding == 2 ? [0, 0] : [0]
-        guard let split = firstRange(of: terminator, in: rest) else { return nil }
+        guard let split = textTerminator(after: encoding, in: rest) else { return nil }
         let url = Array(rest.dropFirst(split.upperBound))
         return decode(url, encoding: 0)?.trimmingCharacters(in: .whitespacesAndNewlines)
     }
 
     private static func decode(_ bytes: [UInt8], encoding: UInt8) -> String? {
-        let trimmed = Array(bytes.prefix(while: { $0 != 0 || encoding == 1 || encoding == 2 }))
+        let trimmed = Array(bytes.prefix(while: { $0 != 0 || isWideEncoding(encoding) }))
         let decoded: String?
         switch encoding {
         case 0:
@@ -230,9 +228,22 @@ public enum ID3ChapterReader {
         return decoded?.replacing("\0", with: "")
     }
 
-    private static func firstRange(of pattern: [UInt8], in bytes: [UInt8]) -> Range<Int>? {
+    private static func isWideEncoding(_ encoding: UInt8) -> Bool {
+        encoding == 1 || encoding == 2
+    }
+
+    /// Where the text written in `encoding` ends.
+    private static func textTerminator(after encoding: UInt8, in bytes: [UInt8]) -> Range<Int>? {
+        let wide = isWideEncoding(encoding)
+        return firstRange(of: wide ? [0, 0] : [0], in: bytes, step: wide ? 2 : 1)
+    }
+
+    /// `step` keeps a UTF-16 terminator on a character boundary: byte-by-byte, the zeros that fill UTF-16 text
+    /// match one byte early and take a zero with them, enough to make the picture that follows undecodable.
+    private static func firstRange(of pattern: [UInt8], in bytes: [UInt8], step: Int = 1) -> Range<Int>? {
         guard !pattern.isEmpty, bytes.count >= pattern.count else { return nil }
-        for start in 0...(bytes.count - pattern.count) where Array(bytes[start..<(start + pattern.count)]) == pattern {
+        for start in Swift.stride(from: 0, through: bytes.count - pattern.count, by: step)
+        where Array(bytes[start..<(start + pattern.count)]) == pattern {
             return start..<(start + pattern.count)
         }
         return nil

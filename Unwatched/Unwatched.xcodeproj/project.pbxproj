@@ -653,6 +653,7 @@
 		88AA10022F0000000000A002 /* MigrationTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 88AA10012F0000000000A001 /* MigrationTests.swift */; };
 		88AA10082F0000000000A008 /* QueueFilterTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 88AA10072F0000000000A007 /* QueueFilterTests.swift */; };
 		FE1000FF000000000000C012 /* PodcastFeedParserTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = FE1000FF000000000000C011 /* PodcastFeedParserTests.swift */; };
+		55A9DF11DDE89BB7A5CDC45F /* PodcastChapterArtworkTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = C485C322062FFD77AA82DBD1 /* PodcastChapterArtworkTests.swift */; };
 		1A9F99A05A0E48A5845FCC81 /* PodcastTriageTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = FADE86879D704827B7266EA7 /* PodcastTriageTests.swift */; };
 		6E4AEBEE463448C2BCDC7B25 /* PodcastEpisodeCacheTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 67E1C9774B64420098EC98D5 /* PodcastEpisodeCacheTests.swift */; };
 		FE1000FF000000000000D012 /* SilenceTrimTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = FE1000FF000000000000D011 /* SilenceTrimTests.swift */; };
@@ -1380,6 +1381,7 @@
 		88AA10012F0000000000A001 /* MigrationTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MigrationTests.swift; sourceTree = "<group>"; };
 		88AA10072F0000000000A007 /* QueueFilterTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = QueueFilterTests.swift; sourceTree = "<group>"; };
 		FE1000FF000000000000C011 /* PodcastFeedParserTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PodcastFeedParserTests.swift; sourceTree = "<group>"; };
+		C485C322062FFD77AA82DBD1 /* PodcastChapterArtworkTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PodcastChapterArtworkTests.swift; sourceTree = "<group>"; };
 		FADE86879D704827B7266EA7 /* PodcastTriageTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PodcastTriageTests.swift; sourceTree = "<group>"; };
 		67E1C9774B64420098EC98D5 /* PodcastEpisodeCacheTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PodcastEpisodeCacheTests.swift; sourceTree = "<group>"; };
 		FE1000FF000000000000D011 /* SilenceTrimTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SilenceTrimTests.swift; sourceTree = "<group>"; };
@@ -1829,6 +1831,7 @@
 				88AA10012F0000000000A001 /* MigrationTests.swift */,
 				88AA10072F0000000000A007 /* QueueFilterTests.swift */,
 				FE1000FF000000000000C011 /* PodcastFeedParserTests.swift */,
+				C485C322062FFD77AA82DBD1 /* PodcastChapterArtworkTests.swift */,
 				FADE86879D704827B7266EA7 /* PodcastTriageTests.swift */,
 				67E1C9774B64420098EC98D5 /* PodcastEpisodeCacheTests.swift */,
 				FE1000FF000000000000D011 /* SilenceTrimTests.swift */,
@@ -3040,6 +3043,7 @@
 				88AA10022F0000000000A002 /* MigrationTests.swift in Sources */,
 				88AA10082F0000000000A008 /* QueueFilterTests.swift in Sources */,
 				FE1000FF000000000000C012 /* PodcastFeedParserTests.swift in Sources */,
+				55A9DF11DDE89BB7A5CDC45F /* PodcastChapterArtworkTests.swift in Sources */,
 				1A9F99A05A0E48A5845FCC81 /* PodcastTriageTests.swift in Sources */,
 				6E4AEBEE463448C2BCDC7B25 /* PodcastEpisodeCacheTests.swift in Sources */,
 				FE1000FF000000000000D012 /* SilenceTrimTests.swift in Sources */,

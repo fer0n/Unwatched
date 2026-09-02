@@ -143,8 +143,19 @@ extension ChapterService {
             if let chaptersUrl {
                 chapters = await PodcastService.fetchChapters(chaptersUrl, duration: duration)
             }
-            if chapters == nil, let mediaUrl {
-                chapters = await PodcastService.embeddedChapters(mediaUrl, duration: duration, episodeId: youtubeId)
+            if let mediaUrl, chapters?.contains(where: { $0.imageUrl != nil }) != true {
+                let embedded = await PodcastService.embeddedChapters(
+                    mediaUrl, duration: duration, episodeId: youtubeId
+                )
+                if let listed = chapters {
+                    // the file a show maintains carries the titles, while the pictures for those same chapters
+                    // sit in the episode's own frames (Lage der Nation does exactly this)
+                    if let embedded, embedded.contains(where: { $0.imageUrl != nil }) {
+                        chapters = PodcastService.mergingImages(from: embedded, into: listed)
+                    }
+                } else {
+                    chapters = embedded
+                }
             }
             if chapters == nil, let feedUrl {
                 // inline markers came with the episode and were cached; this is how they come back once that entry

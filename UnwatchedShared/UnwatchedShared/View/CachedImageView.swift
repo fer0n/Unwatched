@@ -79,12 +79,12 @@ public struct CachedImageView<Content, Content2>: View where Content: View, Cont
     func loadImage() async {
         for url in imageUrls {
             let task = ImageService.getImage(url, cacheManager, maxPixelSize: maxPixelSize)
-            if let taskResult = try? await task.value {
-                let (taskImage, info) = taskResult
-                image = taskImage
-                self.cacheManager[url.absoluteString] = info
-                return
-            }
+            guard let (taskImage, info) = try? await task.value else { continue }
+            self.cacheManager[url.absoluteString] = info
+            // bytes that won't decode are as good as no image: the next url is what this list is for
+            guard let taskImage else { continue }
+            image = taskImage
+            return
         }
     }
 }

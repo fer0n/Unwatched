@@ -79,6 +79,17 @@ public struct ImageService {
         try? context.save()
     }
 
+    /// Stores `data` for `url`, dropping anything held for it before — in memory as well as on disk.
+    public static func replaceImage(url: URL, data: Data) async {
+        let context = ModelContext(DataProvider.shared.localCacheContainer)
+        if let existing = getCachedImage(for: url, context) {
+            context.delete(existing)
+        }
+        context.insert(CachedImage(url, imageData: data))
+        try? context.save()
+        decodedImageCache.removeAll(url: url.absoluteString)
+    }
+
     public static func deleteImages(_ urls: [URL]) {
         Task {
             let imageContainer = DataProvider.shared.localCacheContainer

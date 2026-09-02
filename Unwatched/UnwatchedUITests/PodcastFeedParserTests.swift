@@ -109,7 +109,7 @@ class PodcastFeedParserTests: XCTestCase {
     /// ATP and plenty of others put their chapters only in the episode's ID3 tag: no chapter file in the feed, no
     /// Podlove markers, and show notes that are a link list rather than timestamps.
     func testReadsChaptersFromAnID3Tag() throws {
-        let chapters = try XCTUnwrap(ID3ChapterReader.chapters(inHead: Self.taggedFileHead()))
+        let chapters = try XCTUnwrap(ID3ChapterReader.chapters(inHead: ID3Fixture.taggedFileHead()))
         XCTAssertEqual(chapters.map(\.title), ["Intro", "Main topic"])
         XCTAssertEqual(chapters.map(\.startTime), [0, 90])
         XCTAssertEqual(chapters.first?.endTime, 90)
@@ -118,7 +118,7 @@ class PodcastFeedParserTests: XCTestCase {
 
     /// A truncated tag reads as "no chapters" rather than as whatever the bytes happen to say.
     func testIncompleteTagYieldsNothing() {
-        let head = Self.taggedFileHead()
+        let head = ID3Fixture.taggedFileHead()
         XCTAssertNil(ID3ChapterReader.chapters(inHead: Array(head.prefix(head.count / 2))))
         XCTAssertNil(ID3ChapterReader.chapters(inHead: Array("not a tag at all".utf8)))
     }
@@ -129,7 +129,7 @@ class PodcastFeedParserTests: XCTestCase {
         let url = FileManager.default.temporaryDirectory
             .appending(path: "id3-chapters-\(UUID().uuidString).mp3")
         // padded out past the tag, the way the audio frames of a real episode follow it
-        var bytes = Self.taggedFileHead()
+        var bytes = ID3Fixture.taggedFileHead()
         bytes += [UInt8](repeating: 0, count: 4096)
         try Data(bytes).write(to: url)
         defer { try? FileManager.default.removeItem(at: url) }
@@ -142,91 +142,10 @@ class PodcastFeedParserTests: XCTestCase {
     /// Shows that give every chapter its own artwork — Relay FM's do — carry a tag of a couple of megabytes, with the
     /// chapters spread through all of it.
     func testReadsChaptersFromATagWithArtworkInIt() throws {
-        let head = Self.taggedFileHead(artworkBytes: 1_500_000)
+        let head = ID3Fixture.taggedFileHead(artworkBytes: 1_500_000)
         XCTAssertGreaterThan(head.count, 1 << 20)
         let chapters = try XCTUnwrap(ID3ChapterReader.chapters(inHead: head))
         XCTAssertEqual(chapters.map(\.title), ["Intro", "Main topic"])
-    }
-
-    /// Relay FM and others illustrate every chapter: the picture is an `APIC` frame nested inside the chapter's own,
-    /// and it has no URL, so it is filed under one of the app's making.
-    func testReadsChapterArtworkFromAnID3Tag() async throws {
-        let url = FileManager.default.temporaryDirectory
-            .appending(path: "id3-chapter-art-\(UUID().uuidString).mp3")
-        try Data(Self.taggedFileHead(chapterArtwork: Self.pngBytes)).write(to: url)
-        defer { try? FileManager.default.removeItem(at: url) }
-
-        let episodeId = "pod-\(UUID().uuidString.prefix(8))"
-        let read = await ID3ChapterReader.chapters(from: url, episodeId: episodeId)
-        let chapters = try XCTUnwrap(read)
-        let imageUrl = try XCTUnwrap(chapters[1].imageUrl)
-        defer { ImageService.deleteImages([imageUrl]) }
-
-        XCTAssertNil(chapters[0].imageUrl, "only the second chapter carries a picture")
-        let stored = await ImageService.imageData(for: imageUrl)
-        XCTAssertEqual(stored, Data(Self.pngBytes))
-    }
-
-    /// Enough of a PNG to be told apart from the bytes around it.
-    static let pngBytes: [UInt8] = [0x89, 0x50, 0x4E, 0x47, 0x0D, 0x0A, 0x1A, 0x0A, 0x01, 0x02, 0x03]
-
-    /// An ID3v2.3 head with two chapters, built the way a podcast host writes one.
-    static func taggedFileHead(artworkBytes: Int = 0, chapterArtwork: [UInt8]? = nil) -> [UInt8] {
-        func frame(_ id: String, _ payload: [UInt8]) -> [UInt8] {
-            let size = UInt32(payload.count)
-            return Array(id.utf8)
-                + [UInt8(size >> 24), UInt8((size >> 16) & 0xFF), UInt8((size >> 8) & 0xFF), UInt8(size & 0xFF)]
-                + [0, 0]
-                + payload
-        }
-        func milliseconds(_ value: UInt32) -> [UInt8] {
-            [UInt8(value >> 24), UInt8((value >> 16) & 0xFF), UInt8((value >> 8) & 0xFF), UInt8(value & 0xFF)]
-        }
-        func chapter(
-            _ id: String,
-            start: UInt32,
-            end: UInt32,
-            title: String,
-            url: String? = nil,
-            picture: [UInt8]? = nil
-        ) -> [UInt8] {
-            var payload = Array(id.utf8) + [0]
-            payload += milliseconds(start) + milliseconds(end)
-            payload += milliseconds(0xFFFF_FFFF) + milliseconds(0xFFFF_FFFF)
-            payload += frame("TIT2", [0] + Array(title.utf8))
-            if let url {
-                payload += frame("WXXX", [0] + Array("link".utf8) + [0] + Array(url.utf8))
-            }
-            if let picture {
-                // encoding, MIME type, picture type, description, then the image itself
-                payload += frame(
-                    "APIC",
-                    [0] + Array("image/png".utf8) + [0, 3] + Array("cover".utf8) + [0] + picture
-                )
-            }
-            return frame("CHAP", payload)
-        }
-
-        var body = frame("TIT2", [0] + Array("Episode One".utf8))
-        if artworkBytes > 0 {
-            body += frame("APIC", [UInt8](repeating: 0x2A, count: artworkBytes))
-        }
-        body += chapter("ch0", start: 0, end: 90_000, title: "Intro")
-        body += chapter(
-            "ch1",
-            start: 90_000,
-            end: 180_000,
-            title: "Main topic",
-            url: "https://example.com/topic",
-            picture: chapterArtwork
-        )
-
-        let size = UInt32(body.count)
-        let synchsafe: [UInt8] = [
-            UInt8((size >> 21) & 0x7F), UInt8((size >> 14) & 0x7F),
-            UInt8((size >> 7) & 0x7F), UInt8(size & 0x7F)
-        ]
-        return Array("ID3".utf8) + [3, 0, 0] + synchsafe + body
     }
 
     // MARK: - Show notes

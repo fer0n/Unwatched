@@ -88,8 +88,9 @@ public extension ChapterService {
         store(chapters, youtubeId: youtubeId, hash: fetchedSourceHash)
     }
 
-    /// Marks a cache entry as fetched rather than parsed.
-    private static var fetchedSourceHash: String { "fetched" }
+    /// Marks a cache entry as fetched rather than parsed. The suffix is a version: chapter artwork read
+    /// before it was bumped is stored under a picture that won't decode, and only a re-read replaces it.
+    private static var fetchedSourceHash: String { "fetched2" }
 
     /// Drops both cache layers for a video, e.g.
     static func invalidateDerivedChapters(youtubeId: String) {
