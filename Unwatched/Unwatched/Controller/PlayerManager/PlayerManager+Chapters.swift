@@ -131,9 +131,9 @@ extension PlayerManager {
         // previous chapter
         previousChapter = position.flatMap { ordered.prefix($0).last(where: \.isActive) }
 
-        withAnimation {
-            currentChapter = current
-        }
+        // deliberately not inside `withAnimation`: that flushes SwiftUI's pending updates before it
+        // runs, so views re-evaluate against the old value and never see the write landing right after
+        currentChapter = current
         backend.handleChapterChanged()
 
         // set end time; prepare jump

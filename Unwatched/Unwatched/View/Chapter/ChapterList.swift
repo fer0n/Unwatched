@@ -25,10 +25,14 @@ struct ChapterList: View {
     }
 
     var body: some View {
+        // read here rather than inside the `ForEach` below: a row's content closure runs outside this
+        // body's observation scope, so a read in there never marks the list as depending on the current
+        // chapter and the highlight stays at whatever it was when the rows were first built
+        let currentChapterId = player.currentChapter?.chapterId
         if !chapters.isEmpty {
             LazyVStack(spacing: isCompact ? 4 : 10) {
                 ForEach(chapters, id: \.chapterId) { chapter in
-                    let isCurrent = chapter.chapterId == player.currentChapter?.chapterId
+                    let isCurrent = chapter.chapterId == currentChapterId
                     let foregroundColor: Color = isCurrent ? Color.backgroundColor : Color.neutralAccentColor
                     let backgroundColor: Color = isCurrent ? Color.neutralAccentColor : Color.insetBackgroundColor
 
