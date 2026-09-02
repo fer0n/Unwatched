@@ -28,8 +28,6 @@
 		<string>INMediaCategoryPodcasts</string>
 		<string>INMediaCategoryGeneral</string>
 	</array>
-	<key>ITSAppUsesNonExemptEncryption</key>
-	<false/>
 	<key>NSUbiquitousContainers</key>
 	<dict>
 		<key>iCloud.com.pentlandFirth.Unwatched</key>

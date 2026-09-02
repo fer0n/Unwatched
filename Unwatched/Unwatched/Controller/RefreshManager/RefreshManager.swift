@@ -201,7 +201,6 @@ actor RefreshActor {
             VideoService.fetchVideoDurationsQueueInbox()
             UserDefaults.standard.set(false, forKey: Const.requiresDurationFetch)
         }
-        ChapterService.purgeDerivableChaptersIfNeeded()
         PodcastDownloadManager.shared.scheduleSync()
 
         if enableIcloudSync {
