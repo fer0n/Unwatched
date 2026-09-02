@@ -61,40 +61,23 @@ struct ChapterDescriptionView: View {
                     )
 
                     if hasTranscript || hasChapters {
-                        ChapterSettingsMenu(
-                            video: player.video,
-                            transcriptVideo: video,
-                            transcriptVM: transcriptVM
-                        )
+                        ChapterSettingsMenu(video: video, transcriptVM: transcriptVM)
 
                         Spacer()
                             .frame(height: 10)
                     }
 
-                    if showGenerateTranscript {
-                        // no transcript means no chapters can be generated, so the picker gives way to just the
-                        // button — the settings menu above still stands when chapters already exist regardless
-                        GenerateTranscriptButton(video: video, viewModel: $transcriptVM)
-                            .transition(.opacity)
-
-                        Spacer()
-                            .frame(height: 10)
-
-                        DescriptionDetailView(description: video.videoDescription)
-                    } else {
-                        TranscriptDescriptionSelection(
-                            video: video,
-                            isCurrentVideo: isCurrentVideo,
-                            scrollProxy: proxy,
-                            transcriptVM: $transcriptVM
-                        )
-                        .transition(.opacity)
-                    }
+                    TranscriptDescriptionSelection(
+                        video: video,
+                        isCurrentVideo: isCurrentVideo,
+                        scrollProxy: proxy,
+                        transcriptVM: $transcriptVM
+                    )
+                    .transition(.opacity)
                 }
                 .padding(.horizontal, showThumbnail ? 15 : isCompact ? 10 : 20)
                 .padding(.top, showThumbnail ? 15 : isCompact ? 15 : 30)
                 .frame(idealWidth: 500, maxWidth: 800, alignment: .leading)
-                .animation(.easeInOut, value: showGenerateTranscript)
 
                 Spacer()
                     .frame(height: bottomSpacer)
@@ -103,8 +86,8 @@ struct ChapterDescriptionView: View {
                     .frame(maxWidth: .infinity)
             }
             .task(id: video.youtubeId) {
-                // checked eagerly (not just on opening the transcript tab) since a podcast episode without one hides
-                // chapters/description/transcript entirely in favor of the generate-transcript button
+                // loaded eagerly rather than when the transcript tab is opened: the settings menu offers
+                // generating and restoring on what's there, so it has to know before the tab is touched
                 guard video.isPodcast, TranscriptService.canGenerateTranscript else { return }
                 await transcriptVM.handleTranscriptLoading(video, nil)
                 // kept running for the lifetime of this screen so a generation started elsewhere — a Shortcut,
@@ -249,14 +232,6 @@ struct ChapterDescriptionView: View {
 
     var isCurrentVideo: Bool {
         video.youtubeId == player.video?.youtubeId
-    }
-
-    /// A podcast episode that has no transcript at all — not one that was published, not one generated before — hides
-    /// the description/transcript picker in favor of just the button.
-    var showGenerateTranscript: Bool {
-        video.isPodcast
-            && TranscriptService.canGenerateTranscript
-            && transcriptVM.transcript?.isEmpty == true
     }
 
     func playVideo() {

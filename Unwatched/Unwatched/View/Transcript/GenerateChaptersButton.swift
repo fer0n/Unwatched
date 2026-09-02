@@ -7,9 +7,12 @@ import SwiftUI
 import UnwatchedShared
 import FoundationModels
 
-@Observable class GenerateChaptersButtonViewModel {
+@Observable class GenerateChaptersButtonViewModel: ProgressSweeping {
     var isLoading = false
     var errorMessage: String?
+
+    var sweepProgress: Double = 0
+    var isFadingOutProgress = false
 
     var subTitle: String {
         errorMessage ?? (
@@ -29,15 +32,22 @@ import FoundationModels
                 errorMessage = nil
             }
             isLoading = true
+            sweepProgress = 0
+            isFadingOutProgress = false
             defer {
                 isLoading = false
             }
             let task = TranscriptService.generateAiChapters(
                 for: video,
                 transcriptUrl: transcriptUrl
-            ) { _ in }
+            ) { [weak self] fraction in
+                Task { @MainActor in
+                    self?.sweepProgress = fraction
+                }
+            }
             do {
                 try await task.value
+                await finishProgress()
             } catch LanguageModelSession.GenerationError.guardrailViolation(let context) {
                 errorMessage = context.debugDescription
             } catch TranscriptError.noUrl {

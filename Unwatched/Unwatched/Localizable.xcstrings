@@ -12783,6 +12783,7 @@
       }
     },
     "noVideoFound" : {
+      "extractionState" : "stale",
       "localizations" : {
         "de" : {
           "stringUnit" : {

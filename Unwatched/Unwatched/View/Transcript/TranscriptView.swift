@@ -159,7 +159,7 @@ struct TranscriptView: View {
 }
 
 extension TranscriptView {
-    @Observable class ViewModel {
+    @Observable class ViewModel: ProgressSweeping {
         var transcript: [TranscriptEntry]? {
             didSet { transcriptVersion += 1 }
         }
@@ -171,10 +171,9 @@ extension TranscriptView {
         /// Where the loaded transcript came from; `nil` while none is loaded.
         var origin: TranscriptOrigin?
 
-        var generationProgress: Double = 0
+        var sweepProgress: Double = 0
         var generationError: String?
 
-        /// Set once the sweep has reached the end, so the button can dissolve the fill before it's swapped out.
         var isFadingOutProgress = false
 
         @ObservationIgnored
@@ -243,7 +242,7 @@ extension TranscriptView {
         @MainActor
         func generateTranscript(for video: Video, force: Bool = false) {
             isGenerating = true
-            generationProgress = 0
+            sweepProgress = 0
             isFadingOutProgress = false
             generationError = nil
             TranscriptService.GenerationCoordinator.shared.generate(for: video, force: force)
@@ -284,7 +283,7 @@ extension TranscriptView {
                         isFadingOutProgress = false
                     }
                     isGenerating = coordinator.isGenerating
-                    generationProgress = coordinator.progress
+                    sweepProgress = coordinator.progress
                     generationError = coordinator.error
                 }
 
@@ -307,15 +306,6 @@ extension TranscriptView {
                     return
                 }
             }
-        }
-
-        /// Runs the sweep out to the end and starts fading it, so the swap that follows reads as one motion.
-        @MainActor
-        private func finishProgress() async {
-            generationProgress = 1
-            try? await Task.sleep(for: .seconds(0.25))
-            isFadingOutProgress = true
-            try? await Task.sleep(for: .seconds(0.15))
         }
 
         @MainActor
