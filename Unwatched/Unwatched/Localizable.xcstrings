@@ -12068,6 +12068,40 @@
         }
       }
     },
+    "noPublishedTranscript" : {
+      "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Dieser Podcast veröffentlicht kein eigenes Transkript für diese Folge."
+          }
+        },
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "This podcast doesn’t publish its own transcript for this episode."
+          }
+        },
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Este pódcast no publica su propia transcripción para este episodio."
+          }
+        },
+        "fr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Ce podcast ne publie pas sa propre transcription pour cet épisode."
+          }
+        },
+        "pl" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Ten podcast nie publikuje własnego transkryptu tego odcinka."
+          }
+        }
+      }
+    },
     "noQueueItems" : {
       "localizations" : {
         "de" : {
@@ -17409,6 +17443,40 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "Przywróć oryginał"
+          }
+        }
+      }
+    },
+    "restoreOriginalTranscript" : {
+      "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Original-Transkript wiederherstellen"
+          }
+        },
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Restore Original Transcript"
+          }
+        },
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Restaurar transcripción original"
+          }
+        },
+        "fr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Restaurer la transcription d’origine"
+          }
+        },
+        "pl" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Przywróć oryginalny transkrypt"
           }
         }
       }

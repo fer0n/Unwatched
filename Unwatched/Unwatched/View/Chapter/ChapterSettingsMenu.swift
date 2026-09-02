@@ -8,12 +8,20 @@ import UnwatchedShared
 
 struct ChapterSettingsMenu: View {
     @Environment(AppNotificationVM.self) var appNotificationVM
+    @Environment(\.dismiss) var dismiss
     @State var viewModel = GenerateChaptersButtonViewModel()
 
     let video: Video?
 
+    /// The episode the transcript actions apply to, which is the one being shown rather than the one playing.
+    /// `nil` leaves those actions out entirely.
+    var transcriptVideo: Video?
+    var transcriptVM: TranscriptView.ViewModel?
+
     var body: some View {
         Menu {
+            transcriptSection
+
             if video?.hasCustomChapterOrder == true {
                 videoButton("resetChapterOrder", systemImage: "arrow.up.arrow.down") {
                     ChapterService.resetChapterOrder(for: $0)
@@ -41,7 +49,7 @@ struct ChapterSettingsMenu: View {
         } label: {
             Image(systemName: "gearshape.fill")
                 .symbolEffect(.rotate, isActive: viewModel.isLoading)
-            Text("chapters")
+            Text(showsTranscriptActions ? "settings" : "chapters")
         }
         .foregroundStyle(Color.automaticBlack)
         #if !os(visionOS)
@@ -66,6 +74,54 @@ struct ChapterSettingsMenu: View {
                 appNotificationVM.show(message, isError: true)
             }
         }
+    }
+
+    /// A show that inserts ads publishes the transcript of the ad-free cut, which drifts out of sync with
+    /// what plays — so transcribing the audio is worth offering even when a transcript is already there.
+    @ViewBuilder
+    var transcriptSection: some View {
+        if let transcriptVideo, let transcriptVM, showsTranscriptActions,
+           showsRegenerate || showsRestore {
+            Section {
+                if showsRegenerate {
+                    Button {
+                        guard guardPremium(onInteraction: { dismiss() }) else { return }
+                        Signal.log("Transcript.Generate", parameters: ["source": "menu"])
+                        transcriptVM.generateTranscript(for: transcriptVideo, force: true)
+                    } label: {
+                        Label("generateTranscript", systemImage: "text.quote")
+                    }
+                    .disabled(transcriptVM.isGenerating)
+                }
+
+                if showsRestore {
+                    Button {
+                        Signal.log("Transcript.RestorePublished")
+                        transcriptVM.restorePublishedTranscript(for: transcriptVideo)
+                    } label: {
+                        Label("restoreOriginalTranscript", systemImage: "arrow.uturn.backward")
+                    }
+                    .disabled(transcriptVM.isRestoring)
+                }
+            } header: {
+                Text("transcript")
+            }
+            .tint(Color.automaticBlack)
+        }
+    }
+
+    var showsRegenerate: Bool {
+        transcriptVM?.transcript?.isEmpty == false
+    }
+
+    var showsRestore: Bool {
+        transcriptVM?.origin == .generated
+    }
+
+    var showsTranscriptActions: Bool {
+        transcriptVideo?.isPodcast == true
+            && transcriptVM != nil
+            && TranscriptService.canGenerateTranscript
     }
 
     private func videoButton(

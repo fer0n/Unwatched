@@ -9,8 +9,6 @@ import UnwatchedShared
 /// Stands in for the chapter button and description/transcript picker on an episode that has neither: a tap
 /// transcribes it on device, filling the button's own background left to right as it goes.
 struct GenerateTranscriptButton: View {
-    @Environment(AppNotificationVM.self) var appNotificationVM
-
     let video: Video
     @Binding var viewModel: TranscriptView.ViewModel
 
@@ -42,11 +40,6 @@ struct GenerateTranscriptButton: View {
         .clipShape(Capsule())
         .disabled(viewModel.isGenerating)
         .frame(maxWidth: .infinity, alignment: .center)
-        .task(id: viewModel.generationError) {
-            if let error = viewModel.generationError {
-                appNotificationVM.show(error, isError: true)
-            }
-        }
     }
 
     /// The base tint with a noticeably lighter sweep grown to `generationProgress`, anchored left.

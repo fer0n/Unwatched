@@ -71,30 +71,70 @@ struct TranscriptService {
     /// The transcript an episode already has: one that's been generated before, or the one the show publishes itself.
     @MainActor
     static func podcastTranscript(for video: Video) -> Task<[TranscriptEntry], Never> {
+        let task = podcastTranscriptPayload(for: video)
+        return Task { await task.value.entries }
+    }
+
+    /// Same as `podcastTranscript`, but keeps the origin, which decides whether the show's own transcript
+    /// can be restored over a generated one.
+    @MainActor
+    static func podcastTranscriptPayload(for video: Video) -> Task<TranscriptPayload, Never> {
         let youtubeId = video.youtubeId
         let feedUrl = video.subscription?.link
         let cacheContainer = DataProvider.shared.localCacheContainer
 
         return Task.detached {
             let repo = TranscriptActor(modelContainer: cacheContainer)
-            if let cached = await repo.getTranscript(for: youtubeId) {
+            if let cached = await repo.getPayload(for: youtubeId) {
                 return cached
             }
-            guard let feedUrl else { return [] }
+            guard let feedUrl else { return .empty }
 
             switch await PodcastService.fetchTranscript(feedUrl: feedUrl, episodeId: youtubeId).lookup {
             case .found(let entries):
-                let cleaned = analyseBreaks(entries)
-                await repo.cacheTranscript(cleaned, for: youtubeId)
-                return cleaned
+                let cleaned = await cachePublished(entries, for: youtubeId, in: repo)
+                return TranscriptPayload(entries: cleaned, origin: .published)
             case .notPublished:
                 // remembered, so opening the tab again doesn't re-read the feed.
                 await repo.cacheTranscript([], for: youtubeId)
-                return []
+                return .empty
             case .unreachable:
-                return []
+                return .empty
             }
         }
+    }
+
+    /// Replaces a generated transcript with the one the show publishes, re-read from the feed.
+    /// Throws when the show doesn't publish one (any more), leaving the cache as it was.
+    @MainActor
+    static func restorePublishedTranscript(for video: Video) -> Task<[TranscriptEntry], Error> {
+        let youtubeId = video.youtubeId
+        let feedUrl = video.subscription?.link
+        let cacheContainer = DataProvider.shared.localCacheContainer
+
+        return Task.detached {
+            guard let feedUrl else { throw TranscriptError.noUrl }
+            let repo = TranscriptActor(modelContainer: cacheContainer)
+
+            switch await PodcastService.fetchTranscript(feedUrl: feedUrl, episodeId: youtubeId).lookup {
+            case .found(let entries):
+                return await cachePublished(entries, for: youtubeId, in: repo)
+            case .notPublished:
+                throw TranscriptError.noPublishedTranscript
+            case .unreachable:
+                throw TranscriptError.notFound
+            }
+        }
+    }
+
+    private static func cachePublished(
+        _ entries: [TranscriptEntry],
+        for youtubeId: String,
+        in repo: TranscriptActor
+    ) async -> [TranscriptEntry] {
+        let cleaned = analyseBreaks(entries)
+        await repo.cacheTranscript(cleaned, for: youtubeId)
+        return cleaned
     }
 
     /// Whether a transcript can be produced for an episode that doesn't have one yet.
@@ -107,9 +147,12 @@ struct TranscriptService {
     }
 
     /// Produces a transcript for a podcast episode and caches it, after which it loads like any other transcript.
+    /// - Parameter force: transcribe even when the show publishes a transcript of its own, which is what
+    /// an episode with ads baked in needs — the published one has no ads in it, so its timings drift.
     @MainActor
     static func generateTranscript(
         for video: Video,
+        force: Bool = false,
         progress: @escaping @Sendable (_ fraction: Double) -> Void
     ) -> Task<[TranscriptEntry], Error> {
         let youtubeId = video.youtubeId
@@ -128,11 +171,9 @@ struct TranscriptService {
             if let feedUrl {
                 feed = await PodcastService.fetchTranscript(feedUrl: feedUrl, episodeId: youtubeId)
             }
-            if case .found(let published) = feed?.lookup {
+            if !force, case .found(let published) = feed?.lookup {
                 Log.info("using the feed's own transcript for \(youtubeId)")
-                let cleaned = analyseBreaks(published)
-                await repo.cacheTranscript(cleaned, for: youtubeId)
-                return cleaned
+                return await cachePublished(published, for: youtubeId, in: repo)
             }
 
             #if os(tvOS)
@@ -156,7 +197,7 @@ struct TranscriptService {
                 progress(0.1 + fraction * 0.9)
             }
             let cleaned = analyseBreaks(entries)
-            await repo.cacheTranscript(cleaned, for: youtubeId)
+            await repo.cacheTranscript(cleaned, for: youtubeId, origin: .generated)
             return cleaned
             #endif
         }
@@ -215,7 +256,7 @@ struct TranscriptService {
         /// Starts generating a transcript for `video`, or returns the task already running for it.
         @MainActor
         @discardableResult
-        func generate(for video: Video) -> Task<[TranscriptEntry], Error> {
+        func generate(for video: Video, force: Bool = false) -> Task<[TranscriptEntry], Error> {
             if isGenerating, youtubeId == video.youtubeId, let activeTask {
                 return activeTask
             }
@@ -226,7 +267,7 @@ struct TranscriptService {
             error = nil
             isGenerating = true
 
-            let task = TranscriptService.generateTranscript(for: video) { [weak self] fraction in
+            let task = TranscriptService.generateTranscript(for: video, force: force) { [weak self] fraction in
                 Task { @MainActor in
                     guard self?.youtubeId == id else { return }
                     self?.progress = fraction

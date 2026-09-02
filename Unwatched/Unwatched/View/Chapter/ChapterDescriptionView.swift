@@ -13,6 +13,7 @@ struct ChapterDescriptionView: View {
     @Environment(\.modelContext) var modelContext
     @Environment(\.dismiss) var dismiss
     @Environment(TinyUndoManager.self) private var undoManager
+    @Environment(AppNotificationVM.self) var appNotificationVM
 
     @State var hapticToggle = false
     @State var transcriptVM = TranscriptView.ViewModel()
@@ -60,7 +61,11 @@ struct ChapterDescriptionView: View {
                     )
 
                     if hasTranscript || hasChapters {
-                        ChapterSettingsMenu(video: player.video)
+                        ChapterSettingsMenu(
+                            video: player.video,
+                            transcriptVideo: video,
+                            transcriptVM: transcriptVM
+                        )
 
                         Spacer()
                             .frame(height: 10)
@@ -105,6 +110,12 @@ struct ChapterDescriptionView: View {
                 // kept running for the lifetime of this screen so a generation started elsewhere — a Shortcut,
                 // say — still shows its progress here and loads the result once it lands
                 await transcriptVM.watchGeneration(for: video)
+            }
+            // not on the generate button: the menu can start a generation or a restore after it's gone
+            .task(id: transcriptVM.generationError) {
+                if let error = transcriptVM.generationError {
+                    appNotificationVM.show(error, isError: true)
+                }
             }
             .onAppear {
                 scrollToChapterIfNeeded(hasChapters: hasChapters, proxy: proxy)

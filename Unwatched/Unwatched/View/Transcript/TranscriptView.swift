@@ -166,6 +166,11 @@ extension TranscriptView {
         var text = DebouncedText()
         var isLoading = false
         var isGenerating = false
+        var isRestoring = false
+
+        /// Where the loaded transcript came from; `nil` while none is loaded.
+        var origin: TranscriptOrigin?
+
         var generationProgress: Double = 0
         var generationError: String?
 
@@ -236,12 +241,33 @@ extension TranscriptView {
         /// Starts generating a transcript for `video` — or, if one is already running (kicked off from a
         /// Shortcut, say), just lets `watchGeneration` pick it up.
         @MainActor
-        func generateTranscript(for video: Video) {
+        func generateTranscript(for video: Video, force: Bool = false) {
             isGenerating = true
             generationProgress = 0
             isFadingOutProgress = false
             generationError = nil
-            TranscriptService.GenerationCoordinator.shared.generate(for: video)
+            TranscriptService.GenerationCoordinator.shared.generate(for: video, force: force)
+        }
+
+        /// Puts the show's own transcript back over a generated one, re-read from the feed.
+        @MainActor
+        func restorePublishedTranscript(for video: Video) {
+            guard !isRestoring else { return }
+            isRestoring = true
+            generationError = nil
+            Task {
+                defer { isRestoring = false }
+                do {
+                    let entries = try await TranscriptService.restorePublishedTranscript(for: video).value
+                    withAnimation {
+                        transcript = entries
+                    }
+                    origin = .published
+                    transcriptYoutubeId = video.youtubeId
+                } catch {
+                    generationError = error.localizedDescription
+                }
+            }
         }
 
         /// Mirrors the shared coordinator's state for `video` for as long as this task runs, so this
@@ -266,10 +292,11 @@ extension TranscriptView {
                     handledFinishedVersion = coordinator.finishedVersion
                     if coordinator.error == nil {
                         await finishProgress()
-                        let entries = await TranscriptService.podcastTranscript(for: video).value
+                        let payload = await TranscriptService.podcastTranscriptPayload(for: video).value
                         withAnimation {
-                            transcript = entries
+                            transcript = payload.entries
                         }
+                        origin = payload.origin
                         transcriptYoutubeId = youtubeId
                     }
                 }
@@ -299,6 +326,7 @@ extension TranscriptView {
             let youtubeId = video.youtubeId
             if youtubeId != transcriptYoutubeId && transcript != nil {
                 transcript = nil
+                origin = nil
             }
             guard transcript == nil else {
                 Log.info("Transcript already loaded for \(youtubeId)")
@@ -311,12 +339,15 @@ extension TranscriptView {
             if video.isPodcast {
                 // an episode has no captions to fetch, but it may have one it was given earlier or one the show
                 // publishes itself
-                transcript = await TranscriptService.podcastTranscript(for: video).value
+                let payload = await TranscriptService.podcastTranscriptPayload(for: video).value
+                transcript = payload.entries
+                origin = payload.origin
             } else {
                 transcript = try? await TranscriptService.getTranscript(
                     from: transcriptUrl,
                     youtubeId: youtubeId,
                     )
+                origin = .published
             }
             Log.info("Transcript loaded for \(youtubeId): \(transcript?.count ?? 0) entries")
             transcriptYoutubeId = youtubeId

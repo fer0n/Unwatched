@@ -8,6 +8,7 @@ import Foundation
 enum TranscriptError: Error, CustomLocalizedStringResourceConvertible, LocalizedError {
     case notFound
     case noUrl
+    case noPublishedTranscript
     case emptyTranscript
     case noAudio
     case unsupportedDevice
@@ -20,6 +21,8 @@ enum TranscriptError: Error, CustomLocalizedStringResourceConvertible, Localized
             return "noTranscriptFound"
         case .noUrl:
             return "noTranscriptUrl"
+        case .noPublishedTranscript:
+            return "noPublishedTranscript"
         case .emptyTranscript:
             return "emptyTranscript"
         case .noAudio:
