@@ -925,32 +925,32 @@
       "localizations" : {
         "de" : {
           "stringUnit" : {
-            "state" : "translated",
-            "value" : "YouTube Video URL hinzufügen"
+            "state" : "needs_review",
+            "value" : "YouTube-URL hinzufügen"
           }
         },
         "en" : {
           "stringUnit" : {
-            "state" : "translated",
-            "value" : "Add YouTube Video URL"
+            "state" : "needs_review",
+            "value" : "Add YouTube URL"
           }
         },
         "es" : {
           "stringUnit" : {
-            "state" : "translated",
-            "value" : "Añadir URL del video de YouTube"
+            "state" : "needs_review",
+            "value" : "Añadir URL de YouTube"
           }
         },
         "fr" : {
           "stringUnit" : {
-            "state" : "translated",
-            "value" : "Ajouter l’URL de la vidéo YouTube"
+            "state" : "needs_review",
+            "value" : "Ajouter l’URL YouTube"
           }
         },
         "pl" : {
           "stringUnit" : {
-            "state" : "translated",
-            "value" : "Dodaj URL filmu z YouTube"
+            "state" : "needs_review",
+            "value" : "Dodaj URL YouTube"
           }
         }
       }
@@ -8068,32 +8068,32 @@
       "localizations" : {
         "de" : {
           "stringUnit" : {
-            "state" : "translated",
-            "value" : "Aktuelles Video"
+            "state" : "needs_review",
+            "value" : "Aktuelles abrufen"
           }
         },
         "en" : {
           "stringUnit" : {
-            "state" : "translated",
-            "value" : "Get Current Video"
+            "state" : "needs_review",
+            "value" : "Get Current"
           }
         },
         "es" : {
           "stringUnit" : {
-            "state" : "translated",
-            "value" : "Obtener video actual"
+            "state" : "needs_review",
+            "value" : "Obtener actual"
           }
         },
         "fr" : {
           "stringUnit" : {
-            "state" : "translated",
-            "value" : "Obtenir la Vidéo Actuelle"
+            "state" : "needs_review",
+            "value" : "Obtenir l’actuel"
           }
         },
         "pl" : {
           "stringUnit" : {
-            "state" : "translated",
-            "value" : "Pobierz aktualny film"
+            "state" : "needs_review",
+            "value" : "Pobierz aktualny"
           }
         }
       }
@@ -11528,32 +11528,32 @@
       "localizations" : {
         "de" : {
           "stringUnit" : {
-            "state" : "translated",
-            "value" : "Nächstes Video"
+            "state" : "needs_review",
+            "value" : "Nächstes abspielen"
           }
         },
         "en" : {
           "stringUnit" : {
-            "state" : "translated",
-            "value" : "Next Video"
+            "state" : "needs_review",
+            "value" : "Play Next"
           }
         },
         "es" : {
           "stringUnit" : {
-            "state" : "translated",
-            "value" : "Video siguiente"
+            "state" : "needs_review",
+            "value" : "Reproducir siguiente"
           }
         },
         "fr" : {
           "stringUnit" : {
-            "state" : "translated",
-            "value" : "Vidéo Suivante"
+            "state" : "needs_review",
+            "value" : "Lire la suivante"
           }
         },
         "pl" : {
           "stringUnit" : {
-            "state" : "translated",
-            "value" : "Następny film"
+            "state" : "needs_review",
+            "value" : "Odtwórz następny"
           }
         }
       }
