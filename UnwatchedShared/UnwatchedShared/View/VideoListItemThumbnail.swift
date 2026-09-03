@@ -39,16 +39,27 @@ public struct VideoListItemThumbnail: View {
             slot
                 .overlay { ArtworkBackdrop(urls: imageUrls) }
                 .overlay { artwork }
-                .overlay {
-                    VideoListItemThumbnailOverlay(
-                        video: video,
-                        videoDuration: config.videoDuration
-                    )
-                }
-                .clipShape(RoundedRectangle(cornerRadius: Const.videoCornerRadius))
+                .overlay { thumbnailOverlay }
+                .clipShape(shape)
+                .overlay { border }
         } else {
             artwork
+                .overlay { thumbnailOverlay }
+                .clipShape(shape)
+                .overlay { border }
         }
+    }
+
+    private var shape: RoundedRectangle {
+        RoundedRectangle(cornerRadius: Const.videoCornerRadius)
+    }
+
+    private var border: some View {
+        shape.strokeBorder(.secondary.opacity(0.25), lineWidth: 1)
+    }
+
+    private var thumbnailOverlay: some View {
+        VideoListItemThumbnailOverlay(video: video, videoDuration: config.videoDuration)
     }
 
     /// Podcast cover art is square: filling a 16:9 thumbnail with it cuts off the top and the bottom, so it keeps its
@@ -68,16 +79,7 @@ public struct VideoListItemThumbnail: View {
         } placeholder: {
             sized(Color.insetBackgroundColor)
         }
-        .overlay {
-            // in the square-artwork case this is drawn over the full slot instead, see `body`
-            if !squareArtwork {
-                VideoListItemThumbnailOverlay(
-                    video: video,
-                    videoDuration: config.videoDuration
-                )
-            }
-        }
-        .clipShape(RoundedRectangle(cornerRadius: Const.videoCornerRadius))
+        .clipShape(shape)
     }
 
     @ViewBuilder
