@@ -47,6 +47,7 @@ extension PlayerWebView {
         let fullscreenTitle: String
         let enableLogging: Bool
         let originalAudio: Bool
+        let preferredAudioTrackId: String?
         let playbackId: String
         let seekSeconds: Double
         let uiMode: UIMode
@@ -72,6 +73,7 @@ extension PlayerWebView {
             fullscreenTitle: "\(String(localized: "toggleFullscreen")) (f)",
             enableLogging: UserDefaults.standard.bool(forKey: Const.enableLogging),
             originalAudio: UserDefaults.standard.bool(forKey: Const.originalAudio),
+            preferredAudioTrackId: player.video?.youtubeId.flatMap { player.resolvedAudioTrackByVideoId[$0] },
             playbackId: playbackId,
             seekSeconds: player.userSeekSeconds,
             uiMode: uiMode
@@ -103,6 +105,7 @@ extension PlayerWebView {
         const timerInterval = \(Const.elapsedTimeMonitorSeconds * 1000);
         const enableLogging = \(options.enableLogging);
         const originalAudio = \(options.originalAudio);
+        const preferredAudioTrackId = \(options.preferredAudioTrackId.map { "\"\($0)\"" } ?? "null");
         const playbackId = "\(options.playbackId)";
         const seekSeconds = \(options.seekSeconds);
 
@@ -570,6 +573,15 @@ extension PlayerWebView {
             if (!tracks || !Array.isArray(tracks)) {
                 return null;
             }
+            // Structural check first: YouTube marks the original (non-dubbed) audio track
+            // with an id ending in the magic suffix ".4" (e.g. "en.4", "en-US.4"), regardless
+            // of the track's display name or the page's locale/player variant. Falling back to
+            // matching localized display-name text (below) is what breaks under AirPlay HD's
+            // desktop embed page and for videos whose track names don't match a known word.
+            const byId = tracks.find(track => typeof track?.id === "string" && /\.4$/.test(track.id));
+            if (byId) {
+                return byId;
+            }
             let languageFieldName = null;
             for (const track of tracks) {
                 if (!track || typeof track !== "object") {
@@ -600,34 +612,60 @@ extension PlayerWebView {
                     }
                 }
             }
-            sendError("No original audio track found");
         }
 
-        async function handleAudioTrack() {
+        // Retries: under AirPlay HD (desktop embed page) the audio track list can still be
+        // empty right at loadedmetadata, and YouTube may only settle on a (possibly dubbed)
+        // default track a moment later. A single check right away misses that, so keep
+        // checking for a few seconds instead of giving up after one attempt. This does not
+        // delay playback — it runs fire-and-forget alongside it.
+        const audioTrackRetryDelaysMs = [500, 1000, 2000, 4000];
+        function handleAudioTrack(attempt = 0) {
             const player = document.getElementById("movie_player");
-            const tracks = player.getAvailableAudioTracks();
-            const currentTrack = player.getAudioTrack();
-            const captionTrack = getCaptionTrack(currentTrack);
-            const transcriptUrl = captionTrack?.url;
-            sendMessage("transcriptUrl", transcriptUrl ?? "");
+            const tracks = player?.getAvailableAudioTracks();
+            const currentTrack = player?.getAudioTrack();
+
+            if (attempt === 0) {
+                const captionTrack = getCaptionTrack(currentTrack);
+                sendMessage("transcriptUrl", captionTrack?.url ?? "");
+            }
 
             if (!originalAudio) {
                 return;
             }
-
             if (!tracks || !currentTrack) {
+                retryHandleAudioTrack(attempt);
                 return;
             }
-            const originalTrack = getOriginalTrack(tracks);
-            if (originalTrack) {
-                if (`${originalTrack}` === `${currentTrack}`) {
-                    return;
-                }
-                const isAudioTrackSet = await player.setAudioTrack(originalTrack);
-                if (isAudioTrackSet && enableLogging) {
-                    sendMessage('originalAudioTrack', originalTrack.name);
-                }
+            // If a prior load of this same video already worked out which track id is the
+            // original one, trust that over re-guessing: this page (e.g. AirPlay HD's desktop
+            // embed) may expose tracks less clearly than the one that resolved it originally.
+            const originalTrack = (preferredAudioTrackId
+                && tracks.find(track => track?.id === preferredAudioTrackId))
+                || getOriginalTrack(tracks);
+            if (!originalTrack) {
+                retryHandleAudioTrack(attempt);
+                return;
             }
+            if (`${originalTrack}` === `${currentTrack}`) {
+                sendMessage('originalAudioTrack', originalTrack.id);
+                return;
+            }
+            player.setAudioTrack(originalTrack).then((isAudioTrackSet) => {
+                if (isAudioTrackSet) {
+                    sendMessage('originalAudioTrack', originalTrack.id);
+                } else {
+                    retryHandleAudioTrack(attempt);
+                }
+            });
+        }
+
+        function retryHandleAudioTrack(attempt) {
+            if (attempt >= audioTrackRetryDelaysMs.length) {
+                sendError("No original audio track found");
+                return;
+            }
+            setTimeout(() => handleAudioTrack(attempt + 1), audioTrackRetryDelaysMs[attempt]);
         }
 
         function getCaptionTrack(currentTrack) {
