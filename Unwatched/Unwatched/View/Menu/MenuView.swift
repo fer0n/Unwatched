@@ -49,6 +49,7 @@ struct MenuView: View {
             }
             #if os(iOS)
             .scrollEdgeEffectHidden(for: .bottom)
+            .scrollEdgeEffectStyle(.soft, for: .top)
             #endif
             #if !os(macOS) && !os(visionOS)
             .tabViewSearchActivation(navManager.searchTabShouldAutoFocus ? .searchTabSelection : .automatic)
