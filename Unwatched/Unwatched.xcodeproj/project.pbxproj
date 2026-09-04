@@ -660,6 +660,7 @@
 		6E4AEBEE463448C2BCDC7B25 /* PodcastEpisodeCacheTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 67E1C9774B64420098EC98D5 /* PodcastEpisodeCacheTests.swift */; };
 		FE1000FF000000000000D012 /* SilenceTrimTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = FE1000FF000000000000D011 /* SilenceTrimTests.swift */; };
 		FE1000FF000000000000E012 /* PlayerBackendDispatchTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = FE1000FF000000000000E011 /* PlayerBackendDispatchTests.swift */; };
+		FE1000FF000000000000E022 /* PlayerOwnershipTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = FE1000FF000000000000E021 /* PlayerOwnershipTests.swift */; };
 		88AA10042F0000000000A004 /* MigrationSchemaShapes.swift in Sources */ = {isa = PBXBuildFile; fileRef = 88AA10032F0000000000A003 /* MigrationSchemaShapes.swift */; };
 		88AA10062F0000000000A006 /* SettingsMigrationTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 88AA10052F0000000000A005 /* SettingsMigrationTests.swift */; };
 		88AB10012F9C000100AAAA01 /* ScrollWheelStepper.swift in Sources */ = {isa = PBXBuildFile; fileRef = 88AB10002F9C000100AAAA01 /* ScrollWheelStepper.swift */; };
@@ -736,6 +737,8 @@
 		88CD38762E20782500E7B21C /* TranscriptView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 88CD38742E20781F00E7B21C /* TranscriptView.swift */; };
 		88CD38782E20797C00E7B21C /* PlayerWebViewCoordinator+messages.swift in Sources */ = {isa = PBXBuildFile; fileRef = 88CD38772E20797C00E7B21C /* PlayerWebViewCoordinator+messages.swift */; };
 		88CD38792E20797C00E7B21C /* PlayerWebViewCoordinator+messages.swift in Sources */ = {isa = PBXBuildFile; fileRef = 88CD38772E20797C00E7B21C /* PlayerWebViewCoordinator+messages.swift */; };
+		FE1000FF000000000000E032 /* PlayerWebViewCoordinator+pause.swift in Sources */ = {isa = PBXBuildFile; fileRef = FE1000FF000000000000E031 /* PlayerWebViewCoordinator+pause.swift */; };
+		FE1000FF000000000000E033 /* PlayerWebViewCoordinator+pause.swift in Sources */ = {isa = PBXBuildFile; fileRef = FE1000FF000000000000E031 /* PlayerWebViewCoordinator+pause.swift */; };
 		88CD387B2E20E59100E7B21C /* PlayerError.swift in Sources */ = {isa = PBXBuildFile; fileRef = 88CD387A2E20E59100E7B21C /* PlayerError.swift */; };
 		88CD387C2E20E59100E7B21C /* PlayerError.swift in Sources */ = {isa = PBXBuildFile; fileRef = 88CD387A2E20E59100E7B21C /* PlayerError.swift */; };
 		88CD38812E20E5B400E7B21C /* SwipeDirecton.swift in Sources */ = {isa = PBXBuildFile; fileRef = 88CD38802E20E5B400E7B21C /* SwipeDirecton.swift */; };
@@ -1389,6 +1392,7 @@
 		67E1C9774B64420098EC98D5 /* PodcastEpisodeCacheTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PodcastEpisodeCacheTests.swift; sourceTree = "<group>"; };
 		FE1000FF000000000000D011 /* SilenceTrimTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SilenceTrimTests.swift; sourceTree = "<group>"; };
 		FE1000FF000000000000E011 /* PlayerBackendDispatchTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PlayerBackendDispatchTests.swift; sourceTree = "<group>"; };
+		FE1000FF000000000000E021 /* PlayerOwnershipTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PlayerOwnershipTests.swift; sourceTree = "<group>"; };
 		88AA10032F0000000000A003 /* MigrationSchemaShapes.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MigrationSchemaShapes.swift; sourceTree = "<group>"; };
 		88AA10052F0000000000A005 /* SettingsMigrationTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SettingsMigrationTests.swift; sourceTree = "<group>"; };
 		88AB10002F9C000100AAAA01 /* ScrollWheelStepper.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ScrollWheelStepper.swift; sourceTree = "<group>"; };
@@ -1439,6 +1443,7 @@
 		88CD36FF2E203FB200E7B21C /* PlayerWebView+Initscript.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "PlayerWebView+Initscript.swift"; sourceTree = "<group>"; };
 		88CD38742E20781F00E7B21C /* TranscriptView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TranscriptView.swift; sourceTree = "<group>"; };
 		88CD38772E20797C00E7B21C /* PlayerWebViewCoordinator+messages.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "PlayerWebViewCoordinator+messages.swift"; sourceTree = "<group>"; };
+		FE1000FF000000000000E031 /* PlayerWebViewCoordinator+pause.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "PlayerWebViewCoordinator+pause.swift"; sourceTree = "<group>"; };
 		88CD387A2E20E59100E7B21C /* PlayerError.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PlayerError.swift; sourceTree = "<group>"; };
 		88CD38802E20E5B400E7B21C /* SwipeDirecton.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SwipeDirecton.swift; sourceTree = "<group>"; };
 		88CD38832E20E66300E7B21C /* TranscriptService.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TranscriptService.swift; sourceTree = "<group>"; };
@@ -1839,6 +1844,7 @@
 				67E1C9774B64420098EC98D5 /* PodcastEpisodeCacheTests.swift */,
 				FE1000FF000000000000D011 /* SilenceTrimTests.swift */,
 				FE1000FF000000000000E011 /* PlayerBackendDispatchTests.swift */,
+				FE1000FF000000000000E021 /* PlayerOwnershipTests.swift */,
 				88AA10032F0000000000A003 /* MigrationSchemaShapes.swift */,
 				88AA10052F0000000000A005 /* SettingsMigrationTests.swift */,
 			);
@@ -2294,6 +2300,7 @@
 				887683712C53842600EB05B9 /* PlayerWebViewCoordinator.swift */,
 				88AA10010001000000000011 /* WebPlayerWarmup.swift */,
 				88CD38772E20797C00E7B21C /* PlayerWebViewCoordinator+messages.swift */,
+				FE1000FF000000000000E031 /* PlayerWebViewCoordinator+pause.swift */,
 			);
 			path = PlayerWebView;
 			sourceTree = "<group>";
@@ -3052,6 +3059,7 @@
 				6E4AEBEE463448C2BCDC7B25 /* PodcastEpisodeCacheTests.swift in Sources */,
 				FE1000FF000000000000D012 /* SilenceTrimTests.swift in Sources */,
 				FE1000FF000000000000E012 /* PlayerBackendDispatchTests.swift in Sources */,
+				FE1000FF000000000000E022 /* PlayerOwnershipTests.swift in Sources */,
 				88AA10042F0000000000A004 /* MigrationSchemaShapes.swift in Sources */,
 				88AA10062F0000000000A006 /* SettingsMigrationTests.swift in Sources */,
 				88C33B202EC9E0B300E7685C /* ContentView.swift in Sources */,
@@ -3362,6 +3370,7 @@
 				8826DD222E6EE9CA008234B3 /* PrivacySettingsView.swift in Sources */,
 				883D44FA301807A400950B89 /* SearchSubscriptionListItem.swift in Sources */,
 				88CD38792E20797C00E7B21C /* PlayerWebViewCoordinator+messages.swift in Sources */,
+				FE1000FF000000000000E033 /* PlayerWebViewCoordinator+pause.swift in Sources */,
 				889AF90F2C50ECE7001CEDE6 /* LibraryNavListItem.swift in Sources */,
 				88274EFC301E46FC0033352A /* PlayerEdgeSwipe.swift in Sources */,
 				88F3AA822C99870F0030B2EA /* Chapter.swift in Sources */,
@@ -3805,6 +3814,7 @@
 				889924842C485989001185A6 /* LibraryDestination.swift in Sources */,
 				884C430C2ED8B7FE00FA8DC4 /* DescriptionDetailView.swift in Sources */,
 				88CD38782E20797C00E7B21C /* PlayerWebViewCoordinator+messages.swift in Sources */,
+				FE1000FF000000000000E032 /* PlayerWebViewCoordinator+pause.swift in Sources */,
 				887785EF2EEAB37A00795394 /* SignalInterval.swift in Sources */,
 				887E82AE2CD8FD2F00B196EA /* WatchInUnwatched.swift in Sources */,
 				88DD147B2E7E9878007BA1F4 /* MiniPlayerContent.swift in Sources */,

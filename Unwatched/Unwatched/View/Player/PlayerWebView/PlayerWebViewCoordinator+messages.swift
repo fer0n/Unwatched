@@ -11,6 +11,10 @@ import UnwatchedShared
 extension PlayerWebViewCoordinator {
     // swiftlint:disable:next cyclomatic_complexity function_body_length
     func handleJsMessages(_ topic: String, _ payload: String?) {
+        guard !retired else {
+            handleRetiredMessage(topic, payload)
+            return
+        }
         switch topic {
         case "pause":
             handlePause(payload)
@@ -269,27 +273,6 @@ extension PlayerWebViewCoordinator {
         #endif
     }
 
-    func handlePause(_ payload: String?) {
-        guard let payload else {
-            Log.warning("No payload given for handlePause")
-            return
-        }
-        let payloadArray = payload.split(separator: ",").map { String($0) }
-        let payloadPlaybackId = payloadArray[safe: 1]
-        let playbackId = UserDefaults.standard.string(forKey: Const.playbackId) ?? ""
-        if payloadPlaybackId != playbackId {
-            Log.info("handlePause: playbackId mismatch, not pausing")
-            return
-        }
-        parent.player.reportPaused()
-
-        flushStats(timeString: payloadArray[safe: 0], urlString: payloadArray[safe: 2])
-
-        #if os(iOS)
-        BackgroundMonitor.handlePause()
-        #endif
-    }
-
     func handlePlaybackSpeed(_ payload: String?) {
         guard let payload,
               let playbackRate = Double(payload),
@@ -398,19 +381,6 @@ extension PlayerWebViewCoordinator {
         }
         withAnimation(.seekScrubber) {
             parent.player.currentTime = time
-        }
-    }
-
-    func flushStats(timeString: String? = nil, urlString: String? = nil) {
-        let videoId: String?
-        if let urlString, let url = URL(string: urlString) {
-            videoId = UrlService.getYoutubeIdFromUrl(url: url)
-        } else {
-            videoId = parent.player.video?.youtubeId
-        }
-        let resolvedTime = timeString ?? parent.player.currentTime.map { String($0) }
-        if let videoId {
-            handleTimeUpdate(resolvedTime, persist: true, youtubeId: videoId)
         }
     }
 }

@@ -44,8 +44,8 @@ final class AVPlayerViewModel: PlayerBackend {
     @ObservationIgnored var lastObservedTime: Double?
 
     @ObservationIgnored var loadedVideoId: String?
-    /// The `AVPlayerView` driving this instance; see `cleanup(owner:)`.
-    @ObservationIgnored private var ownerToken: UUID?
+    /// The `AVPlayerView`s driving this instance; see `cleanup(owner:)`.
+    @ObservationIgnored private var liveOwners: Set<UUID> = []
     @ObservationIgnored var hasRetriedPlayback = false
     @ObservationIgnored var hasAppliedH264Cap = false
     @ObservationIgnored var originalAudioLanguage: String?
@@ -420,17 +420,20 @@ final class AVPlayerViewModel: PlayerBackend {
 
     @MainActor
     func takeOwnership(_ token: UUID) {
-        ownerToken = token
+        liveOwners.insert(token)
     }
 
-    /// Ignored when another view has taken over since: SwiftUI can build the replacement view
-    /// before the outgoing one disappears.
+    /// Tears down once the last live view has handed its token back: a player switch briefly has two views,
+    /// and which one owns the player can't be told from the order they register in.
     @MainActor
     func cleanup(owner token: UUID? = nil) {
-        if let token, token != ownerToken {
-            return
+        if let token {
+            guard liveOwners.remove(token) != nil, liveOwners.isEmpty else {
+                return
+            }
+        } else {
+            liveOwners.removeAll()
         }
-        ownerToken = nil
         stopTimeObserver()
         loadTask?.cancel()
         backgroundQualityUpgradeTask?.cancel()
