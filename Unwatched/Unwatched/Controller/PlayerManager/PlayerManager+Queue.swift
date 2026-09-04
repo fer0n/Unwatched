@@ -25,6 +25,13 @@ extension PlayerManager {
         }
     }
 
+    /// The next up of the latched slice.
+    @MainActor
+    func topVideoInQueue(_ context: ModelContext? = nil) -> Video? {
+        let context = context ?? DataProvider.mainContext
+        return VideoService.getTopVideoInQueue(context, queueFilter(context))
+    }
+
     /// Whatever plays takes the top spot of the *whole* queue, not just the slice it came from: "add to top" inserts
     /// below the playing video, undo restores around it and the unfiltered list shows it first.
     @MainActor
