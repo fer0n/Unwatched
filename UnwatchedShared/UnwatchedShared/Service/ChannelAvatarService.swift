@@ -46,7 +46,7 @@ public enum ChannelAvatarService {
             "params": "EgVhYm91dA=="
         ])
 
-        let (data, _) = try await URLSession.shared.data(for: request)
+        let (data, _) = try await URLSession.app.data(for: request)
         guard let json = try JSONSerialization.jsonObject(with: data) as? [String: Any] else { return nil }
         return avatarURL(from: json)
     }

@@ -35,7 +35,7 @@ struct TranscriptService {
 
     private static func loadTranscript(from url: URL) async throws -> [TranscriptEntry] {
         Log.info("loadTranscript: \(url)")
-        let (data, _) = try await URLSession.shared.data(from: url)
+        let (data, _) = try await URLSession.app.data(from: url)
         let parser = TranscriptParser()
         let transcripts = try parser.parse(data: data)
         return analyseBreaks(transcripts)
@@ -217,7 +217,7 @@ struct TranscriptService {
             throw TranscriptError.noAudio
         }
         Log.info("downloading \(youtubeId) to transcribe it")
-        let (temporary, response) = try await URLSession.shared.download(from: mediaUrl)
+        let (temporary, response) = try await URLSession.app.download(from: mediaUrl)
         guard response.isSuccessfulHttp else {
             try? FileManager.default.removeItem(at: temporary)
             throw TranscriptError.noAudio

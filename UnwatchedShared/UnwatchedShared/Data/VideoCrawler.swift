@@ -8,7 +8,7 @@ import OSLog
 
 public struct VideoCrawler {
     public static func fetchFeedData(_ url: URL) async throws -> Data {
-        let (data, response) = try await URLSession.shared.data(from: url)
+        let (data, response) = try await URLSession.app.data(from: url)
 
         guard response.isSuccessfulHttp else {
             throw URLError(.badServerResponse)

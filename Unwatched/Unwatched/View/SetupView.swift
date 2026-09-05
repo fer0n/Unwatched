@@ -170,6 +170,10 @@ struct SetupView: View {
             ChapterService.cleanupDerivedChapters(olderThanDays: Const.cleanupCacheDays)
         }
 
+        if UserDefaults.standard.shouldPerform(Const.purgeLegacyUrlCache, interval: .monthly) {
+            URLSession.purgeLegacyDiskCache()
+        }
+
         CleanupService.runScheduledCleanup(
             deleteWatchedOlderThan: dueCleanupSetting(Const.autoDeleteWatchedVideos) {
                 cleanupInterval(forDays: $0)

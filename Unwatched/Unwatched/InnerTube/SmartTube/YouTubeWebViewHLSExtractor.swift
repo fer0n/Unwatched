@@ -710,7 +710,7 @@ final class YouTubeWebViewHLSExtractor: NSObject {
                 "https://www.youtube.com/s/player/\(playerID)/player_es6.vflset/en_US/base.js"
             ) else { return nil }
             extractLog.notice("⚠️ [solver] downloading player JS for \(playerID as NSString)")
-            guard let (data, _) = try? await URLSession.shared.data(from: playerURL),
+            guard let (data, _) = try? await URLSession.app.data(from: playerURL),
                   !data.isEmpty,
                   let js = String(data: data, encoding: .utf8) else {
                 extractLog.warning("⚠️ [solver] player JS download failed")

@@ -189,7 +189,7 @@ final class AVPlayerPrefetchManager {
             request.setValue("bytes=0-1", forHTTPHeaderField: "Range")
             // `bytes` returns on the response head, so a server that ignores the range header
             // doesn't get to send the stream body to a request that only wants its status
-            let response = try? await URLSession.shared.bytes(for: request)
+            let response = try? await URLSession.app.bytes(for: request)
             response?.0.task.cancel()
             let status = (response?.1 as? HTTPURLResponse)?.statusCode ?? 0
             guard let self, !Task.isCancelled, self.result?.videoId == videoId else {
@@ -332,7 +332,7 @@ extension AVPlayerPrefetchManager {
         let ua = WKHLSManager.desktopSafariUA
         var request = URLRequest(url: url, timeoutInterval: 20)
         request.setValue(ua, forHTTPHeaderField: "User-Agent")
-        guard let (data, response) = try? await URLSession.shared.data(for: request),
+        guard let (data, response) = try? await URLSession.app.data(for: request),
               let http = response as? HTTPURLResponse, http.statusCode == 200,
               let manifestText = String(data: data, encoding: .utf8), !manifestText.isEmpty else {
             Log.info("[AVPlayerView] prefetch wkHLS manifest probe failed: \(videoId)")

@@ -55,7 +55,7 @@ enum YoutubeChannelSearch {
         request.setValue("en-US,en;q=0.9", forHTTPHeaderField: "Accept-Language")
         request.setValue(consentCookie, forHTTPHeaderField: "Cookie")
 
-        let (data, _) = try await URLSession.shared.data(for: request)
+        let (data, _) = try await URLSession.app.data(for: request)
         guard let html = String(data: data, encoding: .utf8) else {
             Log.warning("channelSearch: response wasn't utf8")
             throw YoutubeChannelSearchError.responseUnreadable

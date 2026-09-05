@@ -544,7 +544,7 @@ extension AVPlayerViewModel {
         let ua = WKHLSManager.desktopSafariUA
         var request = URLRequest(url: url, timeoutInterval: 20)
         request.setValue(ua, forHTTPHeaderField: "User-Agent")
-        guard let (data, response) = try? await URLSession.shared.data(for: request),
+        guard let (data, response) = try? await URLSession.app.data(for: request),
               let http = response as? HTTPURLResponse,
               http.statusCode == 200,
               let manifestText = String(data: data, encoding: .utf8),

@@ -48,7 +48,7 @@ actor AnalyticsQueue {
         guard let body = try? JSONEncoder().encode(["events": batch]) else { return false }
         request.httpBody = body
 
-        guard let (_, response) = try? await URLSession.shared.data(for: request) else {
+        guard let (_, response) = try? await URLSession.app.data(for: request) else {
             return false
         }
         return (response as? HTTPURLResponse)?.statusCode == 204

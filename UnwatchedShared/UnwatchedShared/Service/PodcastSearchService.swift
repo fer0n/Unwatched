@@ -36,7 +36,7 @@ public enum PodcastSearchService {
     }
 
     private static func fetchResults(_ url: URL) async throws -> [SendableSubscription] {
-        let (data, response) = try await URLSession.shared.data(from: url)
+        let (data, response) = try await URLSession.app.data(from: url)
         guard response.isSuccessfulHttp else {
             throw URLError(.badServerResponse)
         }

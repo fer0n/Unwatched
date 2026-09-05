@@ -70,7 +70,7 @@ public enum PodcastService {
     /// Fetches a `podcast:chapters` JSON document.
     public static func fetchChapters(_ url: URL, duration: Double?) async -> [SendableChapter]? {
         do {
-            let (data, response) = try await URLSession.shared.data(from: url)
+            let (data, response) = try await URLSession.app.data(from: url)
             guard response.isSuccessfulHttp else { return nil }
             let document = try JSONDecoder().decode(ChaptersDocument.self, from: data)
             let chapters = document.chapters
@@ -217,7 +217,7 @@ public enum PodcastService {
 
     public static func fetchTranscript(_ source: PodcastTranscriptSource) async -> [TranscriptEntry]? {
         do {
-            let (data, response) = try await URLSession.shared.data(from: source.url)
+            let (data, response) = try await URLSession.app.data(from: source.url)
             guard response.isSuccessfulHttp else {
                 Log.warning("podcast transcript unavailable")
                 return nil

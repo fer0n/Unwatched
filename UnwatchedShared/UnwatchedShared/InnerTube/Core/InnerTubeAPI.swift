@@ -263,6 +263,7 @@ public actor InnerTubeAPI {
         config.timeoutIntervalForRequest = Self.requestTimeoutInterval
         config.timeoutIntervalForResource = 60
         config.waitsForConnectivity = true
+        config.urlCache = .memoryOnly
         self.session = URLSession(configuration: config)
         self.authToken = authToken
         self.poTokenProvider = poTokenProvider

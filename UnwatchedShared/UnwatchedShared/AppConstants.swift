@@ -382,6 +382,7 @@ public struct Const {
     public static let autoDeleteOrphanedVideos = "autoDeleteOrphanedVideos"
     public static let autoDeleteInboxVideosLimit = "autoDeleteInboxVideosLimit"
     public static let cleanupPodcastEpisodes = "cleanupPodcastEpisodes"
+    public static let purgeLegacyUrlCache = "purgeLegacyUrlCache"
 
     /// Persisted history tokens, keyed by model type name
     public static let historyTokens = "historyTokens"

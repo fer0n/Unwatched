@@ -285,7 +285,7 @@ public enum ID3ChapterReader {
         var request = URLRequest(url: url)
         request.setValue("bytes=\(range.lowerBound)-\(range.upperBound - 1)", forHTTPHeaderField: "Range")
         do {
-            let (data, response) = try await URLSession.shared.data(for: request)
+            let (data, response) = try await URLSession.app.data(for: request)
             guard response.isSuccessfulHttp else { return nil }
             // a server that ignores the range hands back the whole episode; take the head of it
             return Array(data.prefix(range.count))
