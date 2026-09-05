@@ -7,8 +7,16 @@ import Foundation
 import OSLog
 
 public struct VideoCrawler {
-    public static func fetchFeedData(_ url: URL) async throws -> Data {
-        let (data, response) = try await URLSession.app.data(from: url)
+    /// `ignoreCache` skips the local response cache, for a refresh the user asked for by hand.
+    /// It does not guarantee fresh data: YouTube serves feeds from an edge pool whose copies are
+    /// up to `max-age=900` old, so this trades a copy that is certainly unchanged for one that
+    /// might not be.
+    public static func fetchFeedData(_ url: URL, ignoreCache: Bool = false) async throws -> Data {
+        var request = URLRequest(url: url)
+        if ignoreCache {
+            request.cachePolicy = .reloadIgnoringLocalCacheData
+        }
+        let (data, response) = try await URLSession.app.data(for: request)
 
         guard response.isSuccessfulHttp else {
             throw URLError(.badServerResponse)
@@ -40,8 +48,8 @@ public struct VideoCrawler {
         return rssParserDelegate
     }
 
-    public static func loadVideosFromRSS(url: URL) async throws -> [SendableVideo] {
-        let data = try await fetchFeedData(url)
+    public static func loadVideosFromRSS(url: URL, ignoreCache: Bool = false) async throws -> [SendableVideo] {
+        let data = try await fetchFeedData(url, ignoreCache: ignoreCache)
         if PodcastFeedParser.isPodcastFeed(data) {
             let episodes = try PodcastService.parseFeed(
                 data,

@@ -59,7 +59,7 @@ struct CoreRefreshButton: View {
     private func refresh(hardRefresh: Bool = false) async {
         if refresher.isLoading { return }
         if let subId = refreshOnlySubscription {
-            await refresher.refreshSubscription(subscriptionId: subId, hardRefresh: hardRefresh)
+            await refresher.refreshSubscription(subscriptionId: subId, hardRefresh: hardRefresh, ignoreCache: true)
         } else {
             await refresher.refreshAll(hardRefresh: hardRefresh)
         }

@@ -84,8 +84,14 @@ actor RefreshActor {
         await refresh(hardRefresh: hardRefresh, firstTimeVideoLimit: firstTimeVideoLimit)
     }
 
-    func refreshSubscription(subscriptionId: PersistentIdentifier, hardRefresh: Bool = false) async {
-        await refresh(subscriptionIds: [subscriptionId], hardRefresh: hardRefresh)
+    /// `ignoreCache` is for a refresh the user asked for on one subscription: a cached feed would
+    /// answer it with the bytes they already have (see `VideoCrawler.fetchFeedData`).
+    func refreshSubscription(
+        subscriptionId: PersistentIdentifier,
+        hardRefresh: Bool = false,
+        ignoreCache: Bool = false
+    ) async {
+        await refresh(subscriptionIds: [subscriptionId], hardRefresh: hardRefresh, ignoreCache: ignoreCache)
     }
 
     func startLoading() async -> Bool {
@@ -104,7 +110,8 @@ actor RefreshActor {
     private func refresh(
         subscriptionIds: [PersistentIdentifier]? = nil,
         hardRefresh: Bool = false,
-        firstTimeVideoLimit: Int? = nil
+        firstTimeVideoLimit: Int? = nil,
+        ignoreCache: Bool = false
     ) async {
         let canStartLoading = await startLoading()
         guard canStartLoading else {
@@ -115,7 +122,8 @@ actor RefreshActor {
         await performRefresh(
             subscriptionIds: subscriptionIds,
             hardRefresh: hardRefresh,
-            firstTimeVideoLimit: firstTimeVideoLimit
+            firstTimeVideoLimit: firstTimeVideoLimit,
+            ignoreCache: ignoreCache
         )
         await stopLoading()
     }
@@ -123,7 +131,8 @@ actor RefreshActor {
     private func performRefresh(
         subscriptionIds: [PersistentIdentifier]?,
         hardRefresh: Bool,
-        firstTimeVideoLimit: Int? = nil
+        firstTimeVideoLimit: Int? = nil,
+        ignoreCache: Bool = false
     ) async {
         let isFullRefresh = subscriptionIds?.isEmpty ?? true
         if isFullRefresh {
@@ -133,7 +142,8 @@ actor RefreshActor {
             let task = VideoService.loadNewVideosInBg(
                 subscriptionIds: subscriptionIds,
                 fetchDurations: true,
-                firstTimeVideoLimit: firstTimeVideoLimit
+                firstTimeVideoLimit: firstTimeVideoLimit,
+                ignoreCache: ignoreCache
             )
             let result = try await task.value
             if isFullRefresh {

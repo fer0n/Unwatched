@@ -34,6 +34,9 @@ actor VideoActor: SharedContextActor {
     /// Overrides `Const.triageNewSubs` for the current `loadVideos` run
     var firstTimeVideoLimit: Int?
 
+    /// Skips the local response cache for the current `loadVideos` run
+    var ignoreCache = false
+
     func addForeignUrls(_ urls: [URL],
                         in videoplacement: VideoPlacementArea,
                         at index: Int,
@@ -185,13 +188,18 @@ actor VideoActor: SharedContextActor {
     func loadVideos(
         _ subscriptionIds: [PersistentIdentifier]?,
         fetchDurations: Bool,
-        firstTimeVideoLimit: Int? = nil
+        firstTimeVideoLimit: Int? = nil,
+        ignoreCache: Bool = false
     ) async throws -> NewVideosNotificationInfo {
         Log.info("loadVideos")
         newVideos = NewVideosNotificationInfo()
         fetchErrors = []
         self.firstTimeVideoLimit = firstTimeVideoLimit
-        defer { self.firstTimeVideoLimit = nil }
+        self.ignoreCache = ignoreCache
+        defer {
+            self.firstTimeVideoLimit = nil
+            self.ignoreCache = false
+        }
 
         let sendableSubs = try getSubscriptions(subscriptionIds)
         let placementInfo = getDefaultVideoPlacement()
