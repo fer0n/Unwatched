@@ -111,28 +111,11 @@ struct InlineSpeedControl: View {
                 .padding(.leading, 3)
                 .padding(.trailing, -5)
 
-            SpeedMenu(
-                selectedSpeed: $selectedSpeed,
-                isOn: $isOn,
-                canSetCustomSpeed: player.video?.subscription != nil
-            ) {
-                FullscreenSpeedControlContent(
-                    value: selectedSpeed,
-                    onChange: { selectedSpeed = $0 },
-                    triggerInteraction: { },
-                    isInteracting: $isInteracting,
-                    fontSize: 18,
-                    fontWidth: .standard,
-                    frameWidth: 50
-                )
-                .foregroundStyle(Color.automaticBlack)
+            speedSelection
+                // no `disabled` while a temporary speed is set: toggling it rebuilds the label, which
+                // resets the speed's scroll position. Taps are caught by the overlay in the player variant.
                 .frame(maxHeight: .infinity)
                 .padding(.trailing, 2)
-            }
-            .buttonStyle(.plain)
-            // no `disabled` while a temporary speed is set: toggling it rebuilds the label, which
-            // resets the speed's scroll position. Taps are caught by the overlay in the player variant.
-            .accessibilityLabel(accessibilityLabel)
 
             if showTemporarySpeed {
                 Button {
@@ -161,6 +144,45 @@ struct InlineSpeedControl: View {
         .playerControlBackground(in: Capsule())
         #endif
         .fixedSize(horizontal: true, vertical: false)
+    }
+
+    /// On iOS the menu is anchored on a `UIButton`: a SwiftUI `Menu` swallows every pan inside
+    /// its label as of iOS 27, which would leave the speed unscrollable.
+    @ViewBuilder
+    var speedSelection: some View {
+        #if os(iOS)
+        SpeedMenuButton(
+            selectedSpeed: $selectedSpeed,
+            isOn: $isOn,
+            canSetCustomSpeed: player.video?.subscription != nil,
+            accessibilityLabel: accessibilityLabel
+        ) {
+            speedScroller
+        }
+        #else
+        SpeedMenu(
+            selectedSpeed: $selectedSpeed,
+            isOn: $isOn,
+            canSetCustomSpeed: player.video?.subscription != nil
+        ) {
+            speedScroller
+        }
+        .buttonStyle(.plain)
+        .accessibilityLabel(accessibilityLabel)
+        #endif
+    }
+
+    var speedScroller: some View {
+        FullscreenSpeedControlContent(
+            value: selectedSpeed,
+            onChange: { selectedSpeed = $0 },
+            triggerInteraction: { },
+            isInteracting: $isInteracting,
+            fontSize: 18,
+            fontWidth: .standard,
+            frameWidth: 50
+        )
+        .foregroundStyle(Color.automaticBlack)
     }
 
     var hasTempSpeed: Bool {
@@ -281,86 +303,6 @@ struct PlayerSpeedMenu<Label: View>: View {
             onPopoverChange: onPopoverChange,
             label: label
         )
-    }
-}
-
-/// Menu entries to select the playback speed: a stepper for fine adjustments,
-/// the most common speeds and the toggle to restrict the speed to the current channel.
-struct SpeedMenuContent: View {
-    @Binding var selectedSpeed: Double
-    @Binding var isOn: Bool
-
-    var canSetCustomSpeed = true
-
-    /// Speeds offered in the menu; the player's speed control scrolls through all of them
-    let menuSpeeds: [Double] = [1, 1.3, 1.5, 2]
-
-    var body: some View {
-        // the menu shows neutral system colors instead of inheriting the app's theme tint
-        Group {
-            speedStepper
-
-            ControlGroup {
-                ForEach(menuSpeeds, id: \.self) { speed in
-                    Button {
-                        selectedSpeed = speed
-                    } label: {
-                        Text(verbatim: "\(SpeedHelper.formatSpeed(speed))×")
-                    }
-                    .disabled(speed == selectedSpeed)
-                }
-            }
-            .controlGroupStyle(.compactMenu)
-
-            Divider()
-            customSettingButton
-        }
-        .tint(nil)
-    }
-
-    /// Compact row stepping through all speeds, with the current one in the middle.
-    /// The id keeps it apart from the speeds below: menu entries are diffed by title,
-    /// so a duplicate would silently be moved instead of inserted.
-    var speedStepper: some View {
-        ControlGroup {
-            Button {
-                if let speed = SpeedHelper.getPreviousSpeed(before: selectedSpeed) {
-                    selectedSpeed = speed
-                }
-            } label: {
-                Image(systemName: "minus")
-            }
-            .accessibilityLabel("slowDown")
-
-            Button {
-                // shows the current speed, no action
-            } label: {
-                Text(SpeedHelper.formatSpeed(selectedSpeed))
-            }
-            .id("currentSpeed")
-
-            Button {
-                if let speed = SpeedHelper.getNextSpeed(after: selectedSpeed) {
-                    selectedSpeed = speed
-                }
-            } label: {
-                Image(systemName: "plus")
-            }
-            .accessibilityLabel("speedUp")
-        }
-        .controlGroupStyle(.compactMenu)
-    }
-
-    var customSettingButton: some View {
-        Button {
-            isOn.toggle()
-        } label: {
-            Label(
-                "customSpeedSetting",
-                systemImage: isOn ? Const.customPlaybackSpeedSF : Const.customPlaybackSpeedOffSF
-            )
-        }
-        .disabled(!canSetCustomSpeed)
     }
 }
 
