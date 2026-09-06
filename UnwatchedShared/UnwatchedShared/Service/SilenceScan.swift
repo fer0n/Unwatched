@@ -63,6 +63,7 @@ public struct SilenceScan: Codable, Sendable, Equatable {
 }
 
 /// Reads a downloaded episode once and reports where its pauses are.
+#if !os(watchOS)
 public enum SilenceScanner {
     /// Mono, and downsampled: RMS over a 16 kHz window says exactly what it says over 44.1 kHz, for a third of the
     /// samples.
@@ -208,6 +209,7 @@ public enum SilenceScanner {
         return pauses
     }
 }
+#endif
 
 public enum SilenceScanError: Error {
     case noAudioTrack

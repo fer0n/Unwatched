@@ -7,6 +7,9 @@ import AVFoundation
 import Foundation
 import OSLog
 
+// The scanning machinery follows `SilenceScanner`, which watchOS has no AVAssetReader for.
+#if !os(watchOS)
+
 /// Keeps one scan per downloaded episode, next to the download itself.
 enum SilenceScanStore {
     static func url(for youtubeId: String) -> URL? {
@@ -85,3 +88,4 @@ public actor SilenceScanActor {
         }
     }
 }
+#endif

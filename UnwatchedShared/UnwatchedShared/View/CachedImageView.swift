@@ -52,7 +52,7 @@ public struct CachedImageView<Content, Content2>: View where Content: View, Cont
     public var body: some View {
         Group {
             if let platformImage = image {
-#if os(iOS) || os(tvOS) || os(visionOS)
+#if os(iOS) || os(tvOS) || os(visionOS) || os(watchOS)
                 self.contentImage(Image(uiImage: platformImage))
 #elseif os(macOS)
                 self.contentImage(Image(nsImage: platformImage))

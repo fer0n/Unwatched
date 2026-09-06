@@ -43,7 +43,9 @@ public final class DataProvider: Sendable {
         LaunchTrace.mark(LaunchTrace.Phase.containerBegin)
         Log.info("getModelContainer")
         var enableIcloudSync = UserDefaults.standard.bool(forKey: Const.enableIcloudSync)
-        #if os(tvOS)
+        #if os(tvOS) || os(watchOS)
+        // Neither has a settings screen to turn sync on, and the store is only ever a mirror of
+        // what the phone put in iCloud — without sync there would be nothing to show.
         enableIcloudSync = true
         #endif
 
@@ -122,7 +124,7 @@ public final class DataProvider: Sendable {
         ) {
             storeURL = groupURL.appendingPathComponent(fileName)
         } else {
-            #if os(tvOS)
+            #if os(tvOS) || os(watchOS)
             storeURL = FileManager.default.urls(for: .cachesDirectory, in: .userDomainMask).first!.appendingPathComponent(fileName)
             #elseif os(macOS)
             storeURL = URL.applicationSupportDirectory.appending(path: fileName)

@@ -1,6 +1,6 @@
 //
 //  SyncManager.swift
-//  UnwatchedTV
+//  UnwatchedShared
 //
 
 import SwiftUI
@@ -8,10 +8,9 @@ import Observation
 import Combine
 import OSLog
 import CoreData
-import UnwatchedShared
 
-@Observable class SyncManager {
-    var isSyncing = false
+@Observable public class SyncManager {
+    public var isSyncing = false
 
     @ObservationIgnored var cancellables: Set<AnyCancellable> = []
 
@@ -20,11 +19,11 @@ import UnwatchedShared
     /// while an import is still running.
     @ObservationIgnored private var runningEvents = Set<UUID>()
 
-    init() {
+    public init() {
         setupCloudKitListener()
     }
 
-    func setupCloudKitListener() {
+    public func setupCloudKitListener() {
         Log.info("iCloud sync: Setting up sync notification")
         NotificationCenter.default.publisher(for: NSPersistentCloudKitContainer.eventChangedNotification)
             .sink { [weak self] notification in
@@ -43,7 +42,7 @@ import UnwatchedShared
             .store(in: &cancellables)
     }
 
-    func cancelCloudKitListener() {
+    public func cancelCloudKitListener() {
         Log.info("iCloud sync: cancelling sync notification")
         cancellables.removeAll()
     }

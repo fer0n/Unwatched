@@ -3,7 +3,7 @@
 //  UnwatchedShared
 //
 
-#if !os(tvOS)
+#if !os(tvOS) && !os(watchOS)
 import AVFoundation
 import Foundation
 import OSLog

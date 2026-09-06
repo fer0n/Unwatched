@@ -61,7 +61,7 @@ private func downsampledCGImage(from data: Data, maxPixelSize: CGFloat) -> CGIma
     return CGImageSourceCreateThumbnailAtIndex(source, 0, downsampleOptions)
 }
 
-#if os(iOS) || os(tvOS) || os(visionOS)
+#if os(iOS) || os(tvOS) || os(visionOS) || os(watchOS)
 import UIKit
 public typealias PlatformImage = UIImage
 
@@ -96,7 +96,12 @@ public extension UIImage {
 
     /// Decodes the image up front so the render pass doesn't have to. Call off the main thread.
     func readyForDisplay() -> UIImage {
-        preparingForDisplay() ?? self
+        #if os(watchOS)
+        // `preparingForDisplay()` is unavailable here; the image stays undecoded until it is drawn.
+        return self
+        #else
+        return preparingForDisplay() ?? self
+        #endif
     }
 
     /// Scales an already-decoded image down, for when a smaller size of the same picture is wanted and re-reading
@@ -107,7 +112,23 @@ public extension UIImage {
         guard side > maxPixelSize else { return self }
         let scale = maxPixelSize / side
         let target = CGSize(width: CGFloat(cgImage.width) * scale, height: CGFloat(cgImage.height) * scale)
+        #if os(watchOS)
+        // `preparingThumbnail(of:)` is unavailable here, so redraw at the target size by hand.
+        guard let context = CGContext(
+            data: nil,
+            width: Int(target.width.rounded()),
+            height: Int(target.height.rounded()),
+            bitsPerComponent: 8,
+            bytesPerRow: 0,
+            space: cgImage.colorSpace ?? CGColorSpaceCreateDeviceRGB(),
+            bitmapInfo: CGImageAlphaInfo.premultipliedLast.rawValue
+        ) else { return nil }
+        context.interpolationQuality = .high
+        context.draw(cgImage, in: CGRect(origin: .zero, size: target))
+        return context.makeImage().map(UIImage.init(cgImage:))
+        #else
         return preparingThumbnail(of: target)
+        #endif
     }
 }
 #endif
