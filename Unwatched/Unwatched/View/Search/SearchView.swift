@@ -192,7 +192,7 @@ struct SearchView: View {
             } description: {
                 Text(verbatim: error)
             } actions: {
-                Button("retry") { vm.search() }
+                Button("retry") { vm.search(force: true) }
                 if let url = youtubeSearchURL(for: vm.activeQuery) {
                     Button("searchInBrowser") {
                         openBrowserFallback(url)
@@ -211,7 +211,7 @@ struct SearchView: View {
                     }
                 }
             }
-        } else if !vm.hasSearched || searchFocused {
+        } else if !vm.hasSearched || vm.isEditingQuery {
             SearchSuggestionsView(vm: vm, searchFocused: $searchFocused, onSelect: search(for:))
         } else {
             resultsList
