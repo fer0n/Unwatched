@@ -52,7 +52,9 @@ struct MenuView: View {
             .scrollEdgeEffectStyle(.soft, for: .top)
             #endif
             #if !os(macOS) && !os(visionOS)
-            .tabViewSearchActivation(navManager.searchTabShouldAutoFocus ? .searchTabSelection : .automatic)
+            // Constant on purpose: read live, so flipping it mid-typing rebuilds the tab bar's
+            // search presentation and the field jumps to the top.
+            .tabViewSearchActivation(.searchTabSelection)
             #endif
             #if os(macOS)
             .popover(isPresented: showVideoDetail) {
