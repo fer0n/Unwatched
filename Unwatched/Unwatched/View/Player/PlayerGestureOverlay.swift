@@ -27,6 +27,10 @@ struct PlayerGestureOverlay: ViewModifier {
     @State private var gestureState = GestureTrackingState()
     @State private var swipeTransform = SwipeTransform()
     @State private var hapticTrigger = false
+    #if canImport(UIKit) && !os(visionOS)
+    /// Global coordinates, so the UIKit touch source reports into the `DragGesture`'s space.
+    @State private var overlayFrame: CGRect = .zero
+    #endif
 
     // Must match GestureTrackingState.swipeThreshold so the visual wall aligns with action trigger
     private let swipeThreshold: CGFloat = 50
@@ -45,10 +49,13 @@ struct PlayerGestureOverlay: ViewModifier {
                                 DragGesture(minimumDistance: 0, coordinateSpace: .local)
                                     .onChanged { value in
                                         guard !gestureState.isPinching && !isExternallyPinching else { return }
-                                        gestureState.handleTouchStart(value: value, in: geometry.size) { gesture in
+                                        gestureState.handleTouchStart(
+                                            startLocation: value.startLocation,
+                                            in: geometry.size
+                                        ) { gesture in
                                             handleGesture(gesture)
                                         }
-                                        gestureState.handleTouchMove(value: value, in: geometry.size)
+                                        gestureState.handleTouchMove(location: value.location, in: geometry.size)
                                         applySwipeAnimation(translation: value.translation)
                                     }
                                     .onEnded { value in
@@ -68,6 +75,19 @@ struct PlayerGestureOverlay: ViewModifier {
                                             }
                                     }
                             )
+                            #if canImport(UIKit) && !os(visionOS)
+                            .onGeometryChange(for: CGRect.self) { $0.frame(in: .global) }
+                                action: { overlayFrame = $0 }
+                            // never recognizes, so it does not compete with the drag above it
+                            .gesture(
+                                EarlyTouchGesture(
+                                    overlayFrame: overlayFrame,
+                                    gestureState: gestureState,
+                                    isExternallyPinching: isExternallyPinching,
+                                    handleGesture: { handleGesture($0) }
+                                )
+                            )
+                            #endif
                             .simultaneousGesture(
                                 MagnifyGesture()
                                     .onChanged { _ in
@@ -240,6 +260,108 @@ struct PlayerGestureOverlay: ViewModifier {
         }
     }
 }
+
+#if canImport(UIKit) && !os(visionOS)
+
+/// Starts the touch, and so the long-press timer, from UIKit instead of waiting for SwiftUI.
+///
+/// In landscape full screen `_UISystemGestureGateGR` withholds the touch from `DragGesture` for
+/// ~0.75s in a band down one side. Measured on device: 29ms to a UIKit recognizer, 780ms to
+/// `onChanged`. `.defersSystemGestures` does not affect the gate. Only the start has to beat it —
+/// everything else still comes from the `DragGesture`.
+private struct EarlyTouchGesture: UIGestureRecognizerRepresentable {
+    let overlayFrame: CGRect
+    let gestureState: GestureTrackingState
+    let isExternallyPinching: Bool
+    let handleGesture: @MainActor (PlayerGestureOverlay.GestureType) -> Void
+
+    func makeUIGestureRecognizer(context: Context) -> EarlyTouchRecognizer {
+        let recognizer = EarlyTouchRecognizer()
+        // listen only: never hold a touch back from anything else
+        recognizer.cancelsTouchesInView = false
+        recognizer.delaysTouchesBegan = false
+        recognizer.delaysTouchesEnded = false
+        recognizer.delegate = context.coordinator
+        return recognizer
+    }
+
+    func updateUIGestureRecognizer(_ recognizer: EarlyTouchRecognizer, context: Context) {
+        let frame = overlayFrame
+        // window coordinates share SwiftUI's `.global` origin; the host view may not be that rect
+        func local(_ point: CGPoint) -> CGPoint {
+            CGPoint(x: point.x - frame.minX, y: point.y - frame.minY)
+        }
+        recognizer.onBegan = { point in
+            guard frame.width > 0, frame.height > 0, frame.contains(point) else { return }
+            guard !gestureState.isPinching, !isExternallyPinching else { return }
+            // the drag's `onEnded` can lag a gate timeout behind, leaving the state occupied
+            gestureState.cancelTouch(gestureHandler: handleGesture)
+            gestureState.handleTouchStart(
+                startLocation: local(point),
+                in: frame.size,
+                gestureHandler: handleGesture
+            )
+        }
+        recognizer.onMoved = { point in
+            guard frame.width > 0, frame.height > 0 else { return }
+            gestureState.handleTouchMove(location: local(point), in: frame.size)
+        }
+    }
+
+    func handleUIGestureRecognizerAction(_ recognizer: EarlyTouchRecognizer, context: Context) {}
+
+    func makeCoordinator(converter: CoordinateSpaceConverter) -> Coordinator { Coordinator() }
+
+    final class Coordinator: NSObject, UIGestureRecognizerDelegate {
+        func gestureRecognizer(_ gesture: UIGestureRecognizer,
+                               shouldRecognizeSimultaneouslyWith other: UIGestureRecognizer) -> Bool { true }
+        func gestureRecognizer(_ gesture: UIGestureRecognizer, shouldReceive touch: UITouch) -> Bool { true }
+    }
+}
+
+private final class EarlyTouchRecognizer: UIGestureRecognizer {
+    /// In window coordinates.
+    var onBegan: ((CGPoint) -> Void)?
+    var onMoved: ((CGPoint) -> Void)?
+
+    private var tracked: UITouch?
+
+    override func touchesBegan(_ touches: Set<UITouch>, with event: UIEvent) {
+        super.touchesBegan(touches, with: event)
+        guard tracked == nil, let touch = touches.first else { return }
+        tracked = touch
+        onBegan?(touch.location(in: nil))
+    }
+
+    override func touchesMoved(_ touches: Set<UITouch>, with event: UIEvent) {
+        super.touchesMoved(touches, with: event)
+        guard let tracked, touches.contains(tracked) else { return }
+        onMoved?(tracked.location(in: nil))
+    }
+
+    override func touchesEnded(_ touches: Set<UITouch>, with event: UIEvent) {
+        super.touchesEnded(touches, with: event)
+        finish(touches)
+    }
+
+    override func touchesCancelled(_ touches: Set<UITouch>, with event: UIEvent) {
+        super.touchesCancelled(touches, with: event)
+        finish(touches)
+    }
+
+    /// The `DragGesture` still owns the end of the touch; the gate only withholds the beginning.
+    private func finish(_ touches: Set<UITouch>) {
+        guard let tracked, touches.contains(tracked) else { return }
+        self.tracked = nil
+        state = .failed
+    }
+
+    override func reset() {
+        super.reset()
+        tracked = nil
+    }
+}
+#endif
 
 extension PlayerGestureOverlay {
     enum GestureType {
