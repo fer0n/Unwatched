@@ -173,6 +173,12 @@ struct PlayerMoreMenuContent: View {
                     Label("playerType", systemImage: playerType.systemImage)
                 }
             }
+            #if os(iOS)
+            if preferPlayerType {
+                airPlayButton
+                airPlayHDToggle
+            }
+            #endif
             ReloadPlayerButton()
             Divider()
 
@@ -195,6 +201,26 @@ struct PlayerMoreMenuContent: View {
             #endif
         }
     }
+
+    #if os(iOS)
+    var airPlayButton: some View {
+        Button {
+            AirPlayPicker.present()
+            hapticToggle.toggle()
+        } label: {
+            Label("airPlay", systemImage: "airplay.audio")
+        }
+    }
+
+    var airPlayHDToggle: some View {
+        Toggle(isOn: Binding(
+            get: { player.airplayHD },
+            set: { player.setAirplayHD($0) }
+        )) {
+            Label("airplayHD", systemImage: "airplay.video")
+        }
+    }
+    #endif
 
     var deferDateButton: some View {
         Button {

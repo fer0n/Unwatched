@@ -1057,6 +1057,40 @@
         }
       }
     },
+    "airplayHD" : {
+      "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "AirPlay HD"
+          }
+        },
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "AirPlay HD"
+          }
+        },
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "AirPlay HD"
+          }
+        },
+        "fr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "AirPlay HD"
+          }
+        },
+        "pl" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "AirPlay HD"
+          }
+        }
+      }
+    },
     "airplayHDOff" : {
       "localizations" : {
         "de" : {
