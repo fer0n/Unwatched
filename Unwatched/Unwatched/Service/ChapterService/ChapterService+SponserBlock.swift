@@ -15,10 +15,15 @@ extension ChapterService {
         videoChapters: [SendableChapter],
         duration: Double? = nil,
         forceRefresh: Bool = false,
-        overrideSettingOn: Bool? = nil
+        overrideSettingOn: Bool? = nil,
+        settings: SponsorBlockSettings = SponsorBlockSettings()
     ) async throws -> [SendableChapter]? {
         let loadAllSegments = videoChapters.isEmpty
-        let categories = SponsorBlockSegmentSetting.requestedCategories(videoHasChapters: !loadAllSegments)
+        let categories = SponsorBlockSegmentSetting.requestedCategories(
+            videoHasChapters: !loadAllSegments,
+            sponsorSetting: settings.sponsor,
+            selfPromoSetting: settings.selfPromo
+        )
         if categories.isEmpty {
             Log.info("SponsorBlock: every segment category is turned off")
             return nil

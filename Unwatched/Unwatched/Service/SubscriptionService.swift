@@ -103,6 +103,24 @@ struct SubscriptionService {
         try? modelContext.save()
     }
 
+    /// Downgrades every channel that skips SponsorBlock segments to only showing them, see
+    /// `SponsorBlockSettingsView.stopSkipping`.
+    static func stopSkippingSegments(_ modelContext: ModelContext) {
+        guard let subs = try? modelContext.fetch(FetchDescriptor<Subscription>()) else {
+            Log.info("stopSkippingSegments: no subscriptions found")
+            return
+        }
+        for sub in subs {
+            if sub.sponsorSegmentSetting?.skips == true {
+                sub.sponsorSegmentSetting = .show
+            }
+            if sub.selfPromoSegmentSetting?.skips == true {
+                sub.selfPromoSegmentSetting = .show
+            }
+        }
+        try? modelContext.save()
+    }
+
     static func cleanupArchivedSubscriptions() {
         Task.detached {
             let repo = SubscriptionActor()

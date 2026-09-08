@@ -122,6 +122,10 @@ struct SubscriptionInfoDetails: View {
 
                         SubscriptionAutoSkipSetting(subscription: subscription)
 
+                        SubscriptionSegmentSetting(subscription: subscription, category: .sponsor)
+
+                        SubscriptionSegmentSetting(subscription: subscription, category: .selfPromo)
+
                         SubscriptionTitleFilterButton(
                             showFilter: $showFilter,
                             hasFilter: !subscription.filterText.isEmpty

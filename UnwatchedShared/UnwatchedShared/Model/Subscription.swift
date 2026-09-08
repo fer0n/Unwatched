@@ -83,6 +83,21 @@ public final class Subscription: SubscriptionData, CustomStringConvertible, Expo
         }
     }
 
+    /// This channel's override for sponsor segments; `nil` follows the global setting.
+    /// Stored as `Int?` for the reason given on `_shortsSetting`.
+    public var _sponsorSegmentSetting: Int?
+    public var sponsorSegmentSetting: SponsorBlockSegmentSetting? {
+        get { _sponsorSegmentSetting.flatMap { SponsorBlockSegmentSetting(rawValue: $0) } }
+        set { _sponsorSegmentSetting = newValue?.rawValue }
+    }
+
+    /// The same for self-promotion segments.
+    public var _selfPromoSegmentSetting: Int?
+    public var selfPromoSegmentSetting: SponsorBlockSegmentSetting? {
+        get { _selfPromoSegmentSetting.flatMap { SponsorBlockSegmentSetting(rawValue: $0) } }
+        set { _selfPromoSegmentSetting = newValue?.rawValue }
+    }
+
     public var customSpeedSetting: Double?
     public var customAspectRatio: Double?
     public var skipIntroSeconds: Double?
@@ -132,6 +147,8 @@ public final class Subscription: SubscriptionData, CustomStringConvertible, Expo
                 isArchived: Bool = false,
                 isPodcast: Bool = false,
 
+                sponsorSegmentSetting: SponsorBlockSegmentSetting? = nil,
+                selfPromoSegmentSetting: SponsorBlockSegmentSetting? = nil,
                 customSpeedSetting: Double? = nil,
                 customAspectRatio: Double? = nil,
                 skipIntroSeconds: Double? = nil,
@@ -153,6 +170,8 @@ public final class Subscription: SubscriptionData, CustomStringConvertible, Expo
         self.isArchived = isArchived
         self.isPodcast = isPodcast
 
+        self.sponsorSegmentSetting = sponsorSegmentSetting
+        self.selfPromoSegmentSetting = selfPromoSegmentSetting
         self.customSpeedSetting = customSpeedSetting
         self.customAspectRatio = customAspectRatio
         self.skipIntroSeconds = skipIntroSeconds
@@ -178,6 +197,8 @@ public final class Subscription: SubscriptionData, CustomStringConvertible, Expo
             videoPlacement: videoPlacement,
             isArchived: isArchived,
             isPodcast: isPodcast,
+            sponsorSegmentSetting: sponsorSegmentSetting,
+            selfPromoSegmentSetting: selfPromoSegmentSetting,
             customSpeedSetting: customSpeedSetting,
             customAspectRatio: customAspectRatio,
             skipIntroSeconds: skipIntroSeconds,

@@ -66,7 +66,12 @@ extension ChapterService {
         var newChapters = videoChapters.isEmpty
             ? generateChapters(from: cleanedSegments, videoDuration: video.duration)
             : mergeSponsorSegments(videoChapters, sponsorSegments: cleanedSegments, duration: video.duration)
-        skipSponsorBlockSegments(in: &newChapters)
+        let settings = video.sponsorBlockSettings
+        skipSponsorBlockSegments(
+            in: &newChapters,
+            sponsorSetting: settings.sponsor,
+            selfPromoSetting: settings.selfPromo
+        )
         Log.info("mergeSegments, new: \(newChapters)")
 
         updateIfNeeded(newChapters, video)

@@ -14,6 +14,8 @@ struct SponsorBlockSettingsView: View {
     @CloudStorage(Const.selfPromoSegmentSetting)
     var selfPromoSegmentSetting: SponsorBlockSegmentSetting = SponsorBlockSegmentSetting.selfPromoDefault
 
+    @Environment(\.modelContext) var modelContext
+
     @State var showAlert = false
 
     var body: some View {
@@ -77,6 +79,7 @@ struct SponsorBlockSettingsView: View {
         if selfPromoSegmentSetting.skips {
             selfPromoSegmentSetting = .show
         }
+        SubscriptionService.stopSkippingSegments(modelContext)
     }
 }
 
@@ -118,6 +121,15 @@ private struct SegmentSettingPicker: View {
 }
 
 extension SponsorBlockSegmentSetting {
+    var systemImage: String {
+        switch self {
+        case .nothing: return "eye.slash.fill"
+        case .show: return "eye.fill"
+        case .showAndSkip: return "forward.fill"
+        @unknown default: return "questionmark"
+        }
+    }
+
     var description: String {
         switch self {
         case .nothing: return String(localized: "segmentSettingNothing")

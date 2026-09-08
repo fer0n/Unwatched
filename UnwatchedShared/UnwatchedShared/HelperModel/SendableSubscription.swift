@@ -20,6 +20,9 @@ public struct SendableSubscription: SubscriptionData, Sendable, Codable, Hashabl
     public var isArchived: Bool
     public var isPodcast: Bool = false
 
+    public var sponsorSegmentSetting: SponsorBlockSegmentSetting?
+    public var selfPromoSegmentSetting: SponsorBlockSegmentSetting?
+
     public var customSpeedSetting: Double?
     public var customAspectRatio: Double?
     public var skipIntroSeconds: Double?
@@ -53,6 +56,8 @@ public struct SendableSubscription: SubscriptionData, Sendable, Codable, Hashabl
         videoPlacement: VideoPlacement = VideoPlacement.defaultPlacement,
         isArchived: Bool = false,
         isPodcast: Bool = false,
+        sponsorSegmentSetting: SponsorBlockSegmentSetting? = nil,
+        selfPromoSegmentSetting: SponsorBlockSegmentSetting? = nil,
         customSpeedSetting: Double? = nil,
         customAspectRatio: Double? = nil,
         skipIntroSeconds: Double? = nil,
@@ -78,6 +83,8 @@ public struct SendableSubscription: SubscriptionData, Sendable, Codable, Hashabl
         self.videoPlacement = videoPlacement
         self.isArchived = isArchived
         self.isPodcast = isPodcast
+        self.sponsorSegmentSetting = sponsorSegmentSetting
+        self.selfPromoSegmentSetting = selfPromoSegmentSetting
         self.customSpeedSetting = customSpeedSetting
         self.customAspectRatio = customAspectRatio
         self.skipIntroSeconds = skipIntroSeconds
@@ -117,6 +124,8 @@ public struct SendableSubscription: SubscriptionData, Sendable, Codable, Hashabl
             videoPlacement: videoPlacement,
             isArchived: isArchived,
             isPodcast: isPodcast,
+            sponsorSegmentSetting: sponsorSegmentSetting,
+            selfPromoSegmentSetting: selfPromoSegmentSetting,
             customSpeedSetting: customSpeedSetting,
             customAspectRatio: customAspectRatio,
             skipIntroSeconds: skipIntroSeconds,
@@ -143,6 +152,10 @@ public struct SendableSubscription: SubscriptionData, Sendable, Codable, Hashabl
         videoPlacement = VideoPlacement(rawValue: try container.decodeIfPresent(Int.self, forKey: .videoPlacement) ?? VideoPlacement.defaultPlacement.rawValue) ?? VideoPlacement.defaultPlacement
         isArchived = try container.decodeIfPresent(Bool.self, forKey: .isArchived) ?? false
         isPodcast = try container.decodeIfPresent(Bool.self, forKey: .isPodcast) ?? false
+        sponsorSegmentSetting = try container.decodeIfPresent(Int.self, forKey: .sponsorSegmentSetting)
+            .flatMap { SponsorBlockSegmentSetting(rawValue: $0) }
+        selfPromoSegmentSetting = try container.decodeIfPresent(Int.self, forKey: .selfPromoSegmentSetting)
+            .flatMap { SponsorBlockSegmentSetting(rawValue: $0) }
         customSpeedSetting = try container.decodeIfPresent(Double.self, forKey: .customSpeedSetting)
         customAspectRatio = try container.decodeIfPresent(Double.self, forKey: .customAspectRatio)
         skipIntroSeconds = try container.decodeIfPresent(Double.self, forKey: .skipIntroSeconds)
@@ -173,6 +186,8 @@ public struct SendableSubscription: SubscriptionData, Sendable, Codable, Hashabl
         if isPodcast {
             try container.encode(isPodcast, forKey: .isPodcast)
         }
+        try container.encodeIfPresent(sponsorSegmentSetting?.rawValue, forKey: .sponsorSegmentSetting)
+        try container.encodeIfPresent(selfPromoSegmentSetting?.rawValue, forKey: .selfPromoSegmentSetting)
         try container.encodeIfPresent(customSpeedSetting, forKey: .customSpeedSetting)
         try container.encodeIfPresent(customAspectRatio, forKey: .customAspectRatio)
         try container.encodeIfPresent(skipIntroSeconds, forKey: .skipIntroSeconds)
@@ -196,6 +211,8 @@ public struct SendableSubscription: SubscriptionData, Sendable, Codable, Hashabl
              allowOnMatch,
              isArchived,
              isPodcast,
+             sponsorSegmentSetting,
+             selfPromoSegmentSetting,
              customSpeedSetting,
              customAspectRatio,
              skipIntroSeconds,

@@ -290,8 +290,13 @@ extension PlayerManager {
 
         let sendableChapters = video?.ownChapterData ?? []
         let duration = video?.duration
+        let settings = video?.sponsorBlockSettings ?? SponsorBlockSettings()
         if let mergedChapters = video?.mergedChapters {
-            ChapterService.skipSponsorBlockSegments(in: mergedChapters)
+            ChapterService.skipSponsorBlockSegments(
+                in: mergedChapters,
+                sponsorSetting: settings.sponsor,
+                selfPromoSetting: settings.selfPromo
+            )
             video?.chaptersDidChange()
             self.handleChapterChange()
             // the engine draws its own markers, and the set it has is now out of date
@@ -306,13 +311,18 @@ extension PlayerManager {
                             videoId: videoId,
                             videoChapters: sendableChapters,
                             duration: duration,
-                            forceRefresh: forceRefresh
+                            forceRefresh: forceRefresh,
+                            settings: settings
                         ) else {
                     Log.info("SponsorBlock: Not updating merged chapters")
                     return
                 }
                 Log.info("SponsorBlock: Refreshed")
-                ChapterService.skipSponsorBlockSegments(in: &newChapters)
+                ChapterService.skipSponsorBlockSegments(
+                    in: &newChapters,
+                    sponsorSetting: settings.sponsor,
+                    selfPromoSetting: settings.selfPromo
+                )
 
                 ChapterService.updateIfNeeded(newChapters, video)
                 try video?.modelContext?.save()
