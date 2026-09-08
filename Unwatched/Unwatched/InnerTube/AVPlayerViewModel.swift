@@ -36,6 +36,7 @@ final class AVPlayerViewModel: PlayerBackend {
     /// When the current item last reported a stall; see `isRecentStall`.
     @ObservationIgnored var lastStalledAt: Date?
     @ObservationIgnored var timeObserverToken: Any?
+    @ObservationIgnored private var engineTickTask: Task<Void, Never>?
     @ObservationIgnored var timeObserverTickCount = 0
     @ObservationIgnored var statsTickCount = 0
     /// Last playback position seen by the periodic observer. Stands in for
@@ -75,18 +76,14 @@ final class AVPlayerViewModel: PlayerBackend {
     /// not at the position it reports (see `resumePosition`).
     @ObservationIgnored var pendingSeekToTime: Double?
 
-    /// Set while a "trim silence" composition is playing, and the only thing that knows the player's clock isn't the
-    /// episode's; nil for everything else (see `trimmedComposition`).
-    @ObservationIgnored var silenceMap: SilenceMap? {
-        // the anchor's two times were read against the outgoing map, so they can't be differenced against anything
-        // read against this one
-        didSet { savedTimeAnchor = nil }
-    }
+    /// `avPlayer` has no item while this is running.
+    @ObservationIgnored let podcastEngine = PodcastAudioEngine()
+    @ObservationIgnored private(set) var isUsingPodcastEngine = false
 
     /// The two clocks at the last tick counted toward `Const.trimSilenceSecondsSaved`, and what they've added up to
     /// since it was last written.
     @ObservationIgnored private var savedTimeAnchor: (player: Double, file: Double)?
-    @ObservationIgnored private var pendingSecondsSaved: Double = 0
+    @ObservationIgnored private var pendingStats = TrimSilenceStats(saved: 0, played: 0)
 
     // Set by the view; called when the current video plays to end.
     @ObservationIgnored var onVideoEnded: () -> Void = {}
@@ -111,38 +108,63 @@ final class AVPlayerViewModel: PlayerBackend {
             guard let self else { return }
             guard !cmTime.seconds.isNaN, !cmTime.seconds.isInfinite else { return }
             Task { @MainActor [weak self] in
-                guard let self else { return }
-                let seconds = fileTime(cmTime.seconds)
-                // mid-seek the clock still reports where the playhead is coming from — zero for
-                // a freshly installed item; the pinned target is where playback is
-                if let target = seekAnchor.time {
-                    lastObservedTime = target
-                    return
+                guard let self, !isUsingPodcastEngine else { return }
+                tick(rendered: cmTime.seconds, episode: cmTime.seconds)
+            }
+        }
+    }
+
+    /// The engine has no periodic observer of its own, so it gets a ticker while it is the one playing.
+    @MainActor
+    func setUsingPodcastEngine(_ isUsing: Bool) {
+        guard isUsing != isUsingPodcastEngine else { return }
+        isUsingPodcastEngine = isUsing
+        // the anchor's two times were read against the other engine's clocks
+        savedTimeAnchor = nil
+        engineTickTask?.cancel()
+        engineTickTask = nil
+        guard isUsing else { return }
+        engineTickTask = Task { @MainActor [weak self] in
+            while !Task.isCancelled {
+                try? await Task.sleep(for: .seconds(1))
+                guard let self, !Task.isCancelled else { return }
+                tick(rendered: podcastEngine.playedTime, episode: podcastEngine.currentTime)
+            }
+        }
+    }
+
+    /// One second of playback: `rendered` is what the listener sat through, `episode` where that
+    /// leaves the playhead. Trimming is the difference.
+    @MainActor
+    private func tick(rendered: Double, episode seconds: Double) {
+        // mid-seek the clock still reports where the playhead is coming from — zero for
+        // a freshly installed item; the pinned target is where playback is
+        if let target = seekAnchor.time {
+            lastObservedTime = target
+            return
+        }
+        lastObservedTime = seconds
+        if player.isPlaying {
+            accumulateSecondsSaved(playerTime: rendered, fileTime: seconds)
+            player.monitorChapters(time: seconds)
+            statsTickCount += 1
+            if statsTickCount >= Const.updateDbTimeSeconds {
+                statsTickCount = 0
+                if let videoId = player.video?.youtubeId {
+                    StatsService.shared.handleVideoTimeUpdate(videoId: videoId, time: seconds)
                 }
-                lastObservedTime = seconds
-                if player.isPlaying {
-                    accumulateSecondsSaved(playerTime: cmTime.seconds, fileTime: seconds)
-                    player.monitorChapters(time: seconds)
-                    statsTickCount += 1
-                    if statsTickCount >= Const.updateDbTimeSeconds {
-                        statsTickCount = 0
-                        if let videoId = player.video?.youtubeId {
-                            StatsService.shared.handleVideoTimeUpdate(videoId: videoId, time: seconds)
-                        }
-                    }
-                    timeObserverTickCount += 1
-                    if timeObserverTickCount >= Const.elapsedTimePersistSeconds {
-                        timeObserverTickCount = 0
-                        player.updateElapsedTime(seconds)
-                    }
-                } else {
-                    timeObserverTickCount = 0
-                    statsTickCount = 0
-                    stopCountingSecondsSaved()
-                    if player.isLoading == nil {
-                        if player.currentTime != seconds { player.currentTime = seconds }
-                    }
-                }
+            }
+            timeObserverTickCount += 1
+            if timeObserverTickCount >= Const.elapsedTimePersistSeconds {
+                timeObserverTickCount = 0
+                player.updateElapsedTime(seconds)
+            }
+        } else {
+            timeObserverTickCount = 0
+            statsTickCount = 0
+            stopCountingSecondsSaved()
+            if player.isLoading == nil {
+                if player.currentTime != seconds { player.currentTime = seconds }
             }
         }
     }
@@ -158,11 +180,10 @@ final class AVPlayerViewModel: PlayerBackend {
 
     // MARK: - Time saved by trimming
 
-    /// Adds what the shortened timeline saved between this tick and the last to the lifetime total behind
-    /// `Const.trimSilenceSecondsSaved`.
+    /// Both totals are needed: the saving on its own can't be stated as a speed.
     @MainActor
     private func accumulateSecondsSaved(playerTime: Double, fileTime: Double) {
-        guard silenceMap != nil, playerTime.isFinite, fileTime.isFinite else {
+        guard isUsingPodcastEngine, playerTime.isFinite, fileTime.isFinite else {
             savedTimeAnchor = nil
             return
         }
@@ -171,15 +192,15 @@ final class AVPlayerViewModel: PlayerBackend {
 
         let played = playerTime - previous.player
         // only an ordinary forward tick is time someone sat through: anything else is a seek, a loop or a stall,
-        // where the two deltas describe a jump rather than playback
-        guard played > 0, played < 3 else { return }
-        let saved = (fileTime - previous.file) - played
-        guard saved > 0 else { return }
+        // where the two deltas describe a jump. A tick's worth of audio is the rate itself.
+        guard played > 0, played < (Const.speeds.max() ?? 3) + 1 else { return }
+        let saved = max(0, (fileTime - previous.file) - played)
 
-        pendingSecondsSaved += saved
-        // written in whole seconds rather than every tick: the total is only ever read by eye, and this is the
-        // difference between one write a second and one every ten or twenty
-        if pendingSecondsSaved >= 1 {
+        pendingStats = TrimSilenceStats(
+            saved: pendingStats.saved + saved, played: pendingStats.played + played
+        )
+        // banked every ten seconds rather than every tick; the stored value keeps its fraction
+        if pendingStats.played >= 10 {
             flushSecondsSaved()
         }
     }
@@ -187,18 +208,19 @@ final class AVPlayerViewModel: PlayerBackend {
     /// Banks what's counted so far and stops counting until playback is somewhere differenceable again — otherwise a
     /// pause, or the gap around a new item, would be counted as time saved.
     @MainActor
-    private func stopCountingSecondsSaved() {
+    func stopCountingSecondsSaved() {
         savedTimeAnchor = nil
         flushSecondsSaved()
     }
 
     @MainActor
     private func flushSecondsSaved() {
-        guard pendingSecondsSaved > 0 else { return }
-        let key = Const.trimSilenceSecondsSaved
-        let total = UserDefaults.standard.double(forKey: key) + pendingSecondsSaved
-        pendingSecondsSaved = 0
-        UserDefaults.standard.set(total, forKey: key)
+        guard pendingStats.played > 0 else { return }
+        let stored = TrimSilenceStats.current
+        let defaults = UserDefaults.standard
+        defaults.set(stored.saved + pendingStats.saved, forKey: Const.trimSilenceSecondsSaved)
+        defaults.set(stored.played + pendingStats.played, forKey: Const.trimSilenceSecondsPlayed)
+        pendingStats = TrimSilenceStats(saved: 0, played: 0)
     }
 
     // MARK: - Change handlers (called from view onChange)
@@ -266,6 +288,8 @@ final class AVPlayerViewModel: PlayerBackend {
                 guard !Task.isCancelled else { return }
                 let isNowPlaying = avPlayer.rate != 0
                 await MainActor.run {
+                    // `avPlayer` isn't the engine that's playing, and its rate is stale
+                    guard !isUsingPodcastEngine else { return }
                     // the pause `installItem` makes to reposition isn't the user's
                     guard player.isLoading == nil else { return }
                     // the engine running out of data isn't the user pausing — and it happens while a seek
@@ -301,11 +325,11 @@ final class AVPlayerViewModel: PlayerBackend {
         player.reportVideoQuality(0)
         avPlayer.pause()
         avPlayer.replaceCurrentItem(with: nil)
+        podcastEngine.unload()
+        setUsingPodcastEngine(false)
         // Only podcasts wait: a YouTube stream is raced, prefetched and swapped between qualities, and starting those
         // on whatever has arrived is what makes the switches feel instant.
         avPlayer.automaticallyWaitsToMinimizeStalling = player.video?.mediaUrl != nil
-        // the outgoing episode's shortened timeline must not be read against the incoming one
-        clearSilenceMap()
 
         // before the commands and the now playing info below, which a non-playback session gets ignored for
         PlayerAudioSession.configure()
@@ -343,6 +367,7 @@ final class AVPlayerViewModel: PlayerBackend {
     @MainActor
     func stop() {
         avPlayer.pause()
+        podcastEngine.pause()
     }
 
     @MainActor
@@ -372,13 +397,18 @@ final class AVPlayerViewModel: PlayerBackend {
     func seek(to time: Double) {
         lastObservedTime = time
         seekAnchor.time = time
-        if pendingSeekToTime != nil {
+        if isUsingPodcastEngine {
+            // the engine moves its clocks before it returns; the renderer catches up on its own queue
+            podcastEngine.seek(to: time)
+            seekAnchor.time = nil
+            pendingSeekToTime = nil
+        } else if pendingSeekToTime != nil {
             // seeking an item that isn't repositioned yet wouldn't stick, and `handleReadyToPlay`
             // would undo it: retarget its reposition instead
             pendingSeekToTime = time
         } else {
             let anchor = seekAnchor
-            avPlayer.seek(to: CMTime(seconds: playerTime(time), preferredTimescale: 600),
+            avPlayer.seek(to: CMTime(seconds: time, preferredTimescale: 600),
                           toleranceBefore: .zero, toleranceAfter: .zero) { _ in
                 // also when unfinished: an anchor still pointing here was superseded by nothing
                 if anchor.time == time { anchor.time = nil }
@@ -392,7 +422,9 @@ final class AVPlayerViewModel: PlayerBackend {
 
     @MainActor
     func handlePlaybackSpeedChange() {
-        if avPlayer.rate != 0 {
+        if isUsingPodcastEngine {
+            podcastEngine.setRate(player.playbackSpeed)
+        } else if avPlayer.rate != 0 {
             startAtCurrentSpeed()
         }
     }
@@ -445,6 +477,8 @@ final class AVPlayerViewModel: PlayerBackend {
         rateObserverTask?.cancel()
         cancelStallHandling()
         avPlayer.pause()
+        podcastEngine.unload()
+        setUsingPodcastEngine(false)
         teardownRemoteCommands()
         clearPendingReposition()
         player.precisePosition = nil

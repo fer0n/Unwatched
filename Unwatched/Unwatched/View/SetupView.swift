@@ -217,7 +217,6 @@ struct SetupView: View {
         PlayerManager.shared.restoreNowPlayingVideo()
         PodcastDownloadManager.shared.onEpisodeDownloaded = { youtubeId in
             ChapterService.loadPodcastChapters(youtubeId: youtubeId)
-            SilenceScanActor.scanDownloadedEpisode(youtubeId: youtubeId)
         }
         VideoService.fetchVideoDurationsQueueInbox()
         sendSettings()

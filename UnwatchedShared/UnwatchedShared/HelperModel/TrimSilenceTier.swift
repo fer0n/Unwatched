@@ -12,7 +12,7 @@ public enum TrimSilenceTier: Int, Codable, CaseIterable, Sendable {
     case max
 
     public struct Settings: Sendable {
-        /// How much of a pause at either end is left at its original length.
+        /// Room tone kept at each end of a shortened pause.
         public let guardBand: Double
         /// Shortest run of quiet this tier calls a pause.
         public let minimumPause: Double
@@ -53,9 +53,17 @@ public enum TrimSilenceTier: Int, Codable, CaseIterable, Sendable {
         }
     }
 
-    /// The tier that keeps the widest set of pauses — a scan filters against this one, so any tier
-    /// picked afterwards can be applied to the same cached scan.
-    public static var mostPermissive: TrimSilenceTier { .max }
+    /// What a pause of `length` is allowed to shrink to.
+    public func playedLength(ofPause length: Double) -> Double {
+        let target = Swift.max(settings.targetPause, length * settings.keepFraction)
+        return Swift.max(2 * settings.guardBand + Const.silenceMinimumInterior, Swift.min(length, target))
+    }
+
+    /// Whether the saving is worth a splice at all.
+    public func isWorthTrimming(pauseLength length: Double) -> Bool {
+        guard length >= settings.minimumPause else { return false }
+        return length - playedLength(ofPause: length) >= settings.minimumSaving
+    }
 
     /// The stored setting, or `.medium` when unset or invalid.
     public static var current: TrimSilenceTier {

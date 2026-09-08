@@ -124,8 +124,12 @@ extension AVPlayerViewModel {
     @MainActor
     private static func seek(toEpisodeTime time: Double) {
         let vm = AVPlayerViewModel.shared
-        vm.avPlayer.seek(to: CMTime(seconds: vm.playerTime(time), preferredTimescale: 600),
-                         toleranceBefore: .zero, toleranceAfter: .zero)
+        if vm.isUsingPodcastEngine {
+            vm.podcastEngine.seek(to: time)
+        } else {
+            vm.avPlayer.seek(to: CMTime(seconds: time, preferredTimescale: 600),
+                             toleranceBefore: .zero, toleranceAfter: .zero)
+        }
         patchElapsedTime(time)
     }
 

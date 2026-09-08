@@ -167,35 +167,44 @@ public struct Const {
 
     public static let podcastDownloadSessionId = bundleId + ".podcastDownloads"
 
-    // "Trim silence" shortens each pause in the composition the episode plays from, rather than running the player
-    // faster through it.
+    // "Trim silence" drops the samples inside a pause as the episode plays (see `SilenceRemover`).
 
-    /// How much of a pause at either end is left at its original length.
+    /// Room tone kept at each end of a shortened pause, so a splice isn't a cut into speech.
     public static let silenceGuardBand: Double = 0.15
 
     /// Shortest a pause is allowed to become, and the share of itself a longer one keeps — a long pause cut to the
     /// same length as a short one loses the beat the speaker put there.
     public static let silenceTargetPause: Double = 0.4
     public static let silenceKeepFraction: Double = 0.35
-    /// What has to be left between the guard bands, so a scaled range never rounds away to nothing.
+    /// Left between the two ends, so the shortest pause still has a beat in it.
     public static let silenceMinimumInterior: Double = 0.05
 
-    /// Shortest run of quiet that counts as a pause, and the least it has to save to be worth a segment in the
-    /// composition.
+    /// Shortest run of quiet that counts as a pause, and the least it has to save to be worth a splice.
     public static let silenceMinimumPause: Double = 0.4
     public static let silenceMinimumSaving: Double = 0.15
 
-    /// Bumped whenever a change would make a stored scan's pause list wrong to reuse — a lower detection floor, a
-    /// different threshold.
-    public static let silenceScanVersion = 2
-
-    /// Range the scan's own threshold is held to, in dBFS, in case an episode's levels have only one hump for Otsu's
-    /// method to split (see `SilenceScanner.silenceThreshold`).
+    /// Range the running threshold is held to, whatever the episode's levels suggest.
     public static let silenceThresholdFloorDb: Double = -60
     public static let silenceThresholdCeilingDb: Double = -30
 
-    /// Fine enough that a boundary lands on a sample rather than on a 600th of a second.
-    public static let silenceTimescale: CMTimeScale = 44_100
+    /// What one level reading covers: fine enough for gaps between words, coarse enough to ignore a glottal stop.
+    public static let silenceWindow: Double = 0.01
+
+    /// Left unjudged after a reset, while the level trackers are still settling.
+    public static let silenceWarmup: Double = 0.5
+
+    /// Room tone joined to room tone still clicks without a ramp.
+    public static let silenceSpliceFade: Double = 0.006
+
+    /// Longest pause buffered; a longer gap is trimmed in two steps, which sounds the same.
+    public static let silenceMaximumHeldPause: Double = 20
+
+    /// The cut sits this far above the noise floor, and this far below the speech level.
+    public static let silenceNoiseMarginDb: Double = 8
+    public static let silenceSpeechSeparationDb: Double = 12
+
+    /// Lowest level the remover distinguishes; digital silence reads as this.
+    public static let silenceAnalysisFloorDb: Double = -80
 
     public static let autoRefreshIntervalSeconds: Double = 10 * 60
 
@@ -368,10 +377,10 @@ public struct Const {
     public static let originalAudio = "originalAudio"
     public static let trimSilence = "trimSilence"
     public static let trimSilenceTier = "trimSilenceTier"
-    /// Running total of seconds trimmed, added up as they're played rather than as episodes are
-    /// scanned (see `accumulateSecondsSaved`) — never reset, since it's meant to answer "how much
-    /// has this saved me" over the setting's whole lifetime, not for one episode or session.
+    /// Lifetime total of seconds trimmed, added up as they're played; never reset.
     public static let trimSilenceSecondsSaved = "trimSilenceSecondsSaved"
+    /// Audio rendered while trimming was on, which makes the saving expressible as a speed.
+    public static let trimSilenceSecondsPlayed = "trimSilenceSecondsPlayed"
     public static let playBrowserVideosInApp = "playBrowserVideosInApp"
     public static let inboxFullDismissedDate = "inboxFullDismissedDate"
     public static let inboxTipHiddenPermanently = "inboxTipHiddenPermanently"

@@ -66,7 +66,7 @@ final class BackgroundPlaybackManager {
             guard let self else {
                 return .abort
             }
-            if viewModel.avPlayer.timeControlStatus == .playing {
+            if viewModel.isRendering {
                 return .done
             }
             return viewModel.loadError != nil ? .abort : .retry

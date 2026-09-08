@@ -548,14 +548,14 @@ extension PlayerManager {
     @MainActor
     func setTrimSilence(_ enabled: Bool) {
         UserDefaults.standard.set(enabled, forKey: Const.trimSilence)
+        // before the reset below: the engine banks what it was still holding
+        backend.applyTrimSilence()
         if enabled {
             UserDefaults.standard.set(0.0, forKey: Const.trimSilenceSecondsSaved)
+            UserDefaults.standard.set(0.0, forKey: Const.trimSilenceSecondsPlayed)
         }
-        backend.applyTrimSilence()
     }
 
-    /// Same idea as `setTrimSilence`: the engine re-reads the setting and rebuilds the composition from the episode's
-    /// existing scan, so a tier change never triggers a re-scan.
     @MainActor
     func setTrimSilenceTier(_ tier: TrimSilenceTier) {
         UserDefaults.standard.set(tier.rawValue, forKey: Const.trimSilenceTier)
