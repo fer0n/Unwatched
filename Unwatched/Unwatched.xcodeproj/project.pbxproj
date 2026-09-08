@@ -614,6 +614,7 @@
 		88AA10042F0000000000A004 /* MigrationSchemaShapes.swift in Sources */ = {isa = PBXBuildFile; fileRef = 88AA10032F0000000000A003 /* MigrationSchemaShapes.swift */; };
 		88AA10062F0000000000A006 /* SettingsMigrationTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 88AA10052F0000000000A005 /* SettingsMigrationTests.swift */; };
 		88AA10082F0000000000A008 /* QueueFilterTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 88AA10072F0000000000A007 /* QueueFilterTests.swift */; };
+		88AA100A2F0000000000A00A /* SearchMaterializeTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 88AA10092F0000000000A009 /* SearchMaterializeTests.swift */; };
 		88AA10122F0000000000A012 /* QueueTagMenu.swift in Sources */ = {isa = PBXBuildFile; fileRef = 88AA10112F0000000000A011 /* QueueTagMenu.swift */; };
 		88AA10132F0000000000A013 /* QueueTagMenu.swift in Sources */ = {isa = PBXBuildFile; fileRef = 88AA10112F0000000000A011 /* QueueTagMenu.swift */; };
 		88AA10222F0000000000A022 /* TagEntity.swift in Sources */ = {isa = PBXBuildFile; fileRef = 88AA10212F0000000000A021 /* TagEntity.swift */; };
@@ -1389,6 +1390,7 @@
 		88AA10032F0000000000A003 /* MigrationSchemaShapes.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MigrationSchemaShapes.swift; sourceTree = "<group>"; };
 		88AA10052F0000000000A005 /* SettingsMigrationTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SettingsMigrationTests.swift; sourceTree = "<group>"; };
 		88AA10072F0000000000A007 /* QueueFilterTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = QueueFilterTests.swift; sourceTree = "<group>"; };
+		88AA10092F0000000000A009 /* SearchMaterializeTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SearchMaterializeTests.swift; sourceTree = "<group>"; };
 		88AA10112F0000000000A011 /* QueueTagMenu.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = QueueTagMenu.swift; sourceTree = "<group>"; };
 		88AA10212F0000000000A021 /* TagEntity.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TagEntity.swift; sourceTree = "<group>"; };
 		88AA10312F0000000000A031 /* SubscriptionTagsSetting.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SubscriptionTagsSetting.swift; sourceTree = "<group>"; };
@@ -1874,6 +1876,7 @@
 				88146F502C74EDDC00704B91 /* SharedContextActorTests.swift */,
 				88AA10012F0000000000A001 /* MigrationTests.swift */,
 				88AA10072F0000000000A007 /* QueueFilterTests.swift */,
+				88AA10092F0000000000A009 /* SearchMaterializeTests.swift */,
 				FE1000FF000000000000C011 /* PodcastFeedParserTests.swift */,
 				C485C322062FFD77AA82DBD1 /* PodcastChapterArtworkTests.swift */,
 				FADE86879D704827B7266EA7 /* PodcastTriageTests.swift */,
@@ -3124,6 +3127,7 @@
 				88146F512C74EDDC00704B91 /* SharedContextActorTests.swift in Sources */,
 				88AA10022F0000000000A002 /* MigrationTests.swift in Sources */,
 				88AA10082F0000000000A008 /* QueueFilterTests.swift in Sources */,
+				88AA100A2F0000000000A00A /* SearchMaterializeTests.swift in Sources */,
 				FE1000FF000000000000C012 /* PodcastFeedParserTests.swift in Sources */,
 				55A9DF11DDE89BB7A5CDC45F /* PodcastChapterArtworkTests.swift in Sources */,
 				1A9F99A05A0E48A5845FCC81 /* PodcastTriageTests.swift in Sources */,

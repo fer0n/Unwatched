@@ -77,10 +77,11 @@ Unwatched/Unwatched/InnerTube/
 there need no project edits. Files added to `Unwatched/Unwatched/InnerTube/` still need explicit
 references in `Unwatched.xcodeproj`.
 
-`InnerTubeAPI+Metadata.swift` adds `fetchVideoDescription(videoId:)` — a metadata-only
-`/player` call that parses just `videoDetails.shortDescription`, never throws on
-unresolvable streams. Backfills descriptions for videos added without one (e.g. from
-search). Kept out of `Core/` so `InnerTubeAPI+Player.swift` stays vanilla.
+`InnerTubeAPI+Metadata.swift` adds `fetchVideoMetadata(videoId:)` — a metadata-only
+`/player` call that parses just `videoDetails` (description, channel id, channel title), never
+throws on unresolvable streams. Backfills what a video was added without (e.g. from search,
+whose results carry no description, and whose Shorts carry no channel). Kept out of `Core/` so
+`InnerTubeAPI+Player.swift` stays vanilla.
 
 `InnerTubeAPI+Search.swift`'s `fetchChannelAvatarURL(channelId:)` delegates to
 `UnwatchedShared/UnwatchedShared/Service/ChannelAvatarService.swift` instead of making the
