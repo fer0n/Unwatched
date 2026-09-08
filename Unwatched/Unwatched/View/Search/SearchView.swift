@@ -40,7 +40,6 @@ struct SearchView: View {
     @AppStorage(Const.searchAlwaysUseYoutube) var searchAlwaysUseYoutube: Bool = false
 
     @Environment(\.modelContext) private var modelContext
-    @Environment(PlayerManager.self) private var player
     @Environment(NavigationManager.self) private var navManager
     @Environment(BrowserManager.self) private var browserManager
     @State private var vm = SearchVM()
@@ -107,7 +106,7 @@ struct SearchView: View {
 
         // tap-to-play adds to the queue without an onChange callback — refresh when
         // the now-playing video changes so the status badge catches up.
-        .onChange(of: player.video?.youtubeId) {
+        .onPlayerVideoChange {
             vm.refreshAllStatuses()
         }
         // Focus the search field for explicit requests: "Search YouTube" quick action,

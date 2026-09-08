@@ -60,15 +60,7 @@ struct PlayerEmbedded: View {
         #if os(iOS)
         .onChange(of: player.video?.youtubeId) { resetZoom() }
         .onChange(of: customUI) { resetZoom() }
-        .onChange(of: landscapeFullscreen) { _, isLandscape in
-            scrubberVM.handleLandscapeChanged(isLandscape: isLandscape)
-        }
-        .onChange(of: player.isPlaying) { _, isPlaying in
-            scrubberVM.handlePlayingChanged(isPlaying: isPlaying)
-        }
-        .onChange(of: player.temporaryPlaybackSpeed) { _, speed in
-            scrubberVM.handleTemporarySpeedChanged(active: speed != nil)
-        }
+        .playerScrubberSync(scrubberVM, landscapeFullscreen: landscapeFullscreen)
         #endif
     }
 

@@ -84,7 +84,7 @@ struct VideoPlayer: View {
         }
         .appNotificationOverlay()
         .tint(.neutralAccentColor)
-        .onChange(of: player.isPlaying) {
+        .onPlayerPlayingChange { _ in
             if player.video?.isNew == true {
                 player.video?.isNew = false
             }

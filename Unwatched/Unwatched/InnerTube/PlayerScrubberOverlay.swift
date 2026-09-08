@@ -80,6 +80,32 @@ final class PlayerScrubberOverlayVM {
     }
 }
 
+struct PlayerScrubberSync: ViewModifier {
+    @Environment(PlayerManager.self) private var player
+
+    let vm: PlayerScrubberOverlayVM
+    let landscapeFullscreen: Bool
+
+    func body(content: Content) -> some View {
+        content
+            .onChange(of: landscapeFullscreen) { _, isLandscape in
+                vm.handleLandscapeChanged(isLandscape: isLandscape)
+            }
+            .onChange(of: player.isPlaying) { _, isPlaying in
+                vm.handlePlayingChanged(isPlaying: isPlaying)
+            }
+            .onChange(of: player.temporaryPlaybackSpeed) { _, speed in
+                vm.handleTemporarySpeedChanged(active: speed != nil)
+            }
+    }
+}
+
+extension View {
+    func playerScrubberSync(_ vm: PlayerScrubberOverlayVM, landscapeFullscreen: Bool) -> some View {
+        modifier(PlayerScrubberSync(vm: vm, landscapeFullscreen: landscapeFullscreen))
+    }
+}
+
 /// Full-bleed storyboard preview shown over the video while scrubbing. Mounted as an
 /// `.overlay` on the aspect-fit video view (like `ThumbnailPlaceholder`) so it fills the exact
 /// video bounds, with the scrubber bar layered on top. Driven by the shared provider, so any

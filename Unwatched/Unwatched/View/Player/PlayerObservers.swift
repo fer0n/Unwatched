@@ -1,5 +1,5 @@
 //
-//  PlayerTabChange.swift
+//  PlayerObservers.swift
 //  Unwatched
 //
 
@@ -18,6 +18,32 @@ extension View {
 
     func playerTabHaptic() -> some View {
         modifier(PlayerTabHaptic())
+    }
+
+    func onPlayerPlayingChange(_ action: @escaping (Bool) -> Void) -> some View {
+        modifier(PlayerPlayingChange(action: action))
+    }
+
+    func onPlayerVideoChange(_ action: @escaping () -> Void) -> some View {
+        modifier(PlayerVideoChange(action: action))
+    }
+}
+
+private struct PlayerPlayingChange: ViewModifier {
+    @Environment(PlayerManager.self) private var player
+    var action: (Bool) -> Void
+
+    func body(content: Content) -> some View {
+        content.onChange(of: player.isPlaying) { _, isPlaying in action(isPlaying) }
+    }
+}
+
+private struct PlayerVideoChange: ViewModifier {
+    @Environment(PlayerManager.self) private var player
+    var action: () -> Void
+
+    func body(content: Content) -> some View {
+        content.onChange(of: player.video?.youtubeId) { action() }
     }
 }
 

@@ -243,15 +243,7 @@ struct AVPlayerView: View {
                 videoZoom = 1.0
                 panOffset = .zero
             }
-            .onChange(of: landscapeFullscreen) { _, isLandscape in
-                scrubberVM.handleLandscapeChanged(isLandscape: isLandscape)
-            }
-            .onChange(of: player.isPlaying) { _, isPlaying in
-                scrubberVM.handlePlayingChanged(isPlaying: isPlaying)
-            }
-            .onChange(of: player.temporaryPlaybackSpeed) { _, speed in
-                scrubberVM.handleTemporarySpeedChanged(active: speed != nil)
-            }
+            .playerScrubberSync(scrubberVM, landscapeFullscreen: landscapeFullscreen)
     }
 
     /// Pre-warm the second (next-up) video. Gated on the current video having finished

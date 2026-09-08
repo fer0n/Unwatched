@@ -26,7 +26,6 @@ struct SubscriptionShortsSetting: View {
             menuLabel: "shortsSetting"
         )
         .onChange(of: subscription.shortsSetting) {
-            print("videoPlacement changed")
             if !subscription.shortsSetting.shouldHide() {
                 Task {
                     await refresher.refreshSubscription(subscriptionId: subscription.persistentModelID)

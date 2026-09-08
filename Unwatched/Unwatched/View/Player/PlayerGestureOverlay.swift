@@ -109,16 +109,15 @@ struct PlayerGestureOverlay: ViewModifier {
             // `isExternallyPinching` the instant a second finger lands — well before the
             // SwiftUI MagnifyGesture recognizes. Mirror it into `isPinching` and cancel any
             // pending touch so a two-finger start can't fire the long-press (temporary speed).
-            .onChange(of: isExternallyPinching) { _, pinching in
-                if pinching {
+            .task(id: isExternallyPinching) {
+                if isExternallyPinching {
                     gestureState.isPinching = true
                     gestureState.resetTouch()
                     resetSwipeAnimation()
                 } else {
-                    Task { @MainActor in
-                        try? await Task.sleep(for: .milliseconds(100))
-                        gestureState.isPinching = false
-                    }
+                    try? await Task.sleep(for: .milliseconds(100))
+                    guard !Task.isCancelled else { return }
+                    gestureState.isPinching = false
                 }
             }
     }

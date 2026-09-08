@@ -36,12 +36,9 @@ struct ImageAccentBackground: ViewModifier {
             .listRowInsets(EdgeInsets(top: -topPadding, leading: 0, bottom: 0, trailing: 0))
             .listRowSeparator(.hidden)
             #endif
-            .onChange(of: url, initial: true) {
-                Task {
-                    await updateColor()
-                }
+            .task(id: url) {
+                await updateColor()
             }
-
             .background {
                 (Const.macOS26 || Device.isVision
                     ? Color.clear
