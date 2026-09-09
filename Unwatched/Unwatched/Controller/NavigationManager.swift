@@ -36,8 +36,8 @@ import UnwatchedShared
 
     var presentedSubscriptionQueue = [SendableSubscription]()
     var presentedSubscriptionInbox = [SendableSubscription]()
-    // Transient (not persisted) — channel previews opened from the Search tab.
-    var presentedSearch = [SendableSubscription]()
+    // Transient (not persisted) — the Search tab's result page and the channel previews on top of it.
+    var presentedSearch = [SearchRoute]()
     // Toggled (e.g. via the "Search" home-screen quick action) to request the
     // Search tab focus its search field. SearchView observes and consumes it.
     var pendingSearchFocus = false
@@ -134,8 +134,8 @@ import UnwatchedShared
             tab = .library
             pushToLibrary(sendableSub)
         case .search:
-            if presentedSearch.last != sendableSub {
-                presentedSearch.append(sendableSub)
+            if presentedSearch.last != .subscription(sendableSub) {
+                presentedSearch.append(.subscription(sendableSub))
             }
         case .library:
             pushToLibrary(sendableSub)

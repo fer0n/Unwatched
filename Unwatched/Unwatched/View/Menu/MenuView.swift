@@ -116,6 +116,12 @@ struct MenuView: View {
         Log.info("handleTabChanged \(newTab.rawValue)")
         if newTab == navManager.tab {
             let isTopView = navManager.handleTappedTwice()
+            #if !os(macOS)
+            // Tapping the search tab again asks for a new search; the results page pops on its own.
+            if newTab == .search && isTopView {
+                navManager.pendingSearchFocus = true
+            }
+            #endif
             Task { @MainActor in
                 withAnimation {
                     if isTopView {
