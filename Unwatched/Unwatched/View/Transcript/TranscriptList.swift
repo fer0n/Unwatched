@@ -67,6 +67,32 @@ struct TranscriptItemRow: View {
                 .foregroundStyle(.secondary)
                 .frame(maxWidth: .infinity, alignment: .leading)
                 .padding(.vertical, 4)
+        case .gap(let gap, _):
+            TranscriptGapRow(gap: gap)
         }
+    }
+}
+
+/// Marks audio the show's transcript doesn't cover. It says how long it is and nothing about
+/// what's in it: an insertion is the common cause, but so are music and a publisher's omission.
+struct TranscriptGapRow: View {
+    let gap: TranscriptAlignment.Gap
+
+    var body: some View {
+        HStack(spacing: 8) {
+            rule
+            Text("transcriptGap \(ChapterService.secondsToTimestamp(gap.duration))")
+                .font(.caption)
+                .foregroundStyle(.secondary)
+                .fixedSize()
+            rule
+        }
+        .padding(.vertical, 10)
+    }
+
+    private var rule: some View {
+        Rectangle()
+            .fill(.secondary.opacity(0.3))
+            .frame(height: 1)
     }
 }

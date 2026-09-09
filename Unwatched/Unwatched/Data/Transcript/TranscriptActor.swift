@@ -38,9 +38,13 @@ import UnwatchedShared
         for youtubeId: String,
         origin: TranscriptOrigin = .published
     ) {
+        cachePayload(TranscriptPayload(entries: transcript, origin: origin), for: youtubeId)
+    }
+
+    func cachePayload(_ payload: TranscriptPayload, for youtubeId: String) {
         Log.info("cacheTranscript for \(youtubeId)")
         let encoder = JSONEncoder()
-        guard let encoded = try? encoder.encode(TranscriptPayload(entries: transcript, origin: origin)) else {
+        guard let encoded = try? encoder.encode(payload) else {
             Log.warning("Failed to encode transcript for caching")
             return
         }

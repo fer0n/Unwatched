@@ -50,6 +50,8 @@ public enum TranscriptOrigin: String, Sendable, Codable {
     case published
     /// Transcribed on device.
     case generated
+    /// Published by the show, with its timings corrected to match the audio that plays.
+    case aligned
 }
 
 /// What's stored in `Transcript.data`. A cache written before the origin existed is a bare array
@@ -57,10 +59,17 @@ public enum TranscriptOrigin: String, Sendable, Codable {
 public struct TranscriptPayload: Sendable, Codable {
     public let entries: [TranscriptEntry]
     public let origin: TranscriptOrigin
+    /// Set once the transcript has been checked against the audio, so it isn't probed again.
+    public let alignment: TranscriptAlignment?
 
-    public init(entries: [TranscriptEntry], origin: TranscriptOrigin) {
+    public init(
+        entries: [TranscriptEntry],
+        origin: TranscriptOrigin,
+        alignment: TranscriptAlignment? = nil
+    ) {
         self.entries = entries
         self.origin = origin
+        self.alignment = alignment
     }
 
     public static let empty = TranscriptPayload(entries: [], origin: .published)

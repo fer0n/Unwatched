@@ -104,6 +104,21 @@ struct ChapterSettingsMenu: View {
                 .disabled(transcriptVM.isGenerating)
                 .containsPremium()
 
+                if showsAlign {
+                    Button {
+                        guard guardPremium(onInteraction: { dismiss() }) else { return }
+                        Signal.log("Transcript.Align", parameters: ["source": "menu"])
+                        transcriptVM.alignTranscript(for: video)
+                    } label: {
+                        Label(
+                            "fixTranscriptAlignment",
+                            systemImage: "exclamationmark.arrow.trianglehead.counterclockwise.rotate.90"
+                        )
+                    }
+                    .disabled(transcriptVM.isAligning)
+                    .containsPremium()
+                }
+
                 if showsRestore {
                     Button {
                         Signal.log("Transcript.RestorePublished")
@@ -121,7 +136,17 @@ struct ChapterSettingsMenu: View {
     }
 
     var showsRestore: Bool {
-        transcriptVM?.origin == .generated
+        transcriptVM?.origin == .generated || transcriptVM?.origin == .aligned
+    }
+
+    /// Only for a transcript the show published: a generated one is of the audio already, so it
+    /// has nothing to line up with. Stays offered once corrected, which is how an episode aligned
+    /// before gap chapters existed gets them.
+    var showsAlign: Bool {
+        guard let video, let transcriptVM else { return false }
+        return (transcriptVM.origin == .published || transcriptVM.origin == .aligned)
+            && transcriptVM.transcript?.isEmpty == false
+            && TranscriptService.canAlignTranscript(for: video)
     }
 
     /// Read from the progress itself rather than an is-running flag, which drops before the sweep
@@ -135,7 +160,7 @@ struct ChapterSettingsMenu: View {
     }
 
     var isWorking: Bool {
-        viewModel.isLoading || transcriptVM?.isGenerating == true
+        viewModel.isLoading || transcriptVM?.isGenerating == true || transcriptVM?.isAligning == true
     }
 
     var showsTranscriptActions: Bool {

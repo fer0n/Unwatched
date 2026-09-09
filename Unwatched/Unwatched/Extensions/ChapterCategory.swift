@@ -24,6 +24,8 @@ extension ChapterCategory {
             return String(localized: "categoryPreview")
         case .musicOfftopic:
             return String(localized: "categoryMusicOfftopic")
+        case .notTranscribed:
+            return String(localized: "categoryNotTranscribed")
         case .generated, .chapter:
             return nil
         @unknown default:

@@ -106,6 +106,8 @@
 		8813465E2B88A2A3005A4790 /* SubscriptionInfo.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8813465D2B88A2A3005A4790 /* SubscriptionInfo.swift */; };
 		88146F3F2C74EDDC00704B90 /* ChapterService+SponserBlock.swift in Sources */ = {isa = PBXBuildFile; fileRef = 88146F3E2C74EDDC00704B90 /* ChapterService+SponserBlock.swift */; };
 		88146F402C74EDDC00704B90 /* ChapterService+SponserBlock.swift in Sources */ = {isa = PBXBuildFile; fileRef = 88146F3E2C74EDDC00704B90 /* ChapterService+SponserBlock.swift */; };
+		88CD38A72E20E66300E7B21C /* GapChapterService.swift in Sources */ = {isa = PBXBuildFile; fileRef = 88CD38A62E20E66300E7B21C /* GapChapterService.swift */; };
+		88CD38A82E20E66300E7B21C /* GapChapterService.swift in Sources */ = {isa = PBXBuildFile; fileRef = 88CD38A62E20E66300E7B21C /* GapChapterService.swift */; };
 		88146F512C74EDDC00704B91 /* SharedContextActorTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 88146F502C74EDDC00704B91 /* SharedContextActorTests.swift */; };
 		8816A2002CCD0D19001FE63E /* PipButton.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8816A1FF2CCD0D19001FE63E /* PipButton.swift */; };
 		8816A2012CCD0D19001FE63E /* PipButton.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8816A1FF2CCD0D19001FE63E /* PipButton.swift */; };
@@ -732,6 +734,8 @@
 		88CD37012E203FB200E7B21C /* PlayerWebView+Initscript.swift in Sources */ = {isa = PBXBuildFile; fileRef = 88CD36FF2E203FB200E7B21C /* PlayerWebView+Initscript.swift */; };
 		88CD38752E20782500E7B21C /* TranscriptView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 88CD38742E20781F00E7B21C /* TranscriptView.swift */; };
 		88CD38762E20782500E7B21C /* TranscriptView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 88CD38742E20781F00E7B21C /* TranscriptView.swift */; };
+		88CD38A42E20E66300E7B21C /* TranscriptViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 88CD38A32E20E66300E7B21C /* TranscriptViewModel.swift */; };
+		88CD38A52E20E66300E7B21C /* TranscriptViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 88CD38A32E20E66300E7B21C /* TranscriptViewModel.swift */; };
 		88CD38782E20797C00E7B21C /* PlayerWebViewCoordinator+messages.swift in Sources */ = {isa = PBXBuildFile; fileRef = 88CD38772E20797C00E7B21C /* PlayerWebViewCoordinator+messages.swift */; };
 		88CD38792E20797C00E7B21C /* PlayerWebViewCoordinator+messages.swift in Sources */ = {isa = PBXBuildFile; fileRef = 88CD38772E20797C00E7B21C /* PlayerWebViewCoordinator+messages.swift */; };
 		88CD387B2E20E59100E7B21C /* PlayerError.swift in Sources */ = {isa = PBXBuildFile; fileRef = 88CD387A2E20E59100E7B21C /* PlayerError.swift */; };
@@ -740,6 +744,8 @@
 		88CD38822E20E5B400E7B21C /* SwipeDirecton.swift in Sources */ = {isa = PBXBuildFile; fileRef = 88CD38802E20E5B400E7B21C /* SwipeDirecton.swift */; };
 		88CD38842E20E66300E7B21C /* TranscriptService.swift in Sources */ = {isa = PBXBuildFile; fileRef = 88CD38832E20E66300E7B21C /* TranscriptService.swift */; };
 		88CD38852E20E66300E7B21C /* TranscriptService.swift in Sources */ = {isa = PBXBuildFile; fileRef = 88CD38832E20E66300E7B21C /* TranscriptService.swift */; };
+		88CD38A12E20E66300E7B21C /* TranscriptService+Alignment.swift in Sources */ = {isa = PBXBuildFile; fileRef = 88CD38A02E20E66300E7B21C /* TranscriptService+Alignment.swift */; };
+		88CD38A22E20E66300E7B21C /* TranscriptService+Alignment.swift in Sources */ = {isa = PBXBuildFile; fileRef = 88CD38A02E20E66300E7B21C /* TranscriptService+Alignment.swift */; };
 		88CD388C2E213D0B00E7B21C /* TranscriptSearch.swift in Sources */ = {isa = PBXBuildFile; fileRef = 88CD388B2E213D0B00E7B21C /* TranscriptSearch.swift */; };
 		88CD388D2E213D0B00E7B21C /* TranscriptSearch.swift in Sources */ = {isa = PBXBuildFile; fileRef = 88CD388B2E213D0B00E7B21C /* TranscriptSearch.swift */; };
 		88CD388F2E213D1D00E7B21C /* TranscriptFieldClearButton.swift in Sources */ = {isa = PBXBuildFile; fileRef = 88CD388E2E213D1D00E7B21C /* TranscriptFieldClearButton.swift */; };
@@ -965,6 +971,9 @@
 		FE1000FF000000000000C002 /* PodcastPreviewView.swift in Sources */ = {isa = PBXBuildFile; fileRef = FE1000FF000000000000C001 /* PodcastPreviewView.swift */; };
 		FE1000FF000000000000C003 /* PodcastPreviewView.swift in Sources */ = {isa = PBXBuildFile; fileRef = FE1000FF000000000000C001 /* PodcastPreviewView.swift */; };
 		FE1000FF000000000000C012 /* PodcastFeedParserTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = FE1000FF000000000000C011 /* PodcastFeedParserTests.swift */; };
+		FE1000FF000000000000C112 /* TranscriptAlignmentTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = FE1000FF000000000000C111 /* TranscriptAlignmentTests.swift */; };
+		FE1000FF000000000000C212 /* Mp3ClockTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = FE1000FF000000000000C211 /* Mp3ClockTests.swift */; };
+		FE1000FF000000000000C312 /* GapChapterLabelTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = FE1000FF000000000000C311 /* GapChapterLabelTests.swift */; };
 		FE1000FF000000000000D012 /* SilenceTrimTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = FE1000FF000000000000D011 /* SilenceTrimTests.swift */; };
 		FE1000FF000000000000E012 /* PlayerBackendDispatchTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = FE1000FF000000000000E011 /* PlayerBackendDispatchTests.swift */; };
 		FE1000FF000000000000E022 /* PlayerOwnershipTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = FE1000FF000000000000E021 /* PlayerOwnershipTests.swift */; };
@@ -1153,6 +1162,7 @@
 		880F03822D8EE73D0049B902 /* CursorHideModifier.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CursorHideModifier.swift; sourceTree = "<group>"; };
 		8813465D2B88A2A3005A4790 /* SubscriptionInfo.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SubscriptionInfo.swift; sourceTree = "<group>"; };
 		88146F3E2C74EDDC00704B90 /* ChapterService+SponserBlock.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "ChapterService+SponserBlock.swift"; sourceTree = "<group>"; };
+		88CD38A62E20E66300E7B21C /* GapChapterService.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = GapChapterService.swift; sourceTree = "<group>"; };
 		88146F502C74EDDC00704B91 /* SharedContextActorTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SharedContextActorTests.swift; sourceTree = "<group>"; };
 		8816A1FF2CCD0D19001FE63E /* PipButton.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PipButton.swift; sourceTree = "<group>"; };
 		8816A2FC2CCD5125001FE63E /* PageControl.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PageControl.swift; sourceTree = "<group>"; };
@@ -1458,10 +1468,12 @@
 		88CC8FD72CE3BDB300F6F49D /* SponsorBlockSettingsView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SponsorBlockSettingsView.swift; sourceTree = "<group>"; };
 		88CD36FF2E203FB200E7B21C /* PlayerWebView+Initscript.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "PlayerWebView+Initscript.swift"; sourceTree = "<group>"; };
 		88CD38742E20781F00E7B21C /* TranscriptView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TranscriptView.swift; sourceTree = "<group>"; };
+		88CD38A32E20E66300E7B21C /* TranscriptViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TranscriptViewModel.swift; sourceTree = "<group>"; };
 		88CD38772E20797C00E7B21C /* PlayerWebViewCoordinator+messages.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "PlayerWebViewCoordinator+messages.swift"; sourceTree = "<group>"; };
 		88CD387A2E20E59100E7B21C /* PlayerError.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PlayerError.swift; sourceTree = "<group>"; };
 		88CD38802E20E5B400E7B21C /* SwipeDirecton.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SwipeDirecton.swift; sourceTree = "<group>"; };
 		88CD38832E20E66300E7B21C /* TranscriptService.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TranscriptService.swift; sourceTree = "<group>"; };
+		88CD38A02E20E66300E7B21C /* TranscriptService+Alignment.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "TranscriptService+Alignment.swift"; sourceTree = "<group>"; };
 		88CD388B2E213D0B00E7B21C /* TranscriptSearch.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TranscriptSearch.swift; sourceTree = "<group>"; };
 		88CD388E2E213D1D00E7B21C /* TranscriptFieldClearButton.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TranscriptFieldClearButton.swift; sourceTree = "<group>"; };
 		88CD38912E213D3400E7B21C /* TranscriptList.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TranscriptList.swift; sourceTree = "<group>"; };
@@ -1605,6 +1617,9 @@
 		FE100002AA0000000010F007 /* SearchFilterMenu.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SearchFilterMenu.swift; sourceTree = "<group>"; };
 		FE1000FF000000000000C001 /* PodcastPreviewView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PodcastPreviewView.swift; sourceTree = "<group>"; };
 		FE1000FF000000000000C011 /* PodcastFeedParserTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PodcastFeedParserTests.swift; sourceTree = "<group>"; };
+		FE1000FF000000000000C111 /* TranscriptAlignmentTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TranscriptAlignmentTests.swift; sourceTree = "<group>"; };
+		FE1000FF000000000000C211 /* Mp3ClockTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Mp3ClockTests.swift; sourceTree = "<group>"; };
+		FE1000FF000000000000C311 /* GapChapterLabelTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = GapChapterLabelTests.swift; sourceTree = "<group>"; };
 		FE1000FF000000000000D011 /* SilenceTrimTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SilenceTrimTests.swift; sourceTree = "<group>"; };
 		FE1000FF000000000000E011 /* PlayerBackendDispatchTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PlayerBackendDispatchTests.swift; sourceTree = "<group>"; };
 		FE1000FF000000000000E021 /* PlayerOwnershipTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PlayerOwnershipTests.swift; sourceTree = "<group>"; };
@@ -1852,6 +1867,7 @@
 			children = (
 				CD93E71E2E23AAD500FF6447 /* GenerationService.swift */,
 				88146F3E2C74EDDC00704B90 /* ChapterService+SponserBlock.swift */,
+				88CD38A62E20E66300E7B21C /* GapChapterService.swift */,
 				8AE906A64CC0490FAD1022DC /* ChapterService+Player.swift */,
 			);
 			path = ChapterService;
@@ -1887,6 +1903,9 @@
 				88AA10072F0000000000A007 /* QueueFilterTests.swift */,
 				88AA10092F0000000000A009 /* SearchMaterializeTests.swift */,
 				FE1000FF000000000000C011 /* PodcastFeedParserTests.swift */,
+				FE1000FF000000000000C111 /* TranscriptAlignmentTests.swift */,
+				FE1000FF000000000000C211 /* Mp3ClockTests.swift */,
+				FE1000FF000000000000C311 /* GapChapterLabelTests.swift */,
 				C485C322062FFD77AA82DBD1 /* PodcastChapterArtworkTests.swift */,
 				FADE86879D704827B7266EA7 /* PodcastTriageTests.swift */,
 				67E1C9774B64420098EC98D5 /* PodcastEpisodeCacheTests.swift */,
@@ -2208,6 +2227,7 @@
 				88146F412C74EDE500704B90 /* ChapterService */,
 				88DFC0C52B448C01001895C8 /* VideoService.swift */,
 				88CD38832E20E66300E7B21C /* TranscriptService.swift */,
+				88CD38A02E20E66300E7B21C /* TranscriptService+Alignment.swift */,
 				8891F0B12B4E9F4E0098A3FB /* SubscriptionService.swift */,
 				88190E3D2B99D97900F048C3 /* CleanupService.swift */,
 				888C49C42B5FA75700CDEC76 /* UrlService.swift */,
@@ -2450,6 +2470,7 @@
 				8819EA342F3B56F600F3116D /* ScrollViewInteractionDetector.swift */,
 				888D49282E2251D0007902CF /* TranscriptDescriptionSelection.swift */,
 				88CD38742E20781F00E7B21C /* TranscriptView.swift */,
+				88CD38A32E20E66300E7B21C /* TranscriptViewModel.swift */,
 				88CD38912E213D3400E7B21C /* TranscriptList.swift */,
 				887785EA2EEA08C700795394 /* TranscriptRow.swift */,
 				88CD388E2E213D1D00E7B21C /* TranscriptFieldClearButton.swift */,
@@ -3123,6 +3144,7 @@
 				889AF9502C50ED05001CEDE6 /* CleanupService.swift in Sources */,
 				88EE64BE2E64A1B700A3DD36 /* ContextMenuAction.swift in Sources */,
 				88CD38762E20782500E7B21C /* TranscriptView.swift in Sources */,
+				88CD38A42E20E66300E7B21C /* TranscriptViewModel.swift in Sources */,
 				889AF9512C50ED05001CEDE6 /* VideoListItemMoreMenu.swift in Sources */,
 				88AA20112F0000000000B011 /* VideoTagMenu.swift in Sources */,
 				889AF9522C50ED05001CEDE6 /* SetupView.swift in Sources */,
@@ -3141,6 +3163,9 @@
 				88AA10082F0000000000A008 /* QueueFilterTests.swift in Sources */,
 				88AA100A2F0000000000A00A /* SearchMaterializeTests.swift in Sources */,
 				FE1000FF000000000000C012 /* PodcastFeedParserTests.swift in Sources */,
+				FE1000FF000000000000C112 /* TranscriptAlignmentTests.swift in Sources */,
+				FE1000FF000000000000C212 /* Mp3ClockTests.swift in Sources */,
+				FE1000FF000000000000C312 /* GapChapterLabelTests.swift in Sources */,
 				55A9DF11DDE89BB7A5CDC45F /* PodcastChapterArtworkTests.swift in Sources */,
 				1A9F99A05A0E48A5845FCC81 /* PodcastTriageTests.swift in Sources */,
 				6E4AEBEE463448C2BCDC7B25 /* PodcastEpisodeCacheTests.swift in Sources */,
@@ -3339,6 +3364,7 @@
 				88F286212DEA6DE700309C36 /* MoveQueueEntry.swift in Sources */,
 				88274F00301E47250033352A /* DescriptionEdgeSwipe.swift in Sources */,
 				88CD38842E20E66300E7B21C /* TranscriptService.swift in Sources */,
+				88CD38A12E20E66300E7B21C /* TranscriptService+Alignment.swift in Sources */,
 				CD6681472F1D8B9200E8DA73 /* BackgroundTransparentEffect.swift in Sources */,
 				889AF8F02C50ECC5001CEDE6 /* Double.swift in Sources */,
 				889AF8F12C50ECC5001CEDE6 /* Binding.swift in Sources */,
@@ -3471,6 +3497,7 @@
 				883D44F23018078100950B89 /* SearchSource.swift in Sources */,
 				88F73D8F2D2EFD8900F61E99 /* AppNotificationData.swift in Sources */,
 				88146F402C74EDDC00704B90 /* ChapterService+SponserBlock.swift in Sources */,
+				88CD38A82E20E66300E7B21C /* GapChapterService.swift in Sources */,
 				D5E2AD4F2A5543FAB42EBEC4 /* ChapterService+Player.swift in Sources */,
 				880E87002F6562F2001DAAE8 /* VideoListItemActions.swift in Sources */,
 				889AF9102C50ECE7001CEDE6 /* SettingsView.swift in Sources */,
@@ -3912,6 +3939,7 @@
 				8899247E2C48553F001185A6 /* MyForm.swift in Sources */,
 				883CA8152B5B907000028D52 /* InnerHeightPreferenceChange.swift in Sources */,
 				88CD38752E20782500E7B21C /* TranscriptView.swift in Sources */,
+				88CD38A52E20E66300E7B21C /* TranscriptViewModel.swift in Sources */,
 				88F3AA892C99887E0030B2EA /* ThemeColor.swift in Sources */,
 				88B0C15E2C4165BC006D2423 /* UIWindow.swift in Sources */,
 				883CA81E2B5BD3ED00028D52 /* SubscribeManager.swift in Sources */,
@@ -4001,6 +4029,7 @@
 				8816E3A22FEB16D0004EB1ED /* ScrubberThumbnails.swift in Sources */,
 				883F41072BDEDE7000535952 /* HandleVideoUrlDropModifier.swift in Sources */,
 				88CD38852E20E66300E7B21C /* TranscriptService.swift in Sources */,
+				88CD38A22E20E66300E7B21C /* TranscriptService+Alignment.swift in Sources */,
 				88A4F40D2E6F89650074126C /* AnimatableDetents.swift in Sources */,
 				CD03C1DD2C73BEDE00913256 /* SponsorBlockAPI.swift in Sources */,
 				887EB2DF2CFE167700F9D517 /* MenuSheetDetents.swift in Sources */,
@@ -4020,6 +4049,7 @@
 				29E927CC97728CCD53828549 /* InboxCardDrag.swift in Sources */,
 				BED604C449CA906A7F8272D6 /* InboxCardSwipe.swift in Sources */,
 				88146F3F2C74EDDC00704B90 /* ChapterService+SponserBlock.swift in Sources */,
+				88CD38A72E20E66300E7B21C /* GapChapterService.swift in Sources */,
 				AA774D739DF04181814EF02A /* ChapterService+Player.swift in Sources */,
 				88296ADA2CCEE8E300E96D3C /* DescriptionMiniProgressBar.swift in Sources */,
 				88C205282B516D2A008EC51D /* ChapterListItem.swift in Sources */,
