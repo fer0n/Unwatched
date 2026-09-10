@@ -6,6 +6,7 @@
 import AVFoundation
 import MediaPlayer
 import Observation
+import SwiftData
 import SwiftUI
 import UnwatchedShared
 
@@ -26,6 +27,9 @@ final class WatchAudioPlayer {
     /// Seconds, mirrored from the player so views can observe them.
     private(set) var currentTime: Double = 0
     private(set) var duration: Double?
+
+    /// Read once per item: `sortedChapterData` re-derives and re-sorts on every access.
+    private(set) var chapters: [SendableChapter] = []
 
     @ObservationIgnored private var player: AVPlayer?
     @ObservationIgnored private var timeObserver: Any?
@@ -70,6 +74,9 @@ final class WatchAudioPlayer {
         teardownPlayer()
 
         self.video = video
+        chapters = video.sortedChapterData
+        lastPersisted = 0
+        lastReported = 0
         errorMessage = nil
         isLoading = true
         currentTime = video.elapsedSeconds ?? 0
@@ -161,7 +168,6 @@ final class WatchAudioPlayer {
                     self.duration = itemDuration
                 }
                 self.persistProgress()
-                self.updateNowPlayingTime()
             }
         }
 
@@ -183,6 +189,7 @@ final class WatchAudioPlayer {
         if isPlaying {
             player.pause()
             isPlaying = false
+            persistProgress(force: true)
             updateNowPlaying()
             return
         }
@@ -247,32 +254,93 @@ final class WatchAudioPlayer {
         updateNowPlaying()
     }
 
+    var currentChapterTitle: String? {
+        chapters.last { $0.startTime <= currentTime }?.title
+    }
+
+    /// Where the current chapter ends, or the item.
+    var currentEndTime: Double? {
+        chapters.first { $0.startTime > currentTime }?.startTime ?? duration
+    }
+
+    var hasNextChapter: Bool {
+        chapters.contains { $0.startTime > currentTime + Self.chapterSkipBack }
+    }
+
+    func goToNextChapter() {
+        guard let next = chapters.first(where: { $0.startTime > currentTime + Self.chapterSkipBack }) else {
+            return
+        }
+        seek(to: next.startTime)
+    }
+
+    func goToPreviousChapter() {
+        let starts = chapters.map(\.startTime)
+        guard let current = starts.last(where: { $0 <= currentTime }) else {
+            seek(to: 0)
+            return
+        }
+        if currentTime - current > Self.chapterSkipBack {
+            seek(to: current)
+        } else {
+            seek(to: starts.last(where: { $0 < current }) ?? 0)
+        }
+    }
+
+    private static let chapterSkipBack: Double = 3
+
+    func seek(to seconds: Double) {
+        guard let player else { return }
+        let target = max(0, seconds)
+        player.seek(to: CMTime(seconds: target, preferredTimescale: 600))
+        currentTime = target
+        updateNowPlaying()
+    }
+
     func seek(by seconds: Double) {
         guard let player else { return }
         let target = max(0, currentTime + seconds)
         player.seek(to: CMTime(seconds: target, preferredTimescale: 600))
         currentTime = target
-        updateNowPlayingTime()
+        updateNowPlaying()
     }
 
     func stop() {
         loadTask?.cancel()
         candidates = []
-        persistProgress()
         teardownPlayer()
         video = nil
+        chapters = []
         isPlaying = false
         MPNowPlayingInfoCenter.default().nowPlayingInfo = nil
     }
 
-    /// Playback stops at the end of an episode rather than rolling into the next one: continuous
-    /// play would mean deciding what "watched" means on a device that cannot undo it, which is the
-    /// phone's job.
+    /// The next entry of the tag the wearer is looking at, so continuous play stays in the filter.
+    @MainActor
+    func nextInQueue(in context: ModelContext? = nil) -> Video? {
+        guard let context = context ?? video?.modelContext else { return nil }
+        let tags = (try? context.fetch(FetchDescriptor<Tag>(sortBy: [SortDescriptor(\.order)]))) ?? []
+        let name = UserDefaults.standard.string(forKey: Const.watchSelectedTagName) ?? ""
+        let filter = QueueFilter(tag: tags.first { $0.name == name }, in: tags)
+        let videos = ((try? context.fetch(filter.descriptor())) ?? []).compactMap(\.video)
+
+        guard let current = video?.youtubeId else { return videos.first }
+        guard let index = videos.firstIndex(where: { $0.youtubeId == current }) else {
+            return videos.first
+        }
+        return index + 1 < videos.count ? videos[index + 1] : nil
+    }
+
+    /// Nothing here marks anything watched — that stays the phone's call.
     private func finish() {
         isPlaying = false
+        guard UserDefaults.standard.bool(forKey: Const.continuousPlay),
+              let next = nextInQueue() else { return }
+        play(next)
     }
 
     private func teardownPlayer() {
+        persistProgress(force: true)
         if let timeObserver, let player {
             player.removeTimeObserver(timeObserver)
         }
@@ -289,12 +357,26 @@ final class WatchAudioPlayer {
 
     // MARK: - Progress
 
-    /// Writes the position back to the store so the phone picks the episode up where the watch left
-    /// it. CloudKit carries it over on its own schedule; nothing here waits for that.
-    private func persistProgress() {
-        guard let video, currentTime > 0 else { return }
-        video.elapsedSeconds = currentTime
+    /// The position, for the phone to pick the item up where the wrist left it.
+    func reportProgress() {
+        persistProgress(force: true)
     }
+
+    /// Every few seconds rather than every tick: each write dirties the context and may export.
+    private func persistProgress(force: Bool = false) {
+        guard let video, currentTime > 0 else { return }
+        guard force || abs(currentTime - lastPersisted) >= Self.persistInterval else { return }
+        lastPersisted = currentTime
+        video.elapsedSeconds = currentTime
+
+        guard force, currentTime != lastReported else { return }
+        lastReported = currentTime
+        WatchQueueClient.shared.report(.setProgress(youtubeId: video.youtubeId, seconds: currentTime))
+    }
+
+    @ObservationIgnored private var lastPersisted: Double = 0
+    @ObservationIgnored private var lastReported: Double = 0
+    private static let persistInterval: Double = 5
 
     // MARK: - Audio session
 
@@ -354,6 +436,7 @@ final class WatchAudioPlayer {
         }
     }
 
+    /// The system carries the position forward from the rate, so only rate and item changes matter.
     private func updateNowPlaying() {
         guard let video else { return }
         var info: [String: Any] = [
@@ -364,16 +447,6 @@ final class WatchAudioPlayer {
         if let artist = video.subscription?.title {
             info[MPMediaItemPropertyArtist] = artist
         }
-        if let duration {
-            info[MPMediaItemPropertyPlaybackDuration] = duration
-        }
-        MPNowPlayingInfoCenter.default().nowPlayingInfo = info
-    }
-
-    private func updateNowPlayingTime() {
-        var info = MPNowPlayingInfoCenter.default().nowPlayingInfo ?? [:]
-        info[MPNowPlayingInfoPropertyElapsedPlaybackTime] = currentTime
-        info[MPNowPlayingInfoPropertyPlaybackRate] = isPlaying ? playbackSpeed : 0.0
         if let duration {
             info[MPMediaItemPropertyPlaybackDuration] = duration
         }

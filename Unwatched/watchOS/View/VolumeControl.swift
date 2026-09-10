@@ -21,9 +21,13 @@ struct VolumeControl: View {
     /// Whether this screen is the one the crown should be turning. The player is a page in a tab
     /// view and the queue beside it scrolls, so focus has to be handed back when it isn't showing.
     let isActive: Bool
+    /// `.local` is the watch's own output, `.companion` the iPhone's.
+    let origin: WKInterfaceVolumeControl.Origin
 
     var body: some View {
-        Representable(isActive: isActive)
+        Representable(isActive: isActive, origin: origin)
+            // The origin is fixed when the object is made, so switching player means a new one.
+            .id(origin)
             // Small enough to be nowhere, present enough to keep focus.
             .frame(width: 1, height: 1)
             .opacity(0.001)
@@ -32,10 +36,10 @@ struct VolumeControl: View {
 
     private struct Representable: WKInterfaceObjectRepresentable {
         let isActive: Bool
+        let origin: WKInterfaceVolumeControl.Origin
 
         func makeWKInterfaceObject(context: Context) -> WKInterfaceVolumeControl {
-            // `.local` is the audio playing on the watch itself, which is all this app plays.
-            WKInterfaceVolumeControl(origin: .local)
+            WKInterfaceVolumeControl(origin: origin)
         }
 
         func updateWKInterfaceObject(_ control: WKInterfaceVolumeControl, context: Context) {
@@ -64,8 +68,9 @@ struct VolumeControl: View {
 /// Where the volume is, for anyone drawing it.
 ///
 /// The crown turns the volume through the control above without telling the app anything, but
-/// `outputVolume` is KVO-compliant and does report what it lands on — on the watch itself. On the
-/// simulator the property is a stub that never moves, so this looks broken there and isn't.
+/// `outputVolume` does report what it lands on — on the watch itself. The phone's is not readable
+/// here, so the phone sends it and `update` takes it. On the simulator the property is a stub that
+/// never moves, so this looks broken there and isn't.
 @MainActor
 @Observable
 final class WatchVolume {
@@ -86,19 +91,24 @@ final class WatchVolume {
     /// turn, short enough not to sit on top of the artwork.
     private static let linger = Duration.seconds(1.5)
 
-    func start() {
+    /// The watch's own output. Not while the phone is playing: its volume is what the crown turns.
+    func startLocal() {
         guard observation == nil else { return }
         let session = AVAudioSession.sharedInstance()
         volume = Double(session.outputVolume)
         observation = session.observe(\.outputVolume, options: [.new]) { [weak self] _, change in
             guard let value = change.newValue else { return }
             Task { @MainActor in
-                self?.record(Double(value))
+                self?.update(Double(value))
             }
         }
     }
 
-    private func record(_ value: Double) {
+    func stopLocal() {
+        observation = nil
+    }
+
+    func update(_ value: Double) {
         volume = value
         crownOrientation = WKInterfaceDevice.current().crownOrientation
         isAdjusting = true

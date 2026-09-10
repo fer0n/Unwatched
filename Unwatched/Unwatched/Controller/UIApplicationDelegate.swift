@@ -26,6 +26,7 @@ class AppDelegate: NSObject, UIApplicationDelegate, UNUserNotificationCenterDele
         SetupView.onLaunch()
         #if os(iOS)
         MediaSuggestionService.setup()
+        WatchRemoteBridge.setup()
         #endif
         LaunchTrace.mark(LaunchTrace.Phase.didFinishLaunchingEnd)
         return true
@@ -276,6 +277,100 @@ class SceneDelegate: UIResponder, UIWindowSceneDelegate {
             NotificationCenter.default.post(name: .pasteAndQueue, object: nil)
         } else if shortcutItem.type == Const.shortcutItemSearchYoutube {
             NotificationCenter.default.post(name: .searchYoutube, object: nil)
+        }
+    }
+}
+#endif
+
+#if os(iOS)
+/// The watch's player, driving this one through the hooks `WatchQueueProvider` calls in on.
+@MainActor
+enum WatchRemoteBridge {
+    static func setup() {
+        guard WatchQueueProvider.setup() else { return }
+        WatchQueueProvider.remoteState = { state() }
+        WatchQueueProvider.remoteCommand = { apply($0) }
+        observe()
+    }
+
+    private static func state() -> WatchRemoteState {
+        let player = PlayerManager.shared
+        let video = player.video
+        return WatchRemoteState(
+            isPlaying: player.isPlaying,
+            title: video?.title,
+            channelTitle: video?.subscription?.title,
+            thumbnailUrl: video?.displayThumbnailUrl,
+            isAudioOnly: video?.isAudioOnly == true,
+            duration: video?.duration,
+            position: player.currentTime ?? video?.elapsedSeconds ?? 0,
+            speed: player.playbackSpeed,
+            hasCustomSpeed: video?.subscription?.customSpeedSetting != nil,
+            canSetCustomSpeed: video?.subscription != nil,
+            hasPreviousChapter: player.previousChapter != nil,
+            hasNextChapter: player.nextChapter != nil,
+            chapterTitle: player.currentChapter?.titleText,
+            chapterEndTime: player.currentEndTime,
+            continuousPlay: UserDefaults.standard.bool(forKey: Const.continuousPlay),
+            trimSilence: UserDefaults.standard.bool(forKey: Const.trimSilence),
+            // Only a downloaded file can be trimmed: the pauses are found by decoding ahead.
+            canTrimSilence: video?.isPodcast == true && video?.downloadedDate != nil,
+            theme: UserDefaults.standard.integer(forKey: Const.themeColor)
+        )
+    }
+
+    private static func apply(_ command: WatchRemoteCommand) {
+        let player = PlayerManager.shared
+        switch command {
+        case .togglePlay:
+            player.handlePlayButton()
+        case .play(let youtubeId):
+            guard let video = VideoService.getVideo(for: youtubeId) else {
+                Log.info("watch remote: no video for \(youtubeId)")
+                return
+            }
+            player.playVideo(video)
+        case .seek(let seconds):
+            _ = seconds < 0
+                ? player.seekBackward(-seconds)
+                : player.seekForward(seconds)
+        case .setSpeed(let speed):
+            player.playbackSpeed = speed
+        case .setCustomSpeed(let enabled):
+            player.video?.subscription?.customSpeedSetting = enabled ? player.playbackSpeed : nil
+        case .previousChapter:
+            _ = player.goToPreviousChapter()
+        case .nextChapter:
+            _ = player.goToNextChapter()
+        case .next:
+            player.markVideoWatched(showMenu: false, source: .userInteraction)
+        case .setContinuousPlay(let enabled):
+            UserDefaults.standard.set(enabled, forKey: Const.continuousPlay)
+        case .setTrimSilence(let enabled):
+            player.setTrimSilence(enabled)
+        case .setProgress(let youtubeId, let seconds):
+            // The phone's own player owns the position of what it is playing itself.
+            guard player.video?.youtubeId != youtubeId,
+                  let modelId = VideoService.getModelId(for: youtubeId) else { return }
+            VideoService.forceUpdateVideoNow(modelId, elapsedSeconds: seconds)
+            return
+        }
+        WatchQueueProvider.pushRemoteState()
+    }
+
+    /// Minus the position: it moves four times a second, and the watch carries it forward itself.
+    private static func observe() {
+        withObservationTracking {
+            let player = PlayerManager.shared
+            _ = player.isPlaying
+            _ = player.video?.youtubeId
+            _ = player.video?.title
+            _ = player.currentChapter?.title
+        } onChange: {
+            Task { @MainActor in
+                WatchQueueProvider.pushRemoteState()
+                observe()
+            }
         }
     }
 }

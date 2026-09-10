@@ -14,11 +14,24 @@ enum DebugSeed {
     @MainActor
     static func runIfRequested(_ context: ModelContext) {
         guard CommandLine.arguments.contains("seed-demo") else { return }
+        seed(context)
+    }
+
+    /// The same queue in the synced store, to exercise the full-sync side. `seed-mirror`.
+    @MainActor
+    static func seedMirrorIfRequested() {
+        guard CommandLine.arguments.contains("seed-mirror") else { return }
+        seed(DataProvider.shared.container.mainContext)
+    }
+
+    @MainActor
+    private static func seed(_ context: ModelContext) {
         guard (try? context.fetch(FetchDescriptor<QueueEntry>()))?.isEmpty != false else { return }
 
         let channel = Subscription(link: nil, title: "Veritasium", youtubeChannelId: "UCHnyfMqiRRG1u-2MsSQLbXA")
         let podcastShow = Subscription(link: nil, title: "SoundHelix", youtubeChannelId: "demo-podcast")
         podcastShow.isPodcast = true
+        podcastShow.thumbnailUrl = URL(string: "https://lagedernation.org/wp-content/blogs.dir/10/files/2020/06/apple_podcast_artwork_reverse.png")
         context.insert(channel)
         context.insert(podcastShow)
 
@@ -62,6 +75,87 @@ enum DebugSeed {
 
         try? context.save()
         Log.info("DebugSeed: seeded \(all.count) videos")
+    }
+
+    /// Pretends the phone is playing, for the pages that draw it. `fake-remote`.
+    @MainActor
+    static func fakeRemoteIfRequested() {
+        guard CommandLine.arguments.contains("fake-remote") else { return }
+        WatchQueueClient.shared.debugSetRemote(
+            WatchRemoteState(
+                isPlaying: true,
+                title: "What Game Theory Reveals About Life",
+                channelTitle: "Veritasium",
+                thumbnailUrl: URL(string: "https://i2.ytimg.com/vi/mScpHTIi-kM/hqdefault.jpg"),
+                duration: 1800,
+                position: 420,
+                speed: 1.5,
+                hasCustomSpeed: true,
+                canSetCustomSpeed: true,
+                hasPreviousChapter: true,
+                hasNextChapter: true,
+                chapterTitle: "The Prisoner's Dilemma, and why it matters",
+                chapterEndTime: 1800,
+                continuousPlay: true,
+                trimSilence: true,
+                canTrimSilence: true
+            )
+        )
+    }
+
+    /// Imports a snapshot of the shape the phone sends, without needing a phone. `seed-snapshot`.
+    @MainActor
+    static func seedSnapshotIfRequested() {
+        guard CommandLine.arguments.contains("seed-snapshot") else { return }
+        let show = URL(
+            string: "https://lagedernation.org/wp-content/blogs.dir/10/files/2020/06/apple_podcast_artwork_reverse.png"
+        )
+        let snapshot = WatchQueueSnapshot(
+            items: [
+                WatchQueueSnapshot.Item(
+                    youtubeId: "pod-demo-1",
+                    title: "An episode with no art of its own",
+                    order: 0,
+                    thumbnailUrl: show,
+                    duration: 3600,
+                    channelTitle: "Lage der Nation",
+                    channelThumbnailUrl: show,
+                    isAudioOnly: true
+                ),
+                WatchQueueSnapshot.Item(
+                    youtubeId: "mScpHTIi-kM",
+                    title: "What Game Theory Reveals About Life",
+                    order: 1,
+                    thumbnailUrl: URL(string: "https://i2.ytimg.com/vi/mScpHTIi-kM/hqdefault.jpg"),
+                    channelTitle: "Veritasium"
+                )
+            ],
+            tags: [
+                WatchQueueSnapshot.TagItem(
+                    name: "Podcasts",
+                    order: 0,
+                    mode: 0,
+                    symbol: "mic.fill",
+                    channelTitles: ["Lage der Nation"]
+                )
+            ]
+        )
+        do {
+            let coded = try WatchQueueSnapshot.decoded(try snapshot.encoded())
+            try WatchQueueStore.replace(with: coded)
+            Log.info("DebugSeed: imported a snapshot of \(coded.items.count) items, \(coded.tags.count) tags")
+        } catch {
+            Log.error("DebugSeed: snapshot import failed: \(error)")
+        }
+    }
+
+    /// Drives the `WatchConnectivity` queue request without a tap, for a paired simulator pair.
+    @MainActor
+    static func requestQueueIfRequested() async {
+        guard CommandLine.arguments.contains("request-queue") else { return }
+        await WatchQueueClient.shared.requestSnapshot()
+        let client = WatchQueueClient.shared
+        Log.info("debug request-queue: error=\(client.lastError ?? "none") update=\(client.lastUpdate?.description ?? "none")")
     }
 
     /// Makes the sync indicator appear on a simulator, which has no iCloud account to sync from

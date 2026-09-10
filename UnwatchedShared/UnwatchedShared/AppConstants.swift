@@ -24,6 +24,12 @@ public struct Const {
     public static let allowOnMatch = "allowOnMatch"
     public static let nowPlayingVideo = "nowPlayingVideo"
     public static let enableIcloudSync = "enableIcloudSync"
+    public static let watchFullSync = "watchFullSync"
+    public static let watchQueueUpdatedDate = "watchQueueUpdatedDate"
+    public static let watchSyncTotals = "watchSyncTotals"
+    public static let watchQueueFromPhone = "watchQueueFromPhone"
+    public static let watchSelectedTagName = "watchSelectedTagName"
+    public static let watchControlsPhone = "watchControlsPhone"
     public static let requiresDurationFetch = "requiresDurationFetch"
 
     public static let inboxVideoAddedCategory = "inboxVideoAddedCategory"
