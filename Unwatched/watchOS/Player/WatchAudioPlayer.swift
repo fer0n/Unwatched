@@ -31,6 +31,10 @@ final class WatchAudioPlayer {
     /// Read once per item: `sortedChapterData` re-derives and re-sorts on every access.
     private(set) var chapters: [SendableChapter] = []
 
+    /// How far the seek controls move in the current item. Resolved per item rather than per read:
+    /// the tag lookup fetches, and the controls read this once a second while playing.
+    private(set) var seekIntervals = WatchSeek.default
+
     @ObservationIgnored private var player: AVPlayer?
     @ObservationIgnored private var timeObserver: Any?
     @ObservationIgnored private var endObserver: NSObjectProtocol?
@@ -39,6 +43,8 @@ final class WatchAudioPlayer {
     /// Remaining stream URLs for the current video, in preference order.
     @ObservationIgnored private var candidates: [URL] = []
     @ObservationIgnored private var startSeconds: Double = 0
+    /// The tag continuous play was last set from, see `applyTagContinuousPlay`.
+    @ObservationIgnored private var continuousPlayTagId: PersistentIdentifier?
 
     init() {
         setupRemoteCommands()
@@ -75,6 +81,9 @@ final class WatchAudioPlayer {
 
         self.video = video
         chapters = video.sortedChapterData
+        seekIntervals = WatchSeek(tagSeconds: Tag.seekSecondsTag(for: video)?.seekSeconds)
+        applySeekIntervals()
+        applyTagContinuousPlay(for: video)
         lastPersisted = 0
         lastReported = 0
         errorMessage = nil
@@ -311,6 +320,7 @@ final class WatchAudioPlayer {
         teardownPlayer()
         video = nil
         chapters = []
+        seekIntervals = .default
         isPlaying = false
         MPNowPlayingInfoCenter.default().nowPlayingInfo = nil
     }
@@ -329,6 +339,20 @@ final class WatchAudioPlayer {
             return videos.first
         }
         return index + 1 < videos.count ? videos[index + 1] : nil
+    }
+
+    /// Continuous play follows the tag, on the terms `PlayerManager` sets it on the phone: only
+    /// where playback moves into a different tag than the one that last set it, so a manual flip
+    /// stands for the rest of that tag.
+    private func applyTagContinuousPlay(for video: Video) {
+        guard let tag = Tag.continuousPlayTag(for: video),
+              let continuousPlay = tag.continuousPlay else {
+            continuousPlayTagId = nil
+            return
+        }
+        guard tag.persistentModelID != continuousPlayTagId else { return }
+        continuousPlayTagId = tag.persistentModelID
+        UserDefaults.standard.set(continuousPlay, forKey: Const.continuousPlay)
     }
 
     /// Nothing here marks anything watched — that stays the phone's call.
@@ -400,56 +424,5 @@ final class WatchAudioPlayer {
             errorMessage = String(localized: "watchNoAudioRoute")
             return false
         }
-    }
-
-    // MARK: - Now Playing
-
-    private func setupRemoteCommands() {
-        let center = MPRemoteCommandCenter.shared()
-        center.playCommand.addTarget { [weak self] _ in
-            MainActor.assumeIsolated {
-                guard let self, !self.isPlaying else { return .commandFailed }
-                self.togglePlay()
-                return .success
-            }
-        }
-        center.pauseCommand.addTarget { [weak self] _ in
-            MainActor.assumeIsolated {
-                guard let self, self.isPlaying else { return .commandFailed }
-                self.togglePlay()
-                return .success
-            }
-        }
-        center.skipForwardCommand.preferredIntervals = [30]
-        center.skipForwardCommand.addTarget { [weak self] _ in
-            MainActor.assumeIsolated {
-                self?.seek(by: 30)
-                return .success
-            }
-        }
-        center.skipBackwardCommand.preferredIntervals = [15]
-        center.skipBackwardCommand.addTarget { [weak self] _ in
-            MainActor.assumeIsolated {
-                self?.seek(by: -15)
-                return .success
-            }
-        }
-    }
-
-    /// The system carries the position forward from the rate, so only rate and item changes matter.
-    private func updateNowPlaying() {
-        guard let video else { return }
-        var info: [String: Any] = [
-            MPMediaItemPropertyTitle: video.title,
-            MPNowPlayingInfoPropertyPlaybackRate: isPlaying ? playbackSpeed : 0.0,
-            MPNowPlayingInfoPropertyElapsedPlaybackTime: currentTime
-        ]
-        if let artist = video.subscription?.title {
-            info[MPMediaItemPropertyArtist] = artist
-        }
-        if let duration {
-            info[MPMediaItemPropertyPlaybackDuration] = duration
-        }
-        MPNowPlayingInfoCenter.default().nowPlayingInfo = info
     }
 }

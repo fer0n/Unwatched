@@ -35,6 +35,7 @@ public enum WatchQueueStore {
                     let subscription = Subscription(
                         link: nil,
                         title: channelTitle,
+                        customSpeedSetting: item.customSpeedSetting,
                         thumbnailUrl: item.channelThumbnailUrl
                     )
                     context.insert(subscription)
@@ -52,7 +53,9 @@ public enum WatchQueueStore {
                 order: item.order,
                 symbol: item.symbol,
                 quickSwitch: item.quickSwitch,
-                mode: TagMode(rawValue: item.mode) ?? .include
+                mode: TagMode(rawValue: item.mode) ?? .include,
+                continuousPlay: item.continuousPlay,
+                seekSeconds: item.seekSeconds
             )
             context.insert(tag)
             tag.subscriptions = item.channelTitles.compactMap { subscriptions[$0] }

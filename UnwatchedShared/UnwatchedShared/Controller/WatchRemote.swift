@@ -28,6 +28,9 @@ public struct WatchRemoteState: WatchPayload {
     public var canTrimSilence: Bool
     /// `ThemeColor.rawValue`, which syncs nowhere else. Optional so an older context still decodes.
     public var theme: Int?
+    /// How far a seek moves in what is playing, where a tag decided; `nil` leaves the watch its
+    /// own defaults. Sent so the watch's buttons and the seek the phone performs are one number.
+    public var seekSeconds: Double?
 
     public init(
         isPlaying: Bool,
@@ -48,7 +51,8 @@ public struct WatchRemoteState: WatchPayload {
         continuousPlay: Bool = false,
         trimSilence: Bool = false,
         canTrimSilence: Bool = false,
-        theme: Int? = nil
+        theme: Int? = nil,
+        seekSeconds: Double? = nil
     ) {
         self.isPlaying = isPlaying
         self.title = title
@@ -69,6 +73,7 @@ public struct WatchRemoteState: WatchPayload {
         self.trimSilence = trimSilence
         self.canTrimSilence = canTrimSilence
         self.theme = theme
+        self.seekSeconds = seekSeconds
     }
 
     public var themeColor: ThemeColor {

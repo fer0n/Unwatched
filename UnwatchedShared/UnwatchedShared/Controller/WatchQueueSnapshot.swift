@@ -17,6 +17,9 @@ public struct WatchQueueSnapshot: WatchPayload {
         public var channelThumbnailUrl: URL?
         public var mediaUrl: URL?
         public var isAudioOnly: Bool?
+        /// The channel's own playback speed, which the watch's player honours as the phone does.
+        /// Optional so an older snapshot still decodes.
+        public var customSpeedSetting: Double?
 
         public init(
             youtubeId: String,
@@ -28,7 +31,8 @@ public struct WatchQueueSnapshot: WatchPayload {
             channelTitle: String? = nil,
             channelThumbnailUrl: URL? = nil,
             mediaUrl: URL? = nil,
-            isAudioOnly: Bool? = nil
+            isAudioOnly: Bool? = nil,
+            customSpeedSetting: Double? = nil
         ) {
             self.youtubeId = youtubeId
             self.title = title
@@ -40,6 +44,7 @@ public struct WatchQueueSnapshot: WatchPayload {
             self.channelThumbnailUrl = channelThumbnailUrl
             self.mediaUrl = mediaUrl
             self.isAudioOnly = isAudioOnly
+            self.customSpeedSetting = customSpeedSetting
         }
     }
 
@@ -51,6 +56,11 @@ public struct WatchQueueSnapshot: WatchPayload {
         public var quickSwitch: Bool
         public var channelTitles: [String]
         public var youtubeIds: [String]
+        /// `nil` means the tag has no opinion, see `Tag.seekSeconds`. Optional so an older
+        /// snapshot still decodes.
+        public var seekSeconds: Double?
+        /// `nil` means the tag has no opinion, see `Tag.continuousPlay`.
+        public var continuousPlay: Bool?
 
         public init(
             name: String,
@@ -59,7 +69,9 @@ public struct WatchQueueSnapshot: WatchPayload {
             symbol: String? = nil,
             quickSwitch: Bool = true,
             channelTitles: [String] = [],
-            youtubeIds: [String] = []
+            youtubeIds: [String] = [],
+            seekSeconds: Double? = nil,
+            continuousPlay: Bool? = nil
         ) {
             self.name = name
             self.order = order
@@ -68,6 +80,8 @@ public struct WatchQueueSnapshot: WatchPayload {
             self.quickSwitch = quickSwitch
             self.channelTitles = channelTitles
             self.youtubeIds = youtubeIds
+            self.seekSeconds = seekSeconds
+            self.continuousPlay = continuousPlay
         }
     }
 

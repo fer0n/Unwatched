@@ -27,7 +27,8 @@ actor WatchQueueSnapshotActor: SharedContextActor {
                 channelTitle: video.subscription?.title,
                 channelThumbnailUrl: video.subscription?.thumbnailUrl,
                 mediaUrl: video.mediaUrl,
-                isAudioOnly: video.isAudioOnly
+                isAudioOnly: video.isAudioOnly,
+                customSpeedSetting: video.subscription?.customSpeedSetting
             )
         }
         let channelTitles = Set(items.compactMap(\.channelTitle))
@@ -45,7 +46,9 @@ actor WatchQueueSnapshotActor: SharedContextActor {
                         .filter(channelTitles.contains),
                     youtubeIds: (tag.videos ?? [])
                         .map(\.youtubeId)
-                        .filter(youtubeIds.contains)
+                        .filter(youtubeIds.contains),
+                    seekSeconds: tag.seekSeconds,
+                    continuousPlay: tag.continuousPlay
                 )
             }
 

@@ -13,11 +13,11 @@ struct WatchPlayerControls: View {
 
     var body: some View {
         HStack(spacing: 10) {
-            seekButton("gobackward.15", by: -15)
+            seekButton(forward: false)
 
             playButton
 
-            seekButton("goforward.30", by: 30)
+            seekButton(forward: true)
         }
         .buttonStyle(.glass)
         .buttonBorderShape(.circle)
@@ -62,11 +62,12 @@ struct WatchPlayerControls: View {
             .allowsHitTesting(false)
     }
 
-    private func seekButton(_ symbol: String, by seconds: Double) -> some View {
-        Button {
+    private func seekButton(forward: Bool) -> some View {
+        let seconds = forward ? display.seek.forward : -display.seek.back
+        return Button {
             perform(.seek(seconds))
         } label: {
-            Image(systemName: symbol)
+            Image(systemName: WatchSeek.symbol(forward: forward, seconds: abs(seconds)))
                 .font(.body)
         }
         .frame(width: Self.seekSize, height: Self.seekSize)
