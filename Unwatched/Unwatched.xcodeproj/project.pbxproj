@@ -116,6 +116,7 @@
 		8816E3A22FEB16D0004EB1ED /* ScrubberThumbnails.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8816E3A32FEB16D0004EB1ED /* ScrubberThumbnails.swift */; };
 		8817FA9F2C30668E002DE44F /* ChangeChapterButtonStyle.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8817FA9E2C30668E002DE44F /* ChangeChapterButtonStyle.swift */; };
 		88190E3C2B99D32100F048C3 /* RefreshManager+CloudKit.swift in Sources */ = {isa = PBXBuildFile; fileRef = 88190E3B2B99D32100F048C3 /* RefreshManager+CloudKit.swift */; };
+		88AA1F0130000002000000A2 /* RefreshManager+Lifecycle.swift in Sources */ = {isa = PBXBuildFile; fileRef = 88AA1F0130000001000000A1 /* RefreshManager+Lifecycle.swift */; };
 		88190E3E2B99D97900F048C3 /* CleanupService.swift in Sources */ = {isa = PBXBuildFile; fileRef = 88190E3D2B99D97900F048C3 /* CleanupService.swift */; };
 		88190EF52EC235EE00C1C321 /* MyTint.swift in Sources */ = {isa = PBXBuildFile; fileRef = 88190EF42EC235EE00C1C321 /* MyTint.swift */; };
 		88190EF62EC235EE00C1C321 /* MyTint.swift in Sources */ = {isa = PBXBuildFile; fileRef = 88190EF42EC235EE00C1C321 /* MyTint.swift */; };
@@ -496,6 +497,7 @@
 		889AF8FB2C50ECCD001CEDE6 /* RefreshManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = 883CA81A2B5BC81600028D52 /* RefreshManager.swift */; };
 		889AF8FC2C50ECCD001CEDE6 /* NotificationManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8808A9162B93CDBA004D7CE2 /* NotificationManager.swift */; };
 		889AF8FD2C50ECCD001CEDE6 /* RefreshManager+CloudKit.swift in Sources */ = {isa = PBXBuildFile; fileRef = 88190E3B2B99D32100F048C3 /* RefreshManager+CloudKit.swift */; };
+		88AA1F0130000003000000A3 /* RefreshManager+Lifecycle.swift in Sources */ = {isa = PBXBuildFile; fileRef = 88AA1F0130000001000000A1 /* RefreshManager+Lifecycle.swift */; };
 		889AF8FE2C50ECCD001CEDE6 /* BrowserManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = 88F1EE4F2B5D31D6009866A0 /* BrowserManager.swift */; };
 		889AF8FF2C50ECCD001CEDE6 /* OrientationManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = 881F57422C4A830300559BF9 /* OrientationManager.swift */; };
 		889AF9002C50ECCD001CEDE6 /* SubscribeManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = 883CA81D2B5BD3ED00028D52 /* SubscribeManager.swift */; };
@@ -1189,6 +1191,7 @@
 		8816E3A32FEB16D0004EB1ED /* ScrubberThumbnails.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ScrubberThumbnails.swift; sourceTree = "<group>"; };
 		8817FA9E2C30668E002DE44F /* ChangeChapterButtonStyle.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ChangeChapterButtonStyle.swift; sourceTree = "<group>"; };
 		88190E3B2B99D32100F048C3 /* RefreshManager+CloudKit.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "RefreshManager+CloudKit.swift"; sourceTree = "<group>"; };
+		88AA1F0130000001000000A1 /* RefreshManager+Lifecycle.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "RefreshManager+Lifecycle.swift"; sourceTree = "<group>"; };
 		88190E3D2B99D97900F048C3 /* CleanupService.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CleanupService.swift; sourceTree = "<group>"; };
 		88190EF42EC235EE00C1C321 /* MyTint.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MyTint.swift; sourceTree = "<group>"; };
 		881942A12C97378100B7A7B1 /* PlayerLoadingTimeout.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PlayerLoadingTimeout.swift; sourceTree = "<group>"; };
@@ -1897,6 +1900,7 @@
 			children = (
 				883CA81A2B5BC81600028D52 /* RefreshManager.swift */,
 				88190E3B2B99D32100F048C3 /* RefreshManager+CloudKit.swift */,
+				88AA1F0130000001000000A1 /* RefreshManager+Lifecycle.swift */,
 			);
 			path = RefreshManager;
 			sourceTree = "<group>";
@@ -3272,6 +3276,7 @@
 				889AF94D2C50ECF5001CEDE6 /* DescriptionDetailHeaderView.swift in Sources */,
 				8809D8952DE8E54500B28165 /* HiddenEntriesInfo.swift in Sources */,
 				889AF8FD2C50ECCD001CEDE6 /* RefreshManager+CloudKit.swift in Sources */,
+				88AA1F0130000003000000A3 /* RefreshManager+Lifecycle.swift in Sources */,
 				887785E82EEA088F00795394 /* TranscriptDisplayItem.swift in Sources */,
 				889AF8FE2C50ECCD001CEDE6 /* BrowserManager.swift in Sources */,
 				884777302D2150060044E812 /* UserDataServiceError.swift in Sources */,
@@ -3701,6 +3706,7 @@
 				8808D8232B4AF9FF00B4FF11 /* PlayerToggleStyle.swift in Sources */,
 				88F149DC2F03E45400516422 /* StatsView.swift in Sources */,
 				88190E3C2B99D32100F048C3 /* RefreshManager+CloudKit.swift in Sources */,
+				88AA1F0130000002000000A2 /* RefreshManager+Lifecycle.swift in Sources */,
 				883C383B2EBC830000741119 /* CloudSyncSetting.swift in Sources */,
 				883A0F702E5F5D9E000CE416 /* PremiumNavListItem.swift in Sources */,
 				888C49C22B5F288F00CDEC76 /* Binding.swift in Sources */,

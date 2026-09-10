@@ -12,12 +12,14 @@ import AppKit
 class AppStateObserver {
 
     @MainActor
-    var isActive: Bool = true
+    var isActive: Bool
 
     @ObservationIgnored private var resignObserver: Any?
     @ObservationIgnored private var becomeObserver: Any?
 
+    @MainActor
     init() {
+        isActive = NSApp.isActive
         resignObserver = NotificationCenter.default.addObserver(
             forName: NSApplication.didResignActiveNotification,
             object: nil,
@@ -52,6 +54,11 @@ struct MacOSActiveStateChange: ViewModifier {
 
     func body(content: Content) -> some View {
         content
+            .onAppear {
+                if appStateObserver.isActive {
+                    handleBecomeActive?()
+                }
+            }
             .onChange(of: appStateObserver.isActive) {
                 appStateObserver.isActive ? handleBecomeActive?() : handleResignActive?()
             }

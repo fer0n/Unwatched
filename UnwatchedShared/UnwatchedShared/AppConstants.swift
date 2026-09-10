@@ -214,6 +214,9 @@ public struct Const {
 
     public static let autoRefreshIntervalSeconds: Double = 10 * 60
 
+    /// How long work deferred for an in-flight iCloud sync waits before going ahead anyway.
+    public static let maxSyncRefreshDeferSeconds: Double = 5 * 60
+
     /// Share of subscriptions whose feed fetch has to fail in the same refresh before the reload button shows its
     /// failed state.
     public static let refreshFailedThreshold: Double = 0.5
