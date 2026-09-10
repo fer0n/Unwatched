@@ -115,8 +115,7 @@ struct WatchPlayerView: View {
         return ArtworkFill(url: display.artworkUrl, isSquare: display.isSquare)
             .aspectRatio(display.isSquare ? 1 : Const.defaultVideoAspectRatio, contentMode: .fit)
             .clipShape(shape)
-            // Same border as `VideoListItemThumbnail` in the app's own lists.
-            .overlay { shape.strokeBorder(.secondary.opacity(0.25), lineWidth: 1) }
+            .artworkBorder(shape)
             .frame(maxWidth: .infinity, maxHeight: .infinity)
     }
 

@@ -57,7 +57,6 @@ struct MiniPlayerLayout<Content: View>: View {
 /// page.
 struct InlineMiniPlayer: View {
     @Environment(PlayerManager.self) var player
-    @Environment(\.displayScale) private var displayScale
 
     var goToControls: () -> Void
 
@@ -65,30 +64,13 @@ struct InlineMiniPlayer: View {
         MiniPlayerLayout(hideMiniPlayer: false,
                          handleMiniPlayerTap: goToControls,
                          miniPlayerWidth: PlayerView.miniPlayerHeight) {
-            // decoded at the size it's drawn at, not the full player's: scaling cover art down from 1400px+ in the
-            // render pass aliases (see `PodcastArtwork`). The budget is the mini *bar*'s rather than this slot's,
-            // slightly over-sampled here, so that both share one decode — an episode cover is a 3000px JPEG and
-            // reading it costs the same tens of milliseconds at any output size.
-            CachedImageView(
-                imageUrl: player.video?.displayThumbnailUrl,
-                maxPixelSize: ceil(Const.playerAboveSheetHeight * displayScale)
-            ) { image in
-                image
-                    .resizable()
-                    .aspectRatio(contentMode: .fill)
-            } placeholder: {
-                Image(systemName: Const.podcastSF)
-                    .foregroundStyle(.secondary)
-            }
-            .frame(width: PlayerView.miniPlayerHeight, height: PlayerView.miniPlayerHeight)
-            .background(Color.playerBackgroundColor)
-            .clipShape(RoundedRectangle(
-                cornerRadius: Const.videoPlayerCornerRadius,
-                style: .continuous
-            ))
-            .padding(.leading, PlayerView.miniPlayerHorizontalPadding)
-            .contentShape(Rectangle())
-            .onTapGesture(perform: goToControls)
+            PodcastArtwork(imageUrls: player.displayArtworkUrls, isMiniPlayer: true)
+                .frame(width: PlayerView.miniPlayerHeight, height: PlayerView.miniPlayerHeight)
+                .overlay {
+                    Color.black.opacity(0.000001)
+                        .onTapGesture(perform: goToControls)
+                }
+                .padding(.leading, PlayerView.miniPlayerHorizontalPadding)
         }
     }
 }

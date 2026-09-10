@@ -106,6 +106,10 @@ struct PodcastArtwork: View {
         isMiniPlayer ? Const.videoPlayerCornerRadius : PodcastArtworkLayout.artCornerRadius
     }
 
+    private var shape: RoundedRectangle {
+        RoundedRectangle(cornerRadius: cornerRadius, style: .continuous)
+    }
+
     private var inset: CGFloat {
         isMiniPlayer ? 0 : PodcastArtworkLayout.artInset
     }
@@ -130,11 +134,8 @@ struct PodcastArtwork: View {
                     .font(.largeTitle)
                     .foregroundStyle(.secondary)
             }
-            .clipShape(RoundedRectangle(cornerRadius: cornerRadius, style: .continuous))
-            .overlay {
-                RoundedRectangle(cornerRadius: cornerRadius, style: .continuous)
-                    .stroke(.secondary.opacity(0.18), lineWidth: 2)
-            }
+            .clipShape(shape)
+            .artworkBorder(shape)
             .padding(.horizontal, inset)
         }
         .allowsHitTesting(false)

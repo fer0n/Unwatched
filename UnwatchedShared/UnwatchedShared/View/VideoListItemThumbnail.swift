@@ -41,21 +41,17 @@ public struct VideoListItemThumbnail: View {
                 .overlay { artwork }
                 .overlay { thumbnailOverlay }
                 .clipShape(shape)
-                .overlay { border }
+                .artworkBorder(shape)
         } else {
             artwork
                 .overlay { thumbnailOverlay }
                 .clipShape(shape)
-                .overlay { border }
+                .artworkBorder(shape)
         }
     }
 
     private var shape: RoundedRectangle {
         RoundedRectangle(cornerRadius: Const.videoCornerRadius)
-    }
-
-    private var border: some View {
-        shape.strokeBorder(.secondary.opacity(0.25), lineWidth: 1)
     }
 
     private var thumbnailOverlay: some View {
