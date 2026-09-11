@@ -26,6 +26,36 @@ final class WatchNavigator {
     var controlsPhone = UserDefaults.standard.bool(forKey: Const.watchControlsPhone) {
         didSet { UserDefaults.standard.set(controlsPhone, forKey: Const.watchControlsPhone) }
     }
+
+    @ObservationIgnored private var wearerPickedTab = false
+    @ObservationIgnored private var leftAt: Date?
+
+    var selectedTab: WatchTab {
+        get { tab }
+        set {
+            guard newValue != tab else { return }
+            wearerPickedTab = true
+            tab = newValue
+        }
+    }
+
+    func showPlayer(force: Bool = false) {
+        guard force || !wearerPickedTab else { return }
+        wearerPickedTab = false
+        tab = .player
+    }
+
+    func didLeave() {
+        leftAt = .now
+    }
+
+    func didReturn() {
+        guard let leftAt, Date.now.timeIntervalSince(leftAt) >= Self.visitTimeout else { return }
+        wearerPickedTab = false
+        self.leftAt = nil
+    }
+
+    private static let visitTimeout: TimeInterval = 3 * 60
 }
 
 /// Auto-launching audio apps: watchOS brings the watch app frontmost when its iPhone counterpart
@@ -34,7 +64,7 @@ final class WatchAppDelegate: NSObject, WKApplicationDelegate {
     func handleRemoteNowPlayingActivity() {
         Task { @MainActor in
             WatchNavigator.shared.controlsPhone = true
-            WatchNavigator.shared.tab = .player
+            WatchNavigator.shared.showPlayer(force: true)
         }
     }
 }
@@ -81,9 +111,18 @@ struct UnwatchedWatchApp: App {
         await client.autoUpdateIfNeeded()
     }
 
+    @MainActor
+    private func showPlayerIfPlaying() {
+        let isPlaying = navigator.controlsPhone
+            ? client.remote?.isPlaying == true
+            : player.isPlaying
+        guard isPlaying else { return }
+        navigator.showPlayer()
+    }
+
     var body: some Scene {
         WindowGroup {
-            TabView(selection: $navigator.tab) {
+            TabView(selection: $navigator.selectedTab) {
                 NavigationStack {
                     WatchQueueView()
                 }
@@ -111,16 +150,24 @@ struct UnwatchedWatchApp: App {
             // Only while the queue is showing: leaving the player tab is the wearer's own choice.
             .onChange(of: player.video) { _, video in
                 guard video != nil, navigator.tab == .queue else { return }
-                navigator.tab = .player
+                navigator.showPlayer()
             }
             .onChange(of: player.isPlaying) { _, isPlaying in
                 guard isPlaying, navigator.tab == .queue else { return }
-                navigator.tab = .player
+                navigator.showPlayer()
+            }
+            .onChange(of: client.remote?.isPlaying) { _, isPlaying in
+                guard isPlaying == true, navigator.controlsPhone, navigator.tab == .queue else {
+                    return
+                }
+                navigator.showPlayer()
             }
             // The video the player holds belongs to the store that is going away.
             .onChange(of: usesSnapshot) { _, usesSnapshot in
                 player.stop()
-                navigator.tab = .queue
+                if !navigator.controlsPhone {
+                    navigator.tab = .queue
+                }
                 // Only once the mirror has caught up; mid-import the snapshot is still worth keeping.
                 if !usesSnapshot, progress.hasCaughtUp(with: client.totals) {
                     client.clearQueue()
@@ -142,6 +189,7 @@ struct UnwatchedWatchApp: App {
             }
             .onChange(of: scenePhase) { _, phase in
                 guard phase != .active else { return }
+                navigator.didLeave()
                 // Downloads otherwise live only as long as the process.
                 Task { await imageCacheManager.persistCache() }
                 // The last chance to tell the phone where we are before the app is suspended.
@@ -149,12 +197,15 @@ struct UnwatchedWatchApp: App {
             }
             .task(id: scenePhase) {
                 guard scenePhase == .active else { return }
+                navigator.didReturn()
+                showPlayerIfPlaying()
                 client.activate()
                 // The hand-over is a percentage of the totals, and cached ones can be months old.
                 if fullSync && queueFromPhone {
                     await client.requestTotals()
                 }
                 await refreshFromPhone()
+                showPlayerIfPlaying()
             }
             // One poller for the syncing row, the sync screen and the hand-over above.
             .task(id: progressTrackingKey) {
