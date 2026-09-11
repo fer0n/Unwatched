@@ -35,6 +35,43 @@ import UnwatchedShared
         hasLoadedFirstPage = true
     }
 
+    /// Picks up episodes a refresh wrote to the cache while the list was already on screen.
+    /// Re-reads every page the list has shown so far, so a new episode at the top doesn't push
+    /// the last one out of view.
+    func reloadLoadedPages() async {
+        guard let feedUrl, !isLoading else { return }
+        guard !episodes.isEmpty else {
+            // nothing was in the cache when the list set up; the refresh may have filled it
+            reachedEnd = false
+            await loadNextPage()
+            return
+        }
+        isLoading = true
+        defer { isLoading = false }
+
+        var collected = [SendableVideo]()
+        var collectedIds = Set<String>()
+        var skip = 0
+        while true {
+            let page = await fetchPage(feedUrl: feedUrl, skip: skip, limit: Const.podcastEpisodePageSize)
+            guard !page.isEmpty else {
+                reachedEnd = true
+                break
+            }
+            collected.append(contentsOf: page)
+            collectedIds.formUnion(page.map(\.youtubeId))
+            skip += page.count
+            if loadedIds.isSubset(of: collectedIds) {
+                break
+            }
+        }
+
+        loadedIds = collectedIds
+        withAnimation {
+            episodes = collected
+        }
+    }
+
     func loadMoreIfNeeded(currentItem: SendableVideo) {
         guard !isLoading, !reachedEnd,
               let index = episodes.firstIndex(where: { $0.youtubeId == currentItem.youtubeId }),
@@ -51,11 +88,11 @@ import UnwatchedShared
         isLoading = true
         defer { isLoading = false }
 
-        var page = await fetchPage(feedUrl: feedUrl)
+        var page = await fetchPage(feedUrl: feedUrl, skip: episodes.count)
         if page.isEmpty && !didBackfill {
             didBackfill = true
             await backfill(feedUrl: feedUrl)
-            page = await fetchPage(feedUrl: feedUrl)
+            page = await fetchPage(feedUrl: feedUrl, skip: episodes.count)
         }
 
         let unseen = page.filter { !loadedIds.contains($0.youtubeId) }
@@ -71,15 +108,18 @@ import UnwatchedShared
         }
     }
 
-    private func fetchPage(feedUrl: URL) async -> [SendableVideo] {
+    private func fetchPage(
+        feedUrl: URL,
+        skip: Int,
+        limit: Int = Const.podcastEpisodePageSize
+    ) async -> [SendableVideo] {
         let show = show
-        let skip = episodes.count
         return await Task.detached {
             PodcastEpisodeCache.episodes(
                 feedUrl: feedUrl,
                 show: show,
                 skip: skip,
-                limit: Const.podcastEpisodePageSize
+                limit: limit
             )
         }.value
     }

@@ -10,6 +10,7 @@ import UnwatchedShared
 /// A show's episodes: the catalogue comes from the local cache, the state from the `Video` rows
 /// that exist for the episodes the user has acted on.
 struct PodcastEpisodeListView: View {
+    @Environment(RefreshManager.self) private var refresher
     @Query private var touchedVideos: [Video]
     @State private var vm = PodcastEpisodeListVM()
 
@@ -57,6 +58,14 @@ struct PodcastEpisodeListView: View {
         loadingRow
             .task {
                 await vm.setUp(feedUrl: feedUrl, show: show)
+            }
+            // episodes live in `PodcastEpisodeCache`, not in the `Video` rows `@Query` watches,
+            // so a refresh that fetched new ones needs to be picked up by hand
+            .onChange(of: refresher.isLoading) { _, isLoading in
+                guard !isLoading else { return }
+                Task {
+                    await vm.reloadLoadedPages()
+                }
             }
     }
 
