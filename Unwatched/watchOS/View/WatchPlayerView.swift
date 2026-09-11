@@ -44,7 +44,6 @@ struct WatchPlayerView: View {
             content(display)
         }
         .tint(nil)
-        .animation(.easeInOut(duration: 0.15), value: isLuminanceReduced)
         // The crown belongs to the volume control, so nothing here ever sees it turn; the bar
         // comes and goes with the volume itself instead.
         .digitalCrownAccessory {
@@ -92,11 +91,8 @@ struct WatchPlayerView: View {
 
             title(display)
 
-            // Always On keeps the artwork and the title only.
-            if !isLuminanceReduced {
-                bottom(display)
-                    .transition(.opacity)
-            }
+            // Kept mounted even in Always On: removing it would shift the artwork and title.
+            bottom(display)
         }
         .padding(.horizontal, 4)
         // Into the bottom inset: the band is the paged `TabView`'s own inset for its page dots,
@@ -171,8 +167,8 @@ struct WatchPlayerView: View {
                 .contentShape(.rect.inset(by: -Self.chapterTapOverhang))
         }
         .buttonStyle(.plain)
-        .opacity(isLuminanceReduced ? 0 : (isNext && !display.hasNextChapter ? 0.5 : 1))
-        .disabled(isLuminanceReduced || (isNext && !display.hasNextChapter))
+        .opacity(isNext && !display.hasNextChapter ? 0.5 : 1)
+        .disabled(isNext && !display.hasNextChapter)
     }
 
     /// What is left of the chapter, under the step that leaves it.
