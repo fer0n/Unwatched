@@ -151,7 +151,7 @@ struct WatchPlayerView: View {
         VStack(spacing: 0) {
             chapterButton(display, symbol, isNext: isNext)
             remainingText(display)
-                .opacity(isNext ? 1 : 0)
+                .opacity(isNext && !isLuminanceReduced ? 1 : 0)
         }
     }
 
