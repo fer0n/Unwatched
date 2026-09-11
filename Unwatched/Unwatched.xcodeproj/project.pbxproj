@@ -1445,7 +1445,12 @@
 		88AA1F0130000001000000A1 /* RefreshManager+Lifecycle.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "RefreshManager+Lifecycle.swift"; sourceTree = "<group>"; };
 		88AA20012F1000000000B001 /* MediaSuggestionService.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MediaSuggestionService.swift; sourceTree = "<group>"; };
 		88AA20022F1000000000B002 /* PlayMediaIntentHandler.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PlayMediaIntentHandler.swift; sourceTree = "<group>"; };
-		88AA20032F1000000000B003 /* PlayMedia.intentdefinition */ = {isa = PBXFileReference; lastKnownFileType = file.intentdefinition; path = PlayMedia.intentdefinition; sourceTree = "<group>"; };
+		88AA20042F1000000000B004 /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.intentdefinition; name = Base; path = Base.lproj/PlayMedia.intentdefinition; sourceTree = "<group>"; };
+		88AA20052F1000000000B005 /* en */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = en; path = en.lproj/PlayMedia.strings; sourceTree = "<group>"; };
+		88AA20062F1000000000B006 /* de */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = de; path = de.lproj/PlayMedia.strings; sourceTree = "<group>"; };
+		88AA20072F1000000000B007 /* fr */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = fr; path = fr.lproj/PlayMedia.strings; sourceTree = "<group>"; };
+		88AA20082F1000000000B008 /* es */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = es; path = es.lproj/PlayMedia.strings; sourceTree = "<group>"; };
+		88AA20092F1000000000B009 /* pl */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = pl; path = pl.lproj/PlayMedia.strings; sourceTree = "<group>"; };
 		88AA20102F0000000000B010 /* VideoTagMenu.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = VideoTagMenu.swift; sourceTree = "<group>"; };
 		88AA20202F0000000000B020 /* TagModeLabels.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TagModeLabels.swift; sourceTree = "<group>"; };
 		88AB10002F9C000100AAAA01 /* ScrollWheelStepper.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ScrollWheelStepper.swift; sourceTree = "<group>"; };
@@ -4124,6 +4129,22 @@
 			targetProxy = 88E48D802F215D7100EE199A /* PBXContainerItemProxy */;
 		};
 /* End PBXTargetDependency section */
+
+/* Begin PBXVariantGroup section */
+		88AA20032F1000000000B003 /* PlayMedia.intentdefinition */ = {
+			isa = PBXVariantGroup;
+			children = (
+				88AA20042F1000000000B004 /* Base */,
+				88AA20052F1000000000B005 /* en */,
+				88AA20062F1000000000B006 /* de */,
+				88AA20072F1000000000B007 /* fr */,
+				88AA20082F1000000000B008 /* es */,
+				88AA20092F1000000000B009 /* pl */,
+			);
+			name = PlayMedia.intentdefinition;
+			sourceTree = "<group>";
+		};
+/* End PBXVariantGroup section */
 
 /* Begin XCBuildConfiguration section */
 		5A4E5E0000000000000000A8 /* Debug */ = {
