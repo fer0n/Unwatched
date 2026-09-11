@@ -17,6 +17,7 @@ struct TrimSilenceButton: View {
 
     var body: some View {
         Button {
+            guard trimSilence || guardPremium() else { return }
             player.setTrimSilence(!trimSilence)
             hapticToggle.toggle()
         } label: {

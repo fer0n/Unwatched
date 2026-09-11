@@ -27,7 +27,7 @@ struct FilterSettingsView: View {
                     NavigationLink(value: LibraryDestination.titleFilter) {
                         HStack {
                             Text("videoTitle")
-                            Image(systemName: Const.premiumIndicatorSF)
+                            PremiumIndicator()
                                 .foregroundStyle(.secondary)
                         }
                     }

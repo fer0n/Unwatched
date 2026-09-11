@@ -348,6 +348,9 @@ enum WatchRemoteBridge {
         case .setContinuousPlay(let enabled):
             UserDefaults.standard.set(enabled, forKey: Const.continuousPlay)
         case .setTrimSilence(let enabled):
+            guard !enabled || NSUbiquitousKeyValueStore.default.bool(forKey: Const.unwatchedPremiumAcknowledged) else {
+                return
+            }
             player.setTrimSilence(enabled)
         case .setProgress(let youtubeId, let seconds):
             // The phone's own player owns the position of what it is playing itself.

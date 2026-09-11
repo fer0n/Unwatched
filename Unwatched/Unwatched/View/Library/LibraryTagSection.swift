@@ -17,7 +17,7 @@ struct LibraryTagSection: View {
     @Binding var editedTag: TagEdit?
 
     var body: some View {
-        MySection("tags", hasPadding: false) {
+        MySection("tags", showPremiumIndicator: true, hasPadding: false) {
             NavigationLink(value: LibraryDestination.allVideos) {
                 LibraryNavListItem("allVideos", systemName: Const.allVideosViewSF)
             }
@@ -49,6 +49,7 @@ struct LibraryTagSection: View {
             } label: {
                 LibraryNavListItem("newTag", systemName: "plus")
             }
+            .requiresPremium()
         }
     }
 

@@ -39,12 +39,17 @@ enum PremiumFeatureLarge: String, CaseIterable {
 
 enum PremiumFeature: String, CaseIterable {
     case customTemporaryPlaybackSpeed,
+         trimSilence,
+         tags,
          videoTitleFilter,
          playBrowserVideosInApp,
          seeVideoDuration,
          generateChaptersFromTranscript,
          generateTranscript,
          chapterFilter,
+         reorderChapters,
+         skipIntroOutro,
+         channelSegmentSettings,
          customTheme,
          statistics
 
@@ -52,10 +57,20 @@ enum PremiumFeature: String, CaseIterable {
         switch self {
         case .customTemporaryPlaybackSpeed:
             return String(localized: "customTemporaryPlaybackSpeedTitle")
+        case .trimSilence:
+            return String(localized: "trimSilence")
+        case .tags:
+            return String(localized: "tags")
         case .videoTitleFilter:
             return String(localized: "videoTitleFilter")
         case .chapterFilter:
             return String(localized: "chapterFilterTitle")
+        case .reorderChapters:
+            return String(localized: "reorderChaptersTitle")
+        case .skipIntroOutro:
+            return String(localized: "skipIntroOutroTitle")
+        case .channelSegmentSettings:
+            return String(localized: "channelSegmentSettingsTitle")
         case .playBrowserVideosInApp:
             return String(localized: "playBrowserVideosInApp")
         case .seeVideoDuration:
@@ -75,10 +90,20 @@ enum PremiumFeature: String, CaseIterable {
         switch self {
         case .customTemporaryPlaybackSpeed:
             return "gauge.with.needle"
+        case .trimSilence:
+            return "waveform"
+        case .tags:
+            return "tag.fill"
         case .videoTitleFilter:
             return Const.filterSF
         case .chapterFilter:
             return "chevron.forward.circle.fill"
+        case .reorderChapters:
+            return "arrow.up.arrow.down"
+        case .skipIntroOutro:
+            return "forward.end.fill"
+        case .channelSegmentSettings:
+            return "dollarsign.circle.fill"
         case .playBrowserVideosInApp:
             return "play.fill"
         case .seeVideoDuration:

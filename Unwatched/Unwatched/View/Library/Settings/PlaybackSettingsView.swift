@@ -86,7 +86,7 @@ struct PlaybackSettingsView: View {
                     #endif
                 }
 
-                MySection(footer: "trimSilenceHelper") {
+                MySection(footer: "trimSilenceHelper", showPremiumIndicator: true) {
                     Toggle(isOn: Binding(
                         get: { trimSilence },
                         set: { player.setTrimSilence($0) }
@@ -107,6 +107,7 @@ struct PlaybackSettingsView: View {
                         .pickerStyle(.menu)
                     }
                 }
+                .requiresPremium(!trimSilence)
 
                 MySection(footer: "continuousPlayHelper") {
                     Toggle(isOn: $player.isRepeating) {

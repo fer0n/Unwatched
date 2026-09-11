@@ -56,6 +56,7 @@ struct SubscriptionSkipSetting: View {
             )
         }
         .buttonStyle(CapsuleButtonStyle(primary: false))
+        .requiresPremium(seconds.wrappedValue == 0)
         .modifier(MyMatchedTransitionSource(id: transitionId, namespace: namespace))
         .popover(isPresented: $showPopover, arrowEdge: .top) {
             SkipPopoverContent(seconds: seconds, edge: edge)
@@ -199,6 +200,7 @@ struct SubscriptionSegmentSetting: View {
             },
             menuLabel: category.label
         )
+        .requiresPremium(selection.wrappedValue == nil)
     }
 
     private var globalSetting: SponsorBlockSegmentSetting {

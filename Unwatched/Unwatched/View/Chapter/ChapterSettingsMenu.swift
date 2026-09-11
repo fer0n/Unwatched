@@ -9,6 +9,7 @@ import UnwatchedShared
 struct ChapterSettingsMenu: View {
     @Environment(AppNotificationVM.self) var appNotificationVM
     @Environment(\.dismiss) var dismiss
+    @CloudStorage(Const.unwatchedPremiumAcknowledged) var premium: Bool = false
     @State var viewModel = GenerateChaptersButtonViewModel()
 
     /// The video being shown, which is not always the one playing.
@@ -32,7 +33,9 @@ struct ChapterSettingsMenu: View {
                 GenerateChaptersMenuButton(viewModel: $viewModel, video: video)
 
             } header: {
-                Text(verbatim: "\(String(localized: "generateChapters")) ✪")
+                Text(verbatim: premium
+                        ? String(localized: "generateChapters")
+                        : "\(String(localized: "generateChapters")) ✪")
             }
             .tint(Color.automaticBlack)
             .containsPremium()
@@ -106,7 +109,6 @@ struct ChapterSettingsMenu: View {
 
                 if showsAlign {
                     Button {
-                        guard guardPremium(onInteraction: { dismiss() }) else { return }
                         Signal.log("Transcript.Align", parameters: ["source": "menu"])
                         transcriptVM.alignTranscript(for: video)
                     } label: {
@@ -116,7 +118,6 @@ struct ChapterSettingsMenu: View {
                         )
                     }
                     .disabled(transcriptVM.isAligning)
-                    .containsPremium()
                 }
 
                 if showsRestore {

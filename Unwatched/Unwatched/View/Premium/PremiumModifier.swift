@@ -76,6 +76,16 @@ func guardPremium(onInteraction: (() -> Void)? = nil) -> Bool {
     return premium
 }
 
+struct PremiumIndicator: View {
+    @CloudStorage(Const.unwatchedPremiumAcknowledged) var premium: Bool = false
+
+    var body: some View {
+        if !premium {
+            Image(systemName: Const.premiumIndicatorSF)
+        }
+    }
+}
+
 struct ContainsPremium: ViewModifier {
     @CloudStorage(Const.unwatchedPremiumAcknowledged) var premium: Bool = false
     @AppStorage(Const.hidePremium) var hidePremium: Bool = false

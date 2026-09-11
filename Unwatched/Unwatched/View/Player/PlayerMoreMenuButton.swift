@@ -139,10 +139,14 @@ struct PlayerMoreMenuContent: View {
             if player.video?.isPodcast == true, !player.isAudioOnly {
                 Toggle(isOn: Binding(
                     get: { trimSilence },
-                    set: { player.setTrimSilence($0) }
+                    set: {
+                        guard !$0 || guardPremium() else { return }
+                        player.setTrimSilence($0)
+                    }
                 )) {
                     Label("trimSilence", systemImage: "waveform")
                 }
+                .containsPremium()
             }
 
             if let video = player.video {

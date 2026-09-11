@@ -54,6 +54,7 @@ struct SubscriptionTagsSetting: View {
             }
         }
         .buttonStyle(CapsuleButtonStyle(primary: false))
+        .requiresPremium()
         .sheet(item: $newTag) { edit in
             TagEditView(tag: edit.tag, isNew: edit.isNew)
         }

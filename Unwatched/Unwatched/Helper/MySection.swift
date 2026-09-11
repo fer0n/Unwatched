@@ -85,7 +85,7 @@ struct MySection<Content: View>: View {
                 Text(title)
                     .fontWeight(.semibold)
                 Spacer()
-                Image(systemName: Const.premiumIndicatorSF)
+                PremiumIndicator()
             }
         }
     }
