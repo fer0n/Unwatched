@@ -18,7 +18,7 @@ struct PlayerBackgroundGestureRecognizer: View {
     // long press
     @State var longPressed: Bool = false
     let minDuration: Double = 0.2
-    let maxDistance: Double = 3
+    let maxDistance: Double = 10
 
     var body: some View {
         HStack(spacing: 0) {
@@ -26,23 +26,23 @@ struct PlayerBackgroundGestureRecognizer: View {
                 .onTapGesture {
                     handleTap(isLeftSide: true)
                 }
-                .onLongPressGesture(minimumDuration: minDuration, maximumDistance: maxDistance) {
-                    handleLongPressEnded(slowDown: true)
-                } onPressingChanged: { value in
-                    handleLongPressChanged(value)
-                }
+                .modifier(temporarySpeedPress(slowDown: true))
 
             Color.playerBackground
                 .onTapGesture {
                     handleTap(isLeftSide: false)
                 }
-                .onLongPressGesture(minimumDuration: minDuration, maximumDistance: maxDistance) {
-                    handleLongPressEnded(slowDown: false)
-                } onPressingChanged: { value in
-                    handleLongPressChanged(value)
-                }
+                .modifier(temporarySpeedPress(slowDown: false))
         }
         .sensoryFeedback(Const.sensoryFeedback, trigger: hapticToggle)
+    }
+
+    private func temporarySpeedPress(slowDown: Bool) -> TemporarySpeedPress {
+        TemporarySpeedPress(minDuration: minDuration, maxDistance: maxDistance) {
+            handleLongPressEnded(slowDown: slowDown)
+        } onRelease: {
+            handleLongPressChanged(false)
+        }
     }
 
     private func handleTap(isLeftSide: Bool) {

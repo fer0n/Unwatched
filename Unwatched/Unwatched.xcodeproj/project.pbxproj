@@ -728,6 +728,8 @@
 		88C5F3F12CCCF50500DA802F /* UserTipsView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 88C5F3EF2CCCF50200DA802F /* UserTipsView.swift */; };
 		88C965EA2D0AB4F800D1AE3E /* PlayerBackgroundGestureRecognizer.swift in Sources */ = {isa = PBXBuildFile; fileRef = 88C965E92D0AB4F700D1AE3E /* PlayerBackgroundGestureRecognizer.swift */; };
 		88C965EB2D0AB4F800D1AE3E /* PlayerBackgroundGestureRecognizer.swift in Sources */ = {isa = PBXBuildFile; fileRef = 88C965E92D0AB4F700D1AE3E /* PlayerBackgroundGestureRecognizer.swift */; };
+		88C965F22D0AB4F800D1AE3E /* TemporarySpeedPress.swift in Sources */ = {isa = PBXBuildFile; fileRef = 88C965F12D0AB4F700D1AE3E /* TemporarySpeedPress.swift */; };
+		88C965F32D0AB4F800D1AE3E /* TemporarySpeedPress.swift in Sources */ = {isa = PBXBuildFile; fileRef = 88C965F12D0AB4F700D1AE3E /* TemporarySpeedPress.swift */; };
 		88CAEC382BA49D63000202D9 /* ShareView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 88CAEC372BA49D63000202D9 /* ShareView.swift */; };
 		88CC8FD82CE3BDBC00F6F49D /* SponsorBlockSettingsView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 88CC8FD72CE3BDB300F6F49D /* SponsorBlockSettingsView.swift */; };
 		88CC8FD92CE3BDBC00F6F49D /* SponsorBlockSettingsView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 88CC8FD72CE3BDB300F6F49D /* SponsorBlockSettingsView.swift */; };
@@ -1490,6 +1492,7 @@
 		88C5EF892CCABA9300DA802F /* TransactionVM.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TransactionVM.swift; sourceTree = "<group>"; };
 		88C5F3EF2CCCF50200DA802F /* UserTipsView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = UserTipsView.swift; sourceTree = "<group>"; };
 		88C965E92D0AB4F700D1AE3E /* PlayerBackgroundGestureRecognizer.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PlayerBackgroundGestureRecognizer.swift; sourceTree = "<group>"; };
+		88C965F12D0AB4F700D1AE3E /* TemporarySpeedPress.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TemporarySpeedPress.swift; sourceTree = "<group>"; };
 		88CAEC372BA49D63000202D9 /* ShareView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ShareView.swift; sourceTree = "<group>"; };
 		88CC8FD72CE3BDB300F6F49D /* SponsorBlockSettingsView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SponsorBlockSettingsView.swift; sourceTree = "<group>"; };
 		88CD36FF2E203FB200E7B21C /* PlayerWebView+Initscript.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "PlayerWebView+Initscript.swift"; sourceTree = "<group>"; };
@@ -1992,6 +1995,7 @@
 				88AA01012F000001000000A1 /* PlayerActionsRow.swift */,
 				88E83F6D2D5D5D0600F596A9 /* AirPlayView.swift */,
 				88C965E92D0AB4F700D1AE3E /* PlayerBackgroundGestureRecognizer.swift */,
+				88C965F12D0AB4F700D1AE3E /* TemporarySpeedPress.swift */,
 				883D4CA92CF4791300BB2581 /* PlayerContentView.swift */,
 				889924682C47F4D4001185A6 /* VerticalSwipeGesture.swift */,
 				889924722C482B92001185A6 /* CombinedPlaybackSpeedSetting.swift */,
@@ -3169,6 +3173,7 @@
 				8884ECFC2C58B7490085BD52 /* FullscreenPlayerControlsWrapper.swift in Sources */,
 				889AF94F2C50ED05001CEDE6 /* VideoListItemDetails.swift in Sources */,
 				88C965EA2D0AB4F800D1AE3E /* PlayerBackgroundGestureRecognizer.swift in Sources */,
+				88C965F22D0AB4F800D1AE3E /* TemporarySpeedPress.swift in Sources */,
 				88F3AAA12C9990E60030B2EA /* TestData.swift in Sources */,
 				88899D962E035E6A002C05BC /* SubscriptionTitleFitlerPreview.swift in Sources */,
 				889AF9502C50ED05001CEDE6 /* CleanupService.swift in Sources */,
@@ -3926,6 +3931,7 @@
 				888E1E042B70E84A00608F99 /* AnimationCompletionCallback.swift in Sources */,
 				888F74A92BA1FD8400B94822 /* GeneralSettingsView.swift in Sources */,
 				88C965EB2D0AB4F800D1AE3E /* PlayerBackgroundGestureRecognizer.swift in Sources */,
+				88C965F32D0AB4F800D1AE3E /* TemporarySpeedPress.swift in Sources */,
 				8898B6792B481F2100348D01 /* SubscriptionActor.swift in Sources */,
 				8808820A2E565AD8008C38DA /* HideControlsSettings.swift in Sources */,
 				8846DF342F76A599008AC6FE /* UTType.swift in Sources */,
