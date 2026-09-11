@@ -2078,6 +2078,74 @@
         }
       }
     },
+    "autoSkipRecurringChapters" : {
+      "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Wiederkehrende Kapitel überspringen"
+          }
+        },
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Skip Recurring Chapters"
+          }
+        },
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Omitir capítulos recurrentes"
+          }
+        },
+        "fr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Ignorer les chapitres récurrents"
+          }
+        },
+        "pl" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Pomijaj powtarzające się rozdziały"
+          }
+        }
+      }
+    },
+    "autoSkipRecurringChaptersFooter" : {
+      "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Wenn du ein Kapitel überspringst, werden Kapitel mit demselben Titel auch in künftigen Videos dieses Kanals übersprungen."
+          }
+        },
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "When you skip a chapter, chapters with the same title are skipped in that channel's future videos too."
+          }
+        },
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Al omitir un capítulo, los capítulos con el mismo título también se omiten en los próximos vídeos de ese canal."
+          }
+        },
+        "fr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Lorsque vous ignorez un chapitre, les chapitres portant le même titre sont aussi ignorés dans les prochaines vidéos de cette chaîne."
+          }
+        },
+        "pl" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Gdy pominiesz rozdział, rozdziały o tym samym tytule będą pomijane także w kolejnych filmach tego kanału."
+          }
+        }
+      }
+    },
     "backgroundPlayback" : {
       "localizations" : {
         "de" : {

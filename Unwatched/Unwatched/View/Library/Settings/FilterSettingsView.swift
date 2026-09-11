@@ -9,6 +9,7 @@ import UnwatchedShared
 struct FilterSettingsView: View {
     @CloudStorage(Const.defaultShortsSetting) var defaultShortsSetting: ShortsSetting = .show
     @CloudStorage(Const.skipChapterText) var skipChapterText: String = ""
+    @CloudStorage(Const.autoSkipRecurringChapters) var autoSkipRecurringChapters: Bool = true
     @CloudStorage(Const.filterVideoTitleText) var filterVideoTitleText: String = ""
 
     @Environment(\.modelContext) var modelContext
@@ -58,6 +59,11 @@ struct FilterSettingsView: View {
                     #endif
                 }
                 .requiresPremium(skipChapterText.isEmpty)
+
+                MySection(footer: "autoSkipRecurringChaptersFooter") {
+                    Toggle("autoSkipRecurringChapters", isOn: $autoSkipRecurringChapters)
+                }
+                .requiresPremium()
 
                 SponsorBlockSettingsView()
             }

@@ -13,6 +13,7 @@ extension Const {
         // Filter
         Const.defaultShortsSetting: ShortsSetting.defaultSetting.rawValue,
         Const.skipChapterText: "",
+        Const.autoSkipRecurringChapters: true,
         Const.customYoutubeApiKey: "",
         Const.allowOnMatch: false,
         Const.mergeSponsorBlockChapters: false,

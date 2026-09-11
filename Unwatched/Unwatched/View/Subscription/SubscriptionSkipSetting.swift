@@ -214,12 +214,14 @@ struct SubscriptionSegmentSetting: View {
 
 /// The chapter titles this channel skips automatically, and a way to stop skipping one.
 struct SubscriptionAutoSkipSetting: View {
+    @CloudStorage(Const.autoSkipRecurringChapters) var autoSkipRecurringChapters: Bool = true
+
     var subscription: Subscription
 
     var body: some View {
         let titles = subscription.autoSkipChapterTitles ?? []
 
-        if !titles.isEmpty {
+        if autoSkipRecurringChapters, !titles.isEmpty {
             Menu {
                 Section("autoSkipChaptersHelper") {
                     ForEach(titles, id: \.self) { title in

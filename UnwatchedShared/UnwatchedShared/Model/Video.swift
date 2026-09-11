@@ -97,7 +97,7 @@ public final class Video: VideoData, CustomStringConvertible, Exportable {
         }()
         let withoutAutoSkipped = ChapterService.applyAutoSkip(
             to: computed,
-            titles: subscription?.autoSkipChapterTitles
+            titles: ChapterService.autoSkipsRecurringChapters ? subscription?.autoSkipChapterTitles : nil
         )
         let withoutIntro = ChapterService.applySkipIntro(
             withoutAutoSkipped,

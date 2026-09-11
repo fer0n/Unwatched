@@ -19,6 +19,7 @@ public struct Const {
     public static let sponsorSegmentSetting = "sponsorSegmentSetting"
     public static let selfPromoSegmentSetting = "selfPromoSegmentSetting"
     public static let skipChapterText = "skipChapterText"
+    public static let autoSkipRecurringChapters = "autoSkipRecurringChapters"
     public static let customYoutubeApiKey = "customYoutubeApiKey"
     public static let filterVideoTitleText = "filterVideoTitleText"
     public static let allowOnMatch = "allowOnMatch"

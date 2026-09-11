@@ -228,7 +228,9 @@ extension ChapterService {
     /// list leaves the row saying inactive, and the tap looks like it did nothing.
     @MainActor
     static func setChapterActive(_ isActive: Bool, _ chapter: SendableChapter, of video: Video) {
-        video.subscription?.setAutoSkip(chapter.title, !isActive)
+        if isActive || autoSkipsRecurringChapters {
+            video.subscription?.setAutoSkip(chapter.title, !isActive)
+        }
 
         // one that only the auto-skip list turned off is already back on, and has no row to write
         guard !isActive || stillInactive(chapter, of: video) else {
