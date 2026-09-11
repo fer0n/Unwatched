@@ -17,8 +17,7 @@ struct SearchView: View {
     @Environment(\.modelContext) private var modelContext
     @Environment(NavigationManager.self) private var navManager
     @Environment(BrowserManager.self) private var browserManager
-    @State private var vm = SearchVM()
-    @State private var showBrowserFallback = false
+    @State private var vm = SearchVM.shared
     @State private var hasAppearedOnce = false
     @State private var focusTask: Task<Void, Never>?
     @FocusState private var searchFocused: Bool
@@ -75,7 +74,7 @@ struct SearchView: View {
         }
         .onChange(of: searchFocused) { _, focused in
             if focused {
-                showBrowserFallback = false
+                vm.showBrowserFallback = false
             }
         }
 
@@ -131,7 +130,7 @@ struct SearchView: View {
         if searchAlwaysUseYoutube, let url = youtubeSearchURL(for: trimmed) {
             openBrowserFallback(url)
         } else {
-            showBrowserFallback = false
+            vm.showBrowserFallback = false
             vm.search()
         }
         if !showsResultsInline && navManager.presentedSearch.first != .results {
@@ -148,7 +147,7 @@ struct SearchView: View {
 
     func openBrowserFallback(_ url: URL) {
         browserManager.loadUrl(url)
-        showBrowserFallback = true
+        vm.showBrowserFallback = true
     }
 
     var shouldAutoFocusSearch: Bool {
@@ -197,7 +196,7 @@ struct SearchView: View {
 
     @ViewBuilder
     var rootContent: some View {
-        if showsResultsInline && !showBrowserFallback && vm.hasSearched && !vm.isEditingQuery {
+        if showsResultsInline && !vm.showBrowserFallback && vm.hasSearched && !vm.isEditingQuery {
             resultsContent
         } else {
             SearchSuggestionsView(vm: vm, searchFocused: $searchFocused, onSelect: search(for:))
@@ -217,7 +216,7 @@ struct SearchView: View {
 
     @ViewBuilder
     var resultsContent: some View {
-        if showBrowserFallback {
+        if vm.showBrowserFallback {
             BrowserView(showHeader: false, safeArea: false, hideYoutubeChrome: true)
         } else if vm.isSearching && !vm.hasAnyResults {
             ProgressView()

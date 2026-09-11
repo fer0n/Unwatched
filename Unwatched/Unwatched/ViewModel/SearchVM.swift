@@ -13,7 +13,12 @@ import UnwatchedShared
 @Observable
 @MainActor
 final class SearchVM {
+    /// Outlives `SearchView`, like the results route on `NavigationManager.shared`: on iPhone the
+    /// menu is a sheet that fullscreen dismisses, and a fresh model would reopen an empty results page.
+    static let shared = SearchVM()
+
     var query: String = ""
+    var showBrowserFallback = false
     var results: [SendableVideo] = []
     var podcastResults: [SendableSubscription] = []
     private(set) var suggestions: [String] = []
