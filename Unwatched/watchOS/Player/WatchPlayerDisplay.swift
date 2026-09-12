@@ -14,8 +14,8 @@ struct WatchPlayerDisplay {
     var chapterTitle: String?
     var artworkUrl: URL?
     var isSquare = false
-    var fraction: Double = 0
-    var remaining: Double?
+    /// The two numbers that move on their own, as something the views drawing them can carry forward.
+    var timeline: WatchTimeline = .fixed(fraction: 0, remaining: nil)
     var hasChapters = false
     var hasNextChapter = false
     var errorMessage: String?
@@ -24,16 +24,14 @@ struct WatchPlayerDisplay {
     /// How far the seek buttons move in what is playing.
     var seek = WatchSeek.default
 
-    /// - Parameter date: the moment the phone's position is carried forward to.
-    init(phone state: WatchRemoteState?, at date: Date) {
+    init(phone state: WatchRemoteState?) {
         guard let state else { return }
         isPlaying = state.isPlaying
         title = state.title
         chapterTitle = state.chapterTitle
         artworkUrl = state.thumbnailUrl
         isSquare = state.isAudioOnly
-        fraction = Self.fraction(of: state.position(at: date), in: state.duration)
-        remaining = state.remaining(at: date)
+        timeline = .phone(state)
         hasChapters = state.hasChapters
         hasNextChapter = state.hasNextChapter
         seek = WatchSeek(tagSeconds: state.seekSeconds)
@@ -50,11 +48,13 @@ struct WatchPlayerDisplay {
         chapterTitle = player.currentChapterTitle
         artworkUrl = video?.displayThumbnailUrl
         isSquare = video?.isAudioOnly == true
-        fraction = Self.fraction(
-            of: isUpNext ? (video?.elapsedSeconds ?? 0) : player.currentTime,
-            in: isUpNext ? video?.duration : player.duration
+        timeline = .fixed(
+            fraction: WatchTimeline.fraction(
+                of: isUpNext ? (video?.elapsedSeconds ?? 0) : player.currentTime,
+                in: isUpNext ? video?.duration : player.duration
+            ),
+            remaining: player.currentEndTime.map { max(0, $0 - player.currentTime) }
         )
-        remaining = player.currentEndTime.map { max(0, $0 - player.currentTime) }
         hasChapters = player.video != nil && !player.chapters.isEmpty
         hasNextChapter = player.hasNextChapter
         // What is playing was resolved when it started; nothing is playing yet in the up-next
@@ -64,9 +64,60 @@ struct WatchPlayerDisplay {
             : player.seekIntervals
     }
 
-    private static func fraction(of elapsed: Double, in duration: Double?) -> Double {
+}
+
+/// Where the ring's fill and the time left come from: the phone's reading, which carries forward on
+/// its own, or a value the watch's own player already resolved.
+enum WatchTimeline {
+    case phone(WatchRemoteState)
+    case fixed(fraction: Double, remaining: Double?)
+
+    /// Whether anything moves between the states the phone sends.
+    var isMoving: Bool {
+        switch self {
+        case .phone(let state): state.isPlaying
+        case .fixed: false
+        }
+    }
+
+    func fraction(at date: Date) -> Double {
+        switch self {
+        case .phone(let state): Self.fraction(of: state.position(at: date), in: state.duration)
+        case .fixed(let fraction, _): fraction
+        }
+    }
+
+    func remaining(at date: Date) -> Double? {
+        switch self {
+        case .phone(let state): state.remaining(at: date)
+        case .fixed(_, let remaining): remaining
+        }
+    }
+
+    static func fraction(of elapsed: Double, in duration: Double?) -> Double {
         guard let duration, duration > 0 else { return 0 }
         return min(1, max(0, elapsed / duration))
+    }
+
+    /// How long the fill takes to move one pixel along an arc that long; sooner than that it would
+    /// redraw the same ring.
+    func secondsPerPixel(ofArc pixels: Double) -> TimeInterval {
+        guard case .phone(let state) = self,
+              let duration = state.duration,
+              duration > 0, state.speed > 0, pixels > 0 else { return 1 }
+        return duration / pixels / state.speed
+    }
+
+    /// How long until the time left reads differently. It is drawn in a single unit rounded to the
+    /// nearest, so it changes on the half unit below it — once a minute for most of an item.
+    func secondsUntilRemainingChanges(at date: Date) -> TimeInterval {
+        guard case .phone(let state) = self,
+              let remaining = remaining(at: date),
+              state.speed > 0 else { return 1 }
+        let unit: Double = remaining >= 3600 ? 3600 : (remaining >= 60 ? 60 : 1)
+        // The unit's own floor is a boundary too: below it the next unit down takes over.
+        let target = max(unit == 1 ? 0 : unit, ((remaining / unit).rounded() - 0.5) * unit)
+        return max(0, remaining - target) / state.speed
     }
 }
 

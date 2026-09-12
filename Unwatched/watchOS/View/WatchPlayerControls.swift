@@ -5,6 +5,7 @@
 
 import SwiftUI
 import UnwatchedShared
+import WatchKit
 
 /// The three controls worth having on a wrist, with the timeline around the middle one.
 struct WatchPlayerControls: View {
@@ -52,12 +53,18 @@ struct WatchPlayerControls: View {
             .inset(by: Self.ringWidth / 2)
             .stroke(.white.opacity(0.3), lineWidth: Self.ringWidth)
             .overlay {
-                Circle()
-                    .inset(by: Self.ringWidth / 2)
-                    .trim(from: 0, to: display.fraction)
-                    .stroke(.white, style: StrokeStyle(lineWidth: Self.ringWidth, lineCap: .round))
-                    // Trims start at three o'clock; the top is where a clock face starts.
-                    .rotationEffect(.degrees(-90))
+                CarriedTime(
+                    timeline: display.timeline,
+                    step: { _ in display.timeline.secondsPerPixel(ofArc: Self.ringArcPixels) },
+                    content: { date in
+                        Circle()
+                            .inset(by: Self.ringWidth / 2)
+                            .trim(from: 0, to: display.timeline.fraction(at: date))
+                            .stroke(.white, style: StrokeStyle(lineWidth: Self.ringWidth, lineCap: .round))
+                            // Trims start at three o'clock; the top is where a clock face starts.
+                            .rotationEffect(.degrees(-90))
+                    }
+                )
             }
             .allowsHitTesting(false)
     }
@@ -77,4 +84,9 @@ struct WatchPlayerControls: View {
     private static let playSize: CGFloat = 46
     private static let seekSize: CGFloat = 32
     private static let ringWidth: CGFloat = 2
+
+    /// The trimmed circle's length on screen, which is how finely its fill can actually move.
+    private static var ringArcPixels: Double {
+        (playSize - ringWidth) * .pi * WKInterfaceDevice.current().screenScale
+    }
 }

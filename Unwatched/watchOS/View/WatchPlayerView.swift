@@ -19,21 +19,14 @@ struct WatchPlayerView: View {
     /// What playing would start: the queue's first entry, while nothing is playing yet.
     @State private var upNext: Video?
     @State private var client = WatchQueueClient.shared
-    /// Redrawn once a second so the phone's timeline moves between the states it sends.
-    @State private var tick = Date.now
 
     private var controlsPhone: Bool {
         navigator.controlsPhone
     }
 
-    /// Not while Always On: it redraws about once a minute, so a tick a second there is all cost.
-    private var carriesPosition: Bool {
-        controlsPhone && !isLuminanceReduced && display.isPlaying
-    }
-
     private var display: WatchPlayerDisplay {
         controlsPhone
-            ? WatchPlayerDisplay(phone: client.remote, at: tick)
+            ? WatchPlayerDisplay(phone: client.remote)
             : WatchPlayerDisplay(local: player, upNext: upNext)
     }
 
@@ -66,14 +59,6 @@ struct WatchPlayerView: View {
         .onChange(of: client.remoteVolume) { _, reading in
             guard controlsPhone, let reading else { return }
             volume.update(reading.value)
-        }
-        // Carries the phone's last reported position forward.
-        .task(id: carriesPosition) {
-            guard carriesPosition else { return }
-            while !Task.isCancelled {
-                tick = .now
-                try? await Task.sleep(for: .seconds(1))
-            }
         }
         .background {
             UpNextResolver(
@@ -172,19 +157,24 @@ struct WatchPlayerView: View {
     }
 
     /// What is left of the chapter, under the step that leaves it.
-    @ViewBuilder
     private func remainingText(_ display: WatchPlayerDisplay) -> some View {
-        if let remaining = display.remaining {
-            Text(Duration.seconds(remaining).formatted(
-                .units(allowed: [.hours, .minutes, .seconds], width: .narrow, maximumUnitCount: 1)
-                    .locale(Locale(identifier: "en_US_POSIX"))
-            ))
-            .font(.system(size: 9).monospacedDigit())
-            .frame(width: Self.chapterColumn)
-            .fontWidth(.condensed)
-            .foregroundStyle(.secondary)
-            .lineLimit(1)
-        }
+        CarriedTime(
+            timeline: display.timeline,
+            step: { display.timeline.secondsUntilRemainingChanges(at: $0) },
+            content: { date in
+                if let remaining = display.timeline.remaining(at: date) {
+                    Text(Duration.seconds(remaining).formatted(
+                        .units(allowed: [.hours, .minutes, .seconds], width: .narrow, maximumUnitCount: 1)
+                            .locale(Locale(identifier: "en_US_POSIX"))
+                    ))
+                    .font(.system(size: 9).monospacedDigit())
+                    .frame(width: Self.chapterColumn)
+                    .fontWidth(.condensed)
+                    .foregroundStyle(.secondary)
+                    .lineLimit(1)
+                }
+            }
+        )
     }
 
     @ViewBuilder
