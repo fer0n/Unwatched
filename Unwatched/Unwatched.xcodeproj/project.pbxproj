@@ -903,13 +903,13 @@
 		A3C9D2742FAA3A0AAFE05BF3 /* MiniPlayerAccessory.swift in Sources */ = {isa = PBXBuildFile; fileRef = F17DE266BB0FEFED29F8C300 /* MiniPlayerAccessory.swift */; };
 		AA11CD012E00000000000001 /* ChapterMaterializeTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = AA11CD012E00000000000002 /* ChapterMaterializeTests.swift */; };
 		AA774D739DF04181814EF02A /* ChapterService+Player.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8AE906A64CC0490FAD1022DC /* ChapterService+Player.swift */; };
-		B08193B720FD48BE7B73E45D /* CollapsingDescriptionLayout.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9188F162CA1319558F37116B /* CollapsingDescriptionLayout.swift */; };
+		B08193B720FD48BE7B73E45D /* CollapsingSectionLayout.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9188F162CA1319558F37116B /* CollapsingSectionLayout.swift */; };
 		B92022971A644D18ACED9BF8 /* AVPlayerViewModel+Quality.swift in Sources */ = {isa = PBXBuildFile; fileRef = 39205759BFC648CB9CBED597 /* AVPlayerViewModel+Quality.swift */; };
 		BDFD7892557E62ECF4D225B5 /* InboxCardDrag.swift in Sources */ = {isa = PBXBuildFile; fileRef = 967BA74E83FCF892E693F4DB /* InboxCardDrag.swift */; };
 		BE5B5A937F8BB55681EC034B /* CapsuleLabel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 24EB98A6B9324001ABEE8DE1 /* CapsuleLabel.swift */; };
 		BED604C449CA906A7F8272D6 /* InboxCardSwipe.swift in Sources */ = {isa = PBXBuildFile; fileRef = 20A57C76B1628092FD746792 /* InboxCardSwipe.swift */; };
 		C6727CDEAC4D58DB4B84CC07 /* InboxCardPlacement.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8368DEA68B942E193EDDF71B /* InboxCardPlacement.swift */; };
-		C7EE8450F3EE12A26C7EEB1C /* CollapsingDescriptionLayout.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9188F162CA1319558F37116B /* CollapsingDescriptionLayout.swift */; };
+		C7EE8450F3EE12A26C7EEB1C /* CollapsingSectionLayout.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9188F162CA1319558F37116B /* CollapsingSectionLayout.swift */; };
 		CAB8DE080B9843BA835E1C3D /* PodcastEpisodeListView.swift in Sources */ = {isa = PBXBuildFile; fileRef = E7FF2D549D5945F281ABE152 /* PodcastEpisodeListView.swift */; };
 		CD00F49C2E6B6DBC00DADB96 /* CustomAlerter.swift in Sources */ = {isa = PBXBuildFile; fileRef = CD00F49B2E6B6DBC00DADB96 /* CustomAlerter.swift */; };
 		CD00F49D2E6B6DBC00DADB96 /* CustomAlerter.swift in Sources */ = {isa = PBXBuildFile; fileRef = CD00F49B2E6B6DBC00DADB96 /* CustomAlerter.swift */; };
@@ -1602,7 +1602,7 @@
 		88FEBFC72C19DF5B007FC1A5 /* AddVideoViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AddVideoViewModel.swift; sourceTree = "<group>"; };
 		8AE906A64CC0490FAD1022DC /* ChapterService+Player.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "ChapterService+Player.swift"; sourceTree = "<group>"; };
 		914DBFB3838DE775FA55911F /* ProgressSweeping.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ProgressSweeping.swift; sourceTree = "<group>"; };
-		9188F162CA1319558F37116B /* CollapsingDescriptionLayout.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CollapsingDescriptionLayout.swift; sourceTree = "<group>"; };
+		9188F162CA1319558F37116B /* CollapsingSectionLayout.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CollapsingSectionLayout.swift; sourceTree = "<group>"; };
 		96788AA439F0D955B88A288F /* InboxCardLayout.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = InboxCardLayout.swift; sourceTree = "<group>"; };
 		967BA74E83FCF892E693F4DB /* InboxCardDrag.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = InboxCardDrag.swift; sourceTree = "<group>"; };
 		9C11AA3D2B0F4E1D8A77C001 /* AVPlayerViewModel+Stall.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "AVPlayerViewModel+Stall.swift"; sourceTree = "<group>"; };
@@ -2083,7 +2083,7 @@
 				D3A44E856D548259E59C9836 /* InboxCardFlight.swift */,
 				96788AA439F0D955B88A288F /* InboxCardLayout.swift */,
 				0EACF91AE60C2997A88E1E50 /* InboxCardScrollSwipe.swift */,
-				9188F162CA1319558F37116B /* CollapsingDescriptionLayout.swift */,
+				9188F162CA1319558F37116B /* CollapsingSectionLayout.swift */,
 				1B91BD33FE5E8E8E9DEC6FB2 /* TwoRowChipLayout.swift */,
 				967BA74E83FCF892E693F4DB /* InboxCardDrag.swift */,
 				20A57C76B1628092FD746792 /* InboxCardSwipe.swift */,
@@ -3305,7 +3305,7 @@
 				CF4E5C1022F4529ED4960C99 /* InboxCardFlight.swift in Sources */,
 				84CD31F8457AC2C9116601B7 /* InboxCardLayout.swift in Sources */,
 				A0531532C648722E47D13F87 /* InboxCardScrollSwipe.swift in Sources */,
-				B08193B720FD48BE7B73E45D /* CollapsingDescriptionLayout.swift in Sources */,
+				B08193B720FD48BE7B73E45D /* CollapsingSectionLayout.swift in Sources */,
 				0C3D09182D27E3EBB4BFF29D /* TwoRowChipLayout.swift in Sources */,
 				BDFD7892557E62ECF4D225B5 /* InboxCardDrag.swift in Sources */,
 				6302111413B74E042F4AD469 /* InboxCardSwipe.swift in Sources */,
@@ -4088,7 +4088,7 @@
 				7EA4ED4307E95D5A7FBF5D2E /* InboxCardFlight.swift in Sources */,
 				1300D22C8E3C7180E8721674 /* InboxCardLayout.swift in Sources */,
 				472C23AEC31D000B794A88CB /* InboxCardScrollSwipe.swift in Sources */,
-				C7EE8450F3EE12A26C7EEB1C /* CollapsingDescriptionLayout.swift in Sources */,
+				C7EE8450F3EE12A26C7EEB1C /* CollapsingSectionLayout.swift in Sources */,
 				9F4DA39C2D57E3EFAA06DF5C /* TwoRowChipLayout.swift in Sources */,
 				29E927CC97728CCD53828549 /* InboxCardDrag.swift in Sources */,
 				BED604C449CA906A7F8272D6 /* InboxCardSwipe.swift in Sources */,

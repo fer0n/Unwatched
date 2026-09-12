@@ -1,13 +1,14 @@
 //
-//  CollapsingDescriptionLayout.swift
+//  CollapsingSectionLayout.swift
 //  Unwatched
 //
 
 import SwiftUI
 
 /// Shows its content, and the spacing above it, only while a full line of it fits, so a cramped
-/// card drops the description entirely instead of squeezing everything above it
-struct CollapsingDescriptionLayout: Layout {
+/// card drops the section entirely instead of squeezing everything above it. Content that can't
+/// shrink is all or nothing; text keeps as many of its lines as there is room for.
+struct CollapsingSectionLayout: Layout {
     var spacing: CGFloat
 
     func sizeThatFits(proposal: ProposedViewSize, subviews: Subviews, cache: inout ()) -> CGSize {
