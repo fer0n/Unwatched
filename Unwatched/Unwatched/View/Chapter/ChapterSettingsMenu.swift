@@ -18,6 +18,10 @@ struct ChapterSettingsMenu: View {
     /// Leaving this out leaves the transcript actions out with it.
     var transcriptVM: TranscriptView.ViewModel?
 
+    /// Drops the text label, keeping just the gear icon — for when the button sits next to the
+    /// segmented control and the row has no room to spare.
+    var iconOnly = false
+
     var body: some View {
         Menu {
             transcriptSection
@@ -43,12 +47,15 @@ struct ChapterSettingsMenu: View {
         } label: {
             Image(systemName: "gearshape.fill")
                 .symbolEffect(.rotate, isActive: isWorking)
-            Text(showsTranscriptActions ? "settings" : "chapters")
+            if !iconOnly {
+                Text(showsTranscriptActions ? "settings" : "chapters")
+            }
         }
         .overlay {
             ProgressSweep(progress: progress, isFadingOut: isFadingOutProgress)
         }
         .foregroundStyle(Color.automaticBlack)
+        .font(.subheadline)
         #if !os(visionOS)
         .tint(Color.insetBackgroundColor)
         #endif
@@ -65,7 +72,6 @@ struct ChapterSettingsMenu: View {
         #else
         .buttonStyle(.borderedProminent)
         #endif
-        .frame(maxWidth: .infinity, alignment: .center)
         .task(id: viewModel.errorMessage) {
             if let message = viewModel.errorMessage {
                 appNotificationVM.show(message, isError: true)

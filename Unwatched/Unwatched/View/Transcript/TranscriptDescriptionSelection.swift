@@ -13,14 +13,20 @@ struct TranscriptDescriptionSelection: View {
     let isCurrentVideo: Bool
     let scrollProxy: ScrollViewProxy
     @Binding var transcriptVM: TranscriptView.ViewModel
-
-    @State var selection: DescriptionContentType = .description
+    @Binding var selection: DescriptionContentType
 
     var body: some View {
-        if !hasTranscript {
+        if !hasTranscript || selection == .description {
             DescriptionDetailView(description: video.videoDescription)
         } else {
-            selection(for: video)
+            TranscriptView(
+                video: video,
+                transcriptUrl: isCurrentVideo ? player.transcriptUrl : nil,
+                youtubeId: video.youtubeId,
+                viewModel: $transcriptVM,
+                scrollProxy: scrollProxy
+            )
+            .padding(.bottom, 7)
         }
     }
 
@@ -35,44 +41,6 @@ struct TranscriptDescriptionSelection: View {
             return true
         }
         return !(isCurrentVideo && transcriptUrl == "")
-    }
-
-    @ViewBuilder
-    func selection(for video: Video) -> some View {
-        CapsuleSegmentedControl(
-            selection: $selection,
-            items: [
-                CapsuleSegmentItem(
-                    title: "description",
-                    value: DescriptionContentType.description
-                ),
-                CapsuleSegmentItem(
-                    title: "transcript",
-                    value: DescriptionContentType.transcript
-                )
-            ]
-        )
-        .frame(maxWidth: 260)
-        .frame(maxWidth: .infinity, alignment: .center)
-        .padding(.bottom, 8)
-        .onChange(of: selection) {
-            if selection == .transcript {
-                Signal.log("Transcript.View")
-            }
-        }
-
-        if selection == .description {
-            DescriptionDetailView(description: video.videoDescription)
-        } else {
-            TranscriptView(
-                video: video,
-                transcriptUrl: isCurrentVideo ? player.transcriptUrl : nil,
-                youtubeId: video.youtubeId,
-                viewModel: $transcriptVM,
-                scrollProxy: scrollProxy
-            )
-            .padding(.bottom, 7)
-        }
     }
 }
 

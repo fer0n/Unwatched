@@ -17,6 +17,7 @@ struct ChapterDescriptionView: View {
 
     @State var hapticToggle = false
     @State var transcriptVM = TranscriptView.ViewModel()
+    @State var descriptionSelection: DescriptionContentType = .description
 
     static let buttonSize: CGFloat = 46
     @ScaledMetric(wrappedValue: buttonSize) private var buttonSizeScaled: CGFloat
@@ -61,7 +62,8 @@ struct ChapterDescriptionView: View {
                     )
 
                     if hasTranscript || hasChapters {
-                        ChapterSettingsMenu(video: video, transcriptVM: transcriptVM)
+                        chapterControlsRow(showSegmentedControl: hasTranscript)
+                            .padding(.top)
 
                         Spacer()
                             .frame(height: 10)
@@ -71,7 +73,8 @@ struct ChapterDescriptionView: View {
                         video: video,
                         isCurrentVideo: isCurrentVideo,
                         scrollProxy: proxy,
-                        transcriptVM: $transcriptVM
+                        transcriptVM: $transcriptVM,
+                        selection: $descriptionSelection
                     )
                     .transition(.opacity)
                 }
@@ -164,6 +167,41 @@ struct ChapterDescriptionView: View {
             #endif
         }
         .tint(.neutralAccentColor)
+    }
+
+    /// The description/transcript segmented control with the chapter settings menu kept as its own
+    /// control right next to it — the pair centered together, or just the button on its own once
+    /// there's no segmented control to show.
+    @ViewBuilder
+    func chapterControlsRow(showSegmentedControl: Bool) -> some View {
+        HStack(spacing: 6) {
+            Spacer(minLength: 0)
+            if showSegmentedControl {
+                CapsuleSegmentedControl(
+                    selection: $descriptionSelection,
+                    items: [
+                        CapsuleSegmentItem(
+                            title: "description",
+                            value: DescriptionContentType.description
+                        ),
+                        CapsuleSegmentItem(
+                            title: "transcript",
+                            value: DescriptionContentType.transcript
+                        )
+                    ]
+                )
+                .frame(maxWidth: 260)
+                ChapterSettingsMenu(video: video, transcriptVM: transcriptVM, iconOnly: true)
+            } else {
+                ChapterSettingsMenu(video: video, transcriptVM: transcriptVM)
+            }
+            Spacer(minLength: 0)
+        }
+        .onChange(of: descriptionSelection) {
+            if descriptionSelection == .transcript {
+                Signal.log("Transcript.View")
+            }
+        }
     }
 
     /// Same order as the inbox card actions (see `InboxCardAction`)
