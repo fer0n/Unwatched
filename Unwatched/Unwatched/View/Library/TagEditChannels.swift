@@ -55,7 +55,11 @@ struct ChannelsSection: View {
                     otherTags: otherTagsBySubscription[subscription.persistentModelID] ?? [],
                     isCovered: isCovered(subscription)
                 )
+                .contentShape(Rectangle())
             }
+            #if os(macOS)
+            .buttonStyle(.plain)
+            #endif
         }
     }
 }
