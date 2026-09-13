@@ -64,6 +64,10 @@ struct InboxCardStack: View {
             let minHeight = isFixedPortraitSheet ? sheetPos.playerControlHeight : 0
             let available = CGSize(width: geo.size.width, height: max(geo.size.height, minHeight))
             let layout = InboxCard.Layout(available: available, minDetailHeight: minDetailHeight)
+            let flightBounds = CGSize(
+                width: available.width + layout.size.width,
+                height: available.height + layout.size.height
+            )
 
             ZStack(alignment: .bottom) {
                 ZStack {
@@ -80,12 +84,12 @@ struct InboxCardStack: View {
                 .inboxCardDrag(
                     isEnabled: !videos.isEmpty,
                     onChange: { drag(videos, to: $0) },
-                    onEnd: { endDrag(videos, $0, $1) }
+                    onEnd: { endDrag(videos, $0, $1, flightBounds) }
                 )
 
                 InboxCardActionBar(
                     swipe: swipe,
-                    perform: { perform($0, videos.first, via: "button") }
+                    perform: { perform($0, videos.first, via: "button", clearing: flightBounds) }
                 )
                 // the bar belongs under the details, not across the thumbnail
                 .padding(.leading, layout.isHorizontal ? layout.mediaSize.width : 0)
@@ -146,7 +150,7 @@ struct InboxCardStack: View {
         swipe.setDrag(youtubeId, to: translation)
     }
 
-    private func endDrag(_ videos: [Video], _ translation: CGSize, _ velocity: CGSize) {
+    private func endDrag(_ videos: [Video], _ translation: CGSize, _ velocity: CGSize, _ bounds: CGSize) {
         let predicted = translation + velocity * Self.flickPrediction
         let triggered = translation.length > InboxCardAction.triggerDistance
             || predicted.length > InboxCardAction.flickDistance
@@ -163,6 +167,7 @@ struct InboxCardStack: View {
             action,
             video,
             via: "swipe",
+            clearing: bounds,
             direction: heading,
             // the flight goes along `heading`; speed across it is not speed along it, and would
             // throw the card out faster than it was ever travelling that way
@@ -232,6 +237,7 @@ struct InboxCardStack: View {
         _ action: InboxCardAction,
         _ video: Video?,
         via: String,
+        clearing bounds: CGSize,
         direction: CGSize? = nil,
         speed: CGFloat = 0
     ) {
@@ -249,7 +255,8 @@ struct InboxCardStack: View {
         let flight = InboxCardFlight(
             from: swipe.translation(of: video.youtubeId),
             towards: direction ?? action.direction,
-            speed: speed
+            speed: speed,
+            clearing: bounds
         )
         let departure = Departure(
             video: video,

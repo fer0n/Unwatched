@@ -13,8 +13,10 @@ struct InboxCardFlight {
     let animation: Animation
     let duration: TimeInterval
 
-    /// Far enough to be gone on the widest screen
-    private static let clearance: CGFloat = 800
+    /// Far enough to be gone on a phone, whichever way the card is thrown
+    private static let minClearance: CGFloat = 800
+    /// Of the distance that just takes the card out of sight, so it's gone well before it lands
+    private static let clearanceMargin: CGFloat = 1.2
     /// A card thrown by its button rather than by a swipe has no speed to keep
     private static let untossedDuration: TimeInterval = 0.4
     private static let minDuration: TimeInterval = 0.16
@@ -23,15 +25,18 @@ struct InboxCardFlight {
     private static let easeIn: Double = 0.33
     private static let easeOut = (x: 0.2, y: 1.0)
 
-    init(from start: CGSize, towards direction: CGSize, speed: CGFloat) {
+    /// - Parameter bounds: how far the card has to travel along each axis to be out of sight:
+    ///   the size of the area it's thrown out of plus its own
+    init(from start: CGSize, towards direction: CGSize, speed: CGFloat, clearing bounds: CGSize) {
         let speed = max(0, speed)
+        let clearance = Self.clearance(along: direction, bounds: bounds)
         // long enough for a card thrown this hard to clear the screen, but always within reach
         duration = speed > 0
-            ? min(Self.maxDuration, max(Self.minDuration, TimeInterval(Self.clearance / speed)))
+            ? min(Self.maxDuration, max(Self.minDuration, TimeInterval(clearance / speed)))
             : Self.untossedDuration
         // the travel is what gives, not the time: a flick that would outrun `clearance` in
         // `minDuration` carries on further rather than being braked to fit the distance
-        let travel = max(Self.clearance, speed * CGFloat(duration))
+        let travel = max(clearance, speed * CGFloat(duration))
 
         // measured from where the card is when it's let go, so it travels the way it was thrown.
         // From its resting place instead, a card already dragged aside would veer on release: the
@@ -50,5 +55,21 @@ struct InboxCardFlight {
             Self.easeOut.y,
             duration: duration
         )
+    }
+
+    /// The card leaves as soon as it is past one edge, so the nearer one decides
+    private static func clearance(along direction: CGSize, bounds: CGSize) -> CGFloat {
+        let direction = direction.normalized
+        var distance = CGFloat.greatestFiniteMagnitude
+        if abs(direction.width) > 0.001 {
+            distance = min(distance, bounds.width / 2 / abs(direction.width))
+        }
+        if abs(direction.height) > 0.001 {
+            distance = min(distance, bounds.height / 2 / abs(direction.height))
+        }
+        guard distance < .greatestFiniteMagnitude else {
+            return minClearance
+        }
+        return max(minClearance, distance * clearanceMargin)
     }
 }
