@@ -229,6 +229,12 @@
 		883C383C2EBC830000741119 /* CloudSyncSetting.swift in Sources */ = {isa = PBXBuildFile; fileRef = 883C383A2EBC830000741119 /* CloudSyncSetting.swift */; };
 		883CA8062B5A8FFA00028D52 /* VideoListView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 883CA8052B5A8FFA00028D52 /* VideoListView.swift */; };
 		883CA8082B5AE47E00028D52 /* MenuView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 883CA8072B5AE47E00028D52 /* MenuView.swift */; };
+		882E04C18C84869381EFD045 /* MenuTabBar.swift in Sources */ = {isa = PBXBuildFile; fileRef = 88F4B4B9884D1446C1C223C8 /* MenuTabBar.swift */; };
+		88A758D3F94D634D3739CDE9 /* MenuTabBar.swift in Sources */ = {isa = PBXBuildFile; fileRef = 88F4B4B9884D1446C1C223C8 /* MenuTabBar.swift */; };
+		8869296EBDD9D4C335E4E95B /* MenuTabBarController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 886331A0A5EF090301A1F0C9 /* MenuTabBarController.swift */; };
+		880A7545D98E3827FD055B84 /* MenuTabBarController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 886331A0A5EF090301A1F0C9 /* MenuTabBarController.swift */; };
+		880C28647E6C2BDDA11624A2 /* MenuTabBarCoordinator.swift in Sources */ = {isa = PBXBuildFile; fileRef = 88624DE699CAF49A1F248A23 /* MenuTabBarCoordinator.swift */; };
+		8836F32740F41B51F4FCBD4B /* MenuTabBarCoordinator.swift in Sources */ = {isa = PBXBuildFile; fileRef = 88624DE699CAF49A1F248A23 /* MenuTabBarCoordinator.swift */; };
 		883CA80A2B5AFB4100028D52 /* CapsuleButtonStyle.swift in Sources */ = {isa = PBXBuildFile; fileRef = 883CA8092B5AFB4100028D52 /* CapsuleButtonStyle.swift */; };
 		883CA8132B5B382900028D52 /* RefreshToolbarContent.swift in Sources */ = {isa = PBXBuildFile; fileRef = 883CA8122B5B382900028D52 /* RefreshToolbarContent.swift */; };
 		883CA8152B5B907000028D52 /* InnerHeightPreferenceChange.swift in Sources */ = {isa = PBXBuildFile; fileRef = 883CA8142B5B907000028D52 /* InnerHeightPreferenceChange.swift */; };
@@ -1266,6 +1272,9 @@
 		883C383A2EBC830000741119 /* CloudSyncSetting.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CloudSyncSetting.swift; sourceTree = "<group>"; };
 		883CA8052B5A8FFA00028D52 /* VideoListView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = VideoListView.swift; sourceTree = "<group>"; };
 		883CA8072B5AE47E00028D52 /* MenuView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MenuView.swift; sourceTree = "<group>"; };
+		88F4B4B9884D1446C1C223C8 /* MenuTabBar.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MenuTabBar.swift; sourceTree = "<group>"; };
+		886331A0A5EF090301A1F0C9 /* MenuTabBarController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MenuTabBarController.swift; sourceTree = "<group>"; };
+		88624DE699CAF49A1F248A23 /* MenuTabBarCoordinator.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MenuTabBarCoordinator.swift; sourceTree = "<group>"; };
 		883CA8092B5AFB4100028D52 /* CapsuleButtonStyle.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CapsuleButtonStyle.swift; sourceTree = "<group>"; };
 		883CA8122B5B382900028D52 /* RefreshToolbarContent.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RefreshToolbarContent.swift; sourceTree = "<group>"; };
 		883CA8142B5B907000028D52 /* InnerHeightPreferenceChange.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = InnerHeightPreferenceChange.swift; sourceTree = "<group>"; };
@@ -2145,6 +2154,9 @@
 				88A4F40B2E6F89650074126C /* AnimatableDetents.swift */,
 				881F573E2C4A5D3300559BF9 /* BrowserViewSheet.swift */,
 				883CA8072B5AE47E00028D52 /* MenuView.swift */,
+				88F4B4B9884D1446C1C223C8 /* MenuTabBar.swift */,
+				886331A0A5EF090301A1F0C9 /* MenuTabBarController.swift */,
+				88624DE699CAF49A1F248A23 /* MenuTabBarCoordinator.swift */,
 				883D5DFF2BE0B95800989313 /* TabItemView.swift */,
 				8899246A2C47FAE3001185A6 /* InboxTabItemView.swift */,
 				88F3471F2CF6003D00A2EEB0 /* SheetOverlayMinimumSize.swift */,
@@ -3419,6 +3431,9 @@
 				889AF9092C50ECD8001CEDE6 /* TabItemView.swift in Sources */,
 				88275571301E4BB90033352A /* InboxAppearance.swift in Sources */,
 				889AF90A2C50ECD8001CEDE6 /* MenuView.swift in Sources */,
+				88A758D3F94D634D3739CDE9 /* MenuTabBar.swift in Sources */,
+				880A7545D98E3827FD055B84 /* MenuTabBarController.swift in Sources */,
+				8836F32740F41B51F4FCBD4B /* MenuTabBarCoordinator.swift in Sources */,
 				88DA0EBA2CC8F7D00041841E /* VideoListViewAsync.swift in Sources */,
 				88C5F3F12CCCF50500DA802F /* UserTipsView.swift in Sources */,
 				889AF90B2C50ECD8001CEDE6 /* BrowserViewSheet.swift in Sources */,
@@ -3761,6 +3776,9 @@
 				881E51372B59CAFF006384E4 /* AppConstants.swift in Sources */,
 				88373C1C2C8B3E5000ACBB3B /* SetColorScheme.swift in Sources */,
 				883CA8082B5AE47E00028D52 /* MenuView.swift in Sources */,
+				882E04C18C84869381EFD045 /* MenuTabBar.swift in Sources */,
+				8869296EBDD9D4C335E4E95B /* MenuTabBarController.swift in Sources */,
+				880C28647E6C2BDDA11624A2 /* MenuTabBarCoordinator.swift in Sources */,
 				887E72942B91F6D400928946 /* NextVideoButton.swift in Sources */,
 				CD0FBE00000000000000001B /* YoutubeChannelSearch.swift in Sources */,
 				CD0FBE000000000000000018 /* OnboardingInboxTip.swift in Sources */,

@@ -15,41 +15,7 @@ struct MenuView: View {
     var body: some View {
         @Bindable var navManager = navManager
 
-        ScrollViewReader { proxy in
-            TabView(selection: $navManager.tab.onUpdate { newValue in
-                handleTabChanged(newValue, proxy)
-            }) {
-                Tab(value: NavigationTab.queue) {
-                    QueueTabItemView()
-                } label: {
-                    QueueTabLabel()
-                }
-
-                Tab(value: NavigationTab.inbox) {
-                    InboxTabItemView()
-                } label: {
-                    InboxTabLabel()
-                }
-
-                Tab(value: NavigationTab.library) {
-                    LibraryView()
-                } label: {
-                    MenuTabLabel(image: Image(systemName: "books.vertical"), tag: .library)
-                }
-
-                Tab(value: NavigationTab.search, role: .search) {
-                    SearchView()
-                }
-            }
-            #if os(iOS)
-            .scrollEdgeEffectHidden(for: .bottom)
-            .scrollEdgeEffectStyle(.soft, for: .top)
-            #endif
-            #if !os(macOS) && !os(visionOS)
-            // Constant on purpose: read live, so flipping it mid-typing rebuilds the tab bar's
-            // search presentation and the field jumps to the top.
-            .tabViewSearchActivation(.searchTabSelection)
-            #endif
+        tabs
             #if os(macOS)
             .popover(isPresented: showVideoDetail) {
                 Group {
@@ -83,16 +49,53 @@ struct MenuView: View {
             }
             #endif
             .environment(\.horizontalSizeClass, .compact)
+            .browserViewSheet(navManager: $navManager)
+            .premiumOfferSheet()
+            .background {
+                (Const.macOS26 || Device.isVision
+                    ? Color.clear
+                    : Color.backgroundColor)
+                    .ignoresSafeArea(.all)
+            }
+    }
+
+    @ViewBuilder
+    var tabs: some View {
+        #if os(iOS)
+        MenuTabBar()
+            .ignoresSafeArea()
+        #else
+        @Bindable var navManager = navManager
+
+        ScrollViewReader { proxy in
+            TabView(selection: $navManager.tab.onUpdate { newValue in
+                handleTabChanged(newValue, proxy)
+            }) {
+                Tab(value: NavigationTab.queue) {
+                    QueueTabItemView()
+                } label: {
+                    QueueTabLabel()
+                }
+
+                Tab(value: NavigationTab.inbox) {
+                    InboxTabItemView()
+                } label: {
+                    InboxTabLabel()
+                }
+
+                Tab(value: NavigationTab.library) {
+                    LibraryView()
+                } label: {
+                    MenuTabLabel(image: Image(systemName: "books.vertical"), tag: .library)
+                }
+
+                Tab(value: NavigationTab.search, role: .search) {
+                    SearchView()
+                }
+            }
             .environment(\.scrollViewProxy, proxy)
         }
-        .browserViewSheet(navManager: $navManager)
-        .premiumOfferSheet()
-        .background {
-            (Const.macOS26 || Device.isVision
-                ? Color.clear
-                : Color.backgroundColor)
-                .ignoresSafeArea(.all)
-        }
+        #endif
     }
 
     func videoDetailContent(_ video: Video) -> some View {
@@ -105,12 +108,13 @@ struct MenuView: View {
         .appNotificationOverlay(topPadding: 10)
     }
 
+    #if !os(iOS)
     @MainActor
     func handleTabChanged(_ newTab: NavigationTab, _ proxy: ScrollViewProxy) {
         Log.info("handleTabChanged \(newTab.rawValue)")
         if newTab == navManager.tab {
             let isTopView = navManager.handleTappedTwice()
-            #if !os(macOS)
+            #if os(visionOS)
             // Tapping the search tab again asks for a new search; the results page pops on its own.
             if newTab == .search && isTopView {
                 navManager.pendingSearchFocus = true
@@ -131,6 +135,7 @@ struct MenuView: View {
             #endif
         }
     }
+    #endif
 
     var showVideoDetail: Binding<Bool> {
         Binding<Bool>(

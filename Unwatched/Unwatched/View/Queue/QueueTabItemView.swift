@@ -48,14 +48,14 @@ struct QueueTabLabel: View {
 
     var body: some View {
         MenuTabLabel(
-            image: Image(systemName: symbol),
+            image: Image(systemName: Self.symbol(for: navManager.queueTag, in: tags)),
             tag: .queue,
             showBadge: showTabBarBadge && !queue.isEmpty
         )
     }
 
     /// Only a symbol the user picked for the tag, the default one says no more than the queue's own
-    private var symbol: String {
-        navManager.queueTag.tag(in: tags)?.symbol ?? Const.queueTagSF
+    static func symbol(for selection: QueueTagSelection, in tags: [Tag]) -> String {
+        selection.tag(in: tags)?.symbol ?? Const.queueTagSF
     }
 }

@@ -21,13 +21,7 @@ struct MenuTabLabel: View {
             #if os(macOS) || os(visionOS)
             Text(tag.description)
             #else
-            if showBadge {
-                Text(verbatim: "●")
-            } else if showTabBarLabels {
-                Text(tag.description)
-            } else {
-                Text(verbatim: "")
-            }
+            Text(verbatim: Self.title(tag.description, showBadge: showBadge, showLabels: showTabBarLabels))
             #endif
         } icon: {
             image
@@ -35,5 +29,9 @@ struct MenuTabLabel: View {
                 .fontWeight(.black)
         }
         .accessibilityLabel(tag.description)
+    }
+
+    static func title(_ title: String, showBadge: Bool = false, showLabels: Bool) -> String {
+        showBadge ? "●" : showLabels ? title : ""
     }
 }
