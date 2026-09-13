@@ -110,22 +110,17 @@ struct OnboardingHeader<Page: Hashable>: View {
             .frame(height: 38)
             .padding(.top, 28)
 
-            // all descriptions stay mounted, so the container keeps the height of the longest
-            ZStack(alignment: .top) {
-                ForEach(pages, id: \.self) { candidate in
-                    if let text = description(candidate) {
-                        Text(text)
-                            .font(.body)
-                            .foregroundStyle(.secondary)
-                            .multilineTextAlignment(.center)
-                            .padding(.horizontal, 30)
-                            .opacity(candidate == page ? 1 : 0)
-                            .accessibilityHidden(candidate != page)
-                    }
-                }
+            if let text = description(page) {
+                Text(text)
+                    .font(.body)
+                    .foregroundStyle(.secondary)
+                    .multilineTextAlignment(.center)
+                    .padding(.horizontal, 30)
+                    .padding(.top, 6)
+                    .padding(.bottom, 12)
+                    .id(page)
+                    .transition(.opacity)
             }
-            .padding(.top, 6)
-            .padding(.bottom, 12)
         }
         .animation(.easeInOut(duration: 0.2), value: page)
     }
