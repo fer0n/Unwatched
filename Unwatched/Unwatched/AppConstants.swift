@@ -22,7 +22,12 @@ extension Const {
         Const.selfPromoSegmentSetting: SponsorBlockSegmentSetting.selfPromoDefault.rawValue,
 
         // Queue
-        Const.quickSwitchAllVideos: true
+        Const.quickSwitchAllVideos: true,
+
+        // Keep Media
+        Const.autoDeleteWatchedVideos: 180,
+        Const.autoDeleteOrphanedVideos: 30,
+        Const.autoDeleteInboxVideosLimit: 100
     ]
 
     static let settingsDefaults: [String: Sendable] = [
@@ -47,7 +52,7 @@ extension Const {
         Const.originalAudio: true,
         Const.trimSilence: false,
         Const.backgroundPlayback: true,
-        Const.hideMenuOnPlay: false,
+        Const.hideMenuOnPlay: true,
         Const.returnToQueue: true,
         Const.rotateOnPlay: false,
         Const.markWatchedOnEnded: true,
@@ -87,9 +92,6 @@ extension Const {
         Const.includeWatchHistoryInBackup: true,
         Const.includeUnimportantVideosInBackup: false,
         Const.autoDeleteBackups: true,
-        Const.autoDeleteWatchedVideos: 0,
-        Const.autoDeleteOrphanedVideos: 0,
-        Const.autoDeleteInboxVideosLimit: 0,
 
         // Podcast downloads
         Const.podcastDownloadLimitHours: 0,

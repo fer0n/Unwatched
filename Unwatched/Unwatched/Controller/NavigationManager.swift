@@ -22,6 +22,7 @@ import UnwatchedShared
     var showDeferDateSelector = false
     var showPremiumOffer = false
     var showOnboarding = false
+    var showSettingsSplash = false
 
     var isMacosFullscreen = false
 
@@ -155,6 +156,16 @@ import UnwatchedShared
         showOnboarding = true
     }
 
+    func presentSettingsSplash() {
+        showMenu = false
+        showSettingsSplash = true
+    }
+
+    func dismissSettingsSplash() {
+        showSettingsSplash = false
+        showMenu = true
+    }
+
     func navigateTo(_ tab: NavigationTab) {
         if self.tab != tab {
             self.tab = tab
@@ -283,7 +294,7 @@ import UnwatchedShared
             videoDetail = nil
         }
 
-        if (Const.hideMenuOnPlay.bool ?? false) || (Device.isIphone && rotateOnPlay) {
+        if (Const.hideMenuOnPlay.bool ?? true) || (Device.isIphone && rotateOnPlay) {
             #if os(macOS)
             toggleSidebar(show: false)
             #else

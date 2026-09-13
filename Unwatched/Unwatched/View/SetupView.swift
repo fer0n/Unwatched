@@ -203,8 +203,11 @@ struct SetupView: View {
         _ key: String,
         interval: (Int) -> SignalInterval
     ) -> Int? {
-        let value = UserDefaults.standard.integer(forKey: key)
-        guard value > 0, UserDefaults.standard.shouldPerform(key, interval: interval(value)) else {
+        let value = NSUbiquitousKeyValueStore.default.object(forKey: key) as? Int
+            ?? Const.syncedSettingsDefaults[key] as? Int ?? 0
+        guard value > 0,
+              Const.settingsSplashShown.bool == true,
+              UserDefaults.standard.shouldPerform(key, interval: interval(value)) else {
             return nil
         }
         return value

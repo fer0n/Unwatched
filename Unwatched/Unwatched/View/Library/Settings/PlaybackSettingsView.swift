@@ -10,7 +10,7 @@ struct PlaybackSettingsView: View {
     @AppStorage(Const.fullscreenControlsSetting) var fullscreenControlsSetting: FullscreenControls = .autoHide
     @AppStorage(Const.continuousPlay) var continuousPlay: Bool = false
     @AppStorage(Const.markWatchedOnEnded) var markWatchedOnEnded: Bool = true
-    @AppStorage(Const.hideMenuOnPlay) var hideMenuOnPlay: Bool = false
+    @AppStorage(Const.hideMenuOnPlay) var hideMenuOnPlay: Bool = true
     @AppStorage(Const.playVideoFullscreen) var playVideoFullscreen: Bool = false
     @AppStorage(Const.returnToQueue) var returnToQueue: Bool = true
     @AppStorage(Const.rotateOnPlay) var rotateOnPlay: Bool = false

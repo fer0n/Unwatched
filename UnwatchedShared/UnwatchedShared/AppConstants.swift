@@ -473,6 +473,7 @@ public struct Const {
     public static let showTutorial = "showTutorial"
     public static let onboardingCompleted = "onboardingCompleted"
     public static let onboardingStarted = "onboardingStarted"
+    public static let settingsSplashShown = "settingsSplashShown"
     public static let lightAppIcon = "lightAppIcon"
 
     public static let reloadVideoId = "reloadVideoId"
