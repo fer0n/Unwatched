@@ -42,14 +42,11 @@ enum PremiumFeature: String, CaseIterable {
          trimSilence,
          tags,
          videoTitleFilter,
-         playBrowserVideosInApp,
          seeVideoDuration,
          generateChaptersFromTranscript,
          generateTranscript,
          chapterFilter,
-         reorderChapters,
          skipIntroOutro,
-         channelSegmentSettings,
          customTheme,
          statistics
 
@@ -65,14 +62,8 @@ enum PremiumFeature: String, CaseIterable {
             return String(localized: "videoTitleFilter")
         case .chapterFilter:
             return String(localized: "chapterFilterTitle")
-        case .reorderChapters:
-            return String(localized: "reorderChaptersTitle")
         case .skipIntroOutro:
             return String(localized: "skipIntroOutroTitle")
-        case .channelSegmentSettings:
-            return String(localized: "channelSegmentSettingsTitle")
-        case .playBrowserVideosInApp:
-            return String(localized: "playBrowserVideosInApp")
         case .seeVideoDuration:
             return String(localized: "seeVideoDurationTitle")
         case .generateChaptersFromTranscript:
@@ -98,14 +89,8 @@ enum PremiumFeature: String, CaseIterable {
             return Const.filterSF
         case .chapterFilter:
             return "chevron.forward.circle.fill"
-        case .reorderChapters:
-            return "arrow.up.arrow.down"
         case .skipIntroOutro:
-            return "forward.end.fill"
-        case .channelSegmentSettings:
-            return "dollarsign.circle.fill"
-        case .playBrowserVideosInApp:
-            return "play.fill"
+            return "forward.end.circle.fill"
         case .seeVideoDuration:
             return "clock.fill"
         case .generateChaptersFromTranscript:
