@@ -15,7 +15,7 @@ struct PrivacySettingsView: View {
         ZStack {
             MyBackgroundColor()
 
-            Form {
+            MyForm {
                 Link(destination: UrlService.privacyUrl) {
                     Text("privacyPolicy")
                         .foregroundStyle(theme.color)

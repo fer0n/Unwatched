@@ -12,59 +12,54 @@ struct SettingsWindowView: View {
 
     var body: some View {
         TabView {
-            GeneralSettingsView()
-                .settingsView()
-                .tabItem {
-                    Label("generalSettings", systemImage: Const.settingsViewSF)
-                }
+            settingsTab {
+                GeneralSettingsView()
+            }
+            .tabItem {
+                Label("generalSettings", systemImage: Const.settingsViewSF)
+            }
 
-            ScrollView {
+            settingsTab {
                 AppearanceSettingsView()
-                    .settingsView()
-                    .padding(.vertical)
             }
             .tabItem {
                 Label("appearance", systemImage: Const.appearanceSettingsSF)
             }
 
-            ScrollView {
+            settingsTab {
                 PlaybackSettingsView()
-                    .settingsView()
-                    .padding(.vertical)
             }
             .tabItem {
                 Label("playback", systemImage: Const.playbackSettingsSF)
             }
 
-            ScrollView {
+            settingsTab {
                 FilterSettingsView()
-                    .settingsView()
-                    .padding(.vertical)
             }
             .tabItem {
                 Label("filterSettings", systemImage: Const.filterSettingsSF)
             }
 
-            ScrollView {
+            settingsTab {
                 UserDataSettingsView()
-                    .settingsView()
-                    .padding(.vertical)
             }
             .tabItem {
                 Label("userData", systemImage: Const.userDataSettingsSF)
             }
 
-            DebugView()
-                .settingsView()
-                .tabItem {
-                    Label("debug", systemImage: Const.debugSettingsSF)
-                }
+            settingsTab {
+                DebugView()
+            }
+            .tabItem {
+                Label("debug", systemImage: Const.debugSettingsSF)
+            }
 
-            PrivacySettingsView()
-                .settingsView()
-                .tabItem {
-                    Label("privacyPolicy", systemImage: "checkmark.shield.fill")
-                }
+            settingsTab {
+                PrivacySettingsView()
+            }
+            .tabItem {
+                Label("privacyPolicy", systemImage: "checkmark.shield.fill")
+            }
         }
         .environment(navTitleManager)
         .frame(width: 700, height: 500)
@@ -73,6 +68,14 @@ struct SettingsWindowView: View {
         // workaround: deprecated, but tint doesn't work on macOS
         .accentColor(theme.color)
         #endif
+    }
+
+    private func settingsTab<Content: View>(@ViewBuilder content: () -> Content) -> some View {
+        ScrollView {
+            content()
+                .settingsView()
+                .padding(.vertical)
+        }
     }
 }
 
