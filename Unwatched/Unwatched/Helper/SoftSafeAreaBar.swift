@@ -14,8 +14,24 @@ extension View {
     ) -> some View {
         self
             #if !os(visionOS)
-            .scrollEdgeEffectStyle(.soft, for: edge == .top ? .top : .bottom)
+            .scrollEdgeEffectStyle(.soft, for: Edge.Set(edge))
             #endif
             .safeAreaBar(edge: edge, alignment: alignment, content: content)
+    }
+
+    /// An empty `softSafeAreaBar`: the edge effect only renders in a claimed inset.
+    func softSafeAreaBarSpacer(edge: VerticalEdge, padding: CGFloat = 0) -> some View {
+        softSafeAreaBar(edge: edge) {
+            // Color.clear gets optimized away
+            Color.black.opacity(0.0000001)
+                .frame(width: 1, height: 1)
+                .padding(Edge.Set(edge), padding)
+        }
+    }
+}
+
+private extension Edge.Set {
+    init(_ edge: VerticalEdge) {
+        self = edge == .top ? .top : .bottom
     }
 }

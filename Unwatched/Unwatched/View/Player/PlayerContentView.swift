@@ -53,7 +53,8 @@ struct PlayerContentView: View {
                     SheetPositionReader.shared.playerContentViewHeight = size.height
                 }
 
-            bottomShadow
+            PlayerBottomShadow(height: shadowHeight)
+                .ignoresSafeArea(edges: .bottom)
                 .opacity(navManager.showMenu ? 1 : 0)
 
             if !hidePlayerPageIndicator {
@@ -69,19 +70,6 @@ struct PlayerContentView: View {
             }
         }
         // TODO: enable safe area? Last checked on iOS 26 beta 8 (flickering issue)
-    }
-
-    /// Grown downwards into the bottom safe area, which the pages draw into but the layout around
-    /// them stops short of: left at the container's edge the gradient ended in a hard cut with the
-    /// description still scrolling past underneath it. The inset is zero wherever there is none to
-    /// take, so this is the plain shadow everywhere else.
-    var bottomShadow: some View {
-        GeometryReader { proxy in
-            let inset = proxy.safeAreaInsets.bottom
-
-            PlayerBottomShadow(height: shadowHeight + inset)
-                .padding(.bottom, -inset)
-        }
     }
 
     @ViewBuilder
@@ -142,6 +130,10 @@ struct PlayerContentView: View {
         }
         .scrollTargetBehavior(.paging)
         .scrollIndicators(.hidden)
+        // the pages carry their own edge effects
+        #if os(iOS)
+        .scrollEdgeEffectHidden(for: .all)
+        #endif
         .scrollPosition(id: $scrolledPage)
         .onAppear { scrolledPage = navManager.playerTab }
         .onChange(of: scrolledPage) {
@@ -170,6 +162,12 @@ struct PlayerContentView: View {
                     .layoutPriority(1)
             }
             .frame(maxHeight: .infinity, alignment: .top)
+            // the art's bounce would move the description page sharing this row
+            .transaction { transaction in
+                if navManager.playerTab != .controls {
+                    transaction.disablesAnimations = true
+                }
+            }
         } else {
             playerControls
         }
@@ -207,18 +205,34 @@ struct PlayerContentView: View {
         }
     }
 
-    @ViewBuilder
     func chapterDescription(_ video: Video) -> some View {
         ChapterDescriptionView(
             video: video,
-            bottomSpacer: fadeOutHeight + Const.minSheetDetent,
+            bottomSpacer: descriptionBottomSpacer,
             showThumbnail: false,
             showActions: false
         )
-        .overlay {
-            PlayerTopShadow()
-        }
+        #if !os(visionOS)
+        .softSafeAreaBarSpacer(edge: .top)
+        #endif
+        #if os(iOS)
+        .softSafeAreaBarSpacer(edge: .bottom, padding: aboveSheetPadding)
+        #endif
     }
+
+    private var descriptionBottomSpacer: CGFloat {
+        #if os(iOS)
+        0
+        #else
+        fadeOutHeight + Const.minSheetDetent
+        #endif
+    }
+
+    #if os(iOS)
+    private var aboveSheetPadding: CGFloat {
+        navManager.showMenu ? Const.minSheetDetent - 10 : 10
+    }
+    #endif
 
     var shadowHeight: CGFloat {
         hidePlayerPageIndicator

@@ -10,13 +10,7 @@ import UnwatchedShared
 
 struct MenuView: View {
     @Environment(\.colorScheme) var colorScheme
-    @Environment(\.modelContext) var modelContext
     @Environment(NavigationManager.self) var navManager
-
-    @AppStorage(Const.showTabBarLabels) var showTabBarLabels = true
-
-    var showTabBar = true
-    var isSidebar = false
 
     var body: some View {
         @Bindable var navManager = navManager

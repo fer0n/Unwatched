@@ -20,7 +20,7 @@ struct MacOSSplitView: View {
         @Bindable var navManager = navManager
 
         NavigationSplitView(columnVisibility: isFakePip ? .constant(.detailOnly) : $navManager.columnVisibility) {
-            MenuView(isSidebar: true)
+            MenuView()
                 .toolbar(navManager.isMacosFullscreen || isFakePip ? .hidden : .visible)
                 .navigationSplitViewColumnWidth(min: 320, ideal: 350, max: 450)
                 .concentricMacWorkaround(corners: true)
@@ -171,7 +171,7 @@ struct IOSSPlitView: View {
             .environment(\.layoutDirection, .leftToRight)
 
             if bigScreen && !hideControlsFullscreen {
-                MenuView(isSidebar: true)
+                MenuView()
                     .frame(maxWidth: menuWidth,
                            maxHeight: isLandscape
                             ? nil
