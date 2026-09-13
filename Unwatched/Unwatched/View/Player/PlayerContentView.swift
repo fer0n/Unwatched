@@ -199,6 +199,11 @@ struct PlayerContentView: View {
                 }
 
                 chapterDescription(video)
+                    // below the mini player the page's top isn't on the safe area, so the soft edge effect has no
+                    // region to draw in and the text would cut off hard under the bar
+                    .overlay {
+                        PlayerTopShadow()
+                    }
             }
         } else {
             chapterDescription(video)
