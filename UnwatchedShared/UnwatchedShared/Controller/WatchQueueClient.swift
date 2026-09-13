@@ -50,7 +50,12 @@ public final class WatchQueueClient: NSObject, WCSessionDelegate {
     @ObservationIgnored private var speedTask: Task<Void, Never>?
     @ObservationIgnored private var didActivate = false
 
+    @ObservationIgnored private var commandSequence = 0
+    @ObservationIgnored private var pendingCommands = 0
+    @ObservationIgnored private var lastCommandDate = Date.distantPast
+
     private static let speedDebounce = Duration.milliseconds(400)
+    private static let commandGrace: TimeInterval = 1
     private static let activationAttempts = 50
     private static let staleAfter: TimeInterval = 10 * 60
 
@@ -92,6 +97,7 @@ public final class WatchQueueClient: NSObject, WCSessionDelegate {
     private func apply(context: [String: Any]) {
         guard let state = WatchRemoteState.decoded(from: context) else { return }
         Task { @MainActor in
+            guard shouldAdopt(nil) else { return }
             adopt(state)
         }
     }
@@ -117,6 +123,7 @@ public final class WatchQueueClient: NSObject, WCSessionDelegate {
     @MainActor
     public func setRemoteSpeed(_ value: Double) {
         pendingSpeed = value
+        applyOptimistically(.setSpeed(value))
         speedTask?.cancel()
         speedTask = Task { @MainActor in
             try? await Task.sleep(for: Self.speedDebounce)
@@ -145,8 +152,21 @@ public final class WatchQueueClient: NSObject, WCSessionDelegate {
     @MainActor
     public func send(_ command: WatchRemoteCommand) async {
         guard WCSession.isSupported(), let message = try? command.message() else { return }
+        applyOptimistically(command)
+        commandSequence += 1
+        let sequence = commandSequence
+        pendingCommands += 1
+        defer { pendingCommands -= 1 }
         await waitForActivation()
-        await sendRemote(message)
+        await sendRemote(message, sequence: sequence)
+    }
+
+    /// Starts an item on the phone, drawn as playing here before the phone answers.
+    @MainActor
+    public func play(_ video: Video) async {
+        guard WCSession.isSupported() else { return }
+        remote = WatchRemoteState.starting(video, from: remote)
+        await send(.play(video.youtubeId))
     }
 
     /// Queued rather than sent: the phone is usually out of range while the watch plays on its own.
@@ -162,12 +182,18 @@ public final class WatchQueueClient: NSObject, WCSessionDelegate {
 
     /// Every remote message is answered with the phone's state, so acting and drawing are one trip.
     @MainActor
-    private func sendRemote(_ message: [String: Any]) async {
+    private func sendRemote(_ message: [String: Any], sequence: Int? = nil) async {
+        if sequence != nil {
+            lastCommandDate = .now
+        }
         await withCheckedContinuation { continuation in
             WCSession.default.sendMessage(message) { reply in
                 let state = WatchRemoteState.decoded(from: reply)
                 Task { @MainActor in
-                    if let state {
+                    if let state, self.shouldAdopt(sequence) {
+                        if sequence != nil {
+                            self.lastCommandDate = .now
+                        }
                         self.adopt(state)
                     }
                     continuation.resume()
@@ -177,6 +203,21 @@ public final class WatchQueueClient: NSObject, WCSessionDelegate {
                 continuation.resume()
             }
         }
+    }
+
+    @MainActor
+    private func shouldAdopt(_ sequence: Int?) -> Bool {
+        guard let sequence else {
+            return pendingCommands == 0
+                && Date.now.timeIntervalSince(lastCommandDate) > Self.commandGrace
+        }
+        return sequence == commandSequence
+    }
+
+    @MainActor
+    private func applyOptimistically(_ command: WatchRemoteCommand) {
+        guard let next = remote?.applying(command) else { return }
+        remote = next
     }
 
     // MARK: - Queue snapshot

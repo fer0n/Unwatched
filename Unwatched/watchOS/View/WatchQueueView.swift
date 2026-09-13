@@ -162,7 +162,7 @@ private struct QueueList: View {
             if let video = entry.video, navigator.controlsPhone || video.persistentModelID != player.video?.persistentModelID {
                 Button {
                     if navigator.controlsPhone {
-                        Task { await client.send(.play(video.youtubeId)) }
+                        Task { await client.play(video) }
                     } else {
                         player.play(video)
                     }
