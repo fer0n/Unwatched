@@ -23,7 +23,11 @@ struct TranscriptView: View {
             VStack(spacing: 0) {
                 searchBar
                 driftBanner
-                if viewModel.transcript?.isEmpty != false {
+                if showsGenerateButton {
+                    generateTranscriptButton
+                        .padding(.top, 24)
+                        .padding(.bottom, 8)
+                } else if viewModel.transcript?.isEmpty != false {
                     Text(transcriptStatus)
                         .italic()
                         .foregroundColor(.secondary)
@@ -144,6 +148,34 @@ struct TranscriptView: View {
             .animation(.default, value: autoScroll)
             .frame(maxWidth: .infinity, alignment: .center)
         }
+    }
+
+    /// Only once loading has confirmed there's nothing: an episode that has a transcript shouldn't
+    /// flash the button while it's read. Stays while generating, since the progress is shown on the
+    /// settings menu rather than here.
+    var showsGenerateButton: Bool {
+        video.isPodcast
+            && TranscriptService.canGenerateTranscript
+            && !viewModel.isLoading
+            && viewModel.transcript?.isEmpty == true
+    }
+
+    var generateTranscriptButton: some View {
+        Button {
+            guard guardPremium() else { return }
+            Signal.log("Transcript.Generate", parameters: ["source": "emptyTranscript"])
+            viewModel.generateTranscript(for: video)
+        } label: {
+            Label("generateTranscript", systemImage: "text.quote")
+        }
+        .buttonBorderShape(.capsule)
+        .foregroundStyle(Color.automaticBlack)
+        #if !os(visionOS)
+        .tint(Color.insetBackgroundColor)
+        #endif
+        .buttonStyle(.borderedProminent)
+        .disabled(viewModel.isGenerating)
+        .frame(maxWidth: .infinity, alignment: .center)
     }
 
     var transcriptStatus: LocalizedStringKey {
