@@ -195,6 +195,11 @@ private struct SplashSettingsPage: View {
                     SplashPickerRow(title: "autoDeleteInboxLimit", selection: $autoDeleteInboxVideosLimit,
                                     options: AutoDeleteVideosView.inboxLimitOptions,
                                     label: AutoDeleteVideosView.inboxLimitLabel)
+                    Text("keepVideosSyncFooter")
+                        .font(.footnote)
+                        .foregroundStyle(.secondary)
+                        .frame(maxWidth: .infinity, alignment: .leading)
+                        .padding(.top, 2)
                 }
             }
         }

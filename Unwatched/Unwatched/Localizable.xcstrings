@@ -10232,6 +10232,40 @@
         }
       }
     },
+    "keepVideosSyncFooter" : {
+      "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Wird automatisch mit deinen anderen Geräten synchronisiert."
+          }
+        },
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Syncs automatically with your other devices."
+          }
+        },
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Se sincroniza automáticamente con tus otros dispositivos."
+          }
+        },
+        "fr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Se synchronise automatiquement avec vos autres appareils."
+          }
+        },
+        "pl" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Synchronizuje się automatycznie z innymi urządzeniami."
+          }
+        }
+      }
+    },
     "keywords" : {
       "localizations" : {
         "de" : {

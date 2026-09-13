@@ -15,7 +15,7 @@ struct AutoDeleteVideosView: View {
     static let inboxLimitOptions = [0, 20, 50, 100, 500]
 
     var body: some View {
-        MySection("keepVideos") {
+        MySection("keepVideos", footer: "keepVideosSyncFooter") {
             Picker("autoDeleteWatchedVideos", selection: $autoDeleteWatchedVideos) {
                 ForEach(Self.dayOptions, id: \.self) { days in
                     Text(Self.dayLabel(days)).tag(days)
