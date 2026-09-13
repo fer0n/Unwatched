@@ -247,6 +247,9 @@ public struct Const {
     /// during uninterrupted (usually background) playback can lose.
     public static let elapsedTimePersistSeconds: Int = 120
 
+    public static let elapsedTimeSaveDebounceSeconds: Double = 3
+    public static let elapsedTimeSaveMaxDelaySeconds: Double = 15
+
     /// Safety flush for accumulated watch time when playback never pauses
     public static let statsFlushIntervalSeconds: Double = 600
 

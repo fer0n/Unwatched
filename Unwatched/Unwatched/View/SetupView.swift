@@ -143,6 +143,7 @@ struct SetupView: View {
         // Playback continues in the background, so this may be the last chance to write before the
         // app is suspended — and, if it never comes back, killed.
         PlayerManager.shared.updateElapsedTime(immediate: true)
+        VideoService.commitPendingVideoUpdates()
         StatsService.shared.flush()
         #if os(iOS)
         NotificationManager.handleNotifications()

@@ -132,7 +132,12 @@ extension PlayerManager {
         if immediate {
             VideoService.forceUpdateVideoNow(modelId, elapsedSeconds: time)
         } else {
-            _ = VideoService.forceUpdateVideo(modelId, elapsedSeconds: time)
+            _ = VideoService.forceUpdateVideo(
+                modelId,
+                elapsedSeconds: time,
+                delay: Const.elapsedTimeSaveDebounceSeconds * 1000,
+                maxDelay: Const.elapsedTimeSaveMaxDelaySeconds * 1000
+            )
         }
     }
 

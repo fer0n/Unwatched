@@ -206,6 +206,7 @@ extension VideoService {
         elapsedSeconds: Double? = nil,
         isNew: Bool? = nil,
         delay: Double = 200,
+        maxDelay: Double? = nil,
         ) -> Task<Void, Error> {
         Log.info("forceUpdateVideo")
         return Task { @MainActor in
@@ -219,8 +220,13 @@ extension VideoService {
                     return
                 }
             }
-            PendingVideoUpdates.commit(videoModelId, generation: generation)
+            PendingVideoUpdates.commit(videoModelId, generation: generation, maxDelay: maxDelay)
         }
+    }
+
+    @MainActor
+    static func commitPendingVideoUpdates() {
+        PendingVideoUpdates.commitAll()
     }
 
     /// Writes through without waiting out the debounce window, superseding anything pending for
@@ -687,9 +693,11 @@ private enum PendingVideoUpdates {
         var elapsedSeconds: Double?
         var isNew: Bool?
         var generation = 0
+        let stagedAt = Date.now
     }
 
     private static var pending = [PersistentIdentifier: Update]()
+    private static var lastGeneration = 0
 
     /// Folds new values into the pending update, returning the generation that owns it.
     static func stage(
@@ -702,16 +710,19 @@ private enum PendingVideoUpdates {
         if let duration { update.duration = duration }
         if let elapsedSeconds { update.elapsedSeconds = elapsedSeconds }
         if let isNew { update.isNew = isNew }
-        update.generation += 1
+        lastGeneration += 1
+        update.generation = lastGeneration
         pending[videoModelId] = update
         return update.generation
     }
 
     /// - Parameter generation: the caller's claim on the pending update; a newer `stage` will have
     ///   superseded it, in which case that caller writes instead. `nil` takes over unconditionally.
-    static func commit(_ videoModelId: PersistentIdentifier, generation: Int?) {
-        if let generation, pending[videoModelId]?.generation != generation {
-            return
+    static func commit(_ videoModelId: PersistentIdentifier, generation: Int?, maxDelay: Double? = nil) {
+        if let generation, let update = pending[videoModelId], update.generation != generation {
+            guard let maxDelay, Date.now.timeIntervalSince(update.stagedAt) * 1000 >= maxDelay else {
+                return
+            }
         }
         guard let update = pending.removeValue(forKey: videoModelId) else {
             return
@@ -734,5 +745,11 @@ private enum PendingVideoUpdates {
             }
         }
         try? context.save()
+    }
+
+    static func commitAll() {
+        for videoModelId in Array(pending.keys) {
+            commit(videoModelId, generation: nil)
+        }
     }
 }
