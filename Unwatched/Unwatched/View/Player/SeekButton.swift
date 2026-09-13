@@ -48,18 +48,28 @@ struct CoreSeekButton<Content>: View where Content: View {
 }
 
 struct SeekButton: View {
+    private static let glyphRatio: CGFloat = 0.47
+
     let forward: Bool
     var isSmall: Bool = false
+
+    @ScaledMetric private var smallSize: CGFloat = PlayerToggleModifier.baseSmallSize
+    @ScaledMetric private var normalSize: CGFloat = PlayerToggleModifier.baseNormalSize
 
     var body: some View {
         CoreSeekButton(forward: forward) { image in
             image
+                .font(.system(size: glyphSize))
                 .fontWeight(.medium)
                 // the glyph isn't optically centered within the symbol's bounding box
                 .offset(y: -0.7)
                 .playerToggleModifier(isOn: false, isSmall: isSmall)
         }
         .geometryGroup()
+    }
+
+    private var glyphSize: CGFloat {
+        (isSmall ? smallSize : normalSize) * Self.glyphRatio
     }
 }
 
