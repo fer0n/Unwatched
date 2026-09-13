@@ -7,12 +7,23 @@
 import SwiftUI
 import UnwatchedShared
 
+/// UIKit tab bar with a detached, prominent play/pause button. Only used on iOS 27+ iPhone —
+/// that's the only place `prominentTabIdentifier` exists and looks right (see `usesProminentPlayButton`).
+/// Everywhere else `MenuView` falls back to a plain SwiftUI `TabView`, which doesn't share this
+/// bar's iOS 26 tab-bar-label layout bug (a selected tab's label can render truncated until the
+/// selection moves) and doesn't need a stand-in for `UISearchTab`'s always-detached rendering.
 struct MenuTabBarController: UIViewControllerRepresentable {
     let navManager: NavigationManager
     let player: PlayerManager
     let selection: NavigationTab
     let labels: MenuTabLabels
     let onPlayPauseTapped: () -> Void
+
+    /// Prominent tabs are only supported on iOS 27+, and only look right on iPhone's compact bar.
+    static var usesProminentPlayButton: Bool {
+        guard #available(iOS 27.0, *) else { return false }
+        return Device.isIphone
+    }
 
     func makeCoordinator() -> Coordinator {
         Coordinator(navManager: navManager, player: player, onPlayPauseTapped: onPlayPauseTapped)
@@ -26,6 +37,7 @@ struct MenuTabBarController: UIViewControllerRepresentable {
         controller.delegate = coordinator
         controller.traitOverrides.horizontalSizeClass = .compact
         controller.view.backgroundColor = .clear
+
         controller.tabs = [
             coordinator.tab(.queue) { QueueTabItemView() },
             coordinator.tab(.inbox) { InboxTabItemView() },
@@ -33,6 +45,7 @@ struct MenuTabBarController: UIViewControllerRepresentable {
             UITab(title: "", image: nil, identifier: Coordinator.playPauseIdentifier) { _ in UIViewController() },
             UISearchTab { _ in coordinator.host(.search) { SearchView() } }
         ]
+
         if #available(iOS 27.0, *) {
             controller.prominentTabIdentifier = Coordinator.playPauseIdentifier
         }

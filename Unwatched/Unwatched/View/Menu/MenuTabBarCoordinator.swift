@@ -111,6 +111,7 @@ extension MenuTabBarController {
         }
 
         private func uiTab(for tab: NavigationTab, in controller: UITabBarController) -> UITab? {
+            // UISearchTab doesn't expose a settable identifier, so look it up by type
             tab == .search
                 ? controller.tabs.first { $0 is UISearchTab }
                 : controller.tab(forIdentifier: tab.rawValue)

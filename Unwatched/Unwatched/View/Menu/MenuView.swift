@@ -62,9 +62,21 @@ struct MenuView: View {
     @ViewBuilder
     var tabs: some View {
         #if os(iOS)
-        MenuTabBar()
-            .ignoresSafeArea()
+        if MenuTabBarController.usesProminentPlayButton {
+            MenuTabBar()
+                .ignoresSafeArea()
+        } else {
+            // no role: .search here — a search-role tab always renders detached from the
+            // others, which only makes sense once the play button takes that treatment instead
+            tabView(searchRole: nil)
+        }
         #else
+        tabView(searchRole: .search)
+        #endif
+    }
+
+    @ViewBuilder
+    func tabView(searchRole: TabRole?) -> some View {
         @Bindable var navManager = navManager
 
         ScrollViewReader { proxy in
@@ -89,13 +101,20 @@ struct MenuView: View {
                     MenuTabLabel(image: Image(systemName: "books.vertical"), tag: .library)
                 }
 
-                Tab(value: NavigationTab.search, role: .search) {
-                    SearchView()
+                if let searchRole {
+                    Tab(value: NavigationTab.search, role: searchRole) {
+                        SearchView()
+                    }
+                } else {
+                    Tab(value: NavigationTab.search) {
+                        SearchView()
+                    } label: {
+                        MenuTabLabel(image: Image(systemName: "magnifyingglass"), tag: .search)
+                    }
                 }
             }
             .environment(\.scrollViewProxy, proxy)
         }
-        #endif
     }
 
     func videoDetailContent(_ video: Video) -> some View {
@@ -108,13 +127,12 @@ struct MenuView: View {
         .appNotificationOverlay(topPadding: 10)
     }
 
-    #if !os(iOS)
     @MainActor
     func handleTabChanged(_ newTab: NavigationTab, _ proxy: ScrollViewProxy) {
         Log.info("handleTabChanged \(newTab.rawValue)")
         if newTab == navManager.tab {
             let isTopView = navManager.handleTappedTwice()
-            #if os(visionOS)
+            #if os(visionOS) || os(iOS)
             // Tapping the search tab again asks for a new search; the results page pops on its own.
             if newTab == .search && isTopView {
                 navManager.pendingSearchFocus = true
@@ -128,14 +146,13 @@ struct MenuView: View {
                 }
             }
         } else if newTab == .search {
-            #if os(macOS)
+            #if os(macOS) || os(iOS)
             if navManager.searchTabShouldAutoFocus {
                 navManager.pendingSearchFocus = true
             }
             #endif
         }
     }
-    #endif
 
     var showVideoDetail: Binding<Bool> {
         Binding<Bool>(
