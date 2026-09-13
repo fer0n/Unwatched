@@ -30,9 +30,7 @@ public struct ChapterService {
                 return []
             }
 
-            let chaptersWithBeginning = addBeginningChapterIfNeeded(to: chapters)
-            let chaptersWithDuration = updateDurationAndEndTime(in: chaptersWithBeginning, videoDuration: videoDuration)
-            return chaptersWithDuration
+            return completingTimeline(chapters, videoDuration: videoDuration)
         } catch {
             Log.error("Error creating regex: \(error)")
         }
@@ -99,9 +97,15 @@ public struct ChapterService {
         let beginning = SendableChapter(
             title: nil,
             startTime: 0,
-            category: .generated
+            category: .generated,
+            videoId: earliest.videoId
         )
         return [beginning] + chapters
+    }
+
+    /// Chapters covering the whole video: from the beginning, each one ending where the next starts.
+    public static func completingTimeline(_ chapters: [SendableChapter], videoDuration: Double?) -> [SendableChapter] {
+        updateDurationAndEndTime(in: addBeginningChapterIfNeeded(to: chapters), videoDuration: videoDuration)
     }
 
     public static func updateDurationAndEndTime(in chapters: [SendableChapter], videoDuration: Double?) -> [SendableChapter] {

@@ -2397,6 +2397,20 @@ final class PodcastChapterCacheTests: XCTestCase {
         XCTAssertEqual(video.sortedChapterData.map(\.startTime), [0, 120, 900])
     }
 
+    func testChaptersStartingAfterAnIntroGetABeginningChapter() {
+        let context = DataProvider.newContext()
+        let video = makeEpisode(in: context)
+        let afterIntro = Self.fetched.dropFirst().map { $0 }
+
+        ChapterService.cachePodcastChapters(afterIntro, youtubeId: youtubeId)
+
+        let shown = video.sortedChapterData
+        XCTAssertEqual(shown.map(\.startTime), [0, 120, 900])
+        XCTAssertEqual(shown.first?.category, .generated)
+        XCTAssertEqual(shown.first?.endTime, 120)
+        XCTAssertEqual(shown.first?.videoId, youtubeId)
+    }
+
     func testAnEpisodeWithoutCachedChaptersHasNone() {
         let context = DataProvider.newContext()
         let video = makeEpisode(in: context)

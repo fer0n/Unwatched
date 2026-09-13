@@ -107,7 +107,7 @@ extension PlayerManager {
         // current chapter
         guard let current = extractCurrentChapter(at: time) else {
             Log.info("extractCurrentChapter failed")
-            cancelTimeMonitoring()
+            handleTimeOutsideChapters(time, in: chapters)
             return
         }
 
@@ -144,28 +144,7 @@ extension PlayerManager {
             // the last chapter on the timeline still has to hand over when the order carries on past it
             return nextActive != nil ? current.endTime : nil
         }()
-        if let nextEndTime = boundary {
-            currentEndTime = nextEndTime
-
-            // use the max playback speed to avoid refreshing for every speed change
-            let nextEndTimeForPreciseJump = nextEndTime - (Const.elapsedTimeMonitorSeconds * Const.speedMax)
-
-            if time >= nextEndTimeForPreciseJump {
-                // we're getting close to the next chapter, now might be the last chance for the precise jump
-                let timeUntilChange = (nextEndTime - time) / playbackSpeed
-                if isPlaying {
-                    schedulePreciseChapterChange(delay: timeUntilChange, targetTime: nextEndTime)
-                    earlyEndTime = nil
-                }
-            } else {
-                earlyEndTime = nextEndTimeForPreciseJump
-                changeChapterTask?.cancel()
-            }
-        } else {
-            // no more chapters
-            Log.info("no more chapters")
-            cancelTimeMonitoring()
-        }
+        armChapterBoundary(boundary, at: time)
     }
 
     /// What the custom order says to play once the chapter that just ended is over — see
