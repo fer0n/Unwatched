@@ -101,13 +101,10 @@ struct PremiumOfferView: View {
                     .padding(.vertical, 15)
                     .background(theme.darkColor.mix(with: .black, by: 0.45))
                     .clipShape(RoundedRectangle(cornerRadius: 30, style: .continuous))
-
-                    Spacer()
-                        .frame(height: 150)
                 }
                 .padding(.horizontal)
             }
-            .overlay {
+            .softSafeAreaBar(edge: .bottom) {
                 Button {
                     Signal.signalBool("Premium.Subscribe", value: !premium)
                     premium.toggle()
@@ -124,10 +121,11 @@ struct PremiumOfferView: View {
                 .buttonStyle(.plain)
                 .background(.white, in: Capsule())
                 #endif
-                .frame(maxWidth: .infinity, maxHeight: .infinity, alignment: .bottom)
                 .padding(25)
-                .edgesIgnoringSafeArea(.bottom)
             }
+            #if !os(visionOS)
+            .scrollEdgeEffectStyle(.soft, for: .top)
+            #endif
             .sensoryFeedback(Const.sensoryFeedback, trigger: premium)
             .tint(theme.darkContrastColor)
             .foregroundStyle(theme.contrastColor)
