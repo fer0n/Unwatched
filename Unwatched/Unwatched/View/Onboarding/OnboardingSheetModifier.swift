@@ -63,7 +63,7 @@ extension View {
 
     fileprivate func onboardingSheetFrame() -> some View {
         #if os(macOS) || os(visionOS)
-        self.frame(minWidth: 450, minHeight: 650)
+        self.frame(height: 650).frame(minWidth: 450)
         #else
         self
         #endif
