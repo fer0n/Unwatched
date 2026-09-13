@@ -83,7 +83,7 @@ private struct SplashFeaturesPage: View {
     ]
 
     private let smallerFeatures = [
-        Feature(systemName: "line.3.text.square.stack.fill",
+        Feature(systemName: "rectangle.portrait.on.rectangle.portrait.angled.fill",
                 title: "settingsSplashInboxCardsTitle", subtitle: "settingsSplashInboxCardsDescription"),
         Feature(systemName: "line.3.horizontal.decrease.circle.fill",
                 title: "settingsSplashFiltersTitle", subtitle: "settingsSplashFiltersDescription", premium: true),
