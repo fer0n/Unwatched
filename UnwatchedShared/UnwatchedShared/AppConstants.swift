@@ -405,6 +405,11 @@ public struct Const {
     public static let cleanupPodcastEpisodes = "cleanupPodcastEpisodes"
     public static let purgeLegacyUrlCache = "purgeLegacyUrlCache"
 
+    /// Videos donated as media suggestions, which the system has no way to list
+    public static let donatedMediaIds = "donatedMediaIds"
+    /// Donations made before `donatedMediaIds` existed have been deleted
+    public static let untrackedMediaDonationsDeleted = "untrackedMediaDonationsDeleted"
+
     /// Persisted history tokens, keyed by model type name
     public static let historyTokens = "historyTokens"
     public static let cleanupHistoryTransactions = "cleanupHistoryTransactions"
