@@ -74,7 +74,6 @@ public struct Const {
     /// Video thumbnail list item corner radius
     public static let videoCornerRadius: CGFloat = 15
     
-    ///
     public static let videoPlayerCornerRadius: CGFloat = 9
     
     public static let consideredWideAspectRatio: Double = 18/9

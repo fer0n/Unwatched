@@ -41,7 +41,3 @@ struct VideoDetailThumbnail: View {
         .handleVideoListItemTap(video)
     }
 }
-
-// #Preview {
-//    VideoDetailThumbnail(video: Video.getDummy())
-// }

@@ -55,14 +55,11 @@ extension YtBrowserWebView {
                 return
             }
 
-            // Apply settings and inject scripts
             applySettingsToWebView(webView)
 
-            // Extract subscription information if available
             Log.info("about to extract info")
             let info = getInfoFromUrl(url)
             if info.userName != nil || info.channelId != nil || info.playlistId != nil {
-                // is username page, reload the page
                 extractSubscriptionInfo(webView, info)
             }
         }
@@ -162,7 +159,6 @@ extension YtBrowserWebView {
         }
 
         func injectStyling(_ webView: WKWebView) {
-            // hide the "open app" button
             let script = """
                 (function() {
                     var style = document.createElement('style');
@@ -275,7 +271,6 @@ extension YtBrowserWebView {
                 return
             }
 
-            // && !hasNewPlaylistId reload necessary?
             if !hasNewUserName && !hasNewChannelId {
                 return
             }
@@ -391,7 +386,6 @@ extension YtBrowserWebView {
 
         // MARK: - Common Context Menu Logic
 
-        /// Handle subscription action
         @MainActor
         func handleSubscribeAction(info: SubscriptionInfo) {
             self.parent.appNotificationVM.show(.loading)
@@ -411,7 +405,6 @@ extension YtBrowserWebView {
             Signal.log("Browser.ContextMenu.Subscribe")
         }
 
-        /// Handle queue next action
         @MainActor
         func handleQueueAction(url: URL, at index: Int) {
             self.parent.appNotificationVM.show(.loading)
@@ -431,7 +424,6 @@ extension YtBrowserWebView {
             Signal.log("Browser.ContextMenu.QueueNext")
         }
 
-        /// Handle add to inbox action
         @MainActor
         func handleAddToInboxAction(url: URL) {
             self.parent.appNotificationVM.show(.loading)
@@ -459,7 +451,6 @@ extension YtBrowserWebView {
             contextMenuConfigurationForElement elementInfo: WKContextMenuElementInfo,
             completionHandler: @escaping @MainActor (UIContextMenuConfiguration?) -> Void
         ) {
-            // Only customize URL context menus
             guard let url = elementInfo.linkURL else {
                 completionHandler(nil)
                 return
@@ -470,12 +461,10 @@ extension YtBrowserWebView {
             let actions = ContextMenuAction.getActionsForUrl(url, info: info)
 
             let configuration = UIContextMenuConfiguration(identifier: identifier, previewProvider: nil) { _ in
-                // Group actions by type
                 var basicActions: [UIAction] = []
                 var channelActions: [UIAction] = []
                 var videoActions: [UIAction] = []
 
-                // Create menu actions based on available actions
                 for action in actions {
                     let uiAction = UIAction(title: action.title, image: UIImage(systemName: action.imageName)) { _ in
                         switch action.type {
@@ -496,7 +485,6 @@ extension YtBrowserWebView {
                         }
                     }
 
-                    // Add to appropriate group using the action.group property
                     switch action.group {
                     case .basic:
                         basicActions.append(uiAction)
@@ -507,7 +495,6 @@ extension YtBrowserWebView {
                     }
                 }
 
-                // Create submenu sections with appropriate separators
                 var menuElements: [UIMenuElement] = []
 
                 if !basicActions.isEmpty {
@@ -532,7 +519,6 @@ extension YtBrowserWebView {
         // MARK: - Context Menu Handling (macOS)
         #if os(macOS)
         func setupMacOSContextMenu(_ webView: WKWebView) {
-            // Inject JavaScript to detect right-clicks on links
             let script = """
                 document.addEventListener('contextmenu', function(e) {
                     const link = e.target.closest('a');
@@ -557,17 +543,12 @@ extension YtBrowserWebView {
 
             var lastGroup: ContextMenuAction.ActionGroup?
 
-            // Create menu items based on available actions
             for action in actions {
-                // Add separators when the group changes
                 if let lastGroup = lastGroup, lastGroup != action.group {
                     menu.addItem(NSMenuItem.separator())
                 }
-
-                // Update the last group
                 lastGroup = action.group
 
-                // Create and add menu item
                 let menuItem = NSMenuItem(
                     title: action.title,
                     action: nil,
@@ -606,7 +587,6 @@ extension YtBrowserWebView {
             menu.popUp(positioning: nil, at: point, in: view)
         }
 
-        // Context Menu Actions
         @objc private func openInExternalBrowser(_ sender: NSMenuItem) {
             guard let url = sender.representedObject as? URL else { return }
             NSWorkspace.shared.open(url)
@@ -668,9 +648,3 @@ struct VideoClickData: Codable {
     let url: String
     let videos: [VideoState]
 }
-
-// #Preview {
-//    BrowserView(url: .contant(BrowserUrl.youtubeStartPage))
-//        .modelContainer(DataController.previewContainer)
-//        .environment(RefreshManager())
-// }

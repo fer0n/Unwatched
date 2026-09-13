@@ -159,9 +159,5 @@ struct PremiumOfferView: View {
 
 #Preview {
     PremiumOfferView()
-        //        .frame(
-        //            width: 450,
-        //            height: 650
-        //        )
         .previewEnvironments()
 }

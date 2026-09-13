@@ -361,14 +361,11 @@ extension PlayerWebView {
         };
 
 
-        // Prevent specific keyboard shortcuts from being captured
         function shouldInterceptKeys(event) {
-            // Allow all input in text fields
             if (event.target.tagName === 'INPUT' || event.target.tagName === 'TEXTAREA') {
                 return false;
             }
 
-            // Check if the current key combination matches any inside the intercept list
             const currentModifiers = [];
             if (event.metaKey) currentModifiers.push('Meta');
             if (event.shiftKey) currentModifiers.push('Shift');
@@ -488,11 +485,9 @@ extension PlayerWebView {
             fetchVideoData();
         }
         function fetchVideoData() {
-            // thumbnail url
             const img = document.querySelector('.ytmVideoCoverThumbnail')?.style?.backgroundImage;
             const thumbnailUrl = img ? img.slice(5, -2) : '';
 
-            // channelId
             const channelLink = document.querySelector('.ytmVideoInfoChannelTitle');
             let channelId = null;
             if (channelLink) {
@@ -502,10 +497,8 @@ extension PlayerWebView {
                 }
             }
 
-            // channel title
             const channelTitle = document.querySelector(".ytmVideoInfoChannelTitle .ytmVideoInfoLink")?.innerText;
 
-            // title
             let title = document.title?.replace(/- YouTube$/, '').trim();
 
             const data = { thumbnailUrl, channelId, channelTitle, title };
@@ -797,12 +790,10 @@ extension PlayerWebView {
                     event.stopPropagation();
                     event.preventDefault();
                     if (pendingClick) {
-                        // This is the second click - it's a double click
                         clearTimeout(clickTimeout);
                         pendingClick = null;
                         sendMessage("fullscreen");
                     } else {
-                        // This is the first click - wait to see if there's a second one
                         pendingClick = event;
                         clickTimeout = setTimeout(function() {
                             const newEvent = new event.constructor('click', event);
@@ -1139,12 +1130,10 @@ extension PlayerWebView {
             }
             const event = touchStartEvent;
 
-            // Manually trigger the event again with the custom property
             const newEvent = new event.constructor('touchstart', event);
             newEvent.isReTriggering = true;
             event.target.dispatchEvent(newEvent);
 
-            // trigger end as well
             setTimeout(function() {
                 const endEvent = new event.constructor('touchend', event);
                 endEvent.isReTriggering = true;
@@ -1161,7 +1150,6 @@ extension PlayerWebView {
                     sendMessage("youtubeError", errorContent?.innerText);
                 }
             }
-            // check for errors
             checkError()
             setTimeout(checkError, 1000);
             setTimeout(checkError, 3000);

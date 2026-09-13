@@ -380,5 +380,4 @@ struct PlayerScrubber: View {
     return PlayerScrubber()
         .frame(width: 300, height: 150)
         .environment(player)
-    //     .testEnvironments()
 }

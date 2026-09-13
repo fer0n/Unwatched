@@ -107,8 +107,3 @@ struct ToolbarSpacerWorkaround: ToolbarContent {
         }
     }
 }
-
-// #Preview {
-//    RefreshToolbarButton()
-//         .environment(RefreshManager())
-// }

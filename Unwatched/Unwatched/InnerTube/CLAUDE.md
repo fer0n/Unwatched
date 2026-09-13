@@ -98,6 +98,7 @@ in `ChannelAvatarService.swift`, not here.
 | `HLSAudioLanguageParser.swift` | Stripped `public` | Unwatched is not a Swift package |
 | `YouTubeWebViewHLSExtractor.swift` | Added `func cancel()` | Abort in-flight extraction when iOS client returns HLS first |
 | `YouTubeWebViewHLSExtractor.swift` | Removed `static var isPreWarming` / `preWarm(videoId:)` | Uses `VideoPreloadCache` (not mirrored); Unwatched uses `WKHLSManager.preExtract` instead |
+| `YouTubeWebViewHLSExtractor.swift` | Removed unused JS helper `extractFnFromJSArray` from `interceptorJS` | Never called; `solveNFromPlayerJS` solves the n-challenge via the bundled EJS solver (`jsc`) instead |
 | `YTHLSProxyLoader.swift` | Logger subsystem → `appSubsystem` | Unwatched's OSLog subsystem constant |
 | `YTHLSProxyLoader.swift`, `YouTubeWebViewHLSExtractor.swift` | Added `import UnwatchedShared` | `appSubsystem` moved there with `Core/` |
 

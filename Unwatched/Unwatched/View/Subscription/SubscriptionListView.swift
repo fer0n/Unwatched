@@ -24,7 +24,3 @@ struct SubscriptionListView: View {
         }
     }
 }
-
-// #Preview {
-//    SubscriptionListView()
-// }

@@ -384,44 +384,6 @@ final class YouTubeWebViewHLSExtractor: NSObject {
         }
 
         // ── N-solver extraction from player JS ────────────────────────────────────────
-        // Extracts the function at `arrIdx` from the array `arrName` in `jsText`.
-        // Uses bracket-balanced parsing so commas inside function bodies don't split incorrectly.
-        function extractFnFromJSArray(jsText, arrName, arrIdx) {
-            var safe = arrName.replace(/[$]/g, '\\$');
-            var decl = new RegExp('var\\s+' + safe + '\\s*=\\s*\\[');
-            var di   = jsText.search(decl);
-            if (di < 0) return null;
-
-            var ob = jsText.indexOf('[', di);
-            if (ob < 0) return null;
-
-            var depth = 1, i = ob + 1, eStart = ob + 1, eIdx = 0;
-            while (i < jsText.length && depth > 0) {
-                var ch = jsText[i];
-                if (ch === '[' || ch === '{' || ch === '(') {
-                    depth++;
-                } else if (ch === ']' || ch === '}' || ch === ')') {
-                    depth--;
-                    if (depth === 0) {
-                        if (eIdx === arrIdx) return jsText.slice(eStart, i).trim();
-                        break;
-                    }
-                } else if ((ch === '"' || ch === "'" || ch === '`') && depth === 1) {
-                    var q = ch; i++;
-                    while (i < jsText.length && jsText[i] !== q) {
-                        if (jsText[i] === '\\') i++;
-                        i++;
-                    }
-                } else if (ch === ',' && depth === 1) {
-                    if (eIdx === arrIdx) return jsText.slice(eStart, i).trim();
-                    eIdx++;
-                    eStart = i + 1;
-                }
-                i++;
-            }
-            return null;
-        }
-
         // Downloads the main player JS and uses the bundled EJS AST-based solver (jsc)
         // to solve `unsolvedN`. Returns the solved string, or null on failure.
         // `jsc` is defined by the solver WKUserScripts injected before this script.
