@@ -89,6 +89,7 @@ struct ChapterDescriptionView: View {
                     .frame(maxWidth: .infinity)
             }
             .task(id: video.youtubeId) {
+                transcriptVM.syncGeneration(for: video.youtubeId)
                 // loaded eagerly rather than when the transcript tab is opened: the settings menu offers
                 // generating and restoring on what's there, so it has to know before the tab is touched
                 guard video.isPodcast, TranscriptService.canGenerateTranscript else { return }

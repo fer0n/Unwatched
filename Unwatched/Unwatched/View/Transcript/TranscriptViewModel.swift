@@ -209,6 +209,23 @@ extension TranscriptView {
             }
         }
 
+        @MainActor
+        func syncGeneration(for youtubeId: String) {
+            let coordinator = TranscriptService.GenerationCoordinator.shared
+            if coordinator.youtubeId == youtubeId {
+                if coordinator.isGenerating && !isGenerating {
+                    isFadingOutProgress = false
+                }
+                isGenerating = coordinator.isGenerating
+                sweepProgress = coordinator.progress
+                generationError = coordinator.error
+            } else if isGenerating {
+                isGenerating = false
+                sweepProgress = 0
+                generationError = nil
+            }
+        }
+
         /// Mirrors the shared coordinator's state for `video` for as long as this task runs, so this
         /// screen reflects a generation regardless of who started it, and loads the result once it lands.
         @MainActor
@@ -218,14 +235,7 @@ extension TranscriptView {
             var handledFinishedVersion = coordinator.finishedYoutubeId == youtubeId ? coordinator.finishedVersion : -1
 
             while true {
-                if coordinator.youtubeId == youtubeId {
-                    if coordinator.isGenerating && !isGenerating {
-                        isFadingOutProgress = false
-                    }
-                    isGenerating = coordinator.isGenerating
-                    sweepProgress = coordinator.progress
-                    generationError = coordinator.error
-                }
+                syncGeneration(for: youtubeId)
 
                 if coordinator.finishedYoutubeId == youtubeId && coordinator.finishedVersion != handledFinishedVersion {
                     handledFinishedVersion = coordinator.finishedVersion

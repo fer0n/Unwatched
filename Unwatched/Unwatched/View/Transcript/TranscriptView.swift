@@ -150,9 +150,6 @@ struct TranscriptView: View {
         }
     }
 
-    /// Only once loading has confirmed there's nothing: an episode that has a transcript shouldn't
-    /// flash the button while it's read. Stays while generating, since the progress is shown on the
-    /// settings menu rather than here.
     var showsGenerateButton: Bool {
         video.isPodcast
             && TranscriptService.canGenerateTranscript
