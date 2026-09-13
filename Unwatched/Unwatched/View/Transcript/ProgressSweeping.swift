@@ -20,4 +20,12 @@ extension ProgressSweeping {
         isFadingOutProgress = true
         try? await Task.sleep(for: .seconds(0.15))
     }
+
+    /// Fades away a sweep that ended without finishing, so a failed run doesn't leave the button
+    /// filled to wherever it got to.
+    func cancelProgress() {
+        guard sweepProgress > 0 else { return }
+        isFadingOutProgress = true
+        sweepProgress = 0
+    }
 }

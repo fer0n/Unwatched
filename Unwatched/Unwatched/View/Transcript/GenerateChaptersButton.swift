@@ -55,6 +55,9 @@ import FoundationModels
             } catch {
                 errorMessage = error.localizedDescription
             }
+            if errorMessage != nil {
+                cancelProgress()
+            }
         }
     }
 }

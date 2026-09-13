@@ -167,6 +167,7 @@ extension TranscriptView {
                     }
                 } catch {
                     generationError = error.localizedDescription
+                    cancelProgress()
                 }
             }
         }
