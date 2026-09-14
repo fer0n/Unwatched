@@ -79,7 +79,7 @@ struct WatchPlayerView: View {
             // Kept mounted even in Always On: removing it would shift the artwork and title.
             bottom(display)
         }
-        .padding(.horizontal, 4)
+        .padding(.horizontal, Self.contentInset)
         // Into the bottom inset: the band is the paged `TabView`'s own inset for its page dots,
         // which a child cannot `ignoresSafeArea`. Short of the full inset to keep the dots clear.
         .padding(.bottom, -10)
@@ -104,22 +104,54 @@ struct WatchPlayerView: View {
     @ViewBuilder
     private func title(_ display: WatchPlayerDisplay) -> some View {
         if let titleText = display.title {
-            HStack(spacing: 0) {
+            HStack(spacing: display.hasChapters ? Self.chapterGap : 0) {
                 if display.hasChapters {
                     chapterColumn(display, Const.previousChapterSF, isNext: false)
                 }
 
-                Text(display.chapterTitle ?? titleText)
-                    .font(.caption.weight(.semibold))
+                titles(display.chapterTitle ?? titleText, channel: display.channelTitle)
                     .fontWidth(.compressed)
-                    .lineLimit(2)
                     .multilineTextAlignment(.center)
                     .frame(maxWidth: .infinity)
+                    // The chevrons' tap areas reach over it.
+                    .allowsHitTesting(false)
 
                 if display.hasChapters {
                     chapterColumn(display, Const.nextChapterSF, isNext: true)
                 }
             }
+            // Out to the screen edge, so the width the chevrons give up goes to the title.
+            .padding(.horizontal, display.hasChapters ? -Self.contentInset : 0)
+        }
+    }
+
+    /// The channel under a title that fits on one line; a title that has to wrap gets both lines.
+    @ViewBuilder
+    private func titles(_ title: String, channel: String?) -> some View {
+        let text = Text(title)
+            .font(.caption.weight(.semibold))
+
+        if let channel, !channel.isEmpty {
+            ViewThatFits(in: .horizontal) {
+                VStack(spacing: 0) {
+                    text
+                        .lineLimit(1)
+                        .fixedSize(horizontal: true, vertical: false)
+                    Text(channel)
+                        .font(.caption2)
+                        .foregroundStyle(.secondary)
+                        .lineLimit(1)
+                        // No ideal width, so only the title decides whether this fits; a long
+                        // channel truncates instead.
+                        .frame(minWidth: 0, idealWidth: 0, maxWidth: .infinity)
+                }
+
+                text
+                    .lineLimit(2)
+            }
+        } else {
+            text
+                .lineLimit(2)
         }
     }
 
@@ -145,11 +177,16 @@ struct WatchPlayerView: View {
             perform(isNext ? .nextChapter : .previousChapter)
         } label: {
             Image(systemName: symbol)
-                .font(.caption)
+                .font(.body)
                 .fontWeight(.bold)
                 .frame(width: Self.chapterColumn, height: Self.chapterSize)
-                // Reaches past the chevron through the shape, so it costs the title no width.
-                .contentShape(.rect.inset(by: -Self.chapterTapOverhang))
+                // Reaches past the chevron through the shape, so it costs the title no width. Shifted
+                // inward by the overhang: past the screen edge there is nothing to touch.
+                .contentShape(
+                    .rect
+                        .inset(by: -Self.chapterTapOverhang)
+                        .offset(x: isNext ? -Self.chapterTapOverhang : Self.chapterTapOverhang)
+                )
         }
         .buttonStyle(.plain)
         .opacity(isNext && !display.hasNextChapter ? 0.5 : 1)
@@ -172,6 +209,7 @@ struct WatchPlayerView: View {
                     .fontWidth(.condensed)
                     .foregroundStyle(.secondary)
                     .lineLimit(1)
+                    .allowsHitTesting(false)
                 }
             }
         )
@@ -211,9 +249,12 @@ struct WatchPlayerView: View {
     }
 
     private static let gap: CGFloat = 5
+    private static let contentInset: CGFloat = 4
     private static let chapterSize: CGFloat = 22
-    private static let chapterColumn: CGFloat = 30
-    private static let chapterTapOverhang: CGFloat = 10
+    private static let chapterColumn: CGFloat = 22
+    private static let chapterGap: CGFloat = 4
+    /// Reaches 44 pt in from the screen edge.
+    private static let chapterTapOverhang: CGFloat = (44 - chapterColumn) / 2
 }
 
 /// Reads the queue's first entry for the player to offer before anything is playing. A view of its

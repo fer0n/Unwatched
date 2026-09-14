@@ -12,6 +12,7 @@ struct WatchPlayerDisplay {
     var isLoading = false
     var title: String?
     var chapterTitle: String?
+    var channelTitle: String?
     var artworkUrl: URL?
     var isSquare = false
     /// The two numbers that move on their own, as something the views drawing them can carry forward.
@@ -29,6 +30,7 @@ struct WatchPlayerDisplay {
         isPlaying = state.isPlaying
         title = state.title
         chapterTitle = state.chapterTitle
+        channelTitle = state.channelTitle
         artworkUrl = state.thumbnailUrl
         isSquare = state.isAudioOnly
         timeline = .phone(state)
@@ -46,6 +48,7 @@ struct WatchPlayerDisplay {
         errorMessage = player.errorMessage
         title = video?.title
         chapterTitle = player.currentChapterTitle
+        channelTitle = video?.subscription?.title
         artworkUrl = video?.displayThumbnailUrl
         isSquare = video?.isAudioOnly == true
         timeline = .fixed(
