@@ -49,6 +49,13 @@ struct VideoPlayer: View {
                 .layoutPriority(2)
             } else if !usePodcastLayout {
                 playerView(enableHideControls: enableHideControls)
+                    .hideCursorOnInactive(
+                        after: 2,
+                        isEnabled: hideCursorOverVideoEnabled,
+                        onChange: { isVisible in
+                            autoHideVM.setKeepVisible(isVisible, "hover")
+                        }
+                    )
                     .zIndex(1)
                     .layoutPriority(2)
                     #if os(visionOS)
@@ -232,6 +239,12 @@ struct VideoPlayer: View {
                 Device.isMac && navManager.isSidebarHidden
                     || !Device.isIphone && hideControlsFullscreen
             )
+            && !autoHideVM.showDescription
+    }
+
+    var hideCursorOverVideoEnabled: Bool {
+        player.isPlaying
+            && Device.isMac && !navManager.isSidebarHidden
             && !autoHideVM.showDescription
     }
 
