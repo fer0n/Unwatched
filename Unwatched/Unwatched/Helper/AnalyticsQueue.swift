@@ -29,6 +29,13 @@ actor AnalyticsQueue {
         }
     }
 
+    /// Drops everything queued and sends `event` on its own, once.
+    func replaceAll(with event: AnalyticsEvent) async {
+        save([event])
+        _ = await send([event])
+        save([])
+    }
+
     func flush() async {
         var events = load()
         while !events.isEmpty {

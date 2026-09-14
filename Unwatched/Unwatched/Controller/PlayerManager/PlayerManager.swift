@@ -188,6 +188,7 @@ import UnwatchedShared
             return
         }
         resetVideoIndependentValues()
+        signalMediaType()
         #if os(iOS)
         // after the reset, whose `revertNativeFallback` would undo it
         switchToNativeForBackgroundPlayback(videoSource)

@@ -165,7 +165,9 @@ extension TranscriptView {
                             transcript: payload.entries
                         )
                     }
+                    Signal.generationResult("align", "success")
                 } catch {
+                    Signal.generationResult("align", "failed")
                     generationError = error.localizedDescription
                     cancelProgress()
                 }
@@ -205,6 +207,7 @@ extension TranscriptView {
                     driftDetected = false
                     transcriptYoutubeId = video.youtubeId
                 } catch {
+                    Signal.error("transcriptRestoreFailed")
                     generationError = error.localizedDescription
                 }
             }

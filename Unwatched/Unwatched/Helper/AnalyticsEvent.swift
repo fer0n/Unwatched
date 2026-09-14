@@ -14,6 +14,8 @@ struct AnalyticsEvent: Codable {
     /// a missing key would otherwise fail the whole queue file and drop every event in it.
     /// The Worker treats a missing channel as `release`. See `Signal.buildChannel`.
     let channel: String?
+    /// Optional for the same reason as `channel`.
+    let appVersion: String?
 
     /// `includeUserId` controls whether the per-install `userId` rides along. Almost all
     /// events set it — it powers active-user counts (DAU/WAU/MAU) and per-feature reach
@@ -32,6 +34,7 @@ struct AnalyticsEvent: Codable {
         self.clientTimestamp = minuteFloor * 1000
         self.userId = includeUserId ? AnalyticsEvent.anonymousUserId : nil
         self.channel = Signal.buildChannel
+        self.appVersion = Signal.appVersion
     }
 
     private static let userIdKey = "unwatched.analyticsUserId"

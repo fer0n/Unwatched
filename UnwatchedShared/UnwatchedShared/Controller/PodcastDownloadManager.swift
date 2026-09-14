@@ -25,6 +25,8 @@ public final class PodcastDownloadManager {
     /// Called once an episode's file is on disk.
     @ObservationIgnored public var onEpisodeDownloaded: (@MainActor (String) -> Void)?
 
+    @ObservationIgnored public var onEpisodeDownloadFailed: (@MainActor () -> Void)?
+
     @ObservationIgnored private var backgroundEventsCompletion: (@Sendable () -> Void)?
     @ObservationIgnored private var scheduledSync: Task<Void, Never>?
     @ObservationIgnored private var isSyncing = false
@@ -141,6 +143,9 @@ public final class PodcastDownloadManager {
     /// of vanishing at whatever step it last reported.
     fileprivate func didFinish(_ youtubeId: String, succeeded: Bool) {
         downloadingIds.remove(youtubeId)
+        if !succeeded {
+            onEpisodeDownloadFailed?()
+        }
         guard succeeded, downloadProgress[youtubeId] != nil else {
             downloadProgress[youtubeId] = nil
             return

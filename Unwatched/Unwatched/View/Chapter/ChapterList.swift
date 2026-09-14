@@ -69,7 +69,7 @@ struct ChapterList: View {
                         if !chapter.isActive {
                             toggleChapter(chapter)
                         } else {
-                            Signal.log("Chapter.Jump")
+                            Signal.interaction("Chapter.Jump")
                             setChapter(chapter)
                         }
                     }
@@ -173,7 +173,7 @@ struct ChapterList: View {
             reordered.insert(moved, at: to)
             ChapterService.setChapterOrder(reordered, of: video)
         }
-        Signal.log("Chapter.Reorder")
+        Signal.interaction("Chapter.Reorder")
         return true
     }
 

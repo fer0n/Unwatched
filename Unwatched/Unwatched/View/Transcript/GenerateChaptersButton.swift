@@ -48,12 +48,16 @@ import FoundationModels
             do {
                 try await task.value
                 await finishProgress()
+                Signal.generationResult("aiChapters", "success")
             } catch LanguageModelSession.GenerationError.guardrailViolation(let context) {
                 errorMessage = context.debugDescription
+                Signal.generationResult("aiChapters", "guardrail")
             } catch TranscriptError.noUrl {
                 errorMessage = String(localized: "startToLoadTranscript")
+                Signal.generationResult("aiChapters", "noTranscript")
             } catch {
                 errorMessage = error.localizedDescription
+                Signal.generationResult("aiChapters", "failed")
             }
             if errorMessage != nil {
                 cancelProgress()

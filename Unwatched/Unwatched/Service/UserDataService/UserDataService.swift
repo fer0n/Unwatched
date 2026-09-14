@@ -181,6 +181,7 @@ struct UserDataService {
             }
         } catch {
             Log.error("error decoding: \(error)")
+            Signal.error("backupRestoreFailed")
         }
     }
 

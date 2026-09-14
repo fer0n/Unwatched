@@ -22,6 +22,6 @@ struct ReloadPlayerButton: View {
         player.embeddingDisabled = false
         player.hotReloadPlayer()
         player.handleChapterRefresh(forceRefresh: true)
-        Signal.log("Player.MoreMenu", parameters: ["action": "reload"])
+        Signal.interaction("Player.MoreMenu", "reload")
     }
 }

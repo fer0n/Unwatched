@@ -101,7 +101,7 @@ struct PlayerMoreMenuContent: View {
                     ForEach(player.availableAudioLanguages, id: \.code) { lang in
                         Button {
                             player.setAudioLanguage(lang.code)
-                            Signal.log("Player.MoreMenu", parameters: ["action": "audioLanguage"])
+                            Signal.interaction("Player.MoreMenu", "audioLanguage")
                         } label: {
                             if lang.code == player.selectedAudioLanguage {
                                 Label(lang.name, systemImage: "checkmark")
@@ -120,7 +120,7 @@ struct PlayerMoreMenuContent: View {
                     ForEach(player.availableVideoQualities, id: \.height) { quality in
                         Button {
                             player.setVideoQuality(quality.height)
-                            Signal.log("Player.MoreMenu", parameters: ["action": "videoQuality"])
+                            Signal.interaction("Player.MoreMenu", "videoQuality")
                         } label: {
                             if quality.height == player.selectedVideoQuality {
                                 Label(quality.label, systemImage: "checkmark")
@@ -190,7 +190,7 @@ struct PlayerMoreMenuContent: View {
                 Button {
                     navManager.showMenu = true
                     openUrl(url)
-                    Signal.log("Player.MoreMenu", parameters: ["action": "openInBrowser"])
+                    Signal.interaction("Player.MoreMenu", "openInBrowser")
                 } label: {
                     Text("openInAppBrowser")
                     Image(systemName: Const.viewOnYouTubeSF)
@@ -230,7 +230,7 @@ struct PlayerMoreMenuContent: View {
         Button {
             navManager.showMenu = false
             navManager.showDeferDateSelector = true
-            Signal.log("Player.MoreMenu", parameters: ["action": "defer"])
+            Signal.interaction("Player.MoreMenu", "defer")
         } label: {
             Text("deferVideo")
             Image(systemName: "clock.fill")
@@ -272,7 +272,7 @@ struct PlayerMoreMenuContent: View {
 
             VideoService.toggleBookmark(video)
             hapticToggle.toggle()
-            Signal.log("Player.MoreMenu", parameters: ["action": "bookmark"])
+            Signal.interaction("Player.MoreMenu", "bookmark")
         }
     }
 

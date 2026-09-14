@@ -200,7 +200,7 @@ struct ChapterDescriptionView: View {
         }
         .onChange(of: descriptionSelection) {
             if descriptionSelection == .transcript {
-                Signal.log("Transcript.View")
+                Signal.interaction("Transcript.View")
             }
         }
     }

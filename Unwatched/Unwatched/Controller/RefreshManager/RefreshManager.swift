@@ -267,6 +267,7 @@ extension RefreshManager {
             NotificationManager.notifyRun(.end)
         } catch {
             Log.error("Error during background refresh: \(error)")
+            Signal.error("backgroundRefreshFailed")
             NotificationManager.notifyRun(.error, error.localizedDescription)
         }
 

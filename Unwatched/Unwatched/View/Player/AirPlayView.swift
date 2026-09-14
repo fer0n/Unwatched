@@ -30,7 +30,7 @@ enum AirPlayPicker {
             return
         }
         button.sendActions(for: .touchUpInside)
-        Signal.log("Player.AirPlay")
+        Signal.interaction("Player.AirPlay")
     }
 }
 

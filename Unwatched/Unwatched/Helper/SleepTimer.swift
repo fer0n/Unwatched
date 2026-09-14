@@ -94,7 +94,7 @@ struct SleepTimer: View {
             viewModel.restoreVolume()
             handleTimerPause(player.isPlaying)
             hapticToggle.toggle()
-            Signal.log("Player.MoreMenu", parameters: ["action": "sleepTimer"])
+            Signal.interaction("Player.MoreMenu", "sleepTimer")
         } label: {
             Label("\(minutes) min", systemImage: "plus")
                 .frame(maxWidth: .infinity)

@@ -23,6 +23,8 @@ import UnwatchedShared
         case failed
     }
 
+    private(set) var didSearch = false
+
     /// Channels already subscribed to, so re-entering the first page doesn't subscribe twice
     private var subscribedChannelIds = Set<String>()
     /// Query `searchResults` belong to, so returning to the page doesn't re-run a finished search
@@ -102,6 +104,7 @@ import UnwatchedShared
         }
         isSearching = true
         searchState = .idle
+        didSearch = true
         do {
             let results = try await YoutubeChannelSearch.search(query)
             guard !Task.isCancelled else { return }
@@ -110,6 +113,7 @@ import UnwatchedShared
         } catch {
             guard !Task.isCancelled else { return }
             Log.error("channelSearch failed: \(error)")
+            Signal.error("onboardingChannelSearchFailed")
             searchResults = []
             searchState = .failed
         }
@@ -155,6 +159,7 @@ import UnwatchedShared
                 _ = try await SubscriptionService.addSubscriptions(subscriptionInfo: info)
             } catch {
                 Log.error("onboarding subscribe failed: \(error)")
+                Signal.error("onboardingSubscribeFailed")
                 return
             }
             // refreshAll returns without doing anything while another refresh is in flight, and

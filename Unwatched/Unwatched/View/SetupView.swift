@@ -222,6 +222,9 @@ struct SetupView: View {
         PodcastDownloadManager.shared.onEpisodeDownloaded = { youtubeId in
             ChapterService.loadPodcastChapters(youtubeId: youtubeId)
         }
+        PodcastDownloadManager.shared.onEpisodeDownloadFailed = {
+            Signal.error("podcastDownloadFailed")
+        }
         VideoService.fetchVideoDurationsQueueInbox()
         sendSettings()
     }
@@ -233,6 +236,7 @@ struct SetupView: View {
             var params = UserDataService.getNonDefaultSettings(prefixValue: "Unwatched.Setting.")
             params["device"] = Signal.deviceCategory
             params["os"] = Signal.osVersion
+            params["version"] = Signal.appVersion
             // Free-text settings are never sent verbatim (see getNonDefaultSettings).
             params["hasCustomApiKey"] = "Unwatched.Setting.\(Self.isSyncedSettingSet(Const.customYoutubeApiKey))"
             params["hasSkipText"] = "Unwatched.Setting.\(Self.isSyncedSettingSet(Const.skipChapterText))"
@@ -249,11 +253,15 @@ struct SetupView: View {
     }
 
     static func signalSubscriptionCount() {
-        let task = SubscriptionService.getActiveSubscriptionCount()
+        let subscriptions = SubscriptionService.getActiveSubscriptionCount()
+        let podcasts = SubscriptionService.getActivePodcastSubscriptionCount()
         Task {
-            if let count = await task.value {
-                Signal.log("SubscriptionCount", parameters: ["SubscriptionCount.Value": "\(count)"])
+            guard let count = await subscriptions.value else { return }
+            var params = ["SubscriptionCount.Value": Signal.bucket(count)]
+            if let podcastCount = await podcasts.value {
+                params["PodcastCount.Value"] = Signal.bucket(podcastCount)
             }
+            Signal.log("SubscriptionCount", parameters: params)
         }
     }
 }

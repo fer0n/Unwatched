@@ -67,7 +67,7 @@ struct PlayerTypeButton<Content: View>: View {
             previousPlayerType = playerType
         }
         playerType = type
-        Signal.log("Player.MoreMenu", parameters: ["action": "playerType"])
+        Signal.interaction("Player.MoreMenu", "playerType")
     }
 
     func toggle() {
@@ -83,7 +83,7 @@ struct PlayerTypeButton<Content: View>: View {
         }
         playerType = next
         hapticToggle.toggle()
-        Signal.log("Player.MoreMenu", parameters: ["action": "playerTypeToggle"])
+        Signal.interaction("Player.MoreMenu", "playerTypeToggle")
     }
 }
 
@@ -99,7 +99,7 @@ struct PlayerTypeMenuContent: View {
                     previousPlayerType = playerType
                 }
                 playerType = type
-                Signal.log("Player.MoreMenu", parameters: ["action": "playerType"])
+                Signal.interaction("Player.MoreMenu", "playerType")
             } label: {
                 if type == playerType {
                     Label(type.menuDescription, systemImage: "checkmark")

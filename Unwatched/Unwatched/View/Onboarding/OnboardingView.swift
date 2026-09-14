@@ -69,6 +69,9 @@ struct OnboardingView: View {
             }
         }
         .onAppear {
+            if !onboardingStarted {
+                Signal.onboardingStep("started")
+            }
             // from here on the flow returns on every launch until `finish()` runs
             onboardingStarted = true
         }
@@ -84,12 +87,19 @@ struct OnboardingView: View {
     func handleContinue() {
         switch page {
         case .channels:
+            Signal.onboardingStep("channels", parameters: [
+                "selected": Signal.bucket(viewModel.selected.count),
+                "usedSearch": Signal.onOff(viewModel.didSearch)
+            ])
             // not awaited: the videos load while the shorts page is on screen
             viewModel.subscribeAndLoadVideos(refresher)
             withAnimation {
                 page = .shorts
             }
         case .shorts:
+            Signal.onboardingStep("shorts", parameters: [
+                "hideShorts": Signal.onOff(viewModel.hideShorts)
+            ])
             finish()
         }
     }
@@ -102,6 +112,7 @@ struct OnboardingView: View {
             await viewModel.waitForVideos()
             await viewModel.cleanupShorts()
 
+            Signal.onboardingStep("finished")
             onboardingCompleted = true
             settingsSplashShown = true
             OnboardingInboxTip.onboardingFinished = true

@@ -93,7 +93,7 @@ struct CoreNextButton<Content>: View where Content: View {
     func handlePress() {
         player.markVideoWatched(showMenu: false, source: .userInteraction)
         hapticToggle.toggle()
-        Signal.log("Player.NextVideo", parameters: [
+        Signal.interaction("Player.NextVideo", parameters: [
             "source": endOverlay ? "ended" : "controls",
             "fullscreen": player.fullscreenContext
         ])

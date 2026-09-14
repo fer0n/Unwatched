@@ -36,7 +36,13 @@ struct PrivacySettingsView: View {
                     Toggle(isOn: $analytics) {
                         Text("anonymousAnalytics")
                     }
-                    .signalToggle("Analytics", isOn: analytics)
+                    .onChange(of: analytics) {
+                        if analytics {
+                            Signal.signalBool("Analytics", value: true)
+                        } else {
+                            Signal.handleOptOut()
+                        }
+                    }
                 }
                 #endif
             }

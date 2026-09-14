@@ -278,8 +278,10 @@ struct TranscriptService {
             Task { [weak self] in
                 do {
                     _ = try await task.value
+                    Signal.generationResult("transcript", "success")
                 } catch is CancellationError {
                 } catch {
+                    Signal.generationResult("transcript", "failed")
                     if self?.youtubeId == id {
                         self?.error = error.localizedDescription
                     }

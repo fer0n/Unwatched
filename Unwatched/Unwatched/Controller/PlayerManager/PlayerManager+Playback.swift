@@ -343,13 +343,19 @@ extension PlayerManager {
     }
 
     @MainActor
+    func signalMediaType() {
+        guard videoSource != .restore, let video else { return }
+        Signal.interaction("Player.Media", video.isPodcast ? "podcast" : "video")
+    }
+
+    @MainActor
     func setTemporaryPlaybackSpeed() {
         if temporarySlowDownThreshold {
             temporaryPlaybackSpeed = 1
         } else {
             temporaryPlaybackSpeed = tempSpeedUpValue
         }
-        Signal.log("Player.setTemporarySpeed")
+        Signal.interaction("Player.setTemporarySpeed")
     }
 
     @MainActor
@@ -431,7 +437,7 @@ extension PlayerManager {
         guard pipEnabled || hasPipSurface else { return }
         setPip(!pipEnabled)
         if pipEnabled {
-            Signal.log("Player.PIP")
+            Signal.interaction("Player.PIP")
         }
     }
 
@@ -457,7 +463,7 @@ extension PlayerManager {
         if temporaryPlaybackSpeed != nil {
             return
         }
-        Signal.log("Player.setPlaybackSpeed", parameters: ["fullscreen": fullscreenContext])
+        Signal.interaction("Player.setPlaybackSpeed", parameters: ["fullscreen": fullscreenContext])
         if video?.subscription?.customSpeedSetting != nil {
             video?.subscription?.customSpeedSetting = value
         } else {

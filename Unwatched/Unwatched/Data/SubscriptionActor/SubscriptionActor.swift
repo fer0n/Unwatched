@@ -34,6 +34,15 @@ actor SubscriptionActor: SharedContextActor {
         return try? modelContext.fetchCount(fetch)
     }
 
+    func getActivePodcastSubscriptionCount() -> Int? {
+        let fetch = FetchDescriptor<Subscription>(
+            predicate: #Predicate {
+                $0.isArchived == false && $0.isPodcast == true
+            }
+        )
+        return try? modelContext.fetchCount(fetch)
+    }
+
     func unarchive(_ sub: Subscription) {
         sub.isArchived = false
         sub.subscribedDate = .now

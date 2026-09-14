@@ -66,6 +66,7 @@ import UnwatchedShared
             }
         } catch {
             Log.error("podcast subscription error: \(error)")
+            Signal.error("podcastSubscribeFailed")
             errorMessage = error.localizedDescription
             isSubscribedSuccess = wasSubscribed
         }

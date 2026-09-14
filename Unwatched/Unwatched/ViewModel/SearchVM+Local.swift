@@ -73,7 +73,7 @@ extension SearchVM {
         SearchSource.persistEnabled(enabledSources)
         Signal.log(
             "Search.SourceToggled",
-            parameters: ["source": source.rawValue, "value": isEnabled ? "On" : "Off"]
+            parameters: ["source": source.rawValue, "value": Signal.onOff(isEnabled)]
         )
         if source == .youtube {
             rerunActiveSearch()

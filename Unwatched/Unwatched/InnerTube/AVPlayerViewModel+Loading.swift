@@ -270,6 +270,7 @@ extension AVPlayerViewModel {
             }
             if let ipBlockError {
                 Log.error("[AVPlayerView] IP blocked during parallel fetch: \(videoId)")
+                Signal.error("youtubeIpBlocked")
                 player.isLoading = nil
                 loadError = ipBlockError
                 clearPendingReposition()
@@ -309,6 +310,7 @@ extension AVPlayerViewModel {
 
         guard !Task.isCancelled, player.video?.youtubeId == videoId else { return }
         Log.error("[AVPlayerView] all retry attempts exhausted: \(videoId)")
+        Signal.error("nativeStreamUnavailable")
         player.isLoading = nil
         loadError = APIError.unavailable("Unable to play this video")
         clearPendingReposition()
@@ -820,6 +822,7 @@ extension AVPlayerViewModel {
         switch action {
         case .fail(let err):
             Log.error("[AVPlayerView] unrecoverable failure: \(videoId)")
+            Signal.error("nativePlaybackFailed")
             player.isLoading = nil
             loadError = err ?? item.error
             clearPendingReposition()

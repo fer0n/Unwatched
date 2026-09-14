@@ -212,7 +212,7 @@ extension PlayerManager {
     func goToNextChapter() -> Bool {
         if let next = nextChapter {
             setChapter(next)
-            Signal.log("Player.NextChapter")
+            Signal.interaction("Player.NextChapter")
             return true
         }
         return false
@@ -239,7 +239,7 @@ extension PlayerManager {
             return true
         }
 
-        Signal.log("Player.PreviousChapter")
+        Signal.interaction("Player.PreviousChapter")
         return false
     }
 

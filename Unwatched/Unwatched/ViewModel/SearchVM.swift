@@ -127,6 +127,7 @@ final class SearchVM {
             } catch {
                 if Task.isCancelled { return }
                 Log.error("search failed: \(error)")
+                Signal.error("searchFailed")
                 results = []
                 nextPageToken = nil
                 errorMessage = String(localized: "searchFailed")
