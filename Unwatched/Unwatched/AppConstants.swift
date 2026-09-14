@@ -61,6 +61,7 @@ extension Const {
         Const.playVideoFullscreen: false,
         Const.disableCaptions: false,
         Const.autoCaptionsOnSeekBack: false,
+        Const.doubleTapSeekDuration: Const.seekSeconds,
 
         Const.swipeGestureUp: true,
         Const.swipeGestureDown: true,

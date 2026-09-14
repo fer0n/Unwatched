@@ -272,6 +272,19 @@ extension PlayerManager {
     }
 
     @MainActor
+    var arrowKeySeekSeconds: Double {
+        video.flatMap(Tag.seekSecondsTag(for:))?.seekSeconds ?? Self.defaultArrowKeySeekSeconds
+    }
+
+    static var defaultArrowKeySeekSeconds: Double {
+        hasCustomSeekSeconds ? defaultSeekSeconds : Const.arrowKeySeekSeconds
+    }
+
+    private static var hasCustomSeekSeconds: Bool {
+        UserDefaults.standard.object(forKey: Const.doubleTapSeekDuration) != nil
+    }
+
+    @MainActor
     func seek(backward: Bool, _ seconds: Double) -> Bool {
         if video != nil {
             let offset = backward ? -seconds : seconds

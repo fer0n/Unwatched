@@ -9,8 +9,8 @@ import OSLog
 
 enum PlayerShortcut: String, CaseIterable {
     case playPause
-    case seekForward5
-    case seekBackward5
+    case seekForwardArrow
+    case seekBackwardArrow
     case seekForwardCustom
     case seekBackwardCustom
     case nextChapter
@@ -36,8 +36,8 @@ enum PlayerShortcut: String, CaseIterable {
     var title: LocalizedStringKey {
         switch self {
         case .playPause: return "playPause"
-        case .seekForward5: return "seekForward\(5)"
-        case .seekBackward5: return "seekBackward\(5)"
+        case .seekForwardArrow: return "seekForward\(Int(PlayerManager.defaultArrowKeySeekSeconds))"
+        case .seekBackwardArrow: return "seekBackward\(Int(PlayerManager.defaultArrowKeySeekSeconds))"
         case .seekForwardCustom: return "seekForward\(Int(PlayerManager.defaultSeekSeconds))"
         case .seekBackwardCustom: return "seekBackward\(Int(PlayerManager.defaultSeekSeconds))"
         case .nextChapter: return "nextChapter"
@@ -65,8 +65,8 @@ enum PlayerShortcut: String, CaseIterable {
     var keyboardShortcuts: [(key: KeyEquivalent, modifier: EventModifiers)] {
         switch self {
         case .playPause: return [(.space, []), ("k", [])]
-        case .seekForward5: return [(.rightArrow, [])]
-        case .seekBackward5: return [(.leftArrow, [])]
+        case .seekForwardArrow: return [(.rightArrow, [])]
+        case .seekBackwardArrow: return [(.leftArrow, [])]
         case .seekForwardCustom: return [("l", [])]
         case .seekBackwardCustom: return [("j", [])]
         case .nextChapter: return [(.rightArrow, .command), ("l", .command)]
@@ -135,12 +135,12 @@ enum PlayerShortcut: String, CaseIterable {
         switch self {
         case .playPause:
             player.handlePlayButton()
-        case .seekForward5:
-            if player.seekForward(5) {
+        case .seekForwardArrow:
+            if player.seekForward(player.arrowKeySeekSeconds) {
                 OverlayFullscreenVM.shared.show(.seekForward)
             }
-        case .seekBackward5:
-            if player.seekBackward(5) {
+        case .seekBackwardArrow:
+            if player.seekBackward(player.arrowKeySeekSeconds) {
                 OverlayFullscreenVM.shared.show(.seekBackward)
             }
         case .seekForwardCustom:

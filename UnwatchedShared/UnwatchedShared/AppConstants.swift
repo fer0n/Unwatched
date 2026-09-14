@@ -95,6 +95,9 @@ public struct Const {
     /// Default seconds to seek forward/back
     public static let seekSeconds: Double = 10
 
+    /// Seconds the arrow keys seek until a custom seek duration is set
+    public static let arrowKeySeekSeconds: Double = 5
+
     /// Update the current time if it differs by x seconds
     public static let updateTimeMinimum: Double = 10
 

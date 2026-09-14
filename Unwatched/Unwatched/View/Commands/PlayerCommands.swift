@@ -7,14 +7,17 @@ import UnwatchedShared
 import SwiftUI
 
 struct PlayerCommands: Commands {
+    // redraws the seek titles when the duration changes
+    @AppStorage(Const.doubleTapSeekDuration) var seekDuration: Double?
+
     var body: some Commands {
         CommandMenu("playback") {
             Section {
                 PlayerShortcut.playPause.render()
                 PlayerShortcut.playPause.render(isAlt: true)
 
-                PlayerShortcut.seekBackward5.render()
-                PlayerShortcut.seekForward5.render()
+                PlayerShortcut.seekBackwardArrow.render()
+                PlayerShortcut.seekForwardArrow.render()
 
                 PlayerShortcut.seekBackwardCustom.render()
                 PlayerShortcut.seekForwardCustom.render()

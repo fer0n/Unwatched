@@ -17516,6 +17516,40 @@
         }
       }
     },
+    "resetToDefault" : {
+      "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Standard wiederherstellen"
+          }
+        },
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Reset to Default"
+          }
+        },
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Restablecer"
+          }
+        },
+        "fr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Réinitialiser"
+          }
+        },
+        "pl" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Przywróć domyślne"
+          }
+        }
+      }
+    },
     "restartNow" : {
       "localizations" : {
         "de" : {
@@ -19021,6 +19055,40 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "Przewiń o"
+          }
+        }
+      }
+    },
+    "seekByArrowKeysHelper" : {
+      "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Die Pfeiltasten springen 5 s, bis hier ein Wert eingestellt ist. J und L nutzen immer diesen Wert."
+          }
+        },
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "The arrow keys seek 5s until this is set. J and L always use it."
+          }
+        },
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Las flechas saltan 5 s hasta que se ajuste esto. J y L siempre usan este valor."
+          }
+        },
+        "fr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Les flèches avancent de 5 s tant que ce réglage n'est pas modifié. J et L l'utilisent toujours."
+          }
+        },
+        "pl" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Strzałki przewijają o 5 s, dopóki to nie zostanie ustawione. J i L zawsze używają tej wartości."
           }
         }
       }
