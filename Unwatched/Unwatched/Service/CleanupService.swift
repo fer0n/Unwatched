@@ -589,9 +589,10 @@ extension CleanupActor {
             $0.mediaUrl != nil && $0.watchedDate == nil && $0.bookmarkedDate == nil
         })
         guard let videos = try? modelContext.fetch(fetch) else { return }
+        let downloaded = PodcastDownloadStore.downloadedIds()
         let toDelete = videos.filter {
             ($0.createdDate ?? .distantFuture) < cutoff
-                && isStateless($0)
+                && isStateless($0, downloaded: downloaded)
                 && $0.persistentModelID != protectedId
         }
         guard !toDelete.isEmpty else { return }
@@ -602,9 +603,9 @@ extension CleanupActor {
         Log.info("deleteStatelessPodcastEpisodes: deleted \(toDelete.count) rows")
     }
 
-    private func isStateless(_ video: Video) -> Bool {
+    private func isStateless(_ video: Video, downloaded: Set<String>) -> Bool {
         guard video.inboxEntry == nil, video.queueEntry == nil else { return false }
-        guard video.deferDate == nil, video.downloadedDate == nil else { return false }
+        guard video.deferDate == nil, !downloaded.contains(video.youtubeId) else { return false }
         guard video.keepIntro == nil, video.keepOutro == nil else { return false }
         guard (video.elapsedSeconds ?? 0) <= 0 else { return false }
         guard video.allChapterRows.isEmpty else { return false }

@@ -314,7 +314,7 @@ enum WatchRemoteBridge {
             continuousPlay: UserDefaults.standard.bool(forKey: Const.continuousPlay),
             trimSilence: UserDefaults.standard.bool(forKey: Const.trimSilence),
             // Only a downloaded file can be trimmed: the pauses are found by decoding ahead.
-            canTrimSilence: video?.isPodcast == true && video?.downloadedDate != nil,
+            canTrimSilence: video.map { PodcastDownloadManager.shared.downloadedIds.contains($0.youtubeId) } ?? false,
             theme: UserDefaults.standard.integer(forKey: Const.themeColor),
             seekSeconds: video.flatMap(Tag.seekSecondsTag(for:))?.seekSeconds
         )

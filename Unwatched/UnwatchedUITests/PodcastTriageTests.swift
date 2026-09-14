@@ -129,7 +129,9 @@ class PodcastTriageTests: XCTestCase {
 
         stored[0].elapsedSeconds = 42
         stored[1].watchedDate = .now
-        stored[2].downloadedDate = .now
+        let file = try XCTUnwrap(PodcastDownloadStore.directory?.appending(path: stored[2].youtubeId + ".mp3"))
+        try Data().write(to: file)
+        defer { try? FileManager.default.removeItem(at: file) }
         for row in stored {
             if let entry = row.inboxEntry {
                 context.delete(entry)
@@ -191,5 +193,51 @@ class PodcastTriageTests: XCTestCase {
             show, episodes(1...31), defaultPlacement: placement
         ).loadedVideos.count
         XCTAssertEqual(withNewEpisode, 1, "a newly published episode should get a row")
+    }
+}
+
+class PodcastDownloadKeepTests: XCTestCase {
+    func testWatchedEpisodeKeepsItsFileWithoutASyncedFlag() async throws {
+        let defaults = UserDefaults.standard
+        let keys = [Const.podcastDownloadLimitHours, Const.podcastDownloadKeepDays]
+        let previous = keys.map { defaults.object(forKey: $0) }
+        defaults.set(-1, forKey: Const.podcastDownloadLimitHours)
+        defaults.set(7, forKey: Const.podcastDownloadKeepDays)
+
+        let context = DataProvider.writeExecutor.modelContext
+        let recent = Video(title: "recent", url: nil, youtubeId: "pod-keep-recent", watchedDate: .now,
+                           mediaUrl: URL(string: "https://example.com/recent.mp3"))
+        let old = Video(title: "old", url: nil, youtubeId: "pod-keep-old",
+                        watchedDate: .now.addingTimeInterval(-8 * 86400),
+                        mediaUrl: URL(string: "https://example.com/old.mp3"))
+        context.insert(recent)
+        context.insert(old)
+        try context.save()
+
+        let directory = try XCTUnwrap(PodcastDownloadStore.directory)
+        let recentFile = directory.appending(path: "pod-keep-recent.mp3")
+        let oldFile = directory.appending(path: "pod-keep-old.mp3")
+        try Data().write(to: recentFile)
+        try Data().write(to: oldFile)
+
+        defer {
+            context.delete(recent)
+            context.delete(old)
+            try? context.save()
+            try? FileManager.default.removeItem(at: recentFile)
+            try? FileManager.default.removeItem(at: oldFile)
+            for (key, value) in zip(keys, previous) {
+                defaults.set(value, forKey: key)
+            }
+        }
+
+        await PodcastDownloadManager.shared.sync()
+
+        let files = FileManager.default
+        XCTAssertTrue(files.fileExists(atPath: recentFile.path(percentEncoded: false)), "watched inside the keep window")
+        XCTAssertFalse(files.fileExists(atPath: oldFile.path(percentEncoded: false)), "watched before the keep window")
+        let downloaded = await PodcastDownloadManager.shared.downloadedIds
+        XCTAssertTrue(downloaded.contains("pod-keep-recent"))
+        XCTAssertFalse(downloaded.contains("pod-keep-old"))
     }
 }

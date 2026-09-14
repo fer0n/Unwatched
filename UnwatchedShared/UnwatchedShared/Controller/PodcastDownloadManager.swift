@@ -16,6 +16,9 @@ public final class PodcastDownloadManager {
     /// Episodes with a download in flight, to keep `sync()` from restarting one.
     @ObservationIgnored private var downloadingIds = Set<String>()
 
+    /// Read off the disk rather than a synced `Video` field, which other devices would overwrite.
+    public private(set) var downloadedIds = PodcastDownloadStore.downloadedIds()
+
     /// How far each in-flight episode has written, for the list item's progress bar.
     public private(set) var downloadProgress = [String: Double]()
 
@@ -80,7 +83,7 @@ public final class PodcastDownloadManager {
         downloadingIds = inFlight
         downloadProgress = downloadProgress.filter { inFlight.contains($0.key) }
         PodcastDownloadStore.removeAll(except: plan.keep)
-        setDownloaded(plan.cleared, to: nil)
+        setDownloadedIds(PodcastDownloadStore.downloadedIds())
 
         let onCellular = defaults.bool(forKey: Const.podcastDownloadOnCellular)
         for pending in plan.download where !inFlight.contains(pending.youtubeId) {
@@ -102,25 +105,12 @@ public final class PodcastDownloadManager {
         downloadingIds = []
         downloadProgress = [:]
         PodcastDownloadStore.removeAll(except: [])
-        let context = DataProvider.mainContext
-        let fetch = FetchDescriptor<Video>(predicate: #Predicate { $0.downloadedDate != nil })
-        for video in (try? context.fetch(fetch)) ?? [] {
-            video.downloadedDate = nil
-        }
-        try? context.save()
+        setDownloadedIds([])
     }
 
-    /// Written through the main context: a background actor's save doesn't reach the `Video` rows the lists already
-    /// hold, so the indicator would sit stale until the next launch.
-    private func setDownloaded(_ youtubeIds: [String], to date: Date?) {
-        guard !youtubeIds.isEmpty else { return }
-        let context = DataProvider.mainContext
-        let fetch = FetchDescriptor<Video>(predicate: #Predicate { youtubeIds.contains($0.youtubeId) })
-        guard let videos = try? context.fetch(fetch), !videos.isEmpty else { return }
-        for video in videos {
-            video.downloadedDate = date
-        }
-        try? context.save()
+    private func setDownloadedIds(_ ids: Set<String>) {
+        guard downloadedIds != ids else { return }
+        downloadedIds = ids
     }
 
     private func start(_ pending: PendingPodcastDownload, anyNetwork: Bool) {
@@ -135,7 +125,7 @@ public final class PodcastDownloadManager {
     }
 
     fileprivate func didDownload(_ youtubeId: String) {
-        setDownloaded([youtubeId], to: .now)
+        setDownloadedIds(downloadedIds.union([youtubeId]))
         onEpisodeDownloaded?(youtubeId)
     }
 
@@ -242,8 +232,6 @@ struct PodcastDownloadPlan: Sendable {
     /// Every episode whose file may stay on disk; anything else is swept.
     var keep = Set<String>()
     var download = [PendingPodcastDownload]()
-    /// Episodes whose file is gone or about to be swept, so the flag has to follow.
-    var cleared = [String]()
 }
 
 actor PodcastDownloadActor: SharedContextActor {
@@ -277,13 +265,14 @@ actor PodcastDownloadActor: SharedContextActor {
             }
         }
 
+        guard enabled, keepDays > 0 else { return plan }
         let expiry = Calendar.current.date(byAdding: .day, value: -keepDays, to: .now) ?? .now
-        let fetch = FetchDescriptor<Video>(predicate: #Predicate { $0.downloadedDate != nil })
+        let onDisk = Array(PodcastDownloadStore.downloadedIds().subtracting(plan.keep))
+        guard !onDisk.isEmpty else { return plan }
+        let fetch = FetchDescriptor<Video>(predicate: #Predicate { onDisk.contains($0.youtubeId) })
         for video in (try? modelContext.fetch(fetch)) ?? [] {
-            if enabled, keepDays > 0, let watchedDate = video.watchedDate, watchedDate > expiry {
+            if let watchedDate = video.watchedDate, watchedDate > expiry {
                 plan.keep.insert(video.youtubeId)
-            } else if !plan.keep.contains(video.youtubeId) {
-                plan.cleared.append(video.youtubeId)
             }
         }
         return plan
@@ -293,82 +282,6 @@ actor PodcastDownloadActor: SharedContextActor {
         guard let mediaUrl = video.mediaUrl, !plan.keep.contains(video.youtubeId) else { return }
         plan.keep.insert(video.youtubeId)
         guard PodcastDownloadStore.playbackUrl(for: video) == nil else { return }
-        if video.downloadedDate != nil {
-            plan.cleared.append(video.youtubeId)
-        }
         plan.download.append(PendingPodcastDownload(youtubeId: video.youtubeId, url: mediaUrl))
-    }
-}
-
-// MARK: - File store
-
-public enum PodcastDownloadStore {
-    /// `nil` where downloads aren't offered, which switches the whole feature off.
-    public static let directory: URL? = {
-        #if os(tvOS)
-        return nil
-        #else
-        guard var url = FileManager.default.urls(for: .applicationSupportDirectory, in: .userDomainMask).first else {
-            return nil
-        }
-        url.append(path: "PodcastDownloads", directoryHint: .isDirectory)
-        guard (try? url.checkResourceIsReachable()) != true else {
-            return url
-        }
-        do {
-            try FileManager.default.createDirectory(at: url, withIntermediateDirectories: true)
-            var values = URLResourceValues()
-            values.isExcludedFromBackup = true
-            try url.setResourceValues(values)
-        } catch {
-            Log.error("podcast downloads unavailable: \(error.localizedDescription)")
-            return nil
-        }
-        return url
-        #endif
-    }()
-
-    /// Derived from the enclosure rather than stored, so writer and reader agree without a lookup.
-    static func fileUrl(_ youtubeId: String, _ mediaUrl: URL) -> URL? {
-        let fileExtension = mediaUrl.pathExtension
-        return directory?.appending(path: youtubeId + "." + (fileExtension.isEmpty ? "mp3" : fileExtension))
-    }
-
-    public static func playbackUrl(for video: VideoData) -> URL? {
-        guard video.downloadedDate != nil,
-              let mediaUrl = video.mediaUrl,
-              let url = fileUrl(video.youtubeId, mediaUrl),
-              (try? url.checkResourceIsReachable()) == true else {
-            return nil
-        }
-        return url
-    }
-
-    /// The downloaded file for an episode, found by name — for the callers that have the id but not the `Video` the
-    /// enclosure's extension would come from.
-    public static func downloadedFile(for youtubeId: String) -> URL? {
-        contents().first {
-            $0.deletingPathExtension().lastPathComponent == youtubeId && $0.pathExtension != "silence"
-        }
-    }
-
-    static func removeAll(except keep: Set<String>) {
-        for file in contents() where !keep.contains(file.deletingPathExtension().lastPathComponent) {
-            try? FileManager.default.removeItem(at: file)
-        }
-    }
-
-    public static func totalSize() -> Int64 {
-        contents(keys: [.fileSizeKey]).reduce(0) {
-            $0 + Int64((try? $1.resourceValues(forKeys: [.fileSizeKey]).fileSize) ?? 0)
-        }
-    }
-
-    private static func contents(keys: [URLResourceKey] = []) -> [URL] {
-        guard let directory else { return [] }
-        return (try? FileManager.default.contentsOfDirectory(
-            at: directory,
-            includingPropertiesForKeys: keys
-        )) ?? []
     }
 }

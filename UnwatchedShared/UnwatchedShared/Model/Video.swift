@@ -48,7 +48,7 @@ public final class Video: VideoData, CustomStringConvertible, Exportable {
 
     public var mediaUrl: URL?
     public var isAudioOnly: Bool?
-    /// Set once the episode's enclosure is on disk; see `PodcastDownloadManager`.
+    /// Unused: it synced, so another device cleared it. See `PodcastDownloadManager.downloadedIds`.
     public var downloadedDate: Date?
     /// Podcasting 2.0 `podcast:chapters` JSON, fetched the first time the episode plays.
     public var chaptersUrl: URL?

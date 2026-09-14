@@ -106,10 +106,11 @@ public struct VideoListItemThumbnailOverlay: View {
         )
     }
 
-    /// Only read for an episode that isn't downloaded yet, so a list of watched ones doesn't observe the manager.
+    /// Only read for an episode that isn't downloaded yet, so its list item doesn't redraw at every step.
     private var downloadProgress: Double? {
-        guard video.isPodcast, video.downloadedDate == nil else { return nil }
-        return PodcastDownloadManager.shared.downloadProgress[video.youtubeId]
+        let manager = PodcastDownloadManager.shared
+        guard video.isPodcast, !manager.downloadedIds.contains(video.youtubeId) else { return nil }
+        return manager.downloadProgress[video.youtubeId]
     }
 
     private var cleanedProgress: Double? {

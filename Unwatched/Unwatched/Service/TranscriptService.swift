@@ -158,7 +158,6 @@ struct TranscriptService {
         let youtubeId = video.youtubeId
         let mediaUrl = video.mediaUrl
         let feedUrl = video.subscription?.link
-        let isDownloaded = video.downloadedDate != nil
         let cacheContainer = DataProvider.shared.localCacheContainer
 
         return Task.detached {
@@ -180,8 +179,7 @@ struct TranscriptService {
             throw TranscriptError.noUrl
             #else
             progress(0.02)
-            let (fileUrl, isTemporary) = try await audioFile(youtubeId: youtubeId, mediaUrl: mediaUrl,
-                                                             isDownloaded: isDownloaded)
+            let (fileUrl, isTemporary) = try await audioFile(youtubeId: youtubeId, mediaUrl: mediaUrl)
             defer {
                 if isTemporary {
                     try? FileManager.default.removeItem(at: fileUrl)
@@ -207,10 +205,9 @@ struct TranscriptService {
     /// The episode as a local file, which is what `SpeechAnalyzer` reads.
     private static func audioFile(
         youtubeId: String,
-        mediaUrl: URL?,
-        isDownloaded: Bool
+        mediaUrl: URL?
     ) async throws -> (url: URL, isTemporary: Bool) {
-        if isDownloaded, let downloaded = PodcastDownloadStore.downloadedFile(for: youtubeId) {
+        if let downloaded = PodcastDownloadStore.downloadedFile(for: youtubeId) {
             return (downloaded, false)
         }
         guard let mediaUrl else {
