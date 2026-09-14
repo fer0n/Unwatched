@@ -43,9 +43,12 @@ struct SheetOverlayMinimumSize: View {
             hapticToggle.toggle()
             Signal.interaction("Player.PlayPause.Sheet")
         } label: {
-            Image(systemName: player.playPauseSymbol())
-                .font(.system(size: 17, weight: .black))
-                .foregroundStyle(.black)
+            // resizable pins the circle to the frame; with a font size, .black grows it past the glass
+            Image(systemName: player.playPauseSymbol(circleVariant: true))
+                .resizable()
+                .fontWeight(.black)
+                .symbolRenderingMode(.palette)
+                .foregroundStyle(.black, .white)
                 .contentTransition(.symbolEffect(.replace))
                 .frame(width: 44, height: 44)
                 .glassEffect(.regular.tint(.white).interactive(), in: .circle)
