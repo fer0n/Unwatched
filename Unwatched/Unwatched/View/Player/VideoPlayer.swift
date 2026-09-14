@@ -41,7 +41,13 @@ struct VideoPlayer: View {
             }
             #endif
 
-            if !usePodcastLayout {
+            if useBigScreenPodcastLayout {
+                PodcastPlayerLayout(
+                    playerView: playerView(enableHideControls: enableHideControls, pagedInline: true)
+                )
+                .zIndex(1)
+                .layoutPriority(2)
+            } else if !usePodcastLayout {
                 playerView(enableHideControls: enableHideControls)
                     .zIndex(1)
                     .layoutPriority(2)
@@ -125,6 +131,17 @@ struct VideoPlayer: View {
             && !isFakePip
         #else
         false
+        #endif
+    }
+
+    var useBigScreenPodcastLayout: Bool {
+        #if os(visionOS)
+        false
+        #else
+        player.isAudioOnly
+            && compactSize
+            && !layoutMode.isFullscreen
+            && !isFakePip
         #endif
     }
 

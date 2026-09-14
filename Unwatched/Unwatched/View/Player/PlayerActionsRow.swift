@@ -42,7 +42,8 @@ struct PlayerActionsRow: View {
                 #endif
             }
 
-            if compactSize {
+            // podcasts show the notes beside the art
+            if compactSize && !(player.isAudioOnly && !Device.isVision) {
                 DescriptionButton(show: $autoHideVM.showDescription)
             }
 

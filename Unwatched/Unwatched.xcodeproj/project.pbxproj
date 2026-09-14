@@ -250,6 +250,8 @@
 		883D44FF30180A4E00950B89 /* SearchVM+Status.swift in Sources */ = {isa = PBXBuildFile; fileRef = 883D44FE30180A4E00950B89 /* SearchVM+Status.swift */; };
 		883D450030180A4E00950B89 /* SearchVM+Status.swift in Sources */ = {isa = PBXBuildFile; fileRef = 883D44FE30180A4E00950B89 /* SearchVM+Status.swift */; };
 		883D4CAA2CF4791300BB2581 /* PlayerContentView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 883D4CA92CF4791300BB2581 /* PlayerContentView.swift */; };
+		88A1C0DE2F6A000100000002 /* PodcastPlayerLayout.swift in Sources */ = {isa = PBXBuildFile; fileRef = 88A1C0DE2F6A000100000001 /* PodcastPlayerLayout.swift */; };
+		88A1C0DE2F6A000100000003 /* PodcastPlayerLayout.swift in Sources */ = {isa = PBXBuildFile; fileRef = 88A1C0DE2F6A000100000001 /* PodcastPlayerLayout.swift */; };
 		883D4CAB2CF4791300BB2581 /* PlayerContentView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 883D4CA92CF4791300BB2581 /* PlayerContentView.swift */; };
 		883D5E002BE0B95800989313 /* TabItemView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 883D5DFF2BE0B95800989313 /* TabItemView.swift */; };
 		883EE0962B7ABD5700D0A83A /* SleepTimerViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 883EE0952B7ABD5700D0A83A /* SleepTimerViewModel.swift */; };
@@ -1292,6 +1294,7 @@
 		883D44FB30180A3D00950B89 /* SearchVM+Local.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "SearchVM+Local.swift"; sourceTree = "<group>"; };
 		883D44FE30180A4E00950B89 /* SearchVM+Status.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "SearchVM+Status.swift"; sourceTree = "<group>"; };
 		883D4CA92CF4791300BB2581 /* PlayerContentView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PlayerContentView.swift; sourceTree = "<group>"; };
+		88A1C0DE2F6A000100000001 /* PodcastPlayerLayout.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PodcastPlayerLayout.swift; sourceTree = "<group>"; };
 		883D5DFF2BE0B95800989313 /* TabItemView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TabItemView.swift; sourceTree = "<group>"; };
 		883EE0952B7ABD5700D0A83A /* SleepTimerViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SleepTimerViewModel.swift; sourceTree = "<group>"; };
 		883EE0972B7B422A00D0A83A /* AsyncSharableUrl.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AsyncSharableUrl.swift; sourceTree = "<group>"; };
@@ -2028,6 +2031,7 @@
 				88C965E92D0AB4F700D1AE3E /* PlayerBackgroundGestureRecognizer.swift */,
 				88C965F12D0AB4F700D1AE3E /* TemporarySpeedPress.swift */,
 				883D4CA92CF4791300BB2581 /* PlayerContentView.swift */,
+				88A1C0DE2F6A000100000001 /* PodcastPlayerLayout.swift */,
 				889924682C47F4D4001185A6 /* VerticalSwipeGesture.swift */,
 				889924722C482B92001185A6 /* CombinedPlaybackSpeedSetting.swift */,
 				7A11CE01AA0000000000A001 /* SpeedMenuButton.swift */,
@@ -3346,6 +3350,7 @@
 				883D44FF30180A4E00950B89 /* SearchVM+Status.swift in Sources */,
 				889AF9002C50ECCD001CEDE6 /* SubscribeManager.swift in Sources */,
 				883D4CAB2CF4791300BB2581 /* PlayerContentView.swift in Sources */,
+				88A1C0DE2F6A000100000003 /* PodcastPlayerLayout.swift in Sources */,
 				88CD38932E213D3400E7B21C /* TranscriptList.swift in Sources */,
 				889AF9252C50ECEE001CEDE6 /* PlayerControlButtonStyle.swift in Sources */,
 				889AF9262C50ECEE001CEDE6 /* WatchedButton.swift in Sources */,
@@ -4048,6 +4053,7 @@
 				88CD38822E20E5B400E7B21C /* SwipeDirecton.swift in Sources */,
 				88BF35992BC96C37005FA53E /* TextFieldClearButton.swift in Sources */,
 				883D4CAA2CF4791300BB2581 /* PlayerContentView.swift in Sources */,
+				88A1C0DE2F6A000100000002 /* PodcastPlayerLayout.swift in Sources */,
 				883EE0982B7B422A00D0A83A /* AsyncSharableUrl.swift in Sources */,
 				88CD909E2E2BA56300CD756D /* getTranscript.swift in Sources */,
 				88FAF20B2EF6B4B300DAEAE9 /* ChapterTimeLabel.swift in Sources */,
