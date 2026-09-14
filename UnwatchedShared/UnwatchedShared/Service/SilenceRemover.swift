@@ -20,7 +20,6 @@ public struct TrimmedChunk {
 /// until the speech after it arrives, and its own length says how much to keep.
 public final class SilenceRemover {
     private let format: AVAudioFormat
-    private let tier: TrimSilenceTier
 
     private let window: Int
     private let fade: Int
@@ -42,9 +41,8 @@ public final class SilenceRemover {
     private var noiseFloorDb: Double = 0
     private var speechLevelDb: Double = 0
 
-    public init(format: AVAudioFormat, tier: TrimSilenceTier, startingAt fileFrame: AVAudioFramePosition = 0) {
+    public init(format: AVAudioFormat, startingAt fileFrame: AVAudioFramePosition = 0) {
         self.format = format
-        self.tier = tier
         window = max(1, Int(format.sampleRate * Const.silenceWindow))
         fade = max(1, Int(format.sampleRate * Const.silenceSpliceFade))
         maximumHeld = Int(format.sampleRate * Const.silenceMaximumHeldPause)
@@ -123,10 +121,10 @@ public final class SilenceRemover {
         }
         let frames = range.count
         let seconds = Double(frames) / format.sampleRate
-        guard tier.isWorthTrimming(pauseLength: seconds) else {
+        guard Self.isWorthTrimming(pauseLength: seconds) else {
             return chunk(range).map { [$0] } ?? []
         }
-        let kept = Int((tier.playedLength(ofPause: seconds) * format.sampleRate).rounded())
+        let kept = Int((Self.playedLength(ofPause: seconds) * format.sampleRate).rounded())
         // the fades come out of what is kept
         guard kept > 2 * fade, kept + 2 * fade < frames else {
             return chunk(range).map { [$0] } ?? []
@@ -138,6 +136,21 @@ public final class SilenceRemover {
             chunk(range.lowerBound..<(range.lowerBound + head), fadeOutLast: fade),
             chunk((range.upperBound - tail)..<range.upperBound, fadeInFirst: fade)
         ].compactMap { $0 }
+    }
+
+    // MARK: - How much of a pause survives
+
+    /// What a pause of `length` is allowed to shrink to.
+    public static func playedLength(ofPause length: Double) -> Double {
+        let target = Swift.max(Const.silenceTargetPause, length * Const.silenceKeepFraction)
+        let floor = 2 * Const.silenceGuardBand + Const.silenceMinimumInterior
+        return Swift.max(floor, Swift.min(length, target))
+    }
+
+    /// Whether the saving is worth a splice at all.
+    public static func isWorthTrimming(pauseLength length: Double) -> Bool {
+        guard length >= Const.silenceMinimumPause else { return false }
+        return length - playedLength(ofPause: length) >= Const.silenceMinimumSaving
     }
 
     // MARK: - Level

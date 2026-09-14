@@ -913,7 +913,7 @@ extension AVPlayerViewModel {
         avPlayer.pause()
         avPlayer.replaceCurrentItem(with: nil)
         do {
-            try podcastEngine.load(url: url, tier: .current, startAt: startAt)
+            try podcastEngine.load(url: url, startAt: startAt)
         } catch {
             Log.warning("[AVPlayerView] trim silence: \(videoId) wouldn't decode — \(error.localizedDescription)")
             podcastEngine.unload()
@@ -934,7 +934,7 @@ extension AVPlayerViewModel {
         return true
     }
 
-    /// Applies a setting or tier change without sending the episode back to the start.
+    /// Applies a setting change without sending the episode back to the start.
     @MainActor
     func applyTrimSilence() {
         // banked against the setting as it stands, before `setTrimSilence` zeroes the totals

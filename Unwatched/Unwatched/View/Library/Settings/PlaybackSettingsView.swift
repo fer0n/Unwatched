@@ -17,7 +17,6 @@ struct PlaybackSettingsView: View {
     @AppStorage(Const.autoAirplayHD) var autoAirplayHD: Bool = false
     @AppStorage(Const.originalAudio) var originalAudio: Bool = true
     @AppStorage(Const.trimSilence) var trimSilence: Bool = false
-    @AppStorage(Const.trimSilenceTier) var trimSilenceTier: TrimSilenceTier = .medium
     @AppStorage(Const.playBrowserVideosInApp) var playBrowserVideosInApp: Bool = false
     @AppStorage(Const.playerType) var playerType: PlayerTypeSetting = .youtubeEmbedded
     @AppStorage(Const.preferPlayerType) var preferPlayerType: Bool = false
@@ -92,19 +91,6 @@ struct PlaybackSettingsView: View {
                         set: { player.setTrimSilence($0) }
                     )) {
                         Text("trimSilence")
-                    }
-
-                    if trimSilence {
-                        Picker("trimSilenceTier", selection: Binding(
-                            get: { trimSilenceTier },
-                            set: { player.setTrimSilenceTier($0) }
-                        )) {
-                            ForEach(TrimSilenceTier.allCases, id: \.self) { tier in
-                                Text(tier.description)
-                                    .tag(tier)
-                            }
-                        }
-                        .pickerStyle(.menu)
                     }
                 }
                 .requiresPremium(!trimSilence)

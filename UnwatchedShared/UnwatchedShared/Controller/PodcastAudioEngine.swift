@@ -73,7 +73,7 @@ public final class PodcastAudioEngine: @unchecked Sendable {
     // MARK: - Loading
 
     /// Throws when the file won't decode: the caller's signal to fall back to ordinary playback.
-    public func load(url: URL, tier: TrimSilenceTier, startAt: Double) throws {
+    public func load(url: URL, startAt: Double) throws {
         try queue.sync {
             teardown()
             let file = try AVAudioFile(forReading: url)
@@ -100,7 +100,7 @@ public final class PodcastAudioEngine: @unchecked Sendable {
             observeFlushes()
             let frame = clampedFrame(startAt)
             file.framePosition = frame
-            remover = SilenceRemover(format: format, tier: tier, startingAt: frame)
+            remover = SilenceRemover(format: format, startingAt: frame)
             move(to: frame, playingFrom: nil)
             Log.info("podcast engine: \(Int(self.duration))s at \(Int(format.sampleRate))Hz, from \(Int(startAt))s")
         }

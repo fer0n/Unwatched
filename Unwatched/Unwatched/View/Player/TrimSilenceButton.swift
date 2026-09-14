@@ -11,7 +11,6 @@ struct TrimSilenceButton: View {
     @AppStorage(Const.trimSilence) var trimSilence: Bool = false
     @AppStorage(Const.trimSilenceSecondsSaved) var secondsSaved: Double = 0
     @AppStorage(Const.trimSilenceSecondsPlayed) var secondsPlayed: Double = 0
-    @AppStorage(Const.trimSilenceTier) var trimSilenceTier: TrimSilenceTier = .medium
     @Environment(PlayerManager.self) var player
     @State var hapticToggle = false
 
@@ -36,16 +35,6 @@ struct TrimSilenceButton: View {
 
             if stats.multiplier > 1 {
                 Text(String(format: String(localized: "trimSilenceEffectiveSpeed"), formattedEffectiveSpeed))
-            }
-
-            Picker("trimSilenceTier", selection: Binding(
-                get: { trimSilenceTier },
-                set: { player.setTrimSilenceTier($0) }
-            )) {
-                ForEach(TrimSilenceTier.allCases, id: \.self) { tier in
-                    Text(tier.description)
-                        .tag(tier)
-                }
             }
         }
     }

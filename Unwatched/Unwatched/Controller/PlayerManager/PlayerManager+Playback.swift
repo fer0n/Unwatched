@@ -567,12 +567,6 @@ extension PlayerManager {
         }
     }
 
-    @MainActor
-    func setTrimSilenceTier(_ tier: TrimSilenceTier) {
-        UserDefaults.standard.set(tier.rawValue, forKey: Const.trimSilenceTier)
-        backend.applyTrimSilence()
-    }
-
     /// The player reporting that PiP started or ended without being asked — the system PiP button, or the PiP window
     /// being closed.
     @MainActor

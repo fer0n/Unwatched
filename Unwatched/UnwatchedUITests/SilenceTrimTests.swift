@@ -23,7 +23,6 @@ final class SilenceTrimTests: XCTestCase {
         let roomToneDb: Float?
     }
 
-    /// The two short ones separate the tiers: `.max` reaches both, `.medium` neither.
     private static let pauses = [
         Pause(start: 2.0, length: 1.0),
         Pause(start: 5.0, length: 0.6),
@@ -44,60 +43,58 @@ final class SilenceTrimTests: XCTestCase {
 
     func testNothingOutsideAPauseIsEverDropped() throws {
         for mix in Self.mixes {
-            for tier in TrimSilenceTier.allCases {
-                let pieces = try trim(mix, tier: tier)
-                var previousEnd = 0.0
-                for piece in pieces {
-                    if piece.start - previousEnd > 0.001 {
-                        let real = Self.pauses.contains {
-                            previousEnd >= $0.start - Self.edge && piece.start <= $0.end + Self.edge
-                        }
-                        XCTAssertTrue(real, "\(mix.name)/\(tier): dropped \(previousEnd)–\(piece.start)")
+            let pieces = try trim(mix)
+            var previousEnd = 0.0
+            for piece in pieces {
+                if piece.start - previousEnd > 0.001 {
+                    let real = Self.pauses.contains {
+                        previousEnd >= $0.start - Self.edge && piece.start <= $0.end + Self.edge
                     }
-                    previousEnd = piece.end
+                    XCTAssertTrue(real, "\(mix.name): dropped \(previousEnd)–\(piece.start)")
                 }
+                previousEnd = piece.end
             }
         }
     }
 
     func testPlaybackCoversTheFileFromStartToEnd() throws {
         for mix in Self.mixes {
-            let pieces = try trim(mix, tier: .max)
+            let pieces = try trim(mix)
             XCTAssertEqual(pieces.first?.start ?? -1, 0, accuracy: 0.001, mix.name)
             XCTAssertEqual(pieces.last?.end ?? -1, Self.episodeLength, accuracy: 0.05, mix.name)
         }
     }
 
-    /// The counter and the remaining length are both read off the tier's arithmetic.
-    func testSavingMatchesWhatTheTierPromises() throws {
+    func testSavingMatchesWhatTheArithmeticPromises() throws {
         for mix in Self.mixes {
-            for tier in TrimSilenceTier.allCases {
-                let played = try trim(mix, tier: tier).reduce(0) { $0 + $1.length }
-                let promised = Self.pauses.reduce(0.0) { total, pause in
-                    guard tier.isWorthTrimming(pauseLength: pause.length) else { return total }
-                    return total + (pause.length - tier.playedLength(ofPause: pause.length))
-                }
-                XCTAssertEqual(
-                    Self.episodeLength - played, promised, accuracy: 0.35, "\(mix.name)/\(tier)"
-                )
+            let played = try trim(mix).reduce(0) { $0 + $1.length }
+            let promised = Self.pauses.reduce(0.0) { total, pause in
+                guard SilenceRemover.isWorthTrimming(pauseLength: pause.length) else { return total }
+                return total + (pause.length - SilenceRemover.playedLength(ofPause: pause.length))
             }
+            XCTAssertEqual(Self.episodeLength - played, promised, accuracy: 0.35, mix.name)
         }
     }
 
-    func testEachTierTrimsMoreThanTheOneBelowIt() throws {
-        let played = try TrimSilenceTier.allCases.map { tier in
-            try trim(Self.mixes[1], tier: tier).reduce(0) { $0 + $1.length }
-        }
-        XCTAssertEqual(played, played.sorted(by: >), "the tiers are not ordered by how much they trim")
-        XCTAssertLessThan(played[2], Self.episodeLength - 4, "max barely trims anything")
+    func testEveryPauseIsShortenedToALittleOfItself() throws {
+        let played = try trim(Self.mixes[1]).reduce(0) { $0 + $1.length }
+        let pauseTime = Self.pauses.reduce(0) { $0 + $1.length }
+        XCTAssertTrue(
+            Self.pauses.allSatisfy { SilenceRemover.isWorthTrimming(pauseLength: $0.length) },
+            "a pause was left untouched"
+        )
+        XCTAssertLessThan(
+            Self.episodeLength - played, pauseTime, "more than the pauses was dropped"
+        )
+        XCTAssertGreaterThan(
+            Self.episodeLength - played, pauseTime * 0.7, "less than seven tenths of the quiet was trimmed"
+        )
     }
 
     func testSpeechComesOutUnattenuated() throws {
         for mix in Self.mixes {
-            for tier in TrimSilenceTier.allCases {
-                let peak = try trim(mix, tier: tier, peak: true).1
-                XCTAssertGreaterThan(peak, mix.speechLevel * 0.9, "\(mix.name)/\(tier)")
-            }
+            let peak = try trim(mix, peak: true).1
+            XCTAssertGreaterThan(peak, mix.speechLevel * 0.9, mix.name)
         }
     }
 
@@ -106,7 +103,7 @@ final class SilenceTrimTests: XCTestCase {
         defer { try? FileManager.default.removeItem(at: url) }
         let file = try AVAudioFile(forReading: url)
         let format = file.processingFormat
-        let remover = SilenceRemover(format: format, tier: .max)
+        let remover = SilenceRemover(format: format)
 
         _ = try Self.feed(file, into: remover, seconds: 4)
         let frame = AVAudioFramePosition(12 * format.sampleRate)
@@ -124,7 +121,7 @@ final class SilenceTrimTests: XCTestCase {
         let engine = PodcastAudioEngine()
         defer { engine.unload() }
 
-        try engine.load(url: url, tier: .medium, startAt: 5)
+        try engine.load(url: url, startAt: 5)
         XCTAssertEqual(engine.duration, Self.episodeLength, accuracy: 0.05, "the file's length, not the played one")
         XCTAssertEqual(engine.currentTime, 5, accuracy: 0.05, "loaded away from where it was asked to start")
         XCTAssertEqual(engine.playedTime, 0, accuracy: 0.001, "nothing has been rendered yet")
@@ -140,7 +137,7 @@ final class SilenceTrimTests: XCTestCase {
         let engine = PodcastAudioEngine()
         defer { engine.unload() }
 
-        try engine.load(url: url, tier: .medium, startAt: 0)
+        try engine.load(url: url, startAt: 0)
         engine.play(rate: 1)
         var worst: Double = 0
         var last: Double = 0
@@ -168,7 +165,7 @@ final class SilenceTrimTests: XCTestCase {
         let engine = PodcastAudioEngine()
         defer { engine.unload() }
 
-        try engine.load(url: url, tier: .max, startAt: 0)
+        try engine.load(url: url, startAt: 0)
         // four times over, so six seconds of episode takes a second and a half of test
         engine.play(rate: 4)
         let deadline = Date().addingTimeInterval(20)
@@ -193,7 +190,7 @@ final class SilenceTrimTests: XCTestCase {
 
         let ended = expectation(description: "the episode ended")
         engine.onEnded = { ended.fulfill() }
-        try engine.load(url: url, tier: .medium, startAt: Self.episodeLength - 4)
+        try engine.load(url: url, startAt: Self.episodeLength - 4)
         engine.play(rate: 3)
 
         wait(for: [ended], timeout: 20)
@@ -269,15 +266,15 @@ final class SilenceTrimTests: XCTestCase {
         Mix(name: "a quietly mixed episode", speechLevel: 0.03, roomToneDb: -45)
     ]
 
-    private func trim(_ mix: Mix, tier: TrimSilenceTier) throws -> [Piece] {
-        try trim(mix, tier: tier, peak: false).0
+    private func trim(_ mix: Mix) throws -> [Piece] {
+        try trim(mix, peak: false).0
     }
 
-    private func trim(_ mix: Mix, tier: TrimSilenceTier, peak wantsPeak: Bool) throws -> ([Piece], Float) {
+    private func trim(_ mix: Mix, peak wantsPeak: Bool) throws -> ([Piece], Float) {
         let url = try Self.makeEpisode(mix)
         defer { try? FileManager.default.removeItem(at: url) }
         let file = try AVAudioFile(forReading: url)
-        let remover = SilenceRemover(format: file.processingFormat, tier: tier)
+        let remover = SilenceRemover(format: file.processingFormat)
         var peak: Float = 0
         let pieces = try Self.feed(file, into: remover, seconds: nil) { chunk in
             guard wantsPeak, let data = chunk.buffer.floatChannelData?[0] else { return }

@@ -176,18 +176,18 @@ public struct Const {
     // "Trim silence" drops the samples inside a pause as the episode plays (see `SilenceRemover`).
 
     /// Room tone kept at each end of a shortened pause, so a splice isn't a cut into speech.
-    public static let silenceGuardBand: Double = 0.15
+    public static let silenceGuardBand: Double = 0.04
 
     /// Shortest a pause is allowed to become, and the share of itself a longer one keeps — a long pause cut to the
     /// same length as a short one loses the beat the speaker put there.
-    public static let silenceTargetPause: Double = 0.4
-    public static let silenceKeepFraction: Double = 0.35
+    public static let silenceTargetPause: Double = 0.09
+    public static let silenceKeepFraction: Double = 0.07
     /// Left between the two ends, so the shortest pause still has a beat in it.
-    public static let silenceMinimumInterior: Double = 0.05
+    public static let silenceMinimumInterior: Double = 0.03
 
     /// Shortest run of quiet that counts as a pause, and the least it has to save to be worth a splice.
-    public static let silenceMinimumPause: Double = 0.4
-    public static let silenceMinimumSaving: Double = 0.15
+    public static let silenceMinimumPause: Double = 0.18
+    public static let silenceMinimumSaving: Double = 0.04
 
     /// Range the running threshold is held to, whatever the episode's levels suggest.
     public static let silenceThresholdFloorDb: Double = -60
@@ -388,7 +388,6 @@ public struct Const {
     public static let enableLogging = "enableLogging"
     public static let originalAudio = "originalAudio"
     public static let trimSilence = "trimSilence"
-    public static let trimSilenceTier = "trimSilenceTier"
     /// Lifetime total of seconds trimmed, added up as they're played; never reset.
     public static let trimSilenceSecondsSaved = "trimSilenceSecondsSaved"
     /// Audio rendered while trimming was on, which makes the saving expressible as a speed.
