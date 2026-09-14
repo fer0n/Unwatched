@@ -476,7 +476,7 @@ extension PlayerWebView {
         }, { passive: true, capture: true });
         document.addEventListener('ended', (e) => {
             if (e.target.tagName === 'VIDEO') {
-                sendMessage("ended");
+                sendMessage("ended", window.location.href);
             }
         }, { passive: true, capture: true });
 

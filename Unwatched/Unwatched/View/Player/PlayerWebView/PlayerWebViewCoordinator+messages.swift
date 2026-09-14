@@ -21,8 +21,7 @@ extension PlayerWebViewCoordinator {
         case "play":
             handlePlay()
         case "ended":
-            flushStats()
-            parent.onVideoEnded()
+            handleEnded(payload)
         case "currentTime":
             handleTimeUpdate(payload)
         case "seek":
@@ -261,6 +260,18 @@ extension PlayerWebViewCoordinator {
                 parent.player.unstarted = false
             }
         }
+    }
+
+    /// The outgoing page can still end after the next video was swapped in.
+    func handleEnded(_ urlString: String?) {
+        if let urlString, let url = URL(string: urlString),
+           let videoId = UrlService.getYoutubeIdFromUrl(url: url),
+           videoId != parent.player.video?.youtubeId {
+            Log.info("ended: \(videoId) is no longer the current video")
+            return
+        }
+        flushStats()
+        parent.onVideoEnded()
     }
 
     func handlePlay() {
