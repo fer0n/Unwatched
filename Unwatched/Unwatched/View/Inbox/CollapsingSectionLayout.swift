@@ -27,7 +27,15 @@ struct CollapsingSectionLayout: Layout {
     }
 
     func placeSubviews(in bounds: CGRect, proposal: ProposedViewSize, subviews: Subviews, cache: inout ()) {
-        guard bounds.height > spacing else { return }
+        guard bounds.height > spacing else {
+            // unplaced subviews are drawn centered on the bounds
+            subviews.first?.place(
+                at: CGPoint(x: -100_000, y: bounds.minY),
+                anchor: .topLeading,
+                proposal: .zero
+            )
+            return
+        }
         subviews.first?.place(
             at: CGPoint(x: bounds.minX, y: bounds.minY + spacing),
             anchor: .topLeading,
