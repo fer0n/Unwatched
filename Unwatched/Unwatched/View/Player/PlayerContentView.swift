@@ -193,18 +193,19 @@ struct PlayerContentView: View {
     @ViewBuilder
     func chapterDescriptionPage(_ video: Video) -> some View {
         if inlinePlayer != nil {
-            VStack(spacing: 0) {
-                InlineMiniPlayer {
-                    navManager.playerTab = .controls
-                }
+            chapterDescription(video)
+                .overlay(alignment: .top) {
+                    if !hideMiniPlayer {
+                        ZStack(alignment: .top) {
+                            miniPlayerBackdrop
 
-                chapterDescription(video)
-                    // below the mini player the page's top isn't on the safe area, so the soft edge effect has no
-                    // region to draw in and the text would cut off hard under the bar
-                    .overlay {
-                        PlayerTopShadow()
+                            InlineMiniPlayer {
+                                navManager.playerTab = .controls
+                            }
+                            .frame(maxWidth: .infinity)
+                        }
                     }
-            }
+                }
         } else {
             chapterDescription(video)
         }
@@ -223,6 +224,20 @@ struct PlayerContentView: View {
         #if os(iOS)
         .softSafeAreaBarSpacer(edge: .bottom, padding: aboveSheetPadding)
         #endif
+    }
+
+    /// Covers the notes from the screen's top down to where dragging the sheet hides the mini player.
+    private var miniPlayerBackdrop: some View {
+        GeometryReader { proxy in
+            let sheetPos = SheetPositionReader.shared
+            let pageTop = proxy.frame(in: .global).minY
+            let bottom = max(sheetPos.sheetDistanceToTop, pageTop + sheetPos.playerAboveSheetHeight)
+
+            Color.playerBackgroundColor
+                .frame(maxWidth: .infinity)
+                .frame(height: bottom + SheetPositionReader.swipedBelowThreshold)
+                .ignoresSafeArea(edges: .top)
+        }
     }
 
     private var descriptionBottomSpacer: CGFloat {

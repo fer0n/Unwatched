@@ -9,6 +9,9 @@ public extension Color {
     var isBlack: Bool {
         self == .black
     }
+
+    /// Invisible, but unlike `.clear` still hit tested and not optimized away.
+    static let tappableClear = Color.black.opacity(0.000001)
 }
 
 extension Color {

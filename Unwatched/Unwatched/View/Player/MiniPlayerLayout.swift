@@ -30,6 +30,7 @@ struct MiniPlayerLayout<Content: View>: View {
 
                         MiniPlayerContent(
                             videoTitle: player.video?.title,
+                            channelTitle: player.video?.subscription?.title,
                             handleMiniPlayerTap: handleMiniPlayerTap
                         )
                     }
@@ -67,7 +68,7 @@ struct InlineMiniPlayer: View {
             PodcastArtwork(imageUrls: player.displayArtworkUrls, isMiniPlayer: true)
                 .frame(width: PlayerView.miniPlayerHeight, height: PlayerView.miniPlayerHeight)
                 .overlay {
-                    Color.black.opacity(0.000001)
+                    Color.tappableClear
                         .onTapGesture(perform: goToControls)
                 }
                 .padding(.leading, PlayerView.miniPlayerHorizontalPadding)

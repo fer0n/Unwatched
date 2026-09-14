@@ -56,6 +56,19 @@ private struct PlayerTabChange: ViewModifier {
     }
 }
 
+/// Fades its content out on one player tab. A modifier so the calling view's body doesn't read
+/// `playerTab` and rebuild on every switch — see `onPlayerTabChange`.
+struct PlayerTabFade: ViewModifier {
+    @Environment(NavigationManager.self) private var navManager
+    let hiddenOn: ControlNavigationTab
+
+    func body(content: Content) -> some View {
+        content
+            .opacity(navManager.playerTab == hiddenOn ? 0 : 1)
+            .animation(.default, value: navManager.playerTab)
+    }
+}
+
 private struct PlayerTabHaptic: ViewModifier {
     @Environment(NavigationManager.self) private var navManager
 

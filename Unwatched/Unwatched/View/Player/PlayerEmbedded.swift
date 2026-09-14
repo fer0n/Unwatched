@@ -127,7 +127,7 @@ struct PlayerEmbedded: View {
         .transitionCover(player.transitionCovered)
         .overlay {
             if !hideMiniPlayer {
-                Color.black.opacity(0.000001)
+                Color.tappableClear
                     .onTapGesture {
                         handleMiniPlayerTap()
                     }

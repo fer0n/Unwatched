@@ -166,7 +166,7 @@ struct AVPlayerView: View {
                     .transitionCover(player.transitionCovered)
                     .padding(.leading, PlayerView.miniPlayerHorizontalPadding)
                     .overlay {
-                        Color.black.opacity(0.000001)
+                        Color.tappableClear
                             .onTapGesture { handleMiniPlayerTap() }
                     }
             }
@@ -185,7 +185,7 @@ struct AVPlayerView: View {
                 if hideMiniPlayer {
                     PodcastArtworkTapArea()
                 } else {
-                    Color.black.opacity(0.000001)
+                    Color.tappableClear
                         .onTapGesture { handleMiniPlayerTap() }
                 }
             }
