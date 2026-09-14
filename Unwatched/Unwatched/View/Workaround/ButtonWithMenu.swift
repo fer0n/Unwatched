@@ -85,7 +85,7 @@ extension View {
         .accessibilityLabel(accessibilityLabel)
         .contextMenu {
             ForEach(groups) { group in
-                Section(group.title.map { LocalizedStringKey($0) } ?? "") {
+                MenuSection(group.title.map { LocalizedStringKey($0) }) {
                     ForEach(group.actions) { action in
                         Button(action: action.action) {
                             Text(action.title)

@@ -27,7 +27,7 @@ struct CoreRefreshButton: View {
             }
             .accessibilityLabel("refresh")
             .contextMenu {
-                Section(lastRefreshFailed && !refresher.isLoading ? "refreshFailedMessage" : "") {
+                MenuSection(lastRefreshFailed && !refresher.isLoading ? "refreshFailedMessage" : nil) {
                     Button {
                         Task { @MainActor in
                             await refresh(hardRefresh: true)
