@@ -219,6 +219,7 @@ struct SetupView: View {
         PlayerManager.revertNativeFallbackOnLaunch()
         #endif
         PlayerManager.shared.restoreNowPlayingVideo()
+        prefetchAudioArtworkIfNeeded()
         PodcastDownloadManager.shared.onEpisodeDownloaded = { youtubeId in
             ChapterService.loadPodcastChapters(youtubeId: youtubeId)
         }
@@ -227,6 +228,17 @@ struct SetupView: View {
         }
         VideoService.fetchVideoDurationsQueueInbox()
         sendSettings()
+    }
+
+    /// Starts decoding the restored podcast's cover art immediately after launch, ahead of `PodcastArtwork`
+    /// mounting its `CachedImageView` — otherwise `ImageService.decodedImageCache` is still cold from the fresh
+    /// process and the placeholder shows a moment longer than necessary before the art swaps in.
+    @MainActor
+    static func prefetchAudioArtworkIfNeeded() {
+        guard PlayerManager.shared.isAudioOnly else { return }
+        for url in PlayerManager.shared.displayArtworkUrls.compactMap({ $0 }) {
+            _ = ImageService.getImage(url, ImageCacheManager.shared, maxPixelSize: Const.maxDecodedImagePixelSize)
+        }
     }
 
     static func sendSettings() {

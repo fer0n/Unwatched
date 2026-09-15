@@ -130,9 +130,7 @@ struct PodcastArtwork: View {
                     .resizable()
                     .aspectRatio(contentMode: .fit)
             } placeholder: {
-                Image(systemName: Const.podcastSF)
-                    .font(.largeTitle)
-                    .foregroundStyle(.secondary)
+                Color.clear
             }
             .clipShape(shape)
             .artworkBorder(shape)
