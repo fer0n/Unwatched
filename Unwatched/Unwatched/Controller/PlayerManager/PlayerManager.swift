@@ -36,6 +36,14 @@ import UnwatchedShared
     @MainActor
     var transcriptUrl: String?
 
+    /// The audio track id the web player resolved as "original" for a given video, keyed by
+    /// youtubeId. Reused so a later reload under a different player variant (e.g. AirPlay HD's
+    /// desktop embed, which exposes audio tracks less reliably) can force the same track
+    /// instead of re-guessing from scratch. Transient — stays out of `Codable`, same as
+    /// `transcriptUrl` above.
+    @MainActor
+    var resolvedAudioTrackByVideoId: [String: String] = [:]
+
     var availableAudioLanguages: [(code: String, name: String)] = []
     var selectedAudioLanguage: String = ""
     var availableVideoQualities: [(height: Int, label: String)] = []
