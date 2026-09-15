@@ -61,4 +61,5 @@ struct DescriptionDetailHeaderView: View {
 
 #Preview {
     DescriptionDetailView(description: Video.getDummy().description)
+        .previewEnvironments()
 }
