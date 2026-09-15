@@ -3273,31 +3273,31 @@
         "de" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Videobeschreibung"
+            "value" : "Beschreibung"
           }
         },
         "en" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Video Description"
+            "value" : "Description"
           }
         },
         "es" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Descripción del video"
+            "value" : "Descripción"
           }
         },
         "fr" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Description de la vidéo"
+            "value" : "Description"
           }
         },
         "pl" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Opis filmu"
+            "value" : "Opis"
           }
         }
       }
@@ -10821,13 +10821,13 @@
         "en" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Loop Video"
+            "value" : "Loop"
           }
         },
         "es" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Repetir video"
+            "value" : "Repetir"
           }
         },
         "fr" : {
@@ -10839,7 +10839,7 @@
         "pl" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Zapętl film"
+            "value" : "Zapętl"
           }
         }
       }
@@ -10855,13 +10855,13 @@
         "en" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Loop Video Enabled"
+            "value" : "Loop Enabled"
           }
         },
         "es" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Repetir video activado"
+            "value" : "Repetición activada"
           }
         },
         "fr" : {
@@ -10873,7 +10873,7 @@
         "pl" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Zapętlanie filmu włączone"
+            "value" : "Zapętlanie włączone"
           }
         }
       }
@@ -16773,31 +16773,31 @@
         "de" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Video wirklich löschen?\n\nDies kann nicht rückgängig gemacht werden. Wenn das Video noch existiert, zu einem aktiven Abo gehört und eines der 15 neuesten Videos ist, kann es nach der nächsten Aktualisierung wieder erscheinen."
+            "value" : "Wirklich löschen?\n\nDies kann nicht rückgängig gemacht werden. Wenn der Eintrag noch existiert, zu einem aktiven Abo gehört und einer der 15 neuesten Einträge ist, kann er nach der nächsten Aktualisierung wieder erscheinen."
           }
         },
         "en" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Really delete Video?\n\nThis cannot be undone. If the video still exists, belongs to an active subscription, and is one of the 15 most recent videos, it may reappear after the next refresh."
+            "value" : "Really delete this?\n\nThis cannot be undone. If the entry still exists, belongs to an active subscription, and is one of the 15 most recent entries, it may reappear after the next refresh."
           }
         },
         "es" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "¿Realmente quieres eliminar el video?\n\nEsto no se puede deshacer. Si el video aún existe, pertenece a una suscripción activa y es uno de los 15 videos más recientes, puede reaparecer después de la próxima actualización."
+            "value" : "¿Realmente quieres eliminarlo?\n\nEsto no se puede deshacer. Si el elemento aún existe, pertenece a una suscripción activa y es uno de los 15 elementos más recientes, puede reaparecer después de la próxima actualización."
           }
         },
         "fr" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Vraiment supprimer la vidéo ?\n\nCette action ne peut pas être annulée. Si la vidéo existe toujours, appartient à un abonnement actif et fait partie des 15 vidéos les plus récentes, elle pourrait réapparaître après la prochaine actualisation."
+            "value" : "Vraiment supprimer cet élément ?\n\nCette action ne peut pas être annulée. Si l’élément existe toujours, appartient à un abonnement actif et fait partie des 15 éléments les plus récents, il pourrait réapparaître après la prochaine actualisation."
           }
         },
         "pl" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Naprawdę usunąć film?\n\nTej operacji nie można cofnąć. Jeśli film nadal istnieje, należy do aktywnej subskrypcji i jest jednym z 15 najnowszych filmów, może pojawić się ponownie po następnym odświeżeniu."
+            "value" : "Naprawdę usunąć?\n\nTej operacji nie można cofnąć. Jeśli element nadal istnieje, należy do aktywnej subskrypcji i jest jednym z 15 najnowszych elementów, może pojawić się ponownie po następnym odświeżeniu."
           }
         }
       }
@@ -21002,31 +21002,31 @@
         "de" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Video teilen"
+            "value" : "Teilen"
           }
         },
         "en" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Share Video"
+            "value" : "Share"
           }
         },
         "es" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Compartir video"
+            "value" : "Compartir"
           }
         },
         "fr" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Partager la vidéo"
+            "value" : "Partager"
           }
         },
         "pl" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Udostępnij film"
+            "value" : "Udostępnij"
           }
         }
       }
@@ -26193,31 +26193,31 @@
         "de" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Video"
+            "value" : "Medien"
           }
         },
         "en" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Video"
+            "value" : "Media"
           }
         },
         "es" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Video"
+            "value" : "Multimedia"
           }
         },
         "fr" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Vidéo"
+            "value" : "Médias"
           }
         },
         "pl" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Wideo"
+            "value" : "Multimedia"
           }
         }
       }
@@ -26363,31 +26363,31 @@
         "de" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Video Beschreibung"
+            "value" : "Beschreibung"
           }
         },
         "en" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Video Description"
+            "value" : "Description"
           }
         },
         "es" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Descripción del video"
+            "value" : "Descripción"
           }
         },
         "fr" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Description de la vidéo"
+            "value" : "Description"
           }
         },
         "pl" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Opis filmu"
+            "value" : "Opis"
           }
         }
       }
