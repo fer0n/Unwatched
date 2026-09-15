@@ -21,6 +21,29 @@ public enum SponsorBlockSegmentSetting: Int, Codable, CaseIterable, Sendable {
     }
 }
 
+/// Which settings apply to one video: its channel's overrides where it has them, the global ones otherwise.
+public struct SponsorBlockSettings: Sendable, Equatable {
+    public let sponsor: SponsorBlockSegmentSetting
+    public let selfPromo: SponsorBlockSegmentSetting
+
+    public init(sponsor: SponsorBlockSegmentSetting? = nil, selfPromo: SponsorBlockSegmentSetting? = nil) {
+        self.sponsor = sponsor ?? SponsorBlockSegmentSetting.sponsor
+        self.selfPromo = selfPromo ?? SponsorBlockSegmentSetting.selfPromo
+    }
+}
+
+public extension Subscription {
+    var sponsorBlockSettings: SponsorBlockSettings {
+        SponsorBlockSettings(sponsor: sponsorSegmentSetting, selfPromo: selfPromoSegmentSetting)
+    }
+}
+
+public extension Video {
+    var sponsorBlockSettings: SponsorBlockSettings {
+        subscription?.sponsorBlockSettings ?? SponsorBlockSettings()
+    }
+}
+
 /// Minimal subset of `NSUbiquitousKeyValueStore` so settings migration can be tested without iCloud.
 public protocol KeyValueStoring: AnyObject {
     func object(forKey aKey: String) -> Any?

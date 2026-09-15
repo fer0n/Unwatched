@@ -77,7 +77,3 @@ struct SideloadingView: View {
     }
 
 }
-
-// #Preview {
-//    SideloadingView()
-// }

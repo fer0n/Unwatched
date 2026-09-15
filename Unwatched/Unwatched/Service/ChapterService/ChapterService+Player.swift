@@ -66,7 +66,12 @@ extension ChapterService {
         var newChapters = videoChapters.isEmpty
             ? generateChapters(from: cleanedSegments, videoDuration: video.duration)
             : mergeSponsorSegments(videoChapters, sponsorSegments: cleanedSegments, duration: video.duration)
-        skipSponsorBlockSegments(in: &newChapters)
+        let settings = video.sponsorBlockSettings
+        skipSponsorBlockSegments(
+            in: &newChapters,
+            sponsorSetting: settings.sponsor,
+            selfPromoSetting: settings.selfPromo
+        )
         Log.info("mergeSegments, new: \(newChapters)")
 
         updateIfNeeded(newChapters, video)
@@ -143,8 +148,19 @@ extension ChapterService {
             if let chaptersUrl {
                 chapters = await PodcastService.fetchChapters(chaptersUrl, duration: duration)
             }
-            if chapters == nil, let mediaUrl {
-                chapters = await PodcastService.embeddedChapters(mediaUrl, duration: duration, episodeId: youtubeId)
+            if let mediaUrl, chapters?.contains(where: { $0.imageUrl != nil }) != true {
+                let embedded = await PodcastService.embeddedChapters(
+                    mediaUrl, duration: duration, episodeId: youtubeId
+                )
+                if let listed = chapters {
+                    // the file a show maintains carries the titles, while the pictures for those same chapters
+                    // sit in the episode's own frames (Lage der Nation does exactly this)
+                    if let embedded, embedded.contains(where: { $0.imageUrl != nil }) {
+                        chapters = PodcastService.mergingImages(from: embedded, into: listed)
+                    }
+                } else {
+                    chapters = embedded
+                }
             }
             if chapters == nil, let feedUrl {
                 // inline markers came with the episode and were cached; this is how they come back once that entry
@@ -212,7 +228,9 @@ extension ChapterService {
     /// list leaves the row saying inactive, and the tap looks like it did nothing.
     @MainActor
     static func setChapterActive(_ isActive: Bool, _ chapter: SendableChapter, of video: Video) {
-        video.subscription?.setAutoSkip(chapter.title, !isActive)
+        if isActive || autoSkipsRecurringChapters {
+            video.subscription?.setAutoSkip(chapter.title, !isActive)
+        }
 
         // one that only the auto-skip list turned off is already back on, and has no row to write
         guard !isActive || stillInactive(chapter, of: video) else {

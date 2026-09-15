@@ -7,12 +7,28 @@ import SwiftUI
 import OSLog
 import UnwatchedShared
 
+@MainActor
+extension PlayerManager {
+    var showsPauseIcon: Bool {
+        isPlaying && !videoEnded
+    }
+
+    var playPauseLabel: String {
+        isPlaying ? String(localized: "pause") : String(localized: "play")
+    }
+
+    func playPauseSymbol(circleVariant: Bool = false) -> String {
+        let circle = circleVariant ? ".circle" : ""
+        return showsPauseIcon ? "pause\(circle).fill" : "play\(circle).fill"
+    }
+}
+
 struct CorePlayButton<Content>: View where Content: View {
     @Environment(PlayerManager.self) var player
     @State var hapticToggle: Bool = false
 
     private let contentImage: ((Image) -> Content)
-    private let circle: String
+    private let circleVariant: Bool
     let enableHaptics: Bool
     let enableHelperPopup: Bool
 
@@ -22,7 +38,7 @@ struct CorePlayButton<Content>: View where Content: View {
         enableHelperPopup: Bool = true,
         @ViewBuilder content: @escaping (Image) -> Content = { $0 }
     ) {
-        self.circle = circleVariant ? ".circle" : ""
+        self.circleVariant = circleVariant
         self.enableHaptics = enableHaptics
         self.enableHelperPopup = enableHelperPopup
         self.contentImage = content
@@ -30,9 +46,7 @@ struct CorePlayButton<Content>: View where Content: View {
 
     var body: some View {
         contentImage(
-            Image(systemName: player.isPlaying && !player.videoEnded
-                    ? "pause\(circle).fill"
-                    : "play\(circle).fill")
+            Image(systemName: player.playPauseSymbol(circleVariant: circleVariant))
         )
         .rotationEffect(.degrees(player.videoEnded
                                     ? 180
@@ -41,7 +55,7 @@ struct CorePlayButton<Content>: View where Content: View {
         .foregroundStyle(Color.neutralAccentColor)
         .contentTransition(.symbolEffect(.replace.magic(fallback: .replace), options: .speed(7)))
         .buttonWithMenu(
-            accessibilityLabel: player.isPlaying ? String(localized: "pause") : String(localized: "play"),
+            accessibilityLabel: player.playPauseLabel,
             groups: enableHelperPopup ? menuGroups : [],
             onTap: handlePress
         )

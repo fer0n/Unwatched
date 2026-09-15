@@ -203,9 +203,6 @@ extension DataProvider {
             vid24
         ]
 
-        // let queueEntry = QueueEntry(video: nil, order: 0)
-        // context.insert(queueEntry)
-
         for (index, video) in videos.enumerated() {
             context.insert(video)
             let queueEntry = QueueEntry(video: video, order: index)

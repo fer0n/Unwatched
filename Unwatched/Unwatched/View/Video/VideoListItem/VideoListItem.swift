@@ -138,15 +138,12 @@ extension View {
             )
         )
         .equatable()
-        // .tint(.teal)
         .listRowSeparator(.hidden)
         .videoListItemEntry()
-        // .listRowBackground(Color.gray)
     }
     .listStyle(.plain)
     .modelContainer(container)
     .environment(NavigationManager())
     .environment(PlayerManager())
     .environment(ImageCacheManager())
-    // .environment(\.sizeCategory, .accessibilityExtraExtraExtraLarge)
 }

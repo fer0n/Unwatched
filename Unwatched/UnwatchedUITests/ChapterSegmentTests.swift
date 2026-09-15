@@ -134,5 +134,41 @@ final class ChapterSegmentTests: XCTestCase {
         XCTAssertEqual(merged.map(\.title), ["Intro", "Topic", nil, "Topic"])
         XCTAssertEqual(merged.map(\.category), [nil, nil, .sponsor, nil])
     }
+
+    /// A podcast episode has no automatic SponsorBlock fetch, so a merge written by the shortcut
+    /// is the only way it gets sponsor chapters — it has to show whatever the setting says.
+    @MainActor
+    func testMergedChaptersShowRegardlessOfTheFetchSetting() {
+        let modelContext = DataProvider.newContext()
+        let video = Video(
+            title: "My Episode",
+            url: nil,
+            youtubeId: "podcast-segment-test",
+            duration: 300,
+            mediaUrl: URL(string: "https://example.com/episode.mp3")
+        )
+        let chapters = [
+            Chapter(title: "Intro", time: 0, endTime: 60),
+            Chapter(title: "Topic", time: 60, endTime: 300)
+        ]
+        chapters.forEach(modelContext.insert)
+        modelContext.insert(video)
+        video.chapters = chapters
+        try? modelContext.save()
+        defer {
+            video.allChapterRows.forEach(modelContext.delete)
+            modelContext.delete(video)
+            try? modelContext.save()
+        }
+
+        XCTAssertTrue(video.isPodcast)
+        let segments = ChapterService.extractSegments(from: "01:30 - 02:00 sponsor", videoDuration: video.duration)
+        XCTAssertTrue(ChapterService.mergeSegments(segments, into: video))
+
+        XCTAssertEqual(
+            video.sortedChapterData.map(\.startTime), [0, 60, 90, 120],
+            "the merge the shortcut just wrote has to be visible, whatever the setting happens to be"
+        )
+    }
 }
 // swiftlint:enable all

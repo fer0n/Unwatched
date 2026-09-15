@@ -20,7 +20,7 @@ public struct PodcastDownloadIndicator: View {
 
     public var body: some View {
         // a download in flight shows up in the progress bar instead
-        if video.downloadedDate != nil {
+        if video.isPodcast, PodcastDownloadManager.shared.downloadedIds.contains(video.youtubeId) {
             Image(systemName: Const.downloadedSF)
                 .font(.system(size: iconSize))
                 .fontWeight(.heavy)

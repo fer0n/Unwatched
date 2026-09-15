@@ -132,7 +132,12 @@ extension PlayerManager {
         if immediate {
             VideoService.forceUpdateVideoNow(modelId, elapsedSeconds: time)
         } else {
-            _ = VideoService.forceUpdateVideo(modelId, elapsedSeconds: time)
+            _ = VideoService.forceUpdateVideo(
+                modelId,
+                elapsedSeconds: time,
+                delay: Const.elapsedTimeSaveDebounceSeconds * 1000,
+                maxDelay: Const.elapsedTimeSaveMaxDelaySeconds * 1000
+            )
         }
     }
 
@@ -267,6 +272,19 @@ extension PlayerManager {
     }
 
     @MainActor
+    var arrowKeySeekSeconds: Double {
+        video.flatMap(Tag.seekSecondsTag(for:))?.seekSeconds ?? Self.defaultArrowKeySeekSeconds
+    }
+
+    static var defaultArrowKeySeekSeconds: Double {
+        hasCustomSeekSeconds ? defaultSeekSeconds : Const.arrowKeySeekSeconds
+    }
+
+    private static var hasCustomSeekSeconds: Bool {
+        UserDefaults.standard.object(forKey: Const.doubleTapSeekDuration) != nil
+    }
+
+    @MainActor
     func seek(backward: Bool, _ seconds: Double) -> Bool {
         if video != nil {
             let offset = backward ? -seconds : seconds
@@ -338,13 +356,19 @@ extension PlayerManager {
     }
 
     @MainActor
+    func signalMediaType() {
+        guard videoSource != .restore, let video else { return }
+        Signal.interaction("Player.Media", video.isPodcast ? "podcast" : "video")
+    }
+
+    @MainActor
     func setTemporaryPlaybackSpeed() {
         if temporarySlowDownThreshold {
             temporaryPlaybackSpeed = 1
         } else {
             temporaryPlaybackSpeed = tempSpeedUpValue
         }
-        Signal.log("Player.setTemporarySpeed")
+        Signal.interaction("Player.setTemporarySpeed")
     }
 
     @MainActor
@@ -426,7 +450,7 @@ extension PlayerManager {
         guard pipEnabled || hasPipSurface else { return }
         setPip(!pipEnabled)
         if pipEnabled {
-            Signal.log("Player.PIP")
+            Signal.interaction("Player.PIP")
         }
     }
 
@@ -452,7 +476,7 @@ extension PlayerManager {
         if temporaryPlaybackSpeed != nil {
             return
         }
-        Signal.log("Player.setPlaybackSpeed", parameters: ["fullscreen": fullscreenContext])
+        Signal.interaction("Player.setPlaybackSpeed", parameters: ["fullscreen": fullscreenContext])
         if video?.subscription?.customSpeedSetting != nil {
             video?.subscription?.customSpeedSetting = value
         } else {
@@ -548,18 +572,12 @@ extension PlayerManager {
     @MainActor
     func setTrimSilence(_ enabled: Bool) {
         UserDefaults.standard.set(enabled, forKey: Const.trimSilence)
+        // before the reset below: the engine banks what it was still holding
+        backend.applyTrimSilence()
         if enabled {
             UserDefaults.standard.set(0.0, forKey: Const.trimSilenceSecondsSaved)
+            UserDefaults.standard.set(0.0, forKey: Const.trimSilenceSecondsPlayed)
         }
-        backend.applyTrimSilence()
-    }
-
-    /// Same idea as `setTrimSilence`: the engine re-reads the setting and rebuilds the composition from the episode's
-    /// existing scan, so a tier change never triggers a re-scan.
-    @MainActor
-    func setTrimSilenceTier(_ tier: TrimSilenceTier) {
-        UserDefaults.standard.set(tier.rawValue, forKey: Const.trimSilenceTier)
-        backend.applyTrimSilence()
     }
 
     /// The player reporting that PiP started or ended without being asked — the system PiP button, or the PiP window

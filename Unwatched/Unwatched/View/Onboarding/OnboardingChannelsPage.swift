@@ -21,9 +21,7 @@ struct OnboardingChannelsPage: View {
                         isSelected: viewModel.isSelected(channel),
                         showsDivider: channel.id != firstId
                     ) {
-                        withAnimation {
-                            viewModel.toggle(channel)
-                        }
+                        viewModel.toggle(channel)
                     }
                     .padding(.horizontal, OnboardingLayout.horizontalPadding)
                 }

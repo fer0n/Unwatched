@@ -143,6 +143,7 @@ struct SetupView: View {
         // Playback continues in the background, so this may be the last chance to write before the
         // app is suspended — and, if it never comes back, killed.
         PlayerManager.shared.updateElapsedTime(immediate: true)
+        VideoService.commitPendingVideoUpdates()
         StatsService.shared.flush()
         #if os(iOS)
         NotificationManager.handleNotifications()
@@ -170,6 +171,10 @@ struct SetupView: View {
             ChapterService.cleanupDerivedChapters(olderThanDays: Const.cleanupCacheDays)
         }
 
+        if UserDefaults.standard.shouldPerform(Const.purgeLegacyUrlCache, interval: .monthly) {
+            URLSession.purgeLegacyDiskCache()
+        }
+
         CleanupService.runScheduledCleanup(
             deleteWatchedOlderThan: dueCleanupSetting(Const.autoDeleteWatchedVideos) {
                 cleanupInterval(forDays: $0)
@@ -177,7 +182,11 @@ struct SetupView: View {
             deleteOrphanedOlderThan: dueCleanupSetting(Const.autoDeleteOrphanedVideos) {
                 cleanupInterval(forDays: $0)
             },
-            inboxLimit: dueCleanupSetting(Const.autoDeleteInboxVideosLimit) { _ in .weekly }
+            inboxLimit: dueCleanupSetting(Const.autoDeleteInboxVideosLimit) { _ in .weekly },
+            deleteStatelessPodcastEpisodes: UserDefaults.standard.shouldPerform(
+                Const.cleanupPodcastEpisodes, interval: .weekly
+            ),
+            protecting: PlayerManager.shared.video?.persistentId
         )
 
         HistoryMaintenance.pruneConsumedHistoryIfDue()
@@ -194,8 +203,11 @@ struct SetupView: View {
         _ key: String,
         interval: (Int) -> SignalInterval
     ) -> Int? {
-        let value = UserDefaults.standard.integer(forKey: key)
-        guard value > 0, UserDefaults.standard.shouldPerform(key, interval: interval(value)) else {
+        let value = NSUbiquitousKeyValueStore.default.object(forKey: key) as? Int
+            ?? Const.syncedSettingsDefaults[key] as? Int ?? 0
+        guard value > 0,
+              Const.settingsSplashShown.bool == true,
+              UserDefaults.standard.shouldPerform(key, interval: interval(value)) else {
             return nil
         }
         return value
@@ -209,7 +221,9 @@ struct SetupView: View {
         PlayerManager.shared.restoreNowPlayingVideo()
         PodcastDownloadManager.shared.onEpisodeDownloaded = { youtubeId in
             ChapterService.loadPodcastChapters(youtubeId: youtubeId)
-            SilenceScanActor.scanDownloadedEpisode(youtubeId: youtubeId)
+        }
+        PodcastDownloadManager.shared.onEpisodeDownloadFailed = {
+            Signal.error("podcastDownloadFailed")
         }
         VideoService.fetchVideoDurationsQueueInbox()
         sendSettings()
@@ -222,6 +236,7 @@ struct SetupView: View {
             var params = UserDataService.getNonDefaultSettings(prefixValue: "Unwatched.Setting.")
             params["device"] = Signal.deviceCategory
             params["os"] = Signal.osVersion
+            params["version"] = Signal.appVersion
             // Free-text settings are never sent verbatim (see getNonDefaultSettings).
             params["hasCustomApiKey"] = "Unwatched.Setting.\(Self.isSyncedSettingSet(Const.customYoutubeApiKey))"
             params["hasSkipText"] = "Unwatched.Setting.\(Self.isSyncedSettingSet(Const.skipChapterText))"
@@ -238,11 +253,15 @@ struct SetupView: View {
     }
 
     static func signalSubscriptionCount() {
-        let task = SubscriptionService.getActiveSubscriptionCount()
+        let subscriptions = SubscriptionService.getActiveSubscriptionCount()
+        let podcasts = SubscriptionService.getActivePodcastSubscriptionCount()
         Task {
-            if let count = await task.value {
-                Signal.log("SubscriptionCount", parameters: ["SubscriptionCount.Value": "\(count)"])
+            guard let count = await subscriptions.value else { return }
+            var params = ["SubscriptionCount.Value": Signal.bucket(count)]
+            if let podcastCount = await podcasts.value {
+                params["PodcastCount.Value"] = Signal.bucket(podcastCount)
             }
+            Signal.log("SubscriptionCount", parameters: params)
         }
     }
 }

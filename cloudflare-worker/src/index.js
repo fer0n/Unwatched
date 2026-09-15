@@ -80,6 +80,7 @@ export default {
           JSON.stringify(event.params ?? {}),
           event.userId ?? "unknown",
           event.channel ?? "unknown",
+          event.appVersion ?? "unknown",
         ],
         // doubles: numeric fields, up to 20. clientTimestamp preserves when the
         // event actually happened, since ingestion time reflects when it was sent.

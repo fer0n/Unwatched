@@ -23,6 +23,8 @@ import UnwatchedShared
         case failed
     }
 
+    private(set) var didSearch = false
+
     /// Channels already subscribed to, so re-entering the first page doesn't subscribe twice
     private var subscribedChannelIds = Set<String>()
     /// Query `searchResults` belong to, so returning to the page doesn't re-run a finished search
@@ -39,10 +41,11 @@ import UnwatchedShared
         selected.isEmpty
     }
 
-    /// Selected channels first, so one found via search stays reachable after the query changes.
+    /// Selected channels the list doesn't hold anyway go first, so one found via search stays
+    /// reachable after the query changes. Everything else keeps its place, so picking a channel
+    /// doesn't reshuffle the list under the finger that picked it.
     /// Stale results are dropped while a search is in flight.
     var listedChannels: [YoutubeChannelSearchResult] {
-        let selectedIds = Set(selected.map(\.channelId))
         let rest: [YoutubeChannelSearchResult]
         if searchText.isEmpty {
             rest = OnboardingChannelSuggestions.all
@@ -51,7 +54,8 @@ import UnwatchedShared
         } else {
             rest = searchResults
         }
-        return selected + rest.filter { !selectedIds.contains($0.channelId) }
+        let listedIds = Set(rest.map(\.channelId))
+        return selected.filter { !listedIds.contains($0.channelId) } + rest
     }
 
     func isSelected(_ channel: YoutubeChannelSearchResult) -> Bool {
@@ -100,6 +104,7 @@ import UnwatchedShared
         }
         isSearching = true
         searchState = .idle
+        didSearch = true
         do {
             let results = try await YoutubeChannelSearch.search(query)
             guard !Task.isCancelled else { return }
@@ -108,6 +113,7 @@ import UnwatchedShared
         } catch {
             guard !Task.isCancelled else { return }
             Log.error("channelSearch failed: \(error)")
+            Signal.error("onboardingChannelSearchFailed")
             searchResults = []
             searchState = .failed
         }
@@ -153,6 +159,7 @@ import UnwatchedShared
                 _ = try await SubscriptionService.addSubscriptions(subscriptionInfo: info)
             } catch {
                 Log.error("onboarding subscribe failed: \(error)")
+                Signal.error("onboardingSubscribeFailed")
                 return
             }
             // refreshAll returns without doing anything while another refresh is in flight, and

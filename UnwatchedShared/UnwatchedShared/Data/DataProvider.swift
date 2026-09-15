@@ -44,7 +44,13 @@ public final class DataProvider: Sendable {
         Log.info("getModelContainer")
         var enableIcloudSync = UserDefaults.standard.bool(forKey: Const.enableIcloudSync)
         #if os(tvOS)
+        // No settings screen to turn sync on, and the store is only ever a mirror of what the
+        // phone put in iCloud — without sync there would be nothing to show.
         enableIcloudSync = true
+        #elseif os(watchOS)
+        // Mirroring the phone's whole store takes hours, so it is opt-in: until it is on, the
+        // watch runs off the queue snapshot in `quickContainer` instead.
+        enableIcloudSync = UserDefaults.standard.bool(forKey: Const.watchFullSync)
         #endif
 
         #if DEBUG
@@ -108,8 +114,31 @@ public final class DataProvider: Sendable {
         }
     }
 
+    #if os(watchOS)
+    /// The queue snapshot the phone hands over, in a store of its own so those rows can never be
+    /// exported once full sync is switched on.
+    public static let quickContainer: ModelContainer = {
+        let storeURL = FileManager.default.urls(for: .cachesDirectory, in: .userDomainMask)
+            .first!
+            .appendingPathComponent("watchQuickQueue.sqlite")
+        let config = ModelConfiguration(schema: DataProvider.schema, url: storeURL, cloudKitDatabase: .none)
+
+        do {
+            return try ModelContainer(for: DataProvider.schema, configurations: [config])
+        } catch {
+            Log.error("Could not open the quick queue store, discarding it: \(error)")
+            DataProvider.removeStore(at: storeURL)
+            do {
+                return try ModelContainer(for: DataProvider.schema, configurations: [config])
+            } catch {
+                fatalError("Could not create the quick queue ModelContainer: \(error)")
+            }
+        }
+    }()
+    #endif
+
     public let localCacheContainer: ModelContainer = {
-        let schema = Schema([CachedImage.self, Transcript.self, CachedChapters.self])
+        let schema = Schema([CachedImage.self, Transcript.self, CachedChapters.self, CachedEpisode.self])
         let fileName = "imageCache.sqlite"
 
         // Shared with `UnwatchedShareExtension` (same reasoning as `groupContainer` above) so
@@ -122,7 +151,7 @@ public final class DataProvider: Sendable {
         ) {
             storeURL = groupURL.appendingPathComponent(fileName)
         } else {
-            #if os(tvOS)
+            #if os(tvOS) || os(watchOS)
             storeURL = FileManager.default.urls(for: .cachesDirectory, in: .userDomainMask).first!.appendingPathComponent(fileName)
             #elseif os(macOS)
             storeURL = URL.applicationSupportDirectory.appending(path: fileName)

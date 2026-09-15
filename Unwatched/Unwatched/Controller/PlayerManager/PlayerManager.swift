@@ -196,6 +196,7 @@ import UnwatchedShared
             return
         }
         resetVideoIndependentValues()
+        signalMediaType()
         #if os(iOS)
         // after the reset, whose `revertNativeFallback` would undo it
         switchToNativeForBackgroundPlayback(videoSource)
@@ -287,7 +288,7 @@ import UnwatchedShared
         let currentVideoId = video?.youtubeId
 
         func handleTopVideo(_ context: ModelContext) {
-            let topVideo = VideoService.getTopVideoInQueue(context, queueFilter(context))
+            let topVideo = topVideoInQueue(context)
             if let topVideo {
                 if topVideo.youtubeId != currentVideoId || playIfCurrent {
                     self.setNextVideo(topVideo, source)

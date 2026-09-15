@@ -8,45 +8,18 @@ import SwiftData
 import OSLog
 import UnwatchedShared
 
-private extension View {
-    /// Library matches open the regular detail view; channels and podcasts that aren't added yet get a preview.
-    func searchSubscriptionDestination(_ modelContext: ModelContext) -> some View {
-        navigationDestination(for: SendableSubscription.self) { sub in
-            ZStack {
-                if sub.persistentId != nil {
-                    SendableSubscriptionDetailView(sub, modelContext)
-                } else if sub.isPodcast {
-                    PodcastPreviewView(sub)
-                } else {
-                    ChannelPreviewView(sub)
-                }
-            }
-            #if !os(visionOS)
-            .foregroundStyle(Color.neutralAccentColor)
-            #endif
-            #if os(macOS)
-            .navigationStackWorkaround()
-            #endif
-        }
-    }
-}
-
 /// The Search tab: searches YouTube via the InnerTube WEB client and renders the
 /// results using the same `VideoListItem` rows as the rest of the app. Tapping a
 /// result (or its queue/swipe actions) materialises it into the library on demand.
 struct SearchView: View {
-    private static let collapsedPodcastCount = 3
-
     @AppStorage(Const.searchAlwaysUseYoutube) var searchAlwaysUseYoutube: Bool = false
 
     @Environment(\.modelContext) private var modelContext
-    @Environment(PlayerManager.self) private var player
     @Environment(NavigationManager.self) private var navManager
     @Environment(BrowserManager.self) private var browserManager
-    @State private var vm = SearchVM()
-    @State private var showBrowserFallback = false
+    @State private var vm = SearchVM.shared
     @State private var hasAppearedOnce = false
-    @State private var showAllPodcasts = false
+    @State private var focusTask: Task<Void, Never>?
     @FocusState private var searchFocused: Bool
 
     var body: some View {
@@ -55,7 +28,7 @@ struct SearchView: View {
         NavigationStack(path: $navManager.presentedSearch) {
             ZStack {
                 MyBackgroundColor()
-                content
+                rootContent
                     .paneSearchField(
                         text: $vm.query,
                         focused: $searchFocused,
@@ -66,12 +39,8 @@ struct SearchView: View {
             .myNavigationTitle("search")
             .toolbar {
                 RefreshToolbarContent()
-                if vm.hasSearched {
-                    ToolbarItem(placement: topBarTrailingPlacement) {
-                        SearchFilterMenu(vm: vm)
-                            .font(.footnote)
-                            .fontWeight(.bold)
-                    }
+                if showsResultsInline {
+                    filterToolbarItem
                 }
                 #if !os(macOS)
                 // macOS uses the File menu: a toolbar item here lands outside the sidebar.
@@ -82,7 +51,14 @@ struct SearchView: View {
                 }
                 #endif
             }
-            .searchSubscriptionDestination(modelContext)
+            .navigationDestination(for: SearchRoute.self) { route in
+                switch route {
+                case .results:
+                    resultsPage
+                case .subscription(let sub):
+                    SearchSubscriptionPage(sub, modelContext)
+                }
+            }
             .myTint()
         }
         .nativeSearchable(
@@ -96,18 +72,15 @@ struct SearchView: View {
                 vm.clear()
             }
         }
-        .onChange(of: vm.activeQuery) {
-            showAllPodcasts = false
-        }
         .onChange(of: searchFocused) { _, focused in
             if focused {
-                showBrowserFallback = false
+                vm.showBrowserFallback = false
             }
         }
 
         // tap-to-play adds to the queue without an onChange callback — refresh when
         // the now-playing video changes so the status badge catches up.
-        .onChange(of: player.video?.youtubeId) {
+        .onPlayerVideoChange {
             vm.refreshAllStatuses()
         }
         // Focus the search field for explicit requests: "Search YouTube" quick action,
@@ -120,6 +93,14 @@ struct SearchView: View {
             focusSearchField(delay: hasAppearedOnce ? .zero : .milliseconds(300))
         }
         .onAppear { hasAppearedOnce = true }
+        .onDisappear { focusTask?.cancel() }
+        #if !os(macOS)
+        // Leaving the results page is a request to edit the query, so focus what it reveals.
+        .onChange(of: navManager.presentedSearch) { previous, current in
+            guard current.isEmpty, previous.first == .results, navManager.tab == .search else { return }
+            focusSearchField(delay: .milliseconds(200), attempts: 12)
+        }
+        #endif
         .onChange(of: shouldAutoFocusSearch, initial: true) { _, newValue in
             navManager.searchTabShouldAutoFocus = newValue
         }
@@ -145,11 +126,15 @@ struct SearchView: View {
     func search(for term: String) {
         vm.query = term
         let trimmed = term.trimmingCharacters(in: .whitespacesAndNewlines)
+        guard !trimmed.isEmpty else { return }
         if searchAlwaysUseYoutube, let url = youtubeSearchURL(for: trimmed) {
             openBrowserFallback(url)
         } else {
-            showBrowserFallback = false
+            vm.showBrowserFallback = false
             vm.search()
+        }
+        if !showsResultsInline && navManager.presentedSearch.first != .results {
+            navManager.presentedSearch = [.results]
         }
     }
 
@@ -162,27 +147,76 @@ struct SearchView: View {
 
     func openBrowserFallback(_ url: URL) {
         browserManager.loadUrl(url)
-        showBrowserFallback = true
+        vm.showBrowserFallback = true
     }
 
     var shouldAutoFocusSearch: Bool {
         !vm.hasSearched && vm.query.isEmpty
     }
 
-    func focusSearchField(delay: Duration = .milliseconds(300)) {
+    /// Right after a pop back to the root the field is still morphing into the tab bar and only
+    /// accepts focus around 0.6s later (iOS 27), so callers can ask repeatedly instead of guessing.
+    func focusSearchField(delay: Duration = .milliseconds(300), attempts: Int = 1) {
         navManager.pendingSearchFocus = false
+        focusTask?.cancel()
         // Defer so the searchable field is in the hierarchy (notably on cold launch).
-        Task { @MainActor in
+        focusTask = Task { @MainActor in
             if delay > .zero {
                 try? await Task.sleep(for: delay)
             }
-            searchFocused = true
+            for _ in 0..<attempts {
+                guard !Task.isCancelled, !searchFocused,
+                      navManager.tab == .search, navManager.presentedSearch.isEmpty else { return }
+                searchFocused = true
+                try? await Task.sleep(for: .milliseconds(100))
+            }
+        }
+    }
+
+    /// macOS draws its own search field above the content, so nothing forces focus there and the
+    /// results can stay on the tab's root. See `SearchRoute`.
+    var showsResultsInline: Bool {
+        #if os(macOS)
+        true
+        #else
+        false
+        #endif
+    }
+
+    @ToolbarContentBuilder
+    var filterToolbarItem: some ToolbarContent {
+        if vm.hasSearched {
+            ToolbarItem(placement: topBarTrailingPlacement) {
+                SearchFilterMenu(vm: vm)
+                    .font(.footnote)
+                    .fontWeight(.bold)
+            }
         }
     }
 
     @ViewBuilder
-    var content: some View {
-        if showBrowserFallback {
+    var rootContent: some View {
+        if showsResultsInline && !vm.showBrowserFallback && vm.hasSearched && !vm.isEditingQuery {
+            resultsContent
+        } else {
+            SearchSuggestionsView(vm: vm, searchFocused: $searchFocused, onSelect: search(for:))
+        }
+    }
+
+    var resultsPage: some View {
+        ZStack {
+            MyBackgroundColor()
+            resultsContent
+        }
+        .myNavigationTitle(vm.hasSearched ? .verbatim(vm.activeQuery) : "search")
+        .toolbar {
+            filterToolbarItem
+        }
+    }
+
+    @ViewBuilder
+    var resultsContent: some View {
+        if vm.showBrowserFallback {
             BrowserView(showHeader: false, safeArea: false, hideYoutubeChrome: true)
         } else if vm.isSearching && !vm.hasAnyResults {
             ProgressView()
@@ -192,7 +226,7 @@ struct SearchView: View {
             } description: {
                 Text(verbatim: error)
             } actions: {
-                Button("retry") { vm.search() }
+                Button("retry") { vm.search(force: true) }
                 if let url = youtubeSearchURL(for: vm.activeQuery) {
                     Button("searchInBrowser") {
                         openBrowserFallback(url)
@@ -211,175 +245,9 @@ struct SearchView: View {
                     }
                 }
             }
-        } else if !vm.hasSearched || searchFocused {
-            SearchSuggestionsView(vm: vm, searchFocused: $searchFocused, onSelect: search(for:))
         } else {
-            resultsList
+            SearchResultsList(vm: vm)
         }
-    }
-
-    var resultsList: some View {
-        List {
-            if !vm.localResults.subscriptions.isEmpty {
-                section(.subscriptions) {
-                    ForEach(vm.localResults.subscriptions, id: \.persistentId) { sub in
-                        NavigationLink(value: sub) {
-                            SearchSubscriptionListItem(subscription: sub)
-                        }
-                    }
-                    .myListRowBackground()
-                }
-            }
-
-            if !vm.localResults.bookmarks.isEmpty {
-                section(.bookmarks) {
-                    videoRows(vm.localResults.bookmarks)
-                }
-            }
-
-            if !vm.localResults.videos.isEmpty {
-                section(.library) {
-                    videoRows(vm.localResults.videos)
-                }
-            }
-
-            if !vm.podcastResults.isEmpty {
-                section(.podcasts) {
-                    podcastRows
-                }
-            }
-
-            if !vm.youtubeResults.isEmpty || !vm.youtubeChannelResults.isEmpty {
-                section(.youtube) {
-                    youtubeChannelRows(vm.youtubeChannelResults)
-
-                    videoRows(vm.youtubeResults, loadMore: true)
-
-                    if vm.isLoadingMore {
-                        ProgressView()
-                            .frame(maxWidth: .infinity)
-                            .listRowSeparator(.hidden)
-                            .myListRowBackground()
-                    }
-                }
-            }
-        }
-        .scrollContentBackground(.hidden)
-        .listStyle(.plain)
-        .environment(\.videoListContext, .search)
-    }
-
-    /// Sections are only labelled once something local matched — a lone "YouTube"
-    /// header above a plain search would just be noise.
-    var showSectionHeaders: Bool {
-        !vm.localResults.isEmpty || !vm.podcastResults.isEmpty
-    }
-
-    /// The label is an ordinary row rather than a `Section` header: a plain list pins
-    /// headers, which makes them float free of the rows they label while scrolling.
-    func section<Content: View>(
-        _ source: SearchSource,
-        @ViewBuilder content: () -> Content
-    ) -> some View {
-        Section {
-            if showSectionHeaders {
-                source.label
-                    .font(.subheadline)
-                    .fontWeight(.semibold)
-                    .foregroundStyle(.secondary)
-                    .padding(.horizontal, 10)
-                    .padding(.top, 10)
-                    .frame(maxWidth: .infinity, alignment: .leading)
-                    .listRowInsets(EdgeInsets())
-                    .listRowSeparator(.hidden)
-                    .myListRowBackground()
-            }
-            content()
-        }
-    }
-
-    /// Podcast hits are a sidebar to the search, not its subject: only a few show until asked.
-    @ViewBuilder
-    var podcastRows: some View {
-        let shown = showAllPodcasts
-            ? vm.podcastResults
-            : Array(vm.podcastResults.prefix(Self.collapsedPodcastCount))
-
-        ForEach(shown, id: \.link) { sub in
-            NavigationLink(value: sub) {
-                SearchSubscriptionListItem(subscription: sub)
-            }
-        }
-        .myListRowBackground()
-
-        if !showAllPodcasts && vm.podcastResults.count > Self.collapsedPodcastCount {
-            Button {
-                withAnimation { showAllPodcasts = true }
-            } label: {
-                HStack(spacing: 4) {
-                    Text("showMoreResults")
-                    Image(systemName: "chevron.down")
-                }
-                .font(.subheadline)
-                .fontWeight(.medium)
-                .padding(.vertical, 5)
-            }
-            .buttonStyle(.plain)
-            .foregroundStyle(.secondary)
-            .listRowSeparator(.hidden)
-            .myListRowBackground()
-        }
-    }
-
-    @ViewBuilder
-    func youtubeChannelRows(_ channels: [SendableSubscription]) -> some View {
-        if !channels.isEmpty {
-            ForEach(channels, id: \.youtubeChannelId) { sub in
-                NavigationLink(value: sub) {
-                    SearchSubscriptionListItem(subscription: sub)
-                }
-            }
-            .myListRowBackground()
-            .videoListItemEntry()
-
-            VStack {
-                Divider()
-                    .padding(.horizontal)
-            }
-            .videoListItemEntry()
-            .myListRowBackground()
-        }
-    }
-
-    func videoRows(_ videos: [SendableVideo], loadMore: Bool = false) -> some View {
-        ForEach(videos, id: \.youtubeId) { video in
-            VideoListItem(
-                video,
-                video.youtubeId,
-                config: VideoListItemConfig(
-                    hasInboxEntry: video.hasInboxEntry,
-                    hasQueueEntry: video.queueEntry != nil,
-                    videoDuration: video.duration,
-                    watched: video.watchedDate != nil,
-                    deferred: video.deferDate != nil,
-                    isNew: video.isNew,
-                    showAllStatus: true,
-                    showContextMenu: true,
-                    showDelete: false
-                ),
-                onChange: { _, _ in
-                    vm.refreshStatus(for: video.youtubeId)
-                }
-            )
-            .equatable()
-            .videoListItemEntry()
-            .onAppear {
-                if loadMore {
-                    vm.loadMoreIfNeeded(currentItem: video)
-                }
-            }
-        }
-        .myListRowBackground()
     }
 }
 

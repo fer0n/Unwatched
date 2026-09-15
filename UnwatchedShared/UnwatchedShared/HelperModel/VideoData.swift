@@ -25,7 +25,6 @@ public protocol VideoData {
     /// Direct stream URL.
     var mediaUrl: URL? { get }
     var isAudioOnly: Bool? { get }
-    var downloadedDate: Date? { get }
 
     var sortedChapterData: [SendableChapter] { get }
     var subscriptionData: (any SubscriptionData)? { get }

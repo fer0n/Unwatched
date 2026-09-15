@@ -1,5 +1,8 @@
 import Foundation
 import SwiftUI
+#if os(watchOS)
+import WatchKit
+#endif
 
 public struct Device {
     public static var version: String? {
@@ -84,6 +87,10 @@ public struct Device {
     public static let isIphone: Bool = false
     public static let systemVersion = "tvOS \(ProcessInfo.processInfo.operatingSystemVersionString)"
     public static let isVision: Bool = false
+    #elseif os(watchOS)
+    public static let isIphone: Bool = false
+    public static let systemVersion = "watchOS \(WKInterfaceDevice.current().systemVersion)"
+    public static let isVision: Bool = false
     #elseif os(visionOS)
     public static let systemVersion = "visionOS \(ProcessInfo.processInfo.operatingSystemVersionString)"
     public static let isIphone: Bool = false
@@ -117,6 +124,8 @@ public struct Device {
         return "Mac"
         #elseif os(tvOS)
         return "Apple TV"
+        #elseif os(watchOS)
+        return WKInterfaceDevice.current().model
         #elseif os(visionOS)
         return "Apple Vision Pro"
         #endif

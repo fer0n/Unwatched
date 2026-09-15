@@ -16,6 +16,9 @@ struct MyForm<Content: View>: View {
         Form {
             content
         }
+        #if os(macOS)
+        .formStyle(.grouped)
+        #endif
         .scrollContentBackground(.hidden)
     }
 }

@@ -4,35 +4,44 @@ import OSLog
 import UnwatchedShared
 
 extension VideoService {
-    /// Fetches a video's description in the background when it was added without one — e.g. a
-    /// video added from the search tab, whose results carry no description. Runs once at
-    /// materialisation so the description is present for every action (play, queue, swipe) and
-    /// every player type. Keyed by `youtubeId` so it's safe to dispatch from any context.
-    static func fetchDescriptionInBg(youtubeId: String) {
+    /// Fetches the description and channel a video was added without — search results carry
+    /// no description, and a Short's row carries no channel either.
+    static func fetchMissingInfoInBg(youtubeId: String) {
         Task.detached {
             let repo = VideoActor()
-            let description = await repo.fetchAndSetDescription(youtubeId: youtubeId)
-            guard let description else { return }
-            // The actor saved to the background context — an already-registered Video in the main
-            // context won't pick that up on its own, so mirror the description there too
-            // (chapters are parsed from it on demand, so they follow automatically).
-            await MainActor.run {
-                let context = DataProvider.mainContext
-                if let video = getVideo(for: youtubeId, modelContext: context) {
-                    video.videoDescription = description
-                    try? context.save()
-                }
-                if PlayerManager.shared.video?.youtubeId == youtubeId {
-                    PlayerManager.shared.handleChapterRefresh(forceRefresh: true)
-                }
-            }
+            guard let info = await repo.fetchMissingInfo(youtubeId: youtubeId) else { return }
+            await applyToMainContext(info, youtubeId: youtubeId)
+        }
+    }
+
+    @MainActor
+    private static func applyToMainContext(_ info: InnerTubeAPI.VideoMetadata, youtubeId: String) {
+        let context = DataProvider.mainContext
+        guard let video = getVideo(for: youtubeId, modelContext: context) else { return }
+
+        if let description = info.description {
+            video.videoDescription = description
+        }
+        if video.subscription == nil, let channelId = info.channelId {
+            associateSubscription(
+                video,
+                channelId: channelId,
+                feedTitle: info.channelTitle,
+                modelContext: context
+            )
+        }
+        try? context.save()
+
+        if info.description != nil, PlayerManager.shared.video?.youtubeId == youtubeId {
+            PlayerManager.shared.handleChapterRefresh(forceRefresh: true)
         }
     }
 
     static func loadNewVideosInBg(
         subscriptionIds: [PersistentIdentifier]? = nil,
         fetchDurations: Bool,
-        firstTimeVideoLimit: Int? = nil
+        firstTimeVideoLimit: Int? = nil,
+        ignoreCache: Bool = false
     ) -> Task<NewVideosNotificationInfo, Error> {
         return Task.detached {
             Log.info("loadNewVideosInBg")
@@ -42,7 +51,8 @@ extension VideoService {
                 return try await repo.loadVideos(
                     subscriptionIds,
                     fetchDurations: hasPremium && fetchDurations,
-                    firstTimeVideoLimit: firstTimeVideoLimit
+                    firstTimeVideoLimit: firstTimeVideoLimit,
+                    ignoreCache: ignoreCache
                 )
             } catch {
                 Log.error("\(error)")
@@ -196,6 +206,7 @@ extension VideoService {
         elapsedSeconds: Double? = nil,
         isNew: Bool? = nil,
         delay: Double = 200,
+        maxDelay: Double? = nil,
         ) -> Task<Void, Error> {
         Log.info("forceUpdateVideo")
         return Task { @MainActor in
@@ -209,8 +220,13 @@ extension VideoService {
                     return
                 }
             }
-            PendingVideoUpdates.commit(videoModelId, generation: generation)
+            PendingVideoUpdates.commit(videoModelId, generation: generation, maxDelay: maxDelay)
         }
+    }
+
+    @MainActor
+    static func commitPendingVideoUpdates() {
+        PendingVideoUpdates.commitAll()
     }
 
     /// Writes through without waiting out the debounce window, superseding anything pending for
@@ -436,10 +452,8 @@ extension VideoService {
                 }
                 try? modelContext.save()
             }
-            // Search results carry no description; fetch it (InnerTube, then Data API) in the
-            // background so it's present for every action and player type.
-            if !model.isPodcast, model.videoDescription?.isEmpty ?? true {
-                fetchDescriptionInBg(youtubeId: model.youtubeId)
+            if !model.isPodcast, model.videoDescription?.isEmpty ?? true || model.subscription == nil {
+                fetchMissingInfoInBg(youtubeId: model.youtubeId)
             }
             return model
         }
@@ -679,9 +693,11 @@ private enum PendingVideoUpdates {
         var elapsedSeconds: Double?
         var isNew: Bool?
         var generation = 0
+        let stagedAt = Date.now
     }
 
     private static var pending = [PersistentIdentifier: Update]()
+    private static var lastGeneration = 0
 
     /// Folds new values into the pending update, returning the generation that owns it.
     static func stage(
@@ -694,16 +710,19 @@ private enum PendingVideoUpdates {
         if let duration { update.duration = duration }
         if let elapsedSeconds { update.elapsedSeconds = elapsedSeconds }
         if let isNew { update.isNew = isNew }
-        update.generation += 1
+        lastGeneration += 1
+        update.generation = lastGeneration
         pending[videoModelId] = update
         return update.generation
     }
 
     /// - Parameter generation: the caller's claim on the pending update; a newer `stage` will have
     ///   superseded it, in which case that caller writes instead. `nil` takes over unconditionally.
-    static func commit(_ videoModelId: PersistentIdentifier, generation: Int?) {
-        if let generation, pending[videoModelId]?.generation != generation {
-            return
+    static func commit(_ videoModelId: PersistentIdentifier, generation: Int?, maxDelay: Double? = nil) {
+        if let generation, let update = pending[videoModelId], update.generation != generation {
+            guard let maxDelay, Date.now.timeIntervalSince(update.stagedAt) * 1000 >= maxDelay else {
+                return
+            }
         }
         guard let update = pending.removeValue(forKey: videoModelId) else {
             return
@@ -726,5 +745,11 @@ private enum PendingVideoUpdates {
             }
         }
         try? context.save()
+    }
+
+    static func commitAll() {
+        for videoModelId in Array(pending.keys) {
+            commit(videoModelId, generation: nil)
+        }
     }
 }

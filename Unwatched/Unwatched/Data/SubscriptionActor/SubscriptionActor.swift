@@ -34,6 +34,15 @@ actor SubscriptionActor: SharedContextActor {
         return try? modelContext.fetchCount(fetch)
     }
 
+    func getActivePodcastSubscriptionCount() -> Int? {
+        let fetch = FetchDescriptor<Subscription>(
+            predicate: #Predicate {
+                $0.isArchived == false && $0.isPodcast == true
+            }
+        )
+        return try? modelContext.fetchCount(fetch)
+    }
+
     func unarchive(_ sub: Subscription) {
         sub.isArchived = false
         sub.subscribedDate = .now
@@ -48,35 +57,15 @@ actor SubscriptionActor: SharedContextActor {
             return
         }
 
-        var fetch: FetchDescriptor<Subscription>
-        if let playlistId = info?.playlistId {
-            print("playlistId", playlistId)
-            fetch = FetchDescriptor<Subscription>(predicate: #Predicate {
-                $0.youtubePlaylistId == playlistId
-            })
-        } else if let channelId = info?.channelId {
-            fetch = FetchDescriptor<Subscription>(predicate: #Predicate {
-                $0.youtubePlaylistId == nil && $0.youtubeChannelId == channelId
-            })
-        } else if let userName = info?.userName {
-            fetch = FetchDescriptor<Subscription>(predicate: #Predicate {
-                $0.youtubePlaylistId == nil && $0.youtubeUserName == userName
-            })
-        } else {
+        guard var info, info.playlistId != nil || info.channelId != nil || info.userName != nil else {
             throw SubscriptionError.noInfoFoundToSubscribeTo
         }
 
-        fetch.fetchLimit = 1
-        let subs = try? modelContext.fetch(fetch)
-        if let first = subs?.first {
-            unarchive(first)
+        if unarchiveIfAlreadySubscribed(info) {
             try modelContext.save()
             return
         }
-        guard var info else {
-            Log.info("no channel info here")
-            return
-        }
+
         // if it doesn't exist get url and run the regular subscription flow
         info.rssFeedUrl = await info.getRssFeedUrl()
         if info.rssFeedUrl == nil {
@@ -90,6 +79,32 @@ actor SubscriptionActor: SharedContextActor {
             }
         }
         try modelContext.save()
+    }
+
+    /// Returns true if a match was found, meaning the caller shouldn't insert a new row.
+    private func unarchiveIfAlreadySubscribed(_ info: SubscriptionInfo) -> Bool {
+        var fetch: FetchDescriptor<Subscription>
+        if let playlistId = info.playlistId {
+            fetch = FetchDescriptor<Subscription>(predicate: #Predicate {
+                $0.youtubePlaylistId == playlistId
+            })
+        } else if let channelId = info.channelId {
+            fetch = FetchDescriptor<Subscription>(predicate: #Predicate {
+                $0.youtubePlaylistId == nil && $0.youtubeChannelId == channelId
+            })
+        } else if let userName = info.userName {
+            fetch = FetchDescriptor<Subscription>(predicate: #Predicate {
+                $0.youtubePlaylistId == nil && $0.youtubeUserName == userName
+            })
+        } else {
+            return false
+        }
+        fetch.fetchLimit = 1
+        guard let existing = try? modelContext.fetch(fetch).first else {
+            return false
+        }
+        unarchive(existing)
+        return true
     }
 
     func addSubscriptions(
@@ -207,6 +222,10 @@ actor SubscriptionActor: SharedContextActor {
               info.channelId != nil || info.playlistId != nil else {
             throw SubscriptionError.noInfoFoundToSubscribeTo
         }
+        if unarchiveIfAlreadySubscribed(info) {
+            try modelContext.save()
+            return
+        }
         let rssFeedUrl = await info.getRssFeedUrl()
         var sendableSub = SendableSubscription(
             link: rssFeedUrl,
@@ -306,6 +325,9 @@ actor SubscriptionActor: SharedContextActor {
 
     private func deleteSubscriptions(_ subscriptions: [Subscription]) throws {
         for subscription in subscriptions {
+            if subscription.isPodcast, let feedUrl = subscription.link {
+                PodcastEpisodeCache.delete(feedUrl: feedUrl)
+            }
             var hasVideosLeft = false
             for video in subscription.videos ?? [] {
                 if video.queueEntry == nil &&

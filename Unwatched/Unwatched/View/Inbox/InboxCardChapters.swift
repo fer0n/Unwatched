@@ -74,7 +74,7 @@ struct InboxCardChapters: View {
             VideoService.insertQueueEntries(videos: [video], modelContext: modelContext)
         }
         player.setChapter(chapter)
-        Signal.log("Chapter.Jump")
+        Signal.interaction("Chapter.Jump")
     }
 }
 

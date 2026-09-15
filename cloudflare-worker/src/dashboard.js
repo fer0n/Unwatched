@@ -42,26 +42,31 @@ async function queryAnalytics(env, sql) {
   return res.json();
 }
 
-// Boolean settings worth showing adoption for, mirrored from
-// Const.settingsDefaults / Const.syncedSettingsDefaults (AppConstants.swift).
-// Keep in sync manually when settings are added/removed there.
+// Mirrors Const.settingsDefaults / syncedSettingsDefaults (AppConstants.swift) by hand, defaults
+// included: users missing from a snapshot are counted on the default. See CLAUDE.md.
 const BOOL_SETTINGS = [
+  // Notifications
   ["videoAddedToInboxNotification", false, "Notify: Inbox"],
   ["videoAddedToQueueNotification", false, "Notify: Queue"],
   ["showNotificationBadge", false, "Notification Badge"],
+  // General
   ["autoClearNew", false, "Auto-clear \"New\""],
   ["refreshOnStartup", true, "Refresh on Startup"],
   ["requireClearConfirmation", true, "Require Clear Confirmation"],
-  ["showAddToQueueButton", false, "Show Add-to-Queue Button"],
   ["showClearQueueButton", true, "Show Clear-Queue Button"],
   ["enableQueueContextMenu", false, "Queue Context Menu"],
   ["autoRefreshIgnoresSync", false, "Auto-refresh Ignores Sync"],
   ["useNoCookieUrl", false, "Use No-Cookie URL"],
+  ["quickSwitchAllVideos", true, "Quick Switch: All Videos"],
+  // Playback
+  ["preferPlayerType", false, "Prefer Player Type"],
   ["originalAudio", true, "Original Audio"],
+  ["trimSilence", false, "Trim Silence"],
   ["backgroundPlayback", true, "Background Playback"],
   ["hideMenuOnPlay", true, "Hide Menu on Play"],
-  ["returnToQueue", false, "Return to Queue"],
+  ["returnToQueue", true, "Return to Queue"],
   ["rotateOnPlay", false, "Rotate on Play"],
+  ["markWatchedOnEnded", true, "Mark Watched on Ended"],
   ["playVideoFullscreen", false, "Play Fullscreen"],
   ["disableCaptions", false, "Disable Captions"],
   ["autoCaptionsOnSeekBack", false, "Auto-captions on Seek Back"],
@@ -70,26 +75,62 @@ const BOOL_SETTINGS = [
   ["swipeGestureLeft", true, "Swipe Gesture: Left"],
   ["swipeGestureRight", true, "Swipe Gesture: Right"],
   ["autoAirplayHD", false, "Auto AirPlay HD"],
+  ["suggestVideos", false, "Suggest Videos"],
+  ["nativePlayerFallback", true, "Native Player Fallback"],
   ["playBrowserVideosInApp", false, "Play Browser Videos In-App"],
   ["surroundingEffect", true, "Surrounding Effect"],
+  // Appearance
   ["showTabBarLabels", true, "Show Tab Bar Labels"],
   ["showTabBarBadge", true, "Show Tab Bar Badge"],
   ["hidePlayerPageIndicator", false, "Hide Player Page Indicator"],
+  ["inboxOldestFirst", false, "Inbox Oldest First"],
   ["lightAppIcon", false, "Light App Icon"],
-  ["enableIcloudSync", false, "iCloud Sync"],
-  ["automaticBackups", true, "Automatic Backups"],
-  ["exludeWatchHistoryInBackup", false, "Exclude Watch History in Backup"],
-  ["minimalBackups", true, "Minimal Backups"],
-  ["autoDeleteBackups", false, "Auto-delete Backups"],
-  ["hidePremium", false, "Hide Premium"],
+  // Filter (synced)
+  ["autoSkipRecurringChapters", true, "Auto-skip Recurring Chapters"],
   ["allowOnMatch", false, "Allow on Match"],
   ["mergeSponsorBlockChapters", false, "Merge SponsorBlock Chapters"],
   ["youtubePremium", false, "YouTube Premium"],
-  ["skipSponsorSegments", false, "Skip Sponsor Segments"],
+  // User data
+  ["enableIcloudSync", false, "iCloud Sync"],
+  ["automaticBackups", true, "Automatic Backups"],
+  ["includeWatchHistoryInBackup", true, "Backup: Watch History"],
+  ["includeUnimportantVideosInBackup", false, "Backup: Unimportant Videos"],
+  ["autoDeleteBackups", true, "Auto-delete Backups"],
+  // Podcasts
+  ["podcastDownloadOnCellular", false, "Podcast Downloads on Cellular"],
+  // Premium
+  ["unwatchedPremiumAcknowledged", false, "Premium Unlocked"],
+  ["hidePremium", false, "Hide Premium"],
   // Presence-only flags for free-text settings — the values themselves are never sent
   // (see SetupView.sendSettings / getNonDefaultSettings).
   ["hasCustomApiKey", false, "Custom API Key Set"],
   ["hasSkipText", false, "Skip-Chapter Text Set"],
+];
+
+// Same contract as BOOL_SETTINGS. [key, default, label, rawValue labels or null for numbers, unit]
+const VALUE_SETTINGS = [
+  ["defaultVideoPlacement", 0, "Default Video Placement",
+    { 0: "Inbox", 1: "Queue next", 4: "Queue last", 2: "Nothing", 3: "Default" }],
+  ["defaultShortsSetting", 2, "Shorts", { 0: "Show", 1: "Hide", 2: "Default" }],
+  ["inboxAppearance", 1, "Inbox Appearance", { 0: "List", 1: "Cards" }],
+  ["videoListFormat", 0, "Video List Format", { 0: "Compact", 1: "Expansive" }],
+  ["browserDisplayMode", 0, "Browser", { 0: "In-app", 3: "External", 2: "Disabled" }],
+  ["fullscreenControlsSetting", 1, "Fullscreen Controls", { 0: "Enabled", 1: "Auto-hide", 2: "Disabled" }],
+  ["sponsorSegmentSetting", 1, "SponsorBlock: Sponsor", { 0: "Off", 1: "Show", 2: "Show & skip" }],
+  ["selfPromoSegmentSetting", 1, "SponsorBlock: Self-promo", { 0: "Off", 1: "Show", 2: "Show & skip" }],
+  ["lightModeTheme", 0, "Light Mode Theme", { 0: "Unwatched", 1: "Dark" }],
+  ["darkModeTheme", 1, "Dark Mode Theme", { 0: "Unwatched", 1: "Dark" }],
+  ["themeColor", 6, "Theme Color", {
+    0: "Red", 1: "Orange", 2: "Yellow", 3: "Green", 4: "Dark green",
+    5: "Mint", 6: "Teal", 7: "Blue", 8: "Purple", 9: "Black/White",
+  }],
+  ["temporarySpeedUp", 2, "Temporary Speed Up", null, "×"],
+  ["temporarySlowDown", 0.6, "Temporary Slow Down", null, "×"],
+  ["autoDeleteWatchedVideos", 180, "Auto-delete Watched", null, "d"],
+  ["autoDeleteOrphanedVideos", 30, "Auto-delete Orphaned", null, "d"],
+  ["autoDeleteInboxVideosLimit", 100, "Inbox Limit", null, ""],
+  ["podcastDownloadLimitHours", 0, "Podcast Download Limit", null, "h"],
+  ["podcastDownloadKeepDays", 1, "Podcast Keep", null, "d"],
 ];
 
 const SETTINGS_VALUE_PREFIX = "Unwatched.Setting.";
@@ -126,23 +167,69 @@ function latestPerUser(rows) {
   return [...byUser.values()];
 }
 
+function settingValue(params, key) {
+  if (!Object.prototype.hasOwnProperty.call(params, key)) return null;
+  const raw = String(params[key]);
+  return raw.startsWith(SETTINGS_VALUE_PREFIX) ? raw.slice(SETTINGS_VALUE_PREFIX.length) : raw;
+}
+
+// Users missing from a snapshot count toward the default; 'changed' is how many moved it.
 function tallySettings(latestSnapshots) {
   const totals = {};
   for (const [key, defaultValue, label] of BOOL_SETTINGS) {
-    totals[key] = { label, default: defaultValue, on: 0, off: 0, notTouched: 0 };
+    totals[key] = { label, default: defaultValue, on: 0, off: 0, changed: 0, total: 0 };
   }
   for (const row of latestSnapshots) {
     const params = parseParams(row.params);
-    for (const [key] of BOOL_SETTINGS) {
-      if (!Object.prototype.hasOwnProperty.call(params, key)) {
-        totals[key].notTouched++;
+    for (const [key, defaultValue] of BOOL_SETTINGS) {
+      const entry = totals[key];
+      entry.total++;
+      const raw = settingValue(params, key);
+      if (raw === null) {
+        if (defaultValue) entry.on++; else entry.off++;
         continue;
       }
-      const raw = String(params[key]).startsWith(SETTINGS_VALUE_PREFIX)
-        ? params[key].slice(SETTINGS_VALUE_PREFIX.length)
-        : params[key];
+      entry.changed++;
       const isOn = raw === "true" ? true : raw === "false" ? false : Number(raw) !== 0;
-      if (isOn) totals[key].on++; else totals[key].off++;
+      if (isOn) entry.on++; else entry.off++;
+    }
+  }
+  return totals;
+}
+
+function tallyValueSettings(latestSnapshots) {
+  const totals = {};
+  for (const [key, defaultValue, label, valueLabels, unit] of VALUE_SETTINGS) {
+    totals[key] = {
+      label,
+      default: String(defaultValue),
+      defaultLabel: valueLabels ? (valueLabels[defaultValue] ?? String(defaultValue)) : String(defaultValue),
+      unit: unit ?? "",
+      hasLabels: !!valueLabels,
+      values: {},
+      changed: 0,
+      total: 0,
+    };
+  }
+  const bump = (entry, value, valueLabels) => {
+    // "2.0" and "2" are the same value
+    const num = Number(value);
+    const normalized = Number.isFinite(num) ? String(num) : String(value);
+    const label = valueLabels ? (valueLabels[normalized] ?? normalized) : normalized;
+    entry.values[label] = (entry.values[label] || 0) + 1;
+  };
+  for (const row of latestSnapshots) {
+    const params = parseParams(row.params);
+    for (const [key, defaultValue, , valueLabels] of VALUE_SETTINGS) {
+      const entry = totals[key];
+      entry.total++;
+      const raw = settingValue(params, key);
+      if (raw === null) {
+        bump(entry, defaultValue, valueLabels);
+        continue;
+      }
+      entry.changed++;
+      bump(entry, raw, valueLabels);
     }
   }
   return totals;
@@ -157,9 +244,9 @@ function tallyBuckets(latestRows, paramKey) {
   return counts;
 }
 
-// Mirrors Signal.bucket() (Signal.swift) for values logged as raw counts
-// (e.g. SubscriptionCount) rather than pre-bucketed strings.
+// Mirrors Signal.bucket() (Signal.swift); older builds sent raw counts.
 function bucketCount(value) {
+  if (COUNT_BUCKET_ORDER.includes(value)) return value;
   const n = Number(value);
   if (!Number.isFinite(n)) return null;
   if (n === 0) return "0";
@@ -244,25 +331,30 @@ export async function handleRecentData(env, channel) {
   }
 }
 
+// Same order as the queries in handleDashboardData.
+const QUERY_LABELS = [
+  "event counts",
+  "recent events",
+  "active users (1d)",
+  "active users (7d)",
+  "active users (30d)",
+  "active users trend",
+  "event trend",
+  "writes trend",
+  "settings snapshots",
+  "queue/inbox sizes",
+  "subscription counts",
+  "errors",
+  "error trend",
+  "param events",
+  "app versions",
+];
+
 export async function handleDashboardData(env, channel) {
   const ch = channelFilter(channel);
   try {
-    const [
-      counts,
-      recent,
-      uniqueUsers1d,
-      uniqueUsers7d,
-      uniqueUsers30d,
-      dauTrend,
-      eventTrend,
-      writesTrend,
-      settingsRaw,
-      queueInboxRaw,
-      subscriptionRaw,
-      errorsRaw,
-      errorTrend,
-      paramEventsRaw,
-    ] = await Promise.all([
+    // allSettled: a column no row has written yet 422s its query, which shouldn't blank the page
+    const settled = await Promise.allSettled([
       // Per-event totals AND distinct users over 7d — powers the engagement
       // table (per-active-user rates, adoption %), funnels, and comparisons.
       queryAnalytics(
@@ -302,17 +394,18 @@ export async function handleDashboardData(env, channel) {
         env,
         `SELECT toStartOfDay(timestamp) AS day, count() AS writes FROM unwatched_analytics_v3 WHERE timestamp > NOW() - INTERVAL '${CAPACITY_WINDOW_DAYS}' DAY GROUP BY day ORDER BY day`
       ),
+      // ORDER BY only resolves selected columns, hence the alias
       queryAnalytics(
         env,
-        `SELECT blob2 AS params, blob3 AS userId, double1 AS ts FROM unwatched_analytics_v3 WHERE ${ch} AND blob1 = 'SettingsSnapshot' AND timestamp > NOW() - INTERVAL '${SNAPSHOT_WINDOW_DAYS}' DAY LIMIT ${RAW_ROW_LIMIT}`
+        `SELECT blob2 AS params, blob3 AS userId, double1 AS ts FROM unwatched_analytics_v3 WHERE ${ch} AND blob1 = 'SettingsSnapshot' AND timestamp > NOW() - INTERVAL '${SNAPSHOT_WINDOW_DAYS}' DAY ORDER BY ts DESC LIMIT ${RAW_ROW_LIMIT}`
       ),
       queryAnalytics(
         env,
-        `SELECT blob1 AS name, blob2 AS params, blob3 AS userId, double1 AS ts FROM unwatched_analytics_v3 WHERE ${ch} AND blob1 IN ('Queue.Count', 'Inbox.Count') AND timestamp > NOW() - INTERVAL '${SNAPSHOT_WINDOW_DAYS}' DAY LIMIT ${RAW_ROW_LIMIT}`
+        `SELECT blob1 AS name, blob2 AS params, blob3 AS userId, double1 AS ts FROM unwatched_analytics_v3 WHERE ${ch} AND blob1 IN ('Queue.Count', 'Inbox.Count') AND timestamp > NOW() - INTERVAL '${SNAPSHOT_WINDOW_DAYS}' DAY ORDER BY ts DESC LIMIT ${RAW_ROW_LIMIT}`
       ),
       queryAnalytics(
         env,
-        `SELECT blob2 AS params, blob3 AS userId, double1 AS ts FROM unwatched_analytics_v3 WHERE ${ch} AND blob1 = 'SubscriptionCount' AND timestamp > NOW() - INTERVAL '${SNAPSHOT_WINDOW_DAYS}' DAY LIMIT ${RAW_ROW_LIMIT}`
+        `SELECT blob2 AS params, blob3 AS userId, double1 AS ts FROM unwatched_analytics_v3 WHERE ${ch} AND blob1 = 'SubscriptionCount' AND timestamp > NOW() - INTERVAL '${SNAPSHOT_WINDOW_DAYS}' DAY ORDER BY ts DESC LIMIT ${RAW_ROW_LIMIT}`
       ),
       queryAnalytics(
         env,
@@ -326,9 +419,37 @@ export async function handleDashboardData(env, channel) {
       // client can break them out by dimension (Video.Action by action/context, etc).
       queryAnalytics(
         env,
-        `SELECT blob1 AS name, blob2 AS params, count() AS count FROM unwatched_analytics_v3 WHERE ${ch} AND blob1 IN ('Video.Action', 'Player.MoreMenu', 'Search.Submitted', 'Player.Start') AND timestamp > NOW() - INTERVAL '${TREND_WINDOW_DAYS}' DAY GROUP BY name, params ORDER BY count DESC LIMIT 500`
+        `SELECT blob1 AS name, blob2 AS params, count() AS count FROM unwatched_analytics_v3 WHERE ${ch} AND blob1 IN ('Video.Action', 'Player.MoreMenu', 'Search.Submitted', 'Player.Start', 'Player.Media', 'Onboarding.Step', 'Generation.Result') AND timestamp > NOW() - INTERVAL '${TREND_WINDOW_DAYS}' DAY GROUP BY name, params ORDER BY count DESC LIMIT 500`
+      ),
+      // Distinct users per app version (blob5).
+      queryAnalytics(
+        env,
+        `SELECT blob5 AS version, count(DISTINCT blob3) AS users FROM unwatched_analytics_v3 WHERE ${ch} AND timestamp > NOW() - INTERVAL '${TREND_WINDOW_DAYS}' DAY AND blob3 != 'unknown' GROUP BY version ORDER BY users DESC LIMIT 40`
       ),
     ]);
+
+    const failures = [];
+    const [
+      counts,
+      recent,
+      uniqueUsers1d,
+      uniqueUsers7d,
+      uniqueUsers30d,
+      dauTrend,
+      eventTrend,
+      writesTrend,
+      settingsRaw,
+      queueInboxRaw,
+      subscriptionRaw,
+      errorsRaw,
+      errorTrend,
+      paramEventsRaw,
+      versionsRaw,
+    ] = settled.map((result, index) => {
+      if (result.status === "fulfilled") return result.value;
+      failures.push(`${QUERY_LABELS[index] ?? `query ${index}`}: ${result.reason}`);
+      return { data: [] };
+    });
 
     // Every row here has one userId per app instance, never anything identifying
     // (see AnalyticsEvent.anonymousUserId) — de-duped down to one snapshot per user.
@@ -349,6 +470,7 @@ export async function handleDashboardData(env, channel) {
         // Echoed back normalized so the picker shows what was actually queried
         // (an unknown value silently falls back to DEFAULT_CHANNEL).
         channel: resolveChannel(channel),
+        failures,
         // count/users are per-event over TREND_WINDOW_DAYS; the client derives
         // per-active-user rates and adoption % against activeUsers.
         counts: counts.data,
@@ -366,7 +488,12 @@ export async function handleDashboardData(env, channel) {
           sampleSize: latestSettings.length,
           windowDays: SNAPSHOT_WINDOW_DAYS,
           totals: tallySettings(latestSettings),
+          values: tallyValueSettings(latestSettings),
         },
+        versions: versionsRaw.data.map((r) => ({
+          version: r.version || "unknown",
+          users: Number(r.users) || 0,
+        })),
         // Device family + OS version per user, carried on the settings snapshot.
         platform: {
           windowDays: SNAPSHOT_WINDOW_DAYS,
@@ -383,6 +510,8 @@ export async function handleDashboardData(env, channel) {
           windowDays: SNAPSHOT_WINDOW_DAYS,
           sampleSize: latestSubs.length,
           buckets: tallyRawBuckets(latestSubs, "SubscriptionCount.Value"),
+          podcastSampleSize: latestSubs.filter((r) => parseParams(r.params)["PodcastCount.Value"] != null).length,
+          podcastBuckets: tallyRawBuckets(latestSubs, "PodcastCount.Value"),
         },
         errors: {
           windowDays: SNAPSHOT_WINDOW_DAYS,
@@ -433,6 +562,8 @@ export const DASHBOARD_HTML = `<!DOCTYPE html>
   body.loading .settings-grid,
   body.loading #funnels,
   body.loading #compare,
+  body.loading #generation,
+  body.loading #settingValues,
   body.loading #breakdowns {
     background: linear-gradient(90deg, #1b1b1b 25%, #262626 37%, #1b1b1b 63%);
     background-size: 200% 100%;
@@ -447,13 +578,16 @@ export const DASHBOARD_HTML = `<!DOCTYPE html>
   body.loading .settings-grid { min-height: 10rem; }
   body.loading #funnels,
   body.loading #compare,
+  body.loading #generation,
+  body.loading #settingValues,
   body.loading #breakdowns { min-height: 8rem; }
   /* Hide the real (empty) table markup so only the shimmer shows. */
   body.loading .table-scroll table { visibility: hidden; }
   @media (prefers-reduced-motion: reduce) {
     body.loading .stat-cards, body.loading .card, body.loading .pie-chart,
     body.loading .table-scroll, body.loading .settings-grid,
-    body.loading #funnels, body.loading #compare, body.loading #breakdowns { animation: none; }
+    body.loading #funnels, body.loading #compare, body.loading #breakdowns,
+    body.loading #generation, body.loading #settingValues { animation: none; }
   }
   h1 { font-size: 1.2rem; margin: 0; }
   .page-head { display: flex; align-items: center; gap: 0.75rem; flex-wrap: wrap; margin: 0 0 0.5rem; }
@@ -485,6 +619,8 @@ export const DASHBOARD_HTML = `<!DOCTYPE html>
   td:nth-child(2) { max-width: 45vw; }
   th { color: #888; font-weight: 500; white-space: nowrap; }
   #error { color: #f66; font-size: 0.85rem; }
+  #partial { color: #fbbf24; font-size: 0.78rem; margin: 0 0 0.5rem; }
+  #partial ul { margin: 0.25rem 0 0; padding-left: 1.1rem; }
 
   .stat-cards { display: grid; grid-template-columns: repeat(3, 1fr); gap: 0.6rem; }
   .stat-card { background: #1b1b1b; border: 1px solid #2a2a2a; border-radius: 10px; padding: 0.75rem; text-align: center; }
@@ -494,11 +630,14 @@ export const DASHBOARD_HTML = `<!DOCTYPE html>
   .settings-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(140px, 1fr)); gap: 0.75rem; }
   .setting-card { background: #1b1b1b; border: 1px solid #2a2a2a; border-radius: 10px; padding: 0.6rem; text-align: center; }
   .setting-card .setting-label { font-size: 0.72rem; color: #ccc; margin-bottom: 0.4rem; min-height: 2.2em; }
+  .setting-meta { font-size: 0.66rem; color: #888; margin-top: 0.3rem; }
+  .setting-meta b { color: #ccc; font-weight: 600; }
   .legend { font-size: 0.68rem; margin-top: 0.4rem; text-align: left; }
   .legend div { display: flex; align-items: center; gap: 0.35rem; white-space: nowrap; }
   .swatch { width: 8px; height: 8px; border-radius: 2px; flex: none; }
 
   .settings-grid .setting-card.hidden { display: none; }
+  #settingValues .card.hidden { display: none; }
   #recent tr.hidden { display: none; }
   .toggle-btn {
     display: block; margin: 0.75rem auto 0; padding: 0.45rem 1rem;
@@ -561,6 +700,7 @@ export const DASHBOARD_HTML = `<!DOCTYPE html>
 </div>
 <div class="channel-note" id="channelNote" hidden></div>
 <div id="error"></div>
+<div id="partial" hidden></div>
 
 <h2>Active users (anonymous, on-device id only)</h2>
 <div class="stat-cards" id="activeUsers"></div>
@@ -594,6 +734,10 @@ export const DASHBOARD_HTML = `<!DOCTYPE html>
   </div>
 </div>
 
+<h2>App version <span id="versionWindow"></span></h2>
+<div class="hint" id="versionHint"></div>
+<div class="pie-chart" id="versionPie"></div>
+
 <h2>Engagement <span id="engagementWindow"></span></h2>
 <div class="hint">Per-user = events ÷ weekly active users. Adoption = share of weekly active users who did it at least once.</div>
 <div class="table-scroll">
@@ -617,10 +761,19 @@ export const DASHBOARD_HTML = `<!DOCTYPE html>
 <div class="hint" id="breakdownHint"></div>
 <div class="grid-2" id="breakdowns"></div>
 
+<h2>Generation success <span id="generationWindow"></span></h2>
+<div class="hint">Attempts by outcome, for the on-device transcript, alignment and AI-chapter runs.</div>
+<div class="grid-2" id="generation"></div>
+
 <h2>Settings adoption</h2>
 <div class="hint" id="settingsHint"></div>
 <div class="settings-grid" id="settingsGrid"></div>
 <button id="settingsToggle" class="toggle-btn" hidden></button>
+
+<h2>Setting values</h2>
+<div class="hint" id="settingValuesHint"></div>
+<div class="grid-2" id="settingValues"></div>
+<button id="settingValuesToggle" class="toggle-btn" hidden></button>
 
 <div class="grid-2">
   <div>
@@ -635,9 +788,18 @@ export const DASHBOARD_HTML = `<!DOCTYPE html>
   </div>
 </div>
 
-<h2>Subscription count</h2>
-<div class="hint" id="subsHint"></div>
-<div class="pie-chart" id="subsPie"></div>
+<div class="grid-2">
+  <div>
+    <h2>Subscription count</h2>
+    <div class="hint" id="subsHint"></div>
+    <div class="pie-chart" id="subsPie"></div>
+  </div>
+  <div>
+    <h2>Podcast subscriptions</h2>
+    <div class="hint" id="podcastSubsHint"></div>
+    <div class="pie-chart" id="podcastSubsPie"></div>
+  </div>
+</div>
 
 <h2>Errors <span id="errorWindow"></span></h2>
 <div class="card" id="errorTrend"></div>
@@ -764,44 +926,65 @@ function legendRow(color, text) {
   return '<div><span class="swatch" style="background:' + color + '"></span>' + text + '</div>';
 }
 
-function renderSettingsGrid(el, toggleBtn, settings) {
-  const totals = settings.totals;
-  el.innerHTML = '';
-  const cards = [];
-  let index = 0;
-  for (const key in totals) {
-    const s = totals[key];
-    const total = s.on + s.off + s.notTouched;
-    const pct = (n) => (total ? Math.round((n / total) * 100) : 0);
-    const card = document.createElement('div');
-    card.className = 'setting-card';
-    if (index >= SETTINGS_COLLAPSED_COUNT) card.classList.add('hidden');
-    card.innerHTML =
-      '<div class="setting-label">' + s.label + '</div>' +
-      donutSVG(s.on, s.off, s.notTouched) +
-      '<div class="legend">' +
-        legendRow(COLORS.on, 'On ' + s.on + ' (' + pct(s.on) + '%)') +
-        legendRow(COLORS.off, 'Off ' + s.off + ' (' + pct(s.off) + '%)') +
-        legendRow(COLORS.notTouched, 'Untouched ' + s.notTouched + ' (' + pct(s.notTouched) + '%)') +
-      '</div>';
-    el.appendChild(card);
-    cards.push(card);
-    index++;
-  }
-
-  const hiddenCount = cards.length - SETTINGS_COLLAPSED_COUNT;
-  if (hiddenCount <= 0) {
+function collapsibleCards(el, toggleBtn, cards, noun) {
+  cards.forEach(function (card) { el.appendChild(card); });
+  if (cards.length <= SETTINGS_COLLAPSED_COUNT) {
     toggleBtn.hidden = true;
+    cards.forEach(function (card) { card.classList.remove('hidden'); });
     return;
   }
   let expanded = false;
   const sync = () => {
     cards.forEach((card, i) => card.classList.toggle('hidden', !expanded && i >= SETTINGS_COLLAPSED_COUNT));
-    toggleBtn.textContent = expanded ? 'Show fewer' : 'Show all ' + cards.length + ' settings';
+    toggleBtn.textContent = expanded ? 'Show fewer' : 'Show all ' + cards.length + ' ' + noun;
   };
   toggleBtn.hidden = false;
   toggleBtn.onclick = () => { expanded = !expanded; sync(); };
   sync();
+}
+
+function renderSettingsGrid(el, toggleBtn, settings) {
+  const totals = settings.totals;
+  el.innerHTML = '';
+  const cards = [];
+  for (const key in totals) {
+    const s = totals[key];
+    const total = s.total || (s.on + s.off);
+    const pct = (n) => (total ? Math.round((n / total) * 100) : 0);
+    const defaultOn = !!s.default;
+    const card = document.createElement('div');
+    card.className = 'setting-card hidden';
+    card.innerHTML =
+      '<div class="setting-label">' + s.label + '</div>' +
+      donutSVG(s.on, s.off, 0) +
+      '<div class="legend">' +
+        legendRow(COLORS.on, 'On ' + s.on + ' (' + pct(s.on) + '%)') +
+        legendRow(COLORS.off, 'Off ' + s.off + ' (' + pct(s.off) + '%)') +
+      '</div>' +
+      '<div class="setting-meta">default <b>' + (defaultOn ? 'On' : 'Off') + '</b></div>' +
+      '<div class="setting-meta">changed by <b>' + s.changed + '</b> (' + pct(s.changed) + '%)</div>';
+    cards.push(card);
+  }
+  collapsibleCards(el, toggleBtn, cards, 'settings');
+}
+
+function renderValueSettings(el, toggleBtn, values) {
+  el.innerHTML = '';
+  const cards = Object.keys(values).map(function (key, index) {
+    const s = values[key];
+    const total = s.total || 1;
+    const rows = sortedEntries(s.values).map(function (e, i) {
+      const isDefault = e[0] === s.defaultLabel;
+      return {
+        label: e[0] + (s.unit ? ' ' + s.unit : '') + (isDefault ? ' (default)' : ''),
+        count: e[1],
+        countText: e[1] + ' · ' + Math.round(e[1] / total * 100) + '%',
+        color: isDefault ? COLORS.notTouched : BUCKET_COLORS[(index + i) % BUCKET_COLORS.length],
+      };
+    });
+    return barChartCard(s.label, 'changed by ' + s.changed + ' (' + Math.round(s.changed / total * 100) + '%)', rows);
+  });
+  collapsibleCards(el, toggleBtn, cards, 'settings');
 }
 
 function renderPie(el, buckets) {
@@ -938,12 +1121,69 @@ const FUNNELS = [
     ['Premium.LearnMore', 'Tapped learn more'],
     ['Premium.Subscribe', 'Subscribed'],
   ]},
-  { title: 'New user activation', steps: [
-    ['Onboarding.BrowseYoutube', 'Browsed YouTube'],
+  { title: 'Activation (existing users)', steps: [
+    ['Onboarding.BrowseYoutube', 'Browsed YouTube from empty queue'],
     ['Browser.AddSubscription', 'Added a subscription'],
     ['Player.WatchedVideo', 'Watched a video'],
   ]},
 ];
+
+// The first-launch flow, in the order Signal.onboardingStep emits it.
+const ONBOARDING_STEPS = [
+  ['started', 'Reached onboarding'],
+  ['channels', 'Got past channel picking'],
+  ['shorts', 'Got past shorts'],
+  ['finished', 'Landed in the inbox'],
+];
+
+// Counts events, not users: each step fires at most once per install.
+function renderOnboardingFunnel(el, paramEvents) {
+  const totals = aggregateParam(paramEvents || [], 'Onboarding.Step', 'step');
+  const counts = ONBOARDING_STEPS.map(function (s) { return totals[s[0]] || 0; });
+  const top = Math.max(1, counts[0]);
+  let rows = '';
+  ONBOARDING_STEPS.forEach(function (s, i) {
+    const c = counts[i];
+    const widthPct = Math.max(2, Math.min(100, c / top * 100));
+    const conv = i === 0
+      ? (c + ' installs')
+      : (counts[i - 1] ? Math.round(c / counts[i - 1] * 100) + '% of previous step' : '—');
+    rows += '<div class="funnel-row"><span class="fill" style="width:' + widthPct + '%"></span>' +
+      '<span class="txt">' + s[1] + ' — ' + c + '</span></div>' +
+      '<div class="funnel-conv">' + conv + '</div>';
+  });
+  const card = document.createElement('div');
+  card.className = 'card';
+  card.innerHTML = '<div class="chart-meta"><span><b>First launch</b></span></div><div class="funnel">' + rows + '</div>';
+  el.appendChild(card);
+}
+
+function renderGenerationResults(el, paramEvents) {
+  const byKind = {};
+  (paramEvents || []).forEach(function (r) {
+    if (r.name !== 'Generation.Result') return;
+    const kind = r.params.kind || 'unknown';
+    const outcome = r.params.outcome || 'unknown';
+    byKind[kind] = byKind[kind] || { total: 0, outcomes: {} };
+    byKind[kind].total += r.count;
+    byKind[kind].outcomes[outcome] = (byKind[kind].outcomes[outcome] || 0) + r.count;
+  });
+  const kinds = Object.keys(byKind);
+  if (!kinds.length) {
+    el.innerHTML = '<div class="card"><div class="hint">No generations reported yet.</div></div>';
+    return;
+  }
+  el.innerHTML = '';
+  kinds.forEach(function (kind, gi) {
+    const entry = byKind[kind];
+    const rate = Math.round((entry.outcomes.success || 0) / Math.max(1, entry.total) * 100);
+    const rows = sortedEntries(entry.outcomes).map(function (e, i) {
+      const color = e[0] === 'success' ? COLORS.on : BUCKET_COLORS[(gi * 3 + i) % BUCKET_COLORS.length];
+      return { label: e[0], count: e[1], color: color };
+    });
+    el.appendChild(barChartCard(kind, rate + '% succeeded', rows));
+  });
+}
 
 function renderFunnels(el, usersByEvent) {
   el.innerHTML = '';
@@ -984,19 +1224,10 @@ const COMPARE_GROUPS = [
 function renderCompare(el, countsByEvent) {
   el.innerHTML = '';
   COMPARE_GROUPS.forEach(function (g, gi) {
-    const rows = g.events.map(function (e) { return { label: e[1], count: countsByEvent[e[0]] || 0 }; });
-    const max = Math.max(1, Math.max.apply(null, rows.map(function (r) { return r.count; })));
-    let html = '';
-    rows.forEach(function (r, i) {
-      const color = BUCKET_COLORS[(gi * 3 + i) % BUCKET_COLORS.length];
-      html += '<div class="cmp-row"><span class="cmp-label">' + r.label + '</span>' +
-        '<span class="cmp-track"><span class="cmp-fill" style="width:' + (r.count / max * 100) + '%;background:' + color + '"></span></span>' +
-        '<span class="cmp-count">' + r.count + '</span></div>';
+    const rows = g.events.map(function (e, i) {
+      return { label: e[1], count: countsByEvent[e[0]] || 0, color: BUCKET_COLORS[(gi * 3 + i) % BUCKET_COLORS.length] };
     });
-    const card = document.createElement('div');
-    card.className = 'card';
-    card.innerHTML = '<div class="chart-meta"><span><b>' + g.title + '</b></span></div><div class="cmp-chart">' + html + '</div>';
-    el.appendChild(card);
+    el.appendChild(barChartCard(g.title, null, rows));
   });
 }
 
@@ -1013,19 +1244,30 @@ function aggregateParam(paramEvents, eventName, key) {
 }
 
 function barCard(title, totals, gi) {
-  const entries = Object.entries(totals).sort(function (a, b) { return b[1] - a[1]; });
-  const max = Math.max(1, Math.max.apply(null, entries.map(function (e) { return e[1]; })));
-  let html = '';
-  entries.forEach(function (e, i) {
-    const color = BUCKET_COLORS[(gi * 3 + i) % BUCKET_COLORS.length];
-    html += '<div class="cmp-row"><span class="cmp-label">' + e[0] + '</span>' +
-      '<span class="cmp-track"><span class="cmp-fill" style="width:' + (e[1] / max * 100) + '%;background:' + color + '"></span></span>' +
-      '<span class="cmp-count">' + e[1] + '</span></div>';
+  const rows = sortedEntries(totals).map(function (e, i) {
+    return { label: e[0], count: e[1], color: BUCKET_COLORS[(gi * 3 + i) % BUCKET_COLORS.length] };
   });
-  if (!entries.length) html = '<div class="hint">No data yet.</div>';
+  return barChartCard(title, null, rows);
+}
+
+function sortedEntries(totals) {
+  return Object.entries(totals).sort(function (a, b) { return b[1] - a[1]; });
+}
+
+// rows: [{ label, count, color, countText? }]
+function barChartCard(title, meta, rows) {
+  const max = Math.max(1, Math.max.apply(null, rows.map(function (r) { return r.count; })));
+  let html = '';
+  rows.forEach(function (r) {
+    html += '<div class="cmp-row"><span class="cmp-label">' + r.label + '</span>' +
+      '<span class="cmp-track"><span class="cmp-fill" style="width:' + (r.count / max * 100) + '%;background:' + r.color + '"></span></span>' +
+      '<span class="cmp-count">' + (r.countText || r.count) + '</span></div>';
+  });
+  if (!rows.length) html = '<div class="hint">No data yet.</div>';
   const card = document.createElement('div');
   card.className = 'card';
-  card.innerHTML = '<div class="chart-meta"><span><b>' + title + '</b></span></div><div class="cmp-chart">' + html + '</div>';
+  card.innerHTML = '<div class="chart-meta"><span><b>' + title + '</b></span>' +
+    (meta ? '<span>' + meta + '</span>' : '') + '</div><div class="cmp-chart">' + html + '</div>';
   return card;
 }
 
@@ -1039,6 +1281,10 @@ function renderBreakdowns(el, paramEvents) {
   el.appendChild(barCard('Queue next — by input', aggregateParam(queueTopRows, 'Video.Action', 'via'), 3));
   el.appendChild(barCard('More menu — by action', aggregateParam(paramEvents, 'Player.MoreMenu', 'action'), 2));
   el.appendChild(barCard('Copy URL — by option', aggregateParam(copyRows, 'Player.MoreMenu', 'option'), 0));
+  el.appendChild(barCard('Media played — video vs podcast', aggregateParam(paramEvents, 'Player.Media', 'action'), 4));
+  const channelStep = paramEvents.filter(function (r) { return r.params.step === 'channels'; });
+  el.appendChild(barCard('Onboarding — channels picked', aggregateParam(channelStep, 'Onboarding.Step', 'selected'), 5));
+  el.appendChild(barCard('Onboarding — used channel search', aggregateParam(channelStep, 'Onboarding.Step', 'usedSearch'), 6));
 }
 
 // State/snapshot events are shown elsewhere; the engagement table is behavioral only.
@@ -1149,6 +1395,15 @@ fetch('/dashboard/data' + channelQuery).then(r => r.json()).then(data => {
     return;
   }
 
+  if (data.failures && data.failures.length) {
+    const partial = document.getElementById('partial');
+    partial.innerHTML = 'Some data could not be loaded; the sections below it are empty, not zero:' +
+      '<ul>' + data.failures.map(function (f) {
+        return '<li>' + String(f).replace(/[<>&]/g, '') + '</li>';
+      }).join('') + '</ul>';
+    partial.hidden = false;
+  }
+
   const activeEl = document.getElementById('activeUsers');
   const activeLabels = { daily: 'DAU (24h)', weekly: 'WAU (7d)', monthly: 'MAU (30d)' };
   for (const key in activeLabels) {
@@ -1164,6 +1419,13 @@ fetch('/dashboard/data' + channelQuery).then(r => r.json()).then(data => {
     'Based on ' + data.platform.sampleSize + ' users active in the last ' + data.platform.windowDays + ' days';
   renderPie(document.getElementById('devicePie'), data.platform.devices);
   renderOsPie(document.getElementById('osPie'), data.platform.os);
+
+  const versionTotals = {};
+  (data.versions || []).forEach(function (r) { versionTotals[r.version] = r.users; });
+  document.getElementById('versionWindow').textContent = '(last ' + data.trendWindowDays + ' days)';
+  document.getElementById('versionHint').textContent =
+    'Distinct users per build. Versions people are still on, not versions they last reported a snapshot from.';
+  renderPie(document.getElementById('versionPie'), versionTotals);
 
   const countsByEvent = {}, usersByEvent = {};
   (data.counts || []).forEach(function (r) {
@@ -1185,8 +1447,10 @@ fetch('/dashboard/data' + channelQuery).then(r => r.json()).then(data => {
 
   document.getElementById('funnelHint').textContent = 'Distinct users reaching each step ' + win;
   renderFunnels(document.getElementById('funnels'), usersByEvent);
+  renderOnboardingFunnel(document.getElementById('funnels'), data.paramEvents);
 
-  document.getElementById('compareHint').textContent = 'Total event counts ' + win;
+  document.getElementById('compareHint').textContent =
+    'Adding content: total events ' + win + '. Player navigation: throttled to one event per user per day, so these are user-days, not taps.';
   renderCompare(document.getElementById('compare'), countsByEvent);
 
   document.getElementById('breakdownHint').textContent = 'Consolidated events broken out by their parameters ' + win;
@@ -1195,9 +1459,20 @@ fetch('/dashboard/data' + channelQuery).then(r => r.json()).then(data => {
 
   renderBreakdowns(document.getElementById('breakdowns'), data.paramEvents);
 
-  document.getElementById('settingsHint').textContent =
-    'Based on ' + data.settings.sampleSize + ' users active in the last ' + data.settings.windowDays + ' days';
+  document.getElementById('generationWindow').textContent = win;
+  renderGenerationResults(document.getElementById('generation'), data.paramEvents);
+
+  const settingsBase = 'Based on ' + data.settings.sampleSize + ' users active in the last ' +
+    data.settings.windowDays + ' days. Users who never touched a setting are counted on its default.';
+  document.getElementById('settingsHint').textContent = settingsBase;
   renderSettingsGrid(document.getElementById('settingsGrid'), document.getElementById('settingsToggle'), data.settings);
+
+  document.getElementById('settingValuesHint').textContent = settingsBase;
+  renderValueSettings(
+    document.getElementById('settingValues'),
+    document.getElementById('settingValuesToggle'),
+    data.settings.values || {}
+  );
 
   document.getElementById('queueHint').textContent =
     'Based on ' + data.queueInbox.queue.sampleSize + ' users active in the last ' + data.queueInbox.windowDays + ' days';
@@ -1210,6 +1485,11 @@ fetch('/dashboard/data' + channelQuery).then(r => r.json()).then(data => {
   document.getElementById('subsHint').textContent =
     'Based on ' + data.subscriptions.sampleSize + ' users active in the last ' + data.subscriptions.windowDays + ' days';
   renderPie(document.getElementById('subsPie'), data.subscriptions.buckets);
+
+  document.getElementById('podcastSubsHint').textContent =
+    'Based on ' + (data.subscriptions.podcastSampleSize ?? 0) + ' users reporting a podcast count in the last ' +
+    data.subscriptions.windowDays + ' days';
+  renderPie(document.getElementById('podcastSubsPie'), data.subscriptions.podcastBuckets || {});
 
   document.getElementById('errorWindow').textContent = '(last ' + data.errors.windowDays + ' days)';
   renderErrors(document.getElementById('errorTrend'), document.getElementById('errors'), data.errors);

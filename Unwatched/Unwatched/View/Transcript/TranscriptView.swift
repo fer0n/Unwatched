@@ -22,11 +22,18 @@ struct TranscriptView: View {
         ZStack(alignment: .bottomTrailing) {
             VStack(spacing: 0) {
                 searchBar
-                if viewModel.transcript?.isEmpty != false {
+                driftBanner
+                if showsGenerateButton {
+                    generateTranscriptButton
+                        .padding(.top, 24)
+                        .padding(.bottom, 8)
+                } else if viewModel.transcript?.isEmpty != false {
                     Text(transcriptStatus)
                         .italic()
                         .foregroundColor(.secondary)
                         .frame(maxWidth: .infinity, alignment: .center)
+                        .padding(.top, 24)
+                        .padding(.bottom, 8)
                 } else {
                     LazyVStack(alignment: .leading, spacing: 0, pinnedViews: [.sectionHeaders]) {
                         Section {
@@ -62,8 +69,44 @@ struct TranscriptView: View {
                             video,
                             transcriptUrl
                         )
+                        await viewModel.checkAlignmentIfCheap(for: video)
                     }
             }
+        }
+    }
+
+    /// Offered rather than applied: correcting the timings rewrites what the user is reading, and
+    /// the check that found the drift is cheap enough to be wrong occasionally.
+    var showsDriftBanner: Bool {
+        viewModel.driftDetected && !viewModel.isAligning
+    }
+
+    @ViewBuilder
+    var driftBanner: some View {
+        if showsDriftBanner {
+            Button {
+                Signal.log("Transcript.Align", parameters: ["source": "banner"])
+                viewModel.alignTranscript(for: video)
+            } label: {
+                HStack(spacing: 6) {
+                    Image(systemName: "exclamationmark.arrow.trianglehead.counterclockwise.rotate.90")
+                    Text("transcriptOutOfSync")
+                    Spacer()
+                    Text("fixTranscriptAlignment")
+                        .fontWeight(.semibold)
+                }
+                .font(.footnote)
+            }
+            .buttonStyle(.plain)
+            .foregroundStyle(Color.automaticBlack)
+            .padding(.horizontal, 14)
+            .padding(.vertical, 10)
+            #if os(iOS)
+            .background(Capsule().fill(Color.insetBackgroundColor))
+            #endif
+            .padding(.vertical, 8)
+            // opacity only: a moving transition draws the banner over the search field above it
+            .transition(.opacity)
         }
     }
 
@@ -105,6 +148,31 @@ struct TranscriptView: View {
             .animation(.default, value: autoScroll)
             .frame(maxWidth: .infinity, alignment: .center)
         }
+    }
+
+    var showsGenerateButton: Bool {
+        video.isPodcast
+            && TranscriptService.canGenerateTranscript
+            && !viewModel.isLoading
+            && viewModel.transcript?.isEmpty == true
+    }
+
+    var generateTranscriptButton: some View {
+        Button {
+            guard guardPremium() else { return }
+            Signal.log("Transcript.Generate", parameters: ["source": "emptyTranscript"])
+            viewModel.generateTranscript(for: video)
+        } label: {
+            Label("generateTranscript", systemImage: "text.quote")
+        }
+        .buttonBorderShape(.capsule)
+        .foregroundStyle(Color.automaticBlack)
+        #if !os(visionOS)
+        .tint(Color.insetBackgroundColor)
+        #endif
+        .buttonStyle(.borderedProminent)
+        .disabled(viewModel.isGenerating)
+        .frame(maxWidth: .infinity, alignment: .center)
     }
 
     var transcriptStatus: LocalizedStringKey {
@@ -156,176 +224,4 @@ struct TranscriptView: View {
     var isCurrentVideo: Bool {
         player.video?.youtubeId == youtubeId
     }
-}
-
-extension TranscriptView {
-    @Observable class ViewModel {
-        var transcript: [TranscriptEntry]? {
-            didSet { transcriptVersion += 1 }
-        }
-        var text = DebouncedText()
-        var isLoading = false
-        var isGenerating = false
-        var generationProgress: Double = 0
-        var generationError: String?
-
-        /// Set once the sweep has reached the end, so the button can dissolve the fill before it's swapped out.
-        var isFadingOutProgress = false
-
-        @ObservationIgnored
-        var transcriptYoutubeId: String = ""
-
-        @ObservationIgnored
-        private var transcriptVersion = 0
-
-        @ObservationIgnored
-        private var cache: FilterCache?
-
-        var filteredTranscript: [TranscriptDisplayItem] {
-            // Read both before the cache check so this stays observed even when returning the cache.
-            let transcript = transcript
-            let searchText = text.debounced
-
-            if let cache, cache.version == transcriptVersion, cache.searchText == searchText {
-                return cache.items
-            }
-            let items = makeFilteredTranscript(transcript, searchText)
-            cache = FilterCache(version: transcriptVersion, searchText: searchText, items: items)
-            return items
-        }
-
-        private func makeFilteredTranscript(
-            _ transcript: [TranscriptEntry]?,
-            _ searchText: String
-        ) -> [TranscriptDisplayItem] {
-            guard let transcript = transcript else { return [] }
-
-            if searchText.isEmpty {
-                return transcript.map { .entry($0, isMatch: false) }
-            }
-
-            var result: [TranscriptDisplayItem] = []
-
-            let matchIndices = transcript.indices.filter { index in
-                transcript[index].text.localizedCaseInsensitiveContains(searchText)
-            }
-
-            if matchIndices.isEmpty { return [] }
-
-            var lastIncludedIndex = -1
-
-            for index in matchIndices {
-                let start = max(0, index - 1)
-                let end = min(transcript.count - 1, index + 1)
-
-                if start > lastIncludedIndex + 1 {
-                    result.append(.separator(UUID()))
-                }
-
-                for innerIndex in start...end where innerIndex > lastIncludedIndex {
-                    let entry = transcript[innerIndex]
-                    let isMatch = entry.text.localizedCaseInsensitiveContains(searchText)
-                    result.append(.entry(entry, isMatch: isMatch))
-                    lastIncludedIndex = innerIndex
-                }
-            }
-
-            return result
-        }
-
-        /// Starts generating a transcript for `video` — or, if one is already running (kicked off from a
-        /// Shortcut, say), just lets `watchGeneration` pick it up.
-        @MainActor
-        func generateTranscript(for video: Video) {
-            isGenerating = true
-            generationProgress = 0
-            isFadingOutProgress = false
-            generationError = nil
-            TranscriptService.GenerationCoordinator.shared.generate(for: video)
-        }
-
-        /// Mirrors the shared coordinator's state for `video` for as long as this task runs, so this
-        /// screen reflects a generation regardless of who started it, and loads the result once it lands.
-        @MainActor
-        func watchGeneration(for video: Video) async {
-            let coordinator = TranscriptService.GenerationCoordinator.shared
-            let youtubeId = video.youtubeId
-            var handledFinishedVersion = coordinator.finishedYoutubeId == youtubeId ? coordinator.finishedVersion : -1
-
-            while true {
-                if coordinator.youtubeId == youtubeId {
-                    if coordinator.isGenerating && !isGenerating {
-                        isFadingOutProgress = false
-                    }
-                    isGenerating = coordinator.isGenerating
-                    generationProgress = coordinator.progress
-                    generationError = coordinator.error
-                }
-
-                if coordinator.finishedYoutubeId == youtubeId && coordinator.finishedVersion != handledFinishedVersion {
-                    handledFinishedVersion = coordinator.finishedVersion
-                    if coordinator.error == nil {
-                        await finishProgress()
-                        let entries = await TranscriptService.podcastTranscript(for: video).value
-                        withAnimation {
-                            transcript = entries
-                        }
-                        transcriptYoutubeId = youtubeId
-                    }
-                }
-
-                do {
-                    try await Task.sleep(for: .milliseconds(150))
-                } catch {
-                    return
-                }
-            }
-        }
-
-        /// Runs the sweep out to the end and starts fading it, so the swap that follows reads as one motion.
-        @MainActor
-        private func finishProgress() async {
-            generationProgress = 1
-            try? await Task.sleep(for: .seconds(0.25))
-            isFadingOutProgress = true
-            try? await Task.sleep(for: .seconds(0.15))
-        }
-
-        @MainActor
-        func handleTranscriptLoading(
-            _ video: Video,
-            _ transcriptUrl: String?
-        ) async {
-            let youtubeId = video.youtubeId
-            if youtubeId != transcriptYoutubeId && transcript != nil {
-                transcript = nil
-            }
-            guard transcript == nil else {
-                Log.info("Transcript already loaded for \(youtubeId)")
-                return
-            }
-
-            isLoading = true
-            defer { isLoading = false }
-
-            if video.isPodcast {
-                // an episode has no captions to fetch, but it may have one it was given earlier or one the show
-                // publishes itself
-                transcript = await TranscriptService.podcastTranscript(for: video).value
-            } else {
-                transcript = try? await TranscriptService.getTranscript(
-                    from: transcriptUrl,
-                    youtubeId: youtubeId,
-                    )
-            }
-            Log.info("Transcript loaded for \(youtubeId): \(transcript?.count ?? 0) entries")
-            transcriptYoutubeId = youtubeId
-        }
-    }
-}
-
-private struct FilterCache {
-    let version: Int
-    let searchText: String
-    let items: [TranscriptDisplayItem]
 }

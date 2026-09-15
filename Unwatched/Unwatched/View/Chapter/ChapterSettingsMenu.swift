@@ -8,21 +8,25 @@ import UnwatchedShared
 
 struct ChapterSettingsMenu: View {
     @Environment(AppNotificationVM.self) var appNotificationVM
+    @Environment(\.dismiss) var dismiss
+    @CloudStorage(Const.unwatchedPremiumAcknowledged) var premium: Bool = false
     @State var viewModel = GenerateChaptersButtonViewModel()
 
+    /// The video being shown, which is not always the one playing.
     let video: Video?
+
+    /// Leaving this out leaves the transcript actions out with it.
+    var transcriptVM: TranscriptView.ViewModel?
+
+    /// Drops the text label, keeping just the gear icon — for when the button sits next to the
+    /// segmented control and the row has no room to spare.
+    var iconOnly = false
 
     var body: some View {
         Menu {
-            if video?.hasCustomChapterOrder == true {
-                videoButton("resetChapterOrder", systemImage: "arrow.up.arrow.down") {
-                    ChapterService.resetChapterOrder(for: $0)
-                }
-            }
+            transcriptSection
 
-            videoButton("restoreChapters", systemImage: "arrow.uturn.backward") {
-                ChapterService.restoreChapters(for: $0)
-            }
+            chapterSection
 
             Section {
                 CloudAiButton(dismissOnPaywall: true) {
@@ -33,17 +37,25 @@ struct ChapterSettingsMenu: View {
                 GenerateChaptersMenuButton(viewModel: $viewModel, video: video)
 
             } header: {
-                Text(verbatim: "\(String(localized: "generateChapters")) ✪")
+                Text(verbatim: premium
+                        ? String(localized: "generateChapters")
+                        : "\(String(localized: "generateChapters")) ✪")
             }
             .tint(Color.automaticBlack)
             .containsPremium()
 
         } label: {
             Image(systemName: "gearshape.fill")
-                .symbolEffect(.rotate, isActive: viewModel.isLoading)
-            Text("chapters")
+                .symbolEffect(.rotate, isActive: isWorking)
+            if !iconOnly {
+                Text(showsTranscriptActions ? "settings" : "chapters")
+            }
+        }
+        .overlay {
+            ProgressSweep(progress: progress, isFadingOut: isFadingOutProgress)
         }
         .foregroundStyle(Color.automaticBlack)
+        .font(.subheadline)
         #if !os(visionOS)
         .tint(Color.insetBackgroundColor)
         #endif
@@ -60,12 +72,108 @@ struct ChapterSettingsMenu: View {
         #else
         .buttonStyle(.borderedProminent)
         #endif
-        .frame(maxWidth: .infinity, alignment: .center)
         .task(id: viewModel.errorMessage) {
             if let message = viewModel.errorMessage {
                 appNotificationVM.show(message, isError: true)
             }
         }
+    }
+
+    /// The chapters the video came with, and the way back to them after an edit.
+    @ViewBuilder
+    var chapterSection: some View {
+        Section {
+            if video?.hasCustomChapterOrder == true {
+                videoButton("resetChapterOrder", systemImage: "arrow.up.arrow.down") {
+                    ChapterService.resetChapterOrder(for: $0)
+                }
+            }
+
+            videoButton("restoreChapters", systemImage: "arrow.uturn.backward") {
+                ChapterService.restoreChapters(for: $0)
+            }
+        } header: {
+            Text("chapters")
+        }
+    }
+
+    /// A show that inserts ads publishes the transcript of the ad-free cut, which drifts out of sync with
+    /// what plays — so transcribing the audio is worth offering even when a transcript is already there.
+    @ViewBuilder
+    var transcriptSection: some View {
+        if let video, let transcriptVM, showsTranscriptActions {
+            Section {
+                Button {
+                    guard guardPremium(onInteraction: { dismiss() }) else { return }
+                    Signal.log("Transcript.Generate", parameters: ["source": "menu"])
+                    transcriptVM.generateTranscript(for: video, force: true)
+                } label: {
+                    Label("generateTranscript", systemImage: "text.quote")
+                }
+                .disabled(transcriptVM.isGenerating)
+                .containsPremium()
+
+                if showsAlign {
+                    Button {
+                        Signal.log("Transcript.Align", parameters: ["source": "menu"])
+                        transcriptVM.alignTranscript(for: video)
+                    } label: {
+                        Label(
+                            "fixTranscriptAlignment",
+                            systemImage: "exclamationmark.arrow.trianglehead.counterclockwise.rotate.90"
+                        )
+                    }
+                    .disabled(transcriptVM.isAligning)
+                }
+
+                if showsRestore {
+                    Button {
+                        Signal.log("Transcript.RestorePublished")
+                        transcriptVM.restorePublishedTranscript(for: video)
+                    } label: {
+                        Label("restoreOriginalTranscript", systemImage: "arrow.uturn.backward")
+                    }
+                    .disabled(transcriptVM.isRestoring)
+                }
+            } header: {
+                Text("transcript")
+            }
+            .tint(Color.automaticBlack)
+        }
+    }
+
+    var showsRestore: Bool {
+        transcriptVM?.origin == .generated || transcriptVM?.origin == .aligned
+    }
+
+    /// Only for a transcript the show published: a generated one is of the audio already, so it
+    /// has nothing to line up with. Stays offered once corrected, which is how an episode aligned
+    /// before gap chapters existed gets them.
+    var showsAlign: Bool {
+        guard let video, let transcriptVM else { return false }
+        return (transcriptVM.origin == .published || transcriptVM.origin == .aligned)
+            && transcriptVM.transcript?.isEmpty == false
+            && TranscriptService.canAlignTranscript(for: video)
+    }
+
+    /// Read from the progress itself rather than an is-running flag, which drops before the sweep
+    /// has finished running out.
+    var progress: Double {
+        max(viewModel.sweepProgress, transcriptVM?.sweepProgress ?? 0)
+    }
+
+    var isFadingOutProgress: Bool {
+        viewModel.isFadingOutProgress || transcriptVM?.isFadingOutProgress == true
+    }
+
+    var isWorking: Bool {
+        viewModel.isLoading || transcriptVM?.isGenerating == true || transcriptVM?.isAligning == true
+    }
+
+    var showsTranscriptActions: Bool {
+        video?.isPodcast == true
+            && transcriptVM != nil
+            && TranscriptService.canGenerateTranscript
     }
 
     private func videoButton(
@@ -106,55 +214,23 @@ struct GenerateChaptersMenuButton: View {
     }
 }
 
-struct CloudAiButton<Label: View>: View {
-    @Environment(PlayerManager.self) var player
-    @Environment(\.dismiss) var dismiss
-    @Environment(\.openURL) var openURL
-
-    var dismissOnPaywall: Bool = false
-    @ViewBuilder var label: () -> Label
+/// A left-to-right sweep drawn over the menu's own capsule, so the button keeps whatever style its
+/// platform gives it.
+private struct ProgressSweep: View {
+    let progress: Double
+    let isFadingOut: Bool
 
     var body: some View {
-        Button {
-            let hasAccess = guardPremium(onInteraction: dismissOnPaywall ? { dismiss() } : nil)
-            guard hasAccess else { return }
-
-            let name = "Generate Chapters"
-            var components = URLComponents()
-            let enablePip = !player.pipEnabled && player.isPlaying
-
-            var successUrl = "unwatched://shortcut-success"
-            var errorUrl = "unwatched://shortcut-error"
-
-            if enablePip {
-                successUrl += "?disablePip=true"
-                errorUrl += "?disablePip=true"
-            }
-
-            components.scheme = "shortcuts"
-            components.host = "x-callback-url"
-            components.path = "/run-shortcut"
-            components.queryItems = [
-                URLQueryItem(name: "name", value: name),
-                URLQueryItem(name: "x-success", value: successUrl),
-                URLQueryItem(name: "x-error", value: errorUrl)
-            ]
-            if let url = components.url {
-                if enablePip {
-                    player.setPip(true)
-                    Task {
-                        try await Task.sleep(for: .seconds(0.2))
-                        openURL(url)
-                    }
-                } else {
-                    openURL(url)
-                }
-            } else {
-                openURL(UrlService.generateChaptersShortcutUrl)
-            }
-        } label: {
-            label()
+        GeometryReader { geo in
+            Color.white
+                .opacity(0.25)
+                .frame(width: geo.size.width * progress)
         }
+        .opacity(isFadingOut ? 0 : 1)
+        .clipShape(Capsule())
+        .allowsHitTesting(false)
+        .animation(.linear(duration: 0.3), value: progress)
+        .animation(.easeOut(duration: 0.4), value: isFadingOut)
     }
 }
 

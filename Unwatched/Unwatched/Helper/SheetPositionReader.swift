@@ -40,7 +40,7 @@ import UnwatchedShared
     var selectedDetent: PresentationDetent = .height(Const.minSheetDetent)
     @ObservationIgnored var needsRestoreMiniPlayer: Bool = false
     @ObservationIgnored var sheetHeight: CGFloat = .zero
-    @ObservationIgnored private var sheetDistanceToTop: CGFloat = .zero
+    @ObservationIgnored private(set) var sheetDistanceToTop: CGFloat = .zero
     @ObservationIgnored var playerContentViewHeight: CGFloat?
 
     @ObservationIgnored var debouncedPlayerControlHeight: Task<(), Never>?
@@ -148,11 +148,12 @@ import UnwatchedShared
         setSwipedBelow(false)
     }
 
+    static let swipedBelowThreshold: CGFloat = Const.iOS26_1 ? 60 : 50
+
     // global position changes
     func handleSheetMinYUpdate(_ minY: CGFloat) {
         let value = minY - sheetDistanceToTop
-        let threshold: CGFloat = Const.iOS26_1 ? 60 : 50
-        let newBelow = value > threshold || minY == 0 // after dismissing the sheet minY becomes 0
+        let newBelow = value > Self.swipedBelowThreshold || minY == 0 // after dismissing the sheet minY becomes 0
         setSwipedBelow(newBelow)
     }
 

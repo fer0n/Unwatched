@@ -34,7 +34,7 @@ extension URL {
 // MARK: - YTHLSProxyLoader
 
 /// `AVAssetResourceLoaderDelegate` that forwards every HLS request through
-/// `URLSession.shared` with a desktop-Safari User-Agent header.
+/// `URLSession.app` with a desktop-Safari User-Agent header.
 /// Holds a strong reference to itself via the asset to keep it alive.
 final class YTHLSProxyLoader: NSObject, AVAssetResourceLoaderDelegate, @unchecked Sendable {
     let ua: String
@@ -110,7 +110,7 @@ final class YTHLSProxyLoader: NSObject, AVAssetResourceLoaderDelegate, @unchecke
         proxyLog.notice("[HLSProxy] GET \(realURL.absoluteString.prefix(200))")
 
         let key = ObjectIdentifier(loadingRequest)
-        let task = URLSession.shared.dataTask(with: request) { [weak self] data, response, error in
+        let task = URLSession.app.dataTask(with: request) { [weak self] data, response, error in
             guard let self else { return }
             defer {
                 self.lock.lock()

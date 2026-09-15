@@ -39,12 +39,14 @@ enum PremiumFeatureLarge: String, CaseIterable {
 
 enum PremiumFeature: String, CaseIterable {
     case customTemporaryPlaybackSpeed,
+         trimSilence,
+         tags,
          videoTitleFilter,
-         playBrowserVideosInApp,
          seeVideoDuration,
          generateChaptersFromTranscript,
          generateTranscript,
          chapterFilter,
+         skipIntroOutro,
          customTheme,
          statistics
 
@@ -52,12 +54,16 @@ enum PremiumFeature: String, CaseIterable {
         switch self {
         case .customTemporaryPlaybackSpeed:
             return String(localized: "customTemporaryPlaybackSpeedTitle")
+        case .trimSilence:
+            return String(localized: "trimSilence")
+        case .tags:
+            return String(localized: "tags")
         case .videoTitleFilter:
             return String(localized: "videoTitleFilter")
         case .chapterFilter:
             return String(localized: "chapterFilterTitle")
-        case .playBrowserVideosInApp:
-            return String(localized: "playBrowserVideosInApp")
+        case .skipIntroOutro:
+            return String(localized: "skipIntroOutroTitle")
         case .seeVideoDuration:
             return String(localized: "seeVideoDurationTitle")
         case .generateChaptersFromTranscript:
@@ -75,12 +81,16 @@ enum PremiumFeature: String, CaseIterable {
         switch self {
         case .customTemporaryPlaybackSpeed:
             return "gauge.with.needle"
+        case .trimSilence:
+            return "waveform"
+        case .tags:
+            return "tag.fill"
         case .videoTitleFilter:
             return Const.filterSF
         case .chapterFilter:
             return "chevron.forward.circle.fill"
-        case .playBrowserVideosInApp:
-            return "play.fill"
+        case .skipIntroOutro:
+            return "forward.end.circle.fill"
         case .seeVideoDuration:
             return "clock.fill"
         case .generateChaptersFromTranscript:

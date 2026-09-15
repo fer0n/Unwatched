@@ -16,7 +16,8 @@ public enum ChapterImageStore {
               let url = URL(string: "\(scheme)://\(videoId)/\(Int(startTime * 1000))") else {
             return nil
         }
-        await ImageService.saveImages([(url: url, data: data)])
+        // replaced, not added: an entry an older build wrote for this chapter shouldn't win
+        await ImageService.replaceImage(url: url, data: data)
         return url
     }
 }

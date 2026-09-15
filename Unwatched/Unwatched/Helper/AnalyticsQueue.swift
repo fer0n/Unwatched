@@ -29,6 +29,13 @@ actor AnalyticsQueue {
         }
     }
 
+    /// Drops everything queued and sends `event` on its own, once.
+    func replaceAll(with event: AnalyticsEvent) async {
+        save([event])
+        _ = await send([event])
+        save([])
+    }
+
     func flush() async {
         var events = load()
         while !events.isEmpty {
@@ -48,7 +55,7 @@ actor AnalyticsQueue {
         guard let body = try? JSONEncoder().encode(["events": batch]) else { return false }
         request.httpBody = body
 
-        guard let (_, response) = try? await URLSession.shared.data(for: request) else {
+        guard let (_, response) = try? await URLSession.app.data(for: request) else {
             return false
         }
         return (response as? HTTPURLResponse)?.statusCode == 204

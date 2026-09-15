@@ -15,7 +15,8 @@ class GestureTrackingState {
     @ObservationIgnored private var isSwiping = false
     @ObservationIgnored var longTouchSent = false
     @ObservationIgnored private var centerTouch = false
-    @ObservationIgnored private let longPressThreshold: TimeInterval = 0.3
+    /// Matches `PlayerBackgroundGestureRecognizer.minDuration`; a swipe cancels on movement anyway.
+    @ObservationIgnored private let longPressThreshold: TimeInterval = 0.2
     @ObservationIgnored private let swipeThreshold: CGFloat = 50
     @ObservationIgnored private let doubleTapInterval: TimeInterval = 0.3
     @ObservationIgnored private var lastTapDate: Date?
@@ -26,27 +27,27 @@ class GestureTrackingState {
 
     @MainActor
     func handleTouchStart(
-        value: DragGesture.Value,
+        startLocation: CGPoint,
         in size: CGSize,
         gestureHandler: @escaping @MainActor (PlayerGestureOverlay.GestureType) -> Void
     ) {
         if touchStartLocation == nil {
             touchStartTime = Date()
-            touchStartLocation = value.startLocation
+            touchStartLocation = startLocation
             isSwiping = false
             longTouchSent = false
             centerTouch = false
             let maxTouchSize = min(100, size.width * 0.15)
             let midX = size.width / 2
             let midY = size.height / 2
-            let isHorizontalCenter = abs(value.startLocation.x - midX) < maxTouchSize
-            let isVerticalCenter = abs(value.startLocation.y - midY) < maxTouchSize
+            let isHorizontalCenter = abs(startLocation.x - midX) < maxTouchSize
+            let isVerticalCenter = abs(startLocation.y - midY) < maxTouchSize
             if isHorizontalCenter && isVerticalCenter {
                 centerTouch = true
             }
-            let isLeft = value.startLocation.x < midX
+            let isLeft = startLocation.x < midX
             edgeZoneSide = PlayerEdgeSwipe.edgeZoneSide(
-                startX: value.startLocation.x,
+                startX: startLocation.x,
                 width: size.width
             )
             longPressTask?.cancel()
@@ -59,10 +60,10 @@ class GestureTrackingState {
         }
     }
 
-    func handleTouchMove(value: DragGesture.Value, in size: CGSize) {
+    func handleTouchMove(location: CGPoint, in size: CGSize) {
         guard let start = touchStartLocation else { return }
-        let deltaX = value.location.x - start.x
-        let deltaY = value.location.y - start.y
+        let deltaX = location.x - start.x
+        let deltaY = location.y - start.y
         if !isSwiping && (abs(deltaX) > 10 || abs(deltaY) > 10) {
             isSwiping = true
             longPressTask?.cancel()
@@ -166,6 +167,16 @@ class GestureTrackingState {
         } else if deltaY < -swipeThreshold {
             gestureHandler(.swipeUp)
         }
+    }
+
+    /// A press that already fired still owes its `.longPressEnd`, or the temporary speed stays on.
+    @MainActor
+    func cancelTouch(gestureHandler: @MainActor (PlayerGestureOverlay.GestureType) -> Void) {
+        guard touchStartLocation != nil else { return }
+        if longTouchSent {
+            gestureHandler(.longPressEnd)
+        }
+        resetTouch()
     }
 
     func resetTouch() {

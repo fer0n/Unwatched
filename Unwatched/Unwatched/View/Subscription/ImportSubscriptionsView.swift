@@ -252,7 +252,7 @@ struct ImportSubscriptionsView: View {
             return nil
         }
         let channelId = columns[0]
-        // let channelUrl = columns[1] | not needed
+        // columns[1] (channel URL) is unused
         let channelTitle = columns[2]
         return SendableSubscription(title: channelTitle, youtubeChannelId: channelId)
     }

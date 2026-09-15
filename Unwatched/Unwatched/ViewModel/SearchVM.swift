@@ -13,7 +13,12 @@ import UnwatchedShared
 @Observable
 @MainActor
 final class SearchVM {
+    /// Outlives `SearchView`, like the results route on `NavigationManager.shared`: on iPhone the
+    /// menu is a sheet that fullscreen dismisses, and a fresh model would reopen an empty results page.
+    static let shared = SearchVM()
+
     var query: String = ""
+    var showBrowserFallback = false
     var results: [SendableVideo] = []
     var podcastResults: [SendableSubscription] = []
     private(set) var suggestions: [String] = []
@@ -30,6 +35,11 @@ final class SearchVM {
     var enabledSources = SearchSource.loadEnabled()
 
     var hasSearched: Bool { !activeQuery.isEmpty }
+
+    /// The user is composing a new search, which is what suggestions are for; focus alone isn't.
+    var isEditingQuery: Bool {
+        query != activeQuery
+    }
 
     var hasAnyResults: Bool { !results.isEmpty || !localResults.isEmpty || !podcastResults.isEmpty }
 
@@ -67,14 +77,21 @@ final class SearchVM {
         loadRecentSearches()
     }
 
-    func search() {
+    /// `force` re-runs a query that's already active; without it, submitting it again is a no-op.
+    func search(force: Bool = false) {
         let trimmed = query.trimmingCharacters(in: .whitespacesAndNewlines)
         guard !trimmed.isEmpty else { return }
+        guard force || trimmed != activeQuery || errorMessage != nil else {
+            query = trimmed
+            return
+        }
         recordRecentSearch(trimmed)
 
         searchTask?.cancel()
         errorMessage = nil
         activeQuery = trimmed
+        // keeps the field comparable with `activeQuery` (see `isEditingQuery`)
+        query = trimmed
 
         suggestionsTask?.cancel()
         suggestions = []
@@ -110,6 +127,7 @@ final class SearchVM {
             } catch {
                 if Task.isCancelled { return }
                 Log.error("search failed: \(error)")
+                Signal.error("searchFailed")
                 results = []
                 nextPageToken = nil
                 errorMessage = String(localized: "searchFailed")
@@ -166,7 +184,7 @@ final class SearchVM {
     func rerunActiveSearch() {
         guard hasSearched else { return }
         query = activeQuery
-        search()
+        search(force: true)
     }
 
     /// Fetches the next page when the user scrolls near the end of the list. Triggers on

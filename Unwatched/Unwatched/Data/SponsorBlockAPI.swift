@@ -27,7 +27,7 @@ struct SponsorBlockAPI {
             throw SponsorBlockError.noValidUrl
         }
 
-        let (data, _) = try await URLSession.shared.data(from: url)
+        let (data, _) = try await URLSession.app.data(from: url)
         let decoder = JSONDecoder()
         Log.info("skipSegments url: \(urlString)")
         if let result = try? decoder.decode([SponsorBlockSegmentModel].self, from: data) {

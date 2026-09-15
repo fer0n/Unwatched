@@ -45,6 +45,9 @@ struct SubscriptionInfoDetails: View {
                         .frame(maxHeight: .infinity)
                         .buttonStyle(CapsuleButtonStyle())
 
+                    SubscriptionTagsSetting(subscription: subscription)
+                        .frame(maxHeight: .infinity)
+
                     if browserDisplayMode != .disabled, !subscription.isPodcast {
                         Button {
                             if let url = UrlService.getYoutubeUrl(
@@ -113,13 +116,15 @@ struct SubscriptionInfoDetails: View {
                             SubscriptionShortsSetting(subscription: subscription)
                         }
 
-                        SubscriptionTagsSetting(subscription: subscription)
-
                         SubscriptionSkipSetting(subscription: subscription, edge: .intro)
 
                         SubscriptionSkipSetting(subscription: subscription, edge: .outro)
 
                         SubscriptionAutoSkipSetting(subscription: subscription)
+
+                        SubscriptionSegmentSetting(subscription: subscription, category: .sponsor)
+
+                        SubscriptionSegmentSetting(subscription: subscription, category: .selfPromo)
 
                         SubscriptionTitleFilterButton(
                             showFilter: $showFilter,
@@ -195,16 +200,12 @@ struct SubscriptionInfoDetails: View {
                 }
             }
         } label: {
-            HStack(spacing: 3) {
+            CapsuleLabel(text: subscription.isArchived
+                            ? String(localized: "subscribe")
+                            : String(localized: "subscribed")) {
                 Image(systemName: subscription.isArchived ? "plus" : "checkmark")
                     .contentTransition(.symbolEffect(.replace))
-                Text(subscription.isArchived
-                        ? String(localized: "subscribe")
-                        : String(localized: "subscribed"))
             }
-            .fontWidth(.condensed)
-            .fontWeight(.semibold)
-            .padding(10)
         }
     }
 }

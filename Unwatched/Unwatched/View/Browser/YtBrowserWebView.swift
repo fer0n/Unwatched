@@ -110,9 +110,3 @@ struct YtBrowserWebView: PlatformViewRepresentable {
         Coordinator(self)
     }
 }
-
-// #Preview {
-//    BrowserView(url: .constant(BrowserUrl.youtubeStartPage))
-//        .modelContainer(DataController.previewContainer)
-//        .environment(RefreshManager())
-// }

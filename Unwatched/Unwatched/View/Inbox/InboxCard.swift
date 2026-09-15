@@ -46,19 +46,24 @@ struct InboxCard: View, Equatable {
         .shadow(color: .black.opacity(0.25), radius: 10, y: 4)
     }
 
+    /// Everything below the title gives way from the bottom up as the card gets shorter: the
+    /// description first, then the chapters, and the title itself sheds lines last
     private func details(_ chapters: [SendableChapter]) -> some View {
         VStack(alignment: .leading, spacing: 0) {
-            VStack(alignment: .leading, spacing: 8) {
-                title
-                info
+            title
+            info
+                .padding(.top, 8)
 
-                if !chapters.isEmpty {
+            if !chapters.isEmpty {
+                // chips can't shrink, they go as a whole rather than clipping mid-row
+                CollapsingSectionLayout(spacing: 8) {
                     InboxCardChapters(video: video, chapters: chapters, bleedEdges: layout.chapterBleedEdges)
                 }
+                .layoutPriority(-1)
             }
 
             description
-                .layoutPriority(-1)
+                .layoutPriority(-2)
         }
         .padding(.horizontal, Self.contentPadding)
         .padding(.top, 12)
@@ -126,8 +131,8 @@ struct InboxCard: View, Equatable {
             .font(.system(size: titleSize, weight: .semibold))
             .multilineTextAlignment(.leading)
             .foregroundStyle(.primary)
+            .lineLimit(1...3)
             .frame(idealWidth: 200)
-            .layoutPriority(2)
     }
 
     private var info: some View {
@@ -157,7 +162,7 @@ struct InboxCard: View, Equatable {
     @ViewBuilder
     private var description: some View {
         if let description = content.description {
-            CollapsingDescriptionLayout(spacing: 10) {
+            CollapsingSectionLayout(spacing: 10) {
                 Text(verbatim: description)
                     .font(.system(size: infoSize))
                     .foregroundStyle(.secondary)

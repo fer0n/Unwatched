@@ -69,13 +69,13 @@ struct SleepTimer: View {
         }
         .sensoryFeedback(Const.sensoryFeedback, trigger: hapticToggle)
         #endif
-        .onChange(of: player.isPlaying) {
-            handleTimerPause()
+        .onPlayerPlayingChange { isPlaying in
+            handleTimerPause(isPlaying)
         }
     }
 
-    func handleTimerPause() {
-        if player.isPlaying {
+    func handleTimerPause(_ isPlaying: Bool) {
+        if isPlaying {
             viewModel.resumeTimer()
         } else {
             viewModel.pauseTimer()
@@ -92,9 +92,9 @@ struct SleepTimer: View {
                 viewModel.addTime(minutes)
             }
             viewModel.restoreVolume()
-            handleTimerPause()
+            handleTimerPause(player.isPlaying)
             hapticToggle.toggle()
-            Signal.log("Player.MoreMenu", parameters: ["action": "sleepTimer"])
+            Signal.interaction("Player.MoreMenu", "sleepTimer")
         } label: {
             Label("\(minutes) min", systemImage: "plus")
                 .frame(maxWidth: .infinity)

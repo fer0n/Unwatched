@@ -11,14 +11,17 @@ import UnwatchedShared
 extension PlayerWebViewCoordinator {
     // swiftlint:disable:next cyclomatic_complexity function_body_length
     func handleJsMessages(_ topic: String, _ payload: String?) {
+        guard !retired else {
+            handleRetiredMessage(topic, payload)
+            return
+        }
         switch topic {
         case "pause":
             handlePause(payload)
         case "play":
             handlePlay()
         case "ended":
-            flushStats()
-            parent.onVideoEnded()
+            handleEnded(payload)
         case "currentTime":
             handleTimeUpdate(payload)
         case "seek":
@@ -268,32 +271,25 @@ extension PlayerWebViewCoordinator {
         }
     }
 
+    /// The outgoing page can still end after the next video was swapped in.
+    func handleEnded(_ urlString: String?) {
+        if let urlString, let url = URL(string: urlString),
+           let videoId = UrlService.getYoutubeIdFromUrl(url: url),
+           videoId != parent.player.video?.youtubeId {
+            Log.info("ended: \(videoId) is no longer the current video")
+            return
+        }
+        flushStats()
+        parent.onVideoEnded()
+    }
+
     func handlePlay() {
+        // a tap inside the YouTube page starts playback without going through `WebPlayerBackend.play()`
+        PlayerAudioSession.configure()
         updateUnstarted()
         parent.player.reportPlaying()
         #if os(iOS)
         BackgroundMonitor.handlePlay()
-        #endif
-    }
-
-    func handlePause(_ payload: String?) {
-        guard let payload else {
-            Log.warning("No payload given for handlePause")
-            return
-        }
-        let payloadArray = payload.split(separator: ",").map { String($0) }
-        let payloadPlaybackId = payloadArray[safe: 1]
-        let playbackId = UserDefaults.standard.string(forKey: Const.playbackId) ?? ""
-        if payloadPlaybackId != playbackId {
-            Log.info("handlePause: playbackId mismatch, not pausing")
-            return
-        }
-        parent.player.reportPaused()
-
-        flushStats(timeString: payloadArray[safe: 0], urlString: payloadArray[safe: 2])
-
-        #if os(iOS)
-        BackgroundMonitor.handlePause()
         #endif
     }
 
@@ -405,19 +401,6 @@ extension PlayerWebViewCoordinator {
         }
         withAnimation(.seekScrubber) {
             parent.player.currentTime = time
-        }
-    }
-
-    func flushStats(timeString: String? = nil, urlString: String? = nil) {
-        let videoId: String?
-        if let urlString, let url = URL(string: urlString) {
-            videoId = UrlService.getYoutubeIdFromUrl(url: url)
-        } else {
-            videoId = parent.player.video?.youtubeId
-        }
-        let resolvedTime = timeString ?? parent.player.currentTime.map { String($0) }
-        if let videoId {
-            handleTimeUpdate(resolvedTime, persist: true, youtubeId: videoId)
         }
     }
 }

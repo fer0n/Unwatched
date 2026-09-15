@@ -66,6 +66,7 @@ import UnwatchedShared
             }
         } catch {
             Log.error("podcast subscription error: \(error)")
+            Signal.error("podcastSubscribeFailed")
             errorMessage = error.localizedDescription
             isSubscribedSuccess = wasSubscribed
         }
@@ -132,8 +133,8 @@ import UnwatchedShared
         isLoading = false
     }
 
-    func addWithoutRSS() async {
-        guard let info = failedSubscriptionInfo else { return }
+    func addWithoutRSS(_ info: SubscriptionInfo? = nil) async {
+        guard let info = info ?? failedSubscriptionInfo else { return }
         failedSubscriptionInfo = nil
         errorMessage = nil
         isLoading = true

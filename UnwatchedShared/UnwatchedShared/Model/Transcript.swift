@@ -44,3 +44,33 @@ public struct TranscriptEntry: Sendable, Identifiable, Codable {
     }
 }
 
+/// Where a cached transcript came from, which decides whether restoring the show's own is on offer.
+public enum TranscriptOrigin: String, Sendable, Codable {
+    /// From YouTube's captions or published by the podcast itself.
+    case published
+    /// Transcribed on device.
+    case generated
+    /// Published by the show, with its timings corrected to match the audio that plays.
+    case aligned
+}
+
+/// What's stored in `Transcript.data`. A cache written before the origin existed is a bare array
+/// of entries and still decodes, see `TranscriptActor`.
+public struct TranscriptPayload: Sendable, Codable {
+    public let entries: [TranscriptEntry]
+    public let origin: TranscriptOrigin
+    /// Set once the transcript has been checked against the audio, so it isn't probed again.
+    public let alignment: TranscriptAlignment?
+
+    public init(
+        entries: [TranscriptEntry],
+        origin: TranscriptOrigin,
+        alignment: TranscriptAlignment? = nil
+    ) {
+        self.entries = entries
+        self.origin = origin
+        self.alignment = alignment
+    }
+
+    public static let empty = TranscriptPayload(entries: [], origin: .published)
+}

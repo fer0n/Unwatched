@@ -107,7 +107,7 @@ extension PlayerManager {
         // current chapter
         guard let current = extractCurrentChapter(at: time) else {
             Log.info("extractCurrentChapter failed")
-            cancelTimeMonitoring()
+            handleTimeOutsideChapters(time, in: chapters)
             return
         }
 
@@ -131,9 +131,9 @@ extension PlayerManager {
         // previous chapter
         previousChapter = position.flatMap { ordered.prefix($0).last(where: \.isActive) }
 
-        withAnimation {
-            currentChapter = current
-        }
+        // deliberately not inside `withAnimation`: that flushes SwiftUI's pending updates before it
+        // runs, so views re-evaluate against the old value and never see the write landing right after
+        currentChapter = current
         backend.handleChapterChanged()
 
         // set end time; prepare jump
@@ -144,28 +144,7 @@ extension PlayerManager {
             // the last chapter on the timeline still has to hand over when the order carries on past it
             return nextActive != nil ? current.endTime : nil
         }()
-        if let nextEndTime = boundary {
-            currentEndTime = nextEndTime
-
-            // use the max playback speed to avoid refreshing for every speed change
-            let nextEndTimeForPreciseJump = nextEndTime - (Const.elapsedTimeMonitorSeconds * Const.speedMax)
-
-            if time >= nextEndTimeForPreciseJump {
-                // we're getting close to the next chapter, now might be the last chance for the precise jump
-                let timeUntilChange = (nextEndTime - time) / playbackSpeed
-                if isPlaying {
-                    schedulePreciseChapterChange(delay: timeUntilChange, targetTime: nextEndTime)
-                    earlyEndTime = nil
-                }
-            } else {
-                earlyEndTime = nextEndTimeForPreciseJump
-                changeChapterTask?.cancel()
-            }
-        } else {
-            // no more chapters
-            Log.info("no more chapters")
-            cancelTimeMonitoring()
-        }
+        armChapterBoundary(boundary, at: time)
     }
 
     /// What the custom order says to play once the chapter that just ended is over — see
@@ -233,7 +212,7 @@ extension PlayerManager {
     func goToNextChapter() -> Bool {
         if let next = nextChapter {
             setChapter(next)
-            Signal.log("Player.NextChapter")
+            Signal.interaction("Player.NextChapter")
             return true
         }
         return false
@@ -260,7 +239,7 @@ extension PlayerManager {
             return true
         }
 
-        Signal.log("Player.PreviousChapter")
+        Signal.interaction("Player.PreviousChapter")
         return false
     }
 
@@ -290,8 +269,13 @@ extension PlayerManager {
 
         let sendableChapters = video?.ownChapterData ?? []
         let duration = video?.duration
+        let settings = video?.sponsorBlockSettings ?? SponsorBlockSettings()
         if let mergedChapters = video?.mergedChapters {
-            ChapterService.skipSponsorBlockSegments(in: mergedChapters)
+            ChapterService.skipSponsorBlockSegments(
+                in: mergedChapters,
+                sponsorSetting: settings.sponsor,
+                selfPromoSetting: settings.selfPromo
+            )
             video?.chaptersDidChange()
             self.handleChapterChange()
             // the engine draws its own markers, and the set it has is now out of date
@@ -306,13 +290,18 @@ extension PlayerManager {
                             videoId: videoId,
                             videoChapters: sendableChapters,
                             duration: duration,
-                            forceRefresh: forceRefresh
+                            forceRefresh: forceRefresh,
+                            settings: settings
                         ) else {
                     Log.info("SponsorBlock: Not updating merged chapters")
                     return
                 }
                 Log.info("SponsorBlock: Refreshed")
-                ChapterService.skipSponsorBlockSegments(in: &newChapters)
+                ChapterService.skipSponsorBlockSegments(
+                    in: &newChapters,
+                    sponsorSetting: settings.sponsor,
+                    selfPromoSetting: settings.selfPromo
+                )
 
                 ChapterService.updateIfNeeded(newChapters, video)
                 try video?.modelContext?.save()

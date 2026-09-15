@@ -237,7 +237,7 @@ final class ScrubberThumbnailProvider {
     /// `kCGImageSourceShouldCacheImmediately` forces the pixel decode here (in the background)
     /// rather than lazily on the main thread at first render, which would jank scrubbing.
     nonisolated private static func downloadImage(_ url: URL) async -> CGImage? {
-        guard let (data, _) = try? await URLSession.shared.data(from: url),
+        guard let (data, _) = try? await URLSession.app.data(from: url),
               let source = CGImageSourceCreateWithData(data as CFData, nil) else { return nil }
         let options = [kCGImageSourceShouldCacheImmediately: true] as CFDictionary
         return CGImageSourceCreateImageAtIndex(source, 0, options)

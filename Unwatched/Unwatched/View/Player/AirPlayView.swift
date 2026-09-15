@@ -9,6 +9,31 @@ import AVKit
 import UnwatchedShared
 import OSLog
 
+/// Opens the system route picker by tapping a detached `AVRoutePickerView`'s button.
+///
+/// Shared by the player's AirPlay button and the more menu entry that stands in for it while the
+/// player type button occupies its spot. The picker view is never added to the hierarchy; it only
+/// exists to be poked.
+@MainActor
+enum AirPlayPicker {
+    private static var routePickerView: AVRoutePickerView?
+
+    static func present() {
+        if routePickerView == nil {
+            let picker = AVRoutePickerView()
+            picker.isHidden = true
+            picker.prioritizesVideoDevices = true
+            routePickerView = picker
+        }
+        guard let button = routePickerView?.subviews.first(where: { $0 is UIButton }) as? UIButton else {
+            Log.info("AirPlay button not found")
+            return
+        }
+        button.sendActions(for: .touchUpInside)
+        Signal.interaction("Player.AirPlay")
+    }
+}
+
 struct AirPlayButton: View {
     var body: some View {
         AirPlayView()
@@ -22,7 +47,6 @@ struct AirPlayButton: View {
 struct AirPlayView: View {
     @Environment(PlayerManager.self) var player
 
-    @State private var routePickerView: AVRoutePickerView?
     @State var hapticToggle = false
 
     var body: some View {
@@ -51,19 +75,8 @@ struct AirPlayView: View {
     }
 
     func handlePress() {
-        if routePickerView == nil {
-            let picker = AVRoutePickerView()
-            picker.isHidden = true
-            picker.prioritizesVideoDevices = true
-            routePickerView = picker
-        }
-        guard let button = routePickerView?.subviews.first(where: { $0 is UIButton }) else {
-            Log.info("AirPlay button not found")
-            return
-        }
         hapticToggle.toggle()
-        (button as? UIButton)?.sendActions(for: .touchUpInside)
-        Signal.log("Player.AirPlay")
+        AirPlayPicker.present()
     }
 
     var isOn: Bool {

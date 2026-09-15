@@ -41,8 +41,21 @@ struct VideoPlayer: View {
             }
             #endif
 
-            if !usePodcastLayout {
+            if useBigScreenPodcastLayout {
+                PodcastPlayerLayout(
+                    playerView: playerView(enableHideControls: enableHideControls, pagedInline: true)
+                )
+                .zIndex(1)
+                .layoutPriority(2)
+            } else if !usePodcastLayout {
                 playerView(enableHideControls: enableHideControls)
+                    .hideCursorOnInactive(
+                        after: 2,
+                        isEnabled: hideCursorOverVideoEnabled,
+                        onChange: { isVisible in
+                            autoHideVM.setKeepVisible(isVisible, "hover")
+                        }
+                    )
                     .zIndex(1)
                     .layoutPriority(2)
                     #if os(visionOS)
@@ -84,7 +97,7 @@ struct VideoPlayer: View {
         }
         .appNotificationOverlay()
         .tint(.neutralAccentColor)
-        .onChange(of: player.isPlaying) {
+        .onPlayerPlayingChange { _ in
             if player.video?.isNew == true {
                 player.video?.isNew = false
             }
@@ -125,6 +138,17 @@ struct VideoPlayer: View {
             && !isFakePip
         #else
         false
+        #endif
+    }
+
+    var useBigScreenPodcastLayout: Bool {
+        #if os(visionOS)
+        false
+        #else
+        player.isAudioOnly
+            && compactSize
+            && !layoutMode.isFullscreen
+            && !isFakePip
         #endif
     }
 
@@ -218,6 +242,12 @@ struct VideoPlayer: View {
             && !autoHideVM.showDescription
     }
 
+    var hideCursorOverVideoEnabled: Bool {
+        player.isPlaying
+            && Device.isMac && !navManager.isSidebarHidden
+            && !autoHideVM.showDescription
+    }
+
     var showFullscreenControlsCompactSize: Bool {
         compactSize && (
             fullscreenControlsSetting != .disabled
@@ -244,19 +274,6 @@ struct VideoPlayer: View {
     .environment(TinyUndoManager())
     .tint(Color.neutralAccentColor)
     .preferredColorScheme(.dark)
-    // .environment(\.sizeCategory, .accessibilityExtraExtraExtraLarge)
-
-    //        Button {
-    //            withAnimation {
-    //                if player.aspectRatio ?? 1 <= 1.5 {
-    //                    player.handleAspectRatio(16/9)
-    //                } else {
-    //                    player.handleAspectRatio(4/3)
-    //                }
-    //            }
-    //        } label: {
-    //            Text(verbatim: "switch")
-    //        }
 }
 
 private struct VideoPlayerSheetStatePreview: View {

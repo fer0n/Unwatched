@@ -27,6 +27,21 @@ struct Signal {
         #endif
     }
 
+    /// e.g. "2.0.1", with the build number appended off release
+    static let appVersion: String = {
+        let info = Bundle.main.infoDictionary
+        let version = info?["CFBundleShortVersionString"] as? String ?? "?"
+        #if DEBUG
+        let includeBuild = true
+        #else
+        let includeBuild = isTestFlight
+        #endif
+        guard includeBuild, let build = info?["CFBundleVersion"] as? String else {
+            return version
+        }
+        return "\(version) (\(build))"
+    }()
+
     static func setup() {
         #if os(iOS) || os(visionOS)
         if !(Const.analytics.bool ?? true) { return }
@@ -57,7 +72,11 @@ struct Signal {
     }
 
     static func signalBool(_ signalName: String, value: Bool) {
-        log(signalName, parameters: ["value": value ? "On" : "Off"])
+        log(signalName, parameters: ["value": onOff(value)])
+    }
+
+    static func onOff(_ value: Bool) -> String {
+        value ? "On" : "Off"
     }
 
     static func log(
@@ -68,6 +87,8 @@ struct Signal {
         includeUserId: Bool = true
     ) {
         #if os(iOS) || os(visionOS)
+        // before the throttle, which marks its window as used
+        if !(Const.analytics.bool ?? true) { return }
         if let throttle {
             // `throttleKey` lets callers rate-limit per sub-type (e.g. per gesture) while
             // keeping a single low-cardinality event name. Defaults to the event name.
@@ -83,7 +104,6 @@ struct Signal {
                 return
             }
         }
-        if !(Const.analytics.bool ?? true) { return }
         Log.info("Signal: \(signalName)")
         let event = AnalyticsEvent(name: signalName, params: parameters, includeUserId: includeUserId)
         Task {
@@ -95,7 +115,18 @@ struct Signal {
     /// Errors are logged unidentified — a crash/error id should never build a per-user
     /// profile, and error moments shouldn't count toward active-user metrics.
     static func error(_ id: String) {
-        log("Error", parameters: ["id": id], includeUserId: false)
+        log("Error", parameters: ["id": id], throttle: .hourly, throttleKey: "Error.\(id)", includeUserId: false)
+    }
+
+    /// Bypasses `log`, which the already-disabled setting would block, and drops anything still queued.
+    static func handleOptOut() {
+        #if os(iOS) || os(visionOS)
+        Log.info("Signal: Analytics opt-out")
+        let event = AnalyticsEvent(name: "Analytics", params: ["value": "Off"], includeUserId: false)
+        Task {
+            await AnalyticsQueue.shared.replaceAll(with: event)
+        }
+        #endif
     }
 
     static func bucket(_ count: Int) -> String {
@@ -158,7 +189,7 @@ extension View {
     func signalToggle(_ name: String, isOn: Bool) -> some View {
         self.onChange(of: isOn) {
             #if os(iOS) || os(visionOS)
-            Signal.log(name, parameters: ["value": isOn ? "On" : "Off"])
+            Signal.log(name, parameters: ["value": Signal.onOff(isOn)])
             #endif
         }
     }
@@ -201,7 +232,22 @@ extension Signal {
         if let via {
             params["via"] = via
         }
-        log("Video.Action", parameters: params)
+        log(
+            "Video.Action",
+            parameters: params,
+            throttle: .daily,
+            throttleKey: "Video.Action.\(action).\(context.rawValue).\(via ?? "-")"
+        )
+    }
+
+    /// A repeatable interaction, throttled daily per distinct parameter combination.
+    static func interaction(_ name: String, _ variant: String? = nil, parameters: [String: String] = [:]) {
+        var params = parameters
+        if let variant {
+            params["action"] = variant
+        }
+        let key = ([name] + params.sorted { $0.key < $1.key }.map(\.value)).joined(separator: ".")
+        log(name, parameters: params, throttle: .daily, throttleKey: key)
     }
 
     /// A video started playing from a deliberate user action, tagged with where it was
@@ -210,6 +256,16 @@ extension Signal {
     /// can be charted as a clean breakdown of how users begin playback.
     static func playbackStarted(_ source: String) {
         log("Player.Start", parameters: ["source": source])
+    }
+
+    static func onboardingStep(_ step: String, parameters: [String: String] = [:]) {
+        var params = parameters
+        params["step"] = step
+        log("Onboarding.Step", parameters: params)
+    }
+
+    static func generationResult(_ kind: String, _ outcome: String) {
+        log("Generation.Result", parameters: ["kind": kind, "outcome": outcome])
     }
 
     /// A player gesture was performed. Throttled to one event per gesture *type* per day so

@@ -22,8 +22,8 @@ public struct ArtworkBackdrop: View {
     public var body: some View {
         Group {
             switch backdrop {
-            case .color(let color):
-                color
+            case .gradient(let edge, let center):
+                LinearGradient(colors: [edge, center, edge], startPoint: .leading, endPoint: .trailing)
             case .blurredArt:
                 CachedImageView(urls: imageUrls) { image in
                     image
@@ -43,7 +43,7 @@ public struct ArtworkBackdrop: View {
     }
 
     private func resolve() async {
-        guard backdrop == nil, let key = imageUrls.first?.absoluteString else { return }
+        guard let key = imageUrls.first?.absoluteString else { return }
         if let known = Self.cache[key] {
             backdrop = known
             return
@@ -52,9 +52,9 @@ public struct ArtworkBackdrop: View {
             // the same task the thumbnail itself loads through: the image is decoded once
             let task = ImageService.getImage(url, cacheManager)
             guard let image = try? await task.value.0 else { continue }
-            let resolved: Backdrop = await Task.detached(priority: .utility) {
-                image.uniformEdgeColor().map { Backdrop.color($0) } ?? .blurredArt
-            }.value
+            // a 12x12 downsample and 44 pixels: a task hop off the main thread costs more than the work
+            let resolved = image.uniformEdgeColors()
+                .map { Backdrop.gradient(edge: $0.edge, center: $0.center) } ?? .blurredArt
             Self.cache[key] = resolved
             backdrop = resolved
             return
@@ -62,7 +62,7 @@ public struct ArtworkBackdrop: View {
     }
 
     public enum Backdrop: Equatable, Sendable {
-        case color(Color)
+        case gradient(edge: Color, center: Color)
         case blurredArt
     }
 

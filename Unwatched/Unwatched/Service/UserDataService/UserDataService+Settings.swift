@@ -64,6 +64,21 @@ extension UserDataService {
                             defaults: defaults)
     }
 
+    static func migrateKeepMediaSettingsIfNeeded(
+        store: NSUbiquitousKeyValueStore = .default,
+        defaults: UserDefaults = .standard
+    ) {
+        for key in [Const.autoDeleteWatchedVideos, Const.autoDeleteOrphanedVideos, Const.autoDeleteInboxVideosLimit] {
+            guard let legacyValue = defaults.object(forKey: key) as? Int else {
+                continue
+            }
+            if legacyValue > 0 && store.object(forKey: key) == nil {
+                store.set(Int64(legacyValue), forKey: key)
+            }
+            defaults.removeObject(forKey: key)
+        }
+    }
+
     static private func migrateInvertedBool(legacyKey: String, newKey: String, defaults: UserDefaults) {
         guard defaults.object(forKey: newKey) == nil,
               let legacyValue = defaults.object(forKey: legacyKey) as? Bool else {

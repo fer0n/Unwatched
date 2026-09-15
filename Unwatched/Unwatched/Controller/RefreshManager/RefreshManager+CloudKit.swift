@@ -11,39 +11,33 @@ import UnwatchedShared
 
 extension RefreshManager {
     func setupCloudKitListener() {
-        let enableIcloudSync = UserDefaults.standard.bool(forKey: Const.enableIcloudSync)
-        guard enableIcloudSync else {
+        guard enableIcloudSync, cancellables.isEmpty else {
             return
         }
 
         Log.info("iCloud sync: Setting up sync notification")
         NotificationCenter.default.publisher(for: NSPersistentCloudKitContainer.eventChangedNotification)
             .sink { [weak self] notification in
-                guard let self else { return }
+                guard let self,
+                      let event = notification.userInfo?[NSPersistentCloudKitContainer.eventNotificationUserInfoKey]
+                        as? NSPersistentCloudKitContainer.Event else {
+                    return
+                }
 
-                if let event = notification.userInfo?[NSPersistentCloudKitContainer.eventNotificationUserInfoKey]
-                    as? NSPersistentCloudKitContainer.Event {
-
-                    syncDoneTask?.cancel()
-                    // print("iCloud sync: cancelled syncDoneTask")
-                    if event.endDate == nil {
-                        Task { @MainActor in
-                            if !self.isSyncingIcloud {
-                                self.isSyncingIcloud = true
-                            }
+                syncDoneTask?.cancel()
+                if event.endDate == nil {
+                    Task { @MainActor in
+                        if !self.isSyncingIcloud {
+                            self.isSyncingIcloud = true
+                            self.syncStartedAt = .now
                         }
-                        // starting event
-                    } else {
-                        // print("iCloud sync: STOP: \(event.type)")
-                        syncDoneTask = Task {
-                            do {
-                                try await Task.sleep(for: .seconds(3))
-                                await self.handleIcloudSyncDone()
-                            } catch {
-                                // task cancelled
-                            }
-                        }
-                        // event done
+                    }
+                } else {
+                    syncDoneTask = Task {
+                        do {
+                            try await Task.sleep(for: .seconds(3))
+                            await self.handleIcloudSyncDone()
+                        } catch { }
                     }
                 }
             }
@@ -53,17 +47,17 @@ extension RefreshManager {
     func cancelCloudKitListener() {
         Log.info("iCloud sync: cancelling sync notification")
         cancellables.removeAll()
+        clearSyncState()
     }
 
     func handleIcloudSyncDone() async {
         Log.info("iCloud sync: handleIcloudSyncDone")
-        let task = Task { @MainActor in
-            self.isSyncingIcloud = false
-        }
-        await task.value
+        clearSyncState()
         PlayerManager.shared.handlePotentialUpdate()
         HistoryMaintenance.pruneConsumedHistoryIfDue()
-        let autoRefreshIgnoresSync = UserDefaults.standard.bool(forKey: Const.autoRefreshIgnoresSync)
+        if pendingQuickCleanup {
+            await quickCleanup()
+        }
         if !autoRefreshIgnoresSync {
             await executeAutoRefresh()
         }
@@ -81,10 +75,15 @@ extension RefreshManager {
     }
 
     private func quickCleanup() async {
-        let enableIcloudSync = UserDefaults.standard.bool(forKey: Const.enableIcloudSync)
         guard enableIcloudSync else {
             return
         }
+        guard !shouldDeferForSync else {
+            Log.info("quickCleanup deferred, iCloud sync in progress")
+            pendingQuickCleanup = true
+            return
+        }
+        pendingQuickCleanup = false
         Log.info("quickCleanup")
 
         let task = CleanupService.cleanupDuplicatesAndInboxDate(quickCheck: true)

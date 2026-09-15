@@ -42,7 +42,7 @@ struct CoreRotateOrientationButton<Content>: View where Content: View {
         #if os(iOS)
         OrientationManager.changeOrientation(to: toLeft ? .landscapeLeft : .landscapeRight)
         #endif
-        Signal.log("Player.Fullscreen", parameters: ["type": "landscape"])
+        Signal.interaction("Player.Fullscreen", parameters: ["type": "landscape"])
     }
 }
 
@@ -66,7 +66,7 @@ struct ToggleTallFullscreenButton<Content>: View where Content: View {
             let willEnable = !player.tallFullscreenOverlay
             player.setTallFullscreen(willEnable)
             if willEnable {
-                Signal.log("Player.Fullscreen", parameters: ["type": "tall"])
+                Signal.interaction("Player.Fullscreen", parameters: ["type": "tall"])
             }
         } label: {
             contentImage(

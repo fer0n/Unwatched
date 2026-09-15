@@ -34,14 +34,16 @@ final class BackgroundPlaybackManager {
             // not `setNextVideo`: its fade would defer the swap past the `player.video` read below
             player.setVideoWithoutFade(video, .playWhenReady)
         }
+        if let tag {
+            // even when unchanged: what's loaded may be a video started elsewhere while the tag stayed latched
+            player.playbackTag = tag
+            try stageTopOfQueue()
+        } else if player.video == nil {
+            try stageTopOfQueue()
+        }
+        // after staging: which player is needed depends on what's about to play, not on what played before
         try enableNativePlayer()
         try activateAudioSession()
-        if let tag, tag != player.playbackTag {
-            player.playbackTag = tag
-            player.loadTopmostVideoFromQueue(source: .playWhenReady, playIfCurrent: true)
-        } else if player.video == nil {
-            player.loadTopmostVideoFromQueue(source: .playWhenReady)
-        }
         guard let videoId = player.video?.youtubeId else {
             throw BackgroundPlaybackError.noVideoInQueue
         }
@@ -64,7 +66,7 @@ final class BackgroundPlaybackManager {
             guard let self else {
                 return .abort
             }
-            if viewModel.avPlayer.timeControlStatus == .playing {
+            if viewModel.isRendering {
                 return .done
             }
             return viewModel.loadError != nil ? .abort : .retry
@@ -75,10 +77,22 @@ final class BackgroundPlaybackManager {
         }
     }
 
+    /// The top of the latched slice. Not `loadTopmostVideoFromQueue`: its fade defers the swap past the
+    /// `player.video` read in `start`.
+    private func stageTopOfQueue() throws {
+        guard let topVideo = player.topVideoInQueue() else {
+            throw BackgroundPlaybackError.noVideoInQueue
+        }
+        guard topVideo.youtubeId != player.video?.youtubeId else {
+            return
+        }
+        player.setVideoWithoutFade(topVideo, .playWhenReady)
+    }
+
     /// Up front, so being barred from playing in the background fails here rather than as a
     /// 20 second wait for a player that was never allowed to start.
     private func activateAudioSession() throws {
-        guard PlayerAudioSession.activate(audioOnly: player.isAudioOnly) else {
+        guard PlayerAudioSession.activate() else {
             Log.error("backgroundPlayback: audio session unavailable")
             throw BackgroundPlaybackError.couldNotStart
         }

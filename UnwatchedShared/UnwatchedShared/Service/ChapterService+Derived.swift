@@ -65,7 +65,7 @@ public extension ChapterService {
         if let cached = derivedChapterCache[youtubeId] {
             // a memoized parse means there's nothing fetched for this one; the store already said so
             guard cached.isFetched else { return nil }
-            return updateDurationAndEndTime(in: cached.chapters, videoDuration: duration)
+            return completingTimeline(cached.chapters, videoDuration: duration)
         }
         guard let stored = loadCached(youtubeId: youtubeId, hash: fetchedSourceHash) else {
             return nil
@@ -73,7 +73,7 @@ public extension ChapterService {
         derivedChapterCache[youtubeId] = DerivedChapters(
             source: nil, duration: nil, chapters: stored, isFetched: true
         )
-        return updateDurationAndEndTime(in: stored, videoDuration: duration)
+        return completingTimeline(stored, videoDuration: duration)
     }
 
     /// Caches what was fetched for a podcast episode, replacing whatever was cached for it before.
@@ -88,8 +88,9 @@ public extension ChapterService {
         store(chapters, youtubeId: youtubeId, hash: fetchedSourceHash)
     }
 
-    /// Marks a cache entry as fetched rather than parsed.
-    private static var fetchedSourceHash: String { "fetched" }
+    /// Marks a cache entry as fetched rather than parsed. The suffix is a version: chapter artwork read
+    /// before it was bumped is stored under a picture that won't decode, and only a re-read replaces it.
+    private static var fetchedSourceHash: String { "fetched2" }
 
     /// Drops both cache layers for a video, e.g.
     static func invalidateDerivedChapters(youtubeId: String) {

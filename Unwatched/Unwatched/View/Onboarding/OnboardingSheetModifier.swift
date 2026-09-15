@@ -9,6 +9,7 @@ import UnwatchedShared
 struct OnboardingSheetModifier: ViewModifier {
     @AppStorage(Const.onboardingCompleted) var onboardingCompleted = false
     @AppStorage(Const.onboardingStarted) var onboardingStarted = false
+    @AppStorage(Const.settingsSplashShown) var settingsSplashShown = false
 
     @Environment(NavigationManager.self) var navManager
 
@@ -18,12 +19,15 @@ struct OnboardingSheetModifier: ViewModifier {
         content
             .sheet(isPresented: $navManager.showOnboarding) {
                 OnboardingView()
-                    #if os(macOS) || os(visionOS)
-                    .frame(minWidth: 450, minHeight: 650)
-                #endif
+                    .onboardingSheetFrame()
+            }
+            .sheet(isPresented: $navManager.showSettingsSplash) {
+                SettingsSplashView()
+                    .onboardingSheetFrame()
             }
             .task {
                 guard !onboardingCompleted else {
+                    presentSettingsSplashIfNeeded()
                     return
                 }
                 guard !onboardingStarted else {
@@ -40,13 +44,28 @@ struct OnboardingSheetModifier: ViewModifier {
                     navManager.presentOnboarding()
                 } else {
                     onboardingCompleted = true
+                    presentSettingsSplashIfNeeded()
                 }
             }
+    }
+
+    private func presentSettingsSplashIfNeeded() {
+        if !settingsSplashShown {
+            navManager.presentSettingsSplash()
+        }
     }
 }
 
 extension View {
     func onboardingSheet() -> some View {
         self.modifier(OnboardingSheetModifier())
+    }
+
+    fileprivate func onboardingSheetFrame() -> some View {
+        #if os(macOS) || os(visionOS)
+        self.frame(height: 650).frame(minWidth: 450)
+        #else
+        self
+        #endif
     }
 }

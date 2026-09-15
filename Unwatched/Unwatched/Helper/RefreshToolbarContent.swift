@@ -27,7 +27,7 @@ struct CoreRefreshButton: View {
             }
             .accessibilityLabel("refresh")
             .contextMenu {
-                Section(lastRefreshFailed && !refresher.isLoading ? "refreshFailedMessage" : "") {
+                MenuSection(lastRefreshFailed && !refresher.isLoading ? "refreshFailedMessage" : nil) {
                     Button {
                         Task { @MainActor in
                             await refresh(hardRefresh: true)
@@ -59,7 +59,7 @@ struct CoreRefreshButton: View {
     private func refresh(hardRefresh: Bool = false) async {
         if refresher.isLoading { return }
         if let subId = refreshOnlySubscription {
-            await refresher.refreshSubscription(subscriptionId: subId, hardRefresh: hardRefresh)
+            await refresher.refreshSubscription(subscriptionId: subId, hardRefresh: hardRefresh, ignoreCache: true)
         } else {
             await refresher.refreshAll(hardRefresh: hardRefresh)
         }
@@ -107,8 +107,3 @@ struct ToolbarSpacerWorkaround: ToolbarContent {
         }
     }
 }
-
-// #Preview {
-//    RefreshToolbarButton()
-//         .environment(RefreshManager())
-// }

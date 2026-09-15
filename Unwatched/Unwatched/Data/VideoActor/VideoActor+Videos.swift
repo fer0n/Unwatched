@@ -34,6 +34,9 @@ actor VideoActor: SharedContextActor {
     /// Overrides `Const.triageNewSubs` for the current `loadVideos` run
     var firstTimeVideoLimit: Int?
 
+    /// Skips the local response cache for the current `loadVideos` run
+    var ignoreCache = false
+
     func addForeignUrls(_ urls: [URL],
                         in videoplacement: VideoPlacementArea,
                         at index: Int,
@@ -146,52 +149,55 @@ actor VideoActor: SharedContextActor {
         return videos?.first
     }
 
-    /// Fetches and stores a video's description when it was created without one — e.g. a video
-    /// added from search, whose results carry no description. Prefers InnerTube's player endpoint
-    /// (no Data API quota) and falls back to the official YouTube Data API. Returns the
-    /// description once persisted here so the caller can push it into the main context too —
-    /// this actor's own context isn't the one the UI is observing, so a save here alone never
-    /// appears on screen.
-    ///
-    /// The description is all that's stored: chapters come from parsing it, which
-    /// `ChapterService.derivedChapters` does on demand.
-    @discardableResult
-    func fetchAndSetDescription(youtubeId: String) async -> String? {
-        guard let existing = videoAlreadyExists(youtubeId),
-              existing.videoDescription?.isEmpty ?? true else {
-            return nil
-        }
+    /// Fetches the description and channel a video was created without, preferring InnerTube's
+    /// player endpoint (no Data API quota) over the YouTube Data API. Returns nil when nothing
+    /// is missing, and only the fields that were.
+    func fetchMissingInfo(youtubeId: String) async -> InnerTubeAPI.VideoMetadata? {
+        guard let existing = videoAlreadyExists(youtubeId) else { return nil }
+        let needsDescription = existing.videoDescription?.isEmpty ?? true
+        let needsChannel = existing.subscription == nil
+        guard needsDescription || needsChannel else { return nil }
         let videoId = existing.persistentModelID
 
-        var description = try? await InnerTubeAPI().fetchVideoDescription(videoId: youtubeId)
-        if description?.isEmpty ?? true {
-            description = (try? await YoutubeDataAPI.getYtVideoInfo(youtubeId))?.videoDescription
-            Log.info("fetchAndSetDescription: \(youtubeId) — InnerTube empty, Data API "
-                        + ((description?.isEmpty ?? true) ? "also empty" : "succeeded"))
-        } else {
-            Log.info("fetchAndSetDescription: \(youtubeId) — got description from InnerTube")
+        var info = (try? await InnerTubeAPI().fetchVideoMetadata(videoId: youtubeId))
+            ?? InnerTubeAPI.VideoMetadata()
+        let gotDescription = !(info.description?.isEmpty ?? true)
+        if (needsDescription && !gotDescription) || (needsChannel && info.channelId == nil) {
+            let fallback = try? await YoutubeDataAPI.getYtVideoInfo(youtubeId)
+            Log.info("fetchMissingInfo: \(youtubeId) — InnerTube incomplete, Data API "
+                        + (fallback == nil ? "failed too" : "succeeded"))
+            info.description = gotDescription ? info.description : fallback?.videoDescription
+            info.channelId = info.channelId ?? fallback?.youtubeChannelId
+            info.channelTitle = info.channelTitle ?? fallback?.feedTitle
         }
-        guard let description, !description.isEmpty else { return nil }
 
-        // the shared context went to other jobs across the requests above, so pick the video
-        // back up rather than reusing the one fetched before them
-        guard let video: Video = modelContext.resolvedModel(withID: videoId) else { return nil }
-
-        video.videoDescription = description
-        try? modelContext.save()
-        return description
+        info.description = needsDescription && !(info.description?.isEmpty ?? true)
+            ? info.description
+            : nil
+        if let description = info.description,
+           let video: Video = modelContext.resolvedModel(withID: videoId) {
+            video.videoDescription = description
+            try? modelContext.save()
+        }
+        info.channelId = needsChannel ? info.channelId : nil
+        return info
     }
 
     func loadVideos(
         _ subscriptionIds: [PersistentIdentifier]?,
         fetchDurations: Bool,
-        firstTimeVideoLimit: Int? = nil
+        firstTimeVideoLimit: Int? = nil,
+        ignoreCache: Bool = false
     ) async throws -> NewVideosNotificationInfo {
         Log.info("loadVideos")
         newVideos = NewVideosNotificationInfo()
         fetchErrors = []
         self.firstTimeVideoLimit = firstTimeVideoLimit
-        defer { self.firstTimeVideoLimit = nil }
+        self.ignoreCache = ignoreCache
+        defer {
+            self.firstTimeVideoLimit = nil
+            self.ignoreCache = false
+        }
 
         let sendableSubs = try getSubscriptions(subscriptionIds)
         let placementInfo = getDefaultVideoPlacement()
@@ -286,7 +292,8 @@ actor VideoActor: SharedContextActor {
 
         cacheImages(for: videos, subModel)
 
-        let videoModels = insertVideoModels(from: videos, to: subModel)
+        let toInsert = subModel.isPodcast ? triageCandidates(videos, sub: subModel) : videos
+        let videoModels = insertVideoModels(from: toInsert, to: subModel)
         let addedVideos = triageSubscriptionVideos(subModel,
                                                    videos: videoModels,
                                                    defaultPlacement: defaultPlacement)

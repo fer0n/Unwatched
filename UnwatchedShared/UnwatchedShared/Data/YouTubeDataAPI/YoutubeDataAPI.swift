@@ -49,7 +49,7 @@ public struct YoutubeDataAPI {
         guard let url = URL(string: url) else {
             throw SubscriptionError.notAnUrl(url)
         }
-        let (data, _) = try await URLSession.shared.data(from: url)
+        let (data, _) = try await URLSession.app.data(from: url)
         let decoder = JSONDecoder()
 
         do {

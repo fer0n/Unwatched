@@ -24,6 +24,9 @@ struct CursorHideModifier: ViewModifier {
             .onDisappear {
                 task?.cancel()
             }
+            .onChange(of: isEnabled) {
+                if !isEnabled { release() }
+            }
             .onContinuousHover { phase in
                 switch phase {
                 case .active:
@@ -40,9 +43,14 @@ struct CursorHideModifier: ViewModifier {
                         } catch { }
                     }
                 case .ended:
-                    break
+                    release()
                 }
             }
+    }
+
+    func release() {
+        task?.cancel()
+        handleChange(false)
     }
 
     func handleChange(_ isVisible: Bool) {

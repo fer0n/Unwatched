@@ -39,24 +39,6 @@ struct CapsulePicker<T: Hashable>: View {
     }
 }
 
-struct CapsuleMenuLabel: View {
-    var systemImage: String
-    var menuLabel: LocalizedStringKey
-    var text: String
-
-    var body: some View {
-        VStack(alignment: .leading) {
-            Label(menuLabel, systemImage: systemImage)
-                .font(.system(size: 13))
-                .opacity(0.7)
-            Text(text)
-                .fontWidth(.condensed)
-        }
-        .padding(.horizontal, 10)
-        .padding(.vertical, 5)
-    }
-}
-
 #Preview {
     CapsulePicker(
         selection: .constant(VideoPlacement.defaultPlacement),

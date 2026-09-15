@@ -18,6 +18,11 @@ public struct CachedImageView<Content, Content2>: View where Content: View, Cont
     private let contentImage: ((Image) -> Content)
     private let placeholder: (() -> Content2)
     @State var image: PlatformImage?
+    @State private var loadedKey: LoadKey?
+
+    private var loadKey: LoadKey {
+        LoadKey(urls: imageUrls, maxPixelSize: maxPixelSize)
+    }
 
     /// Creates a cached image view that tries to load images from the provided URLs in order.
     public init(
@@ -33,10 +38,14 @@ public struct CachedImageView<Content, Content2>: View where Content: View, Cont
         self.placeholder = placeholder
         // loading is asynchronous even for an already decoded image, a view recreated around one
         // would blank for a frame
-        _image = State(
-            initialValue: imageUrls.lazy
-                .compactMap { ImageService.decodedImageCache[ImageService.decodedCacheKey(url: $0, maxPixelSize: maxPixelSize)] }
-                .first
+        let decoded = imageUrls.lazy
+            .compactMap { ImageService.decodedImageCache[ImageService.decodedCacheKey(url: $0, maxPixelSize: maxPixelSize)] }
+            .first
+        _image = State(initialValue: decoded)
+        _loadedKey = State(
+            initialValue: decoded == nil
+                ? nil
+                : LoadKey(urls: imageUrls, maxPixelSize: maxPixelSize)
         )
     }
 
@@ -52,39 +61,37 @@ public struct CachedImageView<Content, Content2>: View where Content: View, Cont
     public var body: some View {
         Group {
             if let platformImage = image {
-#if os(iOS) || os(tvOS) || os(visionOS)
+#if os(iOS) || os(tvOS) || os(visionOS) || os(watchOS)
                 self.contentImage(Image(uiImage: platformImage))
 #elseif os(macOS)
                 self.contentImage(Image(nsImage: platformImage))
 #endif
             } else {
                 self.placeholder()
-                    .task(id: imageUrls) {
-                        await loadImage()
-                    }
             }
         }
-        .onChange(of: imageUrls) {
-            Task {
-                await loadImage()
-            }
-        }
-        .onChange(of: maxPixelSize) {
-            Task {
-                await loadImage()
-            }
+        .task(id: loadKey) {
+            guard loadedKey != loadKey else { return }
+            await loadImage()
         }
     }
 
     func loadImage() async {
         for url in imageUrls {
             let task = ImageService.getImage(url, cacheManager, maxPixelSize: maxPixelSize)
-            if let taskResult = try? await task.value {
-                let (taskImage, info) = taskResult
-                image = taskImage
-                self.cacheManager[url.absoluteString] = info
-                return
-            }
+            guard let (taskImage, info) = try? await task.value else { continue }
+            self.cacheManager[url.absoluteString] = info
+            // bytes that won't decode are as good as no image: the next url is what this list is for
+            guard let taskImage else { continue }
+            guard !Task.isCancelled else { return }
+            image = taskImage
+            loadedKey = loadKey
+            return
         }
     }
+}
+
+private struct LoadKey: Equatable {
+    let urls: [URL]
+    let maxPixelSize: CGFloat
 }

@@ -100,11 +100,16 @@ public class RSSParserDelegate: NSObject, XMLParserDelegate {
             let thumbnailUrl = URL(string: thumbnailUrl.trimmingCharacters(in: .whitespacesAndNewlines)) {
                 let description = currentDescription.trimmingCharacters(in: .whitespacesAndNewlines)
                 let chapters = ChapterService.extractChapters(from: description, videoDuration: nil)
-
+                let entryChannelId = getChannelIdFromAuthorUri(
+                    currentUri.trimmingCharacters(in: .whitespacesAndNewlines)
+                )
+                let entryChannelTitle = currentAuthor.trimmingCharacters(in: .whitespacesAndNewlines)
                 let video = SendableVideo(youtubeId: currentYoutubeId.trimmingCharacters(in: .whitespacesAndNewlines),
                                           title: currentTitle.trimmingCharacters(in: .whitespacesAndNewlines),
                                           url: url,
                                           thumbnailUrl: thumbnailUrl,
+                                          youtubeChannelId: entryChannelId,
+                                          feedTitle: entryChannelTitle.isEmpty ? nil : entryChannelTitle,
                                           chapters: chapters,
                                           publishedDate: publishedDate,
                                           updatedDate: updatedDate,

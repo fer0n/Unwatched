@@ -100,7 +100,7 @@ struct CopyUrlOptions: View {
 
     func copyUrl(_ url: String, _ option: String) {
         ClipboardService.set(url)
-        Signal.log("Player.MoreMenu", parameters: ["action": "copyUrl", "option": option])
+        Signal.interaction("Player.MoreMenu", "copyUrl", parameters: ["option": option])
         onSuccess?()
     }
 }

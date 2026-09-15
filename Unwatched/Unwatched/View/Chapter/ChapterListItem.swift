@@ -44,7 +44,7 @@ struct ChapterListItem: View {
         Button {
             toggleChapter(chapter)
             toggleHaptic.toggle()
-            Signal.log("Chapter.toggle")
+            Signal.interaction("Chapter.Toggle")
         } label: {
             ZStack {
                 Image(systemName: Const.circleBackgroundSF)

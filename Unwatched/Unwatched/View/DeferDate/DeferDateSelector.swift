@@ -155,15 +155,4 @@ struct DeferDateSelector: View {
         detectedDate: .constant(Date.now),
         onSuccess: nil
     )
-    // .modelContainer(DataProvider.previewContainer)
-
-    //    @Previewable @State var show = true
-    //
-    //    Button {
-    //        show = true
-    //    } label: {
-    //        Text(verbatim: "Show")
-    //    }
-    //    .dateSelectorSheet(show: $show, video: Video.getDummy())
-    //    .modelContainer(DataProvider.previewContainerFilled)
 }

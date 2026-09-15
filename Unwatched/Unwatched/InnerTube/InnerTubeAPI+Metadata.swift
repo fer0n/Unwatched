@@ -11,19 +11,26 @@ import UnwatchedShared
 
 extension InnerTubeAPI {
 
-    /// Fetches a video's description from the InnerTube player endpoint
-    /// (`videoDetails.shortDescription`). Unlike `fetchPlayerInfo`, this only reads
-    /// `videoDetails`, so it succeeds even for videos whose playable streams can't be
-    /// resolved (e.g. without a PO token). Used to backfill the description for videos
-    /// added without one — e.g. from the search tab — avoiding the YouTube Data API.
-    /// Returns nil when no description is present.
-    func fetchVideoDescription(videoId: String) async throws -> String? {
+    struct VideoMetadata: Sendable {
+        var description: String?
+        var channelId: String?
+        var channelTitle: String?
+    }
+
+    /// Fetches a video's description and channel from the InnerTube player endpoint. Unlike
+    /// `fetchPlayerInfo`, this only reads `videoDetails`, so it succeeds even for videos whose
+    /// playable streams can't be resolved (e.g. without a PO token).
+    func fetchVideoMetadata(videoId: String) async throws -> VideoMetadata {
         var body = makeBody(client: iosClientContext)
         body["videoId"] = videoId
         body["racyCheckOk"] = true
         body["contentCheckOk"] = true
         let data = try await postPlayer(body: body)
         let videoDetails = data["videoDetails"] as? [String: Any]
-        return videoDetails?["shortDescription"] as? String
+        return VideoMetadata(
+            description: videoDetails?["shortDescription"] as? String,
+            channelId: videoDetails?["channelId"] as? String,
+            channelTitle: videoDetails?["author"] as? String
+        )
     }
 }

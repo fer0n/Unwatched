@@ -48,7 +48,7 @@ public final class Video: VideoData, CustomStringConvertible, Exportable {
 
     public var mediaUrl: URL?
     public var isAudioOnly: Bool?
-    /// Set once the episode's enclosure is on disk; see `PodcastDownloadManager`.
+    /// Unused: it synced, so another device cleared it. See `PodcastDownloadManager.downloadedIds`.
     public var downloadedDate: Date?
     /// Podcasting 2.0 `podcast:chapters` JSON, fetched the first time the episode plays.
     public var chaptersUrl: URL?
@@ -87,8 +87,7 @@ public final class Video: VideoData, CustomStringConvertible, Exportable {
     public var sortedChapterData: [SendableChapter] {
         // the edits the rows themselves don't announce, see `chapterRevision`
         _ = chapterRevision
-        // the row check comes first because it's the cheap one: `getSortedChapters` sorts and
-        // reads the key-value store, and this runs inside view bodies
+        // the row check comes first because it's the cheap one: derived chapters are re-parsed
         let computed: [SendableChapter] = {
             guard hasChapterRows else {
                 return derivedChapters
@@ -98,7 +97,7 @@ public final class Video: VideoData, CustomStringConvertible, Exportable {
         }()
         let withoutAutoSkipped = ChapterService.applyAutoSkip(
             to: computed,
-            titles: subscription?.autoSkipChapterTitles
+            titles: ChapterService.autoSkipsRecurringChapters ? subscription?.autoSkipChapterTitles : nil
         )
         let withoutIntro = ChapterService.applySkipIntro(
             withoutAutoSkipped,
@@ -169,10 +168,9 @@ public final class Video: VideoData, CustomStringConvertible, Exportable {
     ) -> [T] {
         var result = [T]()
 
-        // the setting is only read when there's a merge to choose between: derived chapters come
-        // through here with no merged set at all, on the app's main chapter read path
-        if (mergedChapters?.count ?? 0) > 1,
-           NSUbiquitousKeyValueStore.default.bool(forKey: Const.mergeSponsorBlockChapters) {
+        // the setting only gates whether the automatic SponsorBlock fetch runs; an existing merge
+        // (from that fetch or the "set chapters" shortcut) always wins over the video's own chapters
+        if (mergedChapters?.count ?? 0) > 1 {
             result = mergedChapters ?? []
         } else if (chapters?.count ?? 0) > 1 {
             result = chapters ?? []

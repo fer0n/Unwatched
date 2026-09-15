@@ -23,6 +23,13 @@ struct SubscriptionService {
         }
     }
 
+    static func getActivePodcastSubscriptionCount() -> Task<Int?, Never> {
+        Task.detached {
+            let repo = SubscriptionActor()
+            return await repo.getActivePodcastSubscriptionCount()
+        }
+    }
+
     static func addSubscriptions(
         subscriptionInfo: [SubscriptionInfo]) async throws -> [SubscriptionState] {
         let repo = SubscriptionActor()
@@ -99,6 +106,24 @@ struct SubscriptionService {
         }
         for sub in subs {
             sub.isArchived = true
+        }
+        try? modelContext.save()
+    }
+
+    /// Downgrades every channel that skips SponsorBlock segments to only showing them, see
+    /// `SponsorBlockSettingsView.stopSkipping`.
+    static func stopSkippingSegments(_ modelContext: ModelContext) {
+        guard let subs = try? modelContext.fetch(FetchDescriptor<Subscription>()) else {
+            Log.info("stopSkippingSegments: no subscriptions found")
+            return
+        }
+        for sub in subs {
+            if sub.sponsorSegmentSetting?.skips == true {
+                sub.sponsorSegmentSetting = .show
+            }
+            if sub.selfPromoSegmentSetting?.skips == true {
+                sub.selfPromoSegmentSetting = .show
+            }
         }
         try? modelContext.save()
     }

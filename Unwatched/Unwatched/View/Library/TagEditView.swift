@@ -56,134 +56,31 @@ struct TagEditView: View {
             ZStack {
                 MyBackgroundColor()
 
+                #if os(macOS)
+                MyForm {
+                    sections
+                }
+                #else
                 List {
-                    MySection("tagName", footer: nameIsTaken ? "tagNameTakenHelper" : nil) {
-                        TextField("tagName", text: $tag.name)
-                            .focused($nameFocused)
-                            .onSubmit { save() }
-
-                        NavigationLink {
-                            TagSymbolPicker(symbol: $tag.symbol, defaultSymbol: tag.mode.defaultSymbol)
-                        } label: {
-                            HStack {
-                                Text("symbol")
-                                    .foregroundStyle(Color.neutralAccentColor)
-                                Spacer()
-                                Image(systemName: tag.displaySymbol)
-                            }
-                        }
-                    }
-
-                    MySection(footer: tag.mode.helper) {
-                        Picker(selection: $tag.mode.animation()) {
-                            ForEach(TagMode.allCases) { mode in
-                                Text(mode.title).tag(mode)
-                            }
-                        } label: {
-                            Text("tagMode")
-                        }
-                        .onChange(of: tag.mode) {
-                            if !isNew {
-                                save()
-                            }
-                        }
-                    }
-
-                    MySection(footer: "quickSwitchHelper") {
-                        Toggle(isOn: $tag.quickSwitch) {
-                            Text("quickSwitch")
-                        }
-                    }
-
-                    // an `exclude` tag's videos are also every other tag's, so none of them could follow it alone
-                    if tag.mode != .exclude {
-                        MySection(footer: "continuousPlayTagHelper") {
-                            Picker(selection: $tag.continuousPlay) {
-                                Text("useDefault").tag(Bool?.none)
-                                Text("on").tag(Bool?.some(true))
-                                Text("off").tag(Bool?.some(false))
-                            } label: {
-                                Text("continuousPlay")
-                            }
-                        }
-
-                        MySection(footer: "seekSecondsTagHelper") {
-                            Toggle(isOn: hasCustomSeekSeconds) {
-                                Text("customSeekDuration")
-                            }
-
-                            if let seconds = tag.seekSeconds {
-                                Stepper(value: customSeekSeconds, in: 1...120, step: 1) {
-                                    LabeledContent("seekBy", value: "\(Int(seconds))s")
-                                }
-                            }
-                        }
-
-                        #if os(iOS)
-                        MySection(footer: "suggestVideosTagHelper") {
-                            Picker(selection: $tag.suggestVideos) {
-                                Text("useDefault").tag(Bool?.none)
-                                Text("on").tag(Bool?.some(true))
-                                Text("off").tag(Bool?.some(false))
-                            } label: {
-                                Text("suggestVideos")
-                            }
-                        }
-                        #endif
-                    }
-
-                    // an untagged tag is defined by the other tags, so it has nothing to pick
-                    if tag.mode != .untagged {
-                        let taggedVideos = tag.videos ?? []
-                        if !taggedVideos.isEmpty {
-                            TaggedVideosSection(
-                                title: tag.mode == .exclude ? "excludedVideos" : "videos",
-                                tag: tag,
-                                videos: taggedVideos
-                            )
-                        }
-
-                        ChannelsSection(
-                            title: tag.mode == .exclude ? "excludedChannels" : "channels",
-                            subscriptions: subscriptions,
-                            otherTagsBySubscription: otherTagsBySubscription,
-                            isCovered: isCovered,
-                            toggle: toggle
-                        )
-                    }
-
-                    if !isNew {
-                        MySection {
-                            Button(role: .destructive) {
-                                delete()
-                            } label: {
-                                Text("deleteTag")
-                                    .frame(maxWidth: .infinity, alignment: .center)
-                            }
-                        }
-                    }
+                    sections
                 }
                 .scrollContentBackground(.hidden)
+                #endif
             }
             .myTint()
             .myNavigationTitle(isNew ? "newTag" : .verbatim(navigationName))
+            #if !os(macOS)
             .toolbar {
-                ToolbarItem(placement: .confirmationAction) {
-                    Button {
-                        if isNew {
-                            create()
-                        } else {
-                            dismiss()
-                        }
-                    } label: {
-                        Image(systemName: Const.checkmarkSF)
-                    }
-                    .fontWeight(.bold)
-                    .disabled(trimmedName.isEmpty || nameIsTaken)
-                    .accessibilityLabel(isNew ? "createTag" : "confirm")
-                }
+                toolbarContent
             }
+            #endif
         }
+        #if os(macOS)
+        .toolbar {
+            toolbarContent
+        }
+        .frame(width: 500, height: 600)
+        #endif
         .task {
             // a new tag has nothing to look at yet, so start in the name field
             nameFocused = isNew
@@ -301,6 +198,172 @@ struct TagEditView: View {
         modelContext.delete(tag)
         save()
         dismiss()
+    }
+}
+
+extension TagEditView {
+    /// macOS labels the field itself, so a header above it would read as a second "Tag Name".
+    private var nameSectionTitle: LocalizedStringKey {
+        #if os(macOS)
+        ""
+        #else
+        "tagName"
+        #endif
+    }
+
+    @ViewBuilder
+    private var sections: some View {
+        MySection(nameSectionTitle, footer: nameIsTaken ? "tagNameTakenHelper" : nil) {
+            TextField("tagName", text: $tag.name)
+                .focused($nameFocused)
+                .onSubmit { save() }
+
+            NavigationLink {
+                TagSymbolPicker(symbol: $tag.symbol, defaultSymbol: tag.mode.defaultSymbol)
+            } label: {
+                HStack {
+                    Text("symbol")
+                        .foregroundStyle(Color.neutralAccentColor)
+                    Spacer()
+                    Image(systemName: tag.displaySymbol)
+                }
+            }
+        }
+
+        MySection(footer: tag.mode.helper) {
+            Picker(selection: $tag.mode.animation()) {
+                ForEach(TagMode.allCases) { mode in
+                    Text(mode.title).tag(mode)
+                }
+            } label: {
+                Text("tagMode")
+            }
+            .onChange(of: tag.mode) {
+                if !isNew {
+                    save()
+                }
+            }
+        }
+
+        MySection(footer: "quickSwitchHelper") {
+            Toggle(isOn: $tag.quickSwitch) {
+                Text("quickSwitch")
+            }
+        }
+
+        // an `exclude` tag's videos are also every other tag's, so none of them could follow it alone
+        if tag.mode != .exclude {
+            MySection(footer: "continuousPlayTagHelper") {
+                Picker(selection: $tag.continuousPlay) {
+                    Text("useDefault").tag(Bool?.none)
+                    Text("on").tag(Bool?.some(true))
+                    Text("off").tag(Bool?.some(false))
+                } label: {
+                    Text("continuousPlay")
+                }
+            }
+
+            MySection(footer: "seekSecondsTagHelper") {
+                Toggle(isOn: hasCustomSeekSeconds) {
+                    Text("customSeekDuration")
+                }
+
+                if let seconds = tag.seekSeconds {
+                    Stepper(value: customSeekSeconds, in: 1...120, step: 1) {
+                        LabeledContent("seekBy", value: "\(Int(seconds))s")
+                    }
+                }
+            }
+
+            #if os(iOS)
+            MySection(footer: "suggestVideosTagHelper") {
+                Picker(selection: $tag.suggestVideos) {
+                    Text("useDefault").tag(Bool?.none)
+                    Text("on").tag(Bool?.some(true))
+                    Text("off").tag(Bool?.some(false))
+                } label: {
+                    Text("suggestVideos")
+                }
+            }
+            #endif
+        }
+
+        // an untagged tag is defined by the other tags, so it has nothing to pick
+        if tag.mode != .untagged {
+            let taggedVideos = tag.videos ?? []
+            if !taggedVideos.isEmpty {
+                TaggedVideosSection(
+                    title: tag.mode == .exclude ? "excludedVideos" : "videos",
+                    tag: tag,
+                    videos: taggedVideos
+                )
+            }
+
+            ChannelsSection(
+                title: tag.mode == .exclude ? "excludedChannels" : "channels",
+                subscriptions: subscriptions,
+                otherTagsBySubscription: otherTagsBySubscription,
+                isCovered: isCovered,
+                toggle: toggle
+            )
+        }
+
+        if !isNew {
+            MySection {
+                Button(role: .destructive) {
+                    delete()
+                } label: {
+                    Text("deleteTag")
+                        .frame(maxWidth: .infinity, alignment: .center)
+                }
+            }
+        }
+    }
+}
+
+extension TagEditView {
+    @ToolbarContentBuilder
+    private var toolbarContent: some ToolbarContent {
+        #if os(macOS)
+        if isNew {
+            ToolbarItem(placement: .cancellationAction) {
+                Button("cancel") {
+                    dismiss()
+                }
+            }
+        }
+        #endif
+
+        ToolbarItem(placement: .confirmationAction) {
+            Button {
+                if isNew {
+                    create()
+                } else {
+                    dismiss()
+                }
+            } label: {
+                #if os(macOS)
+                Text(isNew ? "createTag" : "ok")
+                #else
+                Image(systemName: Const.checkmarkSF)
+                #endif
+            }
+            .fontWeight(.bold)
+            .disabled(confirmDisabled)
+            #if !os(macOS)
+            .accessibilityLabel(isNew ? "createTag" : "confirm")
+            #endif
+        }
+    }
+
+    /// An existing tag saves as it is edited, so its button only closes the sheet - and on macOS
+    /// it is the only way out, so an unusable name must not disable it.
+    private var confirmDisabled: Bool {
+        #if os(macOS)
+        isNew && (trimmedName.isEmpty || nameIsTaken)
+        #else
+        trimmedName.isEmpty || nameIsTaken
+        #endif
     }
 }
 

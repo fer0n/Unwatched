@@ -96,6 +96,28 @@ class TapHandlerView: NSView {
             }
         }
     }
+
+    // Workaround: NSTableView outlines the whole row while its context menu is open; remove once SwiftUI lists can opt out
+    override func rightMouseDown(with event: NSEvent) {
+        let table = sequence(first: superview, next: { $0?.superview })
+            .lazy
+            .compactMap { $0 as? NSTableView }
+            .first
+        let observer = NotificationCenter.default.addObserver(
+            forName: NSMenu.didBeginTrackingNotification,
+            object: nil,
+            queue: nil
+        ) { _ in
+            MainActor.assumeIsolated {
+                for view in table?.subviews ?? []
+                where NSStringFromClass(type(of: view)) == "NSMenuHighlightView" {
+                    view.isHidden = true
+                }
+            }
+        }
+        super.rightMouseDown(with: event)
+        NotificationCenter.default.removeObserver(observer)
+    }
 }
 
 struct TapHandler: NSViewRepresentable {

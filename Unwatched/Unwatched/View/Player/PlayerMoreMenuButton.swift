@@ -101,7 +101,7 @@ struct PlayerMoreMenuContent: View {
                     ForEach(player.availableAudioLanguages, id: \.code) { lang in
                         Button {
                             player.setAudioLanguage(lang.code)
-                            Signal.log("Player.MoreMenu", parameters: ["action": "audioLanguage"])
+                            Signal.interaction("Player.MoreMenu", "audioLanguage")
                         } label: {
                             if lang.code == player.selectedAudioLanguage {
                                 Label(lang.name, systemImage: "checkmark")
@@ -120,7 +120,7 @@ struct PlayerMoreMenuContent: View {
                     ForEach(player.availableVideoQualities, id: \.height) { quality in
                         Button {
                             player.setVideoQuality(quality.height)
-                            Signal.log("Player.MoreMenu", parameters: ["action": "videoQuality"])
+                            Signal.interaction("Player.MoreMenu", "videoQuality")
                         } label: {
                             if quality.height == player.selectedVideoQuality {
                                 Label(quality.label, systemImage: "checkmark")
@@ -139,10 +139,14 @@ struct PlayerMoreMenuContent: View {
             if player.video?.isPodcast == true, !player.isAudioOnly {
                 Toggle(isOn: Binding(
                     get: { trimSilence },
-                    set: { player.setTrimSilence($0) }
+                    set: {
+                        guard !$0 || guardPremium() else { return }
+                        player.setTrimSilence($0)
+                    }
                 )) {
                     Label("trimSilence", systemImage: "waveform")
                 }
+                .containsPremium()
             }
 
             if let video = player.video {
@@ -173,6 +177,12 @@ struct PlayerMoreMenuContent: View {
                     Label("playerType", systemImage: playerType.systemImage)
                 }
             }
+            #if os(iOS)
+            if preferPlayerType {
+                airPlayButton
+                airPlayHDToggle
+            }
+            #endif
             ReloadPlayerButton()
             Divider()
 
@@ -180,7 +190,7 @@ struct PlayerMoreMenuContent: View {
                 Button {
                     navManager.showMenu = true
                     openUrl(url)
-                    Signal.log("Player.MoreMenu", parameters: ["action": "openInBrowser"])
+                    Signal.interaction("Player.MoreMenu", "openInBrowser")
                 } label: {
                     Text("openInAppBrowser")
                     Image(systemName: Const.viewOnYouTubeSF)
@@ -196,11 +206,31 @@ struct PlayerMoreMenuContent: View {
         }
     }
 
+    #if os(iOS)
+    var airPlayButton: some View {
+        Button {
+            AirPlayPicker.present()
+            hapticToggle.toggle()
+        } label: {
+            Label("airPlay", systemImage: "airplay.audio")
+        }
+    }
+
+    var airPlayHDToggle: some View {
+        Toggle(isOn: Binding(
+            get: { player.airplayHD },
+            set: { player.setAirplayHD($0) }
+        )) {
+            Label("airplayHD", systemImage: "airplay.video")
+        }
+    }
+    #endif
+
     var deferDateButton: some View {
         Button {
             navManager.showMenu = false
             navManager.showDeferDateSelector = true
-            Signal.log("Player.MoreMenu", parameters: ["action": "defer"])
+            Signal.interaction("Player.MoreMenu", "defer")
         } label: {
             Text("deferVideo")
             Image(systemName: "clock.fill")
@@ -242,7 +272,7 @@ struct PlayerMoreMenuContent: View {
 
             VideoService.toggleBookmark(video)
             hapticToggle.toggle()
-            Signal.log("Player.MoreMenu", parameters: ["action": "bookmark"])
+            Signal.interaction("Player.MoreMenu", "bookmark")
         }
     }
 

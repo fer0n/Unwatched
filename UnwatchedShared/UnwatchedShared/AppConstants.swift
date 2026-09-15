@@ -19,13 +19,19 @@ public struct Const {
     public static let sponsorSegmentSetting = "sponsorSegmentSetting"
     public static let selfPromoSegmentSetting = "selfPromoSegmentSetting"
     public static let skipChapterText = "skipChapterText"
+    public static let autoSkipRecurringChapters = "autoSkipRecurringChapters"
     public static let customYoutubeApiKey = "customYoutubeApiKey"
     public static let filterVideoTitleText = "filterVideoTitleText"
     public static let allowOnMatch = "allowOnMatch"
     public static let nowPlayingVideo = "nowPlayingVideo"
     public static let enableIcloudSync = "enableIcloudSync"
+    public static let watchFullSync = "watchFullSync"
+    public static let watchQueueUpdatedDate = "watchQueueUpdatedDate"
+    public static let watchSyncTotals = "watchSyncTotals"
+    public static let watchQueueFromPhone = "watchQueueFromPhone"
+    public static let watchSelectedTagName = "watchSelectedTagName"
+    public static let watchControlsPhone = "watchControlsPhone"
     public static let requiresDurationFetch = "requiresDurationFetch"
-    public static let didPurgeDerivableChapters = "didPurgeDerivableChapters"
 
     public static let inboxVideoAddedCategory = "inboxVideoAddedCategory"
     public static let queueVideoAddedCategory = "queueVideoAddedCategory"
@@ -68,7 +74,6 @@ public struct Const {
     /// Video thumbnail list item corner radius
     public static let videoCornerRadius: CGFloat = 15
     
-    ///
     public static let videoPlayerCornerRadius: CGFloat = 9
     
     public static let consideredWideAspectRatio: Double = 18/9
@@ -89,6 +94,9 @@ public struct Const {
 
     /// Default seconds to seek forward/back
     public static let seekSeconds: Double = 10
+
+    /// Seconds the arrow keys seek until a custom seek duration is set
+    public static let arrowKeySeekSeconds: Double = 5
 
     /// Update the current time if it differs by x seconds
     public static let updateTimeMinimum: Double = 10
@@ -139,8 +147,28 @@ public struct Const {
     /// Same for subscriptions added during onboarding, lower so a first inbox stays skimmable
     public static let triageOnboardingSubs = 3
 
-    /// Episodes kept from a podcast feed.
-    public static let podcastEpisodeLimit = 50
+    /// Episodes triaged from a new podcast subscription; lower than `triageNewSubs` because the
+    /// rest of the catalogue is in `PodcastEpisodeCache`.
+    public static let podcastTriageNewSubs = 3
+
+    /// Episodes parsed from a podcast feed on a regular refresh, enough to triage what's new.
+    public static let podcastRefreshEpisodeLimit = 20
+
+    /// Episodes parsed from a feed when caching a show's catalogue, see `PodcastEpisodeCache`.
+    public static let podcastEpisodeCacheLimit = 500
+
+    /// Episodes a show's list renders before paging in more.
+    public static let podcastEpisodePageSize = 20
+
+    /// Cached episodes a library search can turn up alongside the stored videos.
+    public static let podcastEpisodeSearchLimit = 50
+
+    /// Episodes listed for a show that isn't in the library yet.
+    public static let podcastPreviewEpisodeLimit = 50
+
+    /// How long a podcast episode's `Video` row survives after the user's last state on it went
+    /// away, see `deleteStatelessPodcastEpisodes`.
+    public static let podcastStatelessRowGraceDays = 30
 
     /// Hours of queue that can be kept downloaded; 0 is off, -1 unlimited
     public static let podcastDownloadHourOptions = [0, 5, 10, 50, 100, -1]
@@ -148,37 +176,49 @@ public struct Const {
 
     public static let podcastDownloadSessionId = bundleId + ".podcastDownloads"
 
-    // "Trim silence" shortens each pause in the composition the episode plays from, rather than running the player
-    // faster through it.
+    // "Trim silence" drops the samples inside a pause as the episode plays (see `SilenceRemover`).
 
-    /// How much of a pause at either end is left at its original length.
-    public static let silenceGuardBand: Double = 0.15
+    /// Room tone kept at each end of a shortened pause, so a splice isn't a cut into speech.
+    public static let silenceGuardBand: Double = 0.04
 
     /// Shortest a pause is allowed to become, and the share of itself a longer one keeps — a long pause cut to the
     /// same length as a short one loses the beat the speaker put there.
-    public static let silenceTargetPause: Double = 0.4
-    public static let silenceKeepFraction: Double = 0.35
-    /// What has to be left between the guard bands, so a scaled range never rounds away to nothing.
-    public static let silenceMinimumInterior: Double = 0.05
+    public static let silenceTargetPause: Double = 0.09
+    public static let silenceKeepFraction: Double = 0.07
+    /// Left between the two ends, so the shortest pause still has a beat in it.
+    public static let silenceMinimumInterior: Double = 0.03
 
-    /// Shortest run of quiet that counts as a pause, and the least it has to save to be worth a segment in the
-    /// composition.
-    public static let silenceMinimumPause: Double = 0.4
-    public static let silenceMinimumSaving: Double = 0.15
+    /// Shortest run of quiet that counts as a pause, and the least it has to save to be worth a splice.
+    public static let silenceMinimumPause: Double = 0.18
+    public static let silenceMinimumSaving: Double = 0.04
 
-    /// Bumped whenever a change would make a stored scan's pause list wrong to reuse — a lower detection floor, a
-    /// different threshold.
-    public static let silenceScanVersion = 2
-
-    /// Range the scan's own threshold is held to, in dBFS, in case an episode's levels have only one hump for Otsu's
-    /// method to split (see `SilenceScanner.silenceThreshold`).
+    /// Range the running threshold is held to, whatever the episode's levels suggest.
     public static let silenceThresholdFloorDb: Double = -60
     public static let silenceThresholdCeilingDb: Double = -30
 
-    /// Fine enough that a boundary lands on a sample rather than on a 600th of a second.
-    public static let silenceTimescale: CMTimeScale = 44_100
+    /// What one level reading covers: fine enough for gaps between words, coarse enough to ignore a glottal stop.
+    public static let silenceWindow: Double = 0.01
+
+    /// Left unjudged after a reset, while the level trackers are still settling.
+    public static let silenceWarmup: Double = 0.5
+
+    /// Room tone joined to room tone still clicks without a ramp.
+    public static let silenceSpliceFade: Double = 0.006
+
+    /// Longest pause buffered; a longer gap is trimmed in two steps, which sounds the same.
+    public static let silenceMaximumHeldPause: Double = 20
+
+    /// The cut sits this far above the noise floor, and this far below the speech level.
+    public static let silenceNoiseMarginDb: Double = 8
+    public static let silenceSpeechSeparationDb: Double = 12
+
+    /// Lowest level the remover distinguishes; digital silence reads as this.
+    public static let silenceAnalysisFloorDb: Double = -80
 
     public static let autoRefreshIntervalSeconds: Double = 10 * 60
+
+    /// How long work deferred for an in-flight iCloud sync waits before going ahead anyway.
+    public static let maxSyncRefreshDeferSeconds: Double = 5 * 60
 
     /// Share of subscriptions whose feed fetch has to fail in the same refresh before the reload button shows its
     /// failed state.
@@ -209,6 +249,9 @@ public struct Const {
     /// and backgrounding all persist it too, so this only bounds what a crash or a jetsam kill
     /// during uninterrupted (usually background) playback can lose.
     public static let elapsedTimePersistSeconds: Int = 120
+
+    public static let elapsedTimeSaveDebounceSeconds: Double = 3
+    public static let elapsedTimeSaveMaxDelaySeconds: Double = 15
 
     /// Safety flush for accumulated watch time when playback never pauses
     public static let statsFlushIntervalSeconds: Double = 600
@@ -348,11 +391,10 @@ public struct Const {
     public static let enableLogging = "enableLogging"
     public static let originalAudio = "originalAudio"
     public static let trimSilence = "trimSilence"
-    public static let trimSilenceTier = "trimSilenceTier"
-    /// Running total of seconds trimmed, added up as they're played rather than as episodes are
-    /// scanned (see `accumulateSecondsSaved`) — never reset, since it's meant to answer "how much
-    /// has this saved me" over the setting's whole lifetime, not for one episode or session.
+    /// Lifetime total of seconds trimmed, added up as they're played; never reset.
     public static let trimSilenceSecondsSaved = "trimSilenceSecondsSaved"
+    /// Audio rendered while trimming was on, which makes the saving expressible as a speed.
+    public static let trimSilenceSecondsPlayed = "trimSilenceSecondsPlayed"
     public static let playBrowserVideosInApp = "playBrowserVideosInApp"
     public static let inboxFullDismissedDate = "inboxFullDismissedDate"
     public static let inboxTipHiddenPermanently = "inboxTipHiddenPermanently"
@@ -362,6 +404,13 @@ public struct Const {
     public static let autoDeleteWatchedVideos = "autoDeleteWatchedVideos"
     public static let autoDeleteOrphanedVideos = "autoDeleteOrphanedVideos"
     public static let autoDeleteInboxVideosLimit = "autoDeleteInboxVideosLimit"
+    public static let cleanupPodcastEpisodes = "cleanupPodcastEpisodes"
+    public static let purgeLegacyUrlCache = "purgeLegacyUrlCache"
+
+    /// Videos donated as media suggestions, which the system has no way to list
+    public static let donatedMediaIds = "donatedMediaIds"
+    /// Donations made before `donatedMediaIds` existed have been deleted
+    public static let untrackedMediaDonationsDeleted = "untrackedMediaDonationsDeleted"
 
     /// Persisted history tokens, keyed by model type name
     public static let historyTokens = "historyTokens"
@@ -426,6 +475,7 @@ public struct Const {
     public static let showTutorial = "showTutorial"
     public static let onboardingCompleted = "onboardingCompleted"
     public static let onboardingStarted = "onboardingStarted"
+    public static let settingsSplashShown = "settingsSplashShown"
     public static let lightAppIcon = "lightAppIcon"
 
     public static let reloadVideoId = "reloadVideoId"

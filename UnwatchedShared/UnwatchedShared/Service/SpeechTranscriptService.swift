@@ -3,7 +3,7 @@
 //  UnwatchedShared
 //
 
-#if !os(tvOS)
+#if !os(tvOS) && !os(watchOS)
 import AVFoundation
 import Foundation
 import OSLog
@@ -52,52 +52,73 @@ public enum SpeechTranscriptService {
         }
         Log.info("transcribing in \(locale.identifier) (feed language: \(language ?? "–"))")
 
-        let transcriber = SpeechTranscriber(
-            locale: locale,
-            transcriptionOptions: [],
-            // no volatile results: a file is transcribed once, and the tentative passes would only be thrown away
-            // again
-            reportingOptions: [],
-            attributeOptions: [.audioTimeRange]
-        )
-
+        let transcriber = makeTranscriber(locale: locale, timeRanges: true)
         try await installModel(for: transcriber, locale: locale)
 
+        let entries = try await analyze(
+            fileUrl: fileUrl,
+            transcriber: transcriber,
+            progress: progress
+        ) { text, range -> TranscriptEntry? in
+            let start = range.start.seconds
+            guard start.isFinite else { return nil }
+            let end = range.end.seconds
+            return TranscriptEntry(
+                start: start,
+                duration: end.isFinite ? max(0, end - start) : 0,
+                text: text
+            )
+        }
+        guard !entries.isEmpty else {
+            throw SpeechTranscriptError.emptyResult
+        }
+        return entries
+    }
+
+    /// No volatile results: a file is transcribed once, and the tentative passes would only be
+    /// thrown away again.
+    private static func makeTranscriber(locale: Locale, timeRanges: Bool = false) -> SpeechTranscriber {
+        SpeechTranscriber(
+            locale: locale,
+            transcriptionOptions: [],
+            reportingOptions: [],
+            attributeOptions: timeRanges ? [.audioTimeRange] : []
+        )
+    }
+
+    /// Runs `transcriber` over the whole file, keeping whatever `each` makes of every non-empty
+    /// result.
+    ///
+    /// Results have to be consumed while the analyzer runs: the module publishes them as it goes,
+    /// and `analyzeSequence` doesn't return until the whole file has been read.
+    private static func analyze<Value: Sendable>(
+        fileUrl: URL,
+        transcriber: SpeechTranscriber,
+        progress: (@Sendable (Double) -> Void)? = nil,
+        each make: @escaping @Sendable (String, CMTimeRange) -> Value?
+    ) async throws -> [Value] {
         let file = try AVAudioFile(forReading: fileUrl)
         let format = file.processingFormat
         let duration = format.sampleRate > 0 ? Double(file.length) / format.sampleRate : 0
-
         let analyzer = SpeechAnalyzer(modules: [transcriber])
 
-        // Results have to be consumed while the analyzer runs: the module publishes them as it goes, and
-        // `analyzeSequence` doesn't return until the whole file has been read.
         let collector = Task {
-            var entries = [TranscriptEntry]()
+            var values = [Value]()
             for try await result in transcriber.results {
                 let text = String(result.text.characters).trimmingCharacters(in: .whitespacesAndNewlines)
-                guard !text.isEmpty else { continue }
+                guard !text.isEmpty, let value = make(text, result.range) else { continue }
+                values.append(value)
 
-                let range = result.range
-                let start = range.start.seconds
-                guard start.isFinite else { continue }
-                let end = range.end.seconds
-                entries.append(
-                    TranscriptEntry(
-                        start: start,
-                        duration: end.isFinite ? max(0, end - start) : 0,
-                        text: text
-                    )
-                )
-                if duration > 0, end.isFinite {
+                let end = result.range.end.seconds
+                if let progress, duration > 0, end.isFinite {
                     progress(min(1, end / duration))
                 }
             }
-            return entries
+            return values
         }
 
         do {
-            let lastSampleTime = try await analyzer.analyzeSequence(from: file)
-            if let lastSampleTime {
+            if let lastSampleTime = try await analyzer.analyzeSequence(from: file) {
                 try await analyzer.finalizeAndFinish(through: lastSampleTime)
             } else {
                 await analyzer.cancelAndFinishNow()
@@ -107,12 +128,38 @@ public enum SpeechTranscriptService {
             await analyzer.cancelAndFinishNow()
             throw error
         }
+        return try await collector.value
+    }
 
-        let entries = try await collector.value
-        guard !entries.isEmpty else {
-            throw SpeechTranscriptError.emptyResult
+    /// Resolves and installs the model once, for a caller that then transcribes many short windows.
+    public static func prepare(language: String?) async throws -> Locale {
+        guard isSupported else {
+            throw SpeechTranscriptError.unsupportedDevice
         }
-        return entries
+        guard let locale = await transcriptionLocale(for: language) else {
+            throw SpeechTranscriptError.unsupportedLanguage
+        }
+        try await installModel(for: makeTranscriber(locale: locale), locale: locale)
+        return locale
+    }
+
+    /// Whether a model for `language` is already on the device, which is what decides if a check
+    /// can run on its own or has to wait for the user to ask for it and accept a download.
+    public static func isModelInstalled(for language: String?) async -> Bool {
+        guard isSupported else { return false }
+        guard let locale = await transcriptionLocale(for: language) else { return false }
+        let installed = await SpeechTranscriber.installedLocales
+        return installed.contains { $0.identifier(.bcp47) == locale.identifier(.bcp47) }
+    }
+
+    /// The words in a short window, as one string. Empty when the audio holds no speech, which is
+    /// an answer rather than a failure for a caller probing for content.
+    public static func probeText(fileUrl: URL, locale: Locale) async throws -> String {
+        try await analyze(
+            fileUrl: fileUrl,
+            transcriber: makeTranscriber(locale: locale)
+        ) { text, _ in text }
+            .joined(separator: " ")
     }
 
     /// The model locale to transcribe in: the show's own language where there is a model for it, and the reader's

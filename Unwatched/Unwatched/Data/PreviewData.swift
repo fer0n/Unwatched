@@ -69,7 +69,7 @@ extension PlayerManager {
             title: "The Daily: Why Food Prices Are Still So High",
             url: URL(string: "https://www.nytimes.com/column/the-daily"),
             youtubeId: "podcast-the-daily-preview",
-            thumbnailUrl: URL(string: "https://image.simplecastcdn.com/images/4f9f4ad8-7fbe-4f56-9f36-780d6d38d9f1/4f9f4ad8-7fbe-4f56-9f36-780d6d38d9f1/3000x3000/the-daily-artwork.jpg"),
+            thumbnailUrl: URL(string: "https://image.simplecastcdn.com/images/7f2f4c05-9c2f-4deb-82b7-b538062bc22d/73549bf1-94b3-40ff-8aeb-b4054848ec1b/3000x3000/the-daily-album-art-original.jpg"),
             publishedDate: .now,
             duration: 1_680,
             videoDescription: "The Daily podcast by The New York Times.",

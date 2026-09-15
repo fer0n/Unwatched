@@ -13,9 +13,11 @@ struct ChapterDescriptionView: View {
     @Environment(\.modelContext) var modelContext
     @Environment(\.dismiss) var dismiss
     @Environment(TinyUndoManager.self) private var undoManager
+    @Environment(AppNotificationVM.self) var appNotificationVM
 
     @State var hapticToggle = false
     @State var transcriptVM = TranscriptView.ViewModel()
+    @State var descriptionSelection: DescriptionContentType = .description
 
     static let buttonSize: CGFloat = 46
     @ScaledMetric(wrappedValue: buttonSize) private var buttonSizeScaled: CGFloat
@@ -60,36 +62,25 @@ struct ChapterDescriptionView: View {
                     )
 
                     if hasTranscript || hasChapters {
-                        ChapterSettingsMenu(video: player.video)
+                        chapterControlsRow(showSegmentedControl: hasTranscript)
+                            .padding(.top)
 
                         Spacer()
                             .frame(height: 10)
                     }
 
-                    if showGenerateTranscript {
-                        // no transcript means no chapters can be generated, so the picker gives way to just the
-                        // button — the settings menu above still stands when chapters already exist regardless
-                        GenerateTranscriptButton(video: video, viewModel: $transcriptVM)
-                            .transition(.opacity)
-
-                        Spacer()
-                            .frame(height: 10)
-
-                        DescriptionDetailView(description: video.videoDescription)
-                    } else {
-                        TranscriptDescriptionSelection(
-                            video: video,
-                            isCurrentVideo: isCurrentVideo,
-                            scrollProxy: proxy,
-                            transcriptVM: $transcriptVM
-                        )
-                        .transition(.opacity)
-                    }
+                    TranscriptDescriptionSelection(
+                        video: video,
+                        isCurrentVideo: isCurrentVideo,
+                        scrollProxy: proxy,
+                        transcriptVM: $transcriptVM,
+                        selection: $descriptionSelection
+                    )
+                    .transition(.opacity)
                 }
                 .padding(.horizontal, showThumbnail ? 15 : isCompact ? 10 : 20)
                 .padding(.top, showThumbnail ? 15 : isCompact ? 15 : 30)
                 .frame(idealWidth: 500, maxWidth: 800, alignment: .leading)
-                .animation(.easeInOut, value: showGenerateTranscript)
 
                 Spacer()
                     .frame(height: bottomSpacer)
@@ -98,13 +89,20 @@ struct ChapterDescriptionView: View {
                     .frame(maxWidth: .infinity)
             }
             .task(id: video.youtubeId) {
-                // checked eagerly (not just on opening the transcript tab) since a podcast episode without one hides
-                // chapters/description/transcript entirely in favor of the generate-transcript button
+                transcriptVM.syncGeneration(for: video.youtubeId)
+                // loaded eagerly rather than when the transcript tab is opened: the settings menu offers
+                // generating and restoring on what's there, so it has to know before the tab is touched
                 guard video.isPodcast, TranscriptService.canGenerateTranscript else { return }
                 await transcriptVM.handleTranscriptLoading(video, nil)
                 // kept running for the lifetime of this screen so a generation started elsewhere — a Shortcut,
                 // say — still shows its progress here and loads the result once it lands
                 await transcriptVM.watchGeneration(for: video)
+            }
+            // not on the generate button: the menu can start a generation or a restore after it's gone
+            .task(id: transcriptVM.generationError) {
+                if let error = transcriptVM.generationError {
+                    appNotificationVM.show(error, isError: true)
+                }
             }
             .onAppear {
                 scrollToChapterIfNeeded(hasChapters: hasChapters, proxy: proxy)
@@ -170,6 +168,41 @@ struct ChapterDescriptionView: View {
             #endif
         }
         .tint(.neutralAccentColor)
+    }
+
+    /// The description/transcript segmented control with the chapter settings menu kept as its own
+    /// control right next to it — the pair centered together, or just the button on its own once
+    /// there's no segmented control to show.
+    @ViewBuilder
+    func chapterControlsRow(showSegmentedControl: Bool) -> some View {
+        HStack(spacing: 6) {
+            Spacer(minLength: 0)
+            if showSegmentedControl {
+                CapsuleSegmentedControl(
+                    selection: $descriptionSelection,
+                    items: [
+                        CapsuleSegmentItem(
+                            title: "description",
+                            value: DescriptionContentType.description
+                        ),
+                        CapsuleSegmentItem(
+                            title: "transcript",
+                            value: DescriptionContentType.transcript
+                        )
+                    ]
+                )
+                .frame(maxWidth: 260)
+                ChapterSettingsMenu(video: video, transcriptVM: transcriptVM, iconOnly: true)
+            } else {
+                ChapterSettingsMenu(video: video, transcriptVM: transcriptVM)
+            }
+            Spacer(minLength: 0)
+        }
+        .onChange(of: descriptionSelection) {
+            if descriptionSelection == .transcript {
+                Signal.interaction("Transcript.View")
+            }
+        }
     }
 
     /// Same order as the inbox card actions (see `InboxCardAction`)
@@ -238,14 +271,6 @@ struct ChapterDescriptionView: View {
 
     var isCurrentVideo: Bool {
         video.youtubeId == player.video?.youtubeId
-    }
-
-    /// A podcast episode that has no transcript at all — not one that was published, not one generated before — hides
-    /// the description/transcript picker in favor of just the button.
-    var showGenerateTranscript: Bool {
-        video.isPodcast
-            && TranscriptService.canGenerateTranscript
-            && transcriptVM.transcript?.isEmpty == true
     }
 
     func playVideo() {

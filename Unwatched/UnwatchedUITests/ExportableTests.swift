@@ -310,7 +310,7 @@ class ExportableTests: XCTestCase {
 
                 // Playback
                 Const.fullscreenControlsSetting: FullscreenControls.enabled.rawValue,
-                Const.hideMenuOnPlay: true,
+                Const.hideMenuOnPlay: false,
                 Const.playVideoFullscreen: true,
                 Const.returnToQueue: false,
                 Const.rotateOnPlay: true,

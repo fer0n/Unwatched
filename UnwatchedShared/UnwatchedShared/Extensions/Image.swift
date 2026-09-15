@@ -7,58 +7,6 @@ import SwiftUI
 import ImageIO
 
 public extension CGImage {
-    /// The colour of the image's border, when the border is all one colour.
-    func uniformEdgeColor(tolerance: CGFloat = 0.055) -> Color? {
-        let size = 12
-        let bytesPerPixel = 4
-        var pixels = [UInt8](repeating: 0, count: size * size * bytesPerPixel)
-        guard let context = CGContext(
-            data: &pixels,
-            width: size,
-            height: size,
-            bitsPerComponent: 8,
-            bytesPerRow: size * bytesPerPixel,
-            space: CGColorSpaceCreateDeviceRGB(),
-            bitmapInfo: CGImageAlphaInfo.premultipliedLast.rawValue
-        ) else {
-            return nil
-        }
-        context.interpolationQuality = .medium
-        context.draw(self, in: CGRect(x: 0, y: 0, width: size, height: size))
-
-        var reds = [CGFloat]()
-        var greens = [CGFloat]()
-        var blues = [CGFloat]()
-        reds.reserveCapacity(size * 4)
-        for x in 0..<size {
-            for y in 0..<size where x == 0 || y == 0 || x == size - 1 || y == size - 1 {
-                let index = ((y * size) + x) * bytesPerPixel
-                // a transparent border says nothing about what's behind the art
-                guard pixels[index + 3] > 200 else { return nil }
-                reds.append(CGFloat(pixels[index]) / 255)
-                greens.append(CGFloat(pixels[index + 1]) / 255)
-                blues.append(CGFloat(pixels[index + 2]) / 255)
-            }
-        }
-        guard !reds.isEmpty else { return nil }
-
-        let count = CGFloat(reds.count)
-        let mean = (
-            red: reds.reduce(0, +) / count,
-            green: greens.reduce(0, +) / count,
-            blue: blues.reduce(0, +) / count
-        )
-        for index in 0..<reds.count {
-            let deviation = max(
-                abs(reds[index] - mean.red),
-                abs(greens[index] - mean.green),
-                abs(blues[index] - mean.blue)
-            )
-            guard deviation <= tolerance else { return nil }
-        }
-        return Color(red: mean.red, green: mean.green, blue: mean.blue)
-    }
-
     func pixelColors(at points: [CGPoint]) -> [Color] {
         let width = self.width
         let height = self.height
@@ -113,7 +61,7 @@ private func downsampledCGImage(from data: Data, maxPixelSize: CGFloat) -> CGIma
     return CGImageSourceCreateThumbnailAtIndex(source, 0, downsampleOptions)
 }
 
-#if os(iOS) || os(tvOS) || os(visionOS)
+#if os(iOS) || os(tvOS) || os(visionOS) || os(watchOS)
 import UIKit
 public typealias PlatformImage = UIImage
 
@@ -136,8 +84,8 @@ public extension UIImage {
         return cgImage.extractVibrantAccentColor()
     }
 
-    func uniformEdgeColor() -> Color? {
-        cgImage?.uniformEdgeColor()
+    func uniformEdgeColors() -> (edge: Color, center: Color)? {
+        cgImage?.uniformEdgeColors()
     }
 
     /// Approximate decoded size in bytes, used as the `NSCache` cost in `DecodedImageCache`.
@@ -148,7 +96,12 @@ public extension UIImage {
 
     /// Decodes the image up front so the render pass doesn't have to. Call off the main thread.
     func readyForDisplay() -> UIImage {
-        preparingForDisplay() ?? self
+        #if os(watchOS)
+        // `preparingForDisplay()` is unavailable here; the image stays undecoded until it is drawn.
+        return self
+        #else
+        return preparingForDisplay() ?? self
+        #endif
     }
 
     /// Scales an already-decoded image down, for when a smaller size of the same picture is wanted and re-reading
@@ -159,7 +112,23 @@ public extension UIImage {
         guard side > maxPixelSize else { return self }
         let scale = maxPixelSize / side
         let target = CGSize(width: CGFloat(cgImage.width) * scale, height: CGFloat(cgImage.height) * scale)
+        #if os(watchOS)
+        // `preparingThumbnail(of:)` is unavailable here, so redraw at the target size by hand.
+        guard let context = CGContext(
+            data: nil,
+            width: Int(target.width.rounded()),
+            height: Int(target.height.rounded()),
+            bitsPerComponent: 8,
+            bytesPerRow: 0,
+            space: cgImage.colorSpace ?? CGColorSpaceCreateDeviceRGB(),
+            bitmapInfo: CGImageAlphaInfo.premultipliedLast.rawValue
+        ) else { return nil }
+        context.interpolationQuality = .high
+        context.draw(cgImage, in: CGRect(origin: .zero, size: target))
+        return context.makeImage().map(UIImage.init(cgImage:))
+        #else
         return preparingThumbnail(of: target)
+        #endif
     }
 }
 #endif
@@ -187,8 +156,8 @@ public extension NSImage {
         return cgImage.extractVibrantAccentColor()
     }
 
-    func uniformEdgeColor() -> Color? {
-        cgImage(forProposedRect: nil, context: nil, hints: nil)?.uniformEdgeColor()
+    func uniformEdgeColors() -> (edge: Color, center: Color)? {
+        cgImage(forProposedRect: nil, context: nil, hints: nil)?.uniformEdgeColors()
     }
 
     /// Approximate decoded size in bytes, used as the `NSCache` cost in `DecodedImageCache`.

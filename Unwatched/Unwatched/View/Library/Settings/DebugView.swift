@@ -43,6 +43,12 @@ struct DebugView: View {
                     }
 
                     Button {
+                        navManager.presentSettingsSplash()
+                    } label: {
+                        Text("showSettingsSplash")
+                    }
+
+                    Button {
                         inboxTipHiddenPermanently = false
                     } label: {
                         Text("resetInboxTip")

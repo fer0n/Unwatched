@@ -2,7 +2,39 @@
   "sourceLanguage" : "en",
   "strings" : {
     "" : {
-
+      "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : ""
+          }
+        },
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : ""
+          }
+        },
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : ""
+          }
+        },
+        "fr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : ""
+          }
+        },
+        "pl" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : ""
+          }
+        }
+      },
+      "shouldTranslate" : false
     },
     "%@" : {
       "localizations" : {
@@ -209,7 +241,38 @@
       }
     },
     "%lld" : {
-
+      "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "%lld"
+          }
+        },
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "%lld"
+          }
+        },
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "%lld"
+          }
+        },
+        "fr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "%lld"
+          }
+        },
+        "pl" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "%lld"
+          }
+        }
+      }
     },
     "%lld min" : {
       "localizations" : {
@@ -279,71 +342,37 @@
         }
       }
     },
-    "^[%lld channel](inflect: true)" : {
-      "extractionState" : "stale",
+    "^[%lld syncable entry](inflect: true)" : {
+      "extractionState" : "manual",
       "localizations" : {
         "de" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "^[%lld Kanal](inflect: true)"
+            "value" : "^[%lld synchronisierbarer Eintrag](inflect: true)"
           }
         },
         "en" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "^[%lld Channel](inflect: true)"
+            "value" : "^[%lld syncable entry](inflect: true)"
           }
         },
         "es" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "^[%lld Canal](inflect: true)"
+            "value" : "^[%lld entrada sincronizable](inflect: true)"
           }
         },
         "fr" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "^[%lld Chaîne](inflect: true)"
+            "value" : "^[%lld entrée synchronisable](inflect: true)"
           }
         },
         "pl" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "^[%lld Kanał](inflect: true)"
-          }
-        }
-      }
-    },
-    "^[%lld video](inflect: true) available" : {
-      "localizations" : {
-        "de" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "^[%lld Video](inflect: true) Verfügbar"
-          }
-        },
-        "en" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "^[%lld Video](inflect: true) Available"
-          }
-        },
-        "es" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "^[%lld Video](inflect: true) Disponible"
-          }
-        },
-        "fr" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "^[%lld Vidéo](inflect: true) Disponible"
-          }
-        },
-        "pl" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "^[%lld Film](inflect: true) dostępny"
+            "value" : "^[%lld synchronizowalny wpis](inflect: true)"
           }
         }
       }
@@ -897,31 +926,31 @@
         "de" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "YouTube Video URL hinzufügen"
+            "value" : "YouTube-URL hinzufügen"
           }
         },
         "en" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Add YouTube Video URL"
+            "value" : "Add YouTube URL"
           }
         },
         "es" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Añadir URL del video de YouTube"
+            "value" : "Añadir URL de YouTube"
           }
         },
         "fr" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Ajouter l’URL de la vidéo YouTube"
+            "value" : "Ajouter l’URL YouTube"
           }
         },
         "pl" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Dodaj URL filmu z YouTube"
+            "value" : "Dodaj URL YouTube"
           }
         }
       }
@@ -1024,6 +1053,40 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "AirPlay"
+          }
+        }
+      }
+    },
+    "airplayHD" : {
+      "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "AirPlay HD"
+          }
+        },
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "AirPlay HD"
+          }
+        },
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "AirPlay HD"
+          }
+        },
+        "fr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "AirPlay HD"
+          }
+        },
+        "pl" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "AirPlay HD"
           }
         }
       }
@@ -1958,7 +2021,7 @@
         "en" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Skipped chapters"
+            "value" : "Skip chapters"
           }
         },
         "es" : {
@@ -2011,6 +2074,74 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "Te rozdziały są automatycznie pomijane dla tego kanału. Dotknij, aby przestać pomijać."
+          }
+        }
+      }
+    },
+    "autoSkipRecurringChapters" : {
+      "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Wiederkehrende Kapitel überspringen"
+          }
+        },
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Skip Recurring Chapters"
+          }
+        },
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Omitir capítulos recurrentes"
+          }
+        },
+        "fr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Ignorer les chapitres récurrents"
+          }
+        },
+        "pl" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Pomijaj powtarzające się rozdziały"
+          }
+        }
+      }
+    },
+    "autoSkipRecurringChaptersFooter" : {
+      "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Wenn du ein Kapitel überspringst, werden Kapitel mit demselben Titel auch in künftigen Videos dieses Kanals übersprungen."
+          }
+        },
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "When you skip a chapter, chapters with the same title are skipped in that channel's future videos too."
+          }
+        },
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Al omitir un capítulo, los capítulos con el mismo título también se omiten en los próximos vídeos de ese canal."
+          }
+        },
+        "fr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Lorsque vous ignorez un chapitre, les chapitres portant le même titre sont aussi ignorés dans les prochaines vidéos de cette chaîne."
+          }
+        },
+        "pl" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Gdy pominiesz rozdział, rozdziały o tym samym tytule będą pomijane także w kolejnych filmach tego kanału."
           }
         }
       }
@@ -2763,6 +2894,40 @@
         }
       }
     },
+    "categoryNotTranscribed" : {
+      "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "[Nicht im Transkript]"
+          }
+        },
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "[Not in transcript]"
+          }
+        },
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "[No está en la transcripción]"
+          }
+        },
+        "fr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "[Absent de la transcription]"
+          }
+        },
+        "pl" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "[Brak w transkrypcie]"
+          }
+        }
+      }
+    },
     "categoryOutro" : {
       "localizations" : {
         "de" : {
@@ -3182,7 +3347,7 @@
         "en" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Auto-Skip Chapters"
+            "value" : "Skip & Reorder Chapters"
           }
         },
         "es" : {
@@ -3207,30 +3372,102 @@
     },
     "chapterMode" : {
       "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Vorhandene Kapitel"
+          }
+        },
         "en" : {
           "stringUnit" : {
             "state" : "translated",
             "value" : "Existing Chapters"
+          }
+        },
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Capítulos existentes"
+          }
+        },
+        "fr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Chapitres existants"
+          }
+        },
+        "pl" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Istniejące rozdziały"
           }
         }
       }
     },
     "chapterModeDescription" : {
       "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Ersetzen: Die Zeitstempel werden zu den Kapiteln des Videos.\n\nZusammenführen: Jede Zeile ist ein Segment, angegeben als Zeitbereich, mit optionaler Kategorie und Titel, z. B.:\n\n00:35 - 01:20 sponsor\n05:00 - 05:30 selfpromo: Merch\n12:00 - 13:30 Interview\n\nKategorien: sponsor, selfpromo, interaction, intro, outro, preview, filler, music_offtopic, chapter. Sponsor- und Eigenwerbungs-Segmente werden je nach SponsorBlock-Einstellungen angezeigt und übersprungen; ein Segment ohne Kategorie wird als normales Kapitel eingefügt."
+          }
+        },
         "en" : {
           "stringUnit" : {
             "state" : "translated",
             "value" : "Replace: the timestamps become the video's chapters.\n\nMerge: every line is a segment given as a time range, with an optional category and title, e.g.:\n\n00:35 - 01:20 sponsor\n05:00 - 05:30 selfpromo: Merch\n12:00 - 13:30 Interview\n\nCategories: sponsor, selfpromo, interaction, intro, outro, preview, filler, music_offtopic, chapter. Sponsor and selfpromo segments are shown and skipped according to the SponsorBlock settings; a segment without a category is merged in as a plain chapter."
+          }
+        },
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Reemplazar: las marcas de tiempo se convierten en los capítulos del vídeo.\n\nCombinar: cada línea es un segmento indicado como un intervalo de tiempo, con una categoría y un título opcionales, p. ej.:\n\n00:35 - 01:20 sponsor\n05:00 - 05:30 selfpromo: Merch\n12:00 - 13:30 Interview\n\nCategorías: sponsor, selfpromo, interaction, intro, outro, preview, filler, music_offtopic, chapter. Los segmentos sponsor y selfpromo se muestran y se omiten según los ajustes de SponsorBlock; un segmento sin categoría se combina como un capítulo normal."
+          }
+        },
+        "fr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Remplacer : les horodatages deviennent les chapitres de la vidéo.\n\nFusionner : chaque ligne est un segment indiqué sous forme de plage horaire, avec une catégorie et un titre facultatifs, par ex. :\n\n00:35 - 01:20 sponsor\n05:00 - 05:30 selfpromo: Merch\n12:00 - 13:30 Interview\n\nCatégories : sponsor, selfpromo, interaction, intro, outro, preview, filler, music_offtopic, chapter. Les segments sponsor et selfpromo sont affichés et ignorés selon les réglages SponsorBlock ; un segment sans catégorie est fusionné comme un chapitre normal."
+          }
+        },
+        "pl" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Zastąp: znaczniki czasu stają się rozdziałami filmu.\n\nScal: każdy wiersz to segment podany jako przedział czasu, z opcjonalną kategorią i tytułem, np.:\n\n00:35 - 01:20 sponsor\n05:00 - 05:30 selfpromo: Merch\n12:00 - 13:30 Interview\n\nKategorie: sponsor, selfpromo, interaction, intro, outro, preview, filler, music_offtopic, chapter. Segmenty sponsor i selfpromo są pokazywane i pomijane zgodnie z ustawieniami SponsorBlock; segment bez kategorii jest scalany jako zwykły rozdział."
           }
         }
       }
     },
     "chapterModeType" : {
       "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Kapitel-Modus"
+          }
+        },
         "en" : {
           "stringUnit" : {
             "state" : "translated",
             "value" : "Chapter Mode"
+          }
+        },
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Modo de capítulos"
+          }
+        },
+        "fr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Mode des chapitres"
+          }
+        },
+        "pl" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Tryb rozdziałów"
           }
         }
       }
@@ -4901,6 +5138,40 @@
         }
       }
     },
+    "defaultSegmentSetting %@" : {
+      "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Standard (%@)"
+          }
+        },
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Default (%@)"
+          }
+        },
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Predeterminado (%@)"
+          }
+        },
+        "fr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Par défaut (%@)"
+          }
+        },
+        "pl" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Domyślne (%@)"
+          }
+        }
+      }
+    },
     "defaultShortsSetting %@" : {
       "localizations" : {
         "de" : {
@@ -5683,41 +5954,6 @@
         }
       }
     },
-    "dismiss" : {
-      "extractionState" : "stale",
-      "localizations" : {
-        "de" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Schließen"
-          }
-        },
-        "en" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Dismiss"
-          }
-        },
-        "es" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Descartar"
-          }
-        },
-        "fr" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Fermer"
-          }
-        },
-        "pl" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Odrzuć"
-          }
-        }
-      }
-    },
     "dismissInboxTip" : {
       "localizations" : {
         "de" : {
@@ -5923,7 +6159,7 @@
       }
     },
     "downloaded" : {
-      "extractionState" : "stale",
+      "extractionState" : "manual",
       "localizations" : {
         "de" : {
           "stringUnit" : {
@@ -5953,41 +6189,6 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "Pobrano"
-          }
-        }
-      }
-    },
-    "downloading" : {
-      "extractionState" : "stale",
-      "localizations" : {
-        "de" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Wird geladen"
-          }
-        },
-        "en" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Downloading"
-          }
-        },
-        "es" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Descargando"
-          }
-        },
-        "fr" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Téléchargement"
-          }
-        },
-        "pl" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Pobieranie"
           }
         }
       }
@@ -6605,7 +6806,7 @@
       }
     },
     "emptyYoutubeId" : {
-      "extractionState" : "stale",
+      "extractionState" : "manual",
       "localizations" : {
         "de" : {
           "stringUnit" : {
@@ -7489,6 +7690,40 @@
         }
       }
     },
+    "fixTranscriptAlignment" : {
+      "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Ausrichtung korrigieren"
+          }
+        },
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Fix Alignment"
+          }
+        },
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Corregir sincronización"
+          }
+        },
+        "fr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Corriger la synchronisation"
+          }
+        },
+        "pl" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Popraw synchronizację"
+          }
+        }
+      }
+    },
     "forceOriginalAudio" : {
       "localizations" : {
         "de" : {
@@ -7931,41 +8166,6 @@
         }
       }
     },
-    "generateTranscriptDesc" : {
-      "extractionState" : "stale",
-      "localizations" : {
-        "de" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Transkribiert die Folge auf diesem Gerät. Das kann einige Minuten dauern."
-          }
-        },
-        "en" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Transcribes the episode on this device. This can take a few minutes."
-          }
-        },
-        "es" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Transcribe el episodio en este dispositivo. Puede tardar unos minutos."
-          }
-        },
-        "fr" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Transcrit l'épisode sur cet appareil. Cela peut prendre quelques minutes."
-          }
-        },
-        "pl" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Transkrybuje odcinek na tym urządzeniu. Może to potrwać kilka minut."
-          }
-        }
-      }
-    },
     "generateTranscriptIfNecessary" : {
       "localizations" : {
         "de" : {
@@ -8073,31 +8273,31 @@
         "de" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Aktuelles Video"
+            "value" : "Aktuelles abrufen"
           }
         },
         "en" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Get Current Video"
+            "value" : "Get Current"
           }
         },
         "es" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Obtener video actual"
+            "value" : "Obtener actual"
           }
         },
         "fr" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Obtenir la Vidéo Actuelle"
+            "value" : "Obtenir l’actuel"
           }
         },
         "pl" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Pobierz aktualny film"
+            "value" : "Pobierz aktualny"
           }
         }
       }
@@ -10032,6 +10232,40 @@
         }
       }
     },
+    "keepVideosSyncFooter" : {
+      "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Wird automatisch mit deinen anderen Geräten synchronisiert."
+          }
+        },
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Syncs automatically with your other devices."
+          }
+        },
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Se sincroniza automáticamente con tus otros dispositivos."
+          }
+        },
+        "fr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Se synchronise automatiquement avec vos autres appareils."
+          }
+        },
+        "pl" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Synchronizuje się automatycznie z innymi urządzeniami."
+          }
+        }
+      }
+    },
     "keywords" : {
       "localizations" : {
         "de" : {
@@ -10448,6 +10682,12 @@
             "value" : "Lädt…"
           }
         },
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Loading…"
+          }
+        },
         "es" : {
           "stringUnit" : {
             "state" : "translated",
@@ -10844,10 +11084,34 @@
     },
     "mergeIntoChapters" : {
       "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "In vorhandene einfügen"
+          }
+        },
         "en" : {
           "stringUnit" : {
             "state" : "translated",
             "value" : "Merge into Existing"
+          }
+        },
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Combinar con existentes"
+          }
+        },
+        "fr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Fusionner avec les existants"
+          }
+        },
+        "pl" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Scal z istniejącymi"
           }
         }
       }
@@ -11503,31 +11767,31 @@
         "de" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Nächstes Video"
+            "value" : "Nächstes abspielen"
           }
         },
         "en" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Next Video"
+            "value" : "Play Next"
           }
         },
         "es" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Video siguiente"
+            "value" : "Reproducir siguiente"
           }
         },
         "fr" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Vidéo Suivante"
+            "value" : "Lire la suivante"
           }
         },
         "pl" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Następny film"
+            "value" : "Odtwórz następny"
           }
         }
       }
@@ -11606,6 +11870,12 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "Kein Link gefunden"
+          }
+        },
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "No link found"
           }
         },
         "es" : {
@@ -12036,6 +12306,40 @@
         }
       }
     },
+    "noPublishedTranscript" : {
+      "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Dieser Podcast veröffentlicht kein eigenes Transkript für diese Folge."
+          }
+        },
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "This podcast doesn’t publish its own transcript for this episode."
+          }
+        },
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Este pódcast no publica su propia transcripción para este episodio."
+          }
+        },
+        "fr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Ce podcast ne publie pas sa propre transcription pour cet épisode."
+          }
+        },
+        "pl" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Ten podcast nie publikuje własnego transkryptu tego odcinka."
+          }
+        }
+      }
+    },
     "noQueueItems" : {
       "localizations" : {
         "de" : {
@@ -12174,10 +12478,34 @@
     },
     "noSegmentsFound" : {
       "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Keine Segmente gefunden. Beim Zusammenführen wird ein Zeitbereich pro Zeile erwartet, z. B. „00:35 - 01:20 sponsor“."
+          }
+        },
         "en" : {
           "stringUnit" : {
             "state" : "translated",
             "value" : "No segments found. Merging expects one time range per line, e.g. “00:35 - 01:20 sponsor”."
+          }
+        },
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "No se encontraron segmentos. La combinación espera un intervalo de tiempo por línea, p. ej. «00:35 - 01:20 sponsor»."
+          }
+        },
+        "fr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Aucun segment trouvé. La fusion attend une plage horaire par ligne, par ex. « 00:35 - 01:20 sponsor »."
+          }
+        },
+        "pl" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Nie znaleziono segmentów. Scalanie oczekuje jednego przedziału czasu w wierszu, np. „00:35 - 01:20 sponsor”."
           }
         }
       }
@@ -12324,6 +12652,12 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "Kein YouTube-Link"
+          }
+        },
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Not a YouTube link"
           }
         },
         "es" : {
@@ -12722,7 +13056,7 @@
       }
     },
     "noVideoInfo" : {
-      "extractionState" : "stale",
+      "extractionState" : "manual",
       "localizations" : {
         "de" : {
           "stringUnit" : {
@@ -12825,7 +13159,7 @@
       }
     },
     "noVideosFoundInPlaylist" : {
-      "extractionState" : "stale",
+      "extractionState" : "manual",
       "localizations" : {
         "de" : {
           "stringUnit" : {
@@ -12928,7 +13262,7 @@
       }
     },
     "noVideoUrl" : {
-      "extractionState" : "stale",
+      "extractionState" : "manual",
       "localizations" : {
         "de" : {
           "stringUnit" : {
@@ -12997,7 +13331,7 @@
       }
     },
     "noYoutubeIdFound" : {
-      "extractionState" : "stale",
+      "extractionState" : "manual",
       "localizations" : {
         "de" : {
           "stringUnit" : {
@@ -13032,7 +13366,7 @@
       }
     },
     "noYoutubePlaylistId" : {
-      "extractionState" : "stale",
+      "extractionState" : "manual",
       "localizations" : {
         "de" : {
           "stringUnit" : {
@@ -15788,7 +16122,7 @@
       }
     },
     "potentiallyFaultyYoutubeId%@" : {
-      "extractionState" : "stale",
+      "extractionState" : "manual",
       "localizations" : {
         "de" : {
           "stringUnit" : {
@@ -16980,10 +17314,34 @@
     },
     "replaceChapters" : {
       "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Vorhandene ersetzen"
+          }
+        },
         "en" : {
           "stringUnit" : {
             "state" : "translated",
             "value" : "Replace Existing"
+          }
+        },
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Reemplazar existentes"
+          }
+        },
+        "fr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Remplacer les existants"
+          }
+        },
+        "pl" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Zastąp istniejące"
           }
         }
       }
@@ -17158,6 +17516,40 @@
         }
       }
     },
+    "resetToDefault" : {
+      "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Standard wiederherstellen"
+          }
+        },
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Reset to Default"
+          }
+        },
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Restablecer"
+          }
+        },
+        "fr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Réinitialiser"
+          }
+        },
+        "pl" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Przywróć domyślne"
+          }
+        }
+      }
+    },
     "restartNow" : {
       "localizations" : {
         "de" : {
@@ -17328,6 +17720,40 @@
         }
       }
     },
+    "restoreOriginalTranscript" : {
+      "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Original-Transkript wiederherstellen"
+          }
+        },
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Restore Original Transcript"
+          }
+        },
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Restaurar transcripción original"
+          }
+        },
+        "fr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Restaurer la transcription d’origine"
+          }
+        },
+        "pl" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Przywróć oryginalny transkrypt"
+          }
+        }
+      }
+    },
     "restoreSettingsFromBackup" : {
       "localizations" : {
         "de" : {
@@ -17460,6 +17886,40 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "Spróbuj ponownie"
+          }
+        }
+      }
+    },
+    "retryAfterSeconds" : {
+      "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Erneut versuchen nach (Sekunden)"
+          }
+        },
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Retry After Seconds"
+          }
+        },
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Reintentar después de (segundos)"
+          }
+        },
+        "fr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Réessayer après (secondes)"
+          }
+        },
+        "pl" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Ponów za (sekundy)"
           }
         }
       }
@@ -17737,7 +18197,7 @@
       }
     },
     "searchDateAnytime" : {
-      "extractionState" : "stale",
+      "extractionState" : "manual",
       "localizations" : {
         "de" : {
           "stringUnit" : {
@@ -17772,7 +18232,7 @@
       }
     },
     "searchDateLastHour" : {
-      "extractionState" : "stale",
+      "extractionState" : "manual",
       "localizations" : {
         "de" : {
           "stringUnit" : {
@@ -17807,7 +18267,7 @@
       }
     },
     "searchDateThisMonth" : {
-      "extractionState" : "stale",
+      "extractionState" : "manual",
       "localizations" : {
         "de" : {
           "stringUnit" : {
@@ -17842,7 +18302,7 @@
       }
     },
     "searchDateThisWeek" : {
-      "extractionState" : "stale",
+      "extractionState" : "manual",
       "localizations" : {
         "de" : {
           "stringUnit" : {
@@ -17877,7 +18337,7 @@
       }
     },
     "searchDateThisYear" : {
-      "extractionState" : "stale",
+      "extractionState" : "manual",
       "localizations" : {
         "de" : {
           "stringUnit" : {
@@ -17912,7 +18372,7 @@
       }
     },
     "searchDateToday" : {
-      "extractionState" : "stale",
+      "extractionState" : "manual",
       "localizations" : {
         "de" : {
           "stringUnit" : {
@@ -17947,7 +18407,7 @@
       }
     },
     "searchDurationAny" : {
-      "extractionState" : "stale",
+      "extractionState" : "manual",
       "localizations" : {
         "de" : {
           "stringUnit" : {
@@ -17982,7 +18442,7 @@
       }
     },
     "searchDurationLong" : {
-      "extractionState" : "stale",
+      "extractionState" : "manual",
       "localizations" : {
         "de" : {
           "stringUnit" : {
@@ -18017,7 +18477,7 @@
       }
     },
     "searchDurationMedium" : {
-      "extractionState" : "stale",
+      "extractionState" : "manual",
       "localizations" : {
         "de" : {
           "stringUnit" : {
@@ -18052,7 +18512,7 @@
       }
     },
     "searchDurationShort" : {
-      "extractionState" : "stale",
+      "extractionState" : "manual",
       "localizations" : {
         "de" : {
           "stringUnit" : {
@@ -18325,7 +18785,7 @@
       }
     },
     "searchSortRating" : {
-      "extractionState" : "stale",
+      "extractionState" : "manual",
       "localizations" : {
         "de" : {
           "stringUnit" : {
@@ -18360,7 +18820,7 @@
       }
     },
     "searchSortRelevance" : {
-      "extractionState" : "stale",
+      "extractionState" : "manual",
       "localizations" : {
         "de" : {
           "stringUnit" : {
@@ -18429,7 +18889,7 @@
       }
     },
     "searchSortViewCount" : {
-      "extractionState" : "stale",
+      "extractionState" : "manual",
       "localizations" : {
         "de" : {
           "stringUnit" : {
@@ -18595,6 +19055,40 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "Przewiń o"
+          }
+        }
+      }
+    },
+    "seekByArrowKeysHelper" : {
+      "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Die Pfeiltasten springen 5 s, bis hier ein Wert eingestellt ist. J und L nutzen immer diesen Wert."
+          }
+        },
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "The arrow keys seek 5s until this is set. J and L always use it."
+          }
+        },
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Las flechas saltan 5 s hasta que se ajuste esto. J y L siempre usan este valor."
+          }
+        },
+        "fr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Les flèches avancent de 5 s tant que ce réglage n'est pas modifié. J et L l'utilisent toujours."
+          }
+        },
+        "pl" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Strzałki przewijają o 5 s, dopóki to nie zostanie ustawione. J i L zawsze używają tej wartości."
           }
         }
       }
@@ -19207,6 +19701,992 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "Ustawienia"
+          }
+        }
+      }
+    },
+    "settingsSplashAdBlockProDescription" : {
+      "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Werbeblocker für Safari"
+          }
+        },
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Ad blocker for Safari"
+          }
+        },
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Bloqueador de anuncios para Safari"
+          }
+        },
+        "fr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Bloqueur de publicités pour Safari"
+          }
+        },
+        "pl" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Bloker reklam dla Safari"
+          }
+        }
+      }
+    },
+    "settingsSplashBlockItDescription" : {
+      "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Safari-Erweiterung, die Shorts ausblendet"
+          }
+        },
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Safari extension that hides Shorts"
+          }
+        },
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Extensión de Safari que oculta los Shorts"
+          }
+        },
+        "fr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Extension Safari qui masque les Shorts"
+          }
+        },
+        "pl" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Rozszerzenie Safari ukrywające Shorts"
+          }
+        }
+      }
+    },
+    "settingsSplashBrowserAlternatives" : {
+      "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Lieber die YouTube-Website?"
+          }
+        },
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Prefer the YouTube Website?"
+          }
+        },
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "¿Prefieres el sitio web de YouTube?"
+          }
+        },
+        "fr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Vous préférez le site YouTube ?"
+          }
+        },
+        "pl" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Wolisz stronę YouTube?"
+          }
+        }
+      }
+    },
+    "settingsSplashBrowserAlternativesDescription" : {
+      "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Wenn du YouTube hauptsächlich direkt auf der Website ohne Ablenkungen nutzen willst, könnten diese Apps helfen:"
+          }
+        },
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "If you mostly want to use the YouTube website directly without distractions, these might help:"
+          }
+        },
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Si prefieres usar el sitio web de YouTube directamente y sin distracciones, estas apps pueden ayudarte:"
+          }
+        },
+        "fr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Si vous préférez utiliser directement le site YouTube sans distractions, ces apps peuvent vous aider :"
+          }
+        },
+        "pl" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Jeśli wolisz korzystać bezpośrednio ze strony YouTube bez rozpraszaczy, te aplikacje mogą pomóc:"
+          }
+        }
+      }
+    },
+    "settingsSplashDone" : {
+      "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Fertig"
+          }
+        },
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Done"
+          }
+        },
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Listo"
+          }
+        },
+        "fr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Terminé"
+          }
+        },
+        "pl" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Gotowe"
+          }
+        }
+      }
+    },
+    "settingsSplashFeaturesTitle" : {
+      "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Was ist neu"
+          }
+        },
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "What's New"
+          }
+        },
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Novedades"
+          }
+        },
+        "fr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Nouveautés"
+          }
+        },
+        "pl" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Co nowego"
+          }
+        }
+      }
+    },
+    "settingsSplashFiltersDescription" : {
+      "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Überspringe Intros, Outros und wiederkehrende Kapitel."
+          }
+        },
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Skip intros, outros and recurring chapters."
+          }
+        },
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Omite intros, outros y capítulos recurrentes."
+          }
+        },
+        "fr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Passez les intros, outros et chapitres récurrents."
+          }
+        },
+        "pl" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Pomijaj intro, outro i powtarzające się rozdziały."
+          }
+        }
+      }
+    },
+    "settingsSplashFiltersTitle" : {
+      "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Filter"
+          }
+        },
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Filters"
+          }
+        },
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Filtros"
+          }
+        },
+        "fr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Filtres"
+          }
+        },
+        "pl" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Filtry"
+          }
+        }
+      }
+    },
+    "settingsSplashInboxCardsDescription" : {
+      "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Geh deine Inbox Eintrag für Eintrag durch."
+          }
+        },
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Go through your inbox one entry at a time."
+          }
+        },
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Revisa tu bandeja de entrada una entrada a la vez."
+          }
+        },
+        "fr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Parcourez votre inbox une entrée à la fois."
+          }
+        },
+        "pl" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Przeglądaj skrzynkę wpis po wpisie."
+          }
+        }
+      }
+    },
+    "settingsSplashInboxCardsTitle" : {
+      "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Inbox-Karten"
+          }
+        },
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Inbox Cards"
+          }
+        },
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Tarjetas en la bandeja de entrada"
+          }
+        },
+        "fr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Cartes dans l’inbox"
+          }
+        },
+        "pl" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Karty w skrzynce"
+          }
+        }
+      }
+    },
+    "settingsSplashKeepMediaHelper" : {
+      "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Alte Medien werden automatisch entfernt, damit die Mediathek übersichtlich bleibt."
+          }
+        },
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Old media is removed automatically to keep your library tidy."
+          }
+        },
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "El contenido antiguo se elimina automáticamente para mantener tu biblioteca ordenada."
+          }
+        },
+        "fr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Les anciens médias sont supprimés automatiquement pour garder votre bibliothèque en ordre."
+          }
+        },
+        "pl" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Stare multimedia są usuwane automatycznie, aby biblioteka pozostała uporządkowana."
+          }
+        }
+      }
+    },
+    "settingsSplashNativePlayerDescription" : {
+      "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Zuverlässige Wiedergabe im Hintergrund, meist auf 360p begrenzt. Damit angesehene Videos erscheinen nicht in deinem YouTube-Verlauf."
+          }
+        },
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Reliable background playback, usually limited to 360p. Videos you watch with it stay out of your YouTube history."
+          }
+        },
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Reproducción en segundo plano fiable, normalmente limitada a 360p. Los videos que veas con él no aparecen en tu historial de YouTube."
+          }
+        },
+        "fr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Lecture en arrière-plan fiable, généralement limitée à 360p. Les vidéos regardées avec ce lecteur n’apparaissent pas dans votre historique YouTube."
+          }
+        },
+        "pl" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Niezawodne odtwarzanie w tle, zwykle ograniczone do 360p. Filmy oglądane w nim nie trafiają do historii YouTube."
+          }
+        }
+      }
+    },
+    "settingsSplashNativePlayerTitle" : {
+      "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Nativer Player (experimentell)"
+          }
+        },
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Native Player (Experimental)"
+          }
+        },
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Reproductor nativo (experimental)"
+          }
+        },
+        "fr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Lecteur natif (expérimental)"
+          }
+        },
+        "pl" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Natywny odtwarzacz (eksperymentalny)"
+          }
+        }
+      }
+    },
+    "settingsSplashPlayerControlsDescription" : {
+      "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Größere Play- und Spul-Buttons, auch im Mini-Player."
+          }
+        },
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Bigger play and seek buttons, also in the mini player."
+          }
+        },
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Botones de reproducción y salto más grandes, también en el minirreproductor."
+          }
+        },
+        "fr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Boutons lecture et saut plus grands, aussi dans le mini-lecteur."
+          }
+        },
+        "pl" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Większe przyciski odtwarzania i przewijania, także w miniodtwarzaczu."
+          }
+        }
+      }
+    },
+    "settingsSplashPlayerControlsTitle" : {
+      "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Player-Steuerung"
+          }
+        },
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Player Controls"
+          }
+        },
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Controles del reproductor"
+          }
+        },
+        "fr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Commandes du lecteur"
+          }
+        },
+        "pl" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Sterowanie odtwarzaczem"
+          }
+        }
+      }
+    },
+    "settingsSplashPodcastsDescription" : {
+      "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Abonniere Sendungen und wechsle nahtlos zwischen YouTube-Videos und reinen Audio-Folgen, auch offline. Mit Premium Stille kürzen und Transkripte erstellen."
+          }
+        },
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Subscribe to shows and switch seamlessly between YouTube videos and audio-only episodes, even offline. Trim silence and generate transcripts with Premium."
+          }
+        },
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Suscríbete a programas y pasa sin interrupciones de videos de YouTube a episodios solo de audio, incluso sin conexión. Recorta silencios y genera transcripciones con Premium."
+          }
+        },
+        "fr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Abonnez-vous à des émissions et passez sans coupure des vidéos YouTube aux épisodes audio, même hors ligne. Supprimez les silences et générez des transcriptions avec Premium."
+          }
+        },
+        "pl" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Subskrybuj audycje i płynnie przechodź między filmami z YouTube a odcinkami audio, także offline. Skracaj ciszę i generuj transkrypcje z Premium."
+          }
+        }
+      }
+    },
+    "settingsSplashReturnToQueueHelper" : {
+      "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Wechselt zur Queue, wenn du etwas aus einem anderen Tab abspielst."
+          }
+        },
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Switches to the Queue when you play something from another tab."
+          }
+        },
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Cambia a la cola cuando reproduces algo desde otra pestaña."
+          }
+        },
+        "fr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Affiche la file d’attente lorsque vous lancez une lecture depuis un autre onglet."
+          }
+        },
+        "pl" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Przełącza na kolejkę, gdy odtwarzasz coś z innej karty."
+          }
+        }
+      }
+    },
+    "settingsSplashSearchDescription" : {
+      "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Videos, Kanäle und Podcasts erscheinen direkt in der App, filterbar nach Kategorie oder Datum. Einfacher, schneller und weniger ablenkend als die YouTube-Website."
+          }
+        },
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Videos, channels and podcasts show up natively, filterable by category or date. Easier, faster, and less distracting than using YouTube's website."
+          }
+        },
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Los videos, canales y podcasts aparecen de forma nativa y se pueden filtrar por categoría o fecha. Más fácil, más rápido y con menos distracciones que el sitio web de YouTube."
+          }
+        },
+        "fr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Vidéos, chaînes et podcasts s’affichent nativement, filtrables par catégorie ou date. Plus simple, plus rapide et moins distrayant que le site de YouTube."
+          }
+        },
+        "pl" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Filmy, kanały i podcasty wyświetlają się natywnie, z filtrowaniem według kategorii lub daty. Łatwiej, szybciej i z mniejszą liczbą rozpraszaczy niż na stronie YouTube."
+          }
+        }
+      }
+    },
+    "settingsSplashSearchTitle" : {
+      "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Suche ersetzt YouTube-Browser"
+          }
+        },
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Search Replaces YouTube Browser"
+          }
+        },
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "La búsqueda reemplaza al navegador de YouTube"
+          }
+        },
+        "fr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "La recherche remplace le navigateur YouTube"
+          }
+        },
+        "pl" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Wyszukiwanie zastępuje przeglądarkę YouTube"
+          }
+        }
+      }
+    },
+    "settingsSplashSettingsDescription" : {
+      "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Einige Standardeinstellungen haben sich geändert. Du kannst sie jederzeit in den Einstellungen anpassen."
+          }
+        },
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Some defaults have changed. You can adjust them anytime in Settings."
+          }
+        },
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Algunos ajustes predeterminados han cambiado. Puedes cambiarlos en cualquier momento en Ajustes."
+          }
+        },
+        "fr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Certains réglages par défaut ont changé. Vous pouvez les modifier à tout moment dans les réglages."
+          }
+        },
+        "pl" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Niektóre ustawienia domyślne się zmieniły. Możesz je zmienić w dowolnej chwili w Ustawieniach."
+          }
+        }
+      }
+    },
+    "settingsSplashSettingsTitle" : {
+      "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Prüfe deine Einstellungen"
+          }
+        },
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Check Your Settings"
+          }
+        },
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Revisa tus ajustes"
+          }
+        },
+        "fr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Vérifiez vos réglages"
+          }
+        },
+        "pl" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Sprawdź ustawienia"
+          }
+        }
+      }
+    },
+    "settingsSplashShareSheetDescription" : {
+      "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Videos hinzufügen oder abonnieren aus jeder App, ohne Einrichtung."
+          }
+        },
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Add videos or subscribe from any app, no setup needed."
+          }
+        },
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Añade videos o suscríbete desde cualquier app, sin configuración."
+          }
+        },
+        "fr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Ajoutez des vidéos ou abonnez-vous depuis n’importe quelle app, sans configuration."
+          }
+        },
+        "pl" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Dodawaj filmy lub subskrybuj z dowolnej aplikacji, bez konfiguracji."
+          }
+        }
+      }
+    },
+    "settingsSplashShareSheetTitle" : {
+      "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Neues Teilen-Menü"
+          }
+        },
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "New Share Sheet"
+          }
+        },
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Nueva hoja para compartir"
+          }
+        },
+        "fr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Nouvelle feuille de partage"
+          }
+        },
+        "pl" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Nowy arkusz udostępniania"
+          }
+        }
+      }
+    },
+    "settingsSplashShortcutsDescription" : {
+      "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Queue oder Tag abspielen, nächstes abspielen, Kapitel zusammenführen."
+          }
+        },
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Play your queue or a tag, play next, merge chapters."
+          }
+        },
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Reproduce tu cola o una etiqueta, reproduce el siguiente y combina capítulos."
+          }
+        },
+        "fr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Lisez votre file d’attente ou un tag, lisez la suivante, fusionnez des chapitres."
+          }
+        },
+        "pl" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Odtwarzaj kolejkę lub tag, odtwórz następny, łącz rozdziały."
+          }
+        }
+      }
+    },
+    "settingsSplashShortcutsTitle" : {
+      "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Neue Kurzbefehle"
+          }
+        },
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "New Shortcuts"
+          }
+        },
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Nuevos atajos"
+          }
+        },
+        "fr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Nouveaux raccourcis"
+          }
+        },
+        "pl" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Nowe skróty"
+          }
+        }
+      }
+    },
+    "settingsSplashSwizzTubeDescription" : {
+      "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Eigener Browser, kostenlos, blockiert Werbung"
+          }
+        },
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Dedicated browser, free, blocks ads"
+          }
+        },
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Navegador dedicado, gratis, bloquea anuncios"
+          }
+        },
+        "fr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Navigateur dédié, gratuit, bloque les publicités"
+          }
+        },
+        "pl" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Dedykowana przeglądarka, darmowa, blokuje reklamy"
+          }
+        }
+      }
+    },
+    "settingsSplashTagsDescription" : {
+      "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Organisiere Videos, Kanäle und deine Queue. Jeder Tag kann eigene Sprungweiten und Einstellungen für die fortlaufende Wiedergabe haben."
+          }
+        },
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Organize videos, channels and your queue. Each tag can have its own seek duration and continuous play setting."
+          }
+        },
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Organiza videos, canales y tu cola. Cada etiqueta puede tener su propia duración de salto y ajuste de reproducción continua."
+          }
+        },
+        "fr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Organisez vidéos, chaînes et votre file d’attente. Chaque tag peut avoir sa propre durée de saut et son réglage de lecture continue."
+          }
+        },
+        "pl" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Porządkuj filmy, kanały i kolejkę. Każdy tag może mieć własny czas przewijania i ustawienie ciągłego odtwarzania."
+          }
+        }
+      }
+    },
+    "settingsSplashWatchDescription" : {
+      "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Nur Audio, eigenständig oder zusammen mit deinem iPhone."
+          }
+        },
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Audio only, on its own or as a companion to your iPhone."
+          }
+        },
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Solo audio, por sí sola o junto con tu iPhone."
+          }
+        },
+        "fr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Audio uniquement, seule ou avec votre iPhone."
+          }
+        },
+        "pl" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Tylko dźwięk, samodzielnie lub razem z iPhone’em."
+          }
+        }
+      }
+    },
+    "settingsSplashWatchTitle" : {
+      "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Apple Watch-App"
+          }
+        },
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Apple Watch App"
+          }
+        },
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "App para Apple Watch"
+          }
+        },
+        "fr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "App Apple Watch"
+          }
+        },
+        "pl" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Aplikacja na Apple Watch"
           }
         }
       }
@@ -20049,6 +21529,40 @@
         }
       }
     },
+    "showSettingsSplash" : {
+      "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Einstellungs-Hinweis anzeigen"
+          }
+        },
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Show Settings Splash"
+          }
+        },
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Mostrar aviso de ajustes"
+          }
+        },
+        "fr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Afficher l’écran des réglages"
+          }
+        },
+        "pl" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Pokaż ekran ustawień"
+          }
+        }
+      }
+    },
     "showShorts" : {
       "localizations" : {
         "de" : {
@@ -20283,6 +21797,40 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "Pomiń intro"
+          }
+        }
+      }
+    },
+    "skipIntroOutroTitle" : {
+      "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Intro & Outro überspringen"
+          }
+        },
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Skip Intro & Outro"
+          }
+        },
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Omitir introducción y cierre"
+          }
+        },
+        "fr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Passer l'intro et l'outro"
+          }
+        },
+        "pl" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Pomijanie intro i outro"
           }
         }
       }
@@ -20598,31 +22146,31 @@
         "de" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "SponsorBlock Kapitel"
+            "value" : "Kapitel abrufen"
           }
         },
         "en" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "SponsorBlock Chapters"
+            "value" : "Fetch Chapters"
           }
         },
         "es" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Capítulos de SponsorBlock"
+            "value" : "Obtener capítulos"
           }
         },
         "fr" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Chapitres SponsorBlock"
+            "value" : "Récupérer les chapitres"
           }
         },
         "pl" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Rozdziały SponsorBlock"
+            "value" : "Pobierz rozdziały"
           }
         }
       }
@@ -20666,31 +22214,31 @@
         "de" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Falls verfügbar, werden SponsorBlock-Kapitel angezeigt. Wenn ein Video bereits Kapitel hat, werden je nach Einstellung unten weiterhin passende Segmente ergänzt. Hat ein Video keine Kapitel, werden stattdessen die SponsorBlock-Kapitel verwendet."
+            "value" : "Ruft SponsorBlock-Kapitel für YouTube-Videos automatisch ab: Sie werden je nach den Einstellungen unten in die Kapitel des Videos eingefügt oder eigenständig verwendet, falls es keine hat. Bereits vorhandene Kapitel werden weiterhin angezeigt, auch wenn dies deaktiviert ist – die Einstellung wirkt sich nur darauf aus, ob neue abgerufen werden."
           }
         },
         "en" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "If available, SponsorBlock chapters will be shown. When a video already has chapters, matching segments will still be added based on the settings below. If a video has no chapters, SponsorBlock chapters will be used instead."
+            "value" : "Automatically fetches SponsorBlock chapters for YouTube videos: merged into a video's chapters based on the settings below, or used on their own if it has none. Any chapters that already exist keep showing even if this is off — it only affects whether new ones get fetched."
           }
         },
         "es" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Si está disponible, se mostrarán los capítulos de SponsorBlock. Si un vídeo ya tiene capítulos, se añadirán igualmente los segmentos correspondientes según los ajustes de abajo. Si no tiene capítulos, se usarán los de SponsorBlock en su lugar."
+            "value" : "Obtiene automáticamente los capítulos de SponsorBlock para vídeos de YouTube: se combinan con los capítulos del vídeo según los ajustes de abajo, o se usan por sí solos si no tiene ninguno. Los capítulos que ya existen se siguen mostrando aunque esto esté desactivado; el ajuste solo afecta a si se obtienen otros nuevos."
           }
         },
         "fr" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Si disponible, les chapitres SponsorBlock seront affichés. Si une vidéo possède déjà des chapitres, les segments correspondants seront quand même ajoutés selon les réglages ci-dessous. Si elle n’a aucun chapitre, ceux de SponsorBlock seront utilisés à la place."
+            "value" : "Récupère automatiquement les chapitres SponsorBlock pour les vidéos YouTube : ils sont fusionnés avec les chapitres de la vidéo selon les réglages ci-dessous, ou utilisés seuls si elle n’en a aucun. Les chapitres déjà existants continuent de s’afficher même si c’est désactivé ; ce réglage ne concerne que la récupération de nouveaux chapitres."
           }
         },
         "pl" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Jeśli dostępne, zostaną wyświetlone rozdziały SponsorBlock. Jeśli wideo ma już rozdziały, pasujące segmenty zostaną mimo to dodane zgodnie z ustawieniami poniżej. Jeśli wideo nie ma rozdziałów, zostaną użyte rozdziały SponsorBlock."
+            "value" : "Automatycznie pobiera rozdziały SponsorBlock dla filmów z YouTube: są łączone z rozdziałami filmu zgodnie z ustawieniami poniżej lub używane samodzielnie, jeśli film ich nie ma. Rozdziały, które już istnieją, nadal się wyświetlają, nawet jeśli to ustawienie jest wyłączone — wpływa ono tylko na pobieranie nowych."
           }
         }
       }
@@ -21342,10 +22890,74 @@
       }
     },
     "swipedAbove: off" : {
-
+      "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "swipedAbove: off"
+          }
+        },
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "swipedAbove: off"
+          }
+        },
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "swipedAbove: off"
+          }
+        },
+        "fr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "swipedAbove: off"
+          }
+        },
+        "pl" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "swipedAbove: off"
+          }
+        }
+      },
+      "shouldTranslate" : false
     },
     "swipedAbove: on" : {
-
+      "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "swipedAbove: on"
+          }
+        },
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "swipedAbove: on"
+          }
+        },
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "swipedAbove: on"
+          }
+        },
+        "fr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "swipedAbove: on"
+          }
+        },
+        "pl" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "swipedAbove: on"
+          }
+        }
+      },
+      "shouldTranslate" : false
     },
     "swipeGestures" : {
       "localizations" : {
@@ -23177,41 +24789,6 @@
         }
       }
     },
-    "transcribingEpisode" : {
-      "extractionState" : "stale",
-      "localizations" : {
-        "de" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Folge wird transkribiert…"
-          }
-        },
-        "en" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Transcribing episode…"
-          }
-        },
-        "es" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Transcribiendo el episodio…"
-          }
-        },
-        "fr" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Transcription de l'épisode…"
-          }
-        },
-        "pl" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Transkrybowanie odcinka…"
-          }
-        }
-      }
-    },
     "transcript" : {
       "localizations" : {
         "de" : {
@@ -23246,8 +24823,215 @@
         }
       }
     },
+    "Transcript" : {
+      "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Transkript"
+          }
+        },
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Transcript"
+          }
+        },
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Transcripción"
+          }
+        },
+        "fr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Transcription"
+          }
+        },
+        "pl" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Transkrypt"
+          }
+        }
+      }
+    },
+    "transcriptAlignmentInconclusive" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Das Transkript konnte dem Audio nicht zugeordnet werden."
+          }
+        },
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "The transcript couldn't be matched to the audio."
+          }
+        },
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "No se pudo hacer coincidir la transcripción con el audio."
+          }
+        },
+        "fr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "La transcription n’a pas pu être associée à l’audio."
+          }
+        },
+        "pl" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Nie udało się dopasować transkryptu do dźwięku."
+          }
+        }
+      }
+    },
+    "transcriptAlignmentTooShort" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Dieses Transkript ist zu kurz für eine Prüfung."
+          }
+        },
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "This transcript is too short to check."
+          }
+        },
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Esta transcripción es demasiado corta para comprobarla."
+          }
+        },
+        "fr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Cette transcription est trop courte pour être vérifiée."
+          }
+        },
+        "pl" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Ten transkrypt jest zbyt krótki, aby go sprawdzić."
+          }
+        }
+      }
+    },
+    "transcriptAlignmentUnsupportedFile" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Die Audiodatei dieser Episode kann nicht mit dem Transkript verglichen werden."
+          }
+        },
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "This episode's audio can't be checked against its transcript."
+          }
+        },
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "El audio de este episodio no se puede comparar con su transcripción."
+          }
+        },
+        "fr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "L’audio de cet épisode ne peut pas être comparé à sa transcription."
+          }
+        },
+        "pl" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Dźwięku tego odcinka nie można porównać z jego transkryptem."
+          }
+        }
+      }
+    },
+    "transcriptGap %@" : {
+      "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "%@ nicht im Transkript der Sendung"
+          }
+        },
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "%@ not in the show's transcript"
+          }
+        },
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "%@ no está en la transcripción del programa"
+          }
+        },
+        "fr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "%@ absentes de la transcription de l’émission"
+          }
+        },
+        "pl" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "%@ brak w transkrypcie programu"
+          }
+        }
+      }
+    },
+    "transcriptGenerationNeedsForeground" : {
+      "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Unwatched konnte nicht in den Vordergrund geholt werden, um das Transkript zu generieren. Führe die Aktion manuell aus."
+          }
+        },
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Couldn't bring Unwatched to the foreground to generate the transcript. Try running this shortcut manually."
+          }
+        },
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "No se pudo abrir Unwatched en primer plano para generar la transcripción. Intenta ejecutar este acceso directo manualmente."
+          }
+        },
+        "fr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Impossible d'ouvrir Unwatched au premier plan pour générer la transcription. Essaie d'exécuter ce raccourci manuellement."
+          }
+        },
+        "pl" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Nie udało się otworzyć Unwatched na pierwszym planie, aby wygenerować transkrypt. Spróbuj uruchomić ten skrót ręcznie."
+          }
+        }
+      }
+    },
     "transcriptionEmpty" : {
-      "extractionState" : "stale",
+      "extractionState" : "manual",
       "localizations" : {
         "de" : {
           "stringUnit" : {
@@ -23282,7 +25066,6 @@
       }
     },
     "transcriptionUnsupportedDevice" : {
-      "extractionState" : "stale",
       "localizations" : {
         "de" : {
           "stringUnit" : {
@@ -23317,7 +25100,7 @@
       }
     },
     "transcriptionUnsupportedLanguage" : {
-      "extractionState" : "stale",
+      "extractionState" : "manual",
       "localizations" : {
         "de" : {
           "stringUnit" : {
@@ -23347,6 +25130,176 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "Transkrypcja nie jest dostępna w tym języku."
+          }
+        }
+      }
+    },
+    "transcriptOutOfSync" : {
+      "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Dieses Transkript scheint nicht synchron zu sein"
+          }
+        },
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "This transcript looks out of sync"
+          }
+        },
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Esta transcripción parece desincronizada"
+          }
+        },
+        "fr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Cette transcription semble désynchronisée"
+          }
+        },
+        "pl" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Ten transkrypt wydaje się niezsynchronizowany"
+          }
+        }
+      }
+    },
+    "transcriptStatus" : {
+      "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Transkript-Status"
+          }
+        },
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Transcript Status"
+          }
+        },
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Estado de la transcripción"
+          }
+        },
+        "fr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Statut de la transcription"
+          }
+        },
+        "pl" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Status transkryptu"
+          }
+        }
+      }
+    },
+    "transcriptStatusPending" : {
+      "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Wird noch generiert"
+          }
+        },
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Still Generating"
+          }
+        },
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Aún generando"
+          }
+        },
+        "fr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Encore en cours de génération"
+          }
+        },
+        "pl" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Wciąż generowany"
+          }
+        }
+      }
+    },
+    "transcriptStatusReady" : {
+      "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Fertig"
+          }
+        },
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Ready"
+          }
+        },
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Listo"
+          }
+        },
+        "fr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Prêt"
+          }
+        },
+        "pl" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Gotowe"
+          }
+        }
+      }
+    },
+    "transcriptText" : {
+      "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Transkripttext"
+          }
+        },
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Transcript Text"
+          }
+        },
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Texto de la transcripción"
+          }
+        },
+        "fr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Texte de la transcription"
+          }
+        },
+        "pl" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Tekst transkryptu"
           }
         }
       }
@@ -23419,6 +25372,40 @@
         }
       }
     },
+    "trimSilenceEffectiveSpeed" : {
+      "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Effektiv %@"
+          }
+        },
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "%@ effective"
+          }
+        },
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "%@ efectiva"
+          }
+        },
+        "fr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "%@ effectif"
+          }
+        },
+        "pl" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "%@ efektywnie"
+          }
+        }
+      }
+    },
     "trimSilenceHelper" : {
       "localizations" : {
         "de" : {
@@ -23435,19 +25422,19 @@
         },
         "es" : {
           "stringUnit" : {
-            "state" : "needs_review",
+            "state" : "translated",
             "value" : "Acorta las pausas de un episodio. Funciona en episodios de podcast descargados."
           }
         },
         "fr" : {
           "stringUnit" : {
-            "state" : "needs_review",
+            "state" : "translated",
             "value" : "Raccourcit les pauses d’un épisode. Fonctionne pour les épisodes de podcast téléchargés."
           }
         },
         "pl" : {
           "stringUnit" : {
-            "state" : "needs_review",
+            "state" : "translated",
             "value" : "Skraca pauzy w odcinku. Działa w pobranych odcinkach podcastów."
           }
         }
@@ -23469,19 +25456,19 @@
         },
         "es" : {
           "stringUnit" : {
-            "state" : "needs_review",
+            "state" : "translated",
             "value" : "Aún no se ha ahorrado tiempo"
           }
         },
         "fr" : {
           "stringUnit" : {
-            "state" : "needs_review",
+            "state" : "translated",
             "value" : "Encore aucun temps économisé"
           }
         },
         "pl" : {
           "stringUnit" : {
-            "state" : "needs_review",
+            "state" : "translated",
             "value" : "Jeszcze nie zaoszczędzono czasu"
           }
         }
@@ -23503,159 +25490,20 @@
         },
         "es" : {
           "stringUnit" : {
-            "state" : "needs_review",
+            "state" : "translated",
             "value" : "Ahorrado %@ hasta ahora"
           }
         },
         "fr" : {
           "stringUnit" : {
-            "state" : "needs_review",
+            "state" : "translated",
             "value" : "%@ économisées jusqu’à présent"
           }
         },
         "pl" : {
           "stringUnit" : {
-            "state" : "needs_review",
+            "state" : "translated",
             "value" : "Zaoszczędzono dotychczas %@"
-          }
-        }
-      }
-    },
-    "trimSilenceTier" : {
-      "localizations" : {
-        "de" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Kürzungsstärke"
-          }
-        },
-        "en" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Trim Amount"
-          }
-        },
-        "es" : {
-          "stringUnit" : {
-            "state" : "needs_review",
-            "value" : "Cantidad de recorte"
-          }
-        },
-        "fr" : {
-          "stringUnit" : {
-            "state" : "needs_review",
-            "value" : "Intensité de réduction"
-          }
-        },
-        "pl" : {
-          "stringUnit" : {
-            "state" : "needs_review",
-            "value" : "Poziom skracania"
-          }
-        }
-      }
-    },
-    "trimSilenceTierMax" : {
-      "extractionState" : "stale",
-      "localizations" : {
-        "de" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Maximal"
-          }
-        },
-        "en" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Max"
-          }
-        },
-        "es" : {
-          "stringUnit" : {
-            "state" : "needs_review",
-            "value" : "Máximo"
-          }
-        },
-        "fr" : {
-          "stringUnit" : {
-            "state" : "needs_review",
-            "value" : "Maximal"
-          }
-        },
-        "pl" : {
-          "stringUnit" : {
-            "state" : "needs_review",
-            "value" : "Maksymalny"
-          }
-        }
-      }
-    },
-    "trimSilenceTierMedium" : {
-      "extractionState" : "stale",
-      "localizations" : {
-        "de" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Mittel"
-          }
-        },
-        "en" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Medium"
-          }
-        },
-        "es" : {
-          "stringUnit" : {
-            "state" : "needs_review",
-            "value" : "Medio"
-          }
-        },
-        "fr" : {
-          "stringUnit" : {
-            "state" : "needs_review",
-            "value" : "Moyen"
-          }
-        },
-        "pl" : {
-          "stringUnit" : {
-            "state" : "needs_review",
-            "value" : "Średni"
-          }
-        }
-      }
-    },
-    "trimSilenceTierMild" : {
-      "extractionState" : "stale",
-      "localizations" : {
-        "de" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Sanft"
-          }
-        },
-        "en" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Mild"
-          }
-        },
-        "es" : {
-          "stringUnit" : {
-            "state" : "needs_review",
-            "value" : "Suave"
-          }
-        },
-        "fr" : {
-          "stringUnit" : {
-            "state" : "needs_review",
-            "value" : "Léger"
-          }
-        },
-        "pl" : {
-          "stringUnit" : {
-            "state" : "needs_review",
-            "value" : "Łagodny"
           }
         }
       }

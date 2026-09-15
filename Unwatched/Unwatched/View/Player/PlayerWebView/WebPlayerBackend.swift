@@ -92,6 +92,9 @@ import UnwatchedShared
         cancelStart()
         pauseTask?.cancel()
         guard let webView = commandTarget("PLAY") else { return }
+        // The page plays on the app's session, so the mode that makes AirPods pause on speech rather than duck has
+        // to be set here too; WebKit's own default is not `.spokenAudio`.
+        PlayerAudioSession.configure()
         startGeneration += 1
         let generation = startGeneration
         runningStart = generation

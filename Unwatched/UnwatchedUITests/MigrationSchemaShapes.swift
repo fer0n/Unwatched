@@ -125,7 +125,7 @@ extension MigrationTests {
             "Chapter": ["category", "duration", "endTime", "imageUrl", "isActive", "link", "mergedChapterVideo", "order", "startTime", "title", "video"],
             "InboxEntry": ["date", "video", "youtubeId"],
             "QueueEntry": ["order", "video", "youtubeId"],
-            "Subscription": ["_shortsSetting", "_videoPlacement", "allowOnMatch", "author", "autoSkipChapterTitles", "customAspectRatio", "customSpeedSetting", "failedFetchCount", "filterText", "isArchived", "isPodcast", "lastFetchErrorMessage", "lastFetchFailedDate", "link", "mostRecentVideoDate", "skipIntroSeconds", "skipOutroSeconds", "subscribedDate", "tags", "thumbnailUrl", "title", "videos", "youtubeChannelId", "youtubePlaylistId", "youtubeUserName"],
+            "Subscription": ["_selfPromoSegmentSetting", "_shortsSetting", "_sponsorSegmentSetting", "_videoPlacement", "allowOnMatch", "author", "autoSkipChapterTitles", "customAspectRatio", "customSpeedSetting", "failedFetchCount", "filterText", "isArchived", "isPodcast", "lastFetchErrorMessage", "lastFetchFailedDate", "link", "mostRecentVideoDate", "skipIntroSeconds", "skipOutroSeconds", "subscribedDate", "tags", "thumbnailUrl", "title", "videos", "youtubeChannelId", "youtubePlaylistId", "youtubeUserName"],
             "Tag": ["_mode", "continuousPlay", "createdDate", "name", "order", "quickSwitch", "seekSeconds", "subscriptions", "suggestVideos", "symbol", "videos"],
             "Video": ["apiUpdatedDate", "bookmarkedDate", "chapters", "chaptersUrl", "createdDate", "deferDate", "downloadedDate", "duration", "elapsedSeconds", "inboxEntry", "isAudioOnly", "isNew", "isYtShort", "keepIntro", "keepOutro", "mediaUrl", "mergedChapters", "noDuration", "publishedDate", "queueEntry", "sponserBlockUpdateDate", "subscription", "tags", "thumbnailUrl", "title", "updatedDate", "url", "videoDescription", "watchedDate", "youtubeChannelId", "youtubeId"],
             "WatchTimeEntry": ["channelId", "date", "watchTime"]
@@ -154,6 +154,16 @@ extension MigrationTests {
             "CachedImage": ["colorHex", "createdOn", "imageData", "imageUrl", "lastAccessedOn"],
             "Transcript": ["data", "youtubeId"],
             "CachedChapters": ["data", "sourceHash", "updatedDate", "youtubeId"]
+        ],
+        "2.3.0": [
+            "CachedImage": ["colorHex", "createdOn", "imageData", "imageUrl", "lastAccessedOn"],
+            "Transcript": ["data", "youtubeId"],
+            "CachedChapters": ["data", "sourceHash", "updatedDate", "youtubeId"],
+            "CachedEpisode": [
+                "chaptersUrl", "duration", "episodeDescription", "episodeId", "episodeUrl",
+                "feedUrl", "isAudioOnly", "mediaUrl", "publishedDate", "thumbnailUrl", "title",
+                "updatedDate"
+            ]
         ]
     ]
 }

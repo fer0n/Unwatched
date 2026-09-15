@@ -22,10 +22,29 @@ enum MediaSuggestionService {
     /// The system only generates audio suggestions from media it doesn't consider video — `.movie`, `.tvShow`,
     /// `.tvShowEpisode`, `.musicVideo`, `.news` and `.unknown` are all left out of them.
     private static let itemType: INMediaItemType = .podcastEpisode
+    private static let containerType: INMediaItemType = .podcastShow
 
     static func setup() {
         // suggestions from what was played as well as from the queue
         INUpcomingMediaManager.shared.setPredictionMode(.default, for: itemType)
+        INUpcomingMediaManager.shared.setPredictionMode(.default, for: containerType)
+        deleteUntrackedDonations()
+    }
+
+    /// Donations from before they were tracked can't be pruned one by one, so they all go once.
+    private static func deleteUntrackedDonations() {
+        guard !UserDefaults.standard.bool(forKey: Const.untrackedMediaDonationsDeleted) else {
+            return
+        }
+        Task {
+            do {
+                try await INInteraction.deleteAll()
+                UserDefaults.standard.set(true, forKey: Const.untrackedMediaDonationsDeleted)
+                Log.info("mediaSuggestions: deleted untracked donations")
+            } catch {
+                Log.error("mediaSuggestions: deleting untracked donations failed — \(error.localizedDescription)")
+            }
+        }
     }
 
     /// A tap in Control Center starts playback with no screen to draw into, which only the native player can do (see
@@ -62,6 +81,7 @@ enum MediaSuggestionService {
             interaction.identifier = youtubeId
             do {
                 try await interaction.donate()
+                donatedIds.insert(youtubeId)
                 Log.info("mediaSuggestions: donated \(youtubeId)")
             } catch {
                 Log.error("mediaSuggestions: donating \(youtubeId) failed — \(error.localizedDescription)")
@@ -73,6 +93,7 @@ enum MediaSuggestionService {
     static func refreshSuggestions() {
         Task {
             let context = DataProvider.newContext()
+            pruneDonations(context)
             let videos = QueueFilter.all
                 .videos(context, limit: suggestionCount)
                 .filter(isSuggestable)
@@ -87,30 +108,67 @@ enum MediaSuggestionService {
 
     /// Watched or cleared: the system shouldn't keep offering it.
     static func removeDonation(for youtubeId: String) {
-        if youtubeId == lastDonatedId {
-            lastDonatedId = nil
+        removeDonations(for: [youtubeId])
+    }
+
+    private static func removeDonations(for youtubeIds: Set<String>) {
+        if let lastDonatedId, youtubeIds.contains(lastDonatedId) {
+            self.lastDonatedId = nil
         }
-        INInteraction.delete(with: [youtubeId]) { error in
+        donatedIds.subtract(youtubeIds)
+        INInteraction.delete(with: Array(youtubeIds)) { error in
             if let error {
-                Log.error("mediaSuggestions: deleting \(youtubeId) failed — \(error.localizedDescription)")
+                Log.error("mediaSuggestions: deleting \(youtubeIds) failed — \(error.localizedDescription)")
             }
         }
     }
 
+    private static var donatedIds: Set<String> {
+        get { Set(UserDefaults.standard.stringArray(forKey: Const.donatedMediaIds) ?? []) }
+        set { UserDefaults.standard.set(Array(newValue), forKey: Const.donatedMediaIds) }
+    }
+
+    /// Videos leave the queue in many ways — cleared, watched, deleted, or on another device — so instead of
+    /// taking donations back at each of them, whatever was donated and is no longer queued goes here.
+    private static func pruneDonations(_ context: ModelContext) {
+        let playingId = PlayerManager.shared.video?.youtubeId
+        let stale = donatedIds.filter { youtubeId in
+            youtubeId != playingId
+                && VideoService.getVideo(for: youtubeId, modelContext: context)?.queueEntry == nil
+        }
+        guard !stale.isEmpty else {
+            return
+        }
+        removeDonations(for: stale)
+        Log.info("mediaSuggestions: pruned \(stale.count) donations")
+    }
+
     private static func playIntent(for video: Video) async -> INPlayMediaIntent {
+        let episodeArtwork = await artwork(for: video.displayThumbnailUrl)
         let item = INMediaItem(
             identifier: video.youtubeId,
             title: video.title,
             type: itemType,
-            artwork: await artwork(for: video.displayThumbnailUrl),
+            artwork: episodeArtwork,
             artist: video.subscription?.author ?? video.subscription?.displayTitle
         )
-        // No `mediaContainer`: a container is what Control Center titles the suggestion after, which put the show
-        // there and left the episode nowhere. Without one it uses the item, so the episode is the title and the
-        // show — the item's `artist` — the line under it.
+        // Audio suggestions are only generated from intents with a container — the opt-in is the intent definition's
+        // "mediaContainer" combination — so an episode without one is never offered. The show titles the row.
+        var show: INMediaItem?
+        if let subscription = video.subscription, let key = subscription.subscriptionKey {
+            let showArtwork = subscription.thumbnailUrl == video.displayThumbnailUrl
+                ? episodeArtwork
+                : await artwork(for: subscription.thumbnailUrl)
+            show = INMediaItem(
+                identifier: key,
+                title: subscription.displayTitle,
+                type: containerType,
+                artwork: showArtwork
+            )
+        }
         return INPlayMediaIntent(
             mediaItems: [item],
-            mediaContainer: nil,
+            mediaContainer: show,
             playShuffled: false,
             playbackRepeatMode: .none,
             // "resume" rather than "play" for anything already started

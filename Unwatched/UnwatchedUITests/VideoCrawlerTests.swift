@@ -37,8 +37,6 @@ class VideoCrawlerTests: XCTestCase {
             try context.save()
 
             let fetchSubs = FetchDescriptor<Subscription>()
-            // let subCount = try context.fetchCount(fetchSubs)
-            // print("subCount: \(subCount)")
 
             let refresher = RefreshManager()
 

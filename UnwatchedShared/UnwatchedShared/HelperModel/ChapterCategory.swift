@@ -18,6 +18,10 @@ public enum ChapterCategory: Int, Codable, CaseIterable, CustomStringConvertible
 
     case generated
 
+    /// Audio the show's own transcript doesn't cover. Appended last on purpose: the raw values are
+    /// stored and synced, so an older build decodes this as nil and falls back to the title.
+    case notTranscribed
+
     public var description: String {
         switch self {
         case .sponsor:
@@ -40,6 +44,8 @@ public enum ChapterCategory: Int, Codable, CaseIterable, CustomStringConvertible
             return ".chapter"
         case .generated:
             return ".generated"
+        case .notTranscribed:
+            return ".notTranscribed"
         }
     }
 
@@ -64,7 +70,7 @@ public enum ChapterCategory: Int, Codable, CaseIterable, CustomStringConvertible
             return "music_offtopic"
         case .chapter:
             return "chapter"
-        case .generated:
+        case .generated, .notTranscribed:
             return nil
         }
     }
@@ -75,7 +81,7 @@ public enum ChapterCategory: Int, Codable, CaseIterable, CustomStringConvertible
     }
 
     public var isExternal: Bool {
-        self != .generated
+        self != .generated && self != .notTranscribed
     }
 
     public static func parse(_ sponsorBlockCategory: String) -> ChapterCategory? {

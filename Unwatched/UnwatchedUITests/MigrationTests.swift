@@ -354,7 +354,9 @@ final class MigrationTests: XCTestCase {
                 _ = try container(version, at: url)
             }
             try autoreleasepool {
-                let schema = Schema([CachedImage.self, Transcript.self, CachedChapters.self])
+                let schema = Schema([
+                    CachedImage.self, Transcript.self, CachedChapters.self, CachedEpisode.self
+                ])
                 let migrated = try ModelContainer(
                     for: schema,
                     migrationPlan: CachedImageMigrationPlan.self,

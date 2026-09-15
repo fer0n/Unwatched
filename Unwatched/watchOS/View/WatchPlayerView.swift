@@ -1,0 +1,277 @@
+//
+//  WatchPlayerView.swift
+//  UnwatchedWatch
+//
+
+import SwiftData
+import SwiftUI
+import UnwatchedShared
+import WatchKit
+
+/// What is playing, on whichever player the wearer pointed the pages at.
+struct WatchPlayerView: View {
+    @Environment(WatchAudioPlayer.self) private var player
+    @Environment(WatchNavigator.self) private var navigator
+    @Environment(\.isLuminanceReduced) private var isLuminanceReduced
+    @Query(sort: \Tag.order) private var tags: [Tag]
+    @AppStorage(Const.watchSelectedTagName) private var selectedTagName = ""
+    @State private var volume = WatchVolume()
+    /// What playing would start: the queue's first entry, while nothing is playing yet.
+    @State private var upNext: Video?
+    @State private var client = WatchQueueClient.shared
+
+    private var controlsPhone: Bool {
+        navigator.controlsPhone
+    }
+
+    private var display: WatchPlayerDisplay {
+        controlsPhone
+            ? WatchPlayerDisplay(phone: client.remote)
+            : WatchPlayerDisplay(local: player, upNext: upNext)
+    }
+
+    var body: some View {
+        ZStack {
+            Color.black
+                .ignoresSafeArea()
+            content(display)
+        }
+        .tint(nil)
+        // The crown belongs to the volume control, so nothing here ever sees it turn; the bar
+        // comes and goes with the volume itself instead.
+        .digitalCrownAccessory {
+            VolumeAccessory(
+                volume: volume.volume,
+                isVisible: volume.isAdjusting,
+                crownOrientation: volume.crownOrientation
+            )
+        }
+        // Always mounted, parked off the edge when idle: mounted along with the change it would
+        // arrive at its resting position with no state left to move from.
+        .digitalCrownAccessory(.visible)
+        .onChange(of: controlsPhone, initial: true) {
+            if controlsPhone {
+                volume.stopLocal()
+            } else {
+                volume.startLocal()
+            }
+        }
+        .onChange(of: client.remoteVolume) { _, reading in
+            guard controlsPhone, let reading else { return }
+            volume.update(reading.value)
+        }
+        .background {
+            UpNextResolver(
+                filter: QueueFilter(tag: tags.first { $0.name == selectedTagName }, in: tags),
+                video: $upNext
+            )
+        }
+    }
+
+    private func content(_ display: WatchPlayerDisplay) -> some View {
+        VStack(spacing: Self.gap) {
+            // No spacers: the artwork is the only flexible thing here, so the leftover height
+            // is all its own.
+            artwork(display)
+
+            title(display)
+
+            // Kept mounted even in Always On: removing it would shift the artwork and title.
+            bottom(display)
+        }
+        .padding(.horizontal, Self.contentInset)
+        // Into the bottom inset: the band is the paged `TabView`'s own inset for its page dots,
+        // which a child cannot `ignoresSafeArea`. Short of the full inset to keep the dots clear.
+        .padding(.bottom, -10)
+        .overlay(alignment: .bottom) {
+            VolumeControl(
+                isActive: navigator.tab == .player,
+                origin: controlsPhone ? .companion : .local
+            )
+        }
+    }
+
+    private func artwork(_ display: WatchPlayerDisplay) -> some View {
+        let shape = RoundedRectangle(cornerRadius: 8)
+        return ArtworkFill(url: display.artworkUrl, isSquare: display.isSquare)
+            .aspectRatio(display.isSquare ? 1 : Const.defaultVideoAspectRatio, contentMode: .fit)
+            .clipShape(shape)
+            .artworkBorder(shape)
+            .frame(maxWidth: .infinity, maxHeight: .infinity)
+    }
+
+    /// The chapter's own name where there is one, with the steps either side of it.
+    @ViewBuilder
+    private func title(_ display: WatchPlayerDisplay) -> some View {
+        if let titleText = display.title {
+            HStack(spacing: display.hasChapters ? Self.chapterGap : 0) {
+                if display.hasChapters {
+                    chapterColumn(display, Const.previousChapterSF, isNext: false)
+                }
+
+                titles(display.chapterTitle ?? titleText, channel: display.channelTitle)
+                    .fontWidth(.compressed)
+                    .multilineTextAlignment(.center)
+                    .frame(maxWidth: .infinity)
+                    // The chevrons' tap areas reach over it.
+                    .allowsHitTesting(false)
+
+                if display.hasChapters {
+                    chapterColumn(display, Const.nextChapterSF, isNext: true)
+                }
+            }
+            // Out to the screen edge, so the width the chevrons give up goes to the title.
+            .padding(.horizontal, display.hasChapters ? -Self.contentInset : 0)
+        }
+    }
+
+    /// The channel under a title that fits on one line; a title that has to wrap gets both lines.
+    @ViewBuilder
+    private func titles(_ title: String, channel: String?) -> some View {
+        let text = Text(title)
+            .font(.caption.weight(.semibold))
+
+        if let channel, !channel.isEmpty {
+            ViewThatFits(in: .horizontal) {
+                VStack(spacing: 0) {
+                    text
+                        .lineLimit(1)
+                        .fixedSize(horizontal: true, vertical: false)
+                    Text(channel)
+                        .font(.caption2)
+                        .foregroundStyle(.secondary)
+                        .lineLimit(1)
+                        // No ideal width, so only the title decides whether this fits; a long
+                        // channel truncates instead.
+                        .frame(minWidth: 0, idealWidth: 0, maxWidth: .infinity)
+                }
+
+                text
+                    .lineLimit(2)
+            }
+        } else {
+            text
+                .lineLimit(2)
+        }
+    }
+
+    /// Both sides are built the same way, so the chevrons sit on one line whatever is under them.
+    private func chapterColumn(
+        _ display: WatchPlayerDisplay,
+        _ symbol: String,
+        isNext: Bool
+    ) -> some View {
+        VStack(spacing: 0) {
+            chapterButton(display, symbol, isNext: isNext)
+            remainingText(display)
+                .opacity(isNext && !isLuminanceReduced ? 1 : 0)
+        }
+    }
+
+    private func chapterButton(
+        _ display: WatchPlayerDisplay,
+        _ symbol: String,
+        isNext: Bool
+    ) -> some View {
+        Button {
+            perform(isNext ? .nextChapter : .previousChapter)
+        } label: {
+            Image(systemName: symbol)
+                .font(.body)
+                .fontWeight(.bold)
+                .frame(width: Self.chapterColumn, height: Self.chapterSize)
+                // Reaches past the chevron through the shape, so it costs the title no width. Shifted
+                // inward by the overhang: past the screen edge there is nothing to touch.
+                .contentShape(
+                    .rect
+                        .inset(by: -Self.chapterTapOverhang)
+                        .offset(x: isNext ? -Self.chapterTapOverhang : Self.chapterTapOverhang)
+                )
+        }
+        .buttonStyle(.plain)
+        .opacity(isNext && !display.hasNextChapter ? 0.5 : 1)
+        .disabled(isNext && !display.hasNextChapter)
+    }
+
+    /// What is left of the chapter, under the step that leaves it.
+    private func remainingText(_ display: WatchPlayerDisplay) -> some View {
+        CarriedTime(
+            timeline: display.timeline,
+            step: { display.timeline.secondsUntilRemainingChanges(at: $0) },
+            content: { date in
+                if let remaining = display.timeline.remaining(at: date) {
+                    Text(Duration.seconds(remaining).formatted(
+                        .units(allowed: [.hours, .minutes, .seconds], width: .narrow, maximumUnitCount: 1)
+                            .locale(Locale(identifier: "en_US_POSIX"))
+                    ))
+                    .font(.system(size: 9).monospacedDigit())
+                    .frame(width: Self.chapterColumn)
+                    .fontWidth(.condensed)
+                    .foregroundStyle(.secondary)
+                    .lineLimit(1)
+                    .allowsHitTesting(false)
+                }
+            }
+        )
+    }
+
+    @ViewBuilder
+    private func bottom(_ display: WatchPlayerDisplay) -> some View {
+        if let error = display.errorMessage {
+            Text(error)
+                .font(.caption2)
+                .foregroundStyle(.red)
+                .multilineTextAlignment(.center)
+        } else {
+            WatchPlayerControls(display: display, perform: perform)
+        }
+    }
+
+    private func perform(_ action: WatchPlayerAction) {
+        guard !controlsPhone else {
+            Task { await client.send(action.remoteCommand) }
+            return
+        }
+        switch action {
+        case .togglePlay:
+            if let upNext, player.video == nil {
+                player.play(upNext)
+            } else {
+                player.togglePlay()
+            }
+        case .seek(let seconds):
+            player.seek(by: seconds)
+        case .previousChapter:
+            player.goToPreviousChapter()
+        case .nextChapter:
+            player.goToNextChapter()
+        }
+    }
+
+    private static let gap: CGFloat = 5
+    private static let contentInset: CGFloat = 4
+    private static let chapterSize: CGFloat = 22
+    private static let chapterColumn: CGFloat = 22
+    private static let chapterGap: CGFloat = 4
+    /// Reaches 44 pt in from the screen edge.
+    private static let chapterTapOverhang: CGFloat = (44 - chapterColumn) / 2
+}
+
+/// Reads the queue's first entry for the player to offer before anything is playing. A view of its
+/// own because `@Query` takes its descriptor at init, and the tag filter is only known here.
+private struct UpNextResolver: View {
+    @Query private var entries: [QueueEntry]
+    @Binding var video: Video?
+
+    init(filter: QueueFilter, video: Binding<Video?>) {
+        _entries = Query(filter.descriptor(limit: 1))
+        _video = video
+    }
+
+    var body: some View {
+        Color.clear
+            .onChange(of: entries.first?.video?.persistentModelID, initial: true) {
+                video = entries.first?.video
+            }
+    }
+}

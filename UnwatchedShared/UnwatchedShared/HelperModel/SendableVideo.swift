@@ -36,7 +36,6 @@ public struct SendableVideo: VideoData, Sendable, Codable, Hashable, Equatable {
     public var mediaUrl: URL?
     public var isAudioOnly: Bool?
     public var chaptersUrl: URL?
-    public var downloadedDate: Date? { nil }
     public var createdDate: Date?
     public var isNew: Bool
 

@@ -58,14 +58,11 @@ struct InboxTabLabel: View {
     }
 
     var getInboxSymbol: Image {
-        let isLoading = refresher.isLoading
-        let isEmpty = anyInboxEntry.isEmpty
+        let name = Self.symbol(isLoading: refresher.isLoading, isEmpty: anyInboxEntry.isEmpty)
+        return refresher.isLoading ? Image(name) : Image(systemName: name)
+    }
 
-        let full = isEmpty ? "" : ".full"
-        if !isLoading {
-            return Image(systemName: "tray\(full)")
-        }
-
-        return Image("custom.tray.loading.fill")
+    static func symbol(isLoading: Bool, isEmpty: Bool) -> String {
+        isLoading ? "custom.tray.loading.fill" : isEmpty ? "tray" : "tray.full"
     }
 }

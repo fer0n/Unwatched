@@ -20,6 +20,8 @@ final class AVPlayerPrefetchManager {
         /// loaded (manifest/variant playlists, moov, live connections, cached segments).
         let asset: AVURLAsset
         let playerInfo: PlayerInfo?
+        /// Which InnerTube client `playerInfo` came from; `nil` when `playerInfo` is nil.
+        let client: String?
         let headers: [String: String]
         let originalAudioLanguage: String
         let isWebViewHLS: Bool
@@ -187,7 +189,7 @@ final class AVPlayerPrefetchManager {
             request.setValue("bytes=0-1", forHTTPHeaderField: "Range")
             // `bytes` returns on the response head, so a server that ignores the range header
             // doesn't get to send the stream body to a request that only wants its status
-            let response = try? await URLSession.shared.bytes(for: request)
+            let response = try? await URLSession.app.bytes(for: request)
             response?.0.task.cancel()
             let status = (response?.1 as? HTTPURLResponse)?.statusCode ?? 0
             guard let self, !Task.isCancelled, self.result?.videoId == videoId else {
@@ -240,7 +242,7 @@ extension AVPlayerPrefetchManager {
             let asset = AVURLAsset(url: hlsURL, options: ["AVURLAssetHTTPHeaderFieldsKey": headers])
             Log.info("[AVPlayerView] prefetch built asset (HLS/\(hit.client)): \(videoId)")
             return PrefetchResult(videoId: videoId, asset: asset,
-                                  playerInfo: hit.info, headers: headers,
+                                  playerInfo: hit.info, client: hit.client, headers: headers,
                                   originalAudioLanguage: hit.info.originalAudioLanguage,
                                   isWebViewHLS: false, isMuxed: false, masterURL: nil, nSolver: nil,
                                   poToken: nil, proxyLoader: nil, audioTracks: [],
@@ -260,7 +262,7 @@ extension AVPlayerPrefetchManager {
                                    options: ["AVURLAssetHTTPHeaderFieldsKey": ["User-Agent": userAgent]])
             Log.info("[AVPlayerView] prefetch built asset (muxed/\(hit.client)): \(videoId)")
             return PrefetchResult(videoId: videoId, asset: asset,
-                                  playerInfo: hit.info, headers: [:],
+                                  playerInfo: hit.info, client: hit.client, headers: [:],
                                   originalAudioLanguage: hit.info.originalAudioLanguage,
                                   isWebViewHLS: false, isMuxed: true, masterURL: nil, nSolver: nil,
                                   poToken: nil, proxyLoader: nil, audioTracks: [],
@@ -330,7 +332,7 @@ extension AVPlayerPrefetchManager {
         let ua = WKHLSManager.desktopSafariUA
         var request = URLRequest(url: url, timeoutInterval: 20)
         request.setValue(ua, forHTTPHeaderField: "User-Agent")
-        guard let (data, response) = try? await URLSession.shared.data(for: request),
+        guard let (data, response) = try? await URLSession.app.data(for: request),
               let http = response as? HTTPURLResponse, http.statusCode == 200,
               let manifestText = String(data: data, encoding: .utf8), !manifestText.isEmpty else {
             Log.info("[AVPlayerView] prefetch wkHLS manifest probe failed: \(videoId)")
@@ -344,7 +346,7 @@ extension AVPlayerPrefetchManager {
         let audioTracks = parseHLSAudioLanguages(from: manifestText)
         Log.info("[AVPlayerView] prefetch built asset (wkHLS): \(videoId)")
         return PrefetchResult(videoId: videoId, asset: asset,
-                              playerInfo: playerInfo, headers: [:],
+                              playerInfo: playerInfo, client: nil, headers: [:],
                               originalAudioLanguage: originalAudioLanguage,
                               isWebViewHLS: true, isMuxed: false, masterURL: url, nSolver: nSolver,
                               poToken: poToken, proxyLoader: proxyLoader, audioTracks: audioTracks,

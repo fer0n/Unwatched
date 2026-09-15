@@ -75,6 +75,11 @@ struct AppearanceSettingsView: View {
                         Button {
                             themeColor = theme
                             theme.setAppIcon()
+                            #if os(iOS)
+                            // The watch draws itself in this colour and hears about it through
+                            // the player's state, which may not change for a long while.
+                            WatchQueueProvider.pushRemoteState()
+                            #endif
                         } label: {
                             HStack {
                                 Label {
