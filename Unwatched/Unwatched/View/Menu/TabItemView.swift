@@ -15,11 +15,13 @@ struct MenuTabLabel: View {
     var image: Image
     var tag: NavigationTab
     var showBadge: Bool = false
+    /// Shown instead of the tab's own name, e.g. the queue's current tag
+    var title: String?
 
     var body: some View {
         Label {
             #if os(macOS) || os(visionOS)
-            Text(tag.description)
+            Text(verbatim: title ?? tag.description)
             #else
             Text(verbatim: Self.title(tag.description, showBadge: showBadge, showLabels: showTabBarLabels))
             #endif
@@ -28,7 +30,7 @@ struct MenuTabLabel: View {
                 .environment(\.symbolVariants, .fill)
                 .fontWeight(.black)
         }
-        .accessibilityLabel(tag.description)
+        .accessibilityLabel(title ?? tag.description)
     }
 
     static func title(_ title: String, showBadge: Bool = false, showLabels: Bool) -> String {

@@ -50,8 +50,19 @@ struct QueueTabLabel: View {
         MenuTabLabel(
             image: Image(systemName: Self.symbol(for: navManager.queueTag, in: tags)),
             tag: .queue,
-            showBadge: showTabBarBadge && !queue.isEmpty
+            showBadge: showTabBarBadge && !queue.isEmpty,
+            title: title
         )
+    }
+
+    /// The tag's name stands in for "Queue" where there's room for it
+    private var title: String? {
+        #if os(macOS)
+        let name = navManager.queueTag.tag(in: tags)?.name.trimmingCharacters(in: .whitespaces)
+        return name?.isEmpty == false ? name : nil
+        #else
+        return nil
+        #endif
     }
 
     /// Only a symbol the user picked for the tag, the default one says no more than the queue's own
