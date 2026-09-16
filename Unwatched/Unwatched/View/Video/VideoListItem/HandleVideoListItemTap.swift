@@ -97,26 +97,20 @@ class TapHandlerView: NSView {
         }
     }
 
-    // Workaround: NSTableView outlines the whole row while its context menu is open; remove once SwiftUI lists can opt out
+    /// Workaround: right-clicking a row lets NSTableView lay an `NSMenuHighlightView` over the
+    /// whole table for as long as the menu is up, which reads as a rectangular outline around the
+    /// row. Showing the row's own menu here skips the table's handling, so that view is never made.
+    /// Verified against macOS 26.
     override func rightMouseDown(with event: NSEvent) {
-        let table = sequence(first: superview, next: { $0?.superview })
+        let menu = sequence(first: self as NSView, next: { $0.superview })
             .lazy
-            .compactMap { $0 as? NSTableView }
+            .compactMap(\.menu)
             .first
-        let observer = NotificationCenter.default.addObserver(
-            forName: NSMenu.didBeginTrackingNotification,
-            object: nil,
-            queue: nil
-        ) { _ in
-            MainActor.assumeIsolated {
-                for view in table?.subviews ?? []
-                where NSStringFromClass(type(of: view)) == "NSMenuHighlightView" {
-                    view.isHidden = true
-                }
-            }
+        guard let menu else {
+            super.rightMouseDown(with: event)
+            return
         }
-        super.rightMouseDown(with: event)
-        NotificationCenter.default.removeObserver(observer)
+        menu.popUp(positioning: nil, at: convert(event.locationInWindow, from: nil), in: self)
     }
 }
 
