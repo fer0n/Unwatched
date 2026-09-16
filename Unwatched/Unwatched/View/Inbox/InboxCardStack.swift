@@ -13,6 +13,7 @@ struct InboxCardStack: View {
     @Environment(\.modelContext) private var modelContext
     @Environment(PlayerManager.self) private var player
     @Environment(TinyUndoManager.self) private var undoManager
+    @Environment(NavigationManager.self) private var navManager
     @Environment(SheetPositionReader.self) private var sheetPos
     @Environment(\.horizontalSizeClass) private var horizontalSizeClass
     @Environment(\.verticalSizeClass) private var verticalSizeClass
@@ -123,7 +124,12 @@ struct InboxCardStack: View {
     }
 
     private func commitPending() {
-        commits.flush(modelContext, player, undoManager)
+        commits.flush(
+            modelContext,
+            player,
+            undoManager,
+            queueFilter: navManager.queueFilter(modelContext)
+        )
     }
 
     /// Every card the stack draws, back to front

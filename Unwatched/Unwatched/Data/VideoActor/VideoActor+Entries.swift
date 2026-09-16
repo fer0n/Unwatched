@@ -389,7 +389,11 @@ extension VideoActor {
         try modelContext.save()
     }
 
-    func insertQueueEntries(at startIndex: Int = 0, videoIds: [PersistentIdentifier]) throws {
+    func insertQueueEntries(
+        at startIndex: Int = 0,
+        videoIds: [PersistentIdentifier],
+        filter: QueueFilter = .all
+    ) throws {
         var videos = [Video]()
         for videoId in videoIds {
             if let video = self[videoId, as: Video.self] {
@@ -399,14 +403,26 @@ extension VideoActor {
         VideoActor.insertQueueEntries(
             at: startIndex,
             videos: videos,
+            filter: filter,
             modelContext: modelContext
         )
         try modelContext.save()
     }
 
     /// - Parameter startIndex: the position the videos take in the queue, `-1` for the bottom.
-    static func insertQueueEntries(at startIndex: Int = 0, videos: [Video], modelContext: ModelContext) {
-        QueueInsertionService.insertQueueEntries(at: startIndex, videos: videos, modelContext: modelContext)
+    /// - Parameter filter: the slice `startIndex` counts in.
+    static func insertQueueEntries(
+        at startIndex: Int = 0,
+        videos: [Video],
+        filter: QueueFilter = .all,
+        modelContext: ModelContext
+    ) {
+        QueueInsertionService.insertQueueEntries(
+            at: startIndex,
+            videos: videos,
+            filter: filter,
+            modelContext: modelContext
+        )
     }
 
     func clearList(

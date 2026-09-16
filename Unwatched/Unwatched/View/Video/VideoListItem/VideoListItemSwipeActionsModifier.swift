@@ -163,6 +163,12 @@ struct VideoListItemSwipeActionsModifier: ViewModifier {
         }
     }
 
+    /// The queue tab's slice, not the row's own list: this also runs from the inbox and the search
+    /// results, where `queueFilter` is unset.
+    private var currentQueueFilter: QueueFilter {
+        navManager.queueFilter(modelContext)
+    }
+
     func addVideoToTopQueue(via: String) {
         Log.info("addVideoTop")
         Signal.videoAction("queueTop", listContext, via: via)
@@ -172,13 +178,15 @@ struct VideoListItemSwipeActionsModifier: ViewModifier {
                 asyncAction: { videoId in
                     VideoService.insertQueueEntriesAsync(
                         at: 1,
-                        videoIds: [videoId]
+                        videoIds: [videoId],
+                        filter: currentQueueFilter
                     )
                 },
                 syncAction: { video in
                     VideoService.insertQueueEntries(
                         at: 1,
                         videos: [video],
+                        filter: currentQueueFilter,
                         modelContext: modelContext
                     )
                 },

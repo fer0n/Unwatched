@@ -285,6 +285,7 @@ struct ChapterDescriptionView: View {
         VideoService.insertQueueEntries(
             at: 1,
             videos: [video],
+            filter: navManager.queueFilter(modelContext),
             modelContext: modelContext
         )
         if requiresQueueChange {

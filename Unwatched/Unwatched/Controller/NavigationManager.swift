@@ -54,6 +54,10 @@ import UnwatchedShared
     /// The slice on screen; what plays next is latched on `PlayerManager` instead.
     var queueTag: QueueTagSelection = .all
 
+    func queueFilter(_ context: ModelContext) -> QueueFilter {
+        QueueFilter(queueTag, context)
+    }
+
     init() { }
 
     static func load() -> NavigationManager {

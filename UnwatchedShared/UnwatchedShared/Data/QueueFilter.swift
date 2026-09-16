@@ -61,6 +61,17 @@ public struct QueueFilter: Hashable, Sendable {
         }
     }
 
+    /// Resolves a selection without a `Tag` query at hand.
+    public init(_ selection: QueueTagSelection, _ context: ModelContext) {
+        guard let id = selection.tagId,
+              let tag: Tag = context.existingModel(for: id) else {
+            self = .all
+            return
+        }
+        let tags = tag.mode == .untagged ? (try? context.fetch(FetchDescriptor<Tag>())) ?? [] : []
+        self.init(tag: tag, in: tags)
+    }
+
     public var isActive: Bool {
         subscriptionIds != nil
     }

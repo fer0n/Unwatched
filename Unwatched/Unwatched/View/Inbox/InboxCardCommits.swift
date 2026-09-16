@@ -27,7 +27,14 @@ final class InboxCardCommits {
     }
 
     /// Writes everything swiped so far, in the order it was swiped
-    func flush(_ modelContext: ModelContext, _ player: PlayerManager, _ undoManager: TinyUndoManager) {
+    ///
+    /// - Parameter queueFilter: the slice "queue next" counts in.
+    func flush(
+        _ modelContext: ModelContext,
+        _ player: PlayerManager,
+        _ undoManager: TinyUndoManager,
+        queueFilter: QueueFilter = .all
+    ) {
         // nothing is waiting on its card any more, whatever the undo button was standing in for
         // is about to be registered for real
         undoManager.setHasPendingAction(false)
@@ -38,7 +45,7 @@ final class InboxCardCommits {
         var wrote = false
         var reloadsPlayer = false
         for commit in commits {
-            let result = apply(commit, modelContext, player, undoManager)
+            let result = apply(commit, modelContext, player, undoManager, queueFilter)
             wrote = wrote || result.wrote
             reloadsPlayer = reloadsPlayer || result.reloadsPlayer
         }
@@ -55,7 +62,8 @@ final class InboxCardCommits {
         _ commit: Commit,
         _ modelContext: ModelContext,
         _ player: PlayerManager,
-        _ undoManager: TinyUndoManager
+        _ undoManager: TinyUndoManager,
+        _ queueFilter: QueueFilter
     ) -> (wrote: Bool, reloadsPlayer: Bool) {
         let (action, video) = (commit.action, commit.video)
         Signal.videoAction(action.analyticsAction, .inboxCards, via: commit.via)
@@ -77,7 +85,12 @@ final class InboxCardCommits {
                 HideShortsTip.clearedShorts += 1
             }
         case .queueNext:
-            VideoService.insertQueueEntries(at: 1, videos: [video], modelContext: modelContext)
+            VideoService.insertQueueEntries(
+                at: 1,
+                videos: [video],
+                filter: queueFilter,
+                modelContext: modelContext
+            )
         case .queueLast:
             VideoService.addToBottomQueue(video: video, modelContext: modelContext)
         }

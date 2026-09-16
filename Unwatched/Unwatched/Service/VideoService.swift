@@ -286,23 +286,27 @@ extension VideoService {
         }
     }
 
+    /// - Parameter filter: the slice `index` counts in.
     static func insertQueueEntries(at index: Int = 0,
                                    videos: [Video],
+                                   filter: QueueFilter = .all,
                                    modelContext: ModelContext) {
         // workaround: update queue on main thread, animations don't work on iOS 18 otherwise
         VideoActor.insertQueueEntries(
             at: index,
             videos: videos,
+            filter: filter,
             modelContext: modelContext
         )
         try? modelContext.save()
     }
 
     static func insertQueueEntriesAsync(at index: Int = 0,
-                                        videoIds: [PersistentIdentifier]) -> Task<(), Error> {
+                                        videoIds: [PersistentIdentifier],
+                                        filter: QueueFilter = .all) -> Task<(), Error> {
         let task = Task.detached {
             let repo = VideoActor()
-            try await repo.insertQueueEntries(at: index, videoIds: videoIds)
+            try await repo.insertQueueEntries(at: index, videoIds: videoIds, filter: filter)
         }
         return task
     }
