@@ -96,22 +96,6 @@ class TapHandlerView: NSView {
             }
         }
     }
-
-    /// Workaround: right-clicking a row lets NSTableView lay an `NSMenuHighlightView` over the
-    /// whole table for as long as the menu is up, which reads as a rectangular outline around the
-    /// row. Showing the row's own menu here skips the table's handling, so that view is never made.
-    /// Verified against macOS 26.
-    override func rightMouseDown(with event: NSEvent) {
-        let menu = sequence(first: self as NSView, next: { $0.superview })
-            .lazy
-            .compactMap(\.menu)
-            .first
-        guard let menu else {
-            super.rightMouseDown(with: event)
-            return
-        }
-        menu.popUp(positioning: nil, at: convert(event.locationInWindow, from: nil), in: self)
-    }
 }
 
 struct TapHandler: NSViewRepresentable {

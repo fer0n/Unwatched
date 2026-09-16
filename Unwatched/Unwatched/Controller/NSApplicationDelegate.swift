@@ -32,6 +32,7 @@ class AppDelegate: NSObject, NSApplicationDelegate, ObservableObject, NSWindowDe
 
         restoreWindowFrame()
         handleFullscreenOnLaunch()
+        MenuHighlightSuppressor.start()
 
         SetupView.onLaunch()
     }
@@ -110,4 +111,5 @@ class AppDelegate: NSObject, NSApplicationDelegate, ObservableObject, NSWindowDe
         }
     }
 }
+
 #endif
