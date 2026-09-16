@@ -8,7 +8,8 @@ import UnwatchedShared
 
 /// Turns a queued video into a URL the watch can stream audio from.
 ///
-/// Podcast episodes carry their own media URL and need no lookup at all. YouTube videos go through
+/// Podcast episodes carry their own media URL and need no lookup at all — or, with downloads
+/// switched on, the file on disk. YouTube videos go through
 /// the shared InnerTube client, exactly as tvOS does and for the same reason: the web clients want a
 /// browser session (visitor data, a signature timestamp, a proof-of-origin token minted by YouTube's
 /// own JavaScript) that a device with no WKWebView cannot produce.
@@ -26,9 +27,13 @@ enum WatchStreamResolver {
     /// that resets it, all of which are worth keeping across videos.
     private static let api = InnerTubeAPI()
 
-    /// Playable URLs for a video, best first. A podcast episode has exactly one.
+    /// Playable URLs for a video, best first. A downloaded episode leads, with its enclosure behind it,
+    /// so a truncated file falls back to the stream.
     static func streamCandidates(for video: Video) async throws -> [URL] {
         if let mediaUrl = video.mediaUrl {
+            if let downloaded = PodcastDownloadStore.playbackUrl(for: video) {
+                return [downloaded, mediaUrl]
+            }
             return [mediaUrl]
         }
         return try await youtubeCandidates(for: video.youtubeId)

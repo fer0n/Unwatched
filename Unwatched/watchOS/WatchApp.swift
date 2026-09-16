@@ -67,6 +67,22 @@ final class WatchAppDelegate: NSObject, WKApplicationDelegate {
             WatchNavigator.shared.showPlayer(force: true)
         }
     }
+
+    /// A background download finishes while the app is suspended; the session only delivers what it
+    /// has once its delegate is reconnected.
+    func handle(_ backgroundTasks: Set<WKRefreshBackgroundTask>) {
+        for task in backgroundTasks {
+            guard let session = task as? WKURLSessionRefreshBackgroundTask else {
+                task.setTaskCompletedWithSnapshot(false)
+                continue
+            }
+            Task { @MainActor in
+                PodcastDownloadManager.shared.handleBackgroundEvents {
+                    session.setTaskCompletedWithSnapshot(false)
+                }
+            }
+        }
+    }
 }
 
 @main
@@ -93,7 +109,17 @@ struct UnwatchedWatchApp: App {
     }
 
     private var container: ModelContainer {
+        container(usesSnapshot: usesSnapshot)
+    }
+
+    private func container(usesSnapshot: Bool) -> ModelContainer {
         usesSnapshot ? DataProvider.quickContainer : DataProvider.shared.container
+    }
+
+    /// Downloads are planned from whichever store the queue is in.
+    @MainActor
+    private func syncDownloads(usesSnapshot: Bool) {
+        PodcastDownloadManager.shared.scheduleSync(planning: container(usesSnapshot: usesSnapshot).mainContext)
     }
 
     private var progressTrackingKey: String {
@@ -165,6 +191,7 @@ struct UnwatchedWatchApp: App {
             // The video the player holds belongs to the store that is going away.
             .onChange(of: usesSnapshot) { _, usesSnapshot in
                 player.stop()
+                syncDownloads(usesSnapshot: usesSnapshot)
                 if !navigator.controlsPhone {
                     navigator.tab = .queue
                 }
@@ -206,6 +233,7 @@ struct UnwatchedWatchApp: App {
                 }
                 await refreshFromPhone()
                 showPlayerIfPlaying()
+                syncDownloads(usesSnapshot: usesSnapshot)
             }
             // One poller for the syncing row, the sync screen and the hand-over above.
             .task(id: progressTrackingKey) {

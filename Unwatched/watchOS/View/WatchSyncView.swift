@@ -64,6 +64,8 @@ struct WatchSyncView: View {
                 Text("watchQueueFromPhoneFooter")
             }
 
+            WatchDownloadsSection()
+
             Section {
                 Toggle("watchFullSyncSetting", isOn: $fullSync)
 

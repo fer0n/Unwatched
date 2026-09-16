@@ -174,6 +174,9 @@ public struct Const {
     public static let podcastDownloadHourOptions = [0, 5, 10, 50, 100, -1]
     public static let podcastDownloadKeepDayOptions = [0, 1, 7]
 
+    /// Shorter than the phone's, and without "unlimited": the watch holds the next walk, not a library.
+    public static let watchPodcastDownloadHourOptions = [0, 1, 3, 5, 10]
+
     public static let podcastDownloadSessionId = bundleId + ".podcastDownloads"
 
     // "Trim silence" drops the samples inside a pause as the episode plays (see `SilenceRemover`).

@@ -30,7 +30,12 @@ public final class PodcastDownloadManager {
 
     @ObservationIgnored public var onEpisodeDownloadFailed: (@MainActor () -> Void)?
 
-    @ObservationIgnored private var backgroundEventsCompletion: (@Sendable () -> Void)?
+    /// The store the queue is planned from, where it isn't the app's own. Only the watch sets one: reaching for
+    /// `DataProvider.shared` there would start a CloudKit sync the wearer hasn't asked for.
+    @ObservationIgnored private var planContext: ModelContext?
+
+    /// A list rather than one: watchOS can hand over several refresh tasks for the same session.
+    @ObservationIgnored private var backgroundEventsCompletions = [@Sendable () -> Void]()
     @ObservationIgnored private var scheduledSync: Task<Void, Never>?
     @ObservationIgnored private var isSyncing = false
 
@@ -45,8 +50,13 @@ public final class PodcastDownloadManager {
     private init() { }
 
     /// Debounced `sync()`, for the many places the download window can shift from.
-    public func scheduleSync() {
+    ///
+    /// - Parameter context: the store to read the queue from, see `planContext`. `nil` keeps the one already set.
+    public func scheduleSync(planning context: ModelContext? = nil) {
         guard PodcastDownloadStore.directory != nil else { return }
+        if let context {
+            planContext = context
+        }
         scheduledSync?.cancel()
         scheduledSync = Task {
             try? await Task.sleep(for: .seconds(2))
@@ -57,16 +67,32 @@ public final class PodcastDownloadManager {
 
     public func sync() async {
         guard PodcastDownloadStore.directory != nil, !isSyncing else { return }
+
+        let defaults = UserDefaults.standard
+        let limitHours = defaults.integer(forKey: Const.podcastDownloadLimitHours)
+        // Switched off with nothing left behind: going further would spin up the background session for no reason.
+        guard limitHours != 0 || !downloadedIds.isEmpty || !downloadingIds.isEmpty else { return }
+
         isSyncing = true
         defer { isSyncing = false }
 
-        let defaults = UserDefaults.standard
         let playing = playingYoutubeId
-        let plan = await PodcastDownloadActor().plan(
-            limitHours: defaults.integer(forKey: Const.podcastDownloadLimitHours),
-            keepDays: defaults.object(forKey: Const.podcastDownloadKeepDays) as? Int ?? 1,
-            playing: playing
-        )
+        let keepDays = defaults.object(forKey: Const.podcastDownloadKeepDays) as? Int ?? 1
+        let plan: PodcastDownloadPlan
+        if let planContext {
+            plan = PodcastDownloadPlanner.plan(
+                in: planContext,
+                limitHours: limitHours,
+                keepDays: keepDays,
+                playing: playing
+            )
+        } else {
+            plan = await PodcastDownloadActor().plan(
+                limitHours: limitHours,
+                keepDays: keepDays,
+                playing: playing
+            )
+        }
 
         var inFlight = Set<String>()
         for task in await session.allTasks {
@@ -85,7 +111,13 @@ public final class PodcastDownloadManager {
         PodcastDownloadStore.removeAll(except: plan.keep)
         setDownloadedIds(PodcastDownloadStore.downloadedIds())
 
+        #if os(watchOS)
+        // The watch has no such setting: its tether to the phone reads as expensive, so withholding would leave
+        // downloads that never start.
+        let onCellular = true
+        #else
         let onCellular = defaults.bool(forKey: Const.podcastDownloadOnCellular)
+        #endif
         for pending in plan.download where !inFlight.contains(pending.youtubeId) {
             start(pending, anyNetwork: onCellular || pending.youtubeId == playing)
         }
@@ -94,7 +126,7 @@ public final class PodcastDownloadManager {
     /// Touching `session` is what reconnects to the background session, so its delegate can deliver the events the
     /// app was woken for.
     public func handleBackgroundEvents(completion: @escaping @Sendable () -> Void) {
-        backgroundEventsCompletion = completion
+        backgroundEventsCompletions.append(completion)
         _ = session
     }
 
@@ -155,8 +187,9 @@ public final class PodcastDownloadManager {
     }
 
     fileprivate func didFinishBackgroundEvents() {
-        backgroundEventsCompletion?()
-        backgroundEventsCompletion = nil
+        let completions = backgroundEventsCompletions
+        backgroundEventsCompletions = []
+        completions.forEach { $0() }
     }
 }
 
@@ -218,70 +251,5 @@ private final class PodcastDownloadDelegate: NSObject, URLSessionDownloadDelegat
         Task { @MainActor in
             PodcastDownloadManager.shared.didFinishBackgroundEvents()
         }
-    }
-}
-
-// MARK: - Planning
-
-struct PendingPodcastDownload: Sendable {
-    let youtubeId: String
-    let url: URL
-}
-
-struct PodcastDownloadPlan: Sendable {
-    /// Every episode whose file may stay on disk; anything else is swept.
-    var keep = Set<String>()
-    var download = [PendingPodcastDownload]()
-}
-
-actor PodcastDownloadActor: SharedContextActor {
-    /// Takes the playing episode, then walks the queue in play order until `limitHours` of unplayed time is covered,
-    /// and decides what a watched episode's file has left.
-    func plan(limitHours: Int, keepDays: Int, playing: String?) -> PodcastDownloadPlan {
-        var plan = PodcastDownloadPlan()
-        let enabled = limitHours != 0
-
-        // first in line, and regardless of the ahead-of-time limit: what's playing is what has the most to lose from
-        // a connection dropping mid-episode
-        if let playing {
-            let fetch = FetchDescriptor<Video>(predicate: #Predicate { $0.youtubeId == playing })
-            if let video = (try? modelContext.fetch(fetch))?.first {
-                add(video, to: &plan)
-            }
-        }
-
-        if enabled {
-            var budget = limitHours < 0 ? Double.infinity : Double(limitHours) * 3600
-            let fetch = FetchDescriptor<QueueEntry>(sortBy: [SortDescriptor(\.order)])
-            for entry in (try? modelContext.fetch(fetch)) ?? [] {
-                guard budget > 0 else { break }
-                guard let video = entry.video,
-                      video.mediaUrl != nil,
-                      video.watchedDate == nil else {
-                    continue
-                }
-                budget -= video.remainingTime ?? video.duration ?? 0
-                add(video, to: &plan)
-            }
-        }
-
-        guard enabled, keepDays > 0 else { return plan }
-        let expiry = Calendar.current.date(byAdding: .day, value: -keepDays, to: .now) ?? .now
-        let onDisk = Array(PodcastDownloadStore.downloadedIds().subtracting(plan.keep))
-        guard !onDisk.isEmpty else { return plan }
-        let fetch = FetchDescriptor<Video>(predicate: #Predicate { onDisk.contains($0.youtubeId) })
-        for video in (try? modelContext.fetch(fetch)) ?? [] {
-            if let watchedDate = video.watchedDate, watchedDate > expiry {
-                plan.keep.insert(video.youtubeId)
-            }
-        }
-        return plan
-    }
-
-    private func add(_ video: Video, to plan: inout PodcastDownloadPlan) {
-        guard let mediaUrl = video.mediaUrl, !plan.keep.contains(video.youtubeId) else { return }
-        plan.keep.insert(video.youtubeId)
-        guard PodcastDownloadStore.playbackUrl(for: video) == nil else { return }
-        plan.download.append(PendingPodcastDownload(youtubeId: video.youtubeId, url: mediaUrl))
     }
 }

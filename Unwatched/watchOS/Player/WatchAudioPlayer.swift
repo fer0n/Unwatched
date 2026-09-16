@@ -86,6 +86,9 @@ final class WatchAudioPlayer {
         applyTagContinuousPlay(for: video)
         lastPersisted = 0
         lastReported = 0
+        // What's playing heads the download window; moving on frees the one behind it.
+        PodcastDownloadManager.shared.playingYoutubeId = video.youtubeId
+        PodcastDownloadManager.shared.scheduleSync(planning: video.modelContext)
         errorMessage = nil
         isLoading = true
         currentTime = video.elapsedSeconds ?? 0
@@ -316,6 +319,7 @@ final class WatchAudioPlayer {
 
     func stop() {
         loadTask?.cancel()
+        PodcastDownloadManager.shared.playingYoutubeId = nil
         candidates = []
         teardownPlayer()
         video = nil
