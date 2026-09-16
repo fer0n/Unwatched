@@ -321,6 +321,8 @@ public struct Const {
 
     public static let customPlaybackSpeedSF = "lock.fill"
     public static let customPlaybackSpeedOffSF = "lock.open.fill"
+    public static let trimSilenceSF = "waveform.circle.fill"
+    public static let trimSilenceOffSF = "waveform.circle"
 
     public static let alreadyInLibrarySF = "books.vertical.circle.fill"
 

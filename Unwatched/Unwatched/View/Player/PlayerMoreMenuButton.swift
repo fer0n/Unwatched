@@ -76,7 +76,6 @@ struct PlayerMoreMenuContent: View {
     @AppStorage(Const.playerType) var playerType: PlayerTypeSetting = .youtubeEmbedded
     @AppStorage(Const.browserDisplayMode) var browserDisplayMode: BrowserDisplayMode = .inApp
     @AppStorage(Const.preferPlayerType) var preferPlayerType: Bool = false
-    @AppStorage(Const.trimSilence) var trimSilence: Bool = false
 
     @Environment(\.modelContext) var modelContext
     @Environment(NavigationManager.self) var navManager
@@ -132,21 +131,6 @@ struct PlayerMoreMenuContent: View {
                 } label: {
                     Label("videoQuality", systemImage: "film.fill")
                 }
-            }
-
-            // audio episodes have their own button in PiP's spot; the engine rebuilds its composition,
-            // so this goes through the player rather than straight to `@AppStorage`
-            if player.video?.isPodcast == true, !player.isAudioOnly {
-                Toggle(isOn: Binding(
-                    get: { trimSilence },
-                    set: {
-                        guard !$0 || guardPremium() else { return }
-                        player.setTrimSilence($0)
-                    }
-                )) {
-                    Label("trimSilence", systemImage: "waveform")
-                }
-                .containsPremium()
             }
 
             if let video = player.video {

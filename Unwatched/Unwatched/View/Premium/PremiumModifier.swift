@@ -50,6 +50,12 @@ struct RequiresPremiumModifier: ViewModifier {
 }
 
 @MainActor
+var hidesPremiumEntries: Bool {
+    UserDefaults.standard.bool(forKey: Const.hidePremium)
+        && !NSUbiquitousKeyValueStore.default.bool(forKey: Const.unwatchedPremiumAcknowledged)
+}
+
+@MainActor
 func guardPremium(onInteraction: (() -> Void)? = nil) -> Bool {
     let premium = NSUbiquitousKeyValueStore.default.bool(
         forKey: Const.unwatchedPremiumAcknowledged

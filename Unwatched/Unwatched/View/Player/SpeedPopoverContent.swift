@@ -7,13 +7,14 @@ import SwiftUI
 import UnwatchedShared
 
 /// Speed selection shown in a popover: a stepper for fine adjustments,
-/// the most common speeds and the toggle to restrict the speed to the current channel.
-/// Unlike `SpeedMenuContent` this stays open while stepping through speeds.
+/// the most common speeds and the toggles to restrict the speed to the current channel and
+/// to trim silence. Unlike `SpeedMenuContent` this stays open while stepping through speeds.
 struct SpeedPopoverContent: View {
     @Binding var selectedSpeed: Double
     @Binding var isOn: Bool
 
     var canSetCustomSpeed = true
+    var trimSilence: TrimSilenceOption?
 
     /// Speeds offered directly; the speed control scrolls through all of them
     let quickSpeeds: [Double] = [1, 1.3, 1.5, 2]
@@ -29,6 +30,9 @@ struct SpeedPopoverContent: View {
             stepper
             quickSpeedRow
             customSettingButton
+            if let trimSilence {
+                trimSilenceButton(trimSilence)
+            }
         }
         .frame(minWidth: 210)
         .padding(spacing * 2)
@@ -96,26 +100,67 @@ struct SpeedPopoverContent: View {
         }
     }
 
-    var customSettingButton: some View {
-        Button {
-            isOn.toggle()
-        } label: {
-            HStack(spacing: spacing) {
-                Image(systemName: isOn ? Const.customPlaybackSpeedSF : Const.customPlaybackSpeedOffSF)
-                    .contentTransition(.symbolEffect(.replace))
-                Text("customSpeedSetting")
+    func trimSilenceButton(_ option: TrimSilenceOption) -> some View {
+        optionButton(
+            "trimSilence",
+            image: option.isOn.wrappedValue ? Const.trimSilenceSF : Const.trimSilenceOffSF,
+            isOn: option.isOn.wrappedValue,
+            subtitle: {
+                TrimSilenceSavedText()
+                    .font(.caption)
                     .lineLimit(1)
-                Spacer(minLength: 0)
+                    .frame(maxWidth: .infinity, alignment: .leading)
+            },
+            action: { option.isOn.wrappedValue.toggle() }
+        )
+        .enabled(option.isEnabled)
+    }
+
+    var customSettingButton: some View {
+        optionButton(
+            "customSpeedSetting",
+            image: isOn ? Const.customPlaybackSpeedSF : Const.customPlaybackSpeedOffSF,
+            isOn: isOn,
+            subtitle: { },
+            action: { isOn.toggle() }
+        )
+        .enabled(canSetCustomSpeed)
+    }
+
+    func optionButton<Subtitle: View>(
+        _ title: LocalizedStringKey,
+        image: String,
+        isOn: Bool,
+        @ViewBuilder subtitle: () -> Subtitle,
+        action: @escaping () -> Void
+    ) -> some View {
+        Button(action: action) {
+            VStack(spacing: 2) {
+                HStack(spacing: spacing) {
+                    Image(systemName: image)
+                        .contentTransition(.symbolEffect(.replace))
+                    Text(title)
+                        .lineLimit(1)
+                    Spacer(minLength: 0)
+                }
+                .font(.system(size: 15))
+                .fontWeight(.semibold)
+
+                subtitle()
             }
-            .font(.system(size: 15))
-            .fontWeight(.semibold)
+            .padding(.vertical, spacing)
             .padding(.horizontal, itemHeight / 3)
             .frame(maxWidth: .infinity)
-            .frame(height: itemHeight)
+            .frame(minHeight: itemHeight)
             .modifier(SpeedPopoverItemStyle(isOn: isOn))
         }
-        .disabled(!canSetCustomSpeed)
-        .opacity(canSetCustomSpeed ? 1 : 0.4)
+    }
+}
+
+private extension View {
+    func enabled(_ isEnabled: Bool) -> some View {
+        disabled(!isEnabled)
+            .opacity(isEnabled ? 1 : 0.4)
     }
 }
 

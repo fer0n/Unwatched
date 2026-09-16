@@ -87,6 +87,7 @@ struct CombinedPlaybackSpeedSetting: View {
 /// or restricting the speed to the current channel.
 struct InlineSpeedControl: View {
     @Environment(PlayerManager.self) var player
+    @AppStorage(Const.trimSilence) var trimSilence: Bool = false
 
     @Binding var selectedSpeed: Double
     @Binding var isOn: Bool
@@ -155,6 +156,7 @@ struct InlineSpeedControl: View {
             selectedSpeed: $selectedSpeed,
             isOn: $isOn,
             canSetCustomSpeed: player.video?.subscription != nil,
+            trimSilence: .forPlayer(player, isOn: trimSilence),
             accessibilityLabel: accessibilityLabel
         ) {
             speedScroller
@@ -163,7 +165,8 @@ struct InlineSpeedControl: View {
         SpeedMenu(
             selectedSpeed: $selectedSpeed,
             isOn: $isOn,
-            canSetCustomSpeed: player.video?.subscription != nil
+            canSetCustomSpeed: player.video?.subscription != nil,
+            trimSilence: .forPlayer(player, isOn: trimSilence)
         ) {
             speedScroller
         }
@@ -202,6 +205,7 @@ struct SpeedMenu<Label: View>: View {
     @Binding var isOn: Bool
 
     var canSetCustomSpeed = true
+    var trimSilence: TrimSilenceOption?
     var usePopover = false
     var arrowEdge: Edge?
     var onPopoverChange: ((Bool) -> Void)?
@@ -241,7 +245,8 @@ struct SpeedMenu<Label: View>: View {
             SpeedPopoverContent(
                 selectedSpeed: $selectedSpeed,
                 isOn: $isOn,
-                canSetCustomSpeed: canSetCustomSpeed
+                canSetCustomSpeed: canSetCustomSpeed,
+                trimSilence: trimSilence
             )
             .presentationCompactAdaptation(.popover)
             // the popover doesn't inherit the app's appearance
@@ -264,7 +269,8 @@ struct SpeedMenu<Label: View>: View {
             SpeedMenuContent(
                 selectedSpeed: $selectedSpeed,
                 isOn: $isOn,
-                canSetCustomSpeed: canSetCustomSpeed
+                canSetCustomSpeed: canSetCustomSpeed,
+                trimSilence: trimSilence
             )
         } label: {
             label()
@@ -280,6 +286,7 @@ struct SpeedMenu<Label: View>: View {
 /// `SpeedMenu` bound to the currently playing video
 struct PlayerSpeedMenu<Label: View>: View {
     @Environment(PlayerManager.self) var player
+    @AppStorage(Const.trimSilence) var trimSilence: Bool = false
 
     var usePopover = false
     var arrowEdge: Edge?
@@ -298,6 +305,7 @@ struct PlayerSpeedMenu<Label: View>: View {
             selectedSpeed: $player.debouncedPlaybackSpeed,
             isOn: isOn,
             canSetCustomSpeed: player.video?.subscription != nil,
+            trimSilence: .forPlayer(player, isOn: trimSilence),
             usePopover: usePopover,
             arrowEdge: arrowEdge,
             onPopoverChange: onPopoverChange,

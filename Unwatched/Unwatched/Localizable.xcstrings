@@ -16161,31 +16161,31 @@
         "de" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Player-Typ-Knopf"
+            "value" : "Prominenter Player-Typ-Knopf"
           }
         },
         "en" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Player type button"
+            "value" : "Prominent player type button"
           }
         },
         "es" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Botón de tipo de reproductor"
+            "value" : "Botón de tipo de reproductor destacado"
           }
         },
         "fr" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Bouton de type de lecteur"
+            "value" : "Bouton de type de lecteur bien visible"
           }
         },
         "pl" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Przycisk typu odtwarzacza"
+            "value" : "Wyróżniony przycisk typu odtwarzacza"
           }
         }
       }
@@ -16195,31 +16195,31 @@
         "de" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Zeigt den Player-Typ-Knopf anstelle des Lesezeichen-Knopfes in den Player-Steuerelementen und anstelle des Vollbild-Knopfes in den Vollbild-Steuerelementen. Tippen wechselt den Player-Typ, langes Drücken zeigt alle Optionen."
+            "value" : "Zeigt den Player-Typ-Knopf anstelle des AirPlay-Knopfes in den Player-Steuerelementen und anstelle des Vollbild-Knopfes in den Vollbild-Steuerelementen. Tippen wechselt den Player-Typ, langes Drücken zeigt alle Optionen."
           }
         },
         "en" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Shows the player type button in place of the bookmark button in the player controls, and in place of the fullscreen button in the fullscreen controls. Tap to switch the player type, long press for all options."
+            "value" : "Shows the player type button in place of the AirPlay button in the player controls, and in place of the fullscreen button in the fullscreen controls. Tap to switch the player type, long press for all options."
           }
         },
         "es" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Muestra el botón de tipo de reproductor en lugar del botón de marcador en los controles del reproductor, y en lugar del botón de pantalla completa en los controles de pantalla completa. Toca para cambiar el tipo de reproductor, mantén pulsado para todas las opciones."
+            "value" : "Muestra el botón de tipo de reproductor en lugar del botón de AirPlay en los controles del reproductor, y en lugar del botón de pantalla completa en los controles de pantalla completa. Toca para cambiar el tipo de reproductor, mantén pulsado para todas las opciones."
           }
         },
         "fr" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Affiche le bouton de type de lecteur à la place du bouton de favori dans les commandes du lecteur, et à la place du bouton plein écran dans les commandes plein écran. Touchez pour changer de type de lecteur, appui long pour toutes les options."
+            "value" : "Affiche le bouton de type de lecteur à la place du bouton AirPlay dans les commandes du lecteur, et à la place du bouton plein écran dans les commandes plein écran. Touchez pour changer de type de lecteur, appui long pour toutes les options."
           }
         },
         "pl" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Pokazuje przycisk typu odtwarzacza w miejscu przycisku zakładki w sterowaniu odtwarzaczem oraz w miejscu przycisku pełnego ekranu w sterowaniu pełnym ekranem. Dotknij, aby zmienić typ odtwarzacza, przytrzymaj, aby zobaczyć wszystkie opcje."
+            "value" : "Pokazuje przycisk typu odtwarzacza w miejscu przycisku AirPlay w sterowaniu odtwarzaczem oraz w miejscu przycisku pełnego ekranu w sterowaniu pełnym ekranem. Dotknij, aby zmienić typ odtwarzacza, przytrzymaj, aby zobaczyć wszystkie opcje."
           }
         }
       }
@@ -25408,6 +25408,7 @@
       }
     },
     "trimSilenceEffectiveSpeed" : {
+      "extractionState" : "stale",
       "localizations" : {
         "de" : {
           "stringUnit" : {
@@ -25442,6 +25443,7 @@
       }
     },
     "trimSilenceHelper" : {
+      "extractionState" : "stale",
       "localizations" : {
         "de" : {
           "stringUnit" : {

@@ -20,6 +20,7 @@ struct SpeedMenuButton<Label: View>: UIViewControllerRepresentable {
     @Binding var isOn: Bool
 
     var canSetCustomSpeed = true
+    var trimSilence: TrimSilenceOption?
     var accessibilityLabel: String?
     @ViewBuilder var label: () -> Label
 
@@ -35,10 +36,31 @@ struct SpeedMenuButton<Label: View>: UIViewControllerRepresentable {
         uiViewController.hostedSize(in: proposal)
     }
 
-    /// Mirrors `SpeedMenuContent`: a stepper, the most common speeds and the channel toggle.
+    /// Mirrors `SpeedMenuContent`: a stepper, the most common speeds, the channel toggle and trim silence.
     /// Every action keeps the menu open, the way `menuActionDismissBehavior(.disabled)` does there.
     private var menu: UIMenu {
-        UIMenu(children: [stepperSection, quickSpeedSection, customSettingAction])
+        var children: [UIMenuElement] = [stepperSection, quickSpeedSection, customSettingAction]
+        if let trimSilence {
+            children.append(trimSilenceElement(trimSilence))
+        }
+        return UIMenu(children: children)
+    }
+
+    /// Deferred: the saved total is read as the menu opens.
+    private func trimSilenceElement(_ option: TrimSilenceOption) -> UIDeferredMenuElement {
+        UIDeferredMenuElement.uncached { completion in
+            let action = UIAction(
+                title: String(localized: "trimSilence"),
+                subtitle: TrimSilenceStats.current.savedText,
+                image: UIImage(
+                    systemName: option.isOn.wrappedValue ? Const.trimSilenceSF : Const.trimSilenceOffSF
+                ),
+                attributes: option.isEnabled ? .keepsMenuPresented : [.disabled, .keepsMenuPresented]
+            ) { _ in
+                option.isOn.wrappedValue.toggle()
+            }
+            completion([action])
+        }
     }
 
     private var stepperSection: UIMenu {

@@ -29,17 +29,16 @@ struct PlayerActionsRow: View {
             WatchedButton(isSmall: true)
 
             if player.isAudioOnly {
-                TrimSilenceButton()
+                airPlayButton
+                CopyUrlButton()
             } else {
                 PipButton()
-            }
 
-            if preferPlayerType {
-                playerTypeButton
-            } else {
-                #if os(iOS)
-                AirPlayButton()
-                #endif
+                if preferPlayerType {
+                    playerTypeButton
+                } else {
+                    airPlayButton
+                }
             }
 
             // podcasts show the notes beside the art
@@ -65,6 +64,13 @@ struct PlayerActionsRow: View {
         .clipped()
         // in compact layout the play buttons next to it limit the width already
         .frame(maxWidth: compactSize ? nil : Const.playerRowMaxWidth)
+    }
+
+    @ViewBuilder
+    private var airPlayButton: some View {
+        #if os(iOS)
+        AirPlayButton()
+        #endif
     }
 
     private var playerTypeButton: some View {

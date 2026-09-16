@@ -7,12 +7,14 @@ import SwiftUI
 import UnwatchedShared
 
 /// Menu entries to select the playback speed: a stepper for fine adjustments,
-/// the most common speeds and the toggle to restrict the speed to the current channel.
+/// the most common speeds and the toggles to restrict the speed to the current channel
+/// and to trim silence.
 struct SpeedMenuContent: View {
     @Binding var selectedSpeed: Double
     @Binding var isOn: Bool
 
     var canSetCustomSpeed = true
+    var trimSilence: TrimSilenceOption?
 
     /// Speeds offered in the menu; the player's speed control scrolls through all of them
     static let menuSpeeds: [Double] = [1, 1.3, 1.5, 2]
@@ -36,6 +38,10 @@ struct SpeedMenuContent: View {
 
             Divider()
             customSettingButton
+            if let trimSilence {
+                TrimSilenceMenuEntry(isOn: trimSilence.isOn)
+                    .disabled(!trimSilence.isEnabled)
+            }
         }
         .tint(nil)
     }

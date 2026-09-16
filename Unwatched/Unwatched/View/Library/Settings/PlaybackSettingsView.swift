@@ -16,7 +16,6 @@ struct PlaybackSettingsView: View {
     @AppStorage(Const.rotateOnPlay) var rotateOnPlay: Bool = false
     @AppStorage(Const.autoAirplayHD) var autoAirplayHD: Bool = false
     @AppStorage(Const.originalAudio) var originalAudio: Bool = true
-    @AppStorage(Const.trimSilence) var trimSilence: Bool = false
     @AppStorage(Const.playBrowserVideosInApp) var playBrowserVideosInApp: Bool = false
     @AppStorage(Const.playerType) var playerType: PlayerTypeSetting = .youtubeEmbedded
     @AppStorage(Const.preferPlayerType) var preferPlayerType: Bool = false
@@ -84,16 +83,6 @@ struct PlaybackSettingsView: View {
                     }
                     #endif
                 }
-
-                MySection(footer: "trimSilenceHelper", showPremiumIndicator: true) {
-                    Toggle(isOn: Binding(
-                        get: { trimSilence },
-                        set: { player.setTrimSilence($0) }
-                    )) {
-                        Text("trimSilence")
-                    }
-                }
-                .requiresPremium(!trimSilence)
 
                 MySection(footer: "continuousPlayHelper") {
                     Toggle(isOn: $player.isRepeating) {
