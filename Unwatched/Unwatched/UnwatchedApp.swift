@@ -30,6 +30,7 @@ struct UnwatchedApp: App {
                     SponsorBlockSegmentSetting.migrateSkipSponsorSegmentsIfNeeded()
                     UserDataService.migrateBackupContentSettingsIfNeeded()
                     UserDataService.migrateKeepMediaSettingsIfNeeded()
+                    UserDataService.resetTrimSilenceStatsIfNeeded()
                     try? Tips.configure([
                         .displayFrequency(.immediate),
                         .datastoreLocation(.applicationDefault)

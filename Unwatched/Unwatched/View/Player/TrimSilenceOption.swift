@@ -48,7 +48,7 @@ struct TrimSilenceSavedText: View {
     @AppStorage(Const.trimSilenceSecondsPlayed) var secondsPlayed: Double = 0
 
     var body: some View {
-        Text(TrimSilenceStats(storedSaved: secondsSaved, storedPlayed: secondsPlayed).savedText)
+        Text(TrimSilenceStats(saved: secondsSaved, played: secondsPlayed).savedText)
     }
 }
 

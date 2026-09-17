@@ -116,12 +116,7 @@ final class SilenceTrimTests: XCTestCase {
     }
 
     func testTheEngineReportsTheEpisodesOwnClock() throws {
-        let url = try Self.makeEpisode(Self.mixes[1])
-        defer { try? FileManager.default.removeItem(at: url) }
-        let engine = PodcastAudioEngine()
-        defer { engine.unload() }
-
-        try engine.load(url: url, startAt: 5)
+        let engine = try loadedEngine(startAt: 5)
         XCTAssertEqual(engine.duration, Self.episodeLength, accuracy: 0.05, "the file's length, not the played one")
         XCTAssertEqual(engine.currentTime, 5, accuracy: 0.05, "loaded away from where it was asked to start")
         XCTAssertEqual(engine.playedTime, 0, accuracy: 0.001, "nothing has been rendered yet")
@@ -132,12 +127,7 @@ final class SilenceTrimTests: XCTestCase {
 
     /// `flush()` blocks for tens of milliseconds and every caller is on the main actor.
     func testSeekingDoesNotBlockTheCaller() throws {
-        let url = try Self.makeEpisode(Self.mixes[1])
-        defer { try? FileManager.default.removeItem(at: url) }
-        let engine = PodcastAudioEngine()
-        defer { engine.unload() }
-
-        try engine.load(url: url, startAt: 0)
+        let engine = try loadedEngine()
         engine.play(rate: 1)
         var worst: Double = 0
         var last: Double = 0
@@ -160,18 +150,9 @@ final class SilenceTrimTests: XCTestCase {
 
     /// What the offline checks can't see: that the graph actually renders.
     func testTheEngineRendersAndTrimsWhatItPlays() throws {
-        let url = try Self.makeEpisode(Self.mixes[1])
-        defer { try? FileManager.default.removeItem(at: url) }
-        let engine = PodcastAudioEngine()
-        defer { engine.unload() }
-
-        try engine.load(url: url, startAt: 0)
+        let engine = try loadedEngine()
         // four times over, so six seconds of episode takes a second and a half of test
-        engine.play(rate: 4)
-        let deadline = Date().addingTimeInterval(20)
-        while engine.playedTime < 6, Date() < deadline {
-            RunLoop.current.run(until: Date().addingTimeInterval(0.05))
-        }
+        playUntilRendered(6, of: engine, at: 4)
 
         XCTAssertGreaterThan(engine.playedTime, 5, "the engine rendered nothing")
         XCTAssertTrue(engine.isPlaying)
@@ -183,14 +164,9 @@ final class SilenceTrimTests: XCTestCase {
 
     /// The renderer's clock runs on past the last sample enqueued.
     func testPlaybackEndsAtTheEndOfTheEpisode() throws {
-        let url = try Self.makeEpisode(Self.mixes[1])
-        defer { try? FileManager.default.removeItem(at: url) }
-        let engine = PodcastAudioEngine()
-        defer { engine.unload() }
-
+        let engine = try loadedEngine(startAt: Self.episodeLength - 4)
         let ended = expectation(description: "the episode ended")
         engine.onEnded = { ended.fulfill() }
-        try engine.load(url: url, startAt: Self.episodeLength - 4)
         engine.play(rate: 3)
 
         wait(for: [ended], timeout: 20)
@@ -215,45 +191,54 @@ final class SilenceTrimTests: XCTestCase {
         }
     }
 
-    // MARK: - The readout
+    /// Both clocks count episode seconds, so at 3x they run three times as fast as the listener's
+    /// own: what the saving costs a life is what they say divided by the rate.
+    func testTheClocksRunAtThePlaybackRateNotTheWall() throws {
+        let engine = try loadedEngine()
+        let rate: Double = 3
+        let wall = playUntilRendered(6, of: engine, at: rate)
 
-    func testTheMultiplierIsWhatTrimmingAddsToPlayback() {
-        // an hour of listening that gave back six minutes plays 1.1x faster than the rate that was set
-        let stats = TrimSilenceStats(saved: 360, played: 3600)
-        XCTAssertEqual(stats.multiplier, 1.1, accuracy: 0.001)
-        XCTAssertEqual(stats.effectiveSpeed(at: 1), 1.1, accuracy: 0.001)
-        XCTAssertEqual(stats.effectiveSpeed(at: 1.5), 1.65, accuracy: 0.001)
+        XCTAssertGreaterThan(engine.playedTime, 5.9, "the engine rendered nothing")
+        XCTAssertEqual(engine.playedTime / wall, rate, accuracy: 0.5, "six seconds of audio took \(wall)s")
+        XCTAssertEqual(engine.reading.rate, rate, accuracy: 0.001)
     }
 
-    func testTheMultiplierIsOneUntilThereIsSomethingToDivide() {
-        XCTAssertEqual(TrimSilenceStats(saved: 0, played: 0).multiplier, 1)
-        XCTAssertEqual(TrimSilenceStats(saved: 12, played: 0).multiplier, 1, "divided by nothing")
-        XCTAssertEqual(TrimSilenceStats(saved: 0, played: 900).multiplier, 1, "nothing was trimmed")
-        XCTAssertEqual(TrimSilenceStats(saved: 3, played: 0.5).multiplier, 1, "half a second is not a sample")
-    }
-
-    /// `played` shipped a release after `saved`, so an old install arrives with only one half.
-    func testASavingWithNoListeningBehindItIsNotDivided() {
-        let stale = TrimSilenceStats(storedSaved: 4200, storedPlayed: 0)
-        XCTAssertEqual(stale.saved, 0, "a total from before the pair existed was carried over")
-        XCTAssertEqual(stale.multiplier, 1)
-        XCTAssertEqual(stale.effectiveSpeed(at: 1.7), 1.7, accuracy: 0.001)
-
-        let counted = TrimSilenceStats(storedSaved: 60, storedPlayed: 3000)
-        XCTAssertEqual(counted.saved, 60, "a pair written together is what it says")
-        XCTAssertEqual(counted.multiplier, 1.02, accuracy: 0.001)
-    }
-
-    /// The saving accrues in tenths; a whole-second readout sat still for the first minute.
-    func testTheSavedTimeKeepsItsThousandths() {
-        let stats = TrimSilenceStats(saved: 4.812, played: 60)
-        XCTAssertGreaterThan(stats.saved.truncatingRemainder(dividingBy: 1), 0)
-        let text = Duration.seconds(stats.saved)
-            .formatted(.time(pattern: .minuteSecond(padMinuteToLength: 1, fractionalSecondsLength: 3)))
-        XCTAssertTrue(text.contains("812"), "thousandths were rounded away: \(text)")
+    /// The epoch has to move before `seek` returns: the anchor is read on the next tick, which can
+    /// come before the renderer's queue has got to the flush.
+    func testTheTimelineEpochMovesWithTheSeekItself() throws {
+        let engine = try loadedEngine()
+        let epoch = engine.reading.epoch
+        engine.seek(to: 15)
+        XCTAssertNotEqual(engine.reading.epoch, epoch, "the two clocks parted company under one epoch")
+        XCTAssertEqual(engine.currentTime, 15, accuracy: 0.05, "the episode's clock jumped, as it should")
     }
 
     // MARK: - Helpers
+
+    private func loadedEngine(startAt: Double = 0) throws -> PodcastAudioEngine {
+        let url = try Self.makeEpisode(Self.mixes[1])
+        let engine = PodcastAudioEngine()
+        addTeardownBlock {
+            engine.unload()
+            try? FileManager.default.removeItem(at: url)
+        }
+        try engine.load(url: url, startAt: startAt)
+        return engine
+    }
+
+    /// Plays until that much audio has been rendered, and returns the wall time it took.
+    @discardableResult
+    private func playUntilRendered(
+        _ seconds: Double, of engine: PodcastAudioEngine, at rate: Double
+    ) -> Double {
+        let started = Date()
+        let deadline = started.addingTimeInterval(20)
+        engine.play(rate: rate)
+        while engine.playedTime < seconds, Date() < deadline {
+            RunLoop.current.run(until: Date().addingTimeInterval(0.02))
+        }
+        return Date().timeIntervalSince(started)
+    }
 
     /// How far outside a generated pause a detected edge may sit.
     private static let edge: Double = 0.06

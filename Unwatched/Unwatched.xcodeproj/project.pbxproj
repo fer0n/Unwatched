@@ -1003,6 +1003,7 @@
 		FE1000FF000000000000C212 /* Mp3ClockTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = FE1000FF000000000000C211 /* Mp3ClockTests.swift */; };
 		FE1000FF000000000000C312 /* GapChapterLabelTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = FE1000FF000000000000C311 /* GapChapterLabelTests.swift */; };
 		FE1000FF000000000000D012 /* SilenceTrimTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = FE1000FF000000000000D011 /* SilenceTrimTests.swift */; };
+		FE1000FF000000000000D022 /* TrimSilenceStatsTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = FE1000FF000000000000D021 /* TrimSilenceStatsTests.swift */; };
 		FE1000FF000000000000E012 /* PlayerBackendDispatchTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = FE1000FF000000000000E011 /* PlayerBackendDispatchTests.swift */; };
 		FE1000FF000000000000E022 /* PlayerOwnershipTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = FE1000FF000000000000E021 /* PlayerOwnershipTests.swift */; };
 		FE1000FF000000000000E032 /* PlayerWebViewCoordinator+pause.swift in Sources */ = {isa = PBXBuildFile; fileRef = FE1000FF000000000000E031 /* PlayerWebViewCoordinator+pause.swift */; };
@@ -1687,6 +1688,7 @@
 		FE1000FF000000000000C211 /* Mp3ClockTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Mp3ClockTests.swift; sourceTree = "<group>"; };
 		FE1000FF000000000000C311 /* GapChapterLabelTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = GapChapterLabelTests.swift; sourceTree = "<group>"; };
 		FE1000FF000000000000D011 /* SilenceTrimTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SilenceTrimTests.swift; sourceTree = "<group>"; };
+		FE1000FF000000000000D021 /* TrimSilenceStatsTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TrimSilenceStatsTests.swift; sourceTree = "<group>"; };
 		FE1000FF000000000000E011 /* PlayerBackendDispatchTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PlayerBackendDispatchTests.swift; sourceTree = "<group>"; };
 		FE1000FF000000000000E021 /* PlayerOwnershipTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PlayerOwnershipTests.swift; sourceTree = "<group>"; };
 		FE1000FF000000000000E031 /* PlayerWebViewCoordinator+pause.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "PlayerWebViewCoordinator+pause.swift"; sourceTree = "<group>"; };
@@ -1979,6 +1981,7 @@
 				FADE86879D704827B7266EA7 /* PodcastTriageTests.swift */,
 				67E1C9774B64420098EC98D5 /* PodcastEpisodeCacheTests.swift */,
 				FE1000FF000000000000D011 /* SilenceTrimTests.swift */,
+				FE1000FF000000000000D021 /* TrimSilenceStatsTests.swift */,
 				FE1000FF000000000000E011 /* PlayerBackendDispatchTests.swift */,
 				88C240A5A3CC92DB16D543CF /* PlayerManagerTestCase.swift */,
 				88628038B1DCA12EDFBCE942 /* ChapterGapMonitoringTests.swift */,
@@ -3255,6 +3258,7 @@
 				1A9F99A05A0E48A5845FCC81 /* PodcastTriageTests.swift in Sources */,
 				6E4AEBEE463448C2BCDC7B25 /* PodcastEpisodeCacheTests.swift in Sources */,
 				FE1000FF000000000000D012 /* SilenceTrimTests.swift in Sources */,
+				FE1000FF000000000000D022 /* TrimSilenceStatsTests.swift in Sources */,
 				FE1000FF000000000000E012 /* PlayerBackendDispatchTests.swift in Sources */,
 				886025DB0D31699E80FA0FD5 /* PlayerManagerTestCase.swift in Sources */,
 				8853D0807FD3CBA1D3627B9D /* ChapterGapMonitoringTests.swift in Sources */,

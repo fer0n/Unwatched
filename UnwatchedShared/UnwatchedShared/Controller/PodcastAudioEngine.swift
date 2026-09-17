@@ -155,6 +155,8 @@ public final class PodcastAudioEngine: @unchecked Sendable {
         let token = lock.withLock {
             pendingSeek = frame
             seekToken += 1
+            // the clocks part company here, not when `move` gets to run on `queue`
+            generation += 1
             return seekToken
         }
         queue.async { [weak self] in
@@ -177,22 +179,41 @@ public final class PodcastAudioEngine: @unchecked Sendable {
     }
 
     public var currentTime: Double {
-        let played = playedFrames
+        let played = playedTime
+        return lock.withLock { episodeTime(atPlayed: played) }
+    }
+
+    /// Both clocks, the rate and the timeline they belong to, from one reading: taken separately,
+    /// a seek in between would leave them describing different timelines.
+    public var reading: TrimSilenceStats.Reading {
+        let played = playedTime
+        let rate = Double(synchronizer.rate)
         return lock.withLock {
-            guard sampleRate > 0 else { return 0 }
-            if let pendingSeek { return Double(pendingSeek) / sampleRate }
-            guard let piece = pieces.last(where: { $0.output <= played }) else {
-                return Double(startFileFrame) / sampleRate
-            }
-            let into = min(AVAudioFramePosition(piece.frames), played - piece.output)
-            return Double(piece.fileStart + into) / sampleRate
+            TrimSilenceStats.Reading(
+                rendered: played,
+                episode: episodeTime(atPlayed: played),
+                epoch: generation,
+                rate: rate
+            )
         }
     }
 
-    /// Audio actually rendered since the last seek.
+    /// Audio actually rendered since the timeline was last rebuilt.
     public var playedTime: Double {
         let seconds = synchronizer.currentTime().seconds
         return seconds.isFinite ? Swift.max(0, seconds) : 0
+    }
+
+    /// Call with `lock` held.
+    private func episodeTime(atPlayed seconds: Double) -> Double {
+        guard sampleRate > 0 else { return 0 }
+        if let pendingSeek { return Double(pendingSeek) / sampleRate }
+        let played = AVAudioFramePosition((seconds * sampleRate).rounded())
+        guard let piece = pieces.last(where: { $0.output <= played }) else {
+            return Double(startFileFrame) / sampleRate
+        }
+        let into = min(AVAudioFramePosition(piece.frames), played - piece.output)
+        return Double(piece.fileStart + into) / sampleRate
     }
 
     private var playedFrames: AVAudioFramePosition {

@@ -80,9 +80,9 @@ final class AVPlayerViewModel: PlayerBackend {
     @ObservationIgnored let podcastEngine = PodcastAudioEngine()
     @ObservationIgnored private(set) var isUsingPodcastEngine = false
 
-    /// The two clocks at the last tick counted toward `Const.trimSilenceSecondsSaved`, and what they've added up to
+    /// The clocks at the last tick counted toward `Const.trimSilenceSecondsSaved`, and what they've added up to
     /// since it was last written.
-    @ObservationIgnored private var savedTimeAnchor: (player: Double, file: Double)?
+    @ObservationIgnored private var savedTimeAnchor: TrimSilenceStats.Reading?
     @ObservationIgnored private var pendingStats = TrimSilenceStats(saved: 0, played: 0)
 
     // Set by the view; called when the current video plays to end.
@@ -109,7 +109,7 @@ final class AVPlayerViewModel: PlayerBackend {
             guard !cmTime.seconds.isNaN, !cmTime.seconds.isInfinite else { return }
             Task { @MainActor [weak self] in
                 guard let self, !isUsingPodcastEngine else { return }
-                tick(rendered: cmTime.seconds, episode: cmTime.seconds)
+                tick(episode: cmTime.seconds)
             }
         }
     }
@@ -128,15 +128,13 @@ final class AVPlayerViewModel: PlayerBackend {
             while !Task.isCancelled {
                 try? await Task.sleep(for: .seconds(1))
                 guard let self, !Task.isCancelled else { return }
-                tick(rendered: podcastEngine.playedTime, episode: podcastEngine.currentTime)
+                tick(episode: podcastEngine.currentTime)
             }
         }
     }
 
-    /// One second of playback: `rendered` is what the listener sat through, `episode` where that
-    /// leaves the playhead. Trimming is the difference.
     @MainActor
-    private func tick(rendered: Double, episode seconds: Double) {
+    private func tick(episode seconds: Double) {
         // mid-seek the clock still reports where the playhead is coming from — zero for
         // a freshly installed item; the pinned target is where playback is
         if let target = seekAnchor.time {
@@ -145,7 +143,7 @@ final class AVPlayerViewModel: PlayerBackend {
         }
         lastObservedTime = seconds
         if player.isPlaying {
-            accumulateSecondsSaved(playerTime: rendered, fileTime: seconds)
+            accumulateSecondsSaved()
             player.monitorChapters(time: seconds)
             statsTickCount += 1
             if statsTickCount >= Const.updateDbTimeSeconds {
@@ -180,25 +178,19 @@ final class AVPlayerViewModel: PlayerBackend {
 
     // MARK: - Time saved by trimming
 
-    /// Both totals are needed: the saving on its own can't be stated as a speed.
     @MainActor
-    private func accumulateSecondsSaved(playerTime: Double, fileTime: Double) {
-        guard isUsingPodcastEngine, playerTime.isFinite, fileTime.isFinite else {
+    private func accumulateSecondsSaved() {
+        guard isUsingPodcastEngine else {
             savedTimeAnchor = nil
             return
         }
-        defer { savedTimeAnchor = (player: playerTime, file: fileTime) }
-        guard let previous = savedTimeAnchor else { return }
-
-        let played = playerTime - previous.player
-        // only an ordinary forward tick is time someone sat through: anything else is a seek, a loop or a stall,
-        // where the two deltas describe a jump. A tick's worth of audio is the rate itself.
-        guard played > 0, played < (Const.speeds.max() ?? 3) + 1 else { return }
-        let saved = max(0, (fileTime - previous.file) - played)
-
-        pendingStats = TrimSilenceStats(
-            saved: pendingStats.saved + saved, played: pendingStats.played + played
-        )
+        let reading = podcastEngine.reading
+        defer { savedTimeAnchor = reading }
+        guard let previous = savedTimeAnchor,
+              let tick = TrimSilenceStats.tick(from: previous, to: reading) else {
+            return
+        }
+        pendingStats = pendingStats + tick
         // banked every ten seconds rather than every tick; the stored value keeps its fraction
         if pendingStats.played >= 10 {
             flushSecondsSaved()

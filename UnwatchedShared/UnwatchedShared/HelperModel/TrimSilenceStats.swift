@@ -5,11 +5,13 @@
 
 import Foundation
 
-/// The two running totals behind the "time saved" readout.
+/// The two running totals behind the "time saved" readout, both in the listener's own seconds:
+/// the engine's clocks run at the playback rate, so what they count is worth that much less of a life.
 public struct TrimSilenceStats: Sendable, Equatable {
-    /// Seconds of episode that never played.
+    /// Seconds the listener got back because silence never played.
     public let saved: Double
-    /// Seconds of audio rendered while trimming was on.
+    /// Seconds spent listening while trimming was on. Nothing reads it back yet; it is kept so the
+    /// saving can be stated as a speed again without counting from scratch.
     public let played: Double
 
     public init(saved: Double, played: Double) {
@@ -17,26 +19,52 @@ public struct TrimSilenceStats: Sendable, Equatable {
         self.played = played
     }
 
-    /// A saving with no listening behind it predates `played` and would divide into a wild multiplier.
-    public init(storedSaved: Double, storedPlayed: Double) {
-        self.init(saved: storedPlayed > 0 ? storedSaved : 0, played: storedPlayed)
-    }
-
     public static var current: TrimSilenceStats {
         TrimSilenceStats(
-            storedSaved: UserDefaults.standard.double(forKey: Const.trimSilenceSecondsSaved),
-            storedPlayed: UserDefaults.standard.double(forKey: Const.trimSilenceSecondsPlayed)
+            saved: UserDefaults.standard.double(forKey: Const.trimSilenceSecondsSaved),
+            played: UserDefaults.standard.double(forKey: Const.trimSilenceSecondsPlayed)
+        )
+    }
+}
+
+public extension TrimSilenceStats {
+    /// The engine's two clocks at one tick, both in episode seconds, on the timeline they were read from.
+    struct Reading: Sendable, Equatable {
+        public let rendered: Double
+        public let episode: Double
+        /// Bumped whenever the engine's timeline is rebuilt; two readings only subtract within one.
+        public let epoch: Int
+        public let rate: Double
+
+        public init(rendered: Double, episode: Double, epoch: Int, rate: Double) {
+            self.rendered = rendered
+            self.episode = episode
+            self.epoch = epoch
+            self.rate = rate
+        }
+    }
+
+    /// What one tick of playback adds to the totals, or nil when the two readings don't describe
+    /// a tick: a seek restarts the rendered clock, and subtracting across one counts the jump as
+    /// a saving.
+    static func tick(from previous: Reading, to current: Reading) -> TrimSilenceStats? {
+        guard previous.epoch == current.epoch, current.rate > 0,
+              previous.rendered.isFinite, previous.episode.isFinite,
+              current.rendered.isFinite, current.episode.isFinite else {
+            return nil
+        }
+        func listenerSeconds(_ episodeSeconds: Double) -> Double { episodeSeconds / current.rate }
+
+        // a tick renders the rate itself: anything else is a loop, a stall, or a gap between ticks
+        let rendered = current.rendered - previous.rendered
+        guard rendered > 0, rendered < current.rate + 1 else { return nil }
+        return TrimSilenceStats(
+            saved: listenerSeconds(Swift.max(0, (current.episode - previous.episode) - rendered)),
+            played: listenerSeconds(rendered)
         )
     }
 
-    /// What trimming multiplies playback by; 1 until there is enough listening to divide by.
-    public var multiplier: Double {
-        guard played >= 1, saved > 0 else { return 1 }
-        return (played + saved) / played
-    }
-
-    /// A lifetime average: a per-episode ratio swings about and resets on every seek.
-    public func effectiveSpeed(at rate: Double) -> Double {
-        rate * multiplier
+    static func + (lhs: TrimSilenceStats, rhs: TrimSilenceStats) -> TrimSilenceStats {
+        TrimSilenceStats(saved: lhs.saved + rhs.saved, played: lhs.played + rhs.played)
     }
 }

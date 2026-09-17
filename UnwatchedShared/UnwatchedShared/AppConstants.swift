@@ -396,10 +396,12 @@ public struct Const {
     public static let enableLogging = "enableLogging"
     public static let originalAudio = "originalAudio"
     public static let trimSilence = "trimSilence"
-    /// Lifetime total of seconds trimmed, added up as they're played; never reset.
+    /// Seconds the listener got back, added up as they're played; reset whenever trimming is switched on.
     public static let trimSilenceSecondsSaved = "trimSilenceSecondsSaved"
-    /// Audio rendered while trimming was on, which makes the saving expressible as a speed.
+    /// Time spent listening while trimming was on, which makes the saving expressible as a speed.
     public static let trimSilenceSecondsPlayed = "trimSilenceSecondsPlayed"
+    /// Set once the two totals above have been cleared of the episode-clock ones they used to hold.
+    public static let trimSilenceStatsAreWallClock = "trimSilenceStatsAreWallClock"
     public static let playBrowserVideosInApp = "playBrowserVideosInApp"
     public static let inboxFullDismissedDate = "inboxFullDismissedDate"
     public static let inboxTipHiddenPermanently = "inboxTipHiddenPermanently"

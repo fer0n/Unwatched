@@ -79,6 +79,15 @@ extension UserDataService {
         }
     }
 
+    /// The totals used to be counted on the episode's clock, which runs at the playback rate, and
+    /// there's no rate left to divide them by after the fact.
+    static func resetTrimSilenceStatsIfNeeded(defaults: UserDefaults = .standard) {
+        guard !defaults.bool(forKey: Const.trimSilenceStatsAreWallClock) else { return }
+        defaults.set(true, forKey: Const.trimSilenceStatsAreWallClock)
+        defaults.removeObject(forKey: Const.trimSilenceSecondsSaved)
+        defaults.removeObject(forKey: Const.trimSilenceSecondsPlayed)
+    }
+
     static private func migrateInvertedBool(legacyKey: String, newKey: String, defaults: UserDefaults) {
         guard defaults.object(forKey: newKey) == nil,
               let legacyValue = defaults.object(forKey: legacyKey) as? Bool else {
