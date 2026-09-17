@@ -41,9 +41,15 @@ struct InboxCard: View, Equatable {
             thumbnail
             details(video.sortedChapterData)
         }
+        #if os(visionOS)
+        // the window is glass already: a plate gives the depth the shadow stands in for elsewhere
+        .clipShape(.rect(cornerRadius: Self.cornerRadius, style: .continuous))
+        .glassBackgroundEffect(in: RoundedRectangle(cornerRadius: Self.cornerRadius, style: .continuous))
+        #else
         .background(Color.insetBackgroundColor)
         .clipShape(.rect(cornerRadius: Self.cornerRadius, style: .continuous))
         .shadow(color: .black.opacity(0.25), radius: 10, y: 4)
+        #endif
     }
 
     /// Everything below the title gives way from the bottom up as the card gets shorter: the

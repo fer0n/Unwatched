@@ -53,6 +53,15 @@ struct InboxCardStack: View {
     private static let maxFlung = 10
     /// one more than is ever visible, so the next card is built before it moves up
     private static let stackDepth = 3
+    /// The visionOS controls ornament hangs off the bottom of the scene and over the card, which
+    /// has no scroll of its own to get out of the way
+    private static let bottomPadding: CGFloat = {
+        #if os(visionOS)
+        80
+        #else
+        13
+        #endif
+    }()
 
     var body: some View {
         let videos = visibleVideos
@@ -104,7 +113,7 @@ struct InboxCardStack: View {
             .frame(maxWidth: .infinity, maxHeight: .infinity)
         }
         .padding(.horizontal)
-        .padding(.bottom, 13)
+        .padding(.bottom, Self.bottomPadding)
         .sensoryFeedback(Const.sensoryFeedback, trigger: hapticToggle)
         .sensoryFeedback(Const.deniedFeedback, trigger: deniedToggle)
         .onChange(of: videos.count, initial: true) {

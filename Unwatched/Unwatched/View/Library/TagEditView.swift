@@ -202,9 +202,10 @@ struct TagEditView: View {
 }
 
 extension TagEditView {
-    /// macOS labels the field itself, so a header above it would read as a second "Tag Name".
+    /// macOS and visionOS label the field itself, so a header above it would read as a second
+    /// "Tag Name".
     private var nameSectionTitle: LocalizedStringKey {
-        #if os(macOS)
+        #if os(macOS) || os(visionOS)
         ""
         #else
         "tagName"
@@ -324,7 +325,8 @@ extension TagEditView {
 extension TagEditView {
     @ToolbarContentBuilder
     private var toolbarContent: some ToolbarContent {
-        #if os(macOS)
+        // neither platform lets the sheet be swiped away, so a new tag needs a way back out
+        #if os(macOS) || os(visionOS)
         if isNew {
             ToolbarItem(placement: .cancellationAction) {
                 Button("cancel") {
@@ -356,10 +358,10 @@ extension TagEditView {
         }
     }
 
-    /// An existing tag saves as it is edited, so its button only closes the sheet - and on macOS
-    /// it is the only way out, so an unusable name must not disable it.
+    /// An existing tag saves as it is edited, so its button only closes the sheet - and where
+    /// there is no swipe to dismiss it is the only way out, so an unusable name must not disable it.
     private var confirmDisabled: Bool {
-        #if os(macOS)
+        #if os(macOS) || os(visionOS)
         isNew && (trimmedName.isEmpty || nameIsTaken)
         #else
         trimmedName.isEmpty || nameIsTaken

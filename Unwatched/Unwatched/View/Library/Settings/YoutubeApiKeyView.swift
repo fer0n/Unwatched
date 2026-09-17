@@ -39,7 +39,7 @@ struct YoutubeApiKeyView: View {
                 Text("createYoutubeApiKey")
                     .foregroundStyle(theme.color)
             }
-            .linkHoverEffect()
+            .settingsListRow()
         }
     }
 

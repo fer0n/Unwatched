@@ -27,7 +27,7 @@ struct OnboardingChannelsPage: View {
                 }
             }
             .padding(.vertical, 6)
-            .background(Color.backgroundColor)
+            .background { MyBackgroundColor(macOS: false) }
         }
         #if !os(visionOS)
         .scrollDismissesKeyboard(.interactively)
@@ -102,7 +102,12 @@ struct OnboardingChannelsSearchBar: View {
         }
         .padding(.horizontal, 14)
         .frame(height: OnboardingLayout.controlHeight)
+        // the bar behind it is already a material on visionOS; an opaque fill reads as a dark blob
+        #if os(visionOS)
+        .background(.quaternary, in: Capsule())
+        #else
         .background(Color.insetBackgroundColor, in: Capsule())
+        #endif
         .padding(.horizontal, OnboardingLayout.horizontalPadding)
         .padding(.top, 8)
     }

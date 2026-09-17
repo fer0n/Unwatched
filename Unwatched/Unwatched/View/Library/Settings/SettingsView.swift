@@ -89,6 +89,7 @@ struct SettingsView: View {
                     } label: {
                         LibraryNavListItem("importSubscriptions", systemName: "square.and.arrow.down.fill")
                     }
+                    .settingsListRow()
                     ExportSubscriptionsShareLink {
                         LibraryNavListItem("exportSubscriptions", systemName: "square.and.arrow.up.fill")
                     }
@@ -104,22 +105,22 @@ struct SettingsView: View {
                     Link(destination: UrlService.writeReviewUrl) {
                         LibraryNavListItem("rateUnwatched", systemName: "star.fill")
                     }
-                    .linkHoverEffect()
+                    .settingsListRow()
                     NavigationLink(value: LibraryDestination.help) {
                         Label("emailAndFaq", systemImage: Const.contactMailSF)
                     }
                     Link(destination: UrlService.githubUrl) {
                         LibraryNavListItem("unwatchedOnGithub", imageName: "github-logo")
                     }
-                    .linkHoverEffect()
+                    .settingsListRow()
                     Link(destination: UrlService.mastodonUrl) {
                         LibraryNavListItem("unwatchedOnMastodon", imageName: "mastodon-logo")
                     }
-                    .linkHoverEffect()
+                    .settingsListRow()
                     Link(destination: UrlService.blueskyUrl) {
                         LibraryNavListItem("unwatchedOnBluesky", imageName: "bluesky_logo")
                     }
-                    .linkHoverEffect()
+                    .settingsListRow()
                 }
 
                 MySection {
@@ -129,14 +130,14 @@ struct SettingsView: View {
                             systemName: "sparkles.2"
                         )
                     }
-                    .linkHoverEffect()
+                    .settingsListRow()
                     Link(destination: UrlService.testFlightUrl) {
                         LibraryNavListItem(
                             "testFlight",
                             systemName: "airplane.departure"
                         )
                     }
-                    .linkHoverEffect()
+                    .settingsListRow()
                     .contextMenu {
                         Button {
                             ClipboardService.set(UrlService.testFlightUrl.absoluteString)
@@ -190,9 +191,12 @@ extension SettingsView {
 }
 
 extension View {
-    func linkHoverEffect() -> some View {
+    /// visionOS gives a `Link` or `Menu` in a list its own button chrome, which indents the row past
+    /// the plain rows next to it, and its own hover effect instead of the row-wide highlight.
+    func settingsListRow() -> some View {
         self
             #if os(visionOS)
+            .buttonStyle(.plain)
             .hoverEffectDisabled()
             .listRowHoverEffect(.highlight)
         #endif

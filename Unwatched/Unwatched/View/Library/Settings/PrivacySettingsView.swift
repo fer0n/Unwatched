@@ -20,6 +20,7 @@ struct PrivacySettingsView: View {
                     Text("privacyPolicy")
                         .foregroundStyle(theme.color)
                 }
+                .settingsListRow()
                 .myListInsetBackground()
 
                 MySection(footer: "useNoCookieUrlHelper") {

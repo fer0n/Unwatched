@@ -43,6 +43,7 @@ struct OnboardingPager<Page: Hashable, Content: View, Accessory: View>: View {
         )
         .softSafeAreaBar(edge: .top) {
             OnboardingHeader(pages: pages, page: page, title: title, description: description)
+                .onboardingBarBackdrop()
         }
         .softSafeAreaBar(edge: .bottom) {
             VStack(spacing: 0) {
@@ -51,9 +52,11 @@ struct OnboardingPager<Page: Hashable, Content: View, Accessory: View>: View {
                 OnboardingPageIndicator(pages: pages, page: page)
             }
             .ignoresSafeArea(.container, edges: .bottom)
+            .onboardingBarBackdrop()
         }
         .setColorScheme()
-        .background(Color.backgroundColor)
+        // visionOS puts the sheet on glass, an opaque plate on top of it would hide that
+        .background { MyBackgroundColor(macOS: false) }
         .tint(theme.color)
         .interactiveDismissDisabled()
         .sensoryFeedback(Const.sensoryFeedback, trigger: page)
@@ -87,6 +90,18 @@ extension OnboardingPager where Accessory == EmptyView {
             content: content,
             accessory: { EmptyView() }
         )
+    }
+}
+
+private extension View {
+    /// visionOS has no scroll edge effect, so the list would scroll visibly through the bar.
+    func onboardingBarBackdrop() -> some View {
+        self
+            #if os(visionOS)
+            // the header is only as wide as its text, the backdrop has to span the sheet
+            .frame(maxWidth: .infinity)
+            .background(.regularMaterial)
+        #endif
     }
 }
 

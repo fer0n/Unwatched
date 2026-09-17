@@ -40,6 +40,8 @@ struct OnboardingShortsPage: View {
         .sensoryFeedback(Const.sensoryFeedback, trigger: hideShorts)
     }
 
+    private static let shape = RoundedRectangle(cornerRadius: 16, style: .continuous)
+
     func choice(
         title: LocalizedStringKey,
         subtitle: LocalizedStringKey,
@@ -65,14 +67,13 @@ struct OnboardingShortsPage: View {
             }
             .padding(16)
             .frame(maxWidth: .infinity, alignment: .leading)
-            .background(
-                RoundedRectangle(cornerRadius: 16, style: .continuous)
-                    .fill(Color.insetBackgroundColor)
-            )
-            .overlay(
-                RoundedRectangle(cornerRadius: 16, style: .continuous)
-                    .strokeBorder(theme.color, lineWidth: isSelected ? 2 : 0)
-            )
+            // an opaque fill on the sheet's glass reads as a plate stuck on top of it
+            #if os(visionOS)
+            .glassBackgroundEffect(in: Self.shape)
+            #else
+            .background(Self.shape.fill(Color.insetBackgroundColor))
+            #endif
+            .overlay(Self.shape.strokeBorder(theme.color, lineWidth: isSelected ? 2 : 0))
             .opacity(isSelected ? 1 : 0.45)
             .contentShape(Rectangle())
         }

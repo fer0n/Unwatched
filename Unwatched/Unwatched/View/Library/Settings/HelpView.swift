@@ -18,6 +18,7 @@ struct HelpView: View {
                         LibraryNavListItem("contactUs", systemName: Const.contactMailSF)
                     }
                     .visionForegroundColor()
+                    .settingsListRow()
                 }
 
                 MySection("frequentlyAskedQuestions") {

@@ -51,7 +51,9 @@ struct SheetOverlayMinimumSize: View {
                 .foregroundStyle(.black, .white)
                 .contentTransition(.symbolEffect(.replace))
                 .frame(width: 44, height: 44)
+                #if !os(visionOS)
                 .glassEffect(.regular.tint(.white).interactive(), in: .circle)
+                #endif
                 .modifier(PlayerTabFade(hiddenOn: .controls))
                 // keeps the faded-out button hit tested
                 .background(Circle().fill(Color.tappableClear))
