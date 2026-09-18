@@ -638,8 +638,13 @@ extension VideoService {
             }
             // podcast episodes are shared via their own page url (see UrlService.getShareUrl)
             let context = DataProvider.mainContext
-            let fetch = FetchDescriptor<Video>(predicate: #Predicate { $0.url == videoUrl })
-            guard let loadedVideo = try? context.fetch(fetch).first else {
+            if let episodeId = UrlService.getEpisodeIdFromUrl(videoUrl),
+               let loadedVideo = VideoService.getVideo(for: episodeId, modelContext: context) {
+                return loadedVideo
+            }
+            let url = UrlService.removingEpisodeId(from: videoUrl)
+            let fetch = FetchDescriptor<Video>(predicate: #Predicate { $0.url == url })
+            guard let loadedVideo = pickVideo(matching: (try? context.fetch(fetch)) ?? [], url: url) else {
                 throw VideoError.noVideoFound
             }
             return loadedVideo
@@ -650,6 +655,29 @@ extension VideoService {
             throw VideoError.noVideoFound
         }
         return fetchedVideo
+    }
+
+    /// Which of several episodes sharing one url is meant. A link made before `UrlService.episodeIdKey`
+    /// existed says nothing beyond the show, so the episode at hand comes first: the one playing, then
+    /// the one in the queue, and otherwise the most recent.
+    @MainActor
+    private static func pickVideo(matching videos: [Video], url: URL) -> Video? {
+        guard videos.count > 1 else {
+            return videos.first
+        }
+        Log.warning("getVideoOrCurrent: \(videos.count) videos share \(url), guessing which one is meant")
+
+        if let playingId = PlayerManager.shared.video?.youtubeId,
+           let playing = videos.first(where: { $0.youtubeId == playingId }) {
+            return playing
+        }
+        let queued = videos.compactMap { video in video.queueEntry.map { (video, $0.order) } }
+        if let topmost = queued.min(by: { $0.1 < $1.1 })?.0 {
+            return topmost
+        }
+        return videos.max {
+            ($0.publishedDate ?? .distantPast) < ($1.publishedDate ?? .distantPast)
+        }
     }
 
     @MainActor

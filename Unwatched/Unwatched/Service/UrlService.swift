@@ -37,11 +37,47 @@ struct UrlService {
         "https://youtu.be/\(youtubeId)" + (timestamp.map { "?t=\(Int($0))" } ?? "")
     }
 
+    /// Names the episode a shared podcast link stands for. Many feeds give every item the show's
+    /// page as its `<link>`, so the url alone doesn't say which episode is meant. It goes in the
+    /// fragment: never sent to the server, ignored by every browser, and ours to read back.
+    static let episodeIdKey = "unw"
+
     /// The link to share for a video.
     static func getShareUrl(_ video: any VideoData, timestamp: Double? = nil) -> String? {
-        video.isPodcast
-            ? video.url?.absoluteString
-            : getShortenedUrl(video.youtubeId, timestamp: timestamp)
+        guard video.isPodcast else {
+            return getShortenedUrl(video.youtubeId, timestamp: timestamp)
+        }
+        guard let url = video.url else { return nil }
+        return addEpisodeId(video.youtubeId, to: url)?.absoluteString ?? url.absoluteString
+    }
+
+    private static func addEpisodeId(_ youtubeId: String, to url: URL) -> URL? {
+        guard var components = URLComponents(url: url, resolvingAgainstBaseURL: false) else {
+            return nil
+        }
+        components.fragment = "\(episodeIdKey)=\(youtubeId)"
+        return components.url
+    }
+
+    /// The episode a link made by `getShareUrl` points at, if it says.
+    static func getEpisodeIdFromUrl(_ url: URL) -> String? {
+        guard let fragment = URLComponents(url: url, resolvingAgainstBaseURL: false)?.fragment else {
+            return nil
+        }
+        let prefix = "\(episodeIdKey)="
+        guard fragment.hasPrefix(prefix) else { return nil }
+        let episodeId = String(fragment.dropFirst(prefix.count))
+        return episodeId.isEmpty ? nil : episodeId
+    }
+
+    /// The url as the episode has it stored, without the marker `getShareUrl` added.
+    static func removingEpisodeId(from url: URL) -> URL {
+        guard getEpisodeIdFromUrl(url) != nil,
+              var components = URLComponents(url: url, resolvingAgainstBaseURL: false) else {
+            return url
+        }
+        components.fragment = nil
+        return components.url ?? url
     }
 
     static func getEmailUrl(title: String? = nil, body: String) -> URL {

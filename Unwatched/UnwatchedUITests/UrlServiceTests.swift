@@ -5,6 +5,7 @@
 
 import XCTest
 import SwiftData
+import UnwatchedShared
 
 // swiftlint:disable all
 final class UrlServiceTests: XCTestCase {
@@ -48,6 +49,35 @@ final class UrlServiceTests: XCTestCase {
             let youtubeId = UrlService.getYoutubeIdFromUrl(url: URL(string: url)!)
             XCTAssertEqual(youtubeId, expected, "Failed for URL: \(url)")
         }
+    }
+
+    @MainActor
+    func testPodcastShareUrlNamesTheEpisode() async {
+        // many feeds give every episode the show's page as its link, so the url alone can't tell them apart
+        let video = Video(
+            title: "An Expert on Conflict",
+            url: URL(string: "https://www.nytimes.com/the-daily")!,
+            youtubeId: "pod-8c7d1765d3f9cae4b1388003",
+            thumbnailUrl: nil,
+            publishedDate: nil,
+            mediaUrl: URL(string: "https://example.com/episode.mp3")!
+        )
+
+        let shared = UrlService.getShareUrl(video)
+        XCTAssertEqual(shared, "https://www.nytimes.com/the-daily#unw=pod-8c7d1765d3f9cae4b1388003")
+
+        let sharedUrl = URL(string: shared!)!
+        XCTAssertEqual(UrlService.getEpisodeIdFromUrl(sharedUrl), "pod-8c7d1765d3f9cae4b1388003")
+        XCTAssertEqual(UrlService.removingEpisodeId(from: sharedUrl).absoluteString, "https://www.nytimes.com/the-daily")
+
+        let plain = URL(string: "https://www.nytimes.com/the-daily")!
+        XCTAssertNil(UrlService.getEpisodeIdFromUrl(plain))
+        XCTAssertEqual(UrlService.removingEpisodeId(from: plain), plain)
+
+        // a fragment that isn't ours stays put
+        let anchored = URL(string: "https://example.com/show#chapter-2")!
+        XCTAssertNil(UrlService.getEpisodeIdFromUrl(anchored))
+        XCTAssertEqual(UrlService.removingEpisodeId(from: anchored), anchored)
     }
 }
 
