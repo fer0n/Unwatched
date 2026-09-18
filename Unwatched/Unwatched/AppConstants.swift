@@ -27,7 +27,11 @@ extension Const {
         // Keep Media
         Const.autoDeleteWatchedVideos: 180,
         Const.autoDeleteOrphanedVideos: 30,
-        Const.autoDeleteInboxVideosLimit: 100
+        Const.autoDeleteInboxVideosLimit: 100,
+
+        // Premium
+        // Lives in the key-value store, so it has to be registered here to be backed up at all.
+        Const.unwatchedPremiumAcknowledged: false
     ]
 
     static let settingsDefaults: [String: Sendable] = [
@@ -100,7 +104,6 @@ extension Const {
         Const.podcastDownloadOnCellular: false,
 
         // Premium
-        Const.unwatchedPremiumAcknowledged: false,
         Const.hidePremium: false
     ]
 }

@@ -634,6 +634,7 @@
 		88AA10022F0000000000A002 /* MigrationTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 88AA10012F0000000000A001 /* MigrationTests.swift */; };
 		88AA10042F0000000000A004 /* MigrationSchemaShapes.swift in Sources */ = {isa = PBXBuildFile; fileRef = 88AA10032F0000000000A003 /* MigrationSchemaShapes.swift */; };
 		88AA10062F0000000000A006 /* SettingsMigrationTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 88AA10052F0000000000A005 /* SettingsMigrationTests.swift */; };
+		88AA10062F0000000000B006 /* CloudKeyValueStoreTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 88AA10052F0000000000B005 /* CloudKeyValueStoreTests.swift */; };
 		88AA10082F0000000000A008 /* QueueFilterTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 88AA10072F0000000000A007 /* QueueFilterTests.swift */; };
 		88AA10082F0000000000A0F8 /* FilteredQueueWriteTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 88AA10072F0000000000A0F7 /* FilteredQueueWriteTests.swift */; };
 		88AA100A2F0000000000A00A /* SearchMaterializeTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 88AA10092F0000000000A009 /* SearchMaterializeTests.swift */; };
@@ -1465,6 +1466,7 @@
 		88AA10012F0000000000A001 /* MigrationTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MigrationTests.swift; sourceTree = "<group>"; };
 		88AA10032F0000000000A003 /* MigrationSchemaShapes.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MigrationSchemaShapes.swift; sourceTree = "<group>"; };
 		88AA10052F0000000000A005 /* SettingsMigrationTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SettingsMigrationTests.swift; sourceTree = "<group>"; };
+		88AA10052F0000000000B005 /* CloudKeyValueStoreTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CloudKeyValueStoreTests.swift; sourceTree = "<group>"; };
 		88AA10072F0000000000A007 /* QueueFilterTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = QueueFilterTests.swift; sourceTree = "<group>"; };
 		88AA10072F0000000000A0F7 /* FilteredQueueWriteTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FilteredQueueWriteTests.swift; sourceTree = "<group>"; };
 		88AA10092F0000000000A009 /* SearchMaterializeTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SearchMaterializeTests.swift; sourceTree = "<group>"; };
@@ -1994,6 +1996,7 @@
 				FE1000FF000000000000E021 /* PlayerOwnershipTests.swift */,
 				88AA10032F0000000000A003 /* MigrationSchemaShapes.swift */,
 				88AA10052F0000000000A005 /* SettingsMigrationTests.swift */,
+				88AA10052F0000000000B005 /* CloudKeyValueStoreTests.swift */,
 			);
 			path = UnwatchedUITests;
 			sourceTree = "<group>";
@@ -3273,6 +3276,7 @@
 				FE1000FF000000000000E022 /* PlayerOwnershipTests.swift in Sources */,
 				88AA10042F0000000000A004 /* MigrationSchemaShapes.swift in Sources */,
 				88AA10062F0000000000A006 /* SettingsMigrationTests.swift in Sources */,
+				88AA10062F0000000000B006 /* CloudKeyValueStoreTests.swift in Sources */,
 				88C33B202EC9E0B300E7685C /* ContentView.swift in Sources */,
 				889AF9572C50ED05001CEDE6 /* VideoActor+Entries.swift in Sources */,
 				889AF9582C50ED05001CEDE6 /* SubscriptionActor+Info.swift in Sources */,

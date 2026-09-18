@@ -41,7 +41,7 @@ extension ShortsSetting {
         let hideShorts: Bool = {
             if let defaultHideShorts { return defaultHideShorts }
 
-            let defaultShortSettingRaw = NSUbiquitousKeyValueStore.default.longLong(forKey: Const.defaultShortsSetting)
+            let defaultShortSettingRaw = CloudKeyValueStore.shared.longLong(forKey: Const.defaultShortsSetting)
             let defaultShortSetting = ShortsSetting(rawValue: Int(defaultShortSettingRaw)) ?? .show
             return defaultShortSetting == .hide
         }()

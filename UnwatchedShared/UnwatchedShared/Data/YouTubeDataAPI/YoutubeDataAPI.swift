@@ -11,7 +11,7 @@ public struct YoutubeDataAPI {
     /// A user-provided YouTube Data API key (set in Debug settings, synced via iCloud).
     /// When set, it overrides both the standard and premium keys for all API calls.
     private static var customApiKey: String? {
-        let key = NSUbiquitousKeyValueStore.default.string(forKey: Const.customYoutubeApiKey)
+        let key = CloudKeyValueStore.shared.string(forKey: Const.customYoutubeApiKey)
         return key?.isEmpty == false ? key : nil
     }
 

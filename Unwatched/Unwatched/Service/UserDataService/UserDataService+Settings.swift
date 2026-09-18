@@ -18,7 +18,7 @@ extension UserDataService {
             }
         }
         for (key, _) in Const.syncedSettingsDefaults {
-            if let value = NSUbiquitousKeyValueStore.default.object(forKey: key) {
+            if let value = CloudKeyValueStore.shared.object(forKey: key) {
                 result[key] = AnyCodable(value)
             } else {
                 Log.warning("Encoding sync settings key not set/found: \(key)")
@@ -34,7 +34,7 @@ extension UserDataService {
         resetDefaultSettingsIfNeeded()
         for (key, value) in settings {
             if Const.syncedSettingsDefaults.contains(where: { $0.key == key }) {
-                NSUbiquitousKeyValueStore.default.set(value.value, forKey: key)
+                CloudKeyValueStore.shared.set(value.value, forKey: key)
             } else {
                 UserDefaults.standard.setValue(value.value, forKey: key)
             }
@@ -65,7 +65,7 @@ extension UserDataService {
     }
 
     static func migrateKeepMediaSettingsIfNeeded(
-        store: NSUbiquitousKeyValueStore = .default,
+        store: KeyValueStoring = CloudKeyValueStore.shared,
         defaults: UserDefaults = .standard
     ) {
         for key in [Const.autoDeleteWatchedVideos, Const.autoDeleteOrphanedVideos, Const.autoDeleteInboxVideosLimit] {
@@ -133,7 +133,7 @@ extension UserDataService {
         }
         // Check synced settings
         for (key, defaultValue) in Const.syncedSettingsDefaults {
-            if let currentValue = NSUbiquitousKeyValueStore.default.object(forKey: key) {
+            if let currentValue = CloudKeyValueStore.shared.object(forKey: key) {
                 if currentValue is String { continue }
                 let currentAnyCodable = AnyCodable(currentValue)
                 let defaultAnyCodable = AnyCodable(defaultValue)

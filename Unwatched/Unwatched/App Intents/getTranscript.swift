@@ -39,7 +39,7 @@ struct GetTranscript: AppIntent {
         Signal.log("Shortcut.GetTranscript")
         let deadline = ContinuousClock.now + Self.generationWait
 
-        let hasPremium = NSUbiquitousKeyValueStore.default.bool(forKey: Const.unwatchedPremiumAcknowledged)
+        let hasPremium = CloudKeyValueStore.hasPremium
         guard hasPremium else {
             throw IntentError.requiresUnwatchedPremium
         }

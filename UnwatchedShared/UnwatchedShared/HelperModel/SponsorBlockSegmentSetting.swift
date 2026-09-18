@@ -51,6 +51,7 @@ public protocol KeyValueStoring: AnyObject {
     func removeObject(forKey aKey: String)
     func longLong(forKey aKey: String) -> Int64
     func bool(forKey aKey: String) -> Bool
+    var dictionaryRepresentation: [String: Any] { get }
 }
 
 extension NSUbiquitousKeyValueStore: KeyValueStoring { }
@@ -71,7 +72,7 @@ public extension SponsorBlockSegmentSetting {
     static func stored(
         _ key: String,
         default defaultValue: SponsorBlockSegmentSetting,
-        store: KeyValueStoring = NSUbiquitousKeyValueStore.default
+        store: KeyValueStoring = CloudKeyValueStore.shared
     ) -> SponsorBlockSegmentSetting {
         guard store.object(forKey: key) != nil else { return defaultValue }
         return SponsorBlockSegmentSetting(rawValue: Int(store.longLong(forKey: key))) ?? defaultValue
@@ -119,7 +120,7 @@ public extension SponsorBlockSegmentSetting {
     /// removed only once it has actually been folded in — dropping it on a run that migrates
     /// nothing would lose the setting for good, with no way to retry.
     static func migrateSkipSponsorSegmentsIfNeeded(
-        store: KeyValueStoring = NSUbiquitousKeyValueStore.default,
+        store: KeyValueStoring = CloudKeyValueStore.shared,
         defaults: UserDefaults = .standard
     ) {
         let legacyValue: Bool? = {

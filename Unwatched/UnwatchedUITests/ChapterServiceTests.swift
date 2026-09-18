@@ -1970,6 +1970,10 @@ final class FakeKeyValueStore: KeyValueStoring {
     func bool(forKey aKey: String) -> Bool {
         (values[aKey] as? Bool) ?? false
     }
+
+    var dictionaryRepresentation: [String: Any] {
+        values
+    }
 }
 
 final class SponsorBlockSegmentSettingTests: XCTestCase {

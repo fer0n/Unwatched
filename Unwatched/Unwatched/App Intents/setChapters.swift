@@ -31,7 +31,7 @@ struct SetChapters: AppIntent {
     func perform() async throws -> some IntentResult {
         Signal.log(mode == .merge ? "Shortcut.SetChapters.merge" : "Shortcut.SetChapters")
 
-        let hasPremium = NSUbiquitousKeyValueStore.default.bool(forKey: Const.unwatchedPremiumAcknowledged)
+        let hasPremium = CloudKeyValueStore.hasPremium
         guard hasPremium else {
             throw IntentError.requiresUnwatchedPremium
         }

@@ -46,7 +46,7 @@ extension VideoService {
         return Task.detached {
             Log.info("loadNewVideosInBg")
             let repo = VideoActor()
-            let hasPremium = NSUbiquitousKeyValueStore.default.bool(forKey: Const.unwatchedPremiumAcknowledged)
+            let hasPremium = CloudKeyValueStore.hasPremium
             do {
                 return try await repo.loadVideos(
                     subscriptionIds,
@@ -146,7 +146,7 @@ extension VideoService {
     }
 
     static func fetchVideoDurationsQueueInbox() {
-        guard NSUbiquitousKeyValueStore.default.bool(forKey: Const.unwatchedPremiumAcknowledged) else {
+        guard CloudKeyValueStore.hasPremium else {
             Log.info("fetchUpdateDurations: no premium user")
             return
         }

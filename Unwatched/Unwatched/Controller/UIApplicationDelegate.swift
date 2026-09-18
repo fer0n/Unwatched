@@ -348,7 +348,7 @@ enum WatchRemoteBridge {
         case .setContinuousPlay(let enabled):
             UserDefaults.standard.set(enabled, forKey: Const.continuousPlay)
         case .setTrimSilence(let enabled):
-            guard !enabled || NSUbiquitousKeyValueStore.default.bool(forKey: Const.unwatchedPremiumAcknowledged) else {
+            guard !enabled || CloudKeyValueStore.hasPremium else {
                 return
             }
             player.setTrimSilence(enabled)

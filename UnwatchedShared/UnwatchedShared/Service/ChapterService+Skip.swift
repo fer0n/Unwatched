@@ -25,7 +25,7 @@ public extension ChapterService {
     }
 
     static var autoSkipsRecurringChapters: Bool {
-        NSUbiquitousKeyValueStore.default.object(forKey: Const.autoSkipRecurringChapters) as? Bool ?? true
+        CloudKeyValueStore.shared.object(forKey: Const.autoSkipRecurringChapters) as? Bool ?? true
     }
 
     /// How a chapter title is matched against a subscription's `autoSkipChapterTitles`.

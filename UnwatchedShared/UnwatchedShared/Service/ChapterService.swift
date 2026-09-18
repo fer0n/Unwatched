@@ -283,7 +283,7 @@ public struct ChapterService {
     }
 
     static func skipChapterFilters() -> [String] {
-        guard let skipChapterText = NSUbiquitousKeyValueStore.default.string(forKey: Const.skipChapterText),
+        guard let skipChapterText = CloudKeyValueStore.shared.string(forKey: Const.skipChapterText),
               !skipChapterText.isEmpty else {
             return []
         }

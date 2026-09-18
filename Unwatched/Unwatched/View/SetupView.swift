@@ -203,7 +203,7 @@ struct SetupView: View {
         _ key: String,
         interval: (Int) -> SignalInterval
     ) -> Int? {
-        let value = NSUbiquitousKeyValueStore.default.object(forKey: key) as? Int
+        let value = CloudKeyValueStore.shared.object(forKey: key) as? Int
             ?? Const.syncedSettingsDefaults[key] as? Int ?? 0
         guard value > 0,
               Const.settingsSplashShown.bool == true,
@@ -266,7 +266,7 @@ struct SetupView: View {
     /// Whether a synced free-text setting has a non-empty value. Used to report the
     /// *presence* of settings like the custom API key without ever transmitting the value.
     static func isSyncedSettingSet(_ key: String) -> Bool {
-        let value = NSUbiquitousKeyValueStore.default.string(forKey: key) ?? ""
+        let value = CloudKeyValueStore.shared.string(forKey: key) ?? ""
         return !value.isEmpty
     }
 

@@ -285,7 +285,7 @@ extension ChapterService {
         _ forceRefresh: Bool,
         _ settingOn: Bool? = nil
     ) -> Bool {
-        let settingOn = settingOn ?? NSUbiquitousKeyValueStore.default.bool(forKey: Const.mergeSponsorBlockChapters)
+        let settingOn = settingOn ?? CloudKeyValueStore.shared.bool(forKey: Const.mergeSponsorBlockChapters)
         if !settingOn {
             Log.info("SponsorBlock: Turned off in settings")
             return false

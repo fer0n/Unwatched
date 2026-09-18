@@ -452,12 +452,12 @@ extension VideoActor {
         let videoPlacementRaw = UserDefaults.standard.integer(forKey: Const.defaultVideoPlacement)
         let videoPlacement = VideoPlacement(rawValue: videoPlacementRaw) ?? .inbox
 
-        let shortsSettingRaw = NSUbiquitousKeyValueStore.default.longLong(forKey: Const.defaultShortsSetting)
+        let shortsSettingRaw = CloudKeyValueStore.shared.longLong(forKey: Const.defaultShortsSetting)
         let shortsSetting = ShortsSetting(rawValue: Int(shortsSettingRaw)) ?? .show
         let showShorts = shortsSetting != .hide
 
-        let filterVideoTitleText = NSUbiquitousKeyValueStore.default.string(forKey: Const.filterVideoTitleText) ?? ""
-        let allowOnMatch = NSUbiquitousKeyValueStore.default.bool(forKey: Const.allowOnMatch)
+        let filterVideoTitleText = CloudKeyValueStore.shared.string(forKey: Const.filterVideoTitleText) ?? ""
+        let allowOnMatch = CloudKeyValueStore.shared.bool(forKey: Const.allowOnMatch)
 
         let info = DefaultVideoPlacement(
             videoPlacement: videoPlacement,

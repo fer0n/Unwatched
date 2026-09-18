@@ -256,7 +256,7 @@ extension PlayerManager {
             return
         }
 
-        let settingOn = NSUbiquitousKeyValueStore.default.bool(forKey: Const.mergeSponsorBlockChapters)
+        let settingOn = CloudKeyValueStore.shared.bool(forKey: Const.mergeSponsorBlockChapters)
         if !settingOn {
             return
         }

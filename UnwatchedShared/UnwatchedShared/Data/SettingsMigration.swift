@@ -5,7 +5,7 @@
 
 import Foundation
 
-/// The subset of `UserDefaults` / `NSUbiquitousKeyValueStore` that `SettingsMigration` needs.
+/// The subset of `UserDefaults` / `CloudKeyValueStore` that `SettingsMigration` needs.
 ///
 /// Exists so the migration can be exercised in tests: the key-value store silently drops writes
 /// without the iCloud entitlement, so a test process can't assert against the real one.
@@ -29,7 +29,7 @@ extension NSUbiquitousKeyValueStore: SettingsStore {}
 public enum SettingsMigration {
     public static func run(
         defaults: SettingsStore = UserDefaults.standard,
-        cloud: SettingsStore = NSUbiquitousKeyValueStore.default
+        cloud: SettingsStore = CloudKeyValueStore.shared
     ) {
         migrateHideShorts(defaults, cloud)
         migrateSyncedSettingsToKeyValueStore(defaults, cloud)

@@ -207,7 +207,7 @@ actor CleanupActor: SharedContextActor {
         let videos = try modelContext.fetch(descriptor)
 
         let defaultHideShorts = defaultHideShorts ?? {
-            let raw = NSUbiquitousKeyValueStore.default.longLong(forKey: Const.defaultShortsSetting)
+            let raw = CloudKeyValueStore.shared.longLong(forKey: Const.defaultShortsSetting)
             return (ShortsSetting(rawValue: Int(raw)) ?? .show) == .hide
         }()
 

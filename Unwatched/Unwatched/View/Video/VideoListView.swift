@@ -42,7 +42,7 @@ struct VideoListView: View {
         var filter: Predicate<Video>?
         let allSubscriptions = subscriptionId == nil
 
-        let shortsSettingRaw = Int(NSUbiquitousKeyValueStore.default.longLong(forKey: Const.defaultShortsSetting))
+        let shortsSettingRaw = Int(CloudKeyValueStore.shared.longLong(forKey: Const.defaultShortsSetting))
         let show = ShortsSetting.show.rawValue
         let defaultSetting = ShortsSetting.defaultSetting.rawValue
 
@@ -81,7 +81,7 @@ struct VideoListView: View {
         removedVideoIds: [String] = [],
         isExcluding: Bool = false
     ) -> Predicate<Video>? {
-        let shortsSettingRaw = Int(NSUbiquitousKeyValueStore.default.longLong(forKey: Const.defaultShortsSetting))
+        let shortsSettingRaw = Int(CloudKeyValueStore.shared.longLong(forKey: Const.defaultShortsSetting))
         let show = ShortsSetting.show.rawValue
         let defaultSetting = ShortsSetting.defaultSetting.rawValue
 
