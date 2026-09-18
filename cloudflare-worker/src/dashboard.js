@@ -270,6 +270,21 @@ function tallyRawBuckets(latestRows, paramKey) {
 }
 
 // Count distinct users per value of a free-form (but low-cardinality) param.
+// One entry per user: the specific hardware model the snapshot carried, falling back
+// to the coarse category ("iPhone") for snapshots written before deviceModel shipped.
+// Merged here rather than charted side by side so a single pie answers "what do people
+// run on" without silently dropping everyone on an older build.
+function tallyDevices(rows) {
+  const counts = {};
+  for (const row of rows) {
+    const params = parseParams(row.params);
+    const value = params.deviceModel || params.device;
+    if (value == null || value === "") continue;
+    counts[value] = (counts[value] || 0) + 1;
+  }
+  return counts;
+}
+
 function tallyParam(rows, paramKey) {
   const counts = {};
   for (const row of rows) {
@@ -498,8 +513,10 @@ export async function handleDashboardData(env, channel) {
         platform: {
           windowDays: SNAPSHOT_WINDOW_DAYS,
           sampleSize: latestSettings.length,
-          devices: tallyParam(latestSettings, "device"),
+          devices: tallyDevices(latestSettings),
           os: tallyParam(latestSettings, "os"),
+          // Only present for users whose watch has reported in — see WatchRemoteCommand.reportSyncMode.
+          watchFullSync: tallyParam(latestSettings, "watchFullSync"),
         },
         queueInbox: {
           windowDays: SNAPSHOT_WINDOW_DAYS,
@@ -733,6 +750,9 @@ export const DASHBOARD_HTML = `<!DOCTYPE html>
     <div class="pie-chart" id="osPie"></div>
   </div>
 </div>
+<h2>Apple Watch</h2>
+<div class="hint" id="watchFullSyncHint"></div>
+<div class="setting-card" id="watchFullSyncCard"></div>
 
 <h2>App version <span id="versionWindow"></span></h2>
 <div class="hint" id="versionHint"></div>
@@ -987,6 +1007,27 @@ function renderValueSettings(el, toggleBtn, values) {
   collapsibleCards(el, toggleBtn, cards, 'settings');
 }
 
+// Not a BOOL_SETTINGS entry on purpose: that pipeline folds users missing the key onto a
+// default, but "missing" here means "no watch reported in", not "full sync off" — folding
+// those in would make every non-watch user look like a "full sync off" vote.
+function renderWatchFullSync(el, hintEl, counts) {
+  const on = counts.On || 0;
+  const off = counts.Off || 0;
+  const total = on + off;
+  hintEl.textContent = total
+    ? 'Based on ' + total + ' watch' + (total === 1 ? '' : 'es') + ' that reported in'
+    : 'No watch has reported in yet';
+  const pct = (n) => (total ? Math.round((n / total) * 100) : 0);
+  el.style.maxWidth = '220px';
+  el.innerHTML =
+    '<div class="setting-label">Full sync</div>' +
+    donutSVG(on, off, 0) +
+    '<div class="legend">' +
+      legendRow(COLORS.on, 'On ' + on + ' (' + pct(on) + '%)') +
+      legendRow(COLORS.off, 'Off ' + off + ' (' + pct(off) + '%)') +
+    '</div>';
+}
+
 function renderPie(el, buckets) {
   el.innerHTML = '';
   const entries = Object.entries(buckets);
@@ -1003,36 +1044,35 @@ function renderPie(el, buckets) {
   el.innerHTML = pieSVG(segments) + '<div class="pie-legend">' + legend + '</div>';
 }
 
-// Distinct base hues per platform+major so e.g. all "iOS 26.x" read as one colour
-// family and "iOS 18.x" as another — easy to eyeball major versions at a glance.
-const OS_HUES = [210, 28, 145, 275, 0, 190, 50, 320];
+// Distinct base hues per family so e.g. all "iOS 26.x" — or all "iPhone 16.x" —
+// read as one colour family, shaded by sub-variant: easy to eyeball a generation's
+// total at a glance, and how it splits.
+const FAMILY_HUES = [210, 28, 145, 275, 0, 190, 50, 320];
 
-function renderOsPie(el, osCounts) {
-  const parsed = Object.entries(osCounts).map(function (e) {
-    const m = String(e[0]).match(/^(.*?)\s*(\d+)(?:\.(\d+))?/);
-    return {
-      label: e[0], count: e[1],
-      platform: m ? m[1].trim() : e[0],
-      major: m ? parseInt(m[2], 10) : 0,
-      minor: m && m[3] ? parseInt(m[3], 10) : 0,
-    };
-  });
-  parsed.forEach(function (p) { p.key = p.platform + ' ' + p.major; });
-  // Newest first within a family, families grouped together.
-  parsed.sort(function (a, b) {
-    return a.platform.localeCompare(b.platform) || b.major - a.major || b.minor - a.minor;
-  });
+// Renders a pie whose segments are grouped into colour families: 'parse(label, count)'
+// returns { label, count, key (family), shade (sub-variant within the family) } for
+// each entry, and 'sortFn' orders entries so a family's shades land together (newest
+// shade first) and families are grouped. Same family -> same hue; within a family,
+// each distinct shade gets progressively lighter.
+function renderFamilyPie(el, counts, parse, sortFn) {
+  const parsed = Object.entries(counts).map(function (e) { return parse(e[0], e[1]); });
+  parsed.sort(sortFn);
 
   const hueByKey = {};
-  const minorsByKey = {};
+  const shadesByKey = {};
   parsed.forEach(function (p) {
-    if (!(p.key in hueByKey)) hueByKey[p.key] = OS_HUES[Object.keys(hueByKey).length % OS_HUES.length];
-    if (!minorsByKey[p.key]) minorsByKey[p.key] = [];
-    if (minorsByKey[p.key].indexOf(p.minor) === -1) minorsByKey[p.key].push(p.minor);
+    if (!(p.key in hueByKey)) hueByKey[p.key] = FAMILY_HUES[Object.keys(hueByKey).length % FAMILY_HUES.length];
+    if (!shadesByKey[p.key]) shadesByKey[p.key] = [];
+    if (shadesByKey[p.key].indexOf(p.shade) === -1) shadesByKey[p.key].push(p.shade);
   });
+  // Lightness is spread over the family's actual shade count rather than stepped by a
+  // fixed amount, so a family with many shades (iOS + iPadOS + visionOS on one release)
+  // doesn't wrap around and hand two of them the same colour.
   const colorFor = function (p) {
-    const idx = minorsByKey[p.key].indexOf(p.minor);
-    return 'hsl(' + hueByKey[p.key] + ', 62%, ' + (44 + (idx % 5) * 9) + '%)';
+    const shades = shadesByKey[p.key];
+    const idx = shades.indexOf(p.shade);
+    const t = shades.length > 1 ? idx / (shades.length - 1) : 0;
+    return 'hsl(' + hueByKey[p.key] + ', 62%, ' + Math.round(40 + t * 36) + '%)';
   };
 
   const total = parsed.reduce(function (s, p) { return s + p.count; }, 0);
@@ -1042,6 +1082,83 @@ function renderOsPie(el, osCounts) {
     return '<div><span class="swatch" style="background:' + colorFor(p) + '"></span>' + p.label + ': ' + p.count + ' (' + pct + '%)</div>';
   }).join('');
   el.innerHTML = pieSVG(segments) + '<div class="pie-legend">' + (legend || '<div class="muted">No data yet.</div>') + '</div>';
+}
+
+function renderOsPie(el, osCounts) {
+  renderFamilyPie(el, osCounts, function (label, count) {
+    // Backslashes doubled: this sits inside DASHBOARD_HTML's outer template literal,
+    // so a single \s/\d would have its backslash silently eaten when that literal is
+    // evaluated (\s, \d aren't recognized string escapes) — this regex would otherwise
+    // require literal "s"/"d" characters instead of whitespace/digits at runtime.
+    const m = String(label).match(/^(.*?)\\s*(\\d+)(?:\\.(\\d+))?/);
+    const platform = m ? m[1].trim() : label;
+    const major = m ? parseInt(m[2], 10) : 0;
+    const minor = m && m[3] ? parseInt(m[3], 10) : 0;
+    // The family is the major version alone, not platform + major: iOS 26 and iPadOS 26
+    // are the same OS release, so they should read as one colour and differ only in shade.
+    // What we want to eyeball here is "who is on 26 yet", not "who is on an iPad".
+    return { label: label, count: count, key: 'os ' + major, shade: platform + ' ' + minor, platform: platform, major: major, minor: minor };
+  }, function (a, b) {
+    // Newest release first, platforms grouped inside it, newest minor first.
+    return b.major - a.major || a.platform.localeCompare(b.platform) || b.minor - a.minor;
+  });
+}
+
+// Raw hardware identifier (Signal.deviceModel, e.g. "iPhone17,3") -> marketing name.
+// Kept here rather than on-device so a new device Apple ships just needs a worker
+// deploy, not an app update — an unmapped identifier still renders fine, just under
+// its raw id instead of a friendly name. Source: https://gist.github.com/adamawolf/3048717
+const DEVICE_MODEL_NAMES = {
+  'iPhone10,3': 'iPhone X', 'iPhone10,6': 'iPhone X',
+  'iPhone11,2': 'iPhone XS', 'iPhone11,4': 'iPhone XS Max', 'iPhone11,6': 'iPhone XS Max', 'iPhone11,8': 'iPhone XR',
+  'iPhone12,1': 'iPhone 11', 'iPhone12,3': 'iPhone 11 Pro', 'iPhone12,5': 'iPhone 11 Pro Max', 'iPhone12,8': 'iPhone SE 2nd Gen',
+  'iPhone13,1': 'iPhone 12 Mini', 'iPhone13,2': 'iPhone 12', 'iPhone13,3': 'iPhone 12 Pro', 'iPhone13,4': 'iPhone 12 Pro Max',
+  'iPhone14,2': 'iPhone 13 Pro', 'iPhone14,3': 'iPhone 13 Pro Max', 'iPhone14,4': 'iPhone 13 Mini', 'iPhone14,5': 'iPhone 13',
+  'iPhone14,6': 'iPhone SE 3rd Gen', 'iPhone14,7': 'iPhone 14', 'iPhone14,8': 'iPhone 14 Plus',
+  'iPhone15,2': 'iPhone 14 Pro', 'iPhone15,3': 'iPhone 14 Pro Max', 'iPhone15,4': 'iPhone 15', 'iPhone15,5': 'iPhone 15 Plus',
+  'iPhone16,1': 'iPhone 15 Pro', 'iPhone16,2': 'iPhone 15 Pro Max',
+  'iPhone17,1': 'iPhone 16 Pro', 'iPhone17,2': 'iPhone 16 Pro Max', 'iPhone17,3': 'iPhone 16', 'iPhone17,4': 'iPhone 16 Plus', 'iPhone17,5': 'iPhone 16e',
+  'iPhone18,1': 'iPhone 17 Pro', 'iPhone18,2': 'iPhone 17 Pro Max', 'iPhone18,3': 'iPhone 17', 'iPhone18,4': 'iPhone Air', 'iPhone18,5': 'iPhone 17e',
+  'iPad5,3': 'iPad Air 2', 'iPad5,4': 'iPad Air 2', 'iPad5,1': 'iPad mini 4', 'iPad5,2': 'iPad mini 4',
+  'iPad6,3': 'iPad Pro 9.7-inch', 'iPad6,4': 'iPad Pro 9.7-inch', 'iPad6,7': 'iPad Pro 12.9-inch', 'iPad6,8': 'iPad Pro 12.9-inch',
+  'iPad6,11': 'iPad 5th Gen', 'iPad6,12': 'iPad 5th Gen',
+  'iPad7,1': 'iPad Pro 12.9-inch 2nd Gen', 'iPad7,2': 'iPad Pro 12.9-inch 2nd Gen',
+  'iPad7,3': 'iPad Pro 10.5-inch', 'iPad7,4': 'iPad Pro 10.5-inch',
+  'iPad7,5': 'iPad 6th Gen', 'iPad7,6': 'iPad 6th Gen', 'iPad7,11': 'iPad 7th Gen', 'iPad7,12': 'iPad 7th Gen',
+  'iPad8,1': 'iPad Pro 11-inch', 'iPad8,2': 'iPad Pro 11-inch', 'iPad8,3': 'iPad Pro 11-inch', 'iPad8,4': 'iPad Pro 11-inch',
+  'iPad8,5': 'iPad Pro 12.9-inch 3rd Gen', 'iPad8,6': 'iPad Pro 12.9-inch 3rd Gen', 'iPad8,7': 'iPad Pro 12.9-inch 3rd Gen', 'iPad8,8': 'iPad Pro 12.9-inch 3rd Gen',
+  'iPad8,9': 'iPad Pro 11-inch 2nd Gen', 'iPad8,10': 'iPad Pro 11-inch 2nd Gen',
+  'iPad8,11': 'iPad Pro 12.9-inch 4th Gen', 'iPad8,12': 'iPad Pro 12.9-inch 4th Gen',
+  'iPad11,1': 'iPad mini 5th Gen', 'iPad11,2': 'iPad mini 5th Gen', 'iPad11,3': 'iPad Air 3rd Gen', 'iPad11,4': 'iPad Air 3rd Gen',
+  'iPad11,6': 'iPad 8th Gen', 'iPad11,7': 'iPad 8th Gen', 'iPad12,1': 'iPad 9th Gen', 'iPad12,2': 'iPad 9th Gen',
+  'iPad14,1': 'iPad mini 6th Gen', 'iPad14,2': 'iPad mini 6th Gen', 'iPad13,1': 'iPad Air 4th Gen', 'iPad13,2': 'iPad Air 4th Gen',
+  'iPad13,4': 'iPad Pro 11-inch 3rd Gen', 'iPad13,5': 'iPad Pro 11-inch 3rd Gen', 'iPad13,6': 'iPad Pro 11-inch 3rd Gen', 'iPad13,7': 'iPad Pro 11-inch 3rd Gen',
+  'iPad13,8': 'iPad Pro 12.9-inch 5th Gen', 'iPad13,9': 'iPad Pro 12.9-inch 5th Gen', 'iPad13,10': 'iPad Pro 12.9-inch 5th Gen', 'iPad13,11': 'iPad Pro 12.9-inch 5th Gen',
+  'iPad13,16': 'iPad Air 5th Gen', 'iPad13,17': 'iPad Air 5th Gen', 'iPad13,18': 'iPad 10th Gen', 'iPad13,19': 'iPad 10th Gen',
+  'iPad14,3': 'iPad Pro 11-inch 4th Gen', 'iPad14,4': 'iPad Pro 11-inch 4th Gen', 'iPad14,5': 'iPad Pro 12.9-inch 6th Gen', 'iPad14,6': 'iPad Pro 12.9-inch 6th Gen',
+  'iPad14,8': 'iPad Air 11-inch 6th Gen', 'iPad14,9': 'iPad Air 11-inch 6th Gen', 'iPad14,10': 'iPad Air 13-inch 6th Gen', 'iPad14,11': 'iPad Air 13-inch 6th Gen',
+  'iPad15,3': 'iPad Air 11-inch 7th Gen', 'iPad15,4': 'iPad Air 11-inch 7th Gen', 'iPad15,5': 'iPad Air 13-inch 7th Gen', 'iPad15,6': 'iPad Air 13-inch 7th Gen',
+  'iPad15,7': 'iPad 11th Gen', 'iPad15,8': 'iPad 11th Gen',
+  'iPad16,1': 'iPad mini 7th Gen', 'iPad16,2': 'iPad mini 7th Gen',
+  'iPad16,3': 'iPad Pro 11-inch 5th Gen', 'iPad16,4': 'iPad Pro 11-inch 5th Gen', 'iPad16,5': 'iPad Pro 12.9-inch 7th Gen', 'iPad16,6': 'iPad Pro 12.9-inch 7th Gen',
+  'iPad16,8': 'iPad Air 11-inch 8th Gen', 'iPad16,9': 'iPad Air 11-inch 8th Gen', 'iPad16,10': 'iPad Air 13-inch 8th Gen', 'iPad16,11': 'iPad Air 13-inch 8th Gen',
+  'RealityDevice14,1': 'Vision Pro',
+  'i386': 'Simulator', 'x86_64': 'Simulator', 'arm64': 'Simulator',
+};
+
+function renderDevicePie(el, modelCounts) {
+  renderFamilyPie(el, modelCounts, function (raw, count) {
+    const label = DEVICE_MODEL_NAMES[raw] || raw;
+    // Same regex idea as OS parsing: split off the generation number, everything
+    // after it (" Pro Max", " Plus", "e", …) is the shade within that generation.
+    // Backslashes doubled — see the comment on the OS regex above for why.
+    const m = label.match(/^(.*?)\\s*(\\d+)(.*)$/);
+    const family = m ? m[1].trim() + ' ' + m[2] : label;
+    const shade = m ? m[3].trim() : '';
+    return { label: label, count: count, key: family, family: m ? m[1].trim() : label, major: m ? parseInt(m[2], 10) : 0, shade: shade };
+  }, function (a, b) {
+    return a.family.localeCompare(b.family) || b.major - a.major || a.shade.localeCompare(b.shade);
+  });
 }
 
 function fmtNum(n) {
@@ -1417,8 +1534,13 @@ fetch('/dashboard/data' + channelQuery).then(r => r.json()).then(data => {
 
   document.getElementById('platformHint').textContent =
     'Based on ' + data.platform.sampleSize + ' users active in the last ' + data.platform.windowDays + ' days';
-  renderPie(document.getElementById('devicePie'), data.platform.devices);
+  renderDevicePie(document.getElementById('devicePie'), data.platform.devices);
   renderOsPie(document.getElementById('osPie'), data.platform.os);
+  renderWatchFullSync(
+    document.getElementById('watchFullSyncCard'),
+    document.getElementById('watchFullSyncHint'),
+    data.platform.watchFullSync
+  );
 
   const versionTotals = {};
   (data.versions || []).forEach(function (r) { versionTotals[r.version] = r.users; });

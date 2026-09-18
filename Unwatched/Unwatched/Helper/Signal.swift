@@ -11,40 +11,21 @@ import UIKit
 #endif
 
 struct Signal {
-    static var isTestFlight: Bool {
-        Bundle.main.appStoreReceiptURL?.lastPathComponent == "sandboxReceipt"
-    }
+    static var isTestFlight: Bool { BuildInfo.isTestFlight }
 
     /// Which build produced an event. Rides along on every event so local testing can be
     /// kept out of the live numbers: the dashboard excludes `debug` by default while still
     /// letting it be inspected, which means the analytics path stays exercised in
     /// development instead of only being proven after release.
-    static var buildChannel: String {
-        #if DEBUG
-        return "debug"
-        #else
-        return isTestFlight ? "testflight" : "release"
-        #endif
-    }
+    static var buildChannel: String { BuildInfo.channel }
 
     /// e.g. "2.0.1", with the build number appended off release
-    static let appVersion: String = {
-        let info = Bundle.main.infoDictionary
-        let version = info?["CFBundleShortVersionString"] as? String ?? "?"
-        #if DEBUG
-        let includeBuild = true
-        #else
-        let includeBuild = isTestFlight
-        #endif
-        guard includeBuild, let build = info?["CFBundleVersion"] as? String else {
-            return version
-        }
-        return "\(version) (\(build))"
-    }()
+    static let appVersion: String = BuildInfo.version
 
     static func setup() {
         #if os(iOS) || os(visionOS)
-        if !(Const.analytics.bool ?? true) { return }
+        AnalyticsSettings.migrateIfNeeded()
+        if !AnalyticsSettings.isEnabled { return }
         Task {
             await AnalyticsQueue.shared.flush()
         }
@@ -55,7 +36,7 @@ struct Signal {
     /// assertion so the in-flight request isn't killed while the app suspends.
     static func flushOnBackground() {
         #if os(iOS) || os(visionOS)
-        if !(Const.analytics.bool ?? true) { return }
+        if !AnalyticsSettings.isEnabled { return }
         Task { @MainActor in
             let app = UIApplication.shared
             var taskId: UIBackgroundTaskIdentifier = .invalid
@@ -88,7 +69,7 @@ struct Signal {
     ) {
         #if os(iOS) || os(visionOS)
         // before the throttle, which marks its window as used
-        if !(Const.analytics.bool ?? true) { return }
+        if !AnalyticsSettings.isEnabled { return }
         if let throttle {
             // `throttleKey` lets callers rate-limit per sub-type (e.g. per gesture) while
             // keeping a single low-cardinality event name. Defaults to the event name.
@@ -162,6 +143,27 @@ struct Signal {
         }
         #else
         return "Unknown"
+        #endif
+    }
+
+    /// Raw hardware identifier, e.g. "iPhone17,3". Sent as-is rather than a marketing
+    /// name mapped on-device: the identifier→name table lives in the dashboard instead,
+    /// so a new device Apple ships shows up correctly without an app update.
+    static var deviceModel: String {
+        var systemInfo = utsname()
+        uname(&systemInfo)
+        let machine = withUnsafeBytes(of: &systemInfo.machine) { bytes -> String in
+            let data = Data(bytes)
+            return String(data: data, encoding: .utf8)?
+                .trimmingCharacters(in: .controlCharacters)
+                .trimmingCharacters(in: CharacterSet(charactersIn: "\0")) ?? "unknown"
+        }
+        #if targetEnvironment(simulator)
+        // On the simulator `machine` is the host Mac's architecture; the simulated
+        // device's real identifier is exposed via this env var instead.
+        return ProcessInfo.processInfo.environment["SIMULATOR_MODEL_IDENTIFIER"] ?? machine
+        #else
+        return machine
         #endif
     }
 

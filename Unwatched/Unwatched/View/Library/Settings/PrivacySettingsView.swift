@@ -7,7 +7,9 @@ import SwiftUI
 import UnwatchedShared
 
 struct PrivacySettingsView: View {
-    @AppStorage(Const.analytics) var analytics = true
+    /// App-group backed so `UnwatchedShareExtension` can read the same choice — see
+    /// `AnalyticsSettings`/`Signal.migrateAnalyticsOptOutIfNeeded`.
+    @AppStorage(Const.analytics, store: UserDefaults.appGroup) var analytics = true
     @AppStorage(Const.useNoCookieUrl) var useNoCookieUrl: Bool = false
     @AppStorage(Const.themeColor) var theme: ThemeColor = .defaultTheme
 

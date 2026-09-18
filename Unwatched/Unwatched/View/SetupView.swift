@@ -247,11 +247,17 @@ struct SetupView: View {
         if shouldSend {
             var params = UserDataService.getNonDefaultSettings(prefixValue: "Unwatched.Setting.")
             params["device"] = Signal.deviceCategory
+            params["deviceModel"] = Signal.deviceModel
             params["os"] = Signal.osVersion
-            params["version"] = Signal.appVersion
             // Free-text settings are never sent verbatim (see getNonDefaultSettings).
             params["hasCustomApiKey"] = "Unwatched.Setting.\(Self.isSyncedSettingSet(Const.customYoutubeApiKey))"
             params["hasSkipText"] = "Unwatched.Setting.\(Self.isSyncedSettingSet(Const.skipChapterText))"
+            // Absent rather than defaulted: only set once the watch app has actually reported
+            // in (WatchRemoteCommand.reportSyncMode), so a phone with no paired watch doesn't
+            // read as "full sync off".
+            if UserDefaults.standard.object(forKey: Const.watchFullSync) != nil {
+                params["watchFullSync"] = Signal.onOff(UserDefaults.standard.bool(forKey: Const.watchFullSync))
+            }
             Signal.log(signalType, parameters: params)
             signalSubscriptionCount()
         }

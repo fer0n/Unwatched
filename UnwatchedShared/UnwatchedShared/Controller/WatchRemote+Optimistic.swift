@@ -26,7 +26,7 @@ public extension WatchRemoteState {
             state.continuousPlay = enabled
         case .setTrimSilence(let enabled):
             state.trimSilence = enabled
-        case .play, .previousChapter, .nextChapter, .next, .setProgress:
+        case .play, .previousChapter, .nextChapter, .next, .setProgress, .reportSyncMode:
             return nil
         }
         return state

@@ -37,7 +37,8 @@ Every event also carries `Signal.appVersion` (`blob5`) — the marketing version
 number appended off release where several builds share one version. On every event rather than
 only on the snapshot, so any figure can be split by release; a fortnightly snapshot can't tell
 "this error started in 2.1" from "this user reports rarely". Optional in `AnalyticsEvent` for the
-same decoding reason as `channel`; the Worker maps a missing one to `unknown`.
+same decoding reason as `channel`; the Worker maps a missing one to `unknown`. It lives *only*
+there — don't also put it on the `SettingsSnapshot` params, the dashboard reads `blob5`.
 
 ## Build channels
 
@@ -87,6 +88,8 @@ in development instead of only being proven after release.
 - Analytics Engine SQL is a ClickHouse subset. Confirmed available: `count(DISTINCT …)`, `toStartOfDay`, `toStartOfInterval`, `now()`. No `uniq()`.
 - `BOOL_SETTINGS` and `VALUE_SETTINGS` in `dashboard.js` mirror the app's settings **manually** — keep both in sync when a setting is added, renamed or removed, *including its default*. A snapshot only carries settings moved off their default, so the dashboard folds every absent user onto the default side: a wrong default there flips the majority of a chart rather than losing a row. `VALUE_SETTINGS` raw values are Swift `rawValue`s, so reordering an enum without explicit raw values silently rewrites the meaning of historical rows.
 - Settings cards report two separate things on purpose: the **distribution** (default-folded, "where people are") and **changed by N** ("how many went and moved it"). A setting that's 95% on because it ships on and one that's 95% on because people turn it on are the same donut and opposite decisions.
+- The **Device** pie shows the specific hardware model (`DEVICE_MODEL_NAMES` maps the raw identifier to a marketing name in the dashboard, so a new device needs a worker deploy, not an app update), falling back to the coarse `device` category for snapshots written before `deviceModel` shipped. An unmapped identifier still charts, just under its raw id.
+- `renderFamilyPie` colours both the device and OS pies: one hue per family, lightness spread across that family's variants. The OS family is the **major version alone** — iOS 26 and iPadOS 26 are the same release and share a hue — not platform + major.
 - `handleDashboardData()` fans out ~15 concurrent queries; if you add more, watch rate limits. Each dashboard load spends that many of the free plan's 10k/day Analytics Engine **read queries** — fine for occasional use, but don't poll/auto-refresh aggressively.
 - Raw-row queries (`SettingsSnapshot`, `Queue.Count`/`Inbox.Count`, `SubscriptionCount`) are capped at `RAW_ROW_LIMIT` and ordered newest-first, so hitting the cap drops the oldest rows rather than an arbitrary slice.
 
@@ -103,3 +106,15 @@ npm run tail                   # live logs
 template literal, so a stray backtick in a comment there closes the string early and the remainder
 can still parse as valid JS. Only esbuild (what `wrangler deploy` runs) rejects it. Never use
 backticks inside `DASHBOARD_HTML` — quote identifiers with `'` in comments there.
+
+A second, sneakier gotcha: **a single backslash inside `DASHBOARD_HTML` gets silently eaten.**
+`\s`, `\d`, `\.` aren't recognized string/template-literal escapes, so when the outer
+`DASHBOARD_HTML` literal is evaluated, `\s` becomes a literal `s`, `\d` becomes `d`, etc. — no
+error, no warning, and `wrangler deploy --dry-run` doesn't catch it since esbuild only checks that
+the outer literal is syntactically valid, not what it evaluates to. This silently breaks any regex
+written directly in the client-side script (e.g. `/^(.*?)\s*(\d+)/` becomes `/^(.*?)s*(d+)/` at
+runtime — matching literal "s"/"d" characters instead of whitespace/digits). Always double the
+backslash for a regex meta-character inside `DASHBOARD_HTML` — write `\\s`, `\\d`, `\\.` — so a
+single backslash survives into the actual browser-side regex. To verify a client-side regex
+actually does what you think, don't trust a read-through: `node -e "import('./src/dashboard.js").then(m => console.log(m.DASHBOARD_HTML))"` prints the real evaluated string, or extract it to a file
+and grep for the regex to see what backslashes actually survived.

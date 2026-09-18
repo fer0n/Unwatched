@@ -358,6 +358,11 @@ enum WatchRemoteBridge {
                   let modelId = VideoService.getModelId(for: youtubeId) else { return }
             VideoService.forceUpdateVideoNow(modelId, elapsedSeconds: seconds)
             return
+        case .reportSyncMode(let fullSync):
+            // Mirrored into this phone's own UserDefaults purely so SetupView.sendSettings can
+            // read it — the watch's actual setting lives only on the watch.
+            UserDefaults.standard.set(fullSync, forKey: Const.watchFullSync)
+            return
         }
         WatchQueueProvider.pushRemoteState()
     }

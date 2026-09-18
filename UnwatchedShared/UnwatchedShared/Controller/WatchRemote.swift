@@ -118,6 +118,9 @@ public enum WatchRemoteCommand: WatchPayload {
     case setTrimSilence(Bool)
     /// Where the watch left an item it played on its own, for the phone to pick up.
     case setProgress(youtubeId: String, seconds: Double)
+    /// The watch's own sync mode, reported for analytics — the phone has no other way to see
+    /// it, since it lives in the watch's local `UserDefaults`, not anything synced across.
+    case reportSyncMode(fullSync: Bool)
 
     public static let payloadKey = "watchRemoteCommand"
 }

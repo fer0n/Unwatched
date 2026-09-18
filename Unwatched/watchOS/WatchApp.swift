@@ -227,6 +227,9 @@ struct UnwatchedWatchApp: App {
                 navigator.didReturn()
                 showPlayerIfPlaying()
                 client.activate()
+                // The phone has no other way to see this — it lives only in this device's
+                // own UserDefaults, not anything synced across.
+                client.report(.reportSyncMode(fullSync: fullSync))
                 // The hand-over is a percentage of the totals, and cached ones can be months old.
                 if fullSync && queueFromPhone {
                     await client.requestTotals()

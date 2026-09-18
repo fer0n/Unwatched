@@ -20,6 +20,8 @@ class ShareViewController: UIViewController {
     private let model = ShareCardModel()
     private let imageCacheManager = ImageCacheManager()
     private var sharedURL: URL?
+    /// Awaited in `finish()` so the extension isn't suspended mid-request.
+    private var signalTask: Task<Void, Never>?
 
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -173,6 +175,7 @@ class ShareViewController: UIViewController {
     /// close immediately instead, since the button itself was already the confirmation.
     private func performAction(_ action: ShareAction, showsConfirmation: Bool = false) {
         guard let url = sharedURL else { return }
+        signalTask = Task { await ShareExtensionSignal.logAdd(action) }
         if action == .play {
             openInApp(url)
             return
@@ -347,6 +350,7 @@ class ShareViewController: UIViewController {
     @MainActor
     private func finish() async {
         await imageCacheManager.persistCache()
+        await signalTask?.value
         extensionContext?.completeRequest(returningItems: nil, completionHandler: nil)
     }
 }
