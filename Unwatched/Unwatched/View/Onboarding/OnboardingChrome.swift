@@ -25,6 +25,12 @@ struct OnboardingPager<Page: Hashable, Content: View, Accessory: View>: View {
             ForEach(pages, id: \.self) { candidate in
                 if candidate == page {
                     content(candidate)
+                        // on the page, not the ZStack: a layout container between the bar and the
+                        // page's scroll view leaves the soft edge effect at a default height
+                        .softSafeAreaBar(edge: .top) {
+                            OnboardingHeader(page: candidate, title: title, description: description)
+                                .onboardingBarBackdrop()
+                        }
                         .transition(.move(edge: candidate == pages.first ? .leading : .trailing))
                 }
             }
@@ -41,10 +47,6 @@ struct OnboardingPager<Page: Hashable, Content: View, Accessory: View>: View {
                 },
             including: previousPage == nil ? .none : .all
         )
-        .softSafeAreaBar(edge: .top) {
-            OnboardingHeader(pages: pages, page: page, title: title, description: description)
-                .onboardingBarBackdrop()
-        }
         .softSafeAreaBar(edge: .bottom) {
             VStack(spacing: 0) {
                 accessory()
@@ -106,24 +108,21 @@ private extension View {
 }
 
 struct OnboardingHeader<Page: Hashable>: View {
-    let pages: [Page]
     let page: Page
     let title: (Page) -> LocalizedStringKey
     let description: (Page) -> LocalizedStringKey?
 
     var body: some View {
         VStack(spacing: 0) {
-            ZStack {
-                Text(title(page))
-                    .font(.title)
-                    .fontWeight(.bold)
-                    .multilineTextAlignment(.center)
-                    .minimumScaleFactor(0.5)
-                    .id(page)
-                    .transition(.opacity)
-            }
-            .frame(height: 38)
-            .padding(.top, 28)
+            Text(title(page))
+                .font(.title)
+                .fontWeight(.bold)
+                // the soft edge effect only blurs the first line, so a second one would sit
+                // on sharp rows
+                .lineLimit(1)
+                .minimumScaleFactor(0.6)
+                .padding(.horizontal, 30)
+                .padding(.top, 28)
 
             if let text = description(page) {
                 Text(text)
@@ -132,12 +131,9 @@ struct OnboardingHeader<Page: Hashable>: View {
                     .multilineTextAlignment(.center)
                     .padding(.horizontal, 30)
                     .padding(.top, 6)
-                    .padding(.bottom, 12)
-                    .id(page)
-                    .transition(.opacity)
             }
         }
-        .animation(.easeInOut(duration: 0.2), value: page)
+        .padding(.bottom, 12)
     }
 }
 

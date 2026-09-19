@@ -163,10 +163,3 @@ enum LocalSearchService {
         return score
     }
 }
-
-private extension String {
-    /// Lowercased and accent-stripped so matching ignores case and diacritics.
-    var folded: String {
-        folding(options: [.caseInsensitive, .diacriticInsensitive], locale: .current)
-    }
-}

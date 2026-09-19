@@ -7,6 +7,11 @@ import Foundation
 import OSLog
 
 public extension String {
+    /// Lowercased and accent-stripped so matching ignores case and diacritics.
+    var folded: String {
+        folding(options: [.caseInsensitive, .diacriticInsensitive], locale: .current)
+    }
+
     var bool: Bool? {
         UserDefaults.standard.value(forKey: self) as? Bool
     }

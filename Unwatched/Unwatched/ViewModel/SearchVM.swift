@@ -150,7 +150,7 @@ final class SearchVM {
             if Task.isCancelled || query != activeQuery { return }
             let filtered = assumesPodcastIntent
                 ? found
-                : found.filter { Self.isGoodPodcastMatch($0, query: query) }
+                : found.filter { PodcastSearchService.isGoodMatch($0, query: query) }
             withAnimation {
                 podcastResults = filtered
             }
@@ -160,23 +160,6 @@ final class SearchVM {
     private static func queryImpliesPodcastIntent(_ query: String) -> Bool {
         let words = query.lowercased().split(whereSeparator: { !$0.isLetter })
         return words.contains { $0 == "pod" || $0 == "pods" || $0.hasPrefix("podcast") }
-    }
-
-    private static func isGoodPodcastMatch(_ sub: SendableSubscription, query: String) -> Bool {
-        let fold: (String) -> String = { $0.folding(options: [.diacriticInsensitive, .caseInsensitive], locale: nil) }
-        let normalizedQuery = fold(query)
-        guard !normalizedQuery.isEmpty else { return true }
-        let title = fold(sub.title)
-        let author = fold(sub.author ?? "")
-        if title.contains(normalizedQuery) || author.contains(normalizedQuery) {
-            return true
-        }
-        let queryWords = normalizedQuery
-            .split(whereSeparator: { !$0.isLetter && !$0.isNumber })
-            .filter { $0.count > 2 }
-        guard !queryWords.isEmpty else { return false }
-        let matchedCount = queryWords.filter { title.contains($0) || author.contains($0) }.count
-        return matchedCount * 2 >= queryWords.count
     }
 
     /// Re-runs the search for the currently active query (e.g. after a filter change),

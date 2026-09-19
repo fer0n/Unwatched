@@ -1,16 +1,26 @@
 //
-//  OnboardingChannelSuggestions.swift
+//  OnboardingSearchSuggestions.swift
 //  Unwatched
 //
 
 import Foundation
+import UnwatchedShared
 
-/// Starter channels offered on the first onboarding page.
-///
-/// Avatar urls are the ones YouTube served at the time; a channel changing its picture falls the
-/// row back to its monogram placeholder.
-enum OnboardingChannelSuggestions {
-    static let all: [YoutubeChannelSearchResult] = [
+/// Starter channels and podcasts offered on the first onboarding page, before any search.
+enum OnboardingSearchSuggestions {
+    static let all: [OnboardingSearchResult] = channels.map(OnboardingSearchResult.channel)
+        + (localizedPodcasts + podcasts).map(OnboardingSearchResult.podcast)
+
+    static let allIds = Set(all.map(\.id))
+
+    /// Shown ahead of the general podcast suggestions when the device language matches.
+    private static var localizedPodcasts: [SendableSubscription] {
+        Locale.current.language.languageCode?.identifier == "de" ? germanPodcasts : []
+    }
+
+    /// Avatar urls are the ones YouTube served at the time; a channel changing its picture falls the
+    /// row back to its monogram placeholder.
+    private static let channels: [YoutubeChannelSearchResult] = [
         channel("UCBJycsmduvYEL83R_U4JriQ", "Marques Brownlee", "mkbhd",
                 "qu4TmIaYUlS41-dJ9gZ7DUR3nilvmB5_11i6OKSdvNnBNiyOusZP1bMN6ICnuxtjFBb6ioKgRQ"),
         channel("UCHnyfMqiRRG1u-2MsSQLbXA", "Veritasium", "veritasium",
@@ -83,6 +93,70 @@ enum OnboardingChannelSuggestions {
                 "NmzjFJ3oFspQ47IkoaNT_tGAN0a9gI_YbW7Fs-VVchxeJ0a336-qarZ4CMboDAS0vw17cqEY")
     ]
 
+    /// Feed urls and artwork are the ones the iTunes Search API returned at lookup time.
+    private static let podcasts: [SendableSubscription] = [
+        podcast("The Daily", "The New York Times",
+                "https://feeds.simplecast.com/Sl5CSM3S",
+                "https://is1-ssl.mzstatic.com/image/thumb/Podcasts221/v4/ab/64/66/"
+                    + "ab6466a9-9a7d-e20e-7a3d-bc5be37d29ce/mza_15084852813176276273.jpg/600x600bb.jpg"),
+        podcast("Stuff You Should Know", "iHeartPodcasts",
+                "https://www.omnycontent.com/d/playlist/e73c998e-6e60-432f-8610-ae210140c5b1/"
+                    + "a91018a4-ea4f-4130-bf55-ae270180c327/44710ecc-10bb-48d1-93c7-ae270180c33e/podcast.rss",
+                "https://is1-ssl.mzstatic.com/image/thumb/Podcasts221/v4/aa/82/91/"
+                    + "aa82912f-23ee-6f6a-583c-a4e993164d0e/mza_12111158076643383507.jpg/600x600bb.jpg"),
+        podcast("Search Engine", "PJ Vogt",
+                "https://rss.amperwave.net/v2/feed/audacynetwork/search-engine",
+                "https://is1-ssl.mzstatic.com/image/thumb/Podcasts211/v4/90/5b/62/"
+                    + "905b6220-b426-6e2d-b97c-9f0a16ed31c4/mza_1372109499010593679.jpeg/600x600bb.jpg"),
+        podcast("99% Invisible", "Roman Mars",
+                "https://feeds.simplecast.com/BqbsxVfO",
+                "https://is1-ssl.mzstatic.com/image/thumb/Podcasts211/v4/79/d0/35/"
+                    + "79d035ea-9043-b43e-7380-33cd47bd968b/mza_2606971010425550919.jpg/600x600bb.jpg"),
+        podcast("Planet Money", "NPR",
+                "https://feeds.npr.org/510289/podcast.xml",
+                "https://is1-ssl.mzstatic.com/image/thumb/Podcasts211/v4/85/df/53/"
+                    + "85df5334-0fae-28a9-2bc4-b97b81061d0e/mza_10839245066228881011.jpg/600x600bb.jpg"),
+        podcast("Acquired", "Ben Gilbert and David Rosenthal",
+                "https://feeds.transistor.fm/acquired",
+                "https://is1-ssl.mzstatic.com/image/thumb/Podcasts211/v4/a8/e1/de/"
+                    + "a8e1deff-9f88-4e55-a541-b0dc793c0cdc/mza_11539673419613154037.jpg/600x600bb.jpg"),
+        podcast("Accidental Tech Podcast", "Marco Arment, Casey Liss, John Siracusa",
+                "https://cdn.atp.fm/rss/public?wtvryzdm",
+                "https://is1-ssl.mzstatic.com/image/thumb/Podcasts126/v4/91/22/42/"
+                    + "9122426f-df98-4302-6ba3-da67b0648e70/mza_5041274938111919910.png/600x600bb.jpg"),
+        podcast("The Vergecast", "The Verge",
+                "https://feeds.megaphone.fm/vergecast",
+                "https://is1-ssl.mzstatic.com/image/thumb/Podcasts211/v4/1d/64/cd/"
+                    + "1d64cd45-4497-ee37-0e35-df108046d9e6/mza_781548057726205094.jpg/600x600bb.jpg"),
+        podcast("Connected", "Relay",
+                "https://relay.fm/connected/feed",
+                "https://is1-ssl.mzstatic.com/image/thumb/Podcasts211/v4/29/c1/27/"
+                    + "29c12751-9796-9123-256e-eb00d8eff3c5/mza_2600270488002690512.jpeg/600x600bb.jpg"),
+        podcast("The Talk Show With John Gruber", "Daring Fireball / John Gruber",
+                "https://daringfireball.net/thetalkshow/rss",
+                "https://is1-ssl.mzstatic.com/image/thumb/Podcasts126/v4/3c/d5/d3/"
+                    + "3cd5d37f-bc05-ec52-e700-08bb37839faa/mza_17217490491625030645.png/600x600bb.jpg"),
+        podcast("The Rest Is History", "Goalhanger",
+                "https://feeds.megaphone.fm/GLT4787413333",
+                "https://is1-ssl.mzstatic.com/image/thumb/Podcasts211/v4/bf/89/a5/"
+                    + "bf89a586-3f77-bf37-7ba3-b75f1bca7bfa/mza_1664785978944494824.jpg/600x600bb.jpg")
+    ]
+
+    private static let germanPodcasts: [SendableSubscription] = [
+        podcast("Lage der Nation", "Philip Banse & Ulf Buermeyer",
+                "https://feeds.lagedernation.org/feeds/ldn-mp3.xml",
+                "https://is1-ssl.mzstatic.com/image/thumb/Podcasts113/v4/da/72/0b/"
+                    + "da720b3e-9cb3-0239-fad9-0f80d5daff10/mza_7473842586054974690.png/600x600bb.jpg"),
+        podcast("Bits und so", "Undsoversum GmbH",
+                "http://www.bitsundso.de/feed/",
+                "https://is1-ssl.mzstatic.com/image/thumb/Podcasts62/v4/32/21/7c/"
+                    + "32217c1f-e63d-8d25-d4c1-13647bb55f1e/mza_7055685683099081324.jpg/600x600bb.jpg"),
+        podcast("Kennzeichen E", "Lage der Nation & Christina Kunkel",
+                "https://feeds.lagedernation.org/feeds/kze-mp3.xml",
+                "https://is1-ssl.mzstatic.com/image/thumb/Podcasts221/v4/08/c8/87/"
+                    + "08c8872f-42a8-7910-e8b6-b44a89ed3c17/mza_12104381563337490898.png/600x600bb.jpg")
+    ]
+
     private static func channel(
         _ channelId: String,
         _ title: String,
@@ -96,6 +170,22 @@ enum OnboardingChannelSuggestions {
             thumbnailUrl: URL(
                 string: "https://yt3.googleusercontent.com/\(imagePath)=s176-c-k-c0x00ffffff-no-rj"
             )
+        )
+    }
+
+    private static func podcast(
+        _ title: String,
+        _ author: String,
+        _ feedUrl: String,
+        _ artworkUrl: String
+    ) -> SendableSubscription {
+        SendableSubscription(
+            // same http→https upgrade the directory search applies, so ATS can't block a feed
+            link: PodcastService.secureUrl(string: feedUrl),
+            title: title,
+            author: author,
+            isPodcast: true,
+            thumbnailUrl: PodcastService.secureUrl(string: artworkUrl)
         )
     }
 }

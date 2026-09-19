@@ -13609,31 +13609,31 @@
         "de" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Wähle die Kanäle, die dich interessieren"
+            "value" : "Wähle deine liebsten YouTube-Kanäle und Podcasts. Fang am besten klein an, du kannst jederzeit mehr hinzufügen"
           }
         },
         "en" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Select the channels you care about"
+            "value" : "Pick your favorite YouTube channels and Audio Podcasts. Best to start small, you can always add more at any time"
           }
         },
         "es" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Elige los canales que te importan"
+            "value" : "Elige tus canales de YouTube y pódcasts favoritos. Es mejor empezar con pocos, siempre puedes añadir más"
           }
         },
         "fr" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Choisissez les chaînes qui vous intéressent"
+            "value" : "Choisissez vos chaînes YouTube et podcasts préférés. Mieux vaut commencer petit, vous pourrez en ajouter à tout moment"
           }
         },
         "pl" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Wybierz kanały, na których Ci zależy"
+            "value" : "Wybierz ulubione kanały YouTube i podcasty. Najlepiej zacząć od kilku, zawsze możesz dodać więcej"
           }
         }
       }
@@ -13643,31 +13643,31 @@
         "de" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Videos, ohne Ablenkung"
+            "value" : "Kanäle & Podcasts"
           }
         },
         "en" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Videos, distraction-free"
+            "value" : "Channels & Podcasts"
           }
         },
         "es" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Vídeos, sin distracciones"
+            "value" : "Canales y podcasts"
           }
         },
         "fr" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Des vidéos, sans distraction"
+            "value" : "Chaînes et podcasts"
           }
         },
         "pl" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Filmy bez rozpraszaczy"
+            "value" : "Kanały i podcasty"
           }
         }
       }
@@ -13949,31 +13949,31 @@
         "de" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Beliebigen Kanal suchen"
+            "value" : "Kanal oder Podcast suchen"
           }
         },
         "en" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Search any channel"
+            "value" : "Search any channel or podcast"
           }
         },
         "es" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Buscar cualquier canal"
+            "value" : "Buscar cualquier canal o pódcast"
           }
         },
         "fr" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Rechercher n'importe quelle chaîne"
+            "value" : "Rechercher une chaîne ou un podcast"
           }
         },
         "pl" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Szukaj dowolnego kanału"
+            "value" : "Szukaj kanału lub podcastu"
           }
         }
       }

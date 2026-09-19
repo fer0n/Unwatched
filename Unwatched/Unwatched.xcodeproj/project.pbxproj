@@ -934,18 +934,22 @@
 		CD0FBE000000000000000006 /* OnboardingViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = CD0FBE000000000000000004 /* OnboardingViewModel.swift */; };
 		CD0FBE000000000000000008 /* OnboardingChannelsPage.swift in Sources */ = {isa = PBXBuildFile; fileRef = CD0FBE000000000000000007 /* OnboardingChannelsPage.swift */; };
 		CD0FBE000000000000000009 /* OnboardingChannelsPage.swift in Sources */ = {isa = PBXBuildFile; fileRef = CD0FBE000000000000000007 /* OnboardingChannelsPage.swift */; };
-		CD0FBE00000000000000000B /* OnboardingChannelRow.swift in Sources */ = {isa = PBXBuildFile; fileRef = CD0FBE00000000000000000A /* OnboardingChannelRow.swift */; };
-		CD0FBE00000000000000000C /* OnboardingChannelRow.swift in Sources */ = {isa = PBXBuildFile; fileRef = CD0FBE00000000000000000A /* OnboardingChannelRow.swift */; };
+		CD0FBE00000000000000000B /* OnboardingResultRow.swift in Sources */ = {isa = PBXBuildFile; fileRef = CD0FBE00000000000000000A /* OnboardingResultRow.swift */; };
+		CD0FBE00000000000000000C /* OnboardingResultRow.swift in Sources */ = {isa = PBXBuildFile; fileRef = CD0FBE00000000000000000A /* OnboardingResultRow.swift */; };
 		CD0FBE00000000000000000E /* OnboardingShortsPage.swift in Sources */ = {isa = PBXBuildFile; fileRef = CD0FBE00000000000000000D /* OnboardingShortsPage.swift */; };
 		CD0FBE00000000000000000F /* OnboardingShortsPage.swift in Sources */ = {isa = PBXBuildFile; fileRef = CD0FBE00000000000000000D /* OnboardingShortsPage.swift */; };
-		CD0FBE000000000000000011 /* OnboardingChannelSuggestions.swift in Sources */ = {isa = PBXBuildFile; fileRef = CD0FBE000000000000000010 /* OnboardingChannelSuggestions.swift */; };
-		CD0FBE000000000000000012 /* OnboardingChannelSuggestions.swift in Sources */ = {isa = PBXBuildFile; fileRef = CD0FBE000000000000000010 /* OnboardingChannelSuggestions.swift */; };
 		CD0FBE000000000000000014 /* OnboardingSheetModifier.swift in Sources */ = {isa = PBXBuildFile; fileRef = CD0FBE000000000000000013 /* OnboardingSheetModifier.swift */; };
 		CD0FBE000000000000000015 /* OnboardingSheetModifier.swift in Sources */ = {isa = PBXBuildFile; fileRef = CD0FBE000000000000000013 /* OnboardingSheetModifier.swift */; };
 		CD0FBE000000000000000017 /* OnboardingInboxTip.swift in Sources */ = {isa = PBXBuildFile; fileRef = CD0FBE000000000000000016 /* OnboardingInboxTip.swift */; };
 		CD0FBE000000000000000018 /* OnboardingInboxTip.swift in Sources */ = {isa = PBXBuildFile; fileRef = CD0FBE000000000000000016 /* OnboardingInboxTip.swift */; };
 		CD0FBE00000000000000001A /* YoutubeChannelSearch.swift in Sources */ = {isa = PBXBuildFile; fileRef = CD0FBE000000000000000019 /* YoutubeChannelSearch.swift */; };
 		CD0FBE00000000000000001B /* YoutubeChannelSearch.swift in Sources */ = {isa = PBXBuildFile; fileRef = CD0FBE000000000000000019 /* YoutubeChannelSearch.swift */; };
+		CD0FBE00000000000000001E /* OnboardingSearchResult.swift in Sources */ = {isa = PBXBuildFile; fileRef = CD0FBE00000000000000001C /* OnboardingSearchResult.swift */; };
+		CD0FBE00000000000000001F /* OnboardingSearchResult.swift in Sources */ = {isa = PBXBuildFile; fileRef = CD0FBE00000000000000001C /* OnboardingSearchResult.swift */; };
+		CD0FBE000000000000000020 /* OnboardingSearchSuggestions.swift in Sources */ = {isa = PBXBuildFile; fileRef = CD0FBE00000000000000001D /* OnboardingSearchSuggestions.swift */; };
+		CD0FBE000000000000000021 /* OnboardingSearchSuggestions.swift in Sources */ = {isa = PBXBuildFile; fileRef = CD0FBE00000000000000001D /* OnboardingSearchSuggestions.swift */; };
+		CD0FBE000000000000000023 /* OnboardingViewModel+Search.swift in Sources */ = {isa = PBXBuildFile; fileRef = CD0FBE000000000000000022 /* OnboardingViewModel+Search.swift */; };
+		CD0FBE000000000000000024 /* OnboardingViewModel+Search.swift in Sources */ = {isa = PBXBuildFile; fileRef = CD0FBE000000000000000022 /* OnboardingViewModel+Search.swift */; };
 		CD0FBE0000000000000000A2 /* SettingsSplashView.swift in Sources */ = {isa = PBXBuildFile; fileRef = CD0FBE0000000000000000A1 /* SettingsSplashView.swift */; };
 		CD0FBE0000000000000000A3 /* SettingsSplashView.swift in Sources */ = {isa = PBXBuildFile; fileRef = CD0FBE0000000000000000A1 /* SettingsSplashView.swift */; };
 		CD0FBE0000000000000000A5 /* SettingsSplashCards.swift in Sources */ = {isa = PBXBuildFile; fileRef = CD0FBE0000000000000000A4 /* SettingsSplashCards.swift */; };
@@ -1647,12 +1651,14 @@
 		CD0FBE000000000000000001 /* OnboardingView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = OnboardingView.swift; sourceTree = "<group>"; };
 		CD0FBE000000000000000004 /* OnboardingViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = OnboardingViewModel.swift; sourceTree = "<group>"; };
 		CD0FBE000000000000000007 /* OnboardingChannelsPage.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = OnboardingChannelsPage.swift; sourceTree = "<group>"; };
-		CD0FBE00000000000000000A /* OnboardingChannelRow.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = OnboardingChannelRow.swift; sourceTree = "<group>"; };
+		CD0FBE00000000000000000A /* OnboardingResultRow.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = OnboardingResultRow.swift; sourceTree = "<group>"; };
 		CD0FBE00000000000000000D /* OnboardingShortsPage.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = OnboardingShortsPage.swift; sourceTree = "<group>"; };
-		CD0FBE000000000000000010 /* OnboardingChannelSuggestions.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = OnboardingChannelSuggestions.swift; sourceTree = "<group>"; };
 		CD0FBE000000000000000013 /* OnboardingSheetModifier.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = OnboardingSheetModifier.swift; sourceTree = "<group>"; };
 		CD0FBE000000000000000016 /* OnboardingInboxTip.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = OnboardingInboxTip.swift; sourceTree = "<group>"; };
 		CD0FBE000000000000000019 /* YoutubeChannelSearch.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = YoutubeChannelSearch.swift; sourceTree = "<group>"; };
+		CD0FBE00000000000000001C /* OnboardingSearchResult.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = OnboardingSearchResult.swift; sourceTree = "<group>"; };
+		CD0FBE00000000000000001D /* OnboardingSearchSuggestions.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = OnboardingSearchSuggestions.swift; sourceTree = "<group>"; };
+		CD0FBE000000000000000022 /* OnboardingViewModel+Search.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "OnboardingViewModel+Search.swift"; sourceTree = "<group>"; };
 		CD0FBE0000000000000000A1 /* SettingsSplashView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SettingsSplashView.swift; sourceTree = "<group>"; };
 		CD0FBE0000000000000000A4 /* SettingsSplashCards.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SettingsSplashCards.swift; sourceTree = "<group>"; };
 		CD0FBE0000000000000000A7 /* OnboardingChrome.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = OnboardingChrome.swift; sourceTree = "<group>"; };
@@ -2459,13 +2465,15 @@
 			isa = PBXGroup;
 			children = (
 				CD0FBE000000000000000013 /* OnboardingSheetModifier.swift */,
-				CD0FBE000000000000000010 /* OnboardingChannelSuggestions.swift */,
+				CD0FBE00000000000000001C /* OnboardingSearchResult.swift */,
+				CD0FBE00000000000000001D /* OnboardingSearchSuggestions.swift */,
+				CD0FBE000000000000000022 /* OnboardingViewModel+Search.swift */,
 				CD0FBE00000000000000000D /* OnboardingShortsPage.swift */,
 				CD0FBE0000000000000000A1 /* SettingsSplashView.swift */,
 				CD0FBE0000000000000000A7 /* OnboardingChrome.swift */,
 				CD0FBE0000000000000000A4 /* SettingsSplashCards.swift */,
 				CD0FBE0000000000000000AA /* BrowserAlternatives.swift */,
-				CD0FBE00000000000000000A /* OnboardingChannelRow.swift */,
+				CD0FBE00000000000000000A /* OnboardingResultRow.swift */,
 				CD0FBE000000000000000007 /* OnboardingChannelsPage.swift */,
 				CD0FBE000000000000000004 /* OnboardingViewModel.swift */,
 				CD0FBE000000000000000001 /* OnboardingView.swift */,
@@ -3564,13 +3572,15 @@
 				CD0FBE00000000000000001A /* YoutubeChannelSearch.swift in Sources */,
 				CD0FBE000000000000000017 /* OnboardingInboxTip.swift in Sources */,
 				CD0FBE000000000000000014 /* OnboardingSheetModifier.swift in Sources */,
-				CD0FBE000000000000000011 /* OnboardingChannelSuggestions.swift in Sources */,
+				CD0FBE00000000000000001E /* OnboardingSearchResult.swift in Sources */,
+				CD0FBE000000000000000020 /* OnboardingSearchSuggestions.swift in Sources */,
+				CD0FBE000000000000000023 /* OnboardingViewModel+Search.swift in Sources */,
 				CD0FBE00000000000000000E /* OnboardingShortsPage.swift in Sources */,
 				CD0FBE0000000000000000A2 /* SettingsSplashView.swift in Sources */,
 				CD0FBE0000000000000000A8 /* OnboardingChrome.swift in Sources */,
 				CD0FBE0000000000000000A5 /* SettingsSplashCards.swift in Sources */,
 				CD0FBE0000000000000000AB /* BrowserAlternatives.swift in Sources */,
-				CD0FBE00000000000000000B /* OnboardingChannelRow.swift in Sources */,
+				CD0FBE00000000000000000B /* OnboardingResultRow.swift in Sources */,
 				CD0FBE000000000000000008 /* OnboardingChannelsPage.swift in Sources */,
 				CD0FBE000000000000000005 /* OnboardingViewModel.swift in Sources */,
 				CD0FBE000000000000000002 /* OnboardingView.swift in Sources */,
@@ -3828,13 +3838,15 @@
 				CD0FBE00000000000000001B /* YoutubeChannelSearch.swift in Sources */,
 				CD0FBE000000000000000018 /* OnboardingInboxTip.swift in Sources */,
 				CD0FBE000000000000000015 /* OnboardingSheetModifier.swift in Sources */,
-				CD0FBE000000000000000012 /* OnboardingChannelSuggestions.swift in Sources */,
+				CD0FBE00000000000000001F /* OnboardingSearchResult.swift in Sources */,
+				CD0FBE000000000000000021 /* OnboardingSearchSuggestions.swift in Sources */,
+				CD0FBE000000000000000024 /* OnboardingViewModel+Search.swift in Sources */,
 				CD0FBE00000000000000000F /* OnboardingShortsPage.swift in Sources */,
 				CD0FBE0000000000000000A3 /* SettingsSplashView.swift in Sources */,
 				CD0FBE0000000000000000A9 /* OnboardingChrome.swift in Sources */,
 				CD0FBE0000000000000000A6 /* SettingsSplashCards.swift in Sources */,
 				CD0FBE0000000000000000AC /* BrowserAlternatives.swift in Sources */,
-				CD0FBE00000000000000000C /* OnboardingChannelRow.swift in Sources */,
+				CD0FBE00000000000000000C /* OnboardingResultRow.swift in Sources */,
 				CD0FBE000000000000000009 /* OnboardingChannelsPage.swift in Sources */,
 				CD0FBE000000000000000006 /* OnboardingViewModel.swift in Sources */,
 				CD0FBE000000000000000003 /* OnboardingView.swift in Sources */,

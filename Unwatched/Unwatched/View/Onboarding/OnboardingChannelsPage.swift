@@ -10,18 +10,30 @@ struct OnboardingChannelsPage: View {
     @Bindable var viewModel: OnboardingViewModel
 
     var body: some View {
-        let channels = viewModel.listedChannels
-        let firstId = channels.first?.id
+        let results = viewModel.listedResults
+        let firstId = results.first?.id
 
         ScrollView {
             LazyVStack(spacing: 0) {
-                ForEach(channels) { channel in
-                    OnboardingChannelRow(
-                        channel: channel,
-                        isSelected: viewModel.isSelected(channel),
-                        showsDivider: channel.id != firstId
+                // only above the suggestions: over search results it describes the wrong list
+                if viewModel.searchText.isEmpty {
+                    Text("onboardingChannelsDescription")
+                        .font(.subheadline)
+                        .foregroundStyle(.secondary)
+                        .multilineTextAlignment(.center)
+                        .frame(maxWidth: .infinity)
+                        .padding(.horizontal, 30)
+                        .padding(.top, 6)
+                        .padding(.bottom, 14)
+                }
+
+                ForEach(results) { result in
+                    OnboardingResultRow(
+                        result: result,
+                        isSelected: viewModel.isSelected(result),
+                        showsDivider: result.id != firstId
                     ) {
-                        viewModel.toggle(channel)
+                        viewModel.toggle(result)
                     }
                     .padding(.horizontal, OnboardingLayout.horizontalPadding)
                 }

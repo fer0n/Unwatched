@@ -41,9 +41,11 @@ struct OnboardingView: View {
             }
         }
 
-        var description: LocalizedStringKey {
+        /// `nil` for `.channels`: that page shows its own description inline, scrolling away
+        /// with the list instead of sitting in the fixed header
+        var description: LocalizedStringKey? {
             switch self {
-            case .channels: return "onboardingChannelsDescription"
+            case .channels: return nil
             case .shorts: return "onboardingShortsDescription"
             }
         }

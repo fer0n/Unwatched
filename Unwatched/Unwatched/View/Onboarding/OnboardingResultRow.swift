@@ -1,15 +1,15 @@
 //
-//  OnboardingChannelRow.swift
+//  OnboardingResultRow.swift
 //  Unwatched
 //
 
 import SwiftUI
 import UnwatchedShared
 
-struct OnboardingChannelRow: View {
+struct OnboardingResultRow: View {
     @AppStorage(Const.themeColor) var theme = ThemeColor()
 
-    let channel: YoutubeChannelSearchResult
+    let result: OnboardingSearchResult
     let isSelected: Bool
     var showsDivider = false
     let toggle: () -> Void
@@ -23,15 +23,22 @@ struct OnboardingChannelRow: View {
                 avatar
 
                 VStack(alignment: .leading, spacing: 1) {
-                    Text(channel.title)
+                    Text(result.title)
                         .font(.headline)
                         .lineLimit(1)
 
-                    if let subtitle {
-                        Text(subtitle)
-                            .font(.subheadline)
+                    HStack(spacing: 4) {
+                        Image(systemName: typeIcon)
+                            .font(.caption2)
+                            .fontWeight(.black)
                             .foregroundStyle(.secondary)
-                            .lineLimit(1)
+
+                        if let subtitle = result.subtitle {
+                            Text(subtitle)
+                                .font(.subheadline)
+                                .foregroundStyle(.secondary)
+                                .lineLimit(1)
+                        }
                     }
                 }
                 .frame(maxWidth: .infinity, alignment: .leading)
@@ -55,40 +62,38 @@ struct OnboardingChannelRow: View {
         }
     }
 
-    var subtitle: String? {
-        [channel.subscriberCount, channel.userName.map { "@\($0)" }]
-            .compactMap { $0 }
-            .first
+    var typeIcon: String {
+        result.isPodcast ? "antenna.radiowaves.left.and.right" : "play.rectangle.fill"
     }
 
     var avatar: some View {
-        CachedImageView(imageUrl: channel.thumbnailUrl) { image in
+        CachedImageView(imageUrl: result.thumbnailUrl) { image in
             image
                 .resizable()
                 .scaledToFill()
         } placeholder: {
             ZStack {
                 Color.insetBackgroundColor
-                Text(channel.title.prefix(1))
+                Text(result.title.prefix(1))
                     .font(.title3)
                     .fontWeight(.bold)
                     .foregroundStyle(.secondary)
             }
         }
         .frame(width: Self.avatarSize, height: Self.avatarSize)
-        .channelImageClip(isPodcast: false)
+        .channelImageClip(isPodcast: result.isPodcast)
     }
 }
 
 #Preview {
     List {
-        OnboardingChannelRow(
-            channel: OnboardingChannelSuggestions.all[0],
+        OnboardingResultRow(
+            result: OnboardingSearchSuggestions.all[0],
             isSelected: true,
             toggle: { }
         )
-        OnboardingChannelRow(
-            channel: OnboardingChannelSuggestions.all[1],
+        OnboardingResultRow(
+            result: OnboardingSearchSuggestions.all[1],
             isSelected: false,
             toggle: { }
         )

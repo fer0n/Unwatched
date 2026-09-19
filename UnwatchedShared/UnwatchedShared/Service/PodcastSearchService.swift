@@ -35,6 +35,24 @@ public enum PodcastSearchService {
         return try await fetchResults(url).first
     }
 
+    /// The directory answers loosely — a one-word query comes back with shows that merely
+    /// mention it. Keeps the ones whose title or author actually reflects the query.
+    public static func isGoodMatch(_ sub: SendableSubscription, query: String) -> Bool {
+        let query = query.folded
+        guard !query.isEmpty else { return true }
+        let title = sub.title.folded
+        let author = (sub.author ?? "").folded
+        if title.contains(query) || author.contains(query) {
+            return true
+        }
+        let words = query
+            .split(whereSeparator: { !$0.isLetter && !$0.isNumber })
+            .filter { $0.count > 2 }
+        guard !words.isEmpty else { return false }
+        let matched = words.filter { title.contains($0) || author.contains($0) }.count
+        return matched * 2 >= words.count
+    }
+
     private static func fetchResults(_ url: URL) async throws -> [SendableSubscription] {
         let (data, response) = try await URLSession.app.data(from: url)
         guard response.isSuccessfulHttp else {
