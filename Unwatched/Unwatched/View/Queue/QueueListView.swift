@@ -147,7 +147,6 @@ struct QueueListView: View {
             .myNavigationTitle(title, principal: { QueueTagTitle(title: title) })
             .sendableSubscriptionDestination()
             .toolbar {
-                ToolbarSpacerWorkaround()
                 #if !os(iOS)
                 // the title isn't a view here, so the switcher needs a button of its own
                 ToolbarItem(placement: .primaryAction) {

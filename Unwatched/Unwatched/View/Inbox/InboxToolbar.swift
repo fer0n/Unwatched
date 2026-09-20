@@ -72,7 +72,6 @@ struct InboxToolbar: ViewModifier {
         content
             .toolbar {
                 UndoToolbarButton()
-                ToolbarSpacerWorkaround()
                 InboxAppearanceToolbarButton()
                 RefreshToolbarContent()
             }

@@ -96,14 +96,3 @@ struct RefreshToolbarContent: ToolbarContent {
         }
     }
 }
-
-struct ToolbarSpacerWorkaround: ToolbarContent {
-    var body: some ToolbarContent {
-        ToolbarItem(placement: .secondaryAction) {
-            #if os(macOS)
-            Button("") {}
-                .buttonStyle(.plain)
-            #endif
-        }
-    }
-}
