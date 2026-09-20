@@ -689,6 +689,10 @@
 		88AA40132F2000000000D013 /* MediaSuggestionService.swift in Sources */ = {isa = PBXBuildFile; fileRef = 88AA20012F1000000000B001 /* MediaSuggestionService.swift */; };
 		88AA40142F2000000000D014 /* PlayMediaIntentHandler.swift in Sources */ = {isa = PBXBuildFile; fileRef = 88AA20022F1000000000B002 /* PlayMediaIntentHandler.swift */; };
 		88AA40152F2000000000D015 /* BackgroundPlaybackManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = F6E752B17B521261C873B3BA /* BackgroundPlaybackManager.swift */; };
+		88AA41012F2000000000E002 /* IncreasePlaybackSpeed.swift in Sources */ = {isa = PBXBuildFile; fileRef = 88AA41002F2000000000E001 /* IncreasePlaybackSpeed.swift */; };
+		88AA41022F2000000000E003 /* IncreasePlaybackSpeed.swift in Sources */ = {isa = PBXBuildFile; fileRef = 88AA41002F2000000000E001 /* IncreasePlaybackSpeed.swift */; };
+		88AA41042F2000000000E005 /* DecreasePlaybackSpeed.swift in Sources */ = {isa = PBXBuildFile; fileRef = 88AA41032F2000000000E004 /* DecreasePlaybackSpeed.swift */; };
+		88AA41052F2000000000E006 /* DecreasePlaybackSpeed.swift in Sources */ = {isa = PBXBuildFile; fileRef = 88AA41032F2000000000E004 /* DecreasePlaybackSpeed.swift */; };
 		88AB10012F9C000100AAAA01 /* ScrollWheelStepper.swift in Sources */ = {isa = PBXBuildFile; fileRef = 88AB10002F9C000100AAAA01 /* ScrollWheelStepper.swift */; };
 		88AB10022F9C000100AAAA01 /* ScrollWheelStepper.swift in Sources */ = {isa = PBXBuildFile; fileRef = 88AB10002F9C000100AAAA01 /* ScrollWheelStepper.swift */; };
 		88ABDF442D64F0A400DBD7F8 /* CustomSettingsToggleStyle.swift in Sources */ = {isa = PBXBuildFile; fileRef = 88ABDF432D64F0A400DBD7F8 /* CustomSettingsToggleStyle.swift */; };
@@ -1498,6 +1502,8 @@
 		88AA20092F1000000000B009 /* pl */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = pl; path = pl.lproj/PlayMedia.strings; sourceTree = "<group>"; };
 		88AA20102F0000000000B010 /* VideoTagMenu.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = VideoTagMenu.swift; sourceTree = "<group>"; };
 		88AA20202F0000000000B020 /* TagModeLabels.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TagModeLabels.swift; sourceTree = "<group>"; };
+		88AA41002F2000000000E001 /* IncreasePlaybackSpeed.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = IncreasePlaybackSpeed.swift; sourceTree = "<group>"; };
+		88AA41032F2000000000E004 /* DecreasePlaybackSpeed.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DecreasePlaybackSpeed.swift; sourceTree = "<group>"; };
 		88AB10002F9C000100AAAA01 /* ScrollWheelStepper.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ScrollWheelStepper.swift; sourceTree = "<group>"; };
 		88ABDF432D64F0A400DBD7F8 /* CustomSettingsToggleStyle.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CustomSettingsToggleStyle.swift; sourceTree = "<group>"; };
 		88AD06662B74ADE900151B07 /* AddToLibraryView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AddToLibraryView.swift; sourceTree = "<group>"; };
@@ -2289,6 +2295,8 @@
 				887E82A72CD8FC1000B196EA /* AddYoutubeURL.swift */,
 				5119A44971DFAF56FFC579D7 /* NextVideo.swift */,
 				88F85F4A2E1006D400FB15A1 /* NextVideoChapter.swift */,
+				88AA41002F2000000000E001 /* IncreasePlaybackSpeed.swift */,
+				88AA41032F2000000000E004 /* DecreasePlaybackSpeed.swift */,
 				88F85F4C2E100AD000FB15A1 /* PreviousVideoChapter.swift */,
 				881EEE542D02F0D40028EAF8 /* AddSubscription.swift */,
 				887E82AB2CD8FC8B00B196EA /* GetCurrentVideo.swift */,
@@ -3178,6 +3186,8 @@
 				88AA40042F2000000000D004 /* AddYoutubeURL.swift in Sources */,
 				88AA40052F2000000000D005 /* NextVideo.swift in Sources */,
 				88AA40062F2000000000D006 /* NextVideoChapter.swift in Sources */,
+				88AA41012F2000000000E002 /* IncreasePlaybackSpeed.swift in Sources */,
+				88AA41042F2000000000E005 /* DecreasePlaybackSpeed.swift in Sources */,
 				88AA40072F2000000000D007 /* PreviousVideoChapter.swift in Sources */,
 				88AA40082F2000000000D008 /* AddSubscription.swift in Sources */,
 				88AA40092F2000000000D009 /* GetCurrentVideo.swift in Sources */,
@@ -4029,6 +4039,8 @@
 				8808A9192B95116A004D7CE2 /* NewVideosNotificationInfo.swift in Sources */,
 				887255F82D9420A2008F1DE1 /* NSApplicationDelegate.swift in Sources */,
 				88F85F4B2E1006D400FB15A1 /* NextVideoChapter.swift in Sources */,
+				88AA41022F2000000000E003 /* IncreasePlaybackSpeed.swift in Sources */,
+				88AA41052F2000000000E006 /* DecreasePlaybackSpeed.swift in Sources */,
 				8FEE66D6B58FE2808570CCFA /* NextVideo.swift in Sources */,
 				888E1E042B70E84A00608F99 /* AnimationCompletionCallback.swift in Sources */,
 				888F74A92BA1FD8400B94822 /* GeneralSettingsView.swift in Sources */,
