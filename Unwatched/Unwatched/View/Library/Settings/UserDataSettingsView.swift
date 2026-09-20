@@ -341,10 +341,5 @@ struct AsyncSharableFile: Transferable {
 
 #Preview {
     UserDataSettingsView()
-        .modelContainer(DataProvider.previewContainer)
-        .environment(NavigationManager())
-        .environment(PlayerManager())
-        .environment(RefreshManager())
-        .environment(ImageCacheManager())
-        .environment(Alerter())
+        .previewEnvironments()
 }
