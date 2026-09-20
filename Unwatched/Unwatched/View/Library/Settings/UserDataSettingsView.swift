@@ -27,6 +27,13 @@ struct UserDataSettingsView: View {
             MyBackgroundColor()
 
             MyForm {
+                #if os(macOS)
+                // iOS shows this in `SettingsView`; the macOS settings window has no such list.
+                MySection {
+                    YoutubeLoginButton()
+                }
+                #endif
+
                 CloudSyncSetting()
 
                 AutoDeleteVideosView()

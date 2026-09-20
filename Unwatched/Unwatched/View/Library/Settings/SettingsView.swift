@@ -10,7 +10,6 @@ import UnwatchedShared
 struct SettingsView: View {
     @Environment(NavigationManager.self) var navManager
     @AppStorage(Const.themeColor) var theme = ThemeColor()
-    @State private var isLoggedIntoYoutube = false
     @State private var showOpmlImporter = false
 
     var body: some View {
@@ -59,23 +58,7 @@ struct SettingsView: View {
                 }
 
                 MySection("userData") {
-                    Button {
-                        Task {
-                            let loggedIn = await BrowserManager.shared.isLoggedIntoYoutube()
-                            navManager.openBrowser(
-                                loggedIn ? .youtubeStartPage : .url(UrlService.youtubeLoginUrl.absoluteString)
-                            )
-                        }
-                    } label: {
-                        LibraryNavListItem(
-                            "youtubeLogin",
-                            subTitle: isLoggedIntoYoutube ? "youtubeLoginActive" : nil,
-                            systemName: "person.crop.circle"
-                        )
-                    }
-                    .task {
-                        isLoggedIntoYoutube = await BrowserManager.shared.isLoggedIntoYoutube()
-                    }
+                    YoutubeLoginButton()
 
                     Menu {
                         Button("importFromYoutube") {

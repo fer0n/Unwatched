@@ -150,6 +150,8 @@
 		8823EB782B5519C60010A12F /* SubStateOverview.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8823EB772B5519C60010A12F /* SubStateOverview.swift */; };
 		88250C612B49273100174C8D /* Date.swift in Sources */ = {isa = PBXBuildFile; fileRef = 88250C602B49273100174C8D /* Date.swift */; };
 		88253072A9EC95E688D9565F /* SubscriptionSkipSetting.swift in Sources */ = {isa = PBXBuildFile; fileRef = 88E2ABCAAC0887D9028AAAD5 /* SubscriptionSkipSetting.swift */; };
+		88AA00112F9A000100000002 /* YoutubeLoginButton.swift in Sources */ = {isa = PBXBuildFile; fileRef = 88AA00112F9A000100000001 /* YoutubeLoginButton.swift */; };
+		88AA00112F9A000100000003 /* YoutubeLoginButton.swift in Sources */ = {isa = PBXBuildFile; fileRef = 88AA00112F9A000100000001 /* YoutubeLoginButton.swift */; };
 		8826DD222E6EE9CA008234B3 /* PrivacySettingsView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8826DD212E6EE9CA008234B3 /* PrivacySettingsView.swift */; };
 		8826DD232E6EE9CA008234B3 /* PrivacySettingsView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8826DD212E6EE9CA008234B3 /* PrivacySettingsView.swift */; };
 		88274EFC301E46FC0033352A /* PlayerEdgeSwipe.swift in Sources */ = {isa = PBXBuildFile; fileRef = 88274EFB301E46FC0033352A /* PlayerEdgeSwipe.swift */; };
@@ -1246,6 +1248,7 @@
 		882153602FC03C6900167AEF /* PlayerObservers.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PlayerObservers.swift; sourceTree = "<group>"; };
 		8823EB772B5519C60010A12F /* SubStateOverview.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SubStateOverview.swift; sourceTree = "<group>"; };
 		88250C602B49273100174C8D /* Date.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Date.swift; sourceTree = "<group>"; };
+		88AA00112F9A000100000001 /* YoutubeLoginButton.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = YoutubeLoginButton.swift; sourceTree = "<group>"; };
 		8826DD212E6EE9CA008234B3 /* PrivacySettingsView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PrivacySettingsView.swift; sourceTree = "<group>"; };
 		88274EFB301E46FC0033352A /* PlayerEdgeSwipe.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PlayerEdgeSwipe.swift; sourceTree = "<group>"; };
 		88274EFF301E47250033352A /* DescriptionEdgeSwipe.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DescriptionEdgeSwipe.swift; sourceTree = "<group>"; };
@@ -2336,6 +2339,7 @@
 				888F74A62BA1FAC000B94822 /* NotificationSettingsView.swift */,
 				888F74AC2BA2009C00B94822 /* AppearanceSettingsView.swift */,
 				88632AF42B64FD8200C93F82 /* UserDataSettingsView.swift */,
+				88AA00112F9A000100000001 /* YoutubeLoginButton.swift */,
 				88F7B2CB2C4D883500E722F3 /* DeleteImageCacheButton.swift */,
 				889A84E62E6C198E006F210A /* DeleteEverythingExceptSubsButton.swift */,
 				88CD38942E21480200E7B21C /* DeleteTranscriptCacheButton.swift */,
@@ -3617,6 +3621,7 @@
 				D5E2AD4F2A5543FAB42EBEC4 /* ChapterService+Player.swift in Sources */,
 				880E87002F6562F2001DAAE8 /* VideoListItemActions.swift in Sources */,
 				889AF9102C50ECE7001CEDE6 /* SettingsView.swift in Sources */,
+				88AA00112F9A000100000002 /* YoutubeLoginButton.swift in Sources */,
 				8897E94E2C59903B006093B5 /* FullscreenOverlayControls.swift in Sources */,
 				889AF9112C50ECE7001CEDE6 /* UserDataSettingsView.swift in Sources */,
 				883D44F63018079C00950B89 /* LocalSearchService.swift in Sources */,
@@ -3972,6 +3977,7 @@
 				8899246D2C480112001185A6 /* HandleVideoListItemTap.swift in Sources */,
 				887AC8CC2B49584400512852 /* WatchHistoryView.swift in Sources */,
 				88C572332B53C8BD002FF07E /* SettingsView.swift in Sources */,
+				88AA00112F9A000100000003 /* YoutubeLoginButton.swift in Sources */,
 				881F573F2C4A5D3300559BF9 /* BrowserViewSheet.swift in Sources */,
 				88CD38952E21480200E7B21C /* DeleteTranscriptCacheButton.swift in Sources */,
 				88EEFDE82B72E12500A1F441 /* InboxTip.swift in Sources */,
