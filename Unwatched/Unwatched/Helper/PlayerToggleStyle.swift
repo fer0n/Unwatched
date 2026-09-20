@@ -48,6 +48,7 @@ struct PlayerToggleModifier: ViewModifier {
             .opacity(isEnabled ? 1 : 0.3)
             .background(background.padding(-5))
             .clipShape(Circle())
+            .contentShape(Circle())
             #if !os(visionOS)
             .modifier(OptionalPlayerControlBackground(isEnabled: backgroundColor == nil))
         #endif
