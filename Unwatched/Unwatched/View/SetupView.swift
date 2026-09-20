@@ -97,6 +97,9 @@ struct SetupView: View {
             #endif
             .onAppear {
                 navManager.openWindow = openWindow
+                Task {
+                    await BrowserManager.shared.logYoutubeCookies("launch")
+                }
             }
             #if os(iOS) || os(visionOS)
             // `.active` is the first point at which the app is on screen — `sceneDidBecomeActive`

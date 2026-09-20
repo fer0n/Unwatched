@@ -92,19 +92,18 @@ final class YTHLSProxyLoader: NSObject, AVAssetResourceLoaderDelegate, @unchecke
             request.setValue("https://www.youtube.com", forHTTPHeaderField: "Origin")
             request.setValue("https://www.youtube.com/", forHTTPHeaderField: "Referer")
         }
-        // For googlevideo.com segment CDN requests, attach all cookies extracted from the
-        // WKWebView at proxy creation time (webViewCookies). This includes both youtube.com
-        // and googlevideo.com cookies needed for rqh=1-enforced content.
-        // Falls back to HTTPCookieStorage.shared when webViewCookies was not provided.
+        // Segment requests need the cookies extracted from the WKWebView at proxy creation time:
+        // the googlevideo.com ones for rqh=1 content, plus the visitor id the CDN validates.
         if let host = realURL.host, host.contains("googlevideo.com") {
-            let cookies: [HTTPCookie] = webViewCookies.isEmpty
+            let source: [HTTPCookie] = webViewCookies.isEmpty
                 ? (HTTPCookieStorage.shared.cookies(for: URL(string: "https://www.youtube.com")!) ?? [])
                 : webViewCookies
+            let cookies = YoutubeCookieFilter.sharable(source)
             if !cookies.isEmpty {
                 let cookieHeader = cookies.map { "\($0.name)=\($0.value)" }.joined(separator: "; ")
                 request.setValue(cookieHeader, forHTTPHeaderField: "Cookie")
-                let gvCount = cookies.filter { $0.domain.contains("googlevideo") }.count
-                proxyLog.notice("[HLSProxy] attaching \(cookies.count) cookies (\(gvCount) googlevideo) to segment request")
+                let gvCount = cookies.filter(\.isYoutubeCdnDomain).count
+                proxyLog.notice("[HLSProxy] attaching \(cookies.count)/\(source.count) cookies (\(gvCount) googlevideo) to segment request")
             }
         }
         proxyLog.notice("[HLSProxy] GET \(realURL.absoluteString.prefix(200))")

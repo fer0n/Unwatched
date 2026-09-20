@@ -264,6 +264,10 @@ public actor InnerTubeAPI {
         config.timeoutIntervalForResource = 60
         config.waitsForConnectivity = true
         config.urlCache = .memoryOnly
+        // No cookies either way: every credential here is an explicit header or body field, and
+        // an inherited session on a call declaring a TV client gets the login invalidated.
+        config.httpCookieStorage = nil
+        config.httpShouldSetCookies = false
         self.session = URLSession(configuration: config)
         self.authToken = authToken
         self.poTokenProvider = poTokenProvider

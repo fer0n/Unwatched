@@ -152,6 +152,7 @@
 		88253072A9EC95E688D9565F /* SubscriptionSkipSetting.swift in Sources */ = {isa = PBXBuildFile; fileRef = 88E2ABCAAC0887D9028AAAD5 /* SubscriptionSkipSetting.swift */; };
 		88AA00112F9A000100000002 /* YoutubeLoginButton.swift in Sources */ = {isa = PBXBuildFile; fileRef = 88AA00112F9A000100000001 /* YoutubeLoginButton.swift */; };
 		88AA00112F9A000100000003 /* YoutubeLoginButton.swift in Sources */ = {isa = PBXBuildFile; fileRef = 88AA00112F9A000100000001 /* YoutubeLoginButton.swift */; };
+		88AA00112F9A000100000005 /* YoutubeCookieFilterTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 88AA00112F9A000100000004 /* YoutubeCookieFilterTests.swift */; };
 		8826DD222E6EE9CA008234B3 /* PrivacySettingsView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8826DD212E6EE9CA008234B3 /* PrivacySettingsView.swift */; };
 		8826DD232E6EE9CA008234B3 /* PrivacySettingsView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8826DD212E6EE9CA008234B3 /* PrivacySettingsView.swift */; };
 		88274EFC301E46FC0033352A /* PlayerEdgeSwipe.swift in Sources */ = {isa = PBXBuildFile; fileRef = 88274EFB301E46FC0033352A /* PlayerEdgeSwipe.swift */; };
@@ -1249,6 +1250,7 @@
 		8823EB772B5519C60010A12F /* SubStateOverview.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SubStateOverview.swift; sourceTree = "<group>"; };
 		88250C602B49273100174C8D /* Date.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Date.swift; sourceTree = "<group>"; };
 		88AA00112F9A000100000001 /* YoutubeLoginButton.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = YoutubeLoginButton.swift; sourceTree = "<group>"; };
+		88AA00112F9A000100000004 /* YoutubeCookieFilterTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = YoutubeCookieFilterTests.swift; sourceTree = "<group>"; };
 		8826DD212E6EE9CA008234B3 /* PrivacySettingsView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PrivacySettingsView.swift; sourceTree = "<group>"; };
 		88274EFB301E46FC0033352A /* PlayerEdgeSwipe.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PlayerEdgeSwipe.swift; sourceTree = "<group>"; };
 		88274EFF301E47250033352A /* DescriptionEdgeSwipe.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DescriptionEdgeSwipe.swift; sourceTree = "<group>"; };
@@ -1969,6 +1971,7 @@
 				CDA07A372C601F350009BFEC /* TestData */,
 				CDA07A382C601F510009BFEC /* DataSpeedTests.swift */,
 				88F4E7592CA47EFE00DCF70E /* UrlServiceTests.swift */,
+				88AA00112F9A000100000004 /* YoutubeCookieFilterTests.swift */,
 				CDEB17712C5CCB4B00E6FE66 /* VideoCrawlerTests.swift */,
 				882FBA7F2B905F2500213CEF /* UnwatchedUITests.swift */,
 				8802F84E2C691A51008A7778 /* ImageServiceTests.swift */,
@@ -3515,6 +3518,7 @@
 				8846DF332F76A599008AC6FE /* UTType.swift in Sources */,
 				8849F3902DF068550040DD9A /* ImageAccentBackground.swift in Sources */,
 				88F4E75A2CA47EFE00DCF70E /* UrlServiceTests.swift in Sources */,
+				88AA00112F9A000100000005 /* YoutubeCookieFilterTests.swift in Sources */,
 				886E21732EC1488A00BF03B5 /* UpdateWindowSizeModifier.swift in Sources */,
 				880E85D32F655B88001DAAE8 /* TrailingSwipeMoreMenu.swift in Sources */,
 				889A84E82E6C198E006F210A /* DeleteEverythingExceptSubsButton.swift in Sources */,

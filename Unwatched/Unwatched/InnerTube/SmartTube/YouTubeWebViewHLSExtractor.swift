@@ -748,11 +748,9 @@ final class YouTubeWebViewHLSExtractor: NSObject {
 
         extractLog.notice("✅ [webView] hlsManifestUrl extracted url=\(String(url.absoluteString.prefix(200)) as NSString)")
 
-        // Sync youtube.com session cookies from WKWebView's httpCookieStore into
-        // HTTPCookieStorage.shared NOW (page-load cookies are already set by the time
-        // the player makes its /player call — no need to wait for video playback).
-        // The proxy loader will attach these cookies to googlevideo.com segment requests
-        // so the CDN can validate the /bui/ token against VISITOR_INFO1_LIVE.
+        // Sync the CDN-relevant cookies into the app's own jar NOW (page-load cookies are
+        // already set by the time the player makes its /player call), so the proxy loader can
+        // attach them and the CDN can validate the /bui/ token against VISITOR_INFO1_LIVE.
         let capturedURL = url
         // fixNSolver: Capture extractedNSolver at the moment finishWithURL is called.
         // A concurrent serialExtract call (e.g. VideoCardView prewarming) can call
@@ -764,10 +762,11 @@ final class YouTubeWebViewHLSExtractor: NSObject {
         Task { @MainActor [weak self] in
             await withCheckedContinuation { (cont: CheckedContinuation<Void, Never>) in
                 WKWebsiteDataStore.default().httpCookieStore.getAllCookies { cookies in
-                    let gvCount = cookies.filter { $0.domain.contains("googlevideo") }.count
-                    let names = cookies.map { "\($0.name)@\($0.domain)" }.joined(separator: " ")
-                    extractLog.notice("⚠️ [webView] syncing \(cookies.count) cookies (\(gvCount) googlevideo): \(names as NSString)")
-                    for cookie in cookies {
+                    let sharable = YoutubeCookieFilter.sharable(cookies)
+                    let gvCount = sharable.filter(\.isYoutubeCdnDomain).count
+                    let names = sharable.map { "\($0.name)@\($0.domain)" }.joined(separator: " ")
+                    extractLog.notice("[webView] syncing \(sharable.count)/\(cookies.count) cookies (\(gvCount) googlevideo): \(names as NSString)")
+                    for cookie in sharable {
                         HTTPCookieStorage.shared.setCookie(cookie)
                     }
                     cont.resume()

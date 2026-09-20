@@ -107,6 +107,19 @@ import UnwatchedShared
         return nil
     }
 
+    /// Reports which Google cookies the web view's store actually holds. Names only, no values.
+    @MainActor
+    func logYoutubeCookies(_ context: String) async {
+        let cookies = await withCheckedContinuation { (continuation: CheckedContinuation<[HTTPCookie], Never>) in
+            WKWebsiteDataStore.default().httpCookieStore.getAllCookies { continuation.resume(returning: $0) }
+        }
+        let names = cookies
+            .filter { $0.isGoogleDomain || $0.isYoutubeCdnDomain }
+            .map { "\($0.name)@\($0.domain)" }
+            .sorted()
+        Log.info("youtube cookies (\(context)): \(names.joined(separator: " "))")
+    }
+
     @MainActor
     func isLoggedIntoYoutube() async -> Bool {
         let cookies = await withCheckedContinuation { (continuation: CheckedContinuation<[HTTPCookie], Never>) in
