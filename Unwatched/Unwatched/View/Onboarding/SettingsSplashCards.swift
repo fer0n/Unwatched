@@ -13,13 +13,16 @@ enum SplashCardLayout {
 }
 
 struct SplashCardList<Content: View>: View {
+    let title: LocalizedStringKey
+    var description: LocalizedStringKey?
     @ViewBuilder let content: () -> Content
 
     var body: some View {
         ScrollView {
+            OnboardingHeader(title: title, description: description)
             VStack(spacing: 12, content: content)
                 .padding(.horizontal, OnboardingLayout.horizontalPadding)
-                .padding(.vertical, 8)
+                .padding(.bottom, 8)
         }
         .scrollBounceBehavior(.basedOnSize)
     }

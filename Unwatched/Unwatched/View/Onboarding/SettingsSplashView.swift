@@ -13,39 +13,37 @@ struct SettingsSplashView: View {
 
     @State private var page: SplashPage = .features
 
-    private enum SplashPage: CaseIterable, Hashable, Sendable {
+    private enum SplashPage: Hashable {
         case features
         case settings
-
-        var title: LocalizedStringKey {
-            switch self {
-            case .features: return "settingsSplashFeaturesTitle"
-            case .settings: return "settingsSplashSettingsTitle"
-            }
-        }
-
-        var description: LocalizedStringKey? {
-            switch self {
-            case .features: return nil
-            case .settings: return "settingsSplashSettingsDescription"
-            }
-        }
     }
 
     var body: some View {
-        OnboardingPager(
-            pages: SplashPage.allCases,
-            page: $page,
-            title: { $0.title },
-            description: { $0.description },
-            continueTitle: page == .settings ? "settingsSplashDone" : "onboardingContinue",
-            onContinue: handleContinue
-        ) {
-            switch $0 {
-            case .features: SplashFeaturesPage()
-            case .settings: SplashSettingsPage()
+        Group {
+            switch page {
+            case .features:
+                SplashFeaturesPage()
+                    .transition(.move(edge: .leading))
+            case .settings:
+                SplashSettingsPage()
+                    .transition(.move(edge: .trailing))
+                    .gesture(
+                        DragGesture(minimumDistance: 20)
+                            .onEnded { value in
+                                guard value.translation.width > 50 else { return }
+                                withAnimation {
+                                    page = .features
+                                }
+                            }
+                    )
             }
         }
+        .onboardingBottomBar(
+            page == .settings ? "settingsSplashDone" : "onboardingContinue",
+            onContinue: handleContinue
+        )
+        .onboardingSheetStyle()
+        .sensoryFeedback(Const.sensoryFeedback, trigger: page)
     }
 
     func handleContinue() {
@@ -96,7 +94,7 @@ private struct SplashFeaturesPage: View {
     ]
 
     var body: some View {
-        SplashCardList {
+        SplashCardList(title: "settingsSplashFeaturesTitle") {
             SplashCard(
                 systemName: "magnifyingglass",
                 title: "settingsSplashSearchTitle",
@@ -165,7 +163,10 @@ private struct SplashSettingsPage: View {
     @CloudStorage(Const.autoDeleteInboxVideosLimit) var autoDeleteInboxVideosLimit: Int = 100
 
     var body: some View {
-        SplashCardList {
+        SplashCardList(
+            title: "settingsSplashSettingsTitle",
+            description: "settingsSplashSettingsDescription"
+        ) {
             toggleCard(
                 systemName: Const.watchedSF,
                 title: "markWatchedOnEnded",

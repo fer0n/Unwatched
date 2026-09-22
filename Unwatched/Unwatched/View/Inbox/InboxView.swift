@@ -27,6 +27,7 @@ struct InboxView: View {
 
 private struct InboxContent: View {
     @AppStorage(Const.inboxAppearance) var inboxAppearance: InboxAppearance = .cards
+    @CloudStorage(Const.defaultShortsSetting) var defaultShortsSetting: ShortsSetting = .show
 
     @Environment(\.modelContext) var modelContext
     @Environment(\.colorScheme) private var colorScheme
@@ -38,8 +39,14 @@ private struct InboxContent: View {
     /// shared with `InboxCardStack` so the title can fade as the front card is dragged towards it
     @State private var cardSwipe = InboxCardSwipe()
 
-    private var onboardingTip: OnboardingInboxTip {
-        OnboardingInboxTip(appearance: inboxAppearance)
+    private var cardTip: (any Tip)? {
+        defaultShortsSetting == .show ? HideShortsTip() : nil
+    }
+
+    private func hideShorts() {
+        VideoService.clearAllYtShortsFromInbox(modelContext)
+        defaultShortsSetting = .hide
+        HideShortsTip().invalidate(reason: .actionPerformed)
     }
 
     init(oldestFirst: Bool) {
@@ -63,8 +70,9 @@ private struct InboxContent: View {
                 InboxCardStack(
                     entries: inboxEntries,
                     swipe: cardSwipe,
-                    actionBarTip: onboardingTip
+                    actionBarTip: cardTip
                 )
+                .tipViewStyle(ThemedTipViewStyle(action: hideShorts))
             } else {
                 listView
             }
@@ -103,7 +111,7 @@ private struct InboxContent: View {
         // Workaround: always have the list visible, this avoids a crash when adding the last
         // inbox item to the queue and then moving the video on top of the queue
         List {
-            HideShortsTipView()
+            HideShortsTipView(hideShorts: hideShorts)
                 .id(NavigationManager.getScrollId("top", ClearList.inbox.rawValue))
                 .listRowSeparator(.hidden)
 
@@ -144,7 +152,7 @@ private struct InboxContent: View {
                         .id(NavigationManager.getScrollId(video.youtubeId, ClearList.inbox.rawValue))
                         // only the topmost row, so the tip points at what's on screen
                         .popoverTip(
-                            onboardingTip,
+                            OnboardingInboxTip(),
                             arrowEdge: .top,
                             isActive: entry.id == inboxEntries.first?.id
                         )

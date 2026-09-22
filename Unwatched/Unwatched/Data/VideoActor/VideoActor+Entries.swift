@@ -270,7 +270,9 @@ extension VideoActor {
             let newSubLimit = sub.isPodcast
                 ? Const.podcastTriageNewSubs
                 : Const.triageNewSubs(newSubCount: firstTimeSubCount)
-            return Array(videos.prefix(newSubLimit))
+            let nonShorts = videos.filter { $0.isYtShort != true }
+            let candidates = nonShorts.isEmpty ? videos : nonShorts
+            return Array(candidates.prefix(newSubLimit))
         }
         return videos.filter { ($0.publishedDate ?? .distantPast) > cutOffDate }
     }

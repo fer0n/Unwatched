@@ -15,17 +15,10 @@ struct OnboardingChannelsPage: View {
 
         ScrollView {
             LazyVStack(spacing: 0) {
-                // only above the suggestions: over search results it describes the wrong list
-                if viewModel.searchText.isEmpty {
-                    Text("onboardingChannelsDescription")
-                        .font(.subheadline)
-                        .foregroundStyle(.secondary)
-                        .multilineTextAlignment(.center)
-                        .frame(maxWidth: .infinity)
-                        .padding(.horizontal, 30)
-                        .padding(.top, 6)
-                        .padding(.bottom, 14)
-                }
+                OnboardingHeader(
+                    title: "onboardingChannelsTitle",
+                    description: viewModel.searchText.isEmpty ? "onboardingChannelsDescription" : nil
+                )
 
                 ForEach(results) { result in
                     OnboardingResultRow(
@@ -38,7 +31,7 @@ struct OnboardingChannelsPage: View {
                     .padding(.horizontal, OnboardingLayout.horizontalPadding)
                 }
             }
-            .padding(.vertical, 6)
+            .padding(.bottom, 6)
             .background { MyBackgroundColor(macOS: false) }
         }
         #if !os(visionOS)

@@ -33,8 +33,6 @@ import UnwatchedShared
     private var subscribedResults = [String: OnboardingSearchResult]()
     @ObservationIgnored private var loadTask: Task<Void, Never>?
 
-    var hideShorts = true
-
     /// Cap on how long a refresh may be waited for, so onboarding can't get stuck on one
     private static let refreshTimeout: Duration = .seconds(30)
 
@@ -148,22 +146,6 @@ import UnwatchedShared
         let deadline = ContinuousClock.now + Self.refreshTimeout
         while refresher.isLoading, ContinuousClock.now < deadline {
             try? await Task.sleep(for: .milliseconds(100))
-        }
-    }
-
-    /// Clears the shorts the video load already put into the inbox. The setting itself is written
-    /// by the view, so `CloudStorage` observers see the change.
-    func cleanupShorts() async {
-        guard hideShorts else {
-            return
-        }
-        do {
-            // passed in rather than read back: the setting travels via iCloud's key-value store,
-            // which may not have it yet
-            let count = try await CleanupService.cleanupHiddenShorts(defaultHideShorts: true).value
-            Log.info("onboarding: cleaned up \(count) shorts")
-        } catch {
-            Log.error("onboarding shorts cleanup failed: \(error)")
         }
     }
 }

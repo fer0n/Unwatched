@@ -1249,7 +1249,6 @@ const FUNNELS = [
 const ONBOARDING_STEPS = [
   ['started', 'Reached onboarding'],
   ['channels', 'Got past channel picking'],
-  ['shorts', 'Got past shorts'],
   ['finished', 'Landed in the inbox'],
 ];
 

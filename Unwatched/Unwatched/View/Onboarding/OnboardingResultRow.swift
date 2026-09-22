@@ -7,7 +7,7 @@ import SwiftUI
 import UnwatchedShared
 
 struct OnboardingResultRow: View {
-    @AppStorage(Const.themeColor) var theme = ThemeColor()
+    @Environment(\.displayScale) private var displayScale
 
     let result: OnboardingSearchResult
     let isSelected: Bool
@@ -45,7 +45,7 @@ struct OnboardingResultRow: View {
 
                 Image(systemName: isSelected ? "checkmark.circle.fill" : "circle")
                     .font(.title2)
-                    .foregroundStyle(isSelected ? theme.color : Color.secondary.opacity(0.5))
+                    .foregroundStyle(isSelected ? AnyShapeStyle(.tint) : AnyShapeStyle(Color.secondary.opacity(0.5)))
                     .symbolRenderingMode(.hierarchical)
             }
             .padding(.vertical, 9)
@@ -67,7 +67,7 @@ struct OnboardingResultRow: View {
     }
 
     var avatar: some View {
-        CachedImageView(imageUrl: result.thumbnailUrl) { image in
+        CachedImageView(imageUrl: result.thumbnailUrl, maxPixelSize: ceil(Self.avatarSize * displayScale)) { image in
             image
                 .resizable()
                 .scaledToFill()
