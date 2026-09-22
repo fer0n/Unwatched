@@ -28,12 +28,6 @@ import UnwatchedShared
     /// Query `searchResults` belong to, so returning to the page doesn't re-run a finished search
     var loadedQuery: String?
 
-    /// Results already subscribed to, keyed by `id`, so re-entering the first page doesn't
-    /// subscribe twice and a later unselect knows what to unsubscribe from
-    private var subscribedResults = [String: OnboardingSearchResult]()
-    @ObservationIgnored private var loadTask: Task<Void, Never>?
-
-    /// Cap on how long a refresh may be waited for, so onboarding can't get stuck on one
     private static let refreshTimeout: Duration = .seconds(30)
 
     var isSelectionEmpty: Bool {
@@ -64,51 +58,22 @@ import UnwatchedShared
         }
     }
 
-    /// Subscribes to everything picked so far and loads their videos, so the inbox is already
-    /// filled by the time the last page is done. Awaitable via `waitForVideos()`.
-    ///
-    /// Runs again when the first page is continued a second time, unsubscribing whatever was
-    /// deselected in between.
-    func subscribeAndLoadVideos(_ refresher: RefreshManager) {
-        let selectedIds = Set(selected.map(\.id))
-        let newResults = selected.filter { subscribedResults[$0.id] == nil }
-        let removedResults = subscribedResults.values.filter { !selectedIds.contains($0.id) }
-        guard !newResults.isEmpty || !removedResults.isEmpty else {
+    func subscribeAndRefresh(_ refresher: RefreshManager) {
+        let results = selected
+        guard !results.isEmpty else {
             return
         }
-        for result in newResults {
-            subscribedResults[result.id] = result
-        }
-        for result in removedResults {
-            subscribedResults.removeValue(forKey: result.id)
-        }
-
-        let previousLoad = loadTask
-        loadTask = Task {
-            await previousLoad?.value
-            // after the previous load, so its videos are there to be removed with the subscription
-            for result in removedResults {
-                do {
-                    try await Self.unsubscribe(result)
-                } catch {
-                    Log.error("onboarding unsubscribe failed: \(error)")
-                }
-            }
-            guard !newResults.isEmpty else {
-                return
-            }
+        Task {
             do {
-                try await Self.subscribe(newResults)
+                try await Self.subscribe(results)
             } catch {
                 Log.error("onboarding subscribe failed: \(error)")
                 Signal.error("onboardingSubscribeFailed")
                 return
             }
-            // refreshAll returns without doing anything while another refresh is in flight, and
-            // that one started before these subscriptions existed
-            await waitForRefresh(refresher)
+            // refreshAll does nothing while another refresh is in flight
+            await Self.waitForRefresh(refresher)
             await refresher.refreshAll()
-            await waitForRefresh(refresher)
         }
     }
 
@@ -126,24 +91,8 @@ import UnwatchedShared
         }
     }
 
-    private static func unsubscribe(_ result: OnboardingSearchResult) async throws {
-        switch result {
-        case .channel(let channel):
-            try await SubscriptionService.unsubscribe(
-                SubscriptionInfo(channelId: channel.channelId)
-            ).value
-        case .podcast(let podcast):
-            guard let link = podcast.link else { return }
-            try await SubscriptionService.unsubscribeFromPodcast(link)
-        }
-    }
-
-    func waitForVideos() async {
-        await loadTask?.value
-    }
-
-    private func waitForRefresh(_ refresher: RefreshManager) async {
-        let deadline = ContinuousClock.now + Self.refreshTimeout
+    private static func waitForRefresh(_ refresher: RefreshManager) async {
+        let deadline = ContinuousClock.now + refreshTimeout
         while refresher.isLoading, ContinuousClock.now < deadline {
             try? await Task.sleep(for: .milliseconds(100))
         }

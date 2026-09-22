@@ -26,11 +26,10 @@ struct OnboardingView: View {
     @Environment(\.dismiss) var dismiss
 
     @State private var viewModel = OnboardingViewModel()
-    @State private var isFinishing = false
 
     var body: some View {
         OnboardingChannelsPage(viewModel: viewModel)
-            .onboardingBottomBar(continueTitle, isLoading: isFinishing, onContinue: handleContinue) {
+            .onboardingBottomBar(continueTitle, onContinue: handleContinue) {
                 OnboardingChannelsSearchBar(viewModel: viewModel)
             }
             .onboardingSheetStyle()
@@ -52,24 +51,17 @@ struct OnboardingView: View {
             "selected": Signal.bucket(viewModel.selected.count),
             "usedSearch": Signal.onOff(viewModel.didSearch)
         ])
-        viewModel.subscribeAndLoadVideos(refresher)
+        viewModel.subscribeAndRefresh(refresher)
         finish()
     }
 
     func finish() {
-        isFinishing = true
-        Task {
-            // so the inbox is complete before it becomes visible
-            await viewModel.waitForVideos()
-
-            Signal.onboardingStep("finished")
-            onboardingCompleted = true
-            settingsSplashShown = true
-            OnboardingInboxTip.onboardingFinished = true
-            navManager.navigateTo(.inbox)
-            isFinishing = false
-            dismiss()
-        }
+        Signal.onboardingStep("finished")
+        onboardingCompleted = true
+        settingsSplashShown = true
+        OnboardingInboxTip.onboardingFinished = true
+        navManager.navigateTo(.inbox)
+        dismiss()
     }
 }
 

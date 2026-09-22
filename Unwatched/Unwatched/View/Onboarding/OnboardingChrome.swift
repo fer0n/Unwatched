@@ -10,14 +10,13 @@ extension View {
     /// Apply to the page's `ScrollView` itself, or the soft edge effect falls back to a default height
     func onboardingBottomBar<Accessory: View>(
         _ continueTitle: LocalizedStringKey,
-        isLoading: Bool = false,
         onContinue: @escaping () -> Void,
         @ViewBuilder accessory: @escaping () -> Accessory = { EmptyView() }
     ) -> some View {
         softSafeAreaBar(edge: .bottom) {
             VStack(spacing: 0) {
                 accessory()
-                OnboardingContinueButton(continueTitle, isLoading: isLoading, action: onContinue)
+                OnboardingContinueButton(continueTitle, action: onContinue)
             }
             .padding(.bottom, 8)
             #if os(visionOS)
@@ -75,28 +74,19 @@ struct OnboardingContinueButton: View {
     @AppStorage(Const.themeColor) var theme = ThemeColor()
 
     let title: LocalizedStringKey
-    let isLoading: Bool
     let action: () -> Void
 
-    init(_ title: LocalizedStringKey, isLoading: Bool = false, action: @escaping () -> Void) {
+    init(_ title: LocalizedStringKey, action: @escaping () -> Void) {
         self.title = title
-        self.isLoading = isLoading
         self.action = action
     }
 
     var body: some View {
         Button(action: action) {
-            HStack(spacing: 8) {
-                Text(title)
-                if isLoading {
-                    ProgressView()
-                        .controlSize(.small)
-                }
-            }
-            .fontWeight(.semibold)
-            .frame(maxWidth: .infinity)
+            Text(title)
+                .fontWeight(.semibold)
+                .frame(maxWidth: .infinity)
         }
-        .disabled(isLoading)
         .buttonStyle(.borderedProminent)
         .tint(theme.color)
         .foregroundStyle(theme.contrastColor)
