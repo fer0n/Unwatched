@@ -59,6 +59,15 @@ class PodcastTriageTests: XCTestCase {
         return try XCTUnwrap(sub.toExport)
     }
 
+    /// A first load triages a single episode, so tests that need several rows take the rest from a
+    /// follow-up refresh, where everything newer than the feed head gets a row.
+    private func seedRows(_ show: SendableSubscription, count: Int) async {
+        let actor = VideoActor()
+        _ = await actor.handleNewVideos(show, episodes(1...10), defaultPlacement: placement)
+        guard count > 1 else { return }
+        _ = await actor.handleNewVideos(show, episodes(1...(9 + count)), defaultPlacement: placement)
+    }
+
     func testOnlyTriagedEpisodesBecomeRows() async throws {
         let show = try makeSubscription(isPodcast: true, name: "TriageShow")
 
@@ -85,7 +94,7 @@ class PodcastTriageTests: XCTestCase {
 
         XCTAssertEqual(inserted, 30)
         XCTAssertNotEqual(
-            Const.triageNewSubs,
+            Const.triageNewSubs(newSubCount: 1),
             Const.podcastTriageNewSubs,
             "the YouTube limit is deliberately separate"
         )
@@ -94,12 +103,11 @@ class PodcastTriageTests: XCTestCase {
     /// Clearing an inbox entry leaves the row behind, and for a podcast that row is pure sync cost.
     func testStatelessEpisodeRowsAreSweptUp() async throws {
         let show = try makeSubscription(isPodcast: true, name: "SweepShow")
-        let actor = VideoActor()
-        _ = await actor.handleNewVideos(show, episodes(1...10), defaultPlacement: placement)
+        await seedRows(show, count: 3)
 
         let context = sharedWriteContext
         let showId = try XCTUnwrap(show.persistentId)
-        XCTAssertEqual(try rows(showId, in: context).count, Const.podcastTriageNewSubs)
+        XCTAssertEqual(try rows(showId, in: context).count, 3)
 
         let kept = try XCTUnwrap(try rows(showId, in: context).first)
         kept.bookmarkedDate = .now
@@ -119,13 +127,12 @@ class PodcastTriageTests: XCTestCase {
 
     func testSweepKeepsEpisodesTheUserIsStillUsing() async throws {
         let show = try makeSubscription(isPodcast: true, name: "SweepKeepShow")
-        let actor = VideoActor()
-        _ = await actor.handleNewVideos(show, episodes(1...10), defaultPlacement: placement)
+        await seedRows(show, count: 3)
 
         let context = sharedWriteContext
         let showId = try XCTUnwrap(show.persistentId)
         let stored = try rows(showId, in: context)
-        XCTAssertEqual(stored.count, Const.podcastTriageNewSubs)
+        XCTAssertEqual(stored.count, 3)
 
         stored[0].elapsedSeconds = 42
         stored[1].watchedDate = .now
@@ -143,7 +150,7 @@ class PodcastTriageTests: XCTestCase {
 
         XCTAssertEqual(
             try rows(showId, in: context).count,
-            Const.podcastTriageNewSubs,
+            3,
             "in progress, watched and downloaded episodes all still carry state"
         )
     }
@@ -239,5 +246,17 @@ class PodcastDownloadKeepTests: XCTestCase {
         let downloaded = await PodcastDownloadManager.shared.downloadedIds
         XCTAssertTrue(downloaded.contains("pod-keep-recent"))
         XCTAssertFalse(downloaded.contains("pod-keep-old"))
+    }
+}
+
+/// A first refresh fills the inbox with the tier times the number of subscriptions loading for the
+/// first time, so the boundaries are the part worth pinning down.
+class NewSubscriptionTriageTests: XCTestCase {
+    func testTriageLimitScalesWithNewSubscriptionCount() {
+        XCTAssertEqual(Const.triageNewSubs(newSubCount: 1), 4)
+        XCTAssertEqual(Const.triageNewSubs(newSubCount: 2), 2)
+        XCTAssertEqual(Const.triageNewSubs(newSubCount: 5), 2)
+        XCTAssertEqual(Const.triageNewSubs(newSubCount: 6), 1)
+        XCTAssertEqual(Const.triageNewSubs(newSubCount: 100), 1)
     }
 }

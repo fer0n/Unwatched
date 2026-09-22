@@ -40,7 +40,6 @@ extension VideoService {
     static func loadNewVideosInBg(
         subscriptionIds: [PersistentIdentifier]? = nil,
         fetchDurations: Bool,
-        firstTimeVideoLimit: Int? = nil,
         ignoreCache: Bool = false
     ) -> Task<NewVideosNotificationInfo, Error> {
         return Task.detached {
@@ -51,7 +50,6 @@ extension VideoService {
                 return try await repo.loadVideos(
                     subscriptionIds,
                     fetchDurations: hasPremium && fetchDurations,
-                    firstTimeVideoLimit: firstTimeVideoLimit,
                     ignoreCache: ignoreCache
                 )
             } catch {

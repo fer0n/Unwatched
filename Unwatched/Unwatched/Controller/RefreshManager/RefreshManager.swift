@@ -120,10 +120,9 @@ enum RefreshSource {
 
     func refreshAll(
         hardRefresh: Bool = false,
-        firstTimeVideoLimit: Int? = nil,
         source: RefreshSource = .manual
     ) async {
-        await refresh(hardRefresh: hardRefresh, firstTimeVideoLimit: firstTimeVideoLimit, source: source)
+        await refresh(hardRefresh: hardRefresh, source: source)
     }
 
     /// `ignoreCache` is for a refresh the user asked for on one subscription: a cached feed would
@@ -152,7 +151,6 @@ enum RefreshSource {
     private func refresh(
         subscriptionIds: [PersistentIdentifier]? = nil,
         hardRefresh: Bool = false,
-        firstTimeVideoLimit: Int? = nil,
         ignoreCache: Bool = false,
         source: RefreshSource = .manual
     ) async {
@@ -170,7 +168,6 @@ enum RefreshSource {
         await performRefresh(
             subscriptionIds: subscriptionIds,
             hardRefresh: hardRefresh,
-            firstTimeVideoLimit: firstTimeVideoLimit,
             ignoreCache: ignoreCache
         )
         await stopLoading()
@@ -179,7 +176,6 @@ enum RefreshSource {
     private func performRefresh(
         subscriptionIds: [PersistentIdentifier]?,
         hardRefresh: Bool,
-        firstTimeVideoLimit: Int? = nil,
         ignoreCache: Bool = false
     ) async {
         let isFullRefresh = subscriptionIds?.isEmpty ?? true
@@ -190,7 +186,6 @@ enum RefreshSource {
             let task = VideoService.loadNewVideosInBg(
                 subscriptionIds: subscriptionIds,
                 fetchDurations: true,
-                firstTimeVideoLimit: firstTimeVideoLimit,
                 ignoreCache: ignoreCache
             )
             let result = try await task.value

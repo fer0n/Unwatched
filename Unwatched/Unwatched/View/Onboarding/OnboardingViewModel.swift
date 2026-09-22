@@ -109,7 +109,7 @@ import UnwatchedShared
             // refreshAll returns without doing anything while another refresh is in flight, and
             // that one started before these subscriptions existed
             await waitForRefresh(refresher)
-            await refresher.refreshAll(firstTimeVideoLimit: Const.triageOnboardingSubs)
+            await refresher.refreshAll()
             await waitForRefresh(refresher)
         }
     }

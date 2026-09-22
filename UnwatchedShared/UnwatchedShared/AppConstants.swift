@@ -141,15 +141,20 @@ public struct Const {
     /// If current playback speed is bigger than this, it will temporarily increase, otherwise decrease
     public static let temporarySpeedSwap: Double = 1.6
 
-    /// Number of videos from new subscriptions that will be triaged
-    public static let triageNewSubs = 5
+    /// Number of videos from a new subscription that will be triaged, scaled down by how many
+    /// subscriptions load for the first time in the same run: subscribing to one channel should
+    /// be worth a look, importing a list of twenty should not bury the inbox.
+    public static func triageNewSubs(newSubCount: Int) -> Int {
+        switch newSubCount {
+        case ..<2: 4
+        case ..<6: 2
+        default: 1
+        }
+    }
 
-    /// Same for subscriptions added during onboarding, lower so a first inbox stays skimmable
-    public static let triageOnboardingSubs = 3
-
-    /// Episodes triaged from a new podcast subscription; lower than `triageNewSubs` because the
-    /// rest of the catalogue is in `PodcastEpisodeCache`.
-    public static let podcastTriageNewSubs = 3
+    /// Episodes triaged from a new podcast subscription, independent of how many subscriptions load
+    /// with it: unlike a channel's feed, the rest of the catalogue stays in `PodcastEpisodeCache`.
+    public static let podcastTriageNewSubs = 1
 
     /// Episodes parsed from a podcast feed on a regular refresh, enough to triage what's new.
     public static let podcastRefreshEpisodeLimit = 20

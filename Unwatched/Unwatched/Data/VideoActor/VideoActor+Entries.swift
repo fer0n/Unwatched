@@ -267,8 +267,10 @@ extension VideoActor {
     /// back catalogue never becomes `Video` rows — it stays in `PodcastEpisodeCache`.
     func triageCandidates<T: VideoData>(_ videos: [T], sub: Subscription) -> [T] {
         guard let cutOffDate = sub.mostRecentVideoDate else {
-            let newSubLimit = sub.isPodcast ? Const.podcastTriageNewSubs : Const.triageNewSubs
-            return Array(videos.prefix(firstTimeVideoLimit ?? newSubLimit))
+            let newSubLimit = sub.isPodcast
+                ? Const.podcastTriageNewSubs
+                : Const.triageNewSubs(newSubCount: firstTimeSubCount)
+            return Array(videos.prefix(newSubLimit))
         }
         return videos.filter { ($0.publishedDate ?? .distantPast) > cutOffDate }
     }

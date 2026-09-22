@@ -31,8 +31,9 @@ actor VideoActor: SharedContextActor {
     /// Feed fetch failures collected during the current `loadVideos` run.
     var fetchErrors = [any Error]()
 
-    /// Overrides `Const.triageNewSubs` for the current `loadVideos` run
-    var firstTimeVideoLimit: Int?
+    /// Subscriptions loading for the first time in the current `loadVideos` run, which sets how
+    /// many videos each of them triages (see `Const.triageNewSubs(newSubCount:)`).
+    var firstTimeSubCount = 0
 
     /// Skips the local response cache for the current `loadVideos` run
     var ignoreCache = false
@@ -186,20 +187,19 @@ actor VideoActor: SharedContextActor {
     func loadVideos(
         _ subscriptionIds: [PersistentIdentifier]?,
         fetchDurations: Bool,
-        firstTimeVideoLimit: Int? = nil,
         ignoreCache: Bool = false
     ) async throws -> NewVideosNotificationInfo {
         Log.info("loadVideos")
         newVideos = NewVideosNotificationInfo()
         fetchErrors = []
-        self.firstTimeVideoLimit = firstTimeVideoLimit
         self.ignoreCache = ignoreCache
         defer {
-            self.firstTimeVideoLimit = nil
+            self.firstTimeSubCount = 0
             self.ignoreCache = false
         }
 
         let sendableSubs = try getSubscriptions(subscriptionIds)
+        firstTimeSubCount = sendableSubs.count { $0.mostRecentVideoDate == nil }
         let placementInfo = getDefaultVideoPlacement()
 
         let deferredVideosTask = Task {
