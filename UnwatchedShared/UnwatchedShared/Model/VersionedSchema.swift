@@ -214,7 +214,7 @@ public enum UnwatchedMigrationPlan: SchemaMigrationPlan {
         toVersion: UnwatchedSchemaV1p15.self
     )
 
-    /// Adds `Subscription._liveStreamSetting`.
+    /// Adds `Subscription._liveStreamSetting` and `Tag.playbackSpeed`.
     public static let migrateV1p15toV1p16 = MigrationStage.lightweight(
         fromVersion: UnwatchedSchemaV1p15.self,
         toVersion: UnwatchedSchemaV1p16.self

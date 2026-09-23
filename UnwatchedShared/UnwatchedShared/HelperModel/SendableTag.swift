@@ -31,6 +31,9 @@ public struct SendableTag: Sendable, Codable, Hashable {
     /// `nil` means the tag has no opinion, see `Tag.seekSeconds`.
     public var seekSeconds: Double?
 
+    /// `nil` means the tag has no opinion, see `Tag.playbackSpeed`.
+    public var playbackSpeed: Double?
+
     public init(
         name: String,
         order: Int = Int.max,
@@ -42,7 +45,8 @@ public struct SendableTag: Sendable, Codable, Hashable {
         mode: Int? = nil,
         continuousPlay: Bool? = nil,
         suggestVideos: Bool? = nil,
-        seekSeconds: Double? = nil
+        seekSeconds: Double? = nil,
+        playbackSpeed: Double? = nil
     ) {
         self.name = name
         self.order = order
@@ -55,6 +59,7 @@ public struct SendableTag: Sendable, Codable, Hashable {
         self.continuousPlay = continuousPlay
         self.suggestVideos = suggestVideos
         self.seekSeconds = seekSeconds
+        self.playbackSpeed = playbackSpeed
     }
 
     /// Membership is re-linked by `UserDataService`, once the rows it names exist.
@@ -68,7 +73,8 @@ public struct SendableTag: Sendable, Codable, Hashable {
             mode: mode.flatMap(TagMode.init(rawValue:)) ?? .include,
             continuousPlay: continuousPlay,
             suggestVideos: suggestVideos,
-            seekSeconds: seekSeconds
+            seekSeconds: seekSeconds,
+            playbackSpeed: playbackSpeed
         )
     }
 }

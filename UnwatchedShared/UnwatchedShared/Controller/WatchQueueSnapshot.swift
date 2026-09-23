@@ -61,6 +61,8 @@ public struct WatchQueueSnapshot: WatchPayload {
         public var seekSeconds: Double?
         /// `nil` means the tag has no opinion, see `Tag.continuousPlay`.
         public var continuousPlay: Bool?
+        /// `nil` means the tag has no opinion, see `Tag.playbackSpeed`.
+        public var playbackSpeed: Double?
 
         public init(
             name: String,
@@ -71,7 +73,8 @@ public struct WatchQueueSnapshot: WatchPayload {
             channelTitles: [String] = [],
             youtubeIds: [String] = [],
             seekSeconds: Double? = nil,
-            continuousPlay: Bool? = nil
+            continuousPlay: Bool? = nil,
+            playbackSpeed: Double? = nil
         ) {
             self.name = name
             self.order = order
@@ -82,6 +85,7 @@ public struct WatchQueueSnapshot: WatchPayload {
             self.youtubeIds = youtubeIds
             self.seekSeconds = seekSeconds
             self.continuousPlay = continuousPlay
+            self.playbackSpeed = playbackSpeed
         }
     }
 

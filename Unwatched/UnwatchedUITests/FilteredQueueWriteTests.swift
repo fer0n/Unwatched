@@ -343,3 +343,67 @@ final class FilteredQueueWriteTests: XCTestCase {
         XCTAssertEqual(Tag.continuousPlayTag(for: video("music-1")), first)
     }
 }
+
+final class TagPlaybackSpeedTests: XCTestCase {
+    private var container: ModelContainer!
+    private var context: ModelContext!
+
+    override func setUpWithError() throws {
+        let schema = DataProvider.schema
+        container = try ModelContainer(
+            for: schema,
+            configurations: [
+                ModelConfiguration(schema: schema, isStoredInMemoryOnly: true, cloudKitDatabase: .none)
+            ]
+        )
+        context = ModelContext(container)
+    }
+
+    override func tearDownWithError() throws {
+        context = nil
+        container = nil
+    }
+
+    private func taggedVideo() throws -> (Subscription, Tag, Video) {
+        let channel = Subscription(link: nil, title: "Tech", youtubeChannelId: "tech")
+        let tag = Tag(name: "Tech", order: 0, playbackSpeed: 1.5)
+        let video = Video(title: "tech-1", url: nil, youtubeId: "tech-1")
+        context.insert(channel)
+        context.insert(tag)
+        context.insert(video)
+        video.subscription = channel
+        tag.subscriptions = [channel]
+        try context.save()
+        return (channel, tag, video)
+    }
+
+    func testChannelSpeedBeatsTagSpeed() throws {
+        let (channel, tag, video) = try taggedVideo()
+
+        XCTAssertEqual(video.customPlaybackSpeed, 1.5)
+
+        channel.customSpeedSetting = 2
+        XCTAssertEqual(video.customPlaybackSpeed, 2)
+
+        channel.customSpeedSetting = nil
+        tag.playbackSpeed = nil
+        XCTAssertNil(video.customPlaybackSpeed)
+    }
+
+    func testSpeedChangeWritesTheOverrideInEffect() throws {
+        let (channel, tag, video) = try taggedVideo()
+
+        XCTAssertTrue(video.updateCustomPlaybackSpeed(1.8))
+        XCTAssertEqual(tag.playbackSpeed, 1.8)
+        XCTAssertNil(channel.customSpeedSetting)
+
+        channel.customSpeedSetting = 2
+        XCTAssertTrue(video.updateCustomPlaybackSpeed(2.5))
+        XCTAssertEqual(channel.customSpeedSetting, 2.5)
+        XCTAssertEqual(tag.playbackSpeed, 1.8)
+
+        channel.customSpeedSetting = nil
+        tag.playbackSpeed = nil
+        XCTAssertFalse(video.updateCustomPlaybackSpeed(1.2))
+    }
+}

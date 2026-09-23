@@ -4968,6 +4968,40 @@
         }
       }
     },
+    "customPlaybackSpeed" : {
+      "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Eigene Geschwindigkeit"
+          }
+        },
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Custom Speed"
+          }
+        },
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Velocidad personalizada"
+          }
+        },
+        "fr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Vitesse personnalisée"
+          }
+        },
+        "pl" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Własna prędkość"
+          }
+        }
+      }
+    },
     "customSeekDuration" : {
       "localizations" : {
         "de" : {
@@ -15403,6 +15437,40 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "Prędkość %lf x"
+          }
+        }
+      }
+    },
+    "playbackSpeedTagHelper" : {
+      "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Gilt für Videos dieses Tags anstelle der Standardgeschwindigkeit. Die eigene Geschwindigkeit eines Kanals hat weiterhin Vorrang."
+          }
+        },
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Applies to videos of this tag instead of the default speed. A channel's own speed still takes precedence."
+          }
+        },
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Se aplica a los vídeos de esta etiqueta en lugar de la velocidad predeterminada. La velocidad propia de un canal sigue teniendo prioridad."
+          }
+        },
+        "fr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "S'applique aux vidéos de ce tag à la place de la vitesse par défaut. La vitesse propre à une chaîne reste prioritaire."
+          }
+        },
+        "pl" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Dotyczy filmów z tym tagiem zamiast domyślnej prędkości. Własna prędkość kanału nadal ma pierwszeństwo."
           }
         }
       }

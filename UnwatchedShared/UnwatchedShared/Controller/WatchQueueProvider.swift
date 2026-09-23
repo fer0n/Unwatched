@@ -48,7 +48,8 @@ actor WatchQueueSnapshotActor: SharedContextActor {
                         .map(\.youtubeId)
                         .filter(youtubeIds.contains),
                     seekSeconds: tag.seekSeconds,
-                    continuousPlay: tag.continuousPlay
+                    continuousPlay: tag.continuousPlay,
+                    playbackSpeed: tag.playbackSpeed
                 )
             }
 

@@ -55,7 +55,8 @@ public enum WatchQueueStore {
                 quickSwitch: item.quickSwitch,
                 mode: TagMode(rawValue: item.mode) ?? .include,
                 continuousPlay: item.continuousPlay,
-                seekSeconds: item.seekSeconds
+                seekSeconds: item.seekSeconds,
+                playbackSpeed: item.playbackSpeed
             )
             context.insert(tag)
             tag.subscriptions = item.channelTitles.compactMap { subscriptions[$0] }

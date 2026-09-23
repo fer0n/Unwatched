@@ -68,6 +68,9 @@ struct TagEditView: View {
                 #endif
             }
             .myTint()
+            #if !os(visionOS)
+            .scrollEdgeEffectStyle(.soft, for: .top)
+            #endif
             .myNavigationTitle(isNew ? "newTag" : .verbatim(navigationName))
             #if !os(macOS)
             .toolbar {
@@ -109,6 +112,20 @@ struct TagEditView: View {
         Binding(
             get: { tag.seekSeconds ?? PlayerManager.defaultSeekSeconds },
             set: { tag.seekSeconds = $0 }
+        )
+    }
+
+    private var hasCustomPlaybackSpeed: Binding<Bool> {
+        Binding(
+            get: { tag.playbackSpeed != nil },
+            set: { value in withAnimation { tag.playbackSpeed = value ? PlayerManager.shared.defaultPlaybackSpeed : nil } }
+        )
+    }
+
+    private var customPlaybackSpeed: Binding<Double> {
+        Binding(
+            get: { tag.playbackSpeed ?? PlayerManager.shared.defaultPlaybackSpeed },
+            set: { tag.playbackSpeed = $0 }
         )
     }
 
@@ -272,6 +289,20 @@ extension TagEditView {
                 if let seconds = tag.seekSeconds {
                     Stepper(value: customSeekSeconds, in: 1...120, step: 1) {
                         LabeledContent("seekBy", value: "\(Int(seconds))s")
+                    }
+                }
+            }
+
+            MySection(footer: "playbackSpeedTagHelper") {
+                Toggle(isOn: hasCustomPlaybackSpeed) {
+                    Text("customPlaybackSpeed")
+                }
+
+                if let speed = tag.playbackSpeed {
+                    Picker("playbackSpeed", selection: customPlaybackSpeed) {
+                        ForEach(Set(Const.speeds + [speed]).sorted(), id: \.self) {
+                            Text("\(SpeedHelper.formatSpeed($0))×")
+                        }
                     }
                 }
             }

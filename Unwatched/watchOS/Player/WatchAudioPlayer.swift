@@ -227,23 +227,21 @@ final class WatchAudioPlayer {
     /// the computed value publish.
     private var speedRevision = 0
 
-    /// The channel's own speed if it has one, otherwise this device's default speed. The default
+    /// The channel's or tag's own speed if there is one, otherwise this device's default speed. The default
     /// is a per-device setting: `UserDefaults` doesn't sync, so the phone's value doesn't apply here.
     var playbackSpeed: Double {
         _ = speedRevision
-        if let custom = video?.subscription?.customSpeedSetting, custom > 0 {
+        if let custom = video?.customPlaybackSpeed, custom > 0 {
             return custom
         }
         let stored = UserDefaults.standard.double(forKey: Const.playbackSpeed)
         return stored > 0 ? stored : 1
     }
 
-    /// Writes to whichever source is currently in effect, mirroring the phone: a channel with its
+    /// Writes to whichever source is currently in effect, mirroring the phone: a channel or tag with its
     /// own speed keeps that override, everything else falls back to the shared per-device default.
     func setPlaybackSpeed(_ value: Double) {
-        if video?.subscription?.customSpeedSetting != nil {
-            video?.subscription?.customSpeedSetting = value
-        } else {
+        if video?.updateCustomPlaybackSpeed(value) != true {
             UserDefaults.standard.set(value, forKey: Const.playbackSpeed)
         }
         speedRevision += 1

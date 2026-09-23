@@ -56,6 +56,9 @@ public final class Tag: CustomStringConvertible, Exportable {
     /// How far a seek moves within this tag's videos; `nil` follows the global setting.
     public var seekSeconds: Double?
 
+    /// The speed this tag's videos play at; `nil` follows the global setting.
+    public var playbackSpeed: Double?
+
     /// Raw so a value the app doesn't know reads as `include` instead of failing the store.
     public var _mode: Int? = TagMode.include.rawValue
     public var mode: TagMode {
@@ -72,7 +75,8 @@ public final class Tag: CustomStringConvertible, Exportable {
         mode: TagMode = .include,
         continuousPlay: Bool? = nil,
         suggestVideos: Bool? = nil,
-        seekSeconds: Double? = nil
+        seekSeconds: Double? = nil,
+        playbackSpeed: Double? = nil
     ) {
         self.name = name
         self.order = order
@@ -83,6 +87,7 @@ public final class Tag: CustomStringConvertible, Exportable {
         self.continuousPlay = continuousPlay
         self.suggestVideos = suggestVideos
         self.seekSeconds = seekSeconds
+        self.playbackSpeed = playbackSpeed
     }
 
     /// The tags a channel or video can be added to.
@@ -121,6 +126,11 @@ public final class Tag: CustomStringConvertible, Exportable {
     /// The tag whose seek duration a video follows.
     public static func seekSecondsTag(for video: Video) -> Tag? {
         decidingTag(for: video, \.seekSeconds)
+    }
+
+    /// The tag whose playback speed a video follows.
+    public static func playbackSpeedTag(for video: Video) -> Tag? {
+        decidingTag(for: video, \.playbackSpeed)
     }
 
     /// The tag whose opinion on a setting a video follows: the video's own tags before its channel's, lowest order
@@ -192,7 +202,27 @@ public final class Tag: CustomStringConvertible, Exportable {
             mode: mode.rawValue,
             continuousPlay: continuousPlay,
             suggestVideos: suggestVideos,
-            seekSeconds: seekSeconds
+            seekSeconds: seekSeconds,
+            playbackSpeed: playbackSpeed
         )
+    }
+}
+
+public extension Video {
+    /// The speed that overrides the device default: the channel's own, then the tag's.
+    var customPlaybackSpeed: Double? {
+        subscription?.customSpeedSetting ?? Tag.playbackSpeedTag(for: self)?.playbackSpeed
+    }
+
+    /// Writes to the override in effect; `false` when there is none.
+    func updateCustomPlaybackSpeed(_ value: Double) -> Bool {
+        if let subscription, subscription.customSpeedSetting != nil {
+            subscription.customSpeedSetting = value
+        } else if let tag = Tag.playbackSpeedTag(for: self) {
+            tag.playbackSpeed = value
+        } else {
+            return false
+        }
+        return true
     }
 }

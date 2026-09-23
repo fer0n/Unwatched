@@ -347,7 +347,7 @@ extension PlayerManager {
 
     @MainActor
     var unmodifiedPlaybackSpeed: Double {
-        video?.subscription?.customSpeedSetting ?? defaultPlaybackSpeed
+        video?.customPlaybackSpeed ?? defaultPlaybackSpeed
     }
 
     @MainActor
@@ -477,9 +477,7 @@ extension PlayerManager {
             return
         }
         Signal.interaction("Player.setPlaybackSpeed", parameters: ["fullscreen": fullscreenContext])
-        if video?.subscription?.customSpeedSetting != nil {
-            video?.subscription?.customSpeedSetting = value
-        } else {
+        if video?.updateCustomPlaybackSpeed(value) != true {
             defaultPlaybackSpeed = value
         }
         applyPlaybackSpeed()
