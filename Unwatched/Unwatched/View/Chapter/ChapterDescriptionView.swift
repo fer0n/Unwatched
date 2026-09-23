@@ -20,6 +20,7 @@ struct ChapterDescriptionView: View {
     @State var descriptionSelection: DescriptionContentType = .description
 
     static let buttonSize: CGFloat = 46
+    private static let pageTopId = "chapterDescriptionPageTop"
     @ScaledMetric(wrappedValue: buttonSize) private var buttonSizeScaled: CGFloat
 
     let video: Video
@@ -81,6 +82,7 @@ struct ChapterDescriptionView: View {
                 .padding(.horizontal, showThumbnail ? 15 : isCompact ? 10 : 20)
                 .padding(.top, showThumbnail ? 15 : isCompact ? 15 : 30)
                 .frame(idealWidth: 500, maxWidth: 800, alignment: .leading)
+                .id(Self.pageTopId)
 
                 Spacer()
                     .frame(height: bottomSpacer)
@@ -338,21 +340,14 @@ struct ChapterDescriptionView: View {
         } else {
             return
         }
-        var chapter = player.currentChapter
-        var anchor: UnitPoint = .center
-
-        // one row of context above the current chapter, taken from the list's own order
+        // one row of context above; the first chapter scrolls to the top, as centering it overshoots for a frame
         let listed = video.orderedChapterData
         if let current = player.currentChapter,
-           let index = listed.firstIndex(where: { $0.chapterId == current.chapterId }),
-           index > 0 {
-            chapter = listed[index - 1]
-            anchor = .top
+           let index = listed.firstIndex(where: { $0.chapterId == current.chapterId }) {
+            proxy.scrollTo(index > 0 ? listed[index - 1].chapterId : Self.pageTopId, anchor: .top)
+        } else {
+            proxy.scrollTo(player.currentChapter?.chapterId, anchor: .center)
         }
-        proxy.scrollTo(
-            chapter?.chapterId,
-            anchor: anchor
-        )
     }
 
     func onTitleTap() {
