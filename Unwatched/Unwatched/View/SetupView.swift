@@ -70,6 +70,9 @@ struct SetupView: View {
                     Task {
                         checkVideoHealth()
                     }
+                    Task {
+                        await browserManager.checkYoutubeLogin()
+                    }
                 case .inactive:
                     Log.info("scenePhase: inactive")
                     BackgroundMonitor.handleInactive()
@@ -90,6 +93,9 @@ struct SetupView: View {
                     refresher.handleAutoBackup()
                     await refresher.handleBecameActive()
                 }
+                Task {
+                    await browserManager.checkYoutubeLogin()
+                }
             } handleResignActive: {
                 Log.info("macOSActive: inActive")
                 SetupView.handleAppClosed()
@@ -100,6 +106,11 @@ struct SetupView: View {
                 Task {
                     await BrowserManager.shared.logYoutubeCookies("launch")
                 }
+                #if os(visionOS)
+                Task {
+                    await browserManager.checkYoutubeLogin()
+                }
+                #endif
             }
             #if os(iOS) || os(visionOS)
             // `.active` is the first point at which the app is on screen — `sceneDidBecomeActive`

@@ -27,7 +27,7 @@ struct CoreRefreshButton: View {
             }
             .accessibilityLabel("refresh")
             .contextMenu {
-                MenuSection(lastRefreshFailed && !refresher.isLoading ? "refreshFailedMessage" : nil) {
+                MenuSection(showsFailure ? "refreshFailedMessage" : nil) {
                     Button {
                         Task { @MainActor in
                             await refresh(hardRefresh: true)
@@ -42,17 +42,12 @@ struct CoreRefreshButton: View {
         .fontWeight(.bold)
     }
 
-    private var refreshIconName: String {
-        lastRefreshFailed && !refresher.isLoading
-            ? Const.refreshFailedSF
-            : Const.refreshSF
+    private var showsFailure: Bool {
+        refresher.lastRefreshFailed && !refresher.isLoading
     }
 
-    /// A handful of dead feeds among many shouldn't flag this; a broad outage should.
-    private var lastRefreshFailed: Bool {
-        guard refresher.totalSubscriptionsCount > 0 else { return false }
-        let failureShare = Double(refresher.failedSubscriptionsCount) / Double(refresher.totalSubscriptionsCount)
-        return failureShare >= Const.refreshFailedThreshold
+    private var refreshIconName: String {
+        showsFailure ? Const.refreshFailedSF : Const.refreshSF
     }
 
     @MainActor
@@ -90,6 +85,22 @@ struct RefreshToolbarContent: ToolbarContent {
     var forceNeutral: Bool = false
 
     var body: some ToolbarContent {
+        if BrowserManager.shared.youtubeLoginLost {
+            #if os(iOS)
+            // keeps it apart from the undo button, which shares the leading side
+            ToolbarSpacer(.fixed, placement: .cancellationAction)
+            ToolbarItem(placement: .cancellationAction) {
+                YoutubeLoginWarningButton()
+            }
+            #else
+            ToolbarItem(placement: .confirmationAction) {
+                YoutubeLoginWarningButton()
+            }
+            #if os(macOS)
+            ToolbarSpacer(.fixed, placement: .confirmationAction)
+            #endif
+            #endif
+        }
         ToolbarItemGroup(placement: .confirmationAction) {
             RefreshButton(refreshOnlySubscription: refreshOnlySubscription,
                           forceNeutral: forceNeutral)

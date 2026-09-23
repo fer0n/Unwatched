@@ -45,6 +45,13 @@ enum RefreshSource {
     var failedSubscriptionsCount = 0
     var totalSubscriptionsCount = 0
 
+    /// A handful of dead feeds among many shouldn't flag this; a broad outage should.
+    var lastRefreshFailed: Bool {
+        guard totalSubscriptionsCount > 0 else { return false }
+        let failureShare = Double(failedSubscriptionsCount) / Double(totalSubscriptionsCount)
+        return failureShare >= Const.refreshFailedThreshold
+    }
+
     @ObservationIgnored var triggerPasteAction = false
     @ObservationIgnored var triggerPasteAndQueueAction = false
     @ObservationIgnored var triggerSearchYoutube = false

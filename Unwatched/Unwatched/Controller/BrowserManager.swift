@@ -40,6 +40,7 @@ import UnwatchedShared
     var isVideoUrl = false
 
     var hasCheckedInfo = false
+    var youtubeLoginLost = false
 
     @MainActor
     @ObservationIgnored var webView: WKWebView?
@@ -126,6 +127,24 @@ import UnwatchedShared
             WKWebsiteDataStore.default().httpCookieStore.getAllCookies { continuation.resume(returning: $0) }
         }
         return cookies.contains { $0.name == "LOGIN_INFO" && $0.domain.contains("youtube.com") }
+    }
+
+    @MainActor
+    func checkYoutubeLogin(afterBrowsing: Bool = false) async {
+        let isLoggedIn = await isLoggedIntoYoutube()
+        if isLoggedIn {
+            UserDefaults.standard.set(true, forKey: Const.wasLoggedIntoYoutube)
+        } else if afterBrowsing && !youtubeLoginLost {
+            // logged out in the browser on purpose
+            UserDefaults.standard.set(false, forKey: Const.wasLoggedIntoYoutube)
+        }
+        youtubeLoginLost = !isLoggedIn && UserDefaults.standard.bool(forKey: Const.wasLoggedIntoYoutube)
+    }
+
+    @MainActor
+    func dismissYoutubeLoginLost() {
+        UserDefaults.standard.set(false, forKey: Const.wasLoggedIntoYoutube)
+        youtubeLoginLost = false
     }
 
     func setFoundInfo(_ info: SubscriptionInfo) {

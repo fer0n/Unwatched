@@ -52,8 +52,14 @@ struct BrowserView: View, KeyboardReadable {
                 Task {
                     await subscribeManager.setIsSubscribed(browserManager.info)
                 }
+                Task {
+                    await browserManager.checkYoutubeLogin()
+                }
             }
             .onDisappear {
+                Task {
+                    await browserManager.checkYoutubeLogin(afterBrowsing: true)
+                }
                 if subscribeManager.hasNewSubscriptions {
                     Task {
                         await refresher.refreshAll()

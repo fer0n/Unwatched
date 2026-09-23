@@ -32,6 +32,7 @@ public struct Const {
     public static let watchSelectedTagName = "watchSelectedTagName"
     public static let watchControlsPhone = "watchControlsPhone"
     public static let requiresDurationFetch = "requiresDurationFetch"
+    public static let wasLoggedIntoYoutube = "wasLoggedIntoYoutube"
 
     public static let inboxVideoAddedCategory = "inboxVideoAddedCategory"
     public static let queueVideoAddedCategory = "queueVideoAddedCategory"
@@ -313,6 +314,7 @@ public struct Const {
 
     public static let refreshSF = "arrow.triangle.2.circlepath"
     public static let refreshFailedSF = "exclamationmark.arrow.trianglehead.2.clockwise.rotate.90"
+    public static let refreshWarningSF = "exclamationmark.triangle"
     public static let inboxTabFullSF = "tray.full"
     public static let libraryTabSF = "books.vertical"
 
