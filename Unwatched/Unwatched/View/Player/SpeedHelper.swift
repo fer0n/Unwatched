@@ -15,6 +15,10 @@ struct SpeedHelper {
         Const.speeds.last(where: { $0 < speed }) ?? Const.speeds.first
     }
 
+    static func nearestSpeed(to speed: Double) -> Double? {
+        Const.speeds.min(by: { abs($0 - speed) < abs($1 - speed) })
+    }
+
     static func formatSpeed(_ speed: Double) -> String {
         if floor(speed) == speed {
             return String(format: "%.0f", speed)

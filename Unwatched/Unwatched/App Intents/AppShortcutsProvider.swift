@@ -40,16 +40,13 @@ struct UnwatchedAppShortcuts: AppShortcutsProvider {
             systemImageName: "forward.end.fill"
         )
         AppShortcut(
-            intent: NextVideoChapter(),
-            phrases: ["Skip to next Video Chapter in ${applicationName}", "Next ${applicationName} Chapter"],
-            shortTitle: "nextChapter",
+            intent: SkipVideoChapter(),
+            phrases: [
+                "Skip to ${direction} Video Chapter in ${applicationName}",
+                "${direction} ${applicationName} Chapter"
+            ],
+            shortTitle: "skipChapter",
             systemImageName: "chevron.right.2"
-        )
-        AppShortcut(
-            intent: PreviousVideoChapter(),
-            phrases: ["Skip to previous Video Chapter in ${applicationName}", "Previous ${applicationName} Chapter"],
-            shortTitle: "previousChapter",
-            systemImageName: "chevron.left.2"
         )
         AppShortcut(
             intent: GetTranscript(),

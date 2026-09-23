@@ -3064,6 +3064,142 @@
         }
       }
     },
+    "changePlaybackSpeed" : {
+      "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Wiedergabegeschwindigkeit ändern"
+          }
+        },
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Change Playback Speed"
+          }
+        },
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Cambiar velocidad de reproducción"
+          }
+        },
+        "fr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Modifier la vitesse de lecture"
+          }
+        },
+        "pl" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Zmień prędkość odtwarzania"
+          }
+        }
+      }
+    },
+    "changePlaybackSpeed ${change}" : {
+      "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Wiedergabegeschwindigkeit ${change}"
+          }
+        },
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "${change} playback speed"
+          }
+        },
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "${change} la velocidad de reproducción"
+          }
+        },
+        "fr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "${change} la vitesse de lecture"
+          }
+        },
+        "pl" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "${change} prędkość odtwarzania"
+          }
+        }
+      }
+    },
+    "changePlaybackSpeed ${change} ${speed}" : {
+      "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Wiedergabegeschwindigkeit auf ${speed} ${change}"
+          }
+        },
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "${change} playback speed to ${speed}"
+          }
+        },
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "${change} la velocidad de reproducción en ${speed}"
+          }
+        },
+        "fr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "${change} la vitesse de lecture sur ${speed}"
+          }
+        },
+        "pl" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "${change} prędkość odtwarzania na ${speed}"
+          }
+        }
+      }
+    },
+    "changePlaybackSpeedDescription" : {
+      "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Erhöht oder verringert die Wiedergabegeschwindigkeit um eine Stufe, legt sie auf die nächstgelegene verfügbare Geschwindigkeit fest oder setzt sie auf 1× zurück."
+          }
+        },
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Increases or decreases the playback speed by one step, sets it to the nearest available speed, or resets it to 1×."
+          }
+        },
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Aumenta o disminuye la velocidad de reproducción un paso, la establece en la velocidad disponible más cercana o la restablece a 1×."
+          }
+        },
+        "fr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Augmente ou diminue la vitesse de lecture d'un cran, la règle sur la vitesse disponible la plus proche ou la réinitialise à 1×."
+          }
+        },
+        "pl" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Zwiększa lub zmniejsza prędkość odtwarzania o jeden krok, ustawia ją na najbliższą dostępną prędkość lub resetuje do 1×."
+          }
+        }
+      }
+    },
     "channel" : {
       "localizations" : {
         "de" : {
@@ -3298,6 +3434,74 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "Opis"
+          }
+        }
+      }
+    },
+    "chapterDirection" : {
+      "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Richtung"
+          }
+        },
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Direction"
+          }
+        },
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Dirección"
+          }
+        },
+        "fr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Direction"
+          }
+        },
+        "pl" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Kierunek"
+          }
+        }
+      }
+    },
+    "chapterDirectionType" : {
+      "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Kapitelrichtung"
+          }
+        },
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Chapter Direction"
+          }
+        },
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Dirección del capítulo"
+          }
+        },
+        "fr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Direction du chapitre"
+          }
+        },
+        "pl" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Kierunek rozdziału"
           }
         }
       }
@@ -5138,70 +5342,36 @@
         }
       }
     },
-    "decreasePlaybackSpeed" : {
+    "decreaseSpeed" : {
       "localizations" : {
         "de" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Wiedergabegeschwindigkeit verringern"
+            "value" : "verringern"
           }
         },
         "en" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Decrease Playback Speed"
+            "value" : "Decrease"
           }
         },
         "es" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Reducir velocidad de reproducción"
+            "value" : "Disminuir"
           }
         },
         "fr" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Réduire la vitesse de lecture"
+            "value" : "Diminuer"
           }
         },
         "pl" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Zmniejsz prędkość odtwarzania"
-          }
-        }
-      }
-    },
-    "decreasePlaybackSpeedDescription" : {
-      "localizations" : {
-        "de" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Verringert die Wiedergabegeschwindigkeit um eine Stufe."
-          }
-        },
-        "en" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Decreases the playback speed by one step."
-          }
-        },
-        "es" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Reduce la velocidad de reproducción un paso."
-          }
-        },
-        "fr" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Réduit la vitesse de lecture d'un cran."
-          }
-        },
-        "pl" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Zmniejsza prędkość odtwarzania o jeden krok."
+            "value" : "Zmniejsz"
           }
         }
       }
@@ -10266,70 +10436,36 @@
         }
       }
     },
-    "increasePlaybackSpeed" : {
+    "increaseSpeed" : {
       "localizations" : {
         "de" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Wiedergabegeschwindigkeit erhöhen"
+            "value" : "erhöhen"
           }
         },
         "en" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Increase Playback Speed"
+            "value" : "Increase"
           }
         },
         "es" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Aumentar velocidad de reproducción"
+            "value" : "Aumentar"
           }
         },
         "fr" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Augmenter la vitesse de lecture"
+            "value" : "Augmenter"
           }
         },
         "pl" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Zwiększ prędkość odtwarzania"
-          }
-        }
-      }
-    },
-    "increasePlaybackSpeedDescription" : {
-      "localizations" : {
-        "de" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Erhöht die Wiedergabegeschwindigkeit um eine Stufe."
-          }
-        },
-        "en" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Increases the playback speed by one step."
-          }
-        },
-        "es" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Aumenta la velocidad de reproducción un paso."
-          }
-        },
-        "fr" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Augmente la vitesse de lecture d'un cran."
-          }
-        },
-        "pl" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Zwiększa prędkość odtwarzania o jeden krok."
+            "value" : "Zwiększ"
           }
         }
       }
@@ -11928,6 +12064,40 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "Jeśli dostępny, przechodzi do następnego rozdziału wideo."
+          }
+        }
+      }
+    },
+    "nextChapterDirection" : {
+      "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Nächstes"
+          }
+        },
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Next"
+          }
+        },
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "siguiente"
+          }
+        },
+        "fr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "suivant"
+          }
+        },
+        "pl" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Następny"
           }
         }
       }
@@ -16326,6 +16496,40 @@
         }
       }
     },
+    "previousChapterDirection" : {
+      "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Vorheriges"
+          }
+        },
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Previous"
+          }
+        },
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "anterior"
+          }
+        },
+        "fr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "précédent"
+          }
+        },
+        "pl" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Poprzedni"
+          }
+        }
+      }
+    },
     "privacyPolicy" : {
       "localizations" : {
         "de" : {
@@ -17478,6 +17682,40 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "Resetuj wskazówkę skrzynki"
+          }
+        }
+      }
+    },
+    "resetSpeed" : {
+      "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "zurücksetzen"
+          }
+        },
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Reset"
+          }
+        },
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Restablecer"
+          }
+        },
+        "fr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Réinitialiser"
+          }
+        },
+        "pl" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Zresetuj"
           }
         }
       }
@@ -19637,6 +19875,40 @@
         }
       }
     },
+    "setSpeed" : {
+      "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "festlegen"
+          }
+        },
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Set"
+          }
+        },
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Establecer"
+          }
+        },
+        "fr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Régler"
+          }
+        },
+        "pl" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Ustaw"
+          }
+        }
+      }
+    },
     "settings" : {
       "localizations" : {
         "de" : {
@@ -21768,6 +22040,108 @@
         }
       }
     },
+    "skipChapter" : {
+      "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Kapitel wechseln"
+          }
+        },
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Skip Chapter"
+          }
+        },
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Saltar capítulo"
+          }
+        },
+        "fr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Changer de chapitre"
+          }
+        },
+        "pl" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Przeskocz rozdział"
+          }
+        }
+      }
+    },
+    "skipChapter ${direction}" : {
+      "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "${direction} Kapitel"
+          }
+        },
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "${direction} Chapter"
+          }
+        },
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Capítulo ${direction}"
+          }
+        },
+        "fr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Chapitre ${direction}"
+          }
+        },
+        "pl" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "${direction} rozdział"
+          }
+        }
+      }
+    },
+    "skipChapterDescription" : {
+      "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Springt, falls verfügbar, zum nächsten oder vorherigen Video-Kapitel."
+          }
+        },
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "If available, skips to the next or previous video chapter."
+          }
+        },
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Si está disponible, salta al capítulo siguiente o anterior del video."
+          }
+        },
+        "fr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Si disponible, passe au chapitre suivant ou précédent de la vidéo."
+          }
+        },
+        "pl" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Jeśli to możliwe, przechodzi do następnego lub poprzedniego rozdziału wideo."
+          }
+        }
+      }
+    },
     "skipIntro" : {
       "localizations" : {
         "de" : {
@@ -22070,6 +22444,74 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "Zwolnij"
+          }
+        }
+      }
+    },
+    "speedChange" : {
+      "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Änderung"
+          }
+        },
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Change"
+          }
+        },
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Cambio"
+          }
+        },
+        "fr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Modification"
+          }
+        },
+        "pl" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Zmiana"
+          }
+        }
+      }
+    },
+    "speedChangeType" : {
+      "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Geschwindigkeitsänderung"
+          }
+        },
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Speed Change"
+          }
+        },
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Cambio de velocidad"
+          }
+        },
+        "fr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Changement de vitesse"
+          }
+        },
+        "pl" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Zmiana prędkości"
           }
         }
       }

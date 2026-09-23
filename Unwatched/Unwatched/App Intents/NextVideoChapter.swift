@@ -10,14 +10,12 @@ import UnwatchedShared
 struct NextVideoChapter: AppIntent {
     static var title: LocalizedStringResource { "nextChapter" }
     static let description = IntentDescription("nextChapterDescription")
+    // Superseded by SkipVideoChapter, kept for existing shortcuts
+    static let isDiscoverable = false
 
     @MainActor
     func perform() async throws -> some IntentResult {
-        Signal.log("Shortcut.NextChapter")
-        let success = PlayerManager.shared.goToNextChapter()
-        if !success {
-            throw ChapterControlError.noNextChapter
-        }
+        try ChapterDirection.next.skip()
         return .result()
     }
 }
