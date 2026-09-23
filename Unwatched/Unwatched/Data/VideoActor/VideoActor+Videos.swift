@@ -12,13 +12,14 @@ struct FetchResult: Sendable {
 
     var outcome: [FetchOutcome] {
         guard let subscriptionId = sub.persistentId else { return [] }
-        return [FetchOutcome(subscriptionId: subscriptionId, errorMessage: errorMessage)]
+        return [FetchOutcome(subscriptionId: subscriptionId, isPodcast: sub.isPodcast, errorMessage: errorMessage)]
     }
 }
 
 /// What a refresh run has to say about one feed, see `VideoActor.recordFetchOutcomes`.
 struct FetchOutcome: Sendable {
     let subscriptionId: PersistentIdentifier
+    let isPodcast: Bool
     let errorMessage: String?
 
     var didFail: Bool { errorMessage != nil }
@@ -27,9 +28,6 @@ struct FetchOutcome: Sendable {
 // Video
 actor VideoActor: SharedContextActor {
     var newVideos = NewVideosNotificationInfo()
-
-    /// Feed fetch failures collected during the current `loadVideos` run.
-    var fetchErrors = [any Error]()
 
     /// Subscriptions loading for the first time in the current `loadVideos` run, which sets how
     /// many videos each of them triages (see `Const.triageNewSubs(newSubCount:)`).
@@ -191,7 +189,6 @@ actor VideoActor: SharedContextActor {
     ) async throws -> NewVideosNotificationInfo {
         Log.info("loadVideos")
         newVideos = NewVideosNotificationInfo()
-        fetchErrors = []
         self.ignoreCache = ignoreCache
         defer {
             self.firstTimeSubCount = 0
@@ -234,9 +231,6 @@ actor VideoActor: SharedContextActor {
         await deferredVideosTask.value
 
         try modelContext.save()
-
-        newVideos.failedSubscriptionsCount = fetchErrors.count
-        newVideos.totalSubscriptionsCount = sendableSubs.count
         return newVideos
     }
 

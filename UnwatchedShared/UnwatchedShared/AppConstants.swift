@@ -229,9 +229,13 @@ public struct Const {
     /// How long work deferred for an in-flight iCloud sync waits before going ahead anyway.
     public static let maxSyncRefreshDeferSeconds: Double = 5 * 60
 
-    /// Share of subscriptions whose feed fetch has to fail in the same refresh before the reload button shows its
+    /// Share of YouTube feeds whose fetch has to fail in the same refresh before the reload button shows its
     /// failed state.
     public static let refreshFailedThreshold: Double = 0.5
+
+    public static func isRefreshOutage(failed: Int, total: Int) -> Bool {
+        total > 0 && Double(failed) / Double(total) >= refreshFailedThreshold
+    }
 
     /// Consecutive failed refreshes before a feed is flagged to the user, see `SubscriptionData.hasFeedIssue`.
     public static let subscriptionFailureThreshold = 3

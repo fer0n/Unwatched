@@ -42,14 +42,11 @@ enum RefreshSource {
     var isLoading = false
     var isSyncingIcloud = false
 
-    var failedSubscriptionsCount = 0
-    var totalSubscriptionsCount = 0
+    var failedYoutubeFeedsCount = 0
+    var totalYoutubeFeedsCount = 0
 
-    /// A handful of dead feeds among many shouldn't flag this; a broad outage should.
     var lastRefreshFailed: Bool {
-        guard totalSubscriptionsCount > 0 else { return false }
-        let failureShare = Double(failedSubscriptionsCount) / Double(totalSubscriptionsCount)
-        return failureShare >= Const.refreshFailedThreshold
+        Const.isRefreshOutage(failed: failedYoutubeFeedsCount, total: totalYoutubeFeedsCount)
     }
 
     @ObservationIgnored var triggerPasteAction = false
@@ -197,15 +194,15 @@ enum RefreshSource {
             )
             let result = try await task.value
             if isFullRefresh {
-                failedSubscriptionsCount = result.failedSubscriptionsCount
-                totalSubscriptionsCount = result.totalSubscriptionsCount
+                failedYoutubeFeedsCount = result.failedYoutubeFeedsCount
+                totalYoutubeFeedsCount = result.totalYoutubeFeedsCount
             }
         } catch {
             Log.info("Error during refresh: \(error)")
             if isFullRefresh {
                 // couldn't even get as far as fetching individual feeds — treat as a total failure
-                failedSubscriptionsCount = 1
-                totalSubscriptionsCount = 1
+                failedYoutubeFeedsCount = 1
+                totalYoutubeFeedsCount = 1
             }
         }
         await cleanup(hardRefresh: hardRefresh)

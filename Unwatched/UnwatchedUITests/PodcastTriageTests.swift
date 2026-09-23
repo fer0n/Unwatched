@@ -260,3 +260,70 @@ class NewSubscriptionTriageTests: XCTestCase {
         XCTAssertEqual(Const.triageNewSubs(newSubCount: 100), 1)
     }
 }
+
+/// Whether a refresh counts as a YouTube outage is decided by YouTube feeds alone.
+class FeedOutageTests: XCTestCase {
+    private var subscriptionIds = [PersistentIdentifier]()
+
+    private var sharedWriteContext: ModelContext {
+        DataProvider.writeExecutor.modelContext
+    }
+
+    override func tearDown() async throws {
+        let context = sharedWriteContext
+        for id in subscriptionIds {
+            if let sub: Subscription = context.resolvedModel(withID: id) {
+                context.delete(sub)
+            }
+        }
+        try context.save()
+        subscriptionIds = []
+    }
+
+    private func outcome(isPodcast: Bool, failed: Bool) throws -> FetchOutcome {
+        let context = DataProvider.newContext()
+        let name = "outage-\(UUID().uuidString)"
+        let sub = Subscription(
+            link: URL(string: "https://example.com/\(name).xml"),
+            title: name,
+            isPodcast: isPodcast,
+            youtubeChannelId: isPodcast ? nil : name
+        )
+        context.insert(sub)
+        try context.save()
+        subscriptionIds.append(sub.persistentModelID)
+        return FetchOutcome(
+            subscriptionId: sub.persistentModelID,
+            isPodcast: isPodcast,
+            errorMessage: failed ? "failed" : nil
+        )
+    }
+
+    private func failedFetchCount(_ outcome: FetchOutcome) throws -> Int {
+        let sub: Subscription? = sharedWriteContext.resolvedModel(withID: outcome.subscriptionId)
+        return try XCTUnwrap(sub).failedFetchCount
+    }
+
+    func testYoutubeOutageStillRecordsPodcastFailures() async throws {
+        let channels = try [outcome(isPodcast: false, failed: true), outcome(isPodcast: false, failed: true)]
+        let show = try outcome(isPodcast: true, failed: true)
+
+        await VideoActor().recordFetchOutcomes(channels + [show])
+
+        for channel in channels {
+            XCTAssertEqual(try failedFetchCount(channel), 0, "an outage shouldn't count against each channel")
+        }
+        XCTAssertEqual(try failedFetchCount(show), 1)
+    }
+
+    func testFailingPodcastsDontMakeAYoutubeOutage() async throws {
+        let channel = try outcome(isPodcast: false, failed: false)
+        let shows = try (0..<3).map { _ in try outcome(isPodcast: true, failed: true) }
+
+        await VideoActor().recordFetchOutcomes([channel] + shows)
+
+        for show in shows {
+            XCTAssertEqual(try failedFetchCount(show), 1, "podcast failures were written off as a YouTube outage")
+        }
+    }
+}

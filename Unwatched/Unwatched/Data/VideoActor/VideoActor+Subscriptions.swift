@@ -118,7 +118,6 @@ extension VideoActor {
             Log.error(
                 "Failed to fetch videos for subscription: \(sub.title), error: \(error.localizedDescription)"
             )
-            fetchErrors.append(error)
             return FetchResult(sub: sub, videos: [], errorMessage: error.localizedDescription)
         }
     }
@@ -126,14 +125,18 @@ extension VideoActor {
     /// Writes the run's per-feed outcomes onto the subscriptions, so a feed that keeps failing can be told apart from
     /// one that failed once.
     func recordFetchOutcomes(_ outcomes: [FetchOutcome]) {
-        guard !outcomes.isEmpty else { return }
-        let failureShare = Double(outcomes.filter(\.didFail).count) / Double(outcomes.count)
-        if outcomes.count > 1 && failureShare >= Const.refreshFailedThreshold {
-            Log.info("recordFetchOutcomes: \(failureShare) failed, treating as an outage")
-            return
+        let youtubeOutcomes = outcomes.filter { !$0.isPodcast }
+        let failed = youtubeOutcomes.count(where: \.didFail)
+        let total = youtubeOutcomes.count
+        newVideos.failedYoutubeFeedsCount = failed
+        newVideos.totalYoutubeFeedsCount = total
+
+        let youtubeOutage = total > 1 && Const.isRefreshOutage(failed: failed, total: total)
+        if youtubeOutage {
+            Log.info("recordFetchOutcomes: \(failed)/\(total) YouTube feeds failed, treating as an outage")
         }
 
-        for outcome in outcomes {
+        for outcome in outcomes where outcome.isPodcast || !youtubeOutage {
             guard let sub = self[outcome.subscriptionId, as: Subscription.self] else { continue }
             if let errorMessage = outcome.errorMessage {
                 sub.failedFetchCount += 1
