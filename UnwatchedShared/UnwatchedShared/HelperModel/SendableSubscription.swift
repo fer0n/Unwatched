@@ -20,6 +20,9 @@ public struct SendableSubscription: SubscriptionData, Sendable, Codable, Hashabl
     public var isArchived: Bool
     public var isPodcast: Bool = false
 
+    public var shortsSetting: ShortsSetting = .defaultSetting
+    public var liveStreamSetting: LiveStreamSetting = .defaultSetting
+
     public var sponsorSegmentSetting: SponsorBlockSegmentSetting?
     public var selfPromoSegmentSetting: SponsorBlockSegmentSetting?
 
@@ -56,6 +59,8 @@ public struct SendableSubscription: SubscriptionData, Sendable, Codable, Hashabl
         videoPlacement: VideoPlacement = VideoPlacement.defaultPlacement,
         isArchived: Bool = false,
         isPodcast: Bool = false,
+        shortsSetting: ShortsSetting = .defaultSetting,
+        liveStreamSetting: LiveStreamSetting = .defaultSetting,
         sponsorSegmentSetting: SponsorBlockSegmentSetting? = nil,
         selfPromoSegmentSetting: SponsorBlockSegmentSetting? = nil,
         customSpeedSetting: Double? = nil,
@@ -83,6 +88,8 @@ public struct SendableSubscription: SubscriptionData, Sendable, Codable, Hashabl
         self.videoPlacement = videoPlacement
         self.isArchived = isArchived
         self.isPodcast = isPodcast
+        self.shortsSetting = shortsSetting
+        self.liveStreamSetting = liveStreamSetting
         self.sponsorSegmentSetting = sponsorSegmentSetting
         self.selfPromoSegmentSetting = selfPromoSegmentSetting
         self.customSpeedSetting = customSpeedSetting
@@ -114,7 +121,7 @@ public struct SendableSubscription: SubscriptionData, Sendable, Codable, Hashabl
     }
 
     public var toModel: Subscription {
-        Subscription(
+        let subscription = Subscription(
             link: link,
             title: title,
             author: author,
@@ -137,6 +144,9 @@ public struct SendableSubscription: SubscriptionData, Sendable, Codable, Hashabl
             youtubeUserName: youtubeUserName,
             thumbnailUrl: thumbnailUrl
         )
+        subscription.shortsSetting = shortsSetting
+        subscription.liveStreamSetting = liveStreamSetting
+        return subscription
     }
 
     public init(from decoder: Decoder) throws {
@@ -152,6 +162,10 @@ public struct SendableSubscription: SubscriptionData, Sendable, Codable, Hashabl
         videoPlacement = VideoPlacement(rawValue: try container.decodeIfPresent(Int.self, forKey: .videoPlacement) ?? VideoPlacement.defaultPlacement.rawValue) ?? VideoPlacement.defaultPlacement
         isArchived = try container.decodeIfPresent(Bool.self, forKey: .isArchived) ?? false
         isPodcast = try container.decodeIfPresent(Bool.self, forKey: .isPodcast) ?? false
+        shortsSetting = try container.decodeIfPresent(Int.self, forKey: .shortsSetting)
+            .flatMap(ShortsSetting.init(rawValue:)) ?? .defaultSetting
+        liveStreamSetting = try container.decodeIfPresent(Int.self, forKey: .liveStreamSetting)
+            .flatMap(LiveStreamSetting.init(rawValue:)) ?? .defaultSetting
         sponsorSegmentSetting = try container.decodeIfPresent(Int.self, forKey: .sponsorSegmentSetting)
             .flatMap { SponsorBlockSegmentSetting(rawValue: $0) }
         selfPromoSegmentSetting = try container.decodeIfPresent(Int.self, forKey: .selfPromoSegmentSetting)
@@ -186,6 +200,12 @@ public struct SendableSubscription: SubscriptionData, Sendable, Codable, Hashabl
         if isPodcast {
             try container.encode(isPodcast, forKey: .isPodcast)
         }
+        if shortsSetting != .defaultSetting {
+            try container.encode(shortsSetting.rawValue, forKey: .shortsSetting)
+        }
+        if liveStreamSetting != .defaultSetting {
+            try container.encode(liveStreamSetting.rawValue, forKey: .liveStreamSetting)
+        }
         try container.encodeIfPresent(sponsorSegmentSetting?.rawValue, forKey: .sponsorSegmentSetting)
         try container.encodeIfPresent(selfPromoSegmentSetting?.rawValue, forKey: .selfPromoSegmentSetting)
         try container.encodeIfPresent(customSpeedSetting, forKey: .customSpeedSetting)
@@ -211,6 +231,8 @@ public struct SendableSubscription: SubscriptionData, Sendable, Codable, Hashabl
              allowOnMatch,
              isArchived,
              isPodcast,
+             shortsSetting,
+             liveStreamSetting,
              sponsorSegmentSetting,
              selfPromoSegmentSetting,
              customSpeedSetting,

@@ -288,6 +288,10 @@ class ExportableTests: XCTestCase {
         )
     }
 
+    func testLiveStreamSettingIsBackedUp() {
+        XCTAssertNotNil(Const.syncedSettingsDefaults[Const.defaultLiveStreamSetting])
+    }
+
     func testSettingsBackup() {
         do {
             UserDefaults.standard.register(defaults: Const.settingsDefaults)
@@ -375,6 +379,8 @@ class ExportableTests: XCTestCase {
         let customAspectRatio: Double = 16/9
         let sub = TestData.subscription(customAspectRatio: customAspectRatio)
         sub.mostRecentVideoDate = Date()
+        sub.shortsSetting = .hide
+        sub.liveStreamSetting = .show
         let context = DataProvider.newContext()
         context.insert(sub)
         try? context.save()
@@ -400,6 +406,8 @@ class ExportableTests: XCTestCase {
             XCTAssertEqual(importedSub.videoPlacement, sub.videoPlacement)
             XCTAssertEqual(importedSub.isArchived, sub.isArchived)
             XCTAssertEqual(importedSub.customSpeedSetting, sub.customSpeedSetting)
+            XCTAssertEqual(importedSub.shortsSetting, .hide)
+            XCTAssertEqual(importedSub.liveStreamSetting, .show)
 
             XCTAssertEqual(importedSub.customAspectRatio, sub.customAspectRatio)
             XCTAssertEqual(importedSub.customAspectRatio, customAspectRatio)

@@ -25,6 +25,7 @@ public enum UnwatchedMigrationPlan: SchemaMigrationPlan {
             UnwatchedSchemaV1p13.self,
             UnwatchedSchemaV1p14.self,
             UnwatchedSchemaV1p15.self,
+            UnwatchedSchemaV1p16.self,
         ]
     }
     
@@ -213,6 +214,12 @@ public enum UnwatchedMigrationPlan: SchemaMigrationPlan {
         toVersion: UnwatchedSchemaV1p15.self
     )
 
+    /// Adds `Subscription._liveStreamSetting`.
+    public static let migrateV1p15toV1p16 = MigrationStage.lightweight(
+        fromVersion: UnwatchedSchemaV1p15.self,
+        toVersion: UnwatchedSchemaV1p16.self
+    )
+
     public static var stages: [MigrationStage] {
         [
             migrateV1toV1p1,
@@ -229,7 +236,8 @@ public enum UnwatchedMigrationPlan: SchemaMigrationPlan {
             migrateV1p11toV1p12,
             migrateV1p12toV1p13,
             migrateV1p13toV1p14,
-            migrateV1p14toV1p15
+            migrateV1p14toV1p15,
+            migrateV1p15toV1p16
         ]
     }
 }

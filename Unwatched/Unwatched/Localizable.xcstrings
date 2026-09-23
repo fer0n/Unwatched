@@ -5376,6 +5376,40 @@
         }
       }
     },
+    "defaultLiveStreamSetting %@" : {
+      "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Standard (%@)"
+          }
+        },
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Default (%@)"
+          }
+        },
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Predeterminado (%@)"
+          }
+        },
+        "fr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Par défaut (%@)"
+          }
+        },
+        "pl" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Domyślne (%@)"
+          }
+        }
+      }
+    },
     "defaultSegmentSetting %@" : {
       "localizations" : {
         "de" : {
@@ -8914,6 +8948,40 @@
         }
       }
     },
+    "hideLiveStreams" : {
+      "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Ausblenden"
+          }
+        },
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Hide"
+          }
+        },
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Ocultar"
+          }
+        },
+        "fr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Masquer"
+          }
+        },
+        "pl" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Ukryj"
+          }
+        }
+      }
+    },
     "hideMenuOnPlay" : {
       "localizations" : {
         "de" : {
@@ -10942,6 +11010,108 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "Polub wideo, zobacz komentarze"
+          }
+        }
+      }
+    },
+    "liveStreamFilterTitle" : {
+      "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Livestreams ausblenden"
+          }
+        },
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Hide Live Streams"
+          }
+        },
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Ocultar directos"
+          }
+        },
+        "fr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Masquer les directs"
+          }
+        },
+        "pl" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Ukryj transmisje na żywo"
+          }
+        }
+      }
+    },
+    "liveStreamSetting" : {
+      "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Livestreams"
+          }
+        },
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Live Streams"
+          }
+        },
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Directos"
+          }
+        },
+        "fr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Directs"
+          }
+        },
+        "pl" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Transmisje na żywo"
+          }
+        }
+      }
+    },
+    "liveStreamSettingsFooter" : {
+      "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Standardverhalten für YouTube-Livestreams, auch geplante und vergangene; kann für einzelne Kanäle überschrieben werden. Premieren zählen nicht als Livestreams. Betrifft nur neue Videos."
+          }
+        },
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Default behavior for YouTube live streams, including scheduled and past ones; can be overwritten for individual channels. Premieres don't count as live streams. This only affects new videos."
+          }
+        },
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Comportamiento predeterminado para las transmisiones en directo de YouTube, incluidas las programadas y las pasadas; se puede sobrescribir para canales individuales. Los estrenos no cuentan como directos. Solo afecta a los videos nuevos."
+          }
+        },
+        "fr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Comportement par défaut pour les diffusions en direct YouTube, y compris celles programmées et passées ; peut être remplacé pour chaque chaîne. Les premières ne comptent pas comme des directs. Ne concerne que les nouvelles vidéos."
+          }
+        },
+        "pl" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Domyślne zachowanie dla transmisji na żywo z YouTube, w tym zaplanowanych i minionych; można je zmienić dla poszczególnych kanałów. Premiery nie są traktowane jako transmisje na żywo. Dotyczy tylko nowych filmów."
           }
         }
       }
@@ -21662,6 +21832,40 @@
                 }
               }
             }
+          }
+        }
+      }
+    },
+    "showLiveStreams" : {
+      "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Anzeigen"
+          }
+        },
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Show"
+          }
+        },
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Mostrar"
+          }
+        },
+        "fr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Afficher"
+          }
+        },
+        "pl" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Pokaż"
           }
         }
       }

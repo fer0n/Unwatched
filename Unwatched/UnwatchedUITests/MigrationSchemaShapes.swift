@@ -129,6 +129,15 @@ extension MigrationTests {
             "Tag": ["_mode", "continuousPlay", "createdDate", "name", "order", "quickSwitch", "seekSeconds", "subscriptions", "suggestVideos", "symbol", "videos"],
             "Video": ["apiUpdatedDate", "bookmarkedDate", "chapters", "chaptersUrl", "createdDate", "deferDate", "downloadedDate", "duration", "elapsedSeconds", "inboxEntry", "isAudioOnly", "isNew", "isYtShort", "keepIntro", "keepOutro", "mediaUrl", "mergedChapters", "noDuration", "publishedDate", "queueEntry", "sponserBlockUpdateDate", "subscription", "tags", "thumbnailUrl", "title", "updatedDate", "url", "videoDescription", "watchedDate", "youtubeChannelId", "youtubeId"],
             "WatchTimeEntry": ["channelId", "date", "watchTime"]
+        ],
+        "1.16.0": [
+            "Chapter": ["category", "duration", "endTime", "imageUrl", "isActive", "link", "mergedChapterVideo", "order", "startTime", "title", "video"],
+            "InboxEntry": ["date", "video", "youtubeId"],
+            "QueueEntry": ["order", "video", "youtubeId"],
+            "Subscription": ["_liveStreamSetting", "_selfPromoSegmentSetting", "_shortsSetting", "_sponsorSegmentSetting", "_videoPlacement", "allowOnMatch", "author", "autoSkipChapterTitles", "customAspectRatio", "customSpeedSetting", "failedFetchCount", "filterText", "isArchived", "isPodcast", "lastFetchErrorMessage", "lastFetchFailedDate", "link", "mostRecentVideoDate", "skipIntroSeconds", "skipOutroSeconds", "subscribedDate", "tags", "thumbnailUrl", "title", "videos", "youtubeChannelId", "youtubePlaylistId", "youtubeUserName"],
+            "Tag": ["_mode", "continuousPlay", "createdDate", "name", "order", "quickSwitch", "seekSeconds", "subscriptions", "suggestVideos", "symbol", "videos"],
+            "Video": ["apiUpdatedDate", "bookmarkedDate", "chapters", "chaptersUrl", "createdDate", "deferDate", "downloadedDate", "duration", "elapsedSeconds", "inboxEntry", "isAudioOnly", "isNew", "isYtShort", "keepIntro", "keepOutro", "mediaUrl", "mergedChapters", "noDuration", "publishedDate", "queueEntry", "sponserBlockUpdateDate", "subscription", "tags", "thumbnailUrl", "title", "updatedDate", "url", "videoDescription", "watchedDate", "youtubeChannelId", "youtubeId"],
+            "WatchTimeEntry": ["channelId", "date", "watchTime"]
         ]
     ]
 

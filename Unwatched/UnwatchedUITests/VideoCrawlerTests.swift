@@ -413,3 +413,19 @@ VR Gaming,Virtual Reality Gaming,VR Games,Virtual Reality Games,Meta Quest,Meta 
 """
 }
 // swiftlint:enable all
+
+class LiveStreamFilterTests: XCTestCase {
+
+    func testLiveTabHoldsNoRegularVideos() async throws {
+        let lofiGirl = "UCSJ4gkVC6NrvII8umztf0Ow"
+        let liveIds = try await InnerTubeAPI().fetchChannelLiveStreamIds(channelId: lofiGirl)
+        XCTAssertFalse(liveIds.isEmpty)
+
+        let longFormFeed = try XCTUnwrap(URL(
+            string: "https://www.youtube.com/feeds/videos.xml?playlist_id=UULF\(lofiGirl.dropFirst(2))"
+        ))
+        let regularIds = try await VideoCrawler.loadVideosFromRSS(url: longFormFeed).map(\.youtubeId)
+        XCTAssertFalse(regularIds.isEmpty)
+        XCTAssertTrue(liveIds.isDisjoint(with: regularIds))
+    }
+}

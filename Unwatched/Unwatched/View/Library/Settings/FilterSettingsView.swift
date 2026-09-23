@@ -9,6 +9,7 @@ import SwiftData
 
 struct FilterSettingsView: View {
     @CloudStorage(Const.defaultShortsSetting) var defaultShortsSetting: ShortsSetting = .show
+    @CloudStorage(Const.defaultLiveStreamSetting) var defaultLiveStreamSetting: LiveStreamSetting = .show
     @CloudStorage(Const.skipChapterText) var skipChapterText: String = ""
     @CloudStorage(Const.autoSkipRecurringChapters) var autoSkipRecurringChapters: Bool = true
     @CloudStorage(Const.filterVideoTitleText) var filterVideoTitleText: String = ""
@@ -46,6 +47,22 @@ struct FilterSettingsView: View {
                         }
                     }
                 }
+
+                MySection(footer: "liveStreamSettingsFooter") {
+                    Picker(selection: $defaultLiveStreamSetting) {
+                        ForEach(LiveStreamSetting.allCases.filter { $0 != .defaultSetting }, id: \.self) {
+                            Text($0.description)
+                        }
+                    } label: {
+                        HStack {
+                            Text("liveStreamSetting")
+                            PremiumIndicator()
+                                .foregroundStyle(.secondary)
+                        }
+                    }
+                    .pickerStyle(.menu)
+                }
+                .requiresPremium(defaultLiveStreamSetting == .show)
 
                 #if os(macOS)
                 TitleFilterView()

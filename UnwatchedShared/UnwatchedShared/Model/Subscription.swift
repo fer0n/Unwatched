@@ -83,6 +83,12 @@ public final class Subscription: SubscriptionData, CustomStringConvertible, Expo
         }
     }
 
+    public var _liveStreamSetting: Int? = LiveStreamSetting.defaultSetting.rawValue
+    public var liveStreamSetting: LiveStreamSetting {
+        get { _liveStreamSetting.flatMap(LiveStreamSetting.init(rawValue:)) ?? .defaultSetting }
+        set { _liveStreamSetting = newValue.rawValue }
+    }
+
     /// This channel's override for sponsor segments; `nil` follows the global setting.
     /// Stored as `Int?` for the reason given on `_shortsSetting`.
     public var _sponsorSegmentSetting: Int?
@@ -197,6 +203,8 @@ public final class Subscription: SubscriptionData, CustomStringConvertible, Expo
             videoPlacement: videoPlacement,
             isArchived: isArchived,
             isPodcast: isPodcast,
+            shortsSetting: shortsSetting,
+            liveStreamSetting: liveStreamSetting,
             sponsorSegmentSetting: sponsorSegmentSetting,
             selfPromoSegmentSetting: selfPromoSegmentSetting,
             customSpeedSetting: customSpeedSetting,

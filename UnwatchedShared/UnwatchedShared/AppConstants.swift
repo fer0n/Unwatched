@@ -437,6 +437,9 @@ public struct Const {
     /// Legacy setting, moved to `defaultShortsSetting`
     public static let hideShorts = "hideShortsEverywhere"
     public static let defaultShortsSetting = "defaultShortsSetting"
+    public static let defaultLiveStreamSetting = "defaultLiveStreamSetting"
+    public static let hiddenLiveStreamIds = "hiddenLiveStreamIds"
+    public static let hiddenLiveStreamIdsLimit = 500
 
     public static let navigationManager = "NavigationManager"
     public static let playerManager = "PlayerManager"

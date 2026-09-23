@@ -12,6 +12,7 @@ extension Const {
     static let syncedSettingsDefaults: [String: Sendable] = [
         // Filter
         Const.defaultShortsSetting: ShortsSetting.defaultSetting.rawValue,
+        Const.defaultLiveStreamSetting: LiveStreamSetting.show.rawValue,
         Const.skipChapterText: "",
         Const.autoSkipRecurringChapters: true,
         Const.customYoutubeApiKey: "",

@@ -283,6 +283,7 @@ actor VideoActor: SharedContextActor {
         if subModel.shortsSetting.shouldHide(defaultPlacement.hideShorts) {
             videos = videos.filter { $0.isYtShort != true }
         }
+        videos = await filterLiveStreams(videos, subModel, hideByDefault: defaultPlacement.hideLiveStreams)
 
         cacheImages(for: videos, subModel)
 
@@ -456,6 +457,7 @@ extension VideoActor {
         let info = DefaultVideoPlacement(
             videoPlacement: videoPlacement,
             hideShorts: !showShorts,
+            hideLiveStreams: LiveStreamSetting.defaultHides,
             filterVideoTitleText: filterVideoTitleText,
             allowOnMatch: allowOnMatch
         )

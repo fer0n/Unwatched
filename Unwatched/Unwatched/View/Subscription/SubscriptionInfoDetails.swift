@@ -116,6 +116,10 @@ struct SubscriptionInfoDetails: View {
                             SubscriptionShortsSetting(subscription: subscription)
                         }
 
+                        if !subscription.isPodcast && subscription.youtubeChannelId != nil {
+                            SubscriptionLiveStreamSetting(subscription: subscription)
+                        }
+
                         SubscriptionSkipSetting(subscription: subscription, edge: .intro)
 
                         SubscriptionSkipSetting(subscription: subscription, edge: .outro)

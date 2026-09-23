@@ -42,6 +42,7 @@ enum PremiumFeature: String, CaseIterable {
          trimSilence,
          tags,
          videoTitleFilter,
+         liveStreamFilter,
          seeVideoDuration,
          generateChaptersFromTranscript,
          generateTranscript,
@@ -60,6 +61,8 @@ enum PremiumFeature: String, CaseIterable {
             return String(localized: "tags")
         case .videoTitleFilter:
             return String(localized: "videoTitleFilter")
+        case .liveStreamFilter:
+            return String(localized: "liveStreamFilterTitle")
         case .chapterFilter:
             return String(localized: "chapterFilterTitle")
         case .skipIntroOutro:
@@ -87,6 +90,8 @@ enum PremiumFeature: String, CaseIterable {
             return "tag.fill"
         case .videoTitleFilter:
             return Const.filterSF
+        case .liveStreamFilter:
+            return "dot.radiowaves.left.and.right"
         case .chapterFilter:
             return "chevron.forward.circle.fill"
         case .skipIntroOutro:
