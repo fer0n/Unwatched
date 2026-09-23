@@ -25,6 +25,9 @@ struct SetupView: View {
     @State var sheetPos = SheetPositionReader.shared
     @State var navManager = NavigationManager.shared
     @State var undoManager = TinyUndoManager.shared
+    #if os(macOS)
+    @AppStorage(Const.isFakePip) var isFakePip = false
+    #endif
 
     var body: some View {
         ContentView()
@@ -53,6 +56,10 @@ struct SetupView: View {
                 AddToLibraryView(hidden: true)
             }
             .appNotificationOverlay()
+            // not in MacOSSplitView: ContentView's GeometryReader keeps it from the window
+            .frame(minWidth: isFakePip
+                    ? nil
+                    : MacOSSplitView.minWindowWidth(sidebarHidden: navManager.isSidebarHidden))
             #endif
             #if os(iOS)
             .onChange(of: scenePhase, initial: true) {

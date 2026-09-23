@@ -50,9 +50,9 @@ struct UnwatchedApp: App {
                 // which then fights over the shared web view and app delegate state
                 .handlesExternalEvents(preferring: ["*"], allowing: ["*"])
                 .frame(
-                    minWidth: isFakePip ? 300 : 800,
+                    minWidth: isFakePip ? 300 : nil,
                     idealWidth: isFakePip ? 400 : 1000,
-                    minHeight: isFakePip ? 100 : 500,
+                    minHeight: isFakePip ? 100 : MacOSSplitView.minWindowSize.height,
                     idealHeight: isFakePip ? 100 : 700
                 )
             #elseif os(visionOS)

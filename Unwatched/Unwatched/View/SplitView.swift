@@ -16,13 +16,19 @@ struct MacOSSplitView: View {
     let landscapeFullscreen: Bool
     let breakpoint: CGFloat = 200
 
+    static let sidebarWidth: (min: CGFloat, ideal: CGFloat, max: CGFloat) = (320, 350, 450)
+
     var body: some View {
         @Bindable var navManager = navManager
 
         NavigationSplitView(columnVisibility: isFakePip ? .constant(.detailOnly) : $navManager.columnVisibility) {
             MenuView()
                 .toolbar(navManager.isMacosFullscreen || isFakePip ? .hidden : .visible)
-                .navigationSplitViewColumnWidth(min: 320, ideal: 350, max: 450)
+                .navigationSplitViewColumnWidth(
+                    min: Self.sidebarWidth.min,
+                    ideal: Self.sidebarWidth.ideal,
+                    max: Self.sidebarWidth.max
+                )
                 .concentricMacWorkaround(corners: true)
         } detail: {
             GeometryReader { proxy in
@@ -89,6 +95,15 @@ struct MacOSSplitView: View {
     }
 
     #if os(macOS)
+    static let minWindowSize = CGSize(width: 800, height: 500)
+
+    // AppKit widens the window past the screen to keep a hidden sidebar's detail this wide on reveal
+    static func minWindowWidth(sidebarHidden: Bool) -> CGFloat {
+        sidebarHidden
+            ? minWindowSize.width - sidebarWidth.max
+            : minWindowSize.width
+    }
+
     var mainWindow: NSWindow? {
         NSApp.windows.first { $0.isVisible && $0.canBecomeMain }
     }
@@ -137,7 +152,7 @@ struct MacOSSplitView: View {
 
             // Clear aspect ratio lock before restoring
             window.resizeIncrements = NSSize(width: 1, height: 1)
-            window.contentMinSize = NSSize(width: 800, height: 500)
+            window.contentMinSize = Self.minWindowSize
 
             if let saved = UserDefaults.standard.string(forKey: Const.preFakePipWindowFrame) {
                 let frame = NSRectFromString(saved)
