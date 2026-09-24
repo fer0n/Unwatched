@@ -46,12 +46,18 @@ struct VideoListItemMoreMenuView: View {
                 canBeCleared: canBeCleared
             )
             Divider()
-            Button {
-                viewChannel?()
-            } label: {
-                Label("viewChannel", systemImage: Const.channelSF)
+            if let subscription = videoData.subscriptionData {
+                Button {
+                    viewChannel?()
+                } label: {
+                    if subscription.isPodcast {
+                        Label("viewPodcast", systemImage: Const.podcastSF)
+                    } else {
+                        Label("viewChannel", systemImage: Const.channelSF)
+                    }
+                }
+                Divider()
             }
-            Divider()
             #endif
 
             Button(action: toggleBookmark) {

@@ -85,6 +85,9 @@ struct VideoListItemSwipeActionsModifier: ViewModifier {
         if let subChannelId = videoData.subscriptionData?.youtubeChannelId,
            let sub = SubscriptionService.getRegularChannel(subChannelId) {
             navManager.pushSubscription(subscription: sub)
+        } else if let sub = getVideo()?.subscription {
+            // podcasts have no channel id
+            navManager.pushSubscription(subscription: sub)
         }
     }
 
