@@ -38,6 +38,29 @@ struct FakePipTitleBar: View {
     }
 }
 
+/// Keeps a titlebar drag from also toggling playback in the player underneath.
+struct TitlebarClickBlocker: View {
+    var body: some View {
+        GeometryReader { proxy in
+            let height = proxy.safeAreaInsets.top
+            ClickBlocker()
+                .frame(height: height)
+                .offset(y: -height)
+        }
+    }
+}
+
+private struct ClickBlocker: NSViewRepresentable {
+    func makeNSView(context: Context) -> ClickBlockerNSView { ClickBlockerNSView() }
+    func updateNSView(_ nsView: ClickBlockerNSView, context: Context) {}
+}
+
+private class ClickBlockerNSView: NSView {
+    override func acceptsFirstMouse(for event: NSEvent?) -> Bool { true }
+    override func mouseDown(with event: NSEvent) {}
+    override func mouseUp(with event: NSEvent) {}
+}
+
 struct WindowDragArea: NSViewRepresentable {
     func makeNSView(context: Context) -> WindowDragNSView { WindowDragNSView() }
     func updateNSView(_ nsView: WindowDragNSView, context: Context) {}

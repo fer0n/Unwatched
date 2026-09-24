@@ -59,6 +59,13 @@ struct MacOSSplitView: View {
                 #endif
             }
             .edgesIgnoringSafeArea(.vertical)
+            #if os(macOS)
+            .overlay {
+                if !isFakePip && !navManager.isMacosFullscreen {
+                    TitlebarClickBlocker()
+                }
+            }
+            #endif
         }
         #if os(macOS)
         .onChange(of: isFakePip) { _, enabled in
