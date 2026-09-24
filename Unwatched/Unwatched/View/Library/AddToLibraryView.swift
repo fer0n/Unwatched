@@ -6,6 +6,7 @@
 import SwiftUI
 import OSLog
 import UnwatchedShared
+import SwiftData
 
 struct AddToLibraryView: View {
     @Environment(\.colorScheme) var colorScheme

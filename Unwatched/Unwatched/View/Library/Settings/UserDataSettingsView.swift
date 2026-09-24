@@ -6,6 +6,7 @@
 import SwiftUI
 import OSLog
 import UnwatchedShared
+import SwiftData
 
 struct UserDataSettingsView: View {
     @Environment(PlayerManager.self) var player

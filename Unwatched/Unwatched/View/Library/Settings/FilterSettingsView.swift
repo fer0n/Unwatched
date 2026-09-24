@@ -5,6 +5,7 @@
 
 import SwiftUI
 import UnwatchedShared
+import SwiftData
 
 struct FilterSettingsView: View {
     @CloudStorage(Const.defaultShortsSetting) var defaultShortsSetting: ShortsSetting = .show

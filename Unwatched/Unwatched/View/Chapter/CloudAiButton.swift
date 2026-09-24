@@ -43,7 +43,7 @@ struct CloudAiButton<Label: View>: View {
                 if enablePip {
                     player.setPip(true)
                     Task {
-                        try await Task.sleep(for: .seconds(0.2))
+                        try? await Task.sleep(for: .seconds(0.2))
                         openURL(url)
                     }
                 } else {

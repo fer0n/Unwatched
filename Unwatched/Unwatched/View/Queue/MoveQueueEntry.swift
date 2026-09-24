@@ -5,6 +5,7 @@
 
 import SwiftUI
 import UnwatchedShared
+import SwiftData
 
 struct MoveQueueEntry<Content: DynamicViewContent>: DynamicViewContent {
     @Environment(\.modelContext) var modelContext

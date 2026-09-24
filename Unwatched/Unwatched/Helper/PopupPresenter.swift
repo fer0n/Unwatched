@@ -16,7 +16,7 @@ class PopupPresenter: ObservableObject {
 
         popupWindow = UIWindow(windowScene: scene)
         popupWindow?.backgroundColor = .clear
-        popupWindow?.frame = scene.coordinateSpace.bounds
+        popupWindow?.frame = scene.effectiveGeometry.coordinateSpace.bounds
 
         let popup = PopupContainer(content: content, presenter: self)
 

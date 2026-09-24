@@ -5,6 +5,7 @@
 
 import SwiftUI
 import UnwatchedShared
+import SwiftData
 
 /// Tappable chapter chips that jump straight to that part of the video
 struct InboxCardChapters: View {

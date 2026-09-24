@@ -6,6 +6,7 @@
 import Foundation
 import SwiftUI
 import UnwatchedShared
+import SwiftData
 
 struct CapsulePicker<T: Hashable>: View {
     @Environment(\.modelContext) var modelContext

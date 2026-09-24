@@ -6,6 +6,7 @@
 import SwiftUI
 import UnwatchedShared
 import OSLog
+import SwiftData
 
 struct HandleVideoListItemTap: ViewModifier {
     @Environment(NavigationManager.self) private var navManager

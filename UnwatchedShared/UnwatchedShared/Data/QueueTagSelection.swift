@@ -9,7 +9,7 @@ import SwiftData
 /// Which slice of the queue is in view: the whole thing, or one tag.
 ///
 /// `Codable` because both the queue screen and the player latch a selection and persist it.
-public enum QueueTagSelection: Codable, Hashable, Sendable {
+@frozen public enum QueueTagSelection: Codable, Hashable, Sendable {
     case all
     case tag(PersistentIdentifier)
 

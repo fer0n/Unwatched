@@ -7,6 +7,7 @@ import SwiftUI
 import OSLog
 import UnwatchedShared
 import AVKit
+import SwiftData
 
 struct WatchNotificationHandlerViewModifier: ViewModifier {
     @Environment(\.modelContext) var modelContext

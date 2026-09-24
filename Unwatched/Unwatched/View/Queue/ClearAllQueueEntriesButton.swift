@@ -5,6 +5,7 @@
 
 import SwiftUI
 import UnwatchedShared
+import SwiftData
 
 struct ClearAllQueueEntriesButton: View {
     @AppStorage(Const.showClearQueueButton) var showClearQueueButton: Bool = true

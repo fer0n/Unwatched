@@ -5,6 +5,7 @@
 
 import SwiftUI
 import UnwatchedShared
+import SwiftData
 
 struct CoreNextButton<Content>: View where Content: View {
     @Environment(\.modelContext) var modelContext

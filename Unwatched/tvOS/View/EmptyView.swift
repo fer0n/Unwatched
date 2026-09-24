@@ -5,6 +5,7 @@
 
 import SwiftUI
 import UnwatchedShared
+import SwiftData
 
 struct EmptyQueueView: View {
     @Environment(SyncManager.self) var syncer

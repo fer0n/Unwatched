@@ -5,6 +5,7 @@
 
 import SwiftUI
 import UnwatchedShared
+import SwiftData
 
 struct DateSelectorSheet: ViewModifier {
     @Environment(PlayerManager.self) var player

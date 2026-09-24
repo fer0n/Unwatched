@@ -5,6 +5,7 @@
 
 import SwiftUI
 import UnwatchedShared
+import SwiftData
 
 struct DeferDateSelector: View {
     @AppStorage(Const.themeColor) var theme = ThemeColor()

@@ -88,7 +88,7 @@ public final class DecodedImageCache: @unchecked Sendable {
     /// Stores a decode and remembers the size it was made at.
     public func store(_ image: PlatformImage, url: String, maxPixelSize: Int) {
         self[Self.key(url, maxPixelSize)] = image
-        lock.withLock { sizesByUrl[url, default: []].insert(maxPixelSize) }
+        _ = lock.withLock { sizesByUrl[url, default: []].insert(maxPixelSize) }
     }
 
     public static func key(_ url: String, _ maxPixelSize: Int) -> String {

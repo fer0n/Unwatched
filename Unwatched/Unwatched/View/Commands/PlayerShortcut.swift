@@ -162,9 +162,9 @@ enum PlayerShortcut: String, CaseIterable {
         case .hideControls:
             hideControls()
         case .temporarySpeedUp:
-            player.tempSpeedChange(faster: true)
+            _ = player.tempSpeedChange(faster: true)
         case .temporarySlowDown:
-            player.tempSpeedChange()
+            _ = player.tempSpeedChange()
         case .markWatched:
             markVideoWatched()
             OverlayFullscreenVM.shared.show(.watched)

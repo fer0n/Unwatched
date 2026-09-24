@@ -7,7 +7,7 @@ import Foundation
 import SwiftData
 
 /// How a tag turns channels into a slice.
-public enum TagMode: Int, Codable, Sendable, CaseIterable, Identifiable {
+@frozen public enum TagMode: Int, Codable, Sendable, CaseIterable, Identifiable {
     /// Only the channels the tag holds.
     case include = 0
     /// Everything but the channels the tag holds.

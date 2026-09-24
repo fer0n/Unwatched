@@ -209,7 +209,7 @@ extension PlayerWebViewCoordinator {
 
     func handleChapters() {
         Task {
-            try await Task.sleep(for: .seconds(1))
+            try? await Task.sleep(for: .seconds(1))
             parent.backend.setChapterMarkers(force: true)
         }
     }

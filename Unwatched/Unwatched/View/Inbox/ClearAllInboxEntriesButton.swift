@@ -5,6 +5,7 @@
 
 import SwiftUI
 import UnwatchedShared
+import SwiftData
 
 struct ClearAllInboxEntriesButton: View {
     @Environment(\.modelContext) var modelContext

@@ -5,6 +5,7 @@
 
 import SwiftUI
 import UnwatchedShared
+import SwiftData
 
 struct SendableSubscriptionDestination: ViewModifier {
     @Environment(\.modelContext) var modelContext

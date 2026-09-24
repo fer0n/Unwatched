@@ -289,9 +289,9 @@ struct PlayerView: View {
             #if os(macOS)
             return
             #elseif os(visionOS)
-            PlayerManager.shared.tempSpeedChange(faster: true)
+            _ = PlayerManager.shared.tempSpeedChange(faster: true)
             return
-            #endif
+            #else
             if enableHideControls {
                 setHideControlsFullscreen(true)
             } else if !landscapeFullscreen {
@@ -308,6 +308,7 @@ struct PlayerView: View {
             } else {
                 player.setShowMenu()
             }
+            #endif
         case .down:
             guard Const.swipeGestureDown.bool ?? true else {
                 return
@@ -315,9 +316,9 @@ struct PlayerView: View {
             #if os(macOS)
             return
             #elseif os(visionOS)
-            PlayerManager.shared.tempSpeedChange()
+            _ = PlayerManager.shared.tempSpeedChange()
             return
-            #endif
+            #else
             if enableHideControls && hideControlsFullscreen {
                 setHideControlsFullscreen(false)
             } else if landscapeFullscreen {
@@ -334,6 +335,7 @@ struct PlayerView: View {
             } else {
                 player.setPip(true)
             }
+            #endif
         case .left:
             guard Const.swipeGestureLeft.bool ?? true else {
                 return

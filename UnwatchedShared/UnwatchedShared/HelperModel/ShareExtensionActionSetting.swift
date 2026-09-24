@@ -8,7 +8,7 @@ import SwiftUI
 /// The action to take when a video link is shared to Unwatched from another app — either asked
 /// every time (the share sheet shows its chooser) or remembered, so the extension performs it
 /// immediately without showing any UI.
-public enum ShareExtensionActionSetting: String, CaseIterable, Codable, Hashable, Sendable {
+@frozen public enum ShareExtensionActionSetting: String, CaseIterable, Codable, Hashable, Sendable {
     case askEveryTime
     case play
     case queueNext

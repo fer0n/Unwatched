@@ -5,6 +5,7 @@
 
 import SwiftUI
 import UnwatchedShared
+import SwiftData
 
 struct VideoGridItem: View {
     @Environment(\.isFocused) var isFocused

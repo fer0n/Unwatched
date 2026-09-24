@@ -11,7 +11,7 @@ public enum FullscreenControls: Int, Codable, CaseIterable {
     case disabled
 }
 
-public enum PlayerTypeSetting: String, CaseIterable, Hashable {
+@frozen public enum PlayerTypeSetting: String, CaseIterable, Hashable {
     case youtubeEmbedded
     case youtubeEmbeddedMinimal
     case youtubeCustomUI

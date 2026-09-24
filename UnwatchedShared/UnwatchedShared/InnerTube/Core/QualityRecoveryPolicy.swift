@@ -11,7 +11,7 @@ private let avFoundationErrorDomain = "AVFoundationErrorDomain"
 
 /// Describes what recovery action the player should take when an `AVPlayerItem`
 /// enters the `.failed` state.
-public enum QualityRecoveryAction: Sendable {
+@frozen public enum QualityRecoveryAction: Sendable {
     /// HTTP 403 — re-fetch fresh signed URLs via the exhaustive retry path.
     case retry403Recovery
     /// A specific quality cap failed — revert the selection to Auto and reload.

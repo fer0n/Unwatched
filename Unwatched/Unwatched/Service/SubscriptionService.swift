@@ -131,7 +131,11 @@ struct SubscriptionService {
     static func cleanupArchivedSubscriptions() {
         Task.detached {
             let repo = SubscriptionActor()
-            return try await repo.cleanupArchivedSubscriptions()
+            do {
+                try await repo.cleanupArchivedSubscriptions()
+            } catch {
+                Log.error("cleanupArchivedSubscriptions: \(error)")
+            }
         }
     }
 

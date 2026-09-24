@@ -5,6 +5,7 @@
 
 import SwiftUI
 import UnwatchedShared
+import SwiftData
 
 struct BrowserViewSheet: ViewModifier {
     var navManager: Bindable<NavigationManager>

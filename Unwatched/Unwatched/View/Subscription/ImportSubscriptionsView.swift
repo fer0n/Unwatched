@@ -6,6 +6,7 @@
 import SwiftUI
 import OSLog
 import UnwatchedShared
+import SwiftData
 
 struct ImportSubscriptionsView: View {
     @Environment(\.modelContext) var modelContext
@@ -215,7 +216,7 @@ struct ImportSubscriptionsView: View {
                     file.stopAccessingSecurityScopedResource()
                 }
             }
-            let content = try String(contentsOf: file)
+            let content = try String(contentsOf: file, encoding: .utf8)
             let isXML = file.pathExtension.lowercased() == "opml"
                 || content.trimmingCharacters(in: .whitespaces).hasPrefix("<")
             if isXML {

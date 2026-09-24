@@ -46,7 +46,7 @@ public enum PodcastTranscriptFormat: Sendable {
 }
 
 /// What reading an episode's published transcript came to.
-public enum PodcastTranscriptLookup: Sendable {
+@frozen public enum PodcastTranscriptLookup: Sendable {
     case found([TranscriptEntry])
     /// The feed was read and the episode lists no transcript this app can use.
     case notPublished

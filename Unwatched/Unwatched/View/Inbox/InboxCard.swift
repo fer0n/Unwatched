@@ -5,6 +5,7 @@
 
 import SwiftUI
 import UnwatchedShared
+import SwiftData
 
 /// A single inbox video, shown as a card in the inbox card stack
 struct InboxCard: View, Equatable {

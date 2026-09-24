@@ -5,6 +5,7 @@
 
 import SwiftUI
 import UnwatchedShared
+import SwiftData
 
 struct PlayerMoreMenuButton<Content>: View where Content: View {
     @State var hapticToggle = false

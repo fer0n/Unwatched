@@ -547,8 +547,7 @@ extension VideoService {
                 addEntriesOnReceive: true,
                 )
             if let imageUrl {
-                let data = try await ImageService.loadImageData(url: imageUrl)
-                info.video?.thumbnailData = data
+                info.video?.thumbnailData = try? await ImageService.loadImageData(url: imageUrl)
             }
             NotificationManager.sendNotification(info, userInfo: userInfo, triggerDate: deferDate)
         }

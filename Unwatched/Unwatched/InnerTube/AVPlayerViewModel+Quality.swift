@@ -196,7 +196,7 @@ extension AVPlayerViewModel {
         guard group.options.count > 1 else { return }
 
         let languages = group.options.compactMap { opt -> (code: String, name: String)? in
-            guard let code = opt.locale?.languageCode else { return nil }
+            guard let code = opt.locale?.language.languageCode?.identifier else { return nil }
             return (code: code, name: opt.displayName)
         }
         let (detectedLang, currentLang) = await MainActor.run { (originalAudioLanguage, player.selectedAudioLanguage) }
@@ -204,18 +204,18 @@ extension AVPlayerViewModel {
 
         // On a quality switch the item is replaced but the user's language choice should survive.
         if !currentLang.isEmpty,
-           let existing = group.options.first(where: { $0.locale?.languageCode == currentLang }) {
+           let existing = group.options.first(where: { $0.locale?.language.languageCode?.identifier == currentLang }) {
             await MainActor.run { item.select(existing, in: group) }
             return
         }
 
         // Initial load: prefer the video's detected original language.
         if let lang = detectedLang,
-           let byLang = group.options.first(where: { $0.locale?.languageCode == lang || $0.locale?.identifier == lang }) {
+           let byLang = group.options.first(where: { $0.locale?.language.languageCode?.identifier == lang || $0.locale?.identifier == lang }) {
             Log.info("[AVPlayerView] selecting audio by lang '\(lang)': \(byLang.displayName)")
             await MainActor.run {
                 item.select(byLang, in: group)
-                player.reportAudioLanguage(byLang.locale?.languageCode ?? "")
+                player.reportAudioLanguage(byLang.locale?.language.languageCode?.identifier ?? "")
             }
             return
         }
@@ -227,7 +227,7 @@ extension AVPlayerViewModel {
             Log.info("[AVPlayerView] selecting audio via characteristic detection: \(option.displayName) locale=\(option.locale?.identifier ?? "nil")")
             await MainActor.run {
                 item.select(option, in: group)
-                player.reportAudioLanguage(option.locale?.languageCode ?? "")
+                player.reportAudioLanguage(option.locale?.language.languageCode?.identifier ?? "")
             }
         }
     }
@@ -252,7 +252,7 @@ extension AVPlayerViewModel {
 
     private func selectAudioTrack(_ lang: String, for item: AVPlayerItem) async {
         guard let group = try? await item.asset.loadMediaSelectionGroup(for: .audible) else { return }
-        let option = group.options.first { $0.locale?.languageCode == lang || $0.locale?.identifier == lang }
+        let option = group.options.first { $0.locale?.language.languageCode?.identifier == lang || $0.locale?.identifier == lang }
         if let option {
             await MainActor.run { item.select(option, in: group) }
         }

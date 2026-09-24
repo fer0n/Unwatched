@@ -93,7 +93,12 @@ extension RefreshManager {
         isBackingUp = true
         Task {
             defer { isBackingUp = false }
-            try await task.value
+            do {
+                try await task.value
+            } catch {
+                Log.error("auto backup failed: \(error)")
+                return
+            }
             UserDefaults.standard.set(Date(), forKey: Const.lastAutoBackupDate)
             Log.info("saved backup")
 

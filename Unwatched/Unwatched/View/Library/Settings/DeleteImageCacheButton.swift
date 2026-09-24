@@ -6,6 +6,7 @@
 import SwiftUI
 import UnwatchedShared
 import OSLog
+import SwiftData
 
 struct DeleteImageCacheButton: View {
     @Environment(\.modelContext) var modelContext

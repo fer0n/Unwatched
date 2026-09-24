@@ -249,8 +249,9 @@ struct BrowserView: View, KeyboardReadable {
     var supportsSplitView: Bool {
         #if os(macOS)
         return false
-        #endif
+        #else
         return horizontalSizeClass == .regular
+        #endif
     }
 
     var enableBottomPadding: Bool {

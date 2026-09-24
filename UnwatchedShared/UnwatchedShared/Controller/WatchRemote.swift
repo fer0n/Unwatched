@@ -105,7 +105,7 @@ public struct WatchRemoteState: WatchPayload {
     public static let requestKey = "watchRemoteStateRequest"
 }
 
-public enum WatchRemoteCommand: WatchPayload {
+@frozen public enum WatchRemoteCommand: WatchPayload {
     case togglePlay
     case play(String)
     case seek(Double)

@@ -4,6 +4,7 @@
 //
 
 import SwiftUI
+import Combine
 
 struct CircularProgressView: View {
     @Binding var progress: Double

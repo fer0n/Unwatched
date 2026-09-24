@@ -128,25 +128,29 @@ public struct ImageService {
 
     public static func cleanupImages(olderThanDays days: Int) {
         Task.detached {
-            let imageContainer = DataProvider.shared.localCacheContainer
-            let context = ModelContext(imageContainer)
-            let cutoffDate = Calendar.current.date(byAdding: .day, value: -days, to: Date()) ?? Date()
-            let past = Date.distantPast
+            do {
+                let imageContainer = DataProvider.shared.localCacheContainer
+                let context = ModelContext(imageContainer)
+                let cutoffDate = Calendar.current.date(byAdding: .day, value: -days, to: Date()) ?? Date()
+                let past = Date.distantPast
 
-            let fetch = FetchDescriptor<CachedImage>(predicate: #Predicate {
-                ($0.lastAccessedOn ?? past) < cutoffDate
-            })
+                let fetch = FetchDescriptor<CachedImage>(predicate: #Predicate {
+                    ($0.lastAccessedOn ?? past) < cutoffDate
+                })
 
-            let images = try context.fetch(fetch)
-            let count = images.count
-            for image in images {
-                if let imageUrl = image.imageUrl {
-                    decodedImageCache.removeAll(url: imageUrl.absoluteString)
+                let images = try context.fetch(fetch)
+                let count = images.count
+                for image in images {
+                    if let imageUrl = image.imageUrl {
+                        decodedImageCache.removeAll(url: imageUrl.absoluteString)
+                    }
+                    context.delete(image)
                 }
-                context.delete(image)
+                Log.info("cleanupImages: \(count) images older than \(days) days")
+                try context.save()
+            } catch {
+                Log.error("cleanupImages: \(error)")
             }
-            Log.info("cleanupImages: \(count) images older than \(days) days")
-            try context.save()
         }
     }
 

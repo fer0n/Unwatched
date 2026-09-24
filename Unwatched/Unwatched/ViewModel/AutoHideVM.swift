@@ -85,7 +85,7 @@ import UnwatchedShared
             keepVisibleDict.insert(source)
         } else {
             // matches the auto-hide fade; the timeout usually expired while the menu was open
-            withAnimation(Self.hideAnimation) {
+            _ = withAnimation(Self.hideAnimation) {
                 keepVisibleDict.remove(source)
             }
         }
