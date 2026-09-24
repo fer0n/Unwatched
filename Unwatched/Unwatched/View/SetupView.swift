@@ -18,9 +18,6 @@ struct SetupView: View {
     @Environment(\.openWindow) var openWindow
 
     @State var browserManager = BrowserManager.shared
-    #if os(macOS) || os(visionOS)
-    @State var navTitleManager = NavigationTitleManager()
-    #endif
     @State var imageCacheManager = ImageCacheManager.shared
     @State var sheetPos = SheetPositionReader.shared
     @State var navManager = NavigationManager.shared
@@ -45,9 +42,6 @@ struct SetupView: View {
             .environment(undoManager)
             .environment(browserManager)
             .modifier(CustomAlerter())
-            #if os(macOS) || os(visionOS)
-            .environment(navTitleManager)
-            #endif
             .handleDeepLinks()
             #if os(macOS)
             // Root-mounted so File > Paste URL works with the sidebar hidden; the overlay

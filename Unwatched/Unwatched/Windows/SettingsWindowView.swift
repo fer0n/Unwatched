@@ -7,7 +7,6 @@ import SwiftUI
 import UnwatchedShared
 
 struct SettingsWindowView: View {
-    @State var navTitleManager = NavigationTitleManager()
     @AppStorage(Const.themeColor) var theme: ThemeColor = .defaultTheme
 
     var body: some View {
@@ -61,7 +60,6 @@ struct SettingsWindowView: View {
                 Label("privacyPolicy", systemImage: "checkmark.shield.fill")
             }
         }
-        .environment(navTitleManager)
         .frame(width: 700, height: 500)
         .myTint()
         #if os(macOS)

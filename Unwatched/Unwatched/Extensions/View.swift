@@ -77,9 +77,6 @@ extension View {
             .environment(SheetPositionReader.shared)
             .environment(TinyUndoManager())
             .modifier(CustomAlerter())
-            #if os(macOS) || os(visionOS)
-            .environment(NavigationTitleManager())
-            #endif
             .appNotificationOverlay()
     }
 }

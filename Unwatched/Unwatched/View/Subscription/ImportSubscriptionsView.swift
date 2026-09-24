@@ -84,15 +84,13 @@ struct ImportSubscriptionsView: View {
                     .environment(\.editMode, $editMode)
                     // macOS doesn't need explicit edit mode for multi-selection
                     #endif
-                    .toolbar {
-                        ToolbarItem {
-                            Button(action: toggleSelection) {
-                                Text(selection.count == sendableSubs.count
-                                        ? "deselectAll"
-                                        : "selectAll")
-                            }
-                            .foregroundStyle(theme.color)
+                    .paneToolbar {
+                        Button(action: toggleSelection) {
+                            Text(selection.count == sendableSubs.count
+                                    ? "deselectAll"
+                                    : "selectAll")
                         }
+                        .foregroundStyle(theme.color)
                     }
 
                     VStack {

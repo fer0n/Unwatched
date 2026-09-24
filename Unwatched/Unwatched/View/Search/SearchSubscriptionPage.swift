@@ -31,7 +31,7 @@ struct SearchSubscriptionPage: View {
         .foregroundStyle(Color.neutralAccentColor)
         #endif
         #if os(macOS)
-        .navigationStackWorkaround()
+        .sidebarPage()
         #endif
     }
 }

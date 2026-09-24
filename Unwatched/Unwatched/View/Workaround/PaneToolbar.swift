@@ -6,26 +6,36 @@
 import SwiftUI
 
 #if os(macOS)
-/// Trailing actions from pushed views, rendered by `NavigationStackWorkaround`.
-/// A preference rather than a store, so the items stay live with their declaring view.
-struct PaneToolbarKey: PreferenceKey {
-    static let defaultValue: [AnyView] = []
+private struct PaneToolbar<Item: View>: ViewModifier {
+    // absent outside the main window
+    @Environment(NavigationManager.self) var navManager: NavigationManager?
+    let placement: ToolbarItemPlacement
+    let item: Item
 
-    static func reduce(value: inout [AnyView], nextValue: () -> [AnyView]) {
-        value.append(contentsOf: nextValue())
+    func body(content: Content) -> some View {
+        content
+            .toolbar {
+                // otherwise SidebarPage draws them
+                if navManager?.isSidebarHidden != true && navManager?.isMacosFullscreen != true {
+                    ToolbarItem(placement: placement) {
+                        item
+                    }
+                }
+            }
+            .transformPreference(SidebarPageKey.self) {
+                $0.actions.append(AnyView(item))
+            }
     }
 }
 #endif
 
 extension View {
-    /// Trailing actions for a view pushed inside the macOS sidebar pane, which hides the window
-    /// toolbar. Every other platform gets an ordinary toolbar item at `placement`.
     func paneToolbar<Content: View>(
         placement: ToolbarItemPlacement = .automatic,
         @ViewBuilder _ content: () -> Content
     ) -> some View {
         #if os(macOS)
-        preference(key: PaneToolbarKey.self, value: [AnyView(content())])
+        modifier(PaneToolbar(placement: placement, item: content()))
         #else
         toolbar {
             ToolbarItem(placement: placement) {

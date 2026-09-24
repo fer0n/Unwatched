@@ -14,12 +14,13 @@ struct MacBackButton: View {
             dismiss()
         } label: {
             Image(systemName: "chevron.left")
-                .padding(.horizontal, 10)
-                .padding(.vertical, 5)
-                .glassEffect(in: .capsule)
-                .contentShape(.capsule)
+                .fontWeight(.semibold)
+                // the size of the native toolbar buttons next to it
+                .frame(width: 36, height: 36)
+                .contentShape(.circle)
         }
         .buttonStyle(.plain)
+        .glassEffect(.regular.interactive(), in: .circle)
     }
 }
 #endif

@@ -62,7 +62,7 @@ extension View {
                     }
                 }
                 #if os(macOS)
-                .navigationStackWorkaround()
+                .sidebarPage()
                 #endif
             }
     }

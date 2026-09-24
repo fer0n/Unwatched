@@ -33,7 +33,13 @@ struct MyNavigationTitle<Principal: View>: ViewModifier {
             }
         #else
         .navigationTitle(title ?? "")
-        .updateNavTitle(title, titleHidden: titleHidden)
+        #if os(macOS)
+        .transformPreference(SidebarPageKey.self) {
+        guard let title else { return }
+        $0.title = title
+        $0.titleHidden = titleHidden
+        }
+        #endif
         #endif
     }
 }
