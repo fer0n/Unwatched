@@ -106,7 +106,7 @@ final class SearchVM {
         searchLocal()
         searchPodcasts()
 
-        guard enabledSources.contains(.youtube) else {
+        guard enabledSources.contains(.youtube), !searchesYoutubeInBrowser else {
             withAnimation {
                 results = []
             }

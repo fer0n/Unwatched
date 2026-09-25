@@ -15,14 +15,17 @@ struct SearchFilterMenu: View {
 
     var body: some View {
         Menu {
-            Picker(selection: $vm.uploadDate) {
-                ForEach(SearchFilter.UploadDate.allCases, id: \.self) { date in
-                    Text(date.label).tag(date)
+            // Only InnerTube takes the filter; the local sources don't, and the web page ignores it.
+            if !vm.searchesYoutubeInBrowser {
+                Picker(selection: $vm.uploadDate) {
+                    ForEach(SearchFilter.UploadDate.allCases, id: \.self) { date in
+                        Text(date.label).tag(date)
+                    }
+                } label: {
+                    Text("searchSortUploadDate")
                 }
-            } label: {
-                Text("searchSortUploadDate")
+                .pickerStyle(.inline)
             }
-            .pickerStyle(.inline)
 
             Section("searchSources") {
                 ForEach(SearchSource.allCases) { source in
@@ -52,6 +55,6 @@ struct SearchFilterMenu: View {
     }
 
     private var isFiltering: Bool {
-        vm.uploadDate != .anytime || vm.enabledSources != SearchSource.all
+        (vm.uploadDate != .anytime && !vm.searchesYoutubeInBrowser) || vm.enabledSources != SearchSource.all
     }
 }

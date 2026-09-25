@@ -73,6 +73,14 @@ struct SearchView: View {
                 vm.clear()
             }
         }
+        // Toggling the YouTube source reruns the search itself (see `SearchVM.setEnabled`).
+        .onChange(of: vm.searchesYoutubeInBrowser) {
+            guard vm.hasSearched else { return }
+            showBrowserIfSearchingYoutubeThere()
+        }
+        .onChange(of: searchAlwaysUseYoutube) {
+            vm.rerunActiveSearch()
+        }
         .onChange(of: searchFocused) { _, focused in
             if focused {
                 vm.showBrowserFallback = false
@@ -128,12 +136,8 @@ struct SearchView: View {
         vm.query = term
         let trimmed = term.trimmingCharacters(in: .whitespacesAndNewlines)
         guard !trimmed.isEmpty else { return }
-        if searchAlwaysUseYoutube, let url = youtubeSearchURL(for: trimmed) {
-            openBrowserFallback(url)
-        } else {
-            vm.showBrowserFallback = false
-            vm.search()
-        }
+        vm.search()
+        showBrowserIfSearchingYoutubeThere()
         if !showsResultsInline && navManager.presentedSearch.first != .results {
             navManager.presentedSearch = [.results]
         }
@@ -144,6 +148,14 @@ struct SearchView: View {
               let encoded = query.addingPercentEncoding(withAllowedCharacters: .urlQueryAllowed)
         else { return nil }
         return URL(string: "https://www.youtube.com/results?search_query=\(encoded)")
+    }
+
+    func showBrowserIfSearchingYoutubeThere() {
+        if vm.searchesYoutubeInBrowser, let url = youtubeSearchURL(for: vm.activeQuery) {
+            openBrowserFallback(url)
+        } else {
+            vm.showBrowserFallback = false
+        }
     }
 
     func openBrowserFallback(_ url: URL) {
@@ -197,7 +209,7 @@ struct SearchView: View {
 
     @ViewBuilder
     var rootContent: some View {
-        if showsResultsInline && !vm.showBrowserFallback && vm.hasSearched && !vm.isEditingQuery {
+        if showsResultsInline && vm.hasSearched && !vm.isEditingQuery {
             resultsContent
         } else {
             SearchSuggestionsView(vm: vm, searchFocused: $searchFocused, onSelect: search(for:))
@@ -215,8 +227,29 @@ struct SearchView: View {
         }
     }
 
-    @ViewBuilder
     var resultsContent: some View {
+        VStack(spacing: 0) {
+            if showsResultsTabPicker {
+                Picker("search", selection: $vm.showBrowserFallback) {
+                    Text(verbatim: "YouTube").tag(true)
+                    Text("searchDefaultResults").tag(false)
+                }
+                .pickerStyle(.segmented)
+                .labelsHidden()
+                .padding(.horizontal)
+                .padding(.vertical, 8)
+            }
+            resultsBody
+        }
+    }
+
+    /// YouTube's results are in the web page, everything else in the list: switch between the two.
+    var showsResultsTabPicker: Bool {
+        vm.searchesYoutubeInBrowser && vm.hasSearched
+    }
+
+    @ViewBuilder
+    var resultsBody: some View {
         if vm.showBrowserFallback {
             BrowserView(showHeader: false, safeArea: false, hideYoutubeChrome: true)
         } else if vm.isSearching && !vm.hasAnyResults {
