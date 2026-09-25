@@ -123,14 +123,9 @@ struct PlayerControls: View {
                     controlsSpacer(max: 6)
                 }
 
-                ChapterMiniControlView(
-                    compactSize: compactSize,
-                    autoHideVM: autoHideVM,
-                    limitHeight: horizontalLayout || player.isTallAspectRatio,
-                    inlineTime: horizontalLayout || player.isTallAspectRatio,
-                    )
-                .contentShape(Rectangle())
-                .padding(.horizontal)
+                if !singleRow {
+                    scrubber
+                }
 
                 if !player.embeddingDisabled && !compactSize && !player.isTallAspectRatio {
                     controlsSpacer(max: 26)
@@ -155,6 +150,10 @@ struct PlayerControls: View {
                 .padding(.horizontal, 15)
                 .padding(.bottom, !compactSize ? 20 : 0)
                 .frame(maxWidth: 800)
+
+                if singleRow {
+                    scrubber
+                }
 
                 if !player.embeddingDisabled && !compactSize && !player.isTallAspectRatio {
                     controlsSpacer(max: 16)
@@ -215,6 +214,17 @@ struct PlayerControls: View {
         )
     }
 
+    var scrubber: some View {
+        ChapterMiniControlView(
+            compactSize: compactSize,
+            autoHideVM: autoHideVM,
+            limitHeight: horizontalLayout || player.isTallAspectRatio,
+            inlineTime: horizontalLayout || player.isTallAspectRatio,
+            )
+        .contentShape(Rectangle())
+        .padding(.horizontal)
+    }
+
     var actionsRow: some View {
         PlayerActionsRow(
             maxSpacing: compactSize ? 8 : 40,
@@ -243,6 +253,11 @@ struct PlayerControls: View {
         }
         .padding(.horizontal, compactSize ? 0 : 20)
         .frame(maxWidth: compactSize ? nil : Const.playerRowMaxWidth)
+    }
+
+    /// Everything in one line: play buttons, then the actions, then the scrubber.
+    var singleRow: Bool {
+        horizontalLayout && compactSize
     }
 
     var showControls: Bool {
