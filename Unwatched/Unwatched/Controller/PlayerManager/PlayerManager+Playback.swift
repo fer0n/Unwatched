@@ -220,7 +220,7 @@ extension PlayerManager {
             MediaSuggestionService.donate(video)
         }
         #endif
-        updateVideoEnded()
+        clearVideoEnded()
         handleRotateOnPlay()
         handlePreciseChapterChangePlay()
     }
@@ -230,7 +230,7 @@ extension PlayerManager {
         if self.isPlaying {
             self.isPlaying = false
         }
-        updateVideoEnded()
+        clearVideoEnded()
         changeChapterTask?.cancel()
     }
 
@@ -292,7 +292,7 @@ extension PlayerManager {
             let target = max(0, chapterAwareSeekTarget(from: base, offset: offset))
             backend.seek(to: target)
             currentTime = target
-            updateVideoEnded()
+            clearVideoEnded()
             return true
         }
         return false
@@ -305,7 +305,7 @@ extension PlayerManager {
         } else {
             backend.seek(to: time)
         }
-        updateVideoEnded()
+        clearVideoEnded()
         updateElapsedTime(time, videoId: video?.youtubeId)
     }
 
@@ -504,7 +504,7 @@ extension PlayerManager {
     }
 
     @MainActor
-    private func updateVideoEnded() {
+    func clearVideoEnded() {
         if videoEnded {
             setVideoEnded(false)
         }

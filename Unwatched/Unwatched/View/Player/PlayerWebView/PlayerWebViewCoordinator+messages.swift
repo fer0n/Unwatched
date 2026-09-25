@@ -393,5 +393,6 @@ extension PlayerWebViewCoordinator {
         withAnimation(.seekScrubber) {
             parent.player.currentTime = time
         }
+        parent.player.clearVideoEnded()
     }
 }
