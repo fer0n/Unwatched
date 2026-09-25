@@ -137,31 +137,14 @@ struct PlayerControls: View {
                 }
 
                 layout {
-                    PlayerActionsRow(
-                        maxSpacing: compactSize ? 8 : 40,
-                        minSpacing: speedSpacing,
-                        compactSize: compactSize,
-                        showRotateButton: showRotateFullscreen && player.embeddingDisabled,
-                        sleepTimerVM: sleepTimerVM,
-                        autoHideVM: $autoHideVM
-                    )
-
-                    HStack(spacing: hasSmallControls ? speedSpacing : nil) {
-                        SeekButton(forward: false, isSmall: hasSmallControls)
-                            .frame(maxWidth: compactSize ? nil : .infinity)
-
-                        PlayerControlsPlayButton(size: playButtonSize)
-                            .frame(maxWidth: compactSize ? nil : .infinity)
-
-                        SeekButton(forward: true, isSmall: hasSmallControls)
-                            .frame(maxWidth: compactSize ? nil : .infinity)
-
-                        if enableHideControls {
-                            HideControlsButton(isSmall: true)
-                        }
+                    // side by side, the play buttons lead
+                    if compactSize {
+                        playbackButtons
+                        actionsRow
+                    } else {
+                        actionsRow
+                        playbackButtons
                     }
-                    .padding(.horizontal, compactSize ? 0 : 20)
-                    .frame(maxWidth: compactSize ? nil : Const.playerRowMaxWidth)
 
                     if player.isTallAspectRatio {
                         // make sure play button vertical spacing is equal
@@ -230,6 +213,36 @@ struct PlayerControls: View {
                 }
                 : nil
         )
+    }
+
+    var actionsRow: some View {
+        PlayerActionsRow(
+            maxSpacing: compactSize ? 8 : 40,
+            minSpacing: speedSpacing,
+            compactSize: compactSize,
+            showRotateButton: showRotateFullscreen && player.embeddingDisabled,
+            sleepTimerVM: sleepTimerVM,
+            autoHideVM: $autoHideVM
+        )
+    }
+
+    var playbackButtons: some View {
+        HStack(spacing: hasSmallControls ? speedSpacing : nil) {
+            SeekButton(forward: false, isSmall: hasSmallControls)
+                .frame(maxWidth: compactSize ? nil : .infinity)
+
+            PlayerControlsPlayButton(size: playButtonSize)
+                .frame(maxWidth: compactSize ? nil : .infinity)
+
+            SeekButton(forward: true, isSmall: hasSmallControls)
+                .frame(maxWidth: compactSize ? nil : .infinity)
+
+            if enableHideControls {
+                HideControlsButton(isSmall: true)
+            }
+        }
+        .padding(.horizontal, compactSize ? 0 : 20)
+        .frame(maxWidth: compactSize ? nil : Const.playerRowMaxWidth)
     }
 
     var showControls: Bool {
