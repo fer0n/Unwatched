@@ -13,26 +13,34 @@ struct OnboardingInboxTip: Tip {
         Text("onboardingInboxTip")
     }
 
-    // concatenated rather than interpolated: interpolation leaks format strings into the catalog
     var message: Text? {
-        let lines = [
-            iconLine(Const.queueNextSF, "onboardingInboxTipQueueNext"),
-            iconLine(Const.queueLastSF, "onboardingInboxTipQueueLast"),
+        let newline = Text(verbatim: "\n")
+        return Self.joined([
+            Text("onboardingInboxTipMessage"), newline,
+            iconLine(Const.queueNextSF, "onboardingInboxTipQueueNext"), newline,
+            iconLine(Const.queueLastSF, "onboardingInboxTipQueueLast"), newline,
             iconLine(Const.clearNoFillSF, "onboardingInboxTipClear")
-        ]
-
-        return lines.reduce(Text("onboardingInboxTipMessage") + Text(verbatim: "\n")) {
-            $0 + Text(verbatim: "\n") + $1
-        }
+        ])
     }
 
     // the icon is a run inside the message's single `Text`, so color and weight are all it can take
     private func iconLine(_ systemImage: String, _ text: String.LocalizationValue) -> Text {
-        Text(Image(systemName: systemImage))
-            .bold()
-            .foregroundStyle(Color.primary)
-            + Text(verbatim: "  ")
-            + Text(String(localized: text))
+        Self.joined([
+            Text(Image(systemName: systemImage))
+                .bold()
+                .foregroundStyle(Color.primary),
+            Text(verbatim: "  "),
+            Text(String(localized: text))
+        ])
+    }
+
+    // built without a string literal: an interpolated literal would leak format strings into the catalog
+    private static func joined(_ parts: [Text]) -> Text {
+        var interpolation = LocalizedStringKey.StringInterpolation(literalCapacity: 0, interpolationCount: parts.count)
+        for part in parts {
+            interpolation.appendInterpolation(part)
+        }
+        return Text(LocalizedStringKey(stringInterpolation: interpolation))
     }
 
     @Parameter
