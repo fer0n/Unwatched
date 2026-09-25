@@ -234,10 +234,10 @@ private struct SystemVideoPlayer: UIViewControllerRepresentable {
         // in the player's speed menu for as long as the video runs.
         if !context.coordinator.didSelectSpeed {
             context.coordinator.didSelectSpeed = true
-            controller.speeds = TvSpeed.selectable(including: speed).map {
-                AVPlaybackSpeed(rate: Float($0), localizedName: TvSpeed.label($0))
+            controller.speeds = SpeedHelper.selectable(including: speed).map {
+                AVPlaybackSpeed(rate: Float($0), localizedName: SpeedHelper.label($0))
             }
-            if let match = controller.speeds.first(where: { TvSpeed.isSame(Double($0.rate), speed) }) {
+            if let match = controller.speeds.first(where: { SpeedHelper.isSame(Double($0.rate), speed) }) {
                 controller.selectSpeed(match)
             }
         }

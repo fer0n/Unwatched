@@ -483,6 +483,12 @@ extension PlayerManager {
         applyPlaybackSpeed()
     }
 
+    @MainActor
+    func setCustomSpeedEnabled(_ enabled: Bool) {
+        video?.subscription?.customSpeedSetting = enabled ? unmodifiedPlaybackSpeed : nil
+        applyPlaybackSpeed()
+    }
+
     /// Pushes the effective speed to the engine.
     @MainActor
     func applyPlaybackSpeed() {

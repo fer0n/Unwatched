@@ -11,7 +11,7 @@ struct TvSettingsView: View {
     @AppStorage(Const.tvPlaybackMode) var playbackMode: TvPlaybackMode = .youtubeApp
     @AppStorage(Const.playbackSpeed) var playbackSpeed: Double = 1
 
-    private let speeds = TvSpeed.selectable
+    private let speeds = SpeedHelper.selectable
 
     var body: some View {
         VStack(spacing: 40) {
@@ -53,7 +53,7 @@ struct TvSettingsView: View {
             }
             .disabled(playbackSpeed <= (speeds.first ?? 1))
 
-            Text(verbatim: TvSpeed.label(playbackSpeed))
+            Text(verbatim: SpeedHelper.label(playbackSpeed))
                 .monospacedDigit()
                 .frame(minWidth: 120)
 

@@ -8,45 +8,55 @@ import SwiftUI
 import UnwatchedShared
 
 struct SubscriptionSpeedSetting: View {
-    @AppStorage(Const.themeColor) var theme = ThemeColor()
+    @Bindable var subscription: Subscription
+
+    var body: some View {
+        CustomSpeedSetting(customSpeed: $subscription.customSpeedSetting) { text in
+            CapsuleMenuLabel(systemImage: "timer", menuLabel: "speedSetting", text: text)
+        }
+        .myTint()
+    }
+}
+
+struct CustomSpeedSetting<Label: View>: View {
     @Environment(PlayerManager.self) var player
 
-    @Bindable var subscription: Subscription
+    @Binding var customSpeed: Double?
+    var customSettingLabel: LocalizedStringResource = "customSpeedSetting"
+    @ViewBuilder var label: (String) -> Label
 
     var body: some View {
         let selectedSpeed = Binding(
             get: {
-                subscription.customSpeedSetting ?? player.defaultPlaybackSpeed
+                customSpeed ?? player.defaultPlaybackSpeed
             }, set: { value in
-                subscription.customSpeedSetting = value
+                customSpeed = value
             })
         let isOn = Binding(
             get: {
-                subscription.customSpeedSetting != nil
+                customSpeed != nil
             }, set: { value in
                 withAnimation {
-                    if value {
-                        subscription.customSpeedSetting = player.defaultPlaybackSpeed
-                    } else {
-                        subscription.customSpeedSetting = nil
-                    }
+                    customSpeed = value ? player.defaultPlaybackSpeed : nil
                 }
             }
         )
 
         SpeedMenu(
             selectedSpeed: selectedSpeed,
-            isOn: isOn
+            isOn: isOn,
+            customSettingLabel: customSettingLabel
         ) {
-            var text: String = ""
-            if let custom = subscription.customSpeedSetting {
-                text = "\(SpeedHelper.formatSpeed(custom))×"
-            } else {
-                text = String(localized: "defaultSpeed\(SpeedHelper.formatSpeed(player.defaultPlaybackSpeed))")
-            }
-            return CapsuleMenuLabel(systemImage: "timer", menuLabel: "speedSetting", text: text)
+            label(text)
         }
-        .myTint()
+    }
+
+    var text: String {
+        if let customSpeed {
+            SpeedHelper.label(customSpeed)
+        } else {
+            String(localized: "defaultSpeed\(SpeedHelper.formatSpeed(player.defaultPlaybackSpeed))")
+        }
     }
 }
 

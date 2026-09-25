@@ -14,10 +14,8 @@ struct SpeedPopoverContent: View {
     @Binding var isOn: Bool
 
     var canSetCustomSpeed = true
+    var customSettingLabel: LocalizedStringResource = "customSpeedSetting"
     var trimSilence: TrimSilenceOption?
-
-    /// Speeds offered directly; the speed control scrolls through all of them
-    let quickSpeeds: [Double] = [1, 1.3, 1.5, 2]
 
     let itemHeight: CGFloat = 36
     let spacing: CGFloat = 6
@@ -47,7 +45,7 @@ struct SpeedPopoverContent: View {
                 SpeedHelper.getPreviousSpeed(before: selectedSpeed)
             }
 
-            Text(verbatim: "\(SpeedHelper.formatSpeed(selectedSpeed))×")
+            Text(verbatim: SpeedHelper.label(selectedSpeed))
                 .font(.system(size: 17))
                 .fontWeight(.semibold)
                 .contentTransition(.numericText())
@@ -84,11 +82,11 @@ struct SpeedPopoverContent: View {
 
     var quickSpeedRow: some View {
         HStack(spacing: spacing) {
-            ForEach(quickSpeeds, id: \.self) { speed in
+            ForEach(SpeedMenuContent.menuSpeeds, id: \.self) { speed in
                 Button {
                     selectedSpeed = speed
                 } label: {
-                    Text(verbatim: "\(SpeedHelper.formatSpeed(speed))×")
+                    Text(verbatim: SpeedHelper.label(speed))
                         .font(.system(size: 15))
                         .fontWeight(.semibold)
                         .fontWidth(.condensed)
@@ -118,7 +116,7 @@ struct SpeedPopoverContent: View {
 
     var customSettingButton: some View {
         optionButton(
-            "customSpeedSetting",
+            customSettingLabel,
             image: isOn ? Const.customPlaybackSpeedSF : Const.customPlaybackSpeedOffSF,
             isOn: isOn,
             subtitle: { },
@@ -128,7 +126,7 @@ struct SpeedPopoverContent: View {
     }
 
     func optionButton<Subtitle: View>(
-        _ title: LocalizedStringKey,
+        _ title: LocalizedStringResource,
         image: String,
         isOn: Bool,
         @ViewBuilder subtitle: () -> Subtitle,

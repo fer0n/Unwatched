@@ -338,7 +338,7 @@ enum WatchRemoteBridge {
         case .setSpeed(let speed):
             player.playbackSpeed = speed
         case .setCustomSpeed(let enabled):
-            player.video?.subscription?.customSpeedSetting = enabled ? player.playbackSpeed : nil
+            player.setCustomSpeedEnabled(enabled)
         case .previousChapter:
             _ = player.goToPreviousChapter()
         case .nextChapter:

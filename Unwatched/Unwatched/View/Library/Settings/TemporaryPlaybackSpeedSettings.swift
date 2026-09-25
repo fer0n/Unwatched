@@ -18,7 +18,7 @@ struct TemporaryPlaybackSpeedSettings: View {
         ) {
             Picker("temporarySpeedUp", selection: $temporarySpeedUp) {
                 ForEach(speeds, id: \.self) { speed in
-                    Text(format(speed))
+                    Text(SpeedHelper.label(speed))
                         .tag(speed)
                 }
             }
@@ -26,17 +26,13 @@ struct TemporaryPlaybackSpeedSettings: View {
 
             Picker("temporarySlowDown", selection: $temporarySlowDown) {
                 ForEach(speeds, id: \.self) { speed in
-                    Text(format(speed))
+                    Text(SpeedHelper.label(speed))
                         .tag(speed)
                 }
             }
             .pickerStyle(.menu)
         }
         .requiresPremium()
-    }
-
-    func format(_ speed: Double) -> String {
-        SpeedHelper.formatSpeed(speed) + "×"
     }
 
     var speeds: [Double] {

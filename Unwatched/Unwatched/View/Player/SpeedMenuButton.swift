@@ -20,6 +20,7 @@ struct SpeedMenuButton<Label: View>: UIViewControllerRepresentable {
     @Binding var isOn: Bool
 
     var canSetCustomSpeed = true
+    var customSettingLabel: LocalizedStringResource = "customSpeedSetting"
     var trimSilence: TrimSilenceOption?
     var accessibilityLabel: String?
     @ViewBuilder var label: () -> Label
@@ -100,7 +101,7 @@ struct SpeedMenuButton<Label: View>: UIViewControllerRepresentable {
     private var quickSpeedSection: UIMenu {
         let children = SpeedMenuContent.menuSpeeds.map { speed in
             let action = UIAction(
-                title: "\(SpeedHelper.formatSpeed(speed))×",
+                title: SpeedHelper.label(speed),
                 attributes: speed == selectedSpeed ? [.disabled, .keepsMenuPresented] : .keepsMenuPresented
             ) { _ in
                 selectedSpeed = speed
@@ -113,7 +114,7 @@ struct SpeedMenuButton<Label: View>: UIViewControllerRepresentable {
 
     private var customSettingAction: UIAction {
         UIAction(
-            title: String(localized: "customSpeedSetting"),
+            title: String(localized: customSettingLabel),
             image: UIImage(systemName: isOn ? Const.customPlaybackSpeedSF : Const.customPlaybackSpeedOffSF),
             attributes: canSetCustomSpeed ? .keepsMenuPresented : [.disabled, .keepsMenuPresented]
         ) { _ in

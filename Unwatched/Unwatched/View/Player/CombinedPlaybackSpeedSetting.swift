@@ -20,7 +20,7 @@ struct CombinedPlaybackSpeedSettingPlayer: View {
         let isOn = Binding(get: {
             player.video?.subscription?.customSpeedSetting != nil
         }, set: { value in
-            player.video?.subscription?.customSpeedSetting = value ? player.unmodifiedPlaybackSpeed : nil
+            player.setCustomSpeedEnabled(value)
             hapticToggle.toggle()
         })
 
@@ -205,6 +205,7 @@ struct SpeedMenu<Label: View>: View {
     @Binding var isOn: Bool
 
     var canSetCustomSpeed = true
+    var customSettingLabel: LocalizedStringResource = "customSpeedSetting"
     var trimSilence: TrimSilenceOption?
     var usePopover = false
     var arrowEdge: Edge?
@@ -246,6 +247,7 @@ struct SpeedMenu<Label: View>: View {
                 selectedSpeed: $selectedSpeed,
                 isOn: $isOn,
                 canSetCustomSpeed: canSetCustomSpeed,
+                customSettingLabel: customSettingLabel,
                 trimSilence: trimSilence
             )
             .presentationCompactAdaptation(.popover)
@@ -270,6 +272,7 @@ struct SpeedMenu<Label: View>: View {
                 selectedSpeed: $selectedSpeed,
                 isOn: $isOn,
                 canSetCustomSpeed: canSetCustomSpeed,
+                customSettingLabel: customSettingLabel,
                 trimSilence: trimSilence
             )
         } label: {
@@ -298,7 +301,7 @@ struct PlayerSpeedMenu<Label: View>: View {
         let isOn = Binding(get: {
             player.video?.subscription?.customSpeedSetting != nil
         }, set: { value in
-            player.video?.subscription?.customSpeedSetting = value ? player.unmodifiedPlaybackSpeed : nil
+            player.setCustomSpeedEnabled(value)
         })
 
         SpeedMenu(

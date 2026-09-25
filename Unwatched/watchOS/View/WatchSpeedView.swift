@@ -36,7 +36,7 @@ struct WatchSpeedView: View {
     }
 
     private var speeds: [Double] {
-        WatchSpeed.selectable(including: currentSpeed)
+        SpeedHelper.selectable(including: currentSpeed)
     }
 
     /// A stepper rather than a picked-from list: 15 speeds are a long scroll on a watch.
@@ -45,7 +45,7 @@ struct WatchSpeedView: View {
             stepButton("minus", faster: false)
                 .disabled(currentSpeed <= (speeds.first ?? 1))
 
-            Text(WatchSpeed.label(currentSpeed))
+            Text(SpeedHelper.label(currentSpeed))
                 .fontWeight(.bold)
                 .fontWidth(.compressed)
                 .monospacedDigit()

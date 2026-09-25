@@ -14,9 +14,9 @@ struct SpeedMenuContent: View {
     @Binding var isOn: Bool
 
     var canSetCustomSpeed = true
+    var customSettingLabel: LocalizedStringResource = "customSpeedSetting"
     var trimSilence: TrimSilenceOption?
 
-    /// Speeds offered in the menu; the player's speed control scrolls through all of them
     static let menuSpeeds: [Double] = [1, 1.3, 1.5, 2]
 
     var body: some View {
@@ -29,7 +29,7 @@ struct SpeedMenuContent: View {
                     Button {
                         selectedSpeed = speed
                     } label: {
-                        Text(verbatim: "\(SpeedHelper.formatSpeed(speed))×")
+                        Text(verbatim: SpeedHelper.label(speed))
                     }
                     .disabled(speed == selectedSpeed)
                 }
@@ -83,10 +83,11 @@ struct SpeedMenuContent: View {
         Button {
             isOn.toggle()
         } label: {
-            Label(
-                "customSpeedSetting",
-                systemImage: isOn ? Const.customPlaybackSpeedSF : Const.customPlaybackSpeedOffSF
-            )
+            Label {
+                Text(customSettingLabel)
+            } icon: {
+                Image(systemName: isOn ? Const.customPlaybackSpeedSF : Const.customPlaybackSpeedOffSF)
+            }
         }
         .disabled(!canSetCustomSpeed)
     }

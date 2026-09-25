@@ -115,20 +115,6 @@ struct TagEditView: View {
         )
     }
 
-    private var hasCustomPlaybackSpeed: Binding<Bool> {
-        Binding(
-            get: { tag.playbackSpeed != nil },
-            set: { value in withAnimation { tag.playbackSpeed = value ? PlayerManager.shared.defaultPlaybackSpeed : nil } }
-        )
-    }
-
-    private var customPlaybackSpeed: Binding<Double> {
-        Binding(
-            get: { tag.playbackSpeed ?? PlayerManager.shared.defaultPlaybackSpeed },
-            set: { tag.playbackSpeed = $0 }
-        )
-    }
-
     private var trimmedName: String {
         tag.name.trimmingCharacters(in: .whitespacesAndNewlines)
     }
@@ -294,15 +280,9 @@ extension TagEditView {
             }
 
             MySection(footer: "playbackSpeedTagHelper") {
-                Toggle(isOn: hasCustomPlaybackSpeed) {
-                    Text("customPlaybackSpeed")
-                }
-
-                if let speed = tag.playbackSpeed {
-                    Picker("playbackSpeed", selection: customPlaybackSpeed) {
-                        ForEach(Set(Const.speeds + [speed]).sorted(), id: \.self) {
-                            Text("\(SpeedHelper.formatSpeed($0))×")
-                        }
+                LabeledContent("playbackSpeed") {
+                    CustomSpeedSetting(customSpeed: $tag.playbackSpeed, customSettingLabel: "Tag") { text in
+                        Text(text)
                     }
                 }
             }
