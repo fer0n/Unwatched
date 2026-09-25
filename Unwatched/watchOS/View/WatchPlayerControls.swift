@@ -13,7 +13,7 @@ struct WatchPlayerControls: View {
     let perform: (WatchPlayerAction) -> Void
 
     var body: some View {
-        HStack(spacing: 10) {
+        HStack(spacing: 14) {
             seekButton(forward: false)
 
             playButton
@@ -75,14 +75,15 @@ struct WatchPlayerControls: View {
             perform(.seek(seconds))
         } label: {
             Image(systemName: WatchSeek.symbol(forward: forward, seconds: abs(seconds)))
-                .font(.body)
+                .font(.title3)
+                .fontWeight(.semibold)
         }
         .frame(width: Self.seekSize, height: Self.seekSize)
         .disabled(display.isUpNext)
     }
 
     private static let playSize: CGFloat = 46
-    private static let seekSize: CGFloat = 32
+    private static let seekSize: CGFloat = 38
     private static let ringWidth: CGFloat = 2
 
     /// The trimmed circle's length on screen, which is how finely its fill can actually move.

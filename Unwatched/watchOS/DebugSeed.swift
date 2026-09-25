@@ -5,6 +5,7 @@
 
 #if DEBUG
 import SwiftData
+import SwiftUI
 import UnwatchedShared
 
 /// Fills the store with a queue to look at, for a simulator that has no iCloud account to sync one
@@ -77,30 +78,49 @@ enum DebugSeed {
         Log.info("DebugSeed: seeded \(all.count) videos")
     }
 
-    /// Pretends the phone is playing, for the pages that draw it. `fake-remote`.
+    /// Pretends the phone is playing, for the pages that draw it. `fake-remote`, or
+    /// `fake-remote-square` for a podcast episode with square cover art.
     @MainActor
     static func fakeRemoteIfRequested() {
-        guard CommandLine.arguments.contains("fake-remote") else { return }
-        WatchQueueClient.shared.debugSetRemote(
-            WatchRemoteState(
-                isPlaying: true,
-                title: "What Game Theory Reveals About Life",
-                channelTitle: "Veritasium",
-                thumbnailUrl: URL(string: "https://i2.ytimg.com/vi/mScpHTIi-kM/hqdefault.jpg"),
-                duration: 1800,
-                position: 420,
-                speed: 1.5,
-                hasCustomSpeed: true,
-                canSetCustomSpeed: true,
-                hasPreviousChapter: true,
-                hasNextChapter: true,
-                chapterTitle: "The Prisoner's Dilemma, and why it matters",
-                chapterEndTime: 1800,
-                continuousPlay: true,
-                trimSilence: true,
-                canTrimSilence: true
-            )
+        let isSquare = CommandLine.arguments.contains("fake-remote-square")
+        guard isSquare || CommandLine.arguments.contains("fake-remote") else { return }
+        let squareArt =
+            "https://lagedernation.org/wp-content/blogs.dir/10/files/2020/06/apple_podcast_artwork_reverse.png"
+        WatchNavigator.shared.controlsPhone = true
+        WatchNavigator.shared.showPlayer(force: true)
+        var state = WatchRemoteState(
+            isPlaying: true,
+            title: "What Game Theory Reveals About Life",
+            channelTitle: "Veritasium",
+            thumbnailUrl: URL(string: isSquare ? squareArt : "https://i2.ytimg.com/vi/mScpHTIi-kM/hqdefault.jpg"),
+            isAudioOnly: isSquare,
+            duration: 1800,
+            position: 420,
+            speed: 1.5,
+            hasCustomSpeed: true,
+            canSetCustomSpeed: true,
+            hasPreviousChapter: true,
+            hasNextChapter: true,
+            chapterTitle: "The Prisoner's Dilemma, and why it matters",
+            chapterEndTime: 1800,
+            continuousPlay: true,
+            trimSilence: true,
+            canTrimSilence: true
         )
+        WatchQueueClient.shared.debugSetRemote(state)
+
+        // `fake-chapter-cycle`: a new chapter every 2 s, for watching the title change.
+        guard CommandLine.arguments.contains("fake-chapter-cycle") else { return }
+        let titles = ["The Prisoner's Dilemma, and why it matters", "Intro", "Tit for Tat"]
+        Task {
+            for index in 1... {
+                try? await Task.sleep(for: .seconds(2))
+                state.chapterTitle = titles[index % titles.count]
+                withAnimation {
+                    WatchQueueClient.shared.debugSetRemote(state)
+                }
+            }
+        }
     }
 
     /// Imports a snapshot of the shape the phone sends, without needing a phone. `seed-snapshot`.
