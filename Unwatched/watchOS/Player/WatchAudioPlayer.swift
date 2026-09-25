@@ -271,6 +271,13 @@ final class WatchAudioPlayer {
         applyPlaybackSpeed()
     }
 
+    func setTagSpeedEnabled(_ enabled: Bool) {
+        guard let video, let tag = Tag.speedLockTag(for: video) else { return }
+        tag.playbackSpeed = enabled ? playbackSpeed : nil
+        speedRevision += 1
+        applyPlaybackSpeed()
+    }
+
     private func applyPlaybackSpeed() {
         let rate = Float(playbackSpeed)
         player?.defaultRate = rate

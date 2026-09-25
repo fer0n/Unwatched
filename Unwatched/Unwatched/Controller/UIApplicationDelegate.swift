@@ -307,6 +307,8 @@ enum WatchRemoteBridge {
             speed: player.playbackSpeed,
             hasCustomSpeed: video?.subscription?.customSpeedSetting != nil,
             canSetCustomSpeed: video?.subscription != nil,
+            speedLockTagName: video.flatMap(Tag.speedLockTag(for:))?.name,
+            hasTagSpeed: video.flatMap(Tag.playbackSpeedTag(for:)) != nil,
             hasPreviousChapter: player.previousChapter != nil,
             hasNextChapter: player.nextChapter != nil,
             chapterTitle: player.currentChapter?.titleText,
@@ -339,6 +341,8 @@ enum WatchRemoteBridge {
             player.playbackSpeed = speed
         case .setCustomSpeed(let enabled):
             player.setCustomSpeedEnabled(enabled)
+        case .setTagSpeed(let enabled):
+            player.setTagSpeedEnabled(enabled)
         case .previousChapter:
             _ = player.goToPreviousChapter()
         case .nextChapter:

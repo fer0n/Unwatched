@@ -133,13 +133,23 @@ public final class Tag: CustomStringConvertible, Exportable {
         decidingTag(for: video, \.playbackSpeed)
     }
 
+    /// The tag the player's tag speed lock writes to: the one whose speed is in effect, otherwise the one that would
+    /// decide once it had a speed.
+    public static func speedLockTag(for video: Video) -> Tag? {
+        playbackSpeedTag(for: video) ?? decidingTags(for: video).min { $0.order < $1.order }
+    }
+
     /// The tag whose opinion on a setting a video follows: the video's own tags before its channel's, lowest order
     /// first.
     private static func decidingTag<Value>(for video: Video, _ setting: KeyPath<Tag, Value?>) -> Tag? {
-        let claiming = ((video.tags ?? []) + (video.subscription?.tags ?? [])).filter { $0.mode == .include }
-        return (claiming.isEmpty ? untaggedTags(for: video) : claiming)
+        decidingTags(for: video)
             .filter { $0[keyPath: setting] != nil }
             .min { $0.order < $1.order }
+    }
+
+    private static func decidingTags(for video: Video) -> [Tag] {
+        let claiming = ((video.tags ?? []) + (video.subscription?.tags ?? [])).filter { $0.mode == .include }
+        return claiming.isEmpty ? untaggedTags(for: video) : claiming
     }
 
     /// The `untagged` tags a video falls into, which is all of them once no `include` tag claims it — the same slice

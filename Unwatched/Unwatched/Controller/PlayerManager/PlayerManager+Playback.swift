@@ -489,6 +489,36 @@ extension PlayerManager {
         applyPlaybackSpeed()
     }
 
+    /// Whether the speed follows the channel or a tag instead of the default.
+    @MainActor
+    var hasSpeedLock: Bool {
+        video?.customPlaybackSpeed != nil
+    }
+
+    @MainActor
+    var canSetSpeedLock: Bool {
+        guard let video else { return false }
+        return video.subscription != nil || Tag.speedLockTag(for: video) != nil
+    }
+
+    /// The single lock beside the speed: locks to the channel, and unlocks whichever lock is in effect.
+    @MainActor
+    func setSpeedLockEnabled(_ enabled: Bool) {
+        let hasChannelLock = video?.subscription?.customSpeedSetting != nil
+        if enabled ? video?.subscription != nil : hasChannelLock {
+            setCustomSpeedEnabled(enabled)
+        } else {
+            setTagSpeedEnabled(enabled)
+        }
+    }
+
+    @MainActor
+    func setTagSpeedEnabled(_ enabled: Bool) {
+        guard let video, let tag = Tag.speedLockTag(for: video) else { return }
+        tag.playbackSpeed = enabled ? unmodifiedPlaybackSpeed : nil
+        applyPlaybackSpeed()
+    }
+
     /// Pushes the effective speed to the engine.
     @MainActor
     func applyPlaybackSpeed() {

@@ -23,10 +23,18 @@ struct CombinedPlaybackSpeedSettingPlayer: View {
             player.setCustomSpeedEnabled(value)
             hapticToggle.toggle()
         })
+        let isLocked = Binding(get: {
+            player.hasSpeedLock
+        }, set: { value in
+            player.setSpeedLockEnabled(value)
+            hapticToggle.toggle()
+        })
 
         CombinedPlaybackSpeedSetting(
             selectedSpeed: $player.debouncedPlaybackSpeed,
             isOn: isOn,
+            isLocked: isLocked,
+            tagLock: .forPlayer(player) { hapticToggle.toggle() },
             hapticToggle: $hapticToggle,
             hasHaptics: hasHaptics,
             spacing: spacing,
@@ -56,6 +64,8 @@ struct CombinedPlaybackSpeedSetting: View {
 
     @Binding var selectedSpeed: Double
     @Binding var isOn: Bool
+    @Binding var isLocked: Bool
+    var tagLock: TagSpeedLockOption?
     @Binding var hapticToggle: Bool
 
     let borderWidth: CGFloat = 2
@@ -70,6 +80,8 @@ struct CombinedPlaybackSpeedSetting: View {
             InlineSpeedControl(
                 selectedSpeed: $selectedSpeed,
                 isOn: $isOn,
+                isLocked: $isLocked,
+                tagLock: tagLock,
                 height: controlHeight,
                 borderWidth: borderWidth,
                 showTemporarySpeed: showTemporarySpeed,
@@ -82,15 +94,19 @@ struct CombinedPlaybackSpeedSetting: View {
     }
 }
 
-/// Vertically scrollable speed selection next to the custom speed setting toggle, sharing one background.
+/// Vertically scrollable speed selection next to the speed lock, sharing one background.
 /// Tapping the speed opens a menu that stays open while stepping, picking a common speed
-/// or restricting the speed to the current channel.
+/// or locking the speed to the current channel or tag.
 struct InlineSpeedControl: View {
     @Environment(PlayerManager.self) var player
     @AppStorage(Const.trimSilence) var trimSilence: Bool = false
 
     @Binding var selectedSpeed: Double
+    /// The channel lock, as the menu shows it.
     @Binding var isOn: Bool
+    /// Any lock in effect, channel or tag.
+    @Binding var isLocked: Bool
+    var tagLock: TagSpeedLockOption?
 
     @State private var isInteracting = false
 
@@ -101,14 +117,14 @@ struct InlineSpeedControl: View {
 
     var body: some View {
         HStack(spacing: 0) {
-            CustomSettingsButton(isOn: $isOn)
+            CustomSettingsButton(isOn: $isLocked)
                 .toggleStyle(
                     CustomSettingsToggleStyle(
-                        imageOn: Const.customPlaybackSpeedSF,
+                        imageOn: player.speedLockSF,
                         imageOff: Const.customPlaybackSpeedOffSF
                     )
                 )
-                .disabled(player.video?.subscription == nil || hasTempSpeed)
+                .disabled(!player.canSetSpeedLock || hasTempSpeed)
                 .padding(.leading, 3)
                 .padding(.trailing, -5)
 
@@ -156,6 +172,7 @@ struct InlineSpeedControl: View {
             selectedSpeed: $selectedSpeed,
             isOn: $isOn,
             canSetCustomSpeed: player.video?.subscription != nil,
+            tagLock: tagLock,
             trimSilence: .forPlayer(player, isOn: trimSilence),
             accessibilityLabel: accessibilityLabel
         ) {
@@ -166,6 +183,7 @@ struct InlineSpeedControl: View {
             selectedSpeed: $selectedSpeed,
             isOn: $isOn,
             canSetCustomSpeed: player.video?.subscription != nil,
+            tagLock: tagLock,
             trimSilence: .forPlayer(player, isOn: trimSilence)
         ) {
             speedScroller
@@ -206,6 +224,7 @@ struct SpeedMenu<Label: View>: View {
 
     var canSetCustomSpeed = true
     var customSettingLabel: LocalizedStringResource = "customSpeedSetting"
+    var tagLock: TagSpeedLockOption?
     var trimSilence: TrimSilenceOption?
     var usePopover = false
     var arrowEdge: Edge?
@@ -248,6 +267,7 @@ struct SpeedMenu<Label: View>: View {
                 isOn: $isOn,
                 canSetCustomSpeed: canSetCustomSpeed,
                 customSettingLabel: customSettingLabel,
+                tagLock: tagLock,
                 trimSilence: trimSilence
             )
             .presentationCompactAdaptation(.popover)
@@ -273,6 +293,7 @@ struct SpeedMenu<Label: View>: View {
                 isOn: $isOn,
                 canSetCustomSpeed: canSetCustomSpeed,
                 customSettingLabel: customSettingLabel,
+                tagLock: tagLock,
                 trimSilence: trimSilence
             )
         } label: {
@@ -308,11 +329,51 @@ struct PlayerSpeedMenu<Label: View>: View {
             selectedSpeed: $player.debouncedPlaybackSpeed,
             isOn: isOn,
             canSetCustomSpeed: player.video?.subscription != nil,
+            tagLock: .forPlayer(player),
             trimSilence: .forPlayer(player, isOn: trimSilence),
             usePopover: usePopover,
             arrowEdge: arrowEdge,
             onPopoverChange: onPopoverChange,
             label: label
+        )
+    }
+}
+
+extension PlayerManager {
+    /// Which lock holds the speed, for the compact controls; the channel's wins.
+    @MainActor
+    var speedLockSF: String {
+        if video?.subscription?.customSpeedSetting != nil {
+            Const.channelSpeedLockFillSF
+        } else if hasSpeedLock {
+            Const.tagSpeedLockFillSF
+        } else {
+            Const.customPlaybackSpeedOffSF
+        }
+    }
+}
+
+/// Locks the speed to the tag that decides it. Grayed out while the channel's own speed is locked, which wins.
+struct TagSpeedLockOption {
+    let isOn: Binding<Bool>
+    let isEnabled: Bool
+    let tagName: String
+
+    @MainActor
+    static func forPlayer(_ player: PlayerManager, onToggle: (() -> Void)? = nil) -> TagSpeedLockOption? {
+        guard let video = player.video, let tag = Tag.speedLockTag(for: video) else {
+            return nil
+        }
+        return TagSpeedLockOption(
+            isOn: Binding(
+                get: { tag.playbackSpeed != nil },
+                set: { value in
+                    player.setTagSpeedEnabled(value)
+                    onToggle?()
+                }
+            ),
+            isEnabled: video.subscription?.customSpeedSetting == nil,
+            tagName: tag.name
         )
     }
 }
@@ -333,6 +394,7 @@ extension View {
     CombinedPlaybackSpeedSetting(
         selectedSpeed: $selectedSpeed,
         isOn: $isOn,
+        isLocked: $isOn,
         hapticToggle: .constant(
             true
         ),

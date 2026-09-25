@@ -67,7 +67,7 @@ struct FullscreenSpeedControl: View {
                 if hasCustomSetting || hasTempSpeed {
                     Spacer()
                         .frame(width: 4)
-                    Image(systemName: hasTempSpeed ? "waveform" : Const.customPlaybackSpeedSF)
+                    Image(systemName: hasTempSpeed ? "waveform" : player.speedLockSF)
                         .font(.caption2)
                         .foregroundStyle(.secondary)
                 }
@@ -105,7 +105,7 @@ struct FullscreenSpeedControl: View {
     }
 
     var hasCustomSetting: Bool {
-        player.video?.subscription?.customSpeedSetting != nil
+        player.hasSpeedLock
     }
 
     var accessibilityLabel: String {

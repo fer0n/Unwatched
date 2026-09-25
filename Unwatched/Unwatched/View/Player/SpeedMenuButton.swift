@@ -21,6 +21,7 @@ struct SpeedMenuButton<Label: View>: UIViewControllerRepresentable {
 
     var canSetCustomSpeed = true
     var customSettingLabel: LocalizedStringResource = "customSpeedSetting"
+    var tagLock: TagSpeedLockOption?
     var trimSilence: TrimSilenceOption?
     var accessibilityLabel: String?
     @ViewBuilder var label: () -> Label
@@ -37,10 +38,13 @@ struct SpeedMenuButton<Label: View>: UIViewControllerRepresentable {
         uiViewController.hostedSize(in: proposal)
     }
 
-    /// Mirrors `SpeedMenuContent`: a stepper, the most common speeds, the channel toggle and trim silence.
+    /// Mirrors `SpeedMenuContent`: a stepper, the most common speeds, the channel and tag locks and trim silence.
     /// Every action keeps the menu open, the way `menuActionDismissBehavior(.disabled)` does there.
     private var menu: UIMenu {
         var children: [UIMenuElement] = [stepperSection, quickSpeedSection, customSettingAction]
+        if let tagLock {
+            children.append(tagLockAction(tagLock))
+        }
         if let trimSilence {
             children.append(trimSilenceElement(trimSilence))
         }
@@ -112,10 +116,23 @@ struct SpeedMenuButton<Label: View>: UIViewControllerRepresentable {
         return UIMenu(options: .displayInline, preferredElementSize: .small, children: children)
     }
 
+    private func tagLockAction(_ option: TagSpeedLockOption) -> UIAction {
+        UIAction(
+            title: String(localized: "Tag"),
+            subtitle: option.tagName,
+            image: UIImage(
+                systemName: option.isOn.wrappedValue ? Const.tagSpeedLockFillSF : Const.tagSpeedLockSF
+            ),
+            attributes: option.isEnabled ? .keepsMenuPresented : [.disabled, .keepsMenuPresented]
+        ) { _ in
+            option.isOn.wrappedValue.toggle()
+        }
+    }
+
     private var customSettingAction: UIAction {
         UIAction(
             title: String(localized: customSettingLabel),
-            image: UIImage(systemName: isOn ? Const.customPlaybackSpeedSF : Const.customPlaybackSpeedOffSF),
+            image: UIImage(systemName: isOn ? Const.channelSpeedLockFillSF : Const.channelSpeedLockSF),
             attributes: canSetCustomSpeed ? .keepsMenuPresented : [.disabled, .keepsMenuPresented]
         ) { _ in
             isOn.toggle()

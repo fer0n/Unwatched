@@ -22,6 +22,8 @@ public extension WatchRemoteState {
             state.speed = speed
         case .setCustomSpeed(let enabled):
             state.hasCustomSpeed = enabled
+        case .setTagSpeed(let enabled):
+            state.hasTagSpeed = enabled
         case .setContinuousPlay(let enabled):
             state.continuousPlay = enabled
         case .setTrimSilence(let enabled):
@@ -46,6 +48,8 @@ public extension WatchRemoteState {
             speed: current?.speed ?? 1,
             hasCustomSpeed: video.subscription?.customSpeedSetting != nil,
             canSetCustomSpeed: video.subscription != nil,
+            speedLockTagName: Tag.speedLockTag(for: video)?.name,
+            hasTagSpeed: Tag.playbackSpeedTag(for: video) != nil,
             continuousPlay: current?.continuousPlay ?? false,
             trimSilence: current?.trimSilence ?? false,
             theme: current?.theme,

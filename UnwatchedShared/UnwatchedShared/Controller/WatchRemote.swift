@@ -19,6 +19,10 @@ public struct WatchRemoteState: WatchPayload {
     public var speed: Double
     public var hasCustomSpeed: Bool
     public var canSetCustomSpeed: Bool
+    /// The tag a speed lock writes to, see `Tag.speedLockTag`; `nil` when no tag could decide. Optional, like
+    /// `hasTagSpeed`, so an older context still decodes.
+    public var speedLockTagName: String?
+    public var hasTagSpeed: Bool?
     public var hasPreviousChapter: Bool
     public var hasNextChapter: Bool
     public var chapterTitle: String?
@@ -44,6 +48,8 @@ public struct WatchRemoteState: WatchPayload {
         speed: Double = 1,
         hasCustomSpeed: Bool = false,
         canSetCustomSpeed: Bool = false,
+        speedLockTagName: String? = nil,
+        hasTagSpeed: Bool? = nil,
         hasPreviousChapter: Bool = false,
         hasNextChapter: Bool = false,
         chapterTitle: String? = nil,
@@ -65,6 +71,8 @@ public struct WatchRemoteState: WatchPayload {
         self.speed = speed
         self.hasCustomSpeed = hasCustomSpeed
         self.canSetCustomSpeed = canSetCustomSpeed
+        self.speedLockTagName = speedLockTagName
+        self.hasTagSpeed = hasTagSpeed
         self.hasPreviousChapter = hasPreviousChapter
         self.hasNextChapter = hasNextChapter
         self.chapterTitle = chapterTitle
@@ -111,6 +119,7 @@ public struct WatchRemoteState: WatchPayload {
     case seek(Double)
     case setSpeed(Double)
     case setCustomSpeed(Bool)
+    case setTagSpeed(Bool)
     case previousChapter
     case nextChapter
     case next

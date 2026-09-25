@@ -7,7 +7,7 @@ import SwiftData
 import SwiftUI
 import UnwatchedShared
 
-/// The page to the right of the player: speed, its channel-level override, and what ends an item.
+/// The page to the right of the player: speed, its channel and tag overrides, and what ends an item.
 struct WatchSpeedView: View {
     @Environment(WatchAudioPlayer.self) private var player
     @Environment(WatchNavigator.self) private var navigator
@@ -24,6 +24,10 @@ struct WatchSpeedView: View {
             speedRow
 
             channelRow
+
+            if let speedLockTagName {
+                tagRow(speedLockTagName)
+            }
 
             actionRow
         }
@@ -110,7 +114,7 @@ struct WatchSpeedView: View {
             setCustomSpeed(!isOn)
         } label: {
             HStack(spacing: 8) {
-                Image(systemName: isOn ? Const.customPlaybackSpeedSF : Const.customPlaybackSpeedOffSF)
+                Image(systemName: isOn ? Const.channelSpeedLockFillSF : Const.customPlaybackSpeedOffSF)
                 Text("watchCustomSpeed")
                 Spacer(minLength: 0)
             }
@@ -121,6 +125,55 @@ struct WatchSpeedView: View {
         .disabled(!canSetCustomSpeed)
         .listRowBackground(Color.clear)
         .listRowInsets(EdgeInsets(top: -Self.tileRowGapFix, leading: 0, bottom: 0, trailing: 0))
+    }
+
+    // MARK: - Tag override
+
+    private var speedLockTagName: String? {
+        controlsPhone
+            ? client.remote?.speedLockTagName
+            : player.video.flatMap(Tag.speedLockTag(for:))?.name
+    }
+
+    private var hasTagSpeed: Bool {
+        controlsPhone
+            ? client.remote?.hasTagSpeed == true
+            : player.video.flatMap(Tag.playbackSpeedTag(for:)) != nil
+    }
+
+    /// Only there when a tag could decide, which changes with the item rather than under the thumb. Disabled
+    /// while the channel's own speed is locked: that one wins.
+    private func tagRow(_ tagName: String) -> some View {
+        let isOn = hasTagSpeed
+        return Button {
+            setTagSpeed(!isOn)
+        } label: {
+            HStack(spacing: 8) {
+                Image(systemName: isOn ? Const.tagSpeedLockFillSF : Const.customPlaybackSpeedOffSF)
+                VStack(alignment: .leading, spacing: 0) {
+                    Text("watchTagSpeed")
+                    Text(verbatim: tagName)
+                        .font(.footnote)
+                        .foregroundStyle(.secondary)
+                        .lineLimit(1)
+                }
+                Spacer(minLength: 0)
+            }
+            .padding(.horizontal, Self.tilePadding)
+            .watchTile(isOn: isOn)
+        }
+        .buttonStyle(.plain)
+        .disabled(hasCustomSpeed)
+        .listRowBackground(Color.clear)
+        .listRowInsets(EdgeInsets(top: -Self.tileRowGapFix, leading: 0, bottom: 0, trailing: 0))
+    }
+
+    private func setTagSpeed(_ enabled: Bool) {
+        if controlsPhone {
+            Task { await client.send(.setTagSpeed(enabled)) }
+        } else {
+            player.setTagSpeedEnabled(enabled)
+        }
     }
 
     private func setCustomSpeed(_ enabled: Bool) {

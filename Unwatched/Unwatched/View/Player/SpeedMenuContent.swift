@@ -7,7 +7,7 @@ import SwiftUI
 import UnwatchedShared
 
 /// Menu entries to select the playback speed: a stepper for fine adjustments,
-/// the most common speeds and the toggles to restrict the speed to the current channel
+/// the most common speeds and the toggles to lock the speed to the current channel or tag
 /// and to trim silence.
 struct SpeedMenuContent: View {
     @Binding var selectedSpeed: Double
@@ -15,6 +15,7 @@ struct SpeedMenuContent: View {
 
     var canSetCustomSpeed = true
     var customSettingLabel: LocalizedStringResource = "customSpeedSetting"
+    var tagLock: TagSpeedLockOption?
     var trimSilence: TrimSilenceOption?
 
     static let menuSpeeds: [Double] = [1, 1.3, 1.5, 2]
@@ -38,6 +39,9 @@ struct SpeedMenuContent: View {
 
             Divider()
             customSettingButton
+            if let tagLock {
+                tagLockButton(tagLock)
+            }
             if let trimSilence {
                 TrimSilenceMenuEntry(isOn: trimSilence.isOn)
                     .disabled(!trimSilence.isEnabled)
@@ -86,9 +90,25 @@ struct SpeedMenuContent: View {
             Label {
                 Text(customSettingLabel)
             } icon: {
-                Image(systemName: isOn ? Const.customPlaybackSpeedSF : Const.customPlaybackSpeedOffSF)
+                Image(systemName: isOn ? Const.channelSpeedLockFillSF : Const.channelSpeedLockSF)
             }
         }
         .disabled(!canSetCustomSpeed)
+    }
+
+    func tagLockButton(_ option: TagSpeedLockOption) -> some View {
+        Button {
+            option.isOn.wrappedValue.toggle()
+        } label: {
+            Label {
+                Text("Tag")
+                Text(verbatim: option.tagName)
+            } icon: {
+                Image(
+                    systemName: option.isOn.wrappedValue ? Const.tagSpeedLockFillSF : Const.tagSpeedLockSF
+                )
+            }
+        }
+        .disabled(!option.isEnabled)
     }
 }

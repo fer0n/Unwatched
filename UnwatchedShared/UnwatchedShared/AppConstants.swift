@@ -335,6 +335,11 @@ public struct Const {
 
     public static let customPlaybackSpeedSF = "lock.fill"
     public static let customPlaybackSpeedOffSF = "lock.open.fill"
+    /// Which lock holds the speed: filled when it does, outline for a menu entry that is off.
+    public static let channelSpeedLockSF = "person"
+    public static let channelSpeedLockFillSF = "person.fill"
+    public static let tagSpeedLockSF = "tag"
+    public static let tagSpeedLockFillSF = "tag.fill"
     public static let trimSilenceSF = "waveform.circle.fill"
     public static let trimSilenceOffSF = "waveform.circle"
 

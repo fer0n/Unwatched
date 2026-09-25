@@ -406,4 +406,32 @@ final class TagPlaybackSpeedTests: XCTestCase {
         tag.playbackSpeed = nil
         XCTAssertFalse(video.updateCustomPlaybackSpeed(1.2))
     }
+
+    func testSpeedLockTagIsTheDecidingOneEvenWithoutASpeed() throws {
+        let (_, tag, video) = try taggedVideo()
+        let later = Tag(name: "Later", order: 1, playbackSpeed: 1.2)
+        context.insert(later)
+        later.videos = [video]
+
+        XCTAssertEqual(Tag.speedLockTag(for: video)?.name, "Tech")
+
+        tag.playbackSpeed = nil
+        XCTAssertEqual(Tag.speedLockTag(for: video)?.name, "Later")
+
+        later.playbackSpeed = nil
+        XCTAssertEqual(Tag.speedLockTag(for: video)?.name, "Tech")
+    }
+
+    func testWatchRemoteStateFromAnOlderPhoneStillDecodes() throws {
+        let state = WatchRemoteState(isPlaying: true, title: "tech-1", speedLockTagName: "Tech", hasTagSpeed: true)
+        var json = try XCTUnwrap(JSONSerialization.jsonObject(with: state.encoded()) as? [String: Any])
+        json["speedLockTagName"] = nil
+        json["hasTagSpeed"] = nil
+        let decoded = try JSONDecoder().decode(
+            WatchRemoteState.self,
+            from: JSONSerialization.data(withJSONObject: json)
+        )
+        XCTAssertNil(decoded.speedLockTagName)
+        XCTAssertEqual(decoded.applying(.setTagSpeed(true))?.hasTagSpeed, true)
+    }
 }

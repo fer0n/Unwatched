@@ -7,7 +7,7 @@ import SwiftUI
 import UnwatchedShared
 
 /// Speed selection shown in a popover: a stepper for fine adjustments,
-/// the most common speeds and the toggles to restrict the speed to the current channel and
+/// the most common speeds and the toggles to lock the speed to the current channel or tag and
 /// to trim silence. Unlike `SpeedMenuContent` this stays open while stepping through speeds.
 struct SpeedPopoverContent: View {
     @Binding var selectedSpeed: Double
@@ -15,6 +15,7 @@ struct SpeedPopoverContent: View {
 
     var canSetCustomSpeed = true
     var customSettingLabel: LocalizedStringResource = "customSpeedSetting"
+    var tagLock: TagSpeedLockOption?
     var trimSilence: TrimSilenceOption?
 
     let itemHeight: CGFloat = 36
@@ -28,6 +29,9 @@ struct SpeedPopoverContent: View {
             stepper
             quickSpeedRow
             customSettingButton
+            if let tagLock {
+                tagLockButton(tagLock)
+            }
             if let trimSilence {
                 trimSilenceButton(trimSilence)
             }
@@ -114,10 +118,26 @@ struct SpeedPopoverContent: View {
         .enabled(option.isEnabled)
     }
 
+    func tagLockButton(_ option: TagSpeedLockOption) -> some View {
+        optionButton(
+            "Tag",
+            image: option.isOn.wrappedValue ? Const.tagSpeedLockFillSF : Const.tagSpeedLockSF,
+            isOn: option.isOn.wrappedValue,
+            subtitle: {
+                Text(verbatim: option.tagName)
+                    .font(.caption)
+                    .lineLimit(1)
+                    .frame(maxWidth: .infinity, alignment: .leading)
+            },
+            action: { option.isOn.wrappedValue.toggle() }
+        )
+        .enabled(option.isEnabled)
+    }
+
     var customSettingButton: some View {
         optionButton(
             customSettingLabel,
-            image: isOn ? Const.customPlaybackSpeedSF : Const.customPlaybackSpeedOffSF,
+            image: isOn ? Const.channelSpeedLockFillSF : Const.channelSpeedLockSF,
             isOn: isOn,
             subtitle: { },
             action: { isOn.toggle() }
