@@ -14,6 +14,7 @@ struct ChapterMiniControlView: View {
     @Environment(NavigationManager.self) var navManager
 
     @State var triggerFeedback = false
+    @State var triggerErrorFeedback = false
 
     let compactSize: Bool
     let autoHideVM: AutoHideVM
@@ -64,7 +65,9 @@ struct ChapterMiniControlView: View {
                         }
                         .buttonStyle(.plain)
                         .highPriorityGesture(LongPressGesture(minimumDuration: 0.3).onEnded { _ in
-                            if let url = player.video?.url {
+                            if player.video?.isPodcast == true {
+                                triggerErrorFeedback.toggle()
+                            } else if let url = player.video?.url {
                                 triggerFeedback.toggle()
                                 navManager.openUrlInApp(.url(url.absoluteString))
                             }
@@ -137,6 +140,7 @@ struct ChapterMiniControlView: View {
             .frame(maxWidth: 600)
         }
         .sensoryFeedback(Const.sensoryFeedback, trigger: triggerFeedback)
+        .sensoryFeedback(.error, trigger: triggerErrorFeedback)
         .frame(maxWidth: .infinity)
         .animation(.bouncy(duration: 0.5), value: player.currentChapter != nil)
         .onChange(of: hasAnyChapters) {
