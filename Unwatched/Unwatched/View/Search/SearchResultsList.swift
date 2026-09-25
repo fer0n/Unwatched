@@ -150,6 +150,20 @@ struct SearchResultsList: View {
     }
 
     func videoRows(_ videos: [SendableVideo], loadMore: Bool = false) -> some View {
+        SearchVideoRows(videos: videos, vm: vm) { video in
+            if loadMore {
+                vm.loadMoreIfNeeded(currentItem: video)
+            }
+        }
+    }
+}
+
+struct SearchVideoRows: View {
+    let videos: [SendableVideo]
+    let vm: SearchVM
+    var onAppear: (SendableVideo) -> Void = { _ in }
+
+    var body: some View {
         ForEach(videos, id: \.youtubeId) { video in
             VideoListItem(
                 video,
@@ -172,9 +186,7 @@ struct SearchResultsList: View {
             .equatable()
             .videoListItemEntry()
             .onAppear {
-                if loadMore {
-                    vm.loadMoreIfNeeded(currentItem: video)
-                }
+                onAppear(video)
             }
         }
         .myListRowBackground()

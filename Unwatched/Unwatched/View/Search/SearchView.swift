@@ -13,6 +13,7 @@ import UnwatchedShared
 /// result (or its queue/swipe actions) materialises it into the library on demand.
 struct SearchView: View {
     @AppStorage(Const.searchAlwaysUseYoutube) var searchAlwaysUseYoutube: Bool = false
+    @AppStorage(Const.showSearchRecommendations) var showRecommendations: Bool = false
 
     @Environment(\.modelContext) private var modelContext
     @Environment(NavigationManager.self) private var navManager
@@ -151,7 +152,7 @@ struct SearchView: View {
     }
 
     var shouldAutoFocusSearch: Bool {
-        !vm.hasSearched && vm.query.isEmpty
+        !showRecommendations && !vm.hasSearched && vm.query.isEmpty
     }
 
     /// Right after a pop back to the root the field is still morphing into the tab bar and only

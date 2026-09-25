@@ -22109,6 +22109,40 @@
         }
       }
     },
+    "showSearchRecommendations" : {
+      "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Empfehlungen in der Suche anzeigen"
+          }
+        },
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Show Recommendations in Search"
+          }
+        },
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Mostrar recomendaciones en la búsqueda"
+          }
+        },
+        "fr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Afficher des recommandations dans la recherche"
+          }
+        },
+        "pl" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Pokazuj polecane w wyszukiwaniu"
+          }
+        }
+      }
+    },
     "showTabBarBadge" : {
       "localizations" : {
         "de" : {

@@ -22,16 +22,15 @@ extension SearchVM {
     /// Overlays stored status onto all current results (e.g. items already in the
     /// queue/inbox, or after returning from playback).
     func refreshAllStatuses() {
-        let youtubeIds = (results + localResults.bookmarks + localResults.videos).map(\.youtubeId)
+        let youtubeIds = (results + localResults.bookmarks + localResults.videos + homeFeed).map(\.youtubeId)
         guard !youtubeIds.isEmpty else { return }
         let stored = Self.storedStatuses(for: youtubeIds)
         guard !stored.isEmpty else { return }
         apply(stored)
     }
 
-    /// Swaps in the stored version of every result it has an entry for, across the
-    /// YouTube and the local video lists.
-    private func apply(_ stored: [String: SendableVideo]) {
+    /// Swaps in the stored version of every result it has an entry for, across all video lists.
+    func apply(_ stored: [String: SendableVideo]) {
         withAnimation {
             if let updated = Self.applying(stored, to: results) {
                 results = updated
@@ -41,6 +40,9 @@ extension SearchVM {
             }
             if let updated = Self.applying(stored, to: localResults.videos) {
                 localResults.videos = updated
+            }
+            if let updated = Self.applying(stored, to: homeFeed) {
+                homeFeed = updated
             }
         }
     }
@@ -71,7 +73,7 @@ extension SearchVM {
     }
 
     /// Fetches stored status for many videos in a single query, keyed by `youtubeId`.
-    private static func storedStatuses(for youtubeIds: [String]) -> [String: SendableVideo] {
+    static func storedStatuses(for youtubeIds: [String]) -> [String: SendableVideo] {
         let context = DataProvider.mainContext
         let fetch = FetchDescriptor<Video>(predicate: #Predicate { youtubeIds.contains($0.youtubeId) })
         guard let videos = try? context.fetch(fetch) else { return [:] }

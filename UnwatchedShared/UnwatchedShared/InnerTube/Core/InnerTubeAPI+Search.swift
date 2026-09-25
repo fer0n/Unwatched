@@ -185,7 +185,8 @@ extension InnerTubeAPI {
     /// renderer type and the pagination continuation token. Works for both the first
     /// page (twoColumnSearchResultsRenderer → sectionListRenderer) and continuation
     /// pages (onResponseReceivedCommands → appendContinuationItemsAction).
-    private func parseSearchPage(from json: [String: Any]) -> SearchPage {
+    /// Unwatched: internal, not private — the home feed (`InnerTubeAPI+HomeFeed`) reuses it.
+    func parseSearchPage(from json: [String: Any]) -> SearchPage {
         var videos: [ITVideo] = []
         var seen = Set<String>()
         var nextPageToken: String?
@@ -480,6 +481,8 @@ extension InnerTubeAPI {
         let thumbVM = (lockup["contentImage"] as? [String: Any])?["thumbnailViewModel"] as? [String: Any]
         let thumbnails = (thumbVM?["image"] as? [String: Any])?["thumbnails"] as? [[String: Any]]
         let thumbURL = thumbnails?.last.flatMap { $0["url"] as? String }.flatMap { URL(string: $0) }
+        // Unwatched: a lockup's only duration is its thumbnail badge ("22:11"); live ones read "LIVE".
+        let duration = thumbVM.flatMap { firstCountBadgeText(in: $0) }.flatMap { parseDuration($0) }
 
         let publishedAt: Date? = {
             for row in metaRows.dropFirst() {
@@ -513,6 +516,7 @@ extension InnerTubeAPI {
             channelTitle: channelTitle,
             channelId: channelId,
             thumbnailURL: thumbURL,
+            duration: duration,
             viewCount: viewCount,
             publishedAt: publishedAt,
             isShort: isShort

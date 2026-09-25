@@ -90,6 +90,17 @@ channel-share preview) but can't import InnerTube, so the one request lives in t
 package and both call into it. If it starts failing, update the embedded WEB client version
 in `ChannelAvatarService.swift`, not here.
 
+`InnerTubeAPI+Search.swift`'s `parseSearchPage(from:)` is internal instead of `private`, so
+`InnerTube/HomeFeed/` can parse the home feed and related videos with it. Those responses are
+fetched from inside a hidden youtube.com web view (`HomeFeedService`), so a signed-in session
+never leaves WebKit — see `YoutubeCookieFilter` for why the app's own requests can't carry it.
+Re-apply the `private` → internal change on every sync.
+
+`parseLockupViewModel` also reads the duration from the thumbnail badge
+(`contentImage.thumbnailViewModel.overlays[].thumbnailBottomOverlayViewModel.badges[]`); upstream
+passes `duration: nil` there, so lockup results (most home, related and many search results)
+showed no length. Re-apply on every sync.
+
 ### `SmartTube/` diffs vs upstream
 
 | File | Change | Reason |

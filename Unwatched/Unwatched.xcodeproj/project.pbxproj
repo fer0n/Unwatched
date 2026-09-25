@@ -247,7 +247,9 @@
 		883D44FC30180A3D00950B89 /* SearchVM+Local.swift in Sources */ = {isa = PBXBuildFile; fileRef = 883D44FB30180A3D00950B89 /* SearchVM+Local.swift */; };
 		883D44FD30180A3D00950B89 /* SearchVM+Local.swift in Sources */ = {isa = PBXBuildFile; fileRef = 883D44FB30180A3D00950B89 /* SearchVM+Local.swift */; };
 		883D44FF30180A4E00950B89 /* SearchVM+Status.swift in Sources */ = {isa = PBXBuildFile; fileRef = 883D44FE30180A4E00950B89 /* SearchVM+Status.swift */; };
+		61F009F2825E611A218F0D36 /* SearchVM+HomeFeed.swift in Sources */ = {isa = PBXBuildFile; fileRef = C1780AB3DD374EE1B755D3EB /* SearchVM+HomeFeed.swift */; };
 		883D450030180A4E00950B89 /* SearchVM+Status.swift in Sources */ = {isa = PBXBuildFile; fileRef = 883D44FE30180A4E00950B89 /* SearchVM+Status.swift */; };
+		DE7E9D8B4E6BDCF26351ACA0 /* SearchVM+HomeFeed.swift in Sources */ = {isa = PBXBuildFile; fileRef = C1780AB3DD374EE1B755D3EB /* SearchVM+HomeFeed.swift */; };
 		883D4CAA2CF4791300BB2581 /* PlayerContentView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 883D4CA92CF4791300BB2581 /* PlayerContentView.swift */; };
 		883D4CAB2CF4791300BB2581 /* PlayerContentView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 883D4CA92CF4791300BB2581 /* PlayerContentView.swift */; };
 		883D5E002BE0B95800989313 /* TabItemView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 883D5DFF2BE0B95800989313 /* TabItemView.swift */; };
@@ -1315,6 +1317,7 @@
 		883D44F8301807A400950B89 /* SearchSubscriptionListItem.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SearchSubscriptionListItem.swift; sourceTree = "<group>"; };
 		883D44FB30180A3D00950B89 /* SearchVM+Local.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "SearchVM+Local.swift"; sourceTree = "<group>"; };
 		883D44FE30180A4E00950B89 /* SearchVM+Status.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "SearchVM+Status.swift"; sourceTree = "<group>"; };
+		C1780AB3DD374EE1B755D3EB /* SearchVM+HomeFeed.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "SearchVM+HomeFeed.swift"; sourceTree = "<group>"; };
 		883D4CA92CF4791300BB2581 /* PlayerContentView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PlayerContentView.swift; sourceTree = "<group>"; };
 		883D5DFF2BE0B95800989313 /* TabItemView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TabItemView.swift; sourceTree = "<group>"; };
 		883EE0952B7ABD5700D0A83A /* SleepTimerViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SleepTimerViewModel.swift; sourceTree = "<group>"; };
@@ -2581,6 +2584,7 @@
 				88373C272C8C6A9100ACBB3B /* SubscriptionListVM.swift */,
 				883D44FB30180A3D00950B89 /* SearchVM+Local.swift */,
 				883D44FE30180A4E00950B89 /* SearchVM+Status.swift */,
+				C1780AB3DD374EE1B755D3EB /* SearchVM+HomeFeed.swift */,
 			);
 			path = ViewModel;
 			sourceTree = "<group>";
@@ -3403,6 +3407,7 @@
 				BDFD7892557E62ECF4D225B5 /* InboxCardDrag.swift in Sources */,
 				6302111413B74E042F4AD469 /* InboxCardSwipe.swift in Sources */,
 				883D44FF30180A4E00950B89 /* SearchVM+Status.swift in Sources */,
+				61F009F2825E611A218F0D36 /* SearchVM+HomeFeed.swift in Sources */,
 				889AF9002C50ECCD001CEDE6 /* SubscribeManager.swift in Sources */,
 				883D4CAB2CF4791300BB2581 /* PlayerContentView.swift in Sources */,
 				88A1C0DE2F6A000100000003 /* PodcastPlayerLayout.swift in Sources */,
@@ -3977,6 +3982,7 @@
 				88AA10622F0000000000A062 /* NavigationTitleLabel.swift in Sources */,
 				88DFC0C62B448C01001895C8 /* VideoService.swift in Sources */,
 				883D450030180A4E00950B89 /* SearchVM+Status.swift in Sources */,
+				DE7E9D8B4E6BDCF26351ACA0 /* SearchVM+HomeFeed.swift in Sources */,
 				88899D932E035E54002C05BC /* TitleFilterView.swift in Sources */,
 				8826DD232E6EE9CA008234B3 /* PrivacySettingsView.swift in Sources */,
 				88C1A1E12FF5D9CB001ED1DD /* AnalyticsEvent.swift in Sources */,

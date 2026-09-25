@@ -50,6 +50,7 @@ extension Const {
         Const.enableQueueContextMenu: false,
         Const.autoRefreshIgnoresSync: false,
         Const.useNoCookieUrl: false,
+        Const.showSearchRecommendations: false,
 
         // Playback
         Const.fullscreenControlsSetting: FullscreenControls.autoHide.rawValue,

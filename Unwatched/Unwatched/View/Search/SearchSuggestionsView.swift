@@ -17,7 +17,7 @@ private extension View {
     }
 }
 
-/// Shows either query suggestions or recent searches while the search field is focused.
+/// Shows query suggestions or recent searches while searching, and recommendations otherwise.
 ///
 /// A single stable `List` root (sections switch, empty state as an overlay) instead of
 /// swapping between different root views keeps swipe-to-delete smooth — a root swap
@@ -27,6 +27,8 @@ private extension View {
 /// and looks identical whether or not the search field is focused — the native
 /// suggestions overlay can't be recoloured.
 struct SearchSuggestionsView: View {
+    @AppStorage(Const.showSearchRecommendations) var showRecommendations: Bool = false
+
     let vm: SearchVM
     @FocusState.Binding var searchFocused: Bool
     let onSelect: (String) -> Void
@@ -43,6 +45,8 @@ struct SearchSuggestionsView: View {
                     }
                 }
                 .listRowSeparatorTint(Color.automaticBlack.opacity(0.08))
+            } else if showsHomeFeed {
+                homeFeedSection
             } else if !vm.recentSearches.isEmpty {
                 Section {
                     ForEach(vm.recentSearches.prefix(10), id: \.self) { recent in
@@ -71,8 +75,12 @@ struct SearchSuggestionsView: View {
             }
         }
         .scrollContentBackground(.hidden)
+        .refreshable {
+            guard showsHomeFeed else { return }
+            await vm.reloadHomeFeed()
+        }
         .overlay {
-            if vm.query.isEmpty && vm.recentSearches.isEmpty {
+            if vm.query.isEmpty && vm.recentSearches.isEmpty && !showsHomeFeed {
                 ContentUnavailableView(
                     "searchPromptTitle",
                     systemImage: "magnifyingglass",
@@ -81,6 +89,32 @@ struct SearchSuggestionsView: View {
             }
         }
         .task(id: vm.query) { vm.updateSuggestions() }
+        .task(id: showRecommendations) {
+            if showRecommendations {
+                vm.loadHomeFeedIfNeeded()
+            }
+        }
+    }
+
+    var showsHomeFeed: Bool {
+        showRecommendations && vm.query.isEmpty && !searchFocused
+            && (!vm.homeFeed.isEmpty || vm.isLoadingHomeFeed)
+    }
+
+    var homeFeedSection: some View {
+        Section {
+            SearchVideoRows(videos: vm.homeFeed, vm: vm) { video in
+                vm.loadMoreHomeFeedIfNeeded(currentItem: video)
+            }
+
+            if vm.isLoadingHomeFeed || vm.isLoadingMoreHomeFeed {
+                ProgressView()
+                    .frame(maxWidth: .infinity)
+                    .listRowSeparator(.hidden)
+                    .myListRowBackground()
+            }
+        }
+        .environment(\.videoListContext, .search)
     }
 
     /// A tappable suggestion/recent row that runs `action` for its term.

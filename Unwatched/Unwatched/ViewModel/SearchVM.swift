@@ -56,6 +56,13 @@ final class SearchVM {
 
     var channelAvatarURLs: [String: URL] = [:]
 
+    var homeFeed: [SendableVideo] = []
+    var isLoadingHomeFeed = false
+    var isLoadingMoreHomeFeed = false
+    @ObservationIgnored var homeFeedToken: String?
+    @ObservationIgnored var homeFeedLoadedAt: Date?
+    @ObservationIgnored var homeFeedTask: Task<Void, Never>?
+
     let api = InnerTubeAPI()
     private var filter = SearchFilter.default
     private var nextPageToken: String?
