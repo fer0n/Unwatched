@@ -8,7 +8,7 @@ import WebKit
 import OSLog
 import UnwatchedShared
 
-/// Loads the web player off screen while another player is still playing, so switching to it takes
+/// Loads the web player out of sight while another player is still playing, so switching to it takes
 /// over a running page instead of waiting for a fresh load. The web view built here is the one
 /// `PlayerWebView` ends up showing — see `takeWebView`.
 ///
@@ -37,8 +37,10 @@ final class WebPlayerWarmup: NSObject {
 
     /// How long the page gets to start playing before adoption settles for a play click instead.
     private static let startTimeout: Double = 3
-    /// The outgoing player keeps going while the seek lands, so aim slightly ahead of it.
-    private static let syncLead: Double = 0.15
+    private static let seekLead: Double = 0.4
+    private static let bufferedSeekLead: Double = 0.15
+    private static let syncTolerance: Double = 0.3
+    private static let syncTimeout: Double = 3
 
     @MainActor private var webView: WKWebView?
     @MainActor private var videoId: String?
@@ -63,6 +65,7 @@ final class WebPlayerWarmup: NSObject {
         let uiMode = PlayerWebView.UIMode.forSetting(setting, embeddingDisabled: player.embeddingDisabled)
         let webView = PlayerWebView.buildWebView(airplayHD: player.airplayHD)
         webView.frame = CGRect(origin: .zero, size: Self.warmupSize)
+        hideBehindKeyWindow(webView)
         webView.navigationDelegate = self
         webView.configuration.userContentController.add(self, name: "iosListener")
 
@@ -109,7 +112,7 @@ final class WebPlayerWarmup: NSObject {
         startedWhileLivePlaying = PlayerManager.shared.isPlaying
         PlayerWebView.evaluateJavaScript(webView, PlayerWebView.unstartedPlayScript)
         let playing = await Poll.until(timeout: Self.startTimeout) {
-            guard isCurrent(webView), !failed else {
+            guard isLive(webView) else {
                 return .abort
             }
             let isPlaying = await PlayerWebView.evaluateBool(
@@ -122,22 +125,44 @@ final class WebPlayerWarmup: NSObject {
             Log.info("webWarmup: silent start didn't take")
             return false
         }
-        syncPosition(webView)
+        await syncPosition(webView)
         return true
     }
 
-    /// Both pages run in real time afterwards, so this one correction is enough — but it has to
-    /// come off the exact playhead, since the swap no longer has a gap that would hide a jump.
     @MainActor
-    private func syncPosition(_ webView: WKWebView) {
-        let player = PlayerManager.shared
-        guard let live = player.precisePosition?() ?? player.currentTime else {
+    private func syncPosition(_ webView: WKWebView) async {
+        guard let lag = await lagAfterSeeking(webView, ahead: Self.seekLead), lag >= Self.syncTolerance else {
             return
         }
-        PlayerWebView.evaluateJavaScript(
-            webView,
-            PlayerWebView.videoPropertyScript("currentTime", "\(live + Self.syncLead)")
-        )
+        _ = await lagAfterSeeking(webView, ahead: Self.bufferedSeekLead)
+    }
+
+    @MainActor
+    private func lagAfterSeeking(_ webView: WKWebView, ahead lead: Double) async -> Double? {
+        guard let live = livePosition else {
+            return nil
+        }
+        let target = live + lead * PlayerManager.shared.playbackSpeed
+        PlayerWebView.evaluateJavaScript(webView, PlayerWebView.seekToScript(target))
+        var page: Double?
+        _ = await Poll.until(timeout: Self.syncTimeout, step: 0.05) {
+            guard isLive(webView) else {
+                return .abort
+            }
+            page = await PlayerWebView.evaluatePosition(webView, whilePlaying: true)
+            return page == nil ? .retry : .done
+        }
+        guard let page, let now = livePosition else {
+            return nil
+        }
+        Log.info("webWarmup: synced \(String(format: "%.2f", now - page))s behind")
+        return now - page
+    }
+
+    @MainActor
+    private var livePosition: Double? {
+        let player = PlayerManager.shared
+        return player.precisePosition?() ?? player.currentTime
     }
 
     /// Waits for the page to have loaded *and* built its media element — the point where taking
@@ -148,7 +173,7 @@ final class WebPlayerWarmup: NSObject {
     @MainActor
     private func awaitPlayable(_ webView: WKWebView, timeout: Double) async -> Bool {
         await Poll.until(timeout: timeout) {
-            guard isCurrent(webView), !failed else {
+            guard isLive(webView) else {
                 return .abort
             }
             guard warmed != nil else {
@@ -162,6 +187,32 @@ final class WebPlayerWarmup: NSObject {
     @MainActor
     private func isCurrent(_ webView: WKWebView) -> Bool {
         self.webView === webView
+    }
+
+    @MainActor
+    private func isLive(_ webView: WKWebView) -> Bool {
+        isCurrent(webView) && !failed
+    }
+
+    /// Out of a window the page never loads any media.
+    @MainActor
+    private func hideBehindKeyWindow(_ webView: WKWebView) {
+        #if os(iOS)
+        let window = UIApplication.shared.connectedScenes
+            .compactMap { $0 as? UIWindowScene }
+            .flatMap(\.windows)
+            .first { $0.isKeyWindow }
+        window?.insertSubview(webView, at: 0)
+        setHidden(webView, true)
+        #endif
+    }
+
+    @MainActor
+    private func setHidden(_ webView: WKWebView, _ hidden: Bool) {
+        #if os(iOS)
+        webView.accessibilityElementsHidden = hidden
+        webView.isUserInteractionEnabled = !hidden
+        #endif
     }
 
     /// Hands over paused instead: the page keeps what it loaded and buffered, it just doesn't
@@ -186,6 +237,7 @@ final class WebPlayerWarmup: NSObject {
         }
         Log.info("webWarmup: adopting warmed page")
         detachHandlers(from: warmed.webView)
+        setHidden(warmed.webView, false)
         reset()
         return warmed
     }
@@ -197,6 +249,7 @@ final class WebPlayerWarmup: NSObject {
             detachHandlers(from: webView)
             webView.stopLoading()
             webView.pauseAllMediaPlayback()
+            webView.removeFromSuperview()
         }
         reset()
     }
@@ -227,80 +280,6 @@ final class WebPlayerWarmup: NSObject {
         let width: CGFloat = 640
         #endif
         return CGSize(width: width, height: (width / Const.defaultVideoAspectRatio).rounded())
-    }
-}
-
-extension PlayerWebView {
-    /// Takes over the page `WebPlayerWarmup` loaded while the previous player was still playing.
-    /// It's initialized already, so all that's left is moving it to the live playback position and
-    /// replaying the one-shot events the warmup swallowed.
-    func adopt(_ warmed: WebPlayerWarmup.Warmed, _ coordinator: PlayerWebViewCoordinator) -> WKWebView {
-        let webView = warmed.webView
-        backend.resetAppliedState()
-        backend.webView = webView
-        backend.loadedVideoId = player.video?.youtubeId
-        backend.appliedUIMode = warmed.uiMode
-
-        attach(coordinator, to: webView)
-
-        if warmed.didStart {
-            player.unstarted = false
-            evaluateJavaScript(webView, PlayerWebView.muteScript(false))
-        } else {
-            // the page still shows YouTube's poster until it starts, so it has to be covered from
-            // the moment the swap happens, not a frame later
-            withAnimation {
-                player.unstarted = true
-            }
-        }
-
-        let startAt = player.getStartPosition()
-        Task { @MainActor in
-            if !warmed.didStart, abs(startAt - warmed.startAt) > 0.5 {
-                evaluateJavaScript(webView, PlayerWebView.seekToScript(startAt))
-            }
-            for message in warmed.messages {
-                coordinator.handleJsMessages(message.topic, message.payload)
-            }
-            player.isLoading = nil
-            // the speed the page was warmed at can be stale by now: it was read when the warm-up started, and the
-            // user had the outgoing player in front of them the whole time
-            if warmed.playbackSpeed != player.playbackSpeed {
-                backend.setRate(player.playbackSpeed)
-            }
-            if !warmed.didStart {
-                await PlayerWebView.awaitViewport(webView)
-            }
-            // `play()` confirms and re-clicks on its own, so adoption no longer needs a retry loop of its own — two
-            // of them would double-click the page.
-            player.handleAutoStart(webView.url)
-            backend.setChapterMarkers(force: true)
-        }
-        return webView
-    }
-
-    /// The play click is aimed at the middle of the viewport, which is still 0×0 right after
-    /// adoption: SwiftUI inserts the web view before laying it out.
-    @MainActor
-    static func awaitViewport(_ webView: WKWebView) async {
-        let sized = await Poll.until(timeout: Self.viewportTimeout, step: Self.viewportPollSeconds) {
-            let result = try? await webView.evaluateJavaScript("window.innerWidth")
-            return (result as? Double ?? 0) > 0 ? .done : .retry
-        }
-        if !sized {
-            Log.warning("adopt: viewport stayed empty")
-        }
-    }
-
-    private static let viewportPollSeconds: Double = 0.03
-    private static let viewportTimeout: Double = 0.9
-
-    func attach(_ coordinator: PlayerWebViewCoordinator, to webView: WKWebView) {
-        webView.navigationDelegate = coordinator
-        webView.configuration.userContentController.add(coordinator, name: "iosListener")
-        #if os(iOS) || os(visionOS)
-        webView.scrollView.delegate = coordinator
-        #endif
     }
 }
 

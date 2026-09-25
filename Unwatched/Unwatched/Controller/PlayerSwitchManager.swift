@@ -74,6 +74,10 @@ final class PlayerSwitchManager {
             guard !Task.isCancelled else {
                 return
             }
+            await self?.captureExactPosition()
+            guard !Task.isCancelled else {
+                return
+            }
             Log.info("playerSwitch: committing \(type.rawValue), warm: \(ready)")
             self?.commit(type)
         }
@@ -140,6 +144,17 @@ final class PlayerSwitchManager {
     private func settle(on type: PlayerTypeSetting) {
         selectedType = type
         PlayerManager.shared.backend.cueVideo()
+    }
+
+    /// Both engines only report `currentTime` once a second.
+    private func captureExactPosition() async {
+        let player = PlayerManager.shared
+        let exact = selectedType.usesWebPlayer
+            ? await WebPlayerBackend.shared.readPosition()
+            : player.precisePosition?()
+        if let exact {
+            player.currentTime = exact
+        }
     }
 
     private func stopWarmup() {

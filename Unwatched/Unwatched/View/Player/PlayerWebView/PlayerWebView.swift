@@ -201,6 +201,19 @@ struct PlayerWebView: PlatformViewRepresentable {
     }
 
     @MainActor
+    static func evaluatePosition(_ view: WKWebView, whilePlaying: Bool = false) async -> Double? {
+        let playing = whilePlaying ? " && !v.seeking && !v.paused && v.readyState >= 3" : ""
+        let result = try? await view.evaluateJavaScript("""
+            (() => {
+                const v = document.querySelector('video');
+                return v\(playing) ? v.currentTime : -1;
+            })()
+            """)
+        guard let time = result as? Double, time >= 0 else { return nil }
+        return time
+    }
+
+    @MainActor
     static func evaluateBool(_ view: WKWebView, _ script: String) async -> Bool {
         let result = try? await view.evaluateJavaScript(script)
         return (result as? Bool) ?? false

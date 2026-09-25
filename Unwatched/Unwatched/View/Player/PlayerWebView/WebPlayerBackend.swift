@@ -211,6 +211,12 @@ import UnwatchedShared
     }
 
     @MainActor
+    func readPosition() async -> Double? {
+        guard let webView else { return nil }
+        return await PlayerWebView.evaluatePosition(webView)
+    }
+
+    @MainActor
     func seek(to time: Double) {
         guard let webView = commandTarget("SEEK") else { return }
         Log.info("SEEK \(time)")

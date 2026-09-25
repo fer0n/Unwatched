@@ -638,6 +638,8 @@
 		88AA10010001000000000003 /* PlayerSwitchManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = 88AA10010001000000000001 /* PlayerSwitchManager.swift */; };
 		88AA10010001000000000012 /* WebPlayerWarmup.swift in Sources */ = {isa = PBXBuildFile; fileRef = 88AA10010001000000000011 /* WebPlayerWarmup.swift */; };
 		88AA10010001000000000013 /* WebPlayerWarmup.swift in Sources */ = {isa = PBXBuildFile; fileRef = 88AA10010001000000000011 /* WebPlayerWarmup.swift */; };
+		88AA10010001000000000022 /* PlayerWebView+Adopt.swift in Sources */ = {isa = PBXBuildFile; fileRef = 88AA10010001000000000021 /* PlayerWebView+Adopt.swift */; };
+		88AA10010001000000000023 /* PlayerWebView+Adopt.swift in Sources */ = {isa = PBXBuildFile; fileRef = 88AA10010001000000000021 /* PlayerWebView+Adopt.swift */; };
 		88AA10022F0000000000A002 /* MigrationTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 88AA10012F0000000000A001 /* MigrationTests.swift */; };
 		88AA10042F0000000000A004 /* MigrationSchemaShapes.swift in Sources */ = {isa = PBXBuildFile; fileRef = 88AA10032F0000000000A003 /* MigrationSchemaShapes.swift */; };
 		88AA10062F0000000000A006 /* SettingsMigrationTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 88AA10052F0000000000A005 /* SettingsMigrationTests.swift */; };
@@ -1482,6 +1484,7 @@
 		88AA01212F000001000000C1 /* CopyUrlButton.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CopyUrlButton.swift; sourceTree = "<group>"; };
 		88AA10010001000000000001 /* PlayerSwitchManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PlayerSwitchManager.swift; sourceTree = "<group>"; };
 		88AA10010001000000000011 /* WebPlayerWarmup.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = WebPlayerWarmup.swift; sourceTree = "<group>"; };
+		88AA10010001000000000021 /* PlayerWebView+Adopt.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "PlayerWebView+Adopt.swift"; sourceTree = "<group>"; };
 		88AA10012F0000000000A001 /* MigrationTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MigrationTests.swift; sourceTree = "<group>"; };
 		88AA10032F0000000000A003 /* MigrationSchemaShapes.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MigrationSchemaShapes.swift; sourceTree = "<group>"; };
 		88AA10052F0000000000A005 /* SettingsMigrationTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SettingsMigrationTests.swift; sourceTree = "<group>"; };
@@ -2488,6 +2491,7 @@
 				88CD36FF2E203FB200E7B21C /* PlayerWebView+Initscript.swift */,
 				887683712C53842600EB05B9 /* PlayerWebViewCoordinator.swift */,
 				88AA10010001000000000011 /* WebPlayerWarmup.swift */,
+				88AA10010001000000000021 /* PlayerWebView+Adopt.swift */,
 				88CD38772E20797C00E7B21C /* PlayerWebViewCoordinator+messages.swift */,
 				FE1000FF000000000000E031 /* PlayerWebViewCoordinator+pause.swift */,
 			);
@@ -3558,6 +3562,7 @@
 				889AF8E32C50ECA9001CEDE6 /* MySection.swift in Sources */,
 				88DD14762E7E981F007BA1F4 /* PlayerEmbedded.swift in Sources */,
 				88AA10010001000000000013 /* WebPlayerWarmup.swift in Sources */,
+				88AA10010001000000000023 /* PlayerWebView+Adopt.swift in Sources */,
 				88AA10010001000000000003 /* PlayerSwitchManager.swift in Sources */,
 				889AF8E42C50ECA9001CEDE6 /* AsyncButton.swift in Sources */,
 				8868178C2D773BD300E06A0D /* FaqWindow.swift in Sources */,
@@ -3947,6 +3952,7 @@
 				88AA01132F000001000000B3 /* TrimSilenceOption.swift in Sources */,
 				88DD14752E7E981F007BA1F4 /* PlayerEmbedded.swift in Sources */,
 				88AA10010001000000000012 /* WebPlayerWarmup.swift in Sources */,
+				88AA10010001000000000022 /* PlayerWebView+Adopt.swift in Sources */,
 				88AA10010001000000000002 /* PlayerSwitchManager.swift in Sources */,
 				889924862C485E3B001185A6 /* LibraryVideoSection.swift in Sources */,
 				88AA10492F0000000000A049 /* TagSymbolPicker.swift in Sources */,
