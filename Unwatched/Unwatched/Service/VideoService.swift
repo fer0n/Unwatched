@@ -299,6 +299,10 @@ extension VideoService {
         try? modelContext.save()
     }
 
+    static func queuePosition(before order: Int, excluding video: Video, _ modelContext: ModelContext) -> Int {
+        QueueFilter.all.entries(modelContext).count { $0.order < order && $0.video != video }
+    }
+
     static func insertQueueEntriesAsync(at index: Int = 0,
                                         videoIds: [PersistentIdentifier],
                                         filter: QueueFilter = .all) -> Task<(), Error> {

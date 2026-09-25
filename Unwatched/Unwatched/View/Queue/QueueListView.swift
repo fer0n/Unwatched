@@ -8,13 +8,10 @@ import SwiftData
 import OSLog
 import UnwatchedShared
 
-/// - Parameter order: the entry's sort key, for picking out the entries above or below it
-/// - Parameter position: where it sat in the filtered queue, for undo to put it back
 struct ChangedEntry {
     let videoId: PersistentIdentifier
     let youtubeId: String
     let order: Int
-    let position: Int
 }
 
 struct QueueListView: View {
@@ -50,10 +47,6 @@ struct QueueListView: View {
     var body: some View {
         @Bindable var navManager = navManager
         let hasTooManyItems = !showAll && queue.count >= Const.queueFetchLimit
-        let positions = Dictionary(
-            queue.enumerated().map { ($1.persistentModelID, $0) },
-            uniquingKeysWith: { first, _ in first }
-        )
 
         NavigationStack(path: $navManager.presentedSubscriptionQueue) {
             ZStack {
@@ -72,9 +65,6 @@ struct QueueListView: View {
                             if let video = entry.video {
                                 let videoId = video.persistentModelID
                                 let youtubeId = video.youtubeId
-                                // undo needs the spot the entry sat in, which its sparse `order`
-                                // doesn't give
-                                let position = positions[entry.persistentModelID] ?? 0
 
                                 VideoListItem(
                                     video,
@@ -97,8 +87,7 @@ struct QueueListView: View {
                                             ChangedEntry(
                                                 videoId: videoId,
                                                 youtubeId: youtubeId,
-                                                order: order ?? entry.order,
-                                                position: position
+                                                order: order ?? entry.order
                                             ),
                                             in: queue
                                         )
@@ -192,7 +181,7 @@ struct QueueListView: View {
         switch reason {
         case .clearEverywhere, .moveToInbox, .toggleWatched:
             undoManager.registerAction(
-                .moveToQueue([entry.videoId], position: entry.position)
+                .restoreToQueue(entry.videoId, order: entry.order)
             )
         case .clearAbove:
             undoManager.handleQueueClearDirection(entry.youtubeId, entries, entry.order, .above)

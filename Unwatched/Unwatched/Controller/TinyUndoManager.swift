@@ -133,15 +133,28 @@ class TinyUndoManager {
                     modelContext: context
                 )
             }
+        case .restoreToQueue(let id, let order):
+            hasNowPlayingVideo = restoreToQueue(id, order: order, context) == 0
         }
 
         if hasNowPlayingVideo {
             PlayerManager.shared.loadTopmostVideoFromQueue()
         }
     }
+
+    @MainActor
+    private func restoreToQueue(_ id: PersistentIdentifier, order: Int, _ context: ModelContext) -> Int? {
+        guard let video: Video = context.existingModel(for: id) else { return nil }
+        let position = VideoService.queuePosition(before: order, excluding: video, context)
+        withAnimation {
+            VideoService.insertQueueEntries(at: position, videos: [video], modelContext: context)
+        }
+        return position
+    }
 }
 
 public enum UndoAction: Sendable {
     case moveToInbox(_ videoIds: [PersistentIdentifier]),
-         moveToQueue(_ videoIds: [PersistentIdentifier], position: Int)
+         moveToQueue(_ videoIds: [PersistentIdentifier], position: Int),
+         restoreToQueue(_ videoId: PersistentIdentifier, order: Int)
 }
