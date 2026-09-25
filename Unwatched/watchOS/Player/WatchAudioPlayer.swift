@@ -48,6 +48,10 @@ final class WatchAudioPlayer {
 
     init() {
         setupRemoteCommands()
+        PodcastDownloadManager.shared.onEpisodeDownloaded = { [weak self] youtubeId in
+            guard let self, let video, video.youtubeId == youtubeId else { return }
+            loadPodcastChapters(for: video)
+        }
     }
 
     #if DEBUG
@@ -81,6 +85,7 @@ final class WatchAudioPlayer {
 
         self.video = video
         chapters = video.sortedChapterData
+        loadPodcastChapters(for: video)
         seekIntervals = WatchSeek(tagSeconds: Tag.seekSecondsTag(for: video)?.seekSeconds)
         applySeekIntervals()
         applyTagContinuousPlay(for: video)
@@ -107,6 +112,17 @@ final class WatchAudioPlayer {
                 errorMessage = error.localizedDescription
                 Log.error("watch playback failed: \(error)")
             }
+        }
+    }
+
+    private func loadPodcastChapters(for video: Video) {
+        guard video.isPodcast else { return }
+        let youtubeId = video.youtubeId
+        Task {
+            guard await ChapterService.fetchPodcastChapters(for: video),
+                  let current = self.video, current.youtubeId == youtubeId else { return }
+            current.chaptersDidChange()
+            chapters = current.sortedChapterData
         }
     }
 

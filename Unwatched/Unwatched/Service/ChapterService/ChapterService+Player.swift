@@ -11,10 +11,6 @@ import SwiftData
 import UnwatchedShared
 
 extension ChapterService {
-    /// Podcast episodes whose chapters this session already fetched, so the same episode isn't asked for twice.
-    @MainActor
-    private static var loadedPodcastChapterIds = Set<String>()
-
     static func updateDuration(
         _ video: Video,
         duration: Double
@@ -120,62 +116,12 @@ extension ChapterService {
         }
     }
 
-    /// Podcast chapters come from the feed itself (Podlove chapters, or timestamps in the description); the two that
-    /// have to be fetched are a `podcast:chapters` file and the chapter frames inside the episode's own audio file.
     @MainActor
     static func loadPodcastChapters(for video: Video) {
-        // rows mean the user has edited this episode's chapters; a cached set means they're already in hand
-        guard video.chapters?.isEmpty ?? true,
-              fetchedChapters(youtubeId: video.youtubeId, duration: video.duration) == nil else {
-            return
-        }
-        let youtubeId = video.youtubeId
-        guard loadedPodcastChapterIds.insert(youtubeId).inserted else {
-            return
-        }
         let videoId = video.persistentModelID
-        let duration = video.duration
-        let chaptersUrl = video.chaptersUrl
-        let feedUrl = video.subscription?.link
-        // the downloaded file where there is one: reading it works offline, and doesn't depend on the show's server
-        // honouring a range request
-        let mediaUrl = PodcastDownloadStore.playbackUrl(for: video) ?? video.mediaUrl
-
         Task {
-            // the feed's own file first: it's a small JSON the show maintains by hand, where the file's frames are
-            // whatever the encoder happened to write
-            var chapters: [SendableChapter]?
-            if let chaptersUrl {
-                chapters = await PodcastService.fetchChapters(chaptersUrl, duration: duration)
-            }
-            if let mediaUrl, chapters?.contains(where: { $0.imageUrl != nil }) != true {
-                let embedded = await PodcastService.embeddedChapters(
-                    mediaUrl, duration: duration, episodeId: youtubeId
-                )
-                if let listed = chapters {
-                    // the file a show maintains carries the titles, while the pictures for those same chapters
-                    // sit in the episode's own frames (Lage der Nation does exactly this)
-                    if let embedded, embedded.contains(where: { $0.imageUrl != nil }) {
-                        chapters = PodcastService.mergingImages(from: embedded, into: listed)
-                    }
-                } else {
-                    chapters = embedded
-                }
-            }
-            if chapters == nil, let feedUrl {
-                // inline markers came with the episode and were cached; this is how they come back once that entry
-                // has been cleaned up
-                chapters = await PodcastService.inlineChapters(feedUrl: feedUrl, episodeId: youtubeId)
-            }
-            guard let chapters else {
-                // nothing found: let the next trigger try again — the download landing since turns a request that
-                // reached nothing into a local read
-                loadedPodcastChapterIds.remove(youtubeId)
-                return
-            }
-            cachePodcastChapters(chapters, youtubeId: youtubeId)
-
-            guard let video: Video = DataProvider.mainContext.existingModel(for: videoId) else {
+            guard await fetchPodcastChapters(for: video),
+                  let video: Video = DataProvider.mainContext.existingModel(for: videoId) else {
                 return
             }
             // the cache publishes nothing of its own, and neither does the player
@@ -340,7 +286,7 @@ extension ChapterService {
         video.keepOutro = nil
         invalidateDerivedChapters(youtubeId: video.youtubeId)
         // the cached copy went with it, so an episode is free to fetch its chapters again
-        loadedPodcastChapterIds.remove(video.youtubeId)
+        allowPodcastChapterRefetch(youtubeId: video.youtubeId)
         video.chaptersDidChange()
         try? context.save()
 
