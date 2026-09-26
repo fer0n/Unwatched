@@ -12,6 +12,7 @@ struct CursorHideModifier: ViewModifier {
 
     @State private var task: Task<Void, Never>?
     @State private var isVisible = true
+    @State private var isHovering = false
 
     init(hideAfter delay: TimeInterval = 2.0, isEnabled: Bool = true, onChange: ((Bool) -> Void)?) {
         self.hideDelay = delay
@@ -25,27 +26,41 @@ struct CursorHideModifier: ViewModifier {
                 task?.cancel()
             }
             .onChange(of: isEnabled) {
-                if !isEnabled { release() }
+                if isEnabled {
+                    if isHovering { hide() }
+                } else {
+                    release()
+                }
             }
             .onContinuousHover { phase in
                 switch phase {
                 case .active:
-                    if !isEnabled { return }
-                    task?.cancel()
-                    handleChange(true)
-                    task = Task {
-                        do {
-                            try await Task.sleep(for: .seconds(hideDelay))
-                            #if os(macOS)
-                            NSCursor.setHiddenUntilMouseMoves(true)
-                            #endif
-                            handleChange(false)
-                        } catch { }
-                    }
+                    isHovering = true
+                    if isEnabled { scheduleHide() }
                 case .ended:
+                    isHovering = false
                     release()
                 }
             }
+    }
+
+    func scheduleHide() {
+        task?.cancel()
+        handleChange(true)
+        task = Task {
+            do {
+                try await Task.sleep(for: .seconds(hideDelay))
+                hide()
+            } catch { }
+        }
+    }
+
+    func hide() {
+        task?.cancel()
+        #if os(macOS)
+        NSCursor.setHiddenUntilMouseMoves(true)
+        #endif
+        handleChange(false)
     }
 
     func release() {
