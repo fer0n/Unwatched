@@ -49,6 +49,7 @@ struct ChapterDescriptionView: View {
 
                     DescriptionDetailHeaderView(
                         video: video,
+                        showProgress: showThumbnail,
                         onTitleTap: onTitleTap)
 
                     if hasChapters {

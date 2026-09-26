@@ -16,13 +16,16 @@ struct InteractiveSubscriptionTitle: View, Equatable {
 
     let subscription: Subscription?
     var showImage = false
+    var imageSize: CGFloat = 30
+    /// A second line next to the image, part of the same tap target
+    var subtitle: String?
 
     var body: some View {
         if let sub = subscription {
             Button {
                 openSubscription(sub)
             } label: {
-                HStack(spacing: 5) {
+                HStack(spacing: subtitle == nil ? 5 : 10) {
                     if showImage, let thumbnailUrl = sub.thumbnailUrl {
                         CachedImageView(imageUrl: thumbnailUrl) { image in
                             image
@@ -31,12 +34,20 @@ struct InteractiveSubscriptionTitle: View, Equatable {
                         } placeholder: {
                             Color.clear
                         }
-                        .frame(width: 30, height: 30)
+                        .frame(width: imageSize, height: imageSize)
                         .channelImageClip(isPodcast: sub.isPodcast)
                     }
-                    Text(sub.displayTitle)
-                    if let icon = getSubscriptionSystemName {
-                        Image(systemName: icon)
+                    VStack(alignment: .leading, spacing: 1) {
+                        HStack(spacing: 5) {
+                            Text(sub.displayTitle)
+                            if let icon = getSubscriptionSystemName {
+                                Image(systemName: icon)
+                            }
+                        }
+                        if let subtitle {
+                            Text(verbatim: subtitle)
+                                .fontWeight(.regular)
+                        }
                     }
                 }
                 .contentShape(Rectangle())
@@ -44,6 +55,7 @@ struct InteractiveSubscriptionTitle: View, Equatable {
             .buttonStyle(.plain)
             .accessibilityElement()
             .accessibilityLabel(sub.displayTitle)
+            .accessibilityValue(subtitle ?? "")
             .accessibilityAction {
                 openSubscription(sub)
             }
@@ -79,6 +91,8 @@ struct InteractiveSubscriptionTitle: View, Equatable {
             && lhs.subscription?.thumbnailUrl == rhs.subscription?.thumbnailUrl
             && lhs.subscription?.isPodcast == rhs.subscription?.isPodcast
             && lhs.showImage == rhs.showImage
+            && lhs.imageSize == rhs.imageSize
+            && lhs.subtitle == rhs.subtitle
     }
 }
 
