@@ -22,6 +22,7 @@ struct AppAppearanceSelection: View {
 
     var body: some View {
         let spacing: CGFloat = width / 10
+        let isWide = !Device.isIphone
 
         ZStack {
             sectionBackgroundColor
@@ -29,11 +30,21 @@ struct AppAppearanceSelection: View {
 
             HStack(spacing: 0) {
                 ForEach(AppAppearance.allCases, id: \.self) { appearance in
-                    UnwatchedMiniature(
-                        appearance,
-                        width: (width / 3) - spacing,
-                        selected: selection == appearance
-                    )
+                    Group {
+                        if isWide {
+                            UnwatchedMiniatureWide(
+                                appearance,
+                                width: (width / 2) - spacing,
+                                selected: selection == appearance
+                            )
+                        } else {
+                            UnwatchedMiniature(
+                                appearance,
+                                width: (width / 3) - spacing,
+                                selected: selection == appearance
+                            )
+                        }
+                    }
                     .frame(maxWidth: .infinity)
                     .onTapGesture {
                         selection = appearance
@@ -47,8 +58,8 @@ struct AppAppearanceSelection: View {
             }
         }
         #if os(macOS)
-        .frame(maxWidth: 250)
-        .frame(height: 120)
+        .frame(maxWidth: 340)
+        .frame(height: 130)
         .clipShape(RoundedRectangle(cornerRadius: 15))
         #endif
     }

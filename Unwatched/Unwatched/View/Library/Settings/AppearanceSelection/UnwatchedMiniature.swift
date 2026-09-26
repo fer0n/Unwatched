@@ -146,3 +146,157 @@ struct UnwatchedMiniature: View {
         }
     }
 }
+
+/// iPad & Mac layout: the menu as a floating sidebar next to the player
+struct UnwatchedMiniatureWide: View {
+    @Environment(\.colorScheme) var currentColorScheme
+
+    @AppStorage(Const.themeColor) var theme = ThemeColor()
+    static let aspectRatio: Double = 1.45
+
+    var fullWidth: Double
+    var fullHeight: Double
+
+    var width: Double
+    var height: Double
+
+    var selected = true
+    var colorSchemePlayer: ColorScheme
+    var colorScheme: ColorScheme
+
+    init(
+        _ appearance: AppAppearance,
+        width: Double,
+        selected: Bool = true
+    ) {
+        colorScheme = appearance.colorScheme
+        colorSchemePlayer = appearance.playerColorScheme
+
+        let padding = width * 0.1
+
+        fullWidth = width
+        fullHeight = width / UnwatchedMiniatureWide.aspectRatio
+        self.width = fullWidth - padding
+        self.height = fullHeight - padding
+
+        self.selected = selected
+    }
+
+    var cornerRadius: Double { height * 0.08 }
+
+    var body: some View {
+        ZStack {
+            borderColor
+                .frame(width: fullWidth, height: fullHeight)
+                .environment(\.colorScheme, currentColorScheme)
+            miniature
+        }
+        .environment(\.colorScheme, colorScheme)
+        .clipShape(RoundedRectangle(cornerRadius: (fullWidth - width) / 2 + cornerRadius))
+    }
+
+    var miniature: some View {
+        HStack(spacing: width * 0.01) {
+            sidebar
+                .frame(width: width * 0.36)
+                .clipShape(RoundedRectangle(cornerRadius: height * 0.05, style: .continuous))
+            player
+                .environment(\.colorScheme, colorSchemePlayer)
+        }
+        .padding(width * 0.012)
+        .background {
+            Color.playerBackgroundColor
+                .environment(\.colorScheme, colorSchemePlayer)
+        }
+        .frame(width: width, height: height)
+        .clipShape(RoundedRectangle(cornerRadius: cornerRadius, style: .continuous))
+        .overlay(
+            RoundedRectangle(cornerRadius: cornerRadius)
+                .stroke(.black, lineWidth: width * 0.02)
+        )
+    }
+
+    var sidebar: some View {
+        ZStack {
+            Color.backgroundColor
+            VStack(alignment: .leading, spacing: height * 0.05) {
+                listItem
+                listItem
+                listItem
+                listItem
+                Spacer()
+            }
+            .padding(.top, height * 0.07)
+            .padding(.horizontal, width * 0.025)
+        }
+    }
+
+    var player: some View {
+        VStack(spacing: height * 0.06) {
+            ZStack {
+                Color.gray.opacity(0.35)
+                play
+            }
+            .aspectRatio(16/9, contentMode: .fit)
+            .clipShape(RoundedRectangle(cornerRadius: height * 0.02, style: .continuous))
+
+            RoundedRectangle(cornerRadius: height * 0.01)
+                .fill(Color.gray)
+                .opacity(0.5)
+                .frame(height: height * 0.02)
+                .padding(.horizontal, width * 0.02)
+
+            HStack(spacing: width * 0.04) {
+                ForEach(0..<3) { _ in
+                    Circle()
+                        .fill(Color.gray)
+                        .opacity(0.5)
+                        .frame(width: height * 0.07, height: height * 0.07)
+                }
+            }
+            Spacer()
+        }
+        .padding(.top, height * 0.05)
+        .padding(.horizontal, width * 0.015)
+        .frame(maxWidth: .infinity)
+    }
+
+    var borderColor: Color {
+        selected
+            ? theme.color
+            : Color.gray.opacity(0.4)
+    }
+
+    var play: some View {
+        Image(systemName: "play.circle.fill")
+            .font(.system(size: width * 0.1))
+            .fontWeight(.black)
+            .foregroundStyle(.automaticBlack)
+    }
+
+    var listItem: some View {
+        HStack(spacing: width * 0.02) {
+            RoundedRectangle(cornerRadius: width * 0.015)
+                .fill(Color.gray)
+                .frame(width: width * 0.12, height: height * 0.1)
+            VStack(alignment: .leading, spacing: height * 0.015) {
+                RoundedRectangle(cornerRadius: width * 0.03)
+                    .fill(Color.gray)
+                    .opacity(0.5)
+                    .frame(width: width * 0.14, height: height * 0.02)
+                RoundedRectangle(cornerRadius: width * 0.03)
+                    .fill(Color.gray)
+                    .opacity(0.3)
+                    .frame(width: width * 0.08, height: height * 0.02)
+            }
+        }
+    }
+}
+
+#Preview {
+    HStack {
+        UnwatchedMiniatureWide(.unwatched, width: 160)
+        UnwatchedMiniatureWide(.dark, width: 160, selected: false)
+    }
+    .padding()
+}
