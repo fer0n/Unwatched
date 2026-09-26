@@ -12,29 +12,31 @@ struct AppAppearanceSelection: View {
     @State var width: CGFloat = 100
     @Environment(\.colorScheme) var colorScheme
 
-    var sectionBackgroundColor: Color {
-        #if os(macOS)
-        colorScheme == .dark ? .black : Color.insetBackgroundColor
-        #else
-        Color.insetBackgroundColor
-        #endif
-    }
+    #if os(macOS)
+    static let gap: CGFloat = 20
+    #else
+    static let gap: CGFloat = 0
+    #endif
 
     var body: some View {
-        let spacing: CGFloat = width / 10
+        let gap = Self.gap
+        // the gap widens the row instead of shrinking the miniatures
+        let spacing: CGFloat = (width - gap) / 10
         let isWide = !Device.isIphone
 
         ZStack {
-            sectionBackgroundColor
+            #if !os(macOS)
+            Color.insetBackgroundColor
                 .scaleEffect(2)
+            #endif
 
-            HStack(spacing: 0) {
+            HStack(spacing: gap) {
                 ForEach(AppAppearance.allCases, id: \.self) { appearance in
                     Group {
                         if isWide {
                             UnwatchedMiniatureWide(
                                 appearance,
-                                width: (width / 2) - spacing,
+                                width: ((width - gap) / 2) - spacing,
                                 selected: selection == appearance
                             )
                         } else {
@@ -58,9 +60,16 @@ struct AppAppearanceSelection: View {
             }
         }
         #if os(macOS)
-        .frame(maxWidth: 340)
+        .frame(maxWidth: 340 + gap)
         .frame(height: 130)
-        .clipShape(RoundedRectangle(cornerRadius: 15))
+        .frame(maxWidth: .infinity)
+        .background {
+            // a grouped Form ignores listRowBackground; this covers the section's own box
+            RoundedRectangle(cornerRadius: 12, style: .continuous)
+                .fill(colorScheme == .dark ? .black : Color.insetBackgroundColor)
+                .padding(-10)
+                .allowsHitTesting(false)
+        }
         #endif
     }
 }

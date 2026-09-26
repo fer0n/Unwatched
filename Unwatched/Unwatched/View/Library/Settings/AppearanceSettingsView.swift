@@ -52,12 +52,6 @@ struct AppearanceSettingsView: View {
                     .pickerStyle(.menu)
                 }
 
-                #if os(macOS)
-                // workaround: app appearance seems to block interaction in a certain area
-                Spacer()
-                    .frame(height: 10)
-                #endif
-
                 #if !os(visionOS)
                 MySection(getAppearanceTitle(.light)) {
                     AppAppearanceSelection(selection: $lightModeTheme)
