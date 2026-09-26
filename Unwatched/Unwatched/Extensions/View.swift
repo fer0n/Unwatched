@@ -43,9 +43,7 @@ extension View {
 extension View {
     /// Applies background color except on macOS 26
     func myListRowBackground() -> some View {
-        self.listRowBackground(Const.macOS26 || Device.isVision
-                                ? .clear
-                                : Color.backgroundColor)
+        self.listRowBackground(MyRowBackgroundColor())
     }
 
     func myListInsetBackground() -> some View {

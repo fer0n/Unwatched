@@ -11,9 +11,21 @@ struct MyBackgroundColor: View {
     var visionOS = true
 
     var body: some View {
-        (macOS && Const.macOS26 || visionOS && Device.isVision
+        MyRowBackgroundColor(macOS: macOS, visionOS: visionOS)
+            .ignoresSafeArea(.all)
+    }
+}
+
+struct MyRowBackgroundColor: View {
+    @Environment(\.colorScheme) var colorScheme
+
+    var macOS = true
+    var visionOS = true
+
+    var body: some View {
+        // the light sidebar material reads as gray
+        (macOS && Const.macOS26 && colorScheme == .dark || visionOS && Device.isVision
             ? Color.clear
             : Color.backgroundColor)
-            .ignoresSafeArea(.all)
     }
 }

@@ -30,6 +30,8 @@ struct MacOSSplitView: View {
                     max: Self.sidebarWidth.max
                 )
                 .concentricMacWorkaround(corners: true)
+                // outside the clip, which would stop it short of the toolbar
+                .background { MyBackgroundColor() }
         } detail: {
             GeometryReader { proxy in
                 let horizontalLayout = horizontalLayout(proxy.size)

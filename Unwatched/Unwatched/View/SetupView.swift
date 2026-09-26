@@ -37,7 +37,11 @@ struct SetupView: View {
             .environment(sheetPos)
             .watchNotificationHandler()
             .environment(navManager)
+            #if os(macOS)
+            .environment(\.originalColorScheme, SystemAppearance.shared.colorScheme)
+            #else
             .environment(\.originalColorScheme, colorScheme)
+            #endif
             .environment(imageCacheManager)
             .environment(undoManager)
             .environment(browserManager)
