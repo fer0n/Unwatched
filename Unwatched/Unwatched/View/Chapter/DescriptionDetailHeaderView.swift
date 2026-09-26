@@ -82,9 +82,7 @@ private struct VideoDetailProgress: View {
     var body: some View {
         let elapsed = min(max(elapsed, 0), duration)
         HStack(spacing: 10) {
-            if elapsed > 0 {
-                Text(verbatim: elapsed.formattedSecondsColon)
-            }
+            Text(verbatim: elapsed.formattedSecondsColon)
             GeometryReader { geo in
                 Capsule()
                     .fill(.quaternary)

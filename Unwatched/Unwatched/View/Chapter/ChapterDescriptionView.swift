@@ -68,7 +68,8 @@ struct ChapterDescriptionView: View {
                         transcriptUrl: player.transcriptUrl
                     )
 
-                    if hasTranscript || hasChapters {
+                    let showsControlsRow = hasTranscript || hasChapters
+                    if showsControlsRow {
                         chapterControlsRow(showSegmentedControl: hasTranscript)
                             .padding(.top)
 
@@ -84,6 +85,8 @@ struct ChapterDescriptionView: View {
                         selection: $descriptionSelection
                     )
                     .transition(.opacity)
+                    // the header only brings its own gap below when it shows the progress
+                    .padding(.top, showsControlsRow || showThumbnail ? 0 : 16)
                 }
                 .padding(.horizontal, showThumbnail ? 15 : isCompact ? 10 : 20)
                 .padding(.top, showThumbnail ? 15 : isCompact ? 15 : 30)
