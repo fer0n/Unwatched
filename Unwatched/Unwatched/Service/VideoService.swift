@@ -457,7 +457,11 @@ extension VideoService {
                 modelContext.insert(model)
                 if let show = video.subscription, show.isPodcast {
                     associatePodcast(model, show: show, modelContext: modelContext)
-                } else {
+                } else if !associatePlaylist(
+                    model,
+                    playlistId: video.subscription?.youtubePlaylistId,
+                    modelContext: modelContext
+                ) {
                     associateSubscription(
                         model,
                         channelId: video.youtubeChannelId,
@@ -491,6 +495,21 @@ extension VideoService {
         sub.isArchived = true
         modelContext.insert(sub)
         sub.videos?.append(video)
+    }
+
+    private static func associatePlaylist(
+        _ video: Video,
+        playlistId: String?,
+        modelContext: ModelContext
+    ) -> Bool {
+        guard let playlistId else { return false }
+        var fetch = FetchDescriptor<Subscription>(predicate: #Predicate {
+            $0.youtubePlaylistId == playlistId
+        })
+        fetch.fetchLimit = 1
+        guard let existing = try? modelContext.fetch(fetch).first else { return false }
+        existing.videos?.append(video)
+        return true
     }
 
     /// Links a (just-materialised) video to its channel's subscription, creating an

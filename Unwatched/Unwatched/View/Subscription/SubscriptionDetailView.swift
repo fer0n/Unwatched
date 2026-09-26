@@ -68,6 +68,12 @@ struct SubscriptionDetailView: View {
                         .listRowSeparator(.hidden)
                 } else if subscription.isPodcast {
                     PodcastEpisodeListView(subscription: subscription)
+                } else if let source = SubscriptionVideoListVM.Source(subscription) {
+                    SubscriptionVideoList(
+                        subscriptionId: subscription.persistentModelID,
+                        source: source,
+                        title: subscription.title
+                    )
                 } else {
                     VideoListView(subscriptionId: subscription.persistentModelID)
                 }

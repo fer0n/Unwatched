@@ -189,6 +189,7 @@ struct CleanupService {
 
         await PodcastDownloadManager.shared.deleteAllDownloads()
         PodcastEpisodeCache.deleteAll()
+        await SubscriptionVideoCache.shared.deleteAll()
         _ = ImageService.deleteAllImages()
         _ = TranscriptService.deleteCache()
         _ = ChapterService.deleteAllDerivedChapters()

@@ -21,19 +21,9 @@ struct SideloadingView: View {
             } else {
                 List {
                     ForEach(sortedVideos) { video in
-                        VideoListItem(
-                            video,
-                            video.youtubeId,
-                            config: VideoListItemConfig(
-                                hasInboxEntry: video.inboxEntry != nil,
-                                hasQueueEntry: video.queueEntry != nil,
-                                watched: video.watchedDate != nil,
-                                deferred: video.deferDate != nil,
-                                isNew: video.isNew,
-                                )
-                        )
-                        .equatable()
-                        .videoListItemEntry()
+                        VideoListItem(video, video.youtubeId, config: VideoListItemConfig(video))
+                            .equatable()
+                            .videoListItemEntry()
                     }
                     .myListRowBackground()
                 }

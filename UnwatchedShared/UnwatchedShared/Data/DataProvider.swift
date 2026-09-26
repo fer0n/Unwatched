@@ -138,7 +138,7 @@ public final class DataProvider: Sendable {
     #endif
 
     public let localCacheContainer: ModelContainer = {
-        let schema = Schema([CachedImage.self, Transcript.self, CachedChapters.self, CachedEpisode.self])
+        let schema = Schema(DataProvider.cacheEntries)
         let fileName = "imageCache.sqlite"
 
         // Shared with `UnwatchedShareExtension` (same reasoning as `groupContainer` above) so
@@ -230,6 +230,8 @@ public final class DataProvider: Sendable {
     ]
 
     public static let schema = Schema(DataProvider.dbEntries)
+
+    public static let cacheEntries = CachedImageSchemaV2p4.models
 
     public static let previewContainer: ModelContainer = {
         var sharedModelContainer: ModelContainer = {

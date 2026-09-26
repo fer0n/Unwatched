@@ -68,3 +68,14 @@ public struct VideoListItemConfig: Equatable, Sendable {
     }
 }
 
+public extension VideoListItemConfig {
+    init(_ video: Video) {
+        self.init(
+            hasInboxEntry: video.inboxEntry != nil,
+            hasQueueEntry: video.queueEntry != nil,
+            watched: video.watchedDate != nil,
+            deferred: video.deferDate != nil,
+            isNew: video.isNew
+        )
+    }
+}

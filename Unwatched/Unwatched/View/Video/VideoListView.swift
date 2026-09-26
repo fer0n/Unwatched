@@ -13,26 +13,22 @@ struct VideoListView: View {
     init(subscriptionId: PersistentIdentifier? = nil,
          sort: VideoSorting? = nil,
          searchText: String = "") {
-        let filter = VideoListView.getVideoFilter(subscriptionId, searchText: searchText)
-        let sorting = [SortDescriptor<Video>(\.publishedDate, order: .reverse)]
-        _videos = Query(filter: filter, sort: sorting, animation: .default)
+        _videos = Self.query(subscriptionId: subscriptionId, searchText: searchText)
+    }
+
+    static func query(subscriptionId: PersistentIdentifier? = nil, searchText: String = "") -> Query<Video, [Video]> {
+        Query(
+            filter: getVideoFilter(subscriptionId, searchText: searchText),
+            sort: [SortDescriptor(\.publishedDate, order: .reverse)],
+            animation: .default
+        )
     }
 
     var body: some View {
         ForEach(videos) { video in
-            VideoListItem(
-                video,
-                video.youtubeId,
-                config: VideoListItemConfig(
-                    hasInboxEntry: video.inboxEntry != nil,
-                    hasQueueEntry: video.queueEntry != nil,
-                    watched: video.watchedDate != nil,
-                    deferred: video.deferDate != nil,
-                    isNew: video.isNew,
-                    )
-            )
-            .equatable()
-            .videoListItemEntry()
+            VideoListItem(video, video.youtubeId, config: VideoListItemConfig(video))
+                .equatable()
+                .videoListItemEntry()
         }
         .myListRowBackground()
     }
