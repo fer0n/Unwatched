@@ -110,6 +110,8 @@ struct InlineSpeedControl: View {
 
     @State private var isInteracting = false
 
+    private let iconOverlap: CGFloat = -8
+
     var height: CGFloat
     var borderWidth: CGFloat = 2
     var showTemporarySpeed = false
@@ -126,13 +128,13 @@ struct InlineSpeedControl: View {
                 )
                 .disabled(!player.canSetSpeedLock || hasTempSpeed)
                 .padding(.leading, 3)
-                .padding(.trailing, -5)
+                .padding(.trailing, iconOverlap)
 
             speedSelection
                 // no `disabled` while a temporary speed is set: toggling it rebuilds the label, which
                 // resets the speed's scroll position. Taps are caught by the overlay in the player variant.
                 .frame(maxHeight: .infinity)
-                .padding(.trailing, 2)
+                .padding(.trailing, showTemporarySpeed ? iconOverlap : 2)
 
             if showTemporarySpeed {
                 Button {
