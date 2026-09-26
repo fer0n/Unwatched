@@ -11,4 +11,6 @@ extension EnvironmentValues {
     /// When true, fullscreen player control buttons use the secondary color (landscape).
     /// When false they use the primary color (portrait fullscreen overlay).
     @Entry var playerControlsSecondary: Bool = false
+
+    @Entry var isInMenuStack: Bool = false
 }

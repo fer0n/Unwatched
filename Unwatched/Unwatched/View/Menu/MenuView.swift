@@ -9,45 +9,12 @@ import OSLog
 import UnwatchedShared
 
 struct MenuView: View {
-    @Environment(\.colorScheme) var colorScheme
     @Environment(NavigationManager.self) var navManager
 
     var body: some View {
         @Bindable var navManager = navManager
 
         tabs
-            #if os(macOS)
-            .popover(isPresented: showVideoDetail) {
-                Group {
-                    if let video = navManager.videoDetail {
-                        videoDetailContent(video)
-                    }
-                }
-            }
-            #elseif os(visionOS)
-            .sheet(isPresented: showVideoDetail) {
-            Group {
-            if let video = navManager.videoDetail {
-            NavigationStack {
-            videoDetailContent(video)
-            .toolbar {
-            ToolbarItem(placement: .cancellationAction) {
-            DismissSheetButton()
-            }
-            }
-            }
-            }
-            }
-            }
-            #else
-            .sheet(isPresented: showVideoDetail) {
-            Group {
-            if let video = navManager.videoDetail {
-            videoDetailContent(video)
-            }
-            }
-            }
-            #endif
             .environment(\.horizontalSizeClass, .compact)
             .browserViewSheet(navManager: $navManager)
             .premiumOfferSheet()
@@ -117,16 +84,6 @@ struct MenuView: View {
         }
     }
 
-    func videoDetailContent(_ video: Video) -> some View {
-        ZStack {
-            MyBackgroundColor(macOS: false)
-            ChapterDescriptionView(video: video, isTransparent: Device.isVision)
-                .presentationDragIndicator(.hidden)
-        }
-        .environment(\.colorScheme, colorScheme)
-        .appNotificationOverlay(topPadding: 10)
-    }
-
     @MainActor
     func handleTabChanged(_ newTab: NavigationTab, _ proxy: ScrollViewProxy) {
         Log.info("handleTabChanged \(newTab.rawValue)")
@@ -152,17 +109,6 @@ struct MenuView: View {
             }
             #endif
         }
-    }
-
-    var showVideoDetail: Binding<Bool> {
-        Binding<Bool>(
-            get: { navManager.videoDetail != nil },
-            set: { isPresented in
-                if !isPresented {
-                    navManager.videoDetail = nil
-                }
-            }
-        )
     }
 }
 

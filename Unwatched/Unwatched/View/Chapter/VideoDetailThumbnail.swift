@@ -6,10 +6,10 @@
 import SwiftUI
 import UnwatchedShared
 
-struct VideoDetailThumbnail: View {
-    @Environment(\.dismiss) var dismiss
-
+struct VideoDetailThumbnail<Overlay: View>: View {
     let video: Video
+    let onTap: () -> Void
+    @ViewBuilder var overlay: Overlay
 
     private var isAudioOnly: Bool { video.isAudioOnly == true }
 
@@ -37,7 +37,12 @@ struct VideoDetailThumbnail: View {
                 isUniform: true
             )
         )
+        .overlay(alignment: .bottomTrailing) {
+            overlay
+                .padding(10)
+        }
         .frame(maxWidth: 600)
-        .handleVideoListItemTap(video)
+        .contentShape(Rectangle())
+        .onTapGesture(perform: onTap)
     }
 }

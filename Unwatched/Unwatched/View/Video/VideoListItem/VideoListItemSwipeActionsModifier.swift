@@ -464,7 +464,7 @@ struct TrailingSwipeActionsView: View {
                     Log.error("No video to show details for")
                     return
                 }
-                navManager.videoDetail = video
+                navManager.pushVideoDetail(video)
                 video.isNew = false
             } label: {
                 Image(Const.videoDescriptionSF)

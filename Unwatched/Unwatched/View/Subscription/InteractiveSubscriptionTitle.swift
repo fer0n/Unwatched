@@ -12,6 +12,7 @@ struct InteractiveSubscriptionTitle: View, Equatable {
     @Environment(SheetPositionReader.self) var sheetPos
     @Environment(\.horizontalSizeClass) var sizeClass: UserInterfaceSizeClass?
     @Environment(\.dismiss) var dismiss
+    @Environment(\.isInMenuStack) var isInMenuStack
 
     let subscription: Subscription?
     var showImage = false
@@ -59,6 +60,10 @@ struct InteractiveSubscriptionTitle: View, Equatable {
     }
 
     func openSubscription(_ sub: Subscription) {
+        if isInMenuStack {
+            navManager.pushSubscription(subscription: sub)
+            return
+        }
         OpenSubscriptionAction(
             navManager: navManager,
             player: player,
@@ -97,7 +102,6 @@ struct OpenSubscriptionAction {
         } else {
             navManager.pushSubscription(subscription: sub)
         }
-        navManager.videoDetail = nil
         player.setShowMenu()
     }
 }

@@ -20,7 +20,7 @@ struct OnGlobalMinYChange: ViewModifier {
     }
 
     func performAction(_ minY: CGFloat) {
-        if !navManager.hasSheetOpen {
+        if !navManager.showBrowser {
             action(minY)
         }
     }

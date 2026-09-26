@@ -26,7 +26,6 @@ import UnwatchedShared
 
     var isMacosFullscreen = false
 
-    var videoDetail: Video?
     var playerTab: ControlNavigationTab = .controls
     @ObservationIgnored var scrollToCurrentChapter = false
 
@@ -35,8 +34,8 @@ import UnwatchedShared
     var askForReviewPoints = 0
     var askForReviewCount = 0
 
-    var presentedSubscriptionQueue = [SendableSubscription]()
-    var presentedSubscriptionInbox = [SendableSubscription]()
+    var presentedQueue = [MenuRoute]()
+    var presentedInbox = [MenuRoute]()
     // Transient (not persisted) — the Search tab's result page and the channel previews on top of it.
     var presentedSearch = [SearchRoute]()
     // Toggled (e.g. via the "Search" home-screen quick action) to request the
@@ -49,8 +48,6 @@ import UnwatchedShared
     @ObservationIgnored var topListItemId: String?
     @ObservationIgnored private var lastTabTwiceDate: Date?
     var lastLibrarySubscriptionId: PersistentIdentifier?
-    var lastInboxSubscriptionId: PersistentIdentifier?
-    var lastQueueSubscriptionId: PersistentIdentifier?
 
     /// The slice on screen; what plays next is latched on `PlayerManager` instead.
     var queueTag: QueueTagSelection = .all
@@ -91,10 +88,13 @@ import UnwatchedShared
         let decoded = try container.decode(NavigationPath.CodableRepresentation.self, forKey: .presentedLibrary)
         presentedLibrary = NavigationPath(decoded)
 
-        presentedSubscriptionInbox = try container.decode(
+        let legacyInbox = try? container.decodeIfPresent(
             [SendableSubscription].self,
             forKey: .presentedSubscriptionInbox
         )
+        presentedInbox = (try? container.decodeIfPresent([MenuRoute].self, forKey: .presentedInbox))
+            ?? legacyInbox?.map(MenuRoute.subscription)
+            ?? []
         // `queueTagId` is what versions before the tag slices wrote. `try?`, so a selection this
         // build can no longer read costs the tag and not the whole navigation state.
         let legacyTagId = try container.decodeIfPresent(PersistentIdentifier.self, forKey: .queueTagId)
@@ -113,46 +113,8 @@ import UnwatchedShared
         if let representation = presentedLibrary.codable {
             try container.encode(representation, forKey: .presentedLibrary)
         }
-        try container.encode(presentedSubscriptionInbox, forKey: .presentedSubscriptionInbox)
+        try container.encode(presentedInbox, forKey: .presentedInbox)
         try container.encode(queueTag, forKey: .queueTag)
-    }
-
-    func pushSubscription(
-        subscription: Subscription? = nil,
-        sendableSubscription: SendableSubscription? = nil
-    ) {
-        guard let sendableSub = sendableSubscription ?? subscription?.toExport else {
-            Log.error("pushSubscription: no subscription given")
-            return
-        }
-        switch tab {
-        case .inbox:
-            if presentedSubscriptionInbox.last != sendableSub {
-                presentedSubscriptionInbox.append(sendableSub)
-                lastInboxSubscriptionId = sendableSub.persistentId
-            }
-        case .queue:
-            if presentedSubscriptionQueue.last != sendableSub {
-                presentedSubscriptionQueue.append(sendableSub)
-                lastQueueSubscriptionId = sendableSub.persistentId
-            }
-        case .browser:
-            tab = .library
-            pushToLibrary(sendableSub)
-        case .search:
-            if presentedSearch.last != .subscription(sendableSub) {
-                presentedSearch.append(.subscription(sendableSub))
-            }
-        case .library:
-            pushToLibrary(sendableSub)
-        }
-    }
-
-    func pushToLibrary(_ sendableSub: SendableSubscription) {
-        if lastLibrarySubscriptionId != sendableSub.persistentId {
-            presentedLibrary.append(sendableSub)
-            lastLibrarySubscriptionId = sendableSub.persistentId
-        }
     }
 
     /// The menu is a sheet on iPhone, and only one sheet shows at a time
@@ -192,7 +154,7 @@ import UnwatchedShared
         if tab != .queue {
             self.tab = .queue
         } else {
-            presentedSubscriptionQueue.removeAll()
+            presentedQueue.removeAll()
         }
     }
 
@@ -208,9 +170,9 @@ import UnwatchedShared
         var isOnTopView = false
         switch tab {
         case .inbox:
-            isOnTopView = presentedSubscriptionInbox.isEmpty
+            isOnTopView = presentedInbox.isEmpty
         case .queue:
-            isOnTopView = presentedSubscriptionQueue.isEmpty
+            isOnTopView = presentedQueue.isEmpty
         case .library:
             isOnTopView = presentedLibrary.isEmpty
         case .browser:
@@ -227,11 +189,9 @@ import UnwatchedShared
     func clearNavigationStack(_ tab: NavigationTab) {
         switch tab {
         case .inbox:
-            presentedSubscriptionInbox.removeAll()
-            lastInboxSubscriptionId = nil
+            presentedInbox.removeAll()
         case .queue:
-            presentedSubscriptionQueue.removeAll()
-            lastQueueSubscriptionId = nil
+            presentedQueue.removeAll()
         case .library:
             lastLibrarySubscriptionId = nil
             presentedLibrary = NavigationPath()
@@ -295,10 +255,6 @@ import UnwatchedShared
             showBrowser = false
         }
 
-        if videoDetail != nil {
-            videoDetail = nil
-        }
-
         if (Const.hideMenuOnPlay.bool ?? true) || (Device.isIphone && rotateOnPlay) {
             #if os(macOS)
             toggleSidebar(show: false)
@@ -347,10 +303,6 @@ import UnwatchedShared
         columnVisibility == .detailOnly
     }
 
-    var hasSheetOpen: Bool {
-        videoDetail != nil || showBrowser == true
-    }
-
     static func getDummy(_ showMenu: Bool = true) -> NavigationManager {
         let navManager = NavigationManager()
         navManager.showMenu = showMenu
@@ -365,8 +317,8 @@ enum NavManagerCodingKeys: CodingKey {
          askForReviewPoints,
          askForReviewCount,
          presentedLibrary,
+         presentedInbox,
          presentedSubscriptionInbox,
-         presentedSubscriptionQueue,
          columnVisibility,
          queueTagId,
          queueTag

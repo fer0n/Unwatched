@@ -17,7 +17,7 @@ struct InboxView: View {
     var body: some View {
         @Bindable var navManager = navManager
 
-        NavigationStack(path: $navManager.presentedSubscriptionInbox) {
+        NavigationStack(path: $navManager.presentedInbox) {
             // the query's sort order is fixed when it's created, recreate it when the order changes
             InboxContent(oldestFirst: oldestFirst)
         }
@@ -89,7 +89,7 @@ private struct InboxContent: View {
         }
         .inboxToolbar()
         .myNavigationTitle("inbox", titleOpacity: { cardSwipe.titleOpacity }, titleAccessory: titleCount)
-        .sendableSubscriptionDestination()
+        .menuRouteDestination()
         .myTint()
     }
 

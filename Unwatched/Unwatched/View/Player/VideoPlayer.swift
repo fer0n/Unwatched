@@ -179,7 +179,7 @@ struct VideoPlayer: View {
     @MainActor
     func handleFullscreenChange(_ mode: FullscreenMode, active: Bool) {
         #if os(iOS)
-        if navManager.hasSheetOpen { return }
+        if navManager.showBrowser { return }
         #endif
         if active {
             // entering fullscreen -> hide the menu

@@ -9,19 +9,32 @@ import SwiftData
 
 struct SendableSubscriptionDestination: ViewModifier {
     @Environment(\.modelContext) var modelContext
-    @Environment(NavigationManager.self) var navManager
 
     func body(content: Content) -> some View {
         content
             .navigationDestination(for: SendableSubscription.self) { sub in
-                SendableSubscriptionDetailView(sub, modelContext)
-                    #if !os(visionOS)
-                    .foregroundStyle(Color.neutralAccentColor)
-                    #endif
-                    #if os(macOS)
-                    .sidebarPage()
-                #endif
+                SendableSubscriptionPage(sub, modelContext)
             }
+    }
+}
+
+struct SendableSubscriptionPage: View {
+    let sub: SendableSubscription
+    let modelContext: ModelContext
+
+    init(_ sub: SendableSubscription, _ modelContext: ModelContext) {
+        self.sub = sub
+        self.modelContext = modelContext
+    }
+
+    var body: some View {
+        SendableSubscriptionDetailView(sub, modelContext)
+            #if !os(visionOS)
+            .foregroundStyle(Color.neutralAccentColor)
+            #endif
+            #if os(macOS)
+            .sidebarPage()
+        #endif
     }
 }
 

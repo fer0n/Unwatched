@@ -11,4 +11,5 @@ import UnwatchedShared
 enum SearchRoute: Hashable {
     case results
     case subscription(SendableSubscription)
+    case video(VideoDetailRoute)
 }

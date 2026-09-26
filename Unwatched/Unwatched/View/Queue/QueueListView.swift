@@ -48,7 +48,7 @@ struct QueueListView: View {
         @Bindable var navManager = navManager
         let hasTooManyItems = !showAll && queue.count >= Const.queueFetchLimit
 
-        NavigationStack(path: $navManager.presentedSubscriptionQueue) {
+        NavigationStack(path: $navManager.presentedQueue) {
             ZStack {
                 MyBackgroundColor()
 
@@ -134,7 +134,7 @@ struct QueueListView: View {
                 .environment(\.queueFilter, filter)
             }
             .myNavigationTitle(title, principal: { QueueTagTitle(title: title) })
-            .sendableSubscriptionDestination()
+            .menuRouteDestination()
             .toolbar {
                 #if !os(iOS)
                 // the title isn't a view here, so the switcher needs a button of its own

@@ -189,7 +189,7 @@ struct InboxCard: View, Equatable {
     }
 
     private func openDetail() {
-        navManager.videoDetail = video
+        navManager.pushVideoDetail(video)
         video.isNew = false
     }
 

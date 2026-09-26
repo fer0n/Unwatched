@@ -58,6 +58,8 @@ struct SearchView: View {
                     resultsPage
                 case .subscription(let sub):
                     SearchSubscriptionPage(sub, modelContext)
+                case .video(let route):
+                    VideoDetailPage(route)
                 }
             }
             .myTint()

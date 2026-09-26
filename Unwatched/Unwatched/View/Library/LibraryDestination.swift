@@ -12,6 +12,7 @@ extension View {
     func libraryDestination() -> some View {
         self
             .sendableSubscriptionDestination()
+            .videoDetailDestination()
             .navigationDestination(for: LibraryDestination.self) { value in
                 ZStack {
                     switch value {

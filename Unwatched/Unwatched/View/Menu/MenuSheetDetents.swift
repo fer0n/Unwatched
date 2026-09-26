@@ -58,7 +58,6 @@ struct MenuSheetDetents: ViewModifier {
             )
             .allowsHitTesting(
                 !(sheetPos.isMinimumSheet
-                    && !navManager.hasSheetOpen
                     && !navManager.showBrowser
                     && !landscapeFullscreen
                     && !navManager.showPremiumOffer
