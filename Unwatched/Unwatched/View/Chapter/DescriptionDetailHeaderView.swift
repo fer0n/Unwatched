@@ -13,10 +13,13 @@ struct DescriptionDetailHeaderView: View {
     var showProgress = true
     let onTitleTap: () -> Void
 
+    private var titleGap: CGFloat { showProgress ? 16 : 0 }
+    private var chapterGap: CGFloat { showProgress ? 24 : 0 }
+
     var body: some View {
         if showProgress, let duration = video.duration, duration > 0 {
             VideoDetailProgress(elapsed: video.elapsedSeconds ?? 0, duration: duration)
-                .padding(.bottom, 4)
+                .padding(.bottom, 2)
         }
 
         Button {
@@ -36,6 +39,7 @@ struct DescriptionDetailHeaderView: View {
             })
         }
         .sensoryFeedback(Const.sensoryFeedback, trigger: hapticToggle)
+        .padding(.top, titleGap)
 
         HStack(alignment: .center) {
             if video.subscription != nil {
@@ -56,6 +60,7 @@ struct DescriptionDetailHeaderView: View {
         .font(.subheadline)
         .fontWeight(.medium)
         .foregroundStyle(.secondary)
+        .padding(.bottom, chapterGap)
     }
 
     /// e.g. "25 Sep · 14h ago"; the year only once it's not the current one
