@@ -253,21 +253,6 @@ import UnwatchedShared
     }
 
     @MainActor
-    func clearVideo(_ modelContext: ModelContext) {
-        guard let video else {
-            Log.warning("No container when trying to clear video")
-            return
-        }
-        VideoService.clearEntries(from: video,
-                                  modelContext: modelContext)
-        loadTopmostVideoFromQueue(modelContext: modelContext)
-
-        // workaround: unreliable, do it twice
-        let task = VideoService.clearFromEverywhereAsync(video.youtubeId)
-        loadTopmostVideoFromQueue(after: task)
-    }
-
-    @MainActor
     func loadTopmostVideoFromQueue(
         after task: (Task<(), Error>)? = nil,
         modelContext: ModelContext? = nil,
@@ -532,7 +517,10 @@ extension PlayerManager {
             }
 
             // workaround: clear on main thread for animation to work (broken in iOS 18.0-2)
-            VideoService.setVideoWatched(video, modelContext: modelContext)
+            // explicit animation: the queue's animated @Query alone doesn't animate the removal on macOS
+            withAnimation {
+                VideoService.setVideoWatched(video, modelContext: modelContext)
+            }
             #if os(iOS)
             MediaSuggestionService.removeDonation(for: video.youtubeId)
             #endif

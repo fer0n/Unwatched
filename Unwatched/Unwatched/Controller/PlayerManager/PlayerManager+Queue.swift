@@ -4,6 +4,7 @@
 //
 
 import SwiftData
+import SwiftUI
 import UnwatchedShared
 
 /// The queue as playback sees it: the slice latched when the video started, not the one the list
@@ -43,6 +44,23 @@ extension PlayerManager {
             return
         }
         VideoService.insertQueueEntries(videos: [video], modelContext: context)
+    }
+
+    @MainActor
+    func clearVideo(_ modelContext: ModelContext) {
+        guard let video else {
+            Log.warning("No container when trying to clear video")
+            return
+        }
+        withAnimation {
+            VideoService.clearEntries(from: video,
+                                      modelContext: modelContext)
+        }
+        loadTopmostVideoFromQueue(modelContext: modelContext)
+
+        // workaround: unreliable, do it twice
+        let task = VideoService.clearFromEverywhereAsync(video.youtubeId)
+        loadTopmostVideoFromQueue(after: task)
     }
 
     @MainActor

@@ -233,7 +233,9 @@ enum PlayerShortcut: String, CaseIterable {
 
         if let video = player.video {
             let context = DataProvider.newContext()
-            VideoService.setVideoWatched(video, modelContext: context)
+            withAnimation {
+                VideoService.setVideoWatched(video, modelContext: context)
+            }
             player.autoSetNextVideo(playNext ? .userInteraction : .nextUp, context)
 
             _ = VideoService.setVideoWatchedAsync(video.id)
