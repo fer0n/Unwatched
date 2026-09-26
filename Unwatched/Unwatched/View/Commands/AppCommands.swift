@@ -61,6 +61,12 @@ struct AppCommands: Commands {
                     openWindow(id: Const.windowBrowser)
                 }
                 .keyboardShortcut("B", modifiers: .command)
+
+                // the browser with the playing video, like "View on YouTube"
+                Button(PlayerShortcut.openInAppBrowser.title) {
+                    PlayerShortcut.openInAppBrowser.trigger()
+                }
+                .keyboardShortcut("B", modifiers: [.command, .shift])
             }
         }
         #endif
