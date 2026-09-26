@@ -32,7 +32,10 @@ extension ChapterService {
         // be a second one that drifts
         invalidateDerivedChapters(youtubeId: video.youtubeId)
 
-        return reconciled.chapters.first { $0.startTime == chapter.startTime }
+        let rows = reconciled.chapters
+        // a skipped intro moves the start of the chapter it cuts into
+        return rows.first { $0.startTime == chapter.startTime }
+            ?? rows.first { $0.startTime < chapter.startTime && chapter.startTime < ($0.endTime ?? .infinity) }
     }
 
     /// Turns a chapter on or off, the way the chapter list does.

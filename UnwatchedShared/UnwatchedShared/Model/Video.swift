@@ -62,10 +62,6 @@ public final class Video: VideoData, CustomStringConvertible, Exportable {
     /// The same for the skipped outro, see `Subscription.skipOutroSeconds`.
     public var keepOutro: Bool?
 
-    /// Bumped whenever this video's chapters change without SwiftData noticing — see `chaptersDidChange`.
-    @Transient
-    public var chapterRevision: Int = 0
-
     public var subscriptionData: (any SubscriptionData)? {
         return subscription
     }
@@ -230,9 +226,14 @@ public final class Video: VideoData, CustomStringConvertible, Exportable {
             )
     }
 
+    /// Bumped whenever this video's chapters change without SwiftData noticing — see `chaptersDidChange`.
+    public var chapterRevision: Int {
+        ChapterRevisions.shared[youtubeId].value
+    }
+
     /// Tells everything reading `sortedChapterData` that this video's chapters changed.
     public func chaptersDidChange() {
-        chapterRevision &+= 1
+        ChapterRevisions.shared[youtubeId].value &+= 1
     }
 
     public var toExportWithSubscription: SendableVideo? {

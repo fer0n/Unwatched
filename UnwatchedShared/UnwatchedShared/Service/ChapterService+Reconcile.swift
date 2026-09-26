@@ -12,7 +12,7 @@ extension ChapterService {
     /// Brings a video's chapter rows in line with `desired`, reusing the rows already there and
     /// attaching whatever it ends up with.
     ///
-    /// Rows are paired with the incoming chapters by position in start-time order and updated in
+    /// Rows are paired with the incoming chapters by start time, then by position, and updated in
     /// place; only surplus is deleted. Reuse is the point: a deleted chapter that the player or a
     /// list row still holds traps that reader on its next property read, and an untouched row
     /// keeps a hand-toggled `isActive` through a refresh that changes nothing else.
@@ -30,15 +30,14 @@ extension ChapterService {
             return ([], false)
         }
         let desired = desired.sorted { $0.startTime < $1.startTime }
-        let existing = (merged ? video.mergedChapters : video.chapters) ?? []
-        let sorted = existing.sorted { $0.startTime < $1.startTime }
+        let existing = attachedRows(of: video, merged: merged, in: modelContext)
+        let paired = pairRows(existing, with: desired)
         var result = [Chapter]()
         result.reserveCapacity(desired.count)
         var hasChanges = false
 
-        for (index, chapter) in desired.enumerated() {
-            if index < sorted.count {
-                let row = sorted[index]
+        for (chapter, row) in zip(desired, paired) {
+            if let row {
                 if !chapterEqual(chapter, row) {
                     Log.info("Update needed: \(row.description) vs \(chapter)")
                     overwrite(row, with: chapter)
@@ -53,7 +52,8 @@ extension ChapterService {
             }
         }
 
-        for surplus in sorted.dropFirst(desired.count) {
+        let kept = Set(result.map(ObjectIdentifier.init))
+        for surplus in existing where !kept.contains(ObjectIdentifier(surplus)) {
             modelContext.delete(surplus)
             hasChanges = true
         }
@@ -82,6 +82,35 @@ extension ChapterService {
         if !sameRows(video[keyPath: ownSide], chapters) {
             video[keyPath: ownSide] = chapters
         }
+    }
+
+    private static func attachedRows(of video: Video, merged: Bool, in context: ModelContext) -> [Chapter] {
+        // the relationship misses rows another context attached, and a second set would orphan them
+        let youtubeId = video.youtubeId
+        let descriptor = merged
+            ? FetchDescriptor<Chapter>(predicate: #Predicate { $0.mergedChapterVideo?.youtubeId == youtubeId })
+            : FetchDescriptor<Chapter>(predicate: #Predicate { $0.video?.youtubeId == youtubeId })
+        let stored = ((try? context.fetch(descriptor)) ?? []).filter {
+            (merged ? $0.mergedChapterVideo : $0.video) === video
+        }
+        var rows = (merged ? video.mergedChapters : video.chapters) ?? []
+        let known = Set(rows.map(ObjectIdentifier.init))
+        rows += stored.filter { !known.contains(ObjectIdentifier($0)) }
+        return rows.sorted { $0.startTime < $1.startTime }
+    }
+
+    private static func pairRows(_ rows: [Chapter], with desired: [SendableChapter]) -> [Chapter?] {
+        var unclaimed = rows
+        var paired = desired.map { chapter -> Chapter? in
+            guard let index = unclaimed.firstIndex(where: { $0.startTime == chapter.startTime }) else {
+                return nil
+            }
+            return unclaimed.remove(at: index)
+        }
+        for index in paired.indices where paired[index] == nil && !unclaimed.isEmpty {
+            paired[index] = unclaimed.removeFirst()
+        }
+        return paired
     }
 
     /// Compared as a set: a relationship hands its contents back in no particular order.

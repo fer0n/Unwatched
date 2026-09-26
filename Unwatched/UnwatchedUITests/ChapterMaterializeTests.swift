@@ -222,3 +222,104 @@ final class ChapterMaterializeTests: XCTestCase {
         try? context.save()
     }
 }
+
+// swiftlint:disable all
+/// Chapter toggles in the main context, the way the chapter list makes them.
+@MainActor
+final class ChapterToggleTests: XCTestCase {
+    private static let description = """
+    0:00 First
+    0:21 Second
+    2:32 Third
+    3:44 Fourth
+    4:41 Fifth
+    """
+
+    private var youtubeId = ""
+    private var context: ModelContext { DataProvider.mainContext }
+
+    override func setUp() async throws {
+        youtubeId = "chapterToggle-\(UUID().uuidString.prefix(8))"
+    }
+
+    override func tearDown() async throws {
+        let id = youtubeId
+        let videos = try context.fetch(FetchDescriptor<Video>(predicate: #Predicate { $0.youtubeId == id }))
+        let rows = try context.fetch(FetchDescriptor<Chapter>()).filter { $0.videoId == id }
+        for row in rows { context.delete(row) }
+        for video in videos {
+            if let subscription = video.subscription { context.delete(subscription) }
+            context.delete(video)
+        }
+        try context.save()
+    }
+
+    private func makeVideo() throws -> Video {
+        let video = Video(
+            title: "toggle test",
+            url: URL(string: "https://www.youtube.com/watch?v=\(youtubeId)"),
+            youtubeId: youtubeId,
+            duration: 400,
+            videoDescription: Self.description
+        )
+        context.insert(video)
+        try context.save()
+        return video
+    }
+
+    private func shown(_ video: Video, at startTime: Double) throws -> SendableChapter {
+        try XCTUnwrap(video.orderedChapterData.first { $0.startTime == startTime })
+    }
+
+    /// Another device's toggle lands as rows attached in a different context, which the main
+    /// context's relationship doesn't see. Toggling there used to build a second set and orphan them.
+    func testToggleReusesRowsAnotherContextAttached() throws {
+        let video = try makeVideo()
+        _ = video.orderedChapterData
+
+        let other = DataProvider.newContext()
+        let otherVideo = try XCTUnwrap(other.model(for: video.persistentModelID) as? Video)
+        let synced = ChapterService.reconcileChapters(otherVideo.ownChapterData, for: otherVideo).chapters
+        synced[1].isActive = false
+        try other.save()
+        let syncedIds = Set(synced.map(\.persistentModelID))
+
+        ChapterService.setChapterActive(false, try shown(video, at: 152), of: video)
+        try context.save()
+
+        let fresh = DataProvider.newContext()
+        let stored = try XCTUnwrap(fresh.model(for: video.persistentModelID) as? Video)
+        XCTAssertEqual(Set(stored.chapters?.map(\.persistentModelID) ?? []), syncedIds, "the synced rows, not a second set")
+        XCTAssertEqual(stored.sortedChapterData.map(\.isActive), [true, false, false, true, true])
+    }
+
+    func testChaptersDidChangeInvalidatesReaders() throws {
+        let video = try makeVideo()
+        var fired = false
+        withObservationTracking {
+            _ = video.orderedChapterData
+        } onChange: {
+            fired = true
+        }
+        video.chaptersDidChange()
+        XCTAssertTrue(fired)
+    }
+
+    /// A skipped intro moves the start of the chapter it cuts into, so there's no row at that time.
+    func testTogglingTheChapterASkippedIntroCutsInto() throws {
+        let video = try makeVideo()
+        let subscription = Subscription(
+            link: URL(string: "https://www.youtube.com/feeds/videos.xml?channel_id=\(youtubeId)"),
+            title: "\(youtubeId)-sub",
+            skipIntroSeconds: 10
+        )
+        context.insert(subscription)
+        video.subscription = subscription
+        try context.save()
+
+        ChapterService.setChapterActive(false, try shown(video, at: 10), of: video)
+
+        XCTAssertEqual(try shown(video, at: 10).isActive, false)
+        XCTAssertEqual(video.chapters?.first { $0.startTime == 0 }?.isActive, false)
+    }
+}
