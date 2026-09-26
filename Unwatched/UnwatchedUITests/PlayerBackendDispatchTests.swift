@@ -56,6 +56,29 @@ final class PlayerBackendDispatchTests: PlayerManagerTestCase {
         XCTAssertEqual(spy.withoutRateChanges, [])
     }
 
+    // MARK: - Position
+
+    func testAReportedPositionIsNotRewoundByTheNextSave() {
+        let video = makeVideo()
+        player.video = video
+        player.currentTime = 100
+
+        player.updateElapsedTime(101.7, videoId: video.youtubeId)
+        player.updateElapsedTime(immediate: true)
+
+        XCTAssertEqual(player.currentTime, 101.7)
+        XCTAssertEqual(video.elapsedSeconds, 101.7)
+    }
+
+    func testAPositionReportedForAnotherVideoIsIgnored() {
+        player.video = makeVideo()
+        player.currentTime = 100
+
+        player.updateElapsedTime(300, videoId: "previous")
+
+        XCTAssertEqual(player.currentTime, 100)
+    }
+
     // MARK: - Play / pause, and the engine reporting back
 
     func testPlayCommandsTheEngine() {

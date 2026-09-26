@@ -115,9 +115,10 @@ extension PlayerManager {
         }
         Log.info("updateElapsedTime")
 
-        let newTime = time ?? currentTime
-
-        guard let time = newTime,
+        if let time, currentTime != time {
+            currentTime = time
+        }
+        guard let time = currentTime,
               let modelId = video?.persistentModelID else {
             Log.info("updateElapsedTime: nothing to update")
             return
@@ -300,13 +301,13 @@ extension PlayerManager {
 
     @MainActor
     func seek(to time: CGFloat) {
+        var target = time
         if let duration = video?.duration, time >= duration {
-            backend.seek(to: duration - Const.seekToEndBuffer)
-        } else {
-            backend.seek(to: time)
+            target = duration - Const.seekToEndBuffer
         }
+        backend.seek(to: target)
         clearVideoEnded()
-        updateElapsedTime(time, videoId: video?.youtubeId)
+        updateElapsedTime(target, videoId: video?.youtubeId)
     }
 
     @MainActor

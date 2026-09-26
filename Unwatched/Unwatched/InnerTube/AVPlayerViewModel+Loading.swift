@@ -1005,7 +1005,7 @@ extension AVPlayerViewModel {
             guard pendingSeekToTime == nil else { return }
             // until the new item is installed the player still holds the previous video, and
             // starting here would resume that behind the one being loaded
-            guard player.isLoading == nil, loadedVideoId == player.video?.youtubeId else { return }
+            guard player.isLoading == nil, isOnCurrentVideo else { return }
             PlayerAudioSession.activate()
             if isUsingPodcastEngine {
                 podcastEngine.play(rate: player.playbackSpeed)
@@ -1027,25 +1027,24 @@ extension AVPlayerViewModel {
     private func persistPlaybackPosition() {
         // a pause mid-reposition would write the position being left behind over `elapsedSeconds`
         let pinned = seekAnchor.time ?? pendingSeekToTime
+        guard let videoId = loadedVideoId else { return }
         if let time = pinned ?? (isUsingPodcastEngine ? podcastEngine.currentTime : nil) {
-            persist(position: time)
+            persist(position: time, videoId: videoId)
             return
         }
         let avp = avPlayer
         Task { @MainActor [weak self] in
             let raw = await Self.readCurrentTime(from: avp)
-            self?.persist(position: raw)
+            self?.persist(position: raw, videoId: videoId)
         }
     }
 
     @MainActor
-    private func persist(position time: Double) {
-        guard !time.isNaN, !time.isInfinite else { return }
+    private func persist(position time: Double, videoId: String) {
+        guard !time.isNaN, !time.isInfinite, videoId == loadedVideoId else { return }
         lastObservedTime = time
-        player.updateElapsedTime(time)
-        if let videoId = player.video?.youtubeId {
-            StatsService.shared.handleVideoTimeUpdate(videoId: videoId, time: time, persist: true)
-        }
+        player.updateElapsedTime(time, videoId: videoId)
+        StatsService.shared.handleVideoTimeUpdate(videoId: videoId, time: time, persist: true)
         updateNowPlayingInfo(elapsed: time)
     }
 

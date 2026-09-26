@@ -166,6 +166,7 @@ import UnwatchedShared
             guard await PlayerWebView.evaluateIsNotPlaying(webView) else { return }
         }
         Log.warning("PLAY: page never started")
+        player.reportPaused()
     }
 
     /// The retry stops the moment the user changes their mind, or the page it was aimed at is gone.
@@ -291,6 +292,7 @@ import UnwatchedShared
         )
         if loaded {
             loadedVideoId = youtubeId
+            player.isLoading = Date()
         }
     }
 

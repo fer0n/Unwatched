@@ -45,6 +45,7 @@ final class AVPlayerViewModel: PlayerBackend {
     @ObservationIgnored var lastObservedTime: Double?
 
     @ObservationIgnored var loadedVideoId: String?
+    @MainActor var isOnCurrentVideo: Bool { loadedVideoId == player.video?.youtubeId }
     /// The `AVPlayerView`s driving this instance; see `cleanup(owner:)`.
     @ObservationIgnored private var liveOwners: Set<UUID> = []
     @ObservationIgnored var hasRetriedPlayback = false
@@ -135,6 +136,7 @@ final class AVPlayerViewModel: PlayerBackend {
 
     @MainActor
     private func tick(episode seconds: Double) {
+        guard isOnCurrentVideo else { return }
         // mid-seek the clock still reports where the playhead is coming from — zero for
         // a freshly installed item; the pinned target is where playback is
         if let target = seekAnchor.time {
@@ -222,6 +224,8 @@ final class AVPlayerViewModel: PlayerBackend {
         // a player switch still reaches here: the outgoing subtree gets one update with the new video
         guard PlayerSwitchManager.shared.nativeIsCurrent else {
             Log.info("loadVideo: skipped, the native player is no longer current")
+            // a paged player outlives the switch
+            stop()
             return
         }
         guard let videoId = player.video?.youtubeId, videoId != loadedVideoId else { return }
@@ -281,7 +285,7 @@ final class AVPlayerViewModel: PlayerBackend {
                 let isNowPlaying = avPlayer.rate != 0
                 await MainActor.run {
                     // `avPlayer` isn't the engine that's playing, and its rate is stale
-                    guard !isUsingPodcastEngine else { return }
+                    guard !isUsingPodcastEngine, isOnCurrentVideo else { return }
                     // the pause `installItem` makes to reposition isn't the user's
                     guard player.isLoading == nil else { return }
                     // the engine running out of data isn't the user pausing — and it happens while a seek

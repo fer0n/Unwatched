@@ -1,5 +1,5 @@
 //
-//  PlayerWebViewCoordinator+pause.swift
+//  PlayerWebViewCoordinator+position.swift
 //  Unwatched
 //
 
@@ -53,6 +53,47 @@ extension PlayerWebViewCoordinator {
         if let videoId {
             handleTimeUpdate(resolvedTime, persist: true, youtubeId: videoId)
         }
+    }
+
+    func handleTimeUpdate(_ timeString: String?, persist: Bool = false, youtubeId: String? = nil) {
+        guard let timeString, let time = Double(timeString) else {
+            return
+        }
+        let mayBeOutgoingPage = youtubeId == nil && parent.player.isLoading != nil
+        guard !mayBeOutgoingPage else {
+            return
+        }
+        if youtubeId == nil || youtubeId == parent.player.video?.youtubeId {
+            if parent.player.isPlaying {
+                parent.player.monitorChapters(time: time)
+            } else if parent.player.currentTime != time {
+                parent.player.currentTime = time
+            }
+        }
+        statsTimeCounter += 1
+        if persist || statsTimeCounter >= Const.updateDbTimeSeconds {
+            statsTimeCounter = 0
+            if let videoId = youtubeId ?? parent.player.video?.youtubeId {
+                StatsService.shared.handleVideoTimeUpdate(videoId: videoId, time: time, persist: persist)
+            }
+        }
+
+        updateTimeCounter += 1
+        if persist || updateTimeCounter >= Const.elapsedTimePersistSeconds {
+            updateTimeCounter = 0
+            parent.player.updateElapsedTime(time, videoId: youtubeId)
+        }
+    }
+
+    /// Applies a seek target right when the seek is issued
+    func handleSeekTime(_ timeString: String?) {
+        guard let timeString, let time = Double(timeString) else {
+            return
+        }
+        withAnimation(.seekScrubber) {
+            parent.player.currentTime = time
+        }
+        parent.player.clearVideoEnded()
     }
 }
 

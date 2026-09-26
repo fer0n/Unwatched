@@ -1040,8 +1040,8 @@
 		FE1000FF000000000000D022 /* TrimSilenceStatsTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = FE1000FF000000000000D021 /* TrimSilenceStatsTests.swift */; };
 		FE1000FF000000000000E012 /* PlayerBackendDispatchTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = FE1000FF000000000000E011 /* PlayerBackendDispatchTests.swift */; };
 		FE1000FF000000000000E022 /* PlayerOwnershipTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = FE1000FF000000000000E021 /* PlayerOwnershipTests.swift */; };
-		FE1000FF000000000000E032 /* PlayerWebViewCoordinator+pause.swift in Sources */ = {isa = PBXBuildFile; fileRef = FE1000FF000000000000E031 /* PlayerWebViewCoordinator+pause.swift */; };
-		FE1000FF000000000000E033 /* PlayerWebViewCoordinator+pause.swift in Sources */ = {isa = PBXBuildFile; fileRef = FE1000FF000000000000E031 /* PlayerWebViewCoordinator+pause.swift */; };
+		FE1000FF000000000000E032 /* PlayerWebViewCoordinator+position.swift in Sources */ = {isa = PBXBuildFile; fileRef = FE1000FF000000000000E031 /* PlayerWebViewCoordinator+position.swift */; };
+		FE1000FF000000000000E033 /* PlayerWebViewCoordinator+position.swift in Sources */ = {isa = PBXBuildFile; fileRef = FE1000FF000000000000E031 /* PlayerWebViewCoordinator+position.swift */; };
 		FE7A00000000000000000001 /* AVPlayerPrefetchManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3F0F611A97CF421FAF1F47ED /* AVPlayerPrefetchManager.swift */; };
 		FE7A00000000000000000002 /* AVPlayerStreamHelpers.swift in Sources */ = {isa = PBXBuildFile; fileRef = BE66417B2F2F4BB8AA39AE78 /* AVPlayerStreamHelpers.swift */; };
 		FE7A00000000000000000003 /* AVPlayerView.swift in Sources */ = {isa = PBXBuildFile; fileRef = FE100001AA000000001000B1 /* AVPlayerView.swift */; };
@@ -1743,7 +1743,7 @@
 		FE1000FF000000000000D021 /* TrimSilenceStatsTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TrimSilenceStatsTests.swift; sourceTree = "<group>"; };
 		FE1000FF000000000000E011 /* PlayerBackendDispatchTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PlayerBackendDispatchTests.swift; sourceTree = "<group>"; };
 		FE1000FF000000000000E021 /* PlayerOwnershipTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PlayerOwnershipTests.swift; sourceTree = "<group>"; };
-		FE1000FF000000000000E031 /* PlayerWebViewCoordinator+pause.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "PlayerWebViewCoordinator+pause.swift"; sourceTree = "<group>"; };
+		FE1000FF000000000000E031 /* PlayerWebViewCoordinator+position.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "PlayerWebViewCoordinator+position.swift"; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFileSystemSynchronizedBuildFileExceptionSet section */
@@ -2513,7 +2513,7 @@
 				88AA10010001000000000011 /* WebPlayerWarmup.swift */,
 				88AA10010001000000000021 /* PlayerWebView+Adopt.swift */,
 				88CD38772E20797C00E7B21C /* PlayerWebViewCoordinator+messages.swift */,
-				FE1000FF000000000000E031 /* PlayerWebViewCoordinator+pause.swift */,
+				FE1000FF000000000000E031 /* PlayerWebViewCoordinator+position.swift */,
 			);
 			path = PlayerWebView;
 			sourceTree = "<group>";
@@ -3673,7 +3673,7 @@
 				8826DD222E6EE9CA008234B3 /* PrivacySettingsView.swift in Sources */,
 				883D44FA301807A400950B89 /* SearchSubscriptionListItem.swift in Sources */,
 				88CD38792E20797C00E7B21C /* PlayerWebViewCoordinator+messages.swift in Sources */,
-				FE1000FF000000000000E033 /* PlayerWebViewCoordinator+pause.swift in Sources */,
+				FE1000FF000000000000E033 /* PlayerWebViewCoordinator+position.swift in Sources */,
 				889AF90F2C50ECE7001CEDE6 /* LibraryNavListItem.swift in Sources */,
 				88274EFC301E46FC0033352A /* PlayerEdgeSwipe.swift in Sources */,
 				88F3AA822C99870F0030B2EA /* Chapter.swift in Sources */,
@@ -4162,7 +4162,7 @@
 				889924842C485989001185A6 /* LibraryDestination.swift in Sources */,
 				884C430C2ED8B7FE00FA8DC4 /* DescriptionDetailView.swift in Sources */,
 				88CD38782E20797C00E7B21C /* PlayerWebViewCoordinator+messages.swift in Sources */,
-				FE1000FF000000000000E032 /* PlayerWebViewCoordinator+pause.swift in Sources */,
+				FE1000FF000000000000E032 /* PlayerWebViewCoordinator+position.swift in Sources */,
 				887785EF2EEAB37A00795394 /* SignalInterval.swift in Sources */,
 				887E82AE2CD8FD2F00B196EA /* WatchInUnwatched.swift in Sources */,
 				88DD147B2E7E9878007BA1F4 /* MiniPlayerContent.swift in Sources */,
