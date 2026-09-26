@@ -48,6 +48,7 @@ struct SetupView: View {
             // reports failures.
             .background {
                 AddToLibraryView(hidden: true)
+                    .environment(navManager)
             }
             .appNotificationOverlay()
             // not in MacOSSplitView: ContentView's GeometryReader keeps it from the window
