@@ -193,7 +193,8 @@ import UnwatchedShared
         }
     }
 
-    func addSubscriptionFromText(_ text: String) async {
+    @discardableResult
+    func addSubscriptionFromText(_ text: String) async -> [SubscriptionState]? {
         let urls: [URL] = text.components(separatedBy: "\n").compactMap { str in
             if !str.isValidURL || str.isEmpty {
                 return nil
@@ -202,16 +203,18 @@ import UnwatchedShared
         }
         if urls.isEmpty {
             errorMessage = "No urls found"
-            return
+            return nil
         }
         let subscriptionInfo = urls.map { SubscriptionInfo(rssFeedUrl: $0) }
-        await addSubscription(subscriptionInfo: subscriptionInfo)
+        return await addSubscription(subscriptionInfo: subscriptionInfo)
     }
 
     @MainActor
-    func addSubscription(subscriptionInfo: [SubscriptionInfo]) async {
+    @discardableResult
+    func addSubscription(subscriptionInfo: [SubscriptionInfo]) async -> [SubscriptionState]? {
         errorMessage = nil
         isLoading = true
+        defer { isLoading = false }
 
         Log.info("load new")
         do {
@@ -222,15 +225,16 @@ import UnwatchedShared
             self.newSubs = subs
             if hasError {
                 self.showDropResults = true
-            } else {
-                self.isSubscribedSuccess = true
+                return nil
             }
+            self.isSubscribedSuccess = true
+            return subs
         } catch {
             Log.error("\(error)")
             self.errorMessage = error.localizedDescription
             self.showDropResults = true
         }
-        self.isLoading = false
+        return nil
     }
 }
 

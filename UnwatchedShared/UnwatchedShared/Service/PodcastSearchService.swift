@@ -35,6 +35,18 @@ public enum PodcastSearchService {
         return try await fetchResults(url).first
     }
 
+    /// The show id in an Apple Podcasts show or episode link.
+    public static func collectionId(from url: URL) -> String? {
+        guard let host = url.host()?.lowercased(),
+              host == "podcasts.apple.com" || host == "itunes.apple.com" else {
+            return nil
+        }
+        let last = url.lastPathComponent
+        guard last.hasPrefix("id") else { return nil }
+        let id = last.dropFirst(2)
+        return !id.isEmpty && id.allSatisfy(\.isNumber) ? String(id) : nil
+    }
+
     /// The directory answers loosely — a one-word query comes back with shows that merely
     /// mention it. Keeps the ones whose title or author actually reflects the query.
     public static func isGoodMatch(_ sub: SendableSubscription, query: String) -> Bool {

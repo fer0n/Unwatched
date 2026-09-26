@@ -79,6 +79,20 @@ final class UrlServiceTests: XCTestCase {
         XCTAssertNil(UrlService.getEpisodeIdFromUrl(anchored))
         XCTAssertEqual(UrlService.removingEpisodeId(from: anchored), anchored)
     }
+
+    func testApplePodcastsCollectionId() {
+        let values: [(String, String?)] = [
+            ("https://podcasts.apple.com/us/podcast/the-daily/id1200361736", "1200361736"),
+            ("https://podcasts.apple.com/de/podcast/lage-der-nation/id1188543221?i=1000690000000", "1188543221"),
+            ("https://itunes.apple.com/us/podcast/id1200361736", "1200361736"),
+            ("https://podcasts.apple.com/us/podcast/the-daily/idabc", nil),
+            ("https://apps.apple.com/app/id6477287463", nil),
+            ("https://feeds.simplecast.com/54nAGcIl", nil)
+        ]
+        for (url, expected) in values {
+            XCTAssertEqual(PodcastSearchService.collectionId(from: URL(string: url)!), expected, url)
+        }
+    }
 }
 
 // swiftlint:enable all

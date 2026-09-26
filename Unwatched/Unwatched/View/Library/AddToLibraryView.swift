@@ -12,6 +12,7 @@ struct AddToLibraryView: View {
     @Environment(\.colorScheme) var colorScheme
     @Environment(\.modelContext) var modelContext
     @Environment(RefreshManager.self) var refresher
+    @Environment(NavigationManager.self) var navManager
 
     /// nil outside the macOS root mount, where the button reports failure itself.
     @Environment(AppNotificationVM.self) private var appNotification: AppNotificationVM?
@@ -156,7 +157,7 @@ struct AddToLibraryView: View {
         }
 
         Task {
-            await addVideoUrls(videoUrlsLocal, target)
+            await addVideoUrls(videoUrlsLocal, target, showList: playListAsVideos)
         }
     }
 
@@ -167,8 +168,12 @@ struct AddToLibraryView: View {
 
     func handleAddSubscriptionFromText() async {
         if let text = addSubscriptionFromText {
-            await subManager.addSubscriptionFromText(text)
+            let states = await subManager.addSubscriptionFromText(text)
             addSubscriptionFromText = nil
+            if states?.count == 1, let subId = states?.first?.subscriptionId,
+               let sub: Subscription = modelContext.resolvedModel(withID: subId) {
+                navManager.pushSubscription(subscription: sub)
+            }
         }
     }
 
@@ -194,14 +199,14 @@ struct AddToLibraryView: View {
         subManager.isSubscribedSuccess = nil
     }
 
-    func addVideoUrls(_ urls: [URL], _ target: VideoPlacementArea) async {
+    func addVideoUrls(_ urls: [URL], _ target: VideoPlacementArea, showList: Bool) async {
         if !urls.isEmpty {
             isLoadingVideos = true
-            let task = VideoService.addForeignUrls(urls, in: target)
             do {
-                try await task.value
+                let videoIds = try await VideoService.addForeignUrlsReturningIds(urls, in: target)
                 isLoadingVideos = false
                 addVideosSuccess = true
+                showAddedVideos(videoIds, in: target, showList: showList)
                 return
             } catch {
                 Log.error("\(error)")
@@ -209,6 +214,17 @@ struct AddToLibraryView: View {
                 addVideosSuccess = false
                 isLoadingVideos = false
             }
+        }
+    }
+
+    func showAddedVideos(_ videoIds: [PersistentIdentifier], in target: VideoPlacementArea, showList: Bool) {
+        if !showList, videoIds.count == 1,
+           let video: Video = modelContext.resolvedModel(withID: videoIds[0]) {
+            navManager.pushVideoDetail(video)
+        } else if !videoIds.isEmpty {
+            let tab: NavigationTab = target == .inbox ? .inbox : .queue
+            navManager.clearNavigationStack(tab)
+            navManager.navigateTo(tab)
         }
     }
 }

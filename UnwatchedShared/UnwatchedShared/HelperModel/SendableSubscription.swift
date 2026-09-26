@@ -262,6 +262,7 @@ public struct SubscriptionState: Identifiable, Sendable {
     public var error: String?
     public var success = false
     public var alreadyAdded = false
+    public var subscriptionId: PersistentIdentifier?
 
     public init(
         id: UUID = UUID(),

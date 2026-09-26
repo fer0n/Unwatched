@@ -343,6 +343,15 @@ extension VideoService {
         return task
     }
 
+    static func addForeignUrlsReturningIds(
+        _ urls: [URL],
+        in videoPlacement: VideoPlacementArea
+    ) async throws -> [PersistentIdentifier] {
+        try await Task.detached {
+            try await VideoActor().addForeignUrls(urls, in: videoPlacement, at: 1, markAsNew: false)
+        }.value
+    }
+
     static func getTopVideoInQueue(_ context: ModelContext, _ filter: QueueFilter = .all) -> Video? {
         if let nextVideo = filter.entries(context, limit: 1).first?.video {
             if nextVideo.isNew {

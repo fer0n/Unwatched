@@ -23,14 +23,12 @@ extension SubscriptionActor {
             return (podcastState, verified)
         }
 
-        if let title = getTitleIfSubscriptionExists(
+        if let existing = existingSubscription(
             channelId: sub.youtubeChannelId,
             unarchiveSubIfAvailable
         ) {
             Log.info("found existing sub via channelId")
-            subState.title = title
-            subState.alreadyAdded = true
-            return (subState, nil)
+            return alreadyAdded(subState, existing)
         }
 
         do {
@@ -70,16 +68,14 @@ extension SubscriptionActor {
                 return await loadPodcastInfo(from: url, unarchiveSubIfAvailable)
             }
 
-            if let title = getTitleIfSubscriptionExists(
+            if let existing = existingSubscription(
                 channelId: subState.channelId,
                 userName: subState.userName,
                 playlistId: subState.playlistId,
                 unarchiveSubIfAvailable
             ) {
                 Log.info("loadSubscriptionInfo: found existing sub via userName")
-                subState.title = title
-                subState.alreadyAdded = true
-                return (subState, nil)
+                return alreadyAdded(subState, existing)
             }
 
             if let sendableSub = try await SubscriptionActor.getSubscription(url: url,
@@ -88,13 +84,11 @@ extension SubscriptionActor {
                                                                              playlistId: subState.playlistId) {
                 let channelId = sendableSub.youtubeChannelId
                 if channelId != nil || sendableSub.youtubePlaylistId != nil,
-                   let title = getTitleIfSubscriptionExists(channelId: channelId,
-                                                            playlistId: subState.playlistId,
-                                                            unarchiveSubIfAvailable) {
+                   let existing = existingSubscription(channelId: channelId,
+                                                       playlistId: subState.playlistId,
+                                                       unarchiveSubIfAvailable) {
                     Log.info("loadSubscriptionInfo: found existing sub via channelId")
-                    subState.title = title
-                    subState.alreadyAdded = true
-                    return (subState, nil)
+                    return alreadyAdded(subState, existing)
                 }
 
                 subState.title = sendableSub.title
@@ -113,16 +107,15 @@ extension SubscriptionActor {
         _ unarchiveSubIfAvailable: Bool
     ) async -> (SubscriptionState, SendableSubscription?) {
         var subState = SubscriptionState(url: url)
-        if let existing = getPodcast(url) {
-            if unarchiveSubIfAvailable {
-                unarchive(existing)
-            }
-            subState.title = existing.title
-            subState.alreadyAdded = true
-            return (subState, nil)
-        }
         do {
-            let feed = try await PodcastService.loadFeed(url, limitEpisodes: 1)
+            let feedUrl = try await resolveApplePodcastsLink(url)
+            if let existing = getPodcast(feedUrl) {
+                if unarchiveSubIfAvailable {
+                    unarchive(existing)
+                }
+                return alreadyAdded(subState, existing)
+            }
+            let feed = try await PodcastService.loadFeed(feedUrl, limitEpisodes: 1)
             subState.title = feed.subscription.title
             subState.success = true
             return (subState, feed.subscription)
@@ -130,6 +123,27 @@ extension SubscriptionActor {
             subState.error = error.localizedDescription
         }
         return (subState, nil)
+    }
+
+    private func resolveApplePodcastsLink(_ url: URL) async throws -> URL {
+        guard let collectionId = PodcastSearchService.collectionId(from: url) else {
+            return url
+        }
+        guard let feedUrl = try await PodcastSearchService.lookup(collectionId: collectionId)?.link else {
+            throw SubscriptionError.noInfoFoundToSubscribeTo
+        }
+        return feedUrl
+    }
+
+    private func alreadyAdded(
+        _ state: SubscriptionState,
+        _ sub: Subscription
+    ) -> (SubscriptionState, SendableSubscription?) {
+        var state = state
+        state.title = sub.title
+        state.subscriptionId = sub.persistentModelID
+        state.alreadyAdded = true
+        return (state, nil)
     }
 
     func isSubscribed(channelId: String?, playlistId: String?, updateInfo: SubscriptionInfo? = nil) -> Bool {
@@ -196,10 +210,10 @@ extension SubscriptionActor {
         }
     }
 
-    func getTitleIfSubscriptionExists(channelId: String? = nil,
-                                      userName: String? = nil,
-                                      playlistId: String? = nil,
-                                      _ unarchiveSubIfAvailable: Bool = false) -> String? {
+    func existingSubscription(channelId: String? = nil,
+                              userName: String? = nil,
+                              playlistId: String? = nil,
+                              _ unarchiveSubIfAvailable: Bool = false) -> Subscription? {
         if channelId == nil && userName == nil && playlistId == nil { return nil }
         var fetch = FetchDescriptor<Subscription>(predicate: #Predicate {
             (playlistId == nil || playlistId == $0.youtubePlaylistId) &&
@@ -212,8 +226,7 @@ extension SubscriptionActor {
             if unarchiveSubIfAvailable {
                 unarchive(sub)
             }
-            let title = sub.title
-            return title
+            return sub
         }
         return nil
     }

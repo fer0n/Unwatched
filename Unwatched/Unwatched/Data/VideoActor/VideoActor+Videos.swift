@@ -36,11 +36,13 @@ actor VideoActor: SharedContextActor {
     /// Skips the local response cache for the current `loadVideos` run
     var ignoreCache = false
 
+    @discardableResult
     func addForeignUrls(_ urls: [URL],
                         in videoplacement: VideoPlacementArea,
                         at index: Int,
                         markAsNew: Bool
-    ) async throws {
+    ) async throws -> [PersistentIdentifier] {
+        var videos = [Video]()
         var videoIds = [(videoId: String, startAt: Double?)]()
         var playlistIds = [String]()
 
@@ -58,7 +60,7 @@ actor VideoActor: SharedContextActor {
         }
 
         if !videoIds.isEmpty {
-            try await addForeignVideos(
+            videos += try await addForeignVideos(
                 videoIds: videoIds,
                 in: videoplacement,
                 at: index,
@@ -67,18 +69,19 @@ actor VideoActor: SharedContextActor {
         }
 
         for playlistId in playlistIds {
-            try await addForeignPlaylist(playlistId: playlistId, in: videoplacement, at: index)
+            videos += try await addForeignPlaylist(playlistId: playlistId, in: videoplacement, at: index)
         }
 
         try modelContext.save()
         if containsError {
             throw VideoError.noYoutubeId
         }
+        return videos.map(\.persistentModelID)
     }
 
     private func addForeignPlaylist(playlistId: String,
                                     in videoplacement: VideoPlacementArea,
-                                    at index: Int) async throws {
+                                    at index: Int) async throws -> [Video] {
         Log.info("addForeignPlaylist")
         var videos = [Video]()
         let playlistVideos = try await YoutubeDataAPI.getYtVideoInfoFromPlaylist(playlistId)
@@ -96,6 +99,7 @@ actor VideoActor: SharedContextActor {
         }
         setVideosNew(videos)
         addVideosTo(videos, placement: videoplacement, index: index)
+        return videos
     }
 
     private func handleNewForeignVideo(_ video: Video, feedTitle: String? = nil) async throws {
@@ -106,7 +110,7 @@ actor VideoActor: SharedContextActor {
                                   in videoplacement: VideoPlacementArea,
                                   at index: Int,
                                   markAsNew: Bool
-    ) async throws {
+    ) async throws -> [Video] {
         Log.info("addForeignVideos?")
         var videos = [Video]()
         for (youtubeId, startAt) in videoIds {
@@ -131,6 +135,7 @@ actor VideoActor: SharedContextActor {
             setVideosNew(videos)
         }
         addVideosTo(videos, placement: videoplacement, index: index)
+        return videos
     }
 
     func setVideosNew(_ videos: [Video]) {

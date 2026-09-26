@@ -111,8 +111,8 @@ actor SubscriptionActor: SharedContextActor {
         subscriptionInfo: [SubscriptionInfo] = [],
         sendableSubs: [SendableSubscription] = []
     ) async throws -> [SubscriptionState] {
-        var subscriptionStates = [SubscriptionState]()
-        Log.info("addSubscriptions: \(subscriptionStates)")
+        var results = [(state: SubscriptionState, inserted: Subscription?)]()
+        Log.info("addSubscriptions")
         try await withThrowingTaskGroup(of: (SubscriptionState, SendableSubscription?).self) { group in
             if !subscriptionInfo.isEmpty {
                 for info in subscriptionInfo {
@@ -145,15 +145,21 @@ actor SubscriptionActor: SharedContextActor {
             }
 
             for try await (subState, sendableSub) in group {
-                subscriptionStates.append(subState)
-                if let sendableSub = sendableSub {
-                    let sub = sendableSub.createSubscription()
+                let sub = sendableSub?.createSubscription()
+                if let sub {
                     modelContext.insert(sub)
                 }
+                results.append((subState, sub))
             }
         }
         try modelContext.save()
-        return subscriptionStates
+        return results.map { state, sub in
+            var state = state
+            if let sub {
+                state.subscriptionId = sub.persistentModelID
+            }
+            return state
+        }
     }
 
     /// Fills in the channel avatar (profile picture) from InnerTube when the feed didn't
