@@ -14,7 +14,7 @@ extension ChapterDescriptionView {
         HStack(spacing: 12) {
             detailButton(Const.queueNextSF, label: "queueNext", action: addToQueueNext)
             detailButton(Const.queueLastSF, label: "queueLast", action: addToQueueLast)
-            detailButton(Const.clearNoFillSF, label: "clearVideo", disabled: !canBeCleared, action: clearVideo)
+            detailButton(Const.clearNoFillSF, label: clearLabel, disabled: !canBeCleared, action: clearVideo)
         }
         .padding(15)
         .padding()
@@ -50,8 +50,12 @@ extension ChapterDescriptionView {
         }
         ToolbarItem(placement: .topBarTrailing) {
             Menu {
-                Button("clear", systemImage: Const.clearNoFillSF, action: clearVideo)
-                    .disabled(!canBeCleared)
+                if video.inboxEntry == nil {
+                    Button("moveToInbox", systemImage: "tray.and.arrow.down", action: moveToInbox)
+                }
+                if canBeCleared {
+                    Button(clearLabel, systemImage: Const.clearNoFillSF, action: clearVideo)
+                }
             } label: {
                 Image(systemName: "ellipsis")
             }
@@ -77,6 +81,15 @@ extension ChapterDescriptionView {
         video.inboxEntry != nil || video.queueEntry != nil
     }
 
+    /// Names the list the video leaves; a video in both keeps the generic label
+    var clearLabel: LocalizedStringKey {
+        switch (video.inboxEntry != nil, video.queueEntry != nil) {
+        case (true, false): "removeFromInbox"
+        case (false, true): "removeFromQueue"
+        default: "clearVideo"
+        }
+    }
+
     func playVideo() {
         navManager.popVideoDetail()
         VideoService.insertQueueEntries(videos: [video], modelContext: modelContext)
@@ -98,7 +111,7 @@ extension ChapterDescriptionView {
             handlePotentialQueueChange()
         }
         Signal.videoAction("queueTop", .detail)
-        handleDone()
+        handleDone(undo: .moveToInbox([video.persistentModelID]))
     }
 
     func addToQueueLast() {
@@ -111,7 +124,7 @@ extension ChapterDescriptionView {
             handlePotentialQueueChange()
         }
         Signal.videoAction("queueBottom", .detail)
-        handleDone()
+        handleDone(undo: .moveToInbox([video.persistentModelID]))
     }
 
     func clearVideo() {
@@ -121,7 +134,20 @@ extension ChapterDescriptionView {
             handlePotentialQueueChange()
         }
         Signal.videoAction("clear", .detail)
-        handleDone()
+        handleDone(undo: .moveToInbox([video.persistentModelID]))
+    }
+
+    func moveToInbox() {
+        let requiresQueueChange = requiresQueueChange()
+        let undo: UndoAction? = video.queueEntry.map {
+            .restoreToQueue(video.persistentModelID, order: $0.order)
+        }
+        VideoService.moveVideoToInbox(video, modelContext: modelContext)
+        if requiresQueueChange {
+            handlePotentialQueueChange()
+        }
+        Signal.videoAction("inbox", .detail)
+        handleDone(undo: undo)
     }
 
     func handlePotentialQueueChange() {
@@ -135,8 +161,10 @@ extension ChapterDescriptionView {
         return adding && player.isQueueEmpty(modelContext)
     }
 
-    func handleDone() {
-        undoManager.registerAction(.moveToInbox([video.persistentModelID]))
+    func handleDone(undo: UndoAction?) {
+        if let undo {
+            undoManager.registerAction(undo)
+        }
         hapticToggle.toggle()
         if navManager.tab == .inbox, let date = video.publishedDate {
             openNextInboxVideo(date)
