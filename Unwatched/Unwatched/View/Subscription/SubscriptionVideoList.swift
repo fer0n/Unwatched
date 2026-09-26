@@ -7,13 +7,23 @@ import SwiftUI
 import SwiftData
 import UnwatchedShared
 
-struct SubscriptionVideoList: View {
+struct SubscriptionVideoList: View, Equatable {
     @Query var videos: [Video]
     @State private var viewModel: SubscriptionVideoListVM
 
+    private let subscriptionId: PersistentIdentifier
+    private let source: SubscriptionVideoListVM.Source
+
     init(subscriptionId: PersistentIdentifier, source: SubscriptionVideoListVM.Source, title: String) {
+        self.subscriptionId = subscriptionId
+        self.source = source
         _videos = VideoListView.query(subscriptionId: subscriptionId)
         _viewModel = State(initialValue: SubscriptionVideoListVM(source: source, title: title))
+    }
+
+    // skips page redraws (e.g. the scrolling title); don't use .equatable(), it lays out every List row
+    nonisolated static func == (lhs: SubscriptionVideoList, rhs: SubscriptionVideoList) -> Bool {
+        lhs.subscriptionId == rhs.subscriptionId && lhs.source == rhs.source
     }
 
     var body: some View {

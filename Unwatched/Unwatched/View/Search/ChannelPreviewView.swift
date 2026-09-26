@@ -175,19 +175,14 @@ struct ChannelPreviewView: View {
                 Button {
                     Task { await toggleSubscribe() }
                 } label: {
-                    CapsuleLabel(text: subManager.isSubscribedSuccess == true
-                                    ? String(localized: "subscribed")
-                                    : String(localized: "subscribe")) {
-                        if subManager.isLoading {
-                            ProgressView()
-                        } else {
-                            Image(systemName: subManager.isSubscribedSuccess == true ? "checkmark" : "plus")
-                                .contentTransition(.symbolEffect(.replace))
-                        }
-                    }
+                    SubscribeCapsuleLabel(
+                        isSubscribed: subManager.isSubscribedSuccess == true,
+                        isLoading: subManager.isLoading
+                    )
                 }
                 .buttonStyle(CapsuleButtonStyle())
-                .disabled(subManager.isLoading || (sub.youtubeChannelId == nil && sub.youtubePlaylistId == nil))
+                .disabled(sub.youtubeChannelId == nil && sub.youtubePlaylistId == nil)
+                .allowsHitTesting(!subManager.isLoading)
                 .subscribeErrorPopover(subManager)
 
                 if browserDisplayMode != .disabled, let youtubeUrl {
@@ -202,6 +197,7 @@ struct ChannelPreviewView: View {
                     .buttonStyle(CapsuleButtonStyle(primary: false))
                 }
             }
+            .animation(.default, value: subManager.isSubscribedSuccess == true)
             .fixedSize(horizontal: false, vertical: true)
             .padding(.horizontal, 15)
         }
@@ -221,7 +217,7 @@ struct ChannelPreviewView: View {
     }
 
     private var subscriptionInfo: SubscriptionInfo {
-        SubscriptionInfo(
+        var info = SubscriptionInfo(
             nil,
             sub.youtubeChannelId,
             nil,
@@ -230,6 +226,11 @@ struct ChannelPreviewView: View {
             nil,
             sub.youtubePlaylistId
         )
+        // reuse the header's avatar instead of fetching it again
+        if !isPlaylist {
+            info.imageUrl = sub.thumbnailUrl ?? channelImageUrl
+        }
+        return info
     }
 
     private func load() async {

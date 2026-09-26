@@ -21,7 +21,7 @@ import UnwatchedShared
     private static let maxPagesPerLoad = 4
     private static let maxPagesPerRestart = 20
 
-    enum Source {
+    enum Source: Equatable {
         case channel(String)
         case playlist(String)
 

@@ -21,6 +21,35 @@ struct CapsuleLabel<Icon: View>: View {
     }
 }
 
+struct SubscribeCapsuleLabel: View {
+    var isSubscribed: Bool
+    var isLoading: Bool
+
+    @State private var spinnerDue = false
+
+    var body: some View {
+        CapsuleLabel(text: isSubscribed
+                        ? String(localized: "subscribed")
+                        : String(localized: "subscribe")) {
+            if isLoading && spinnerDue {
+                ProgressView()
+            } else {
+                Image(systemName: isSubscribed ? "checkmark" : "plus")
+                    .contentTransition(.symbolEffect(.replace))
+            }
+        }
+        .task(id: isLoading) {
+            spinnerDue = false
+            guard isLoading else { return }
+            // only show the spinner for slow subscribes, so it doesn't flash
+            try? await Task.sleep(for: .milliseconds(300))
+            if !Task.isCancelled {
+                spinnerDue = true
+            }
+        }
+    }
+}
+
 struct CapsuleMenuLabel: View {
     var systemImage: String
     var menuLabel: LocalizedStringKey

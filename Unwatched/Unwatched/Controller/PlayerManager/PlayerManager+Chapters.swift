@@ -18,9 +18,7 @@ extension PlayerManager {
 
     @MainActor
     func monitorChapters(time: Double) {
-        withAnimation {
-            currentTime = time
-        }
+        currentTime = time
         if let endTime = earlyEndTime ?? currentEndTime, time >= endTime {
             handleChapterChange()
         } else if let current = currentChapter,

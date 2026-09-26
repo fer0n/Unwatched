@@ -121,19 +121,14 @@ struct PodcastPreviewView: View {
         Button {
             Task { await subManager.togglePodcastSubscription(show) }
         } label: {
-            CapsuleLabel(text: subManager.isSubscribedSuccess == true
-                            ? String(localized: "subscribed")
-                            : String(localized: "subscribe")) {
-                if subManager.isLoading {
-                    ProgressView()
-                } else {
-                    Image(systemName: subManager.isSubscribedSuccess == true ? "checkmark" : "plus")
-                        .contentTransition(.symbolEffect(.replace))
-                }
-            }
+            SubscribeCapsuleLabel(
+                isSubscribed: subManager.isSubscribedSuccess == true,
+                isLoading: subManager.isLoading
+            )
         }
         .buttonStyle(CapsuleButtonStyle())
-        .disabled(subManager.isLoading || show.link == nil)
+        .disabled(show.link == nil)
+        .allowsHitTesting(!subManager.isLoading)
         .subscribeErrorPopover(subManager)
     }
 
