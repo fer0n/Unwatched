@@ -19,6 +19,7 @@ struct WatchPlayerView: View {
     /// What playing would start: the queue's first entry, while nothing is playing yet.
     @State private var upNext: Video?
     @State private var client = WatchQueueClient.shared
+    @State private var showChapters = false
 
     private var controlsPhone: Bool {
         navigator.controlsPhone
@@ -70,6 +71,13 @@ struct WatchPlayerView: View {
 
     private func content(_ display: WatchPlayerDisplay) -> some View {
         VStack(spacing: Self.gap) {
+            // A square cover takes the height a title line would need; a video leaves room for it.
+            if !display.isSquare, let title = display.chapterTitle ?? display.title {
+                titleButton(title, hasChapters: display.hasChapters, inBar: false)
+                    // above the chapter edges, whose tap areas reach up into this line
+                    .zIndex(1)
+            }
+
             // No spacers: the artwork is the only flexible thing here, so the leftover height
             // is all its own.
             artwork(display)
@@ -80,19 +88,16 @@ struct WatchPlayerView: View {
         // Into the bottom inset: the band is the paged `TabView`'s own inset for its page dots,
         // which a child cannot `ignoresSafeArea`. Short of the full inset to keep the dots clear.
         .padding(.bottom, -10)
-        .padding(.top, -Self.topBarOverlap)
+        .padding(.top, display.isSquare ? -Self.topBarOverlap : 0)
         .toolbar {
-            if let title = display.chapterTitle ?? display.title {
+            if display.isSquare, let title = display.chapterTitle ?? display.title {
                 ToolbarItem(placement: .topBarLeading) {
-                    Text(title)
-                        .lineLimit(1)
-                        // fixed: unbounded, the bar drops the clock
-                        .frame(width: Self.titleWidth, alignment: .leading)
-                        .transaction(value: title) { $0.animation = nil }
-                        // onto the clock's baseline
-                        .offset(y: -10)
+                    titleButton(title, hasChapters: display.hasChapters, inBar: true)
                 }
             }
+        }
+        .sheet(isPresented: $showChapters) {
+            WatchChapterList()
         }
         .overlay(alignment: .bottom) {
             VolumeControl(
@@ -100,6 +105,31 @@ struct WatchPlayerView: View {
                 origin: controlsPhone ? .companion : .local
             )
         }
+    }
+
+    /// Opens the chapters where there are any to show. Beside the clock in the bar, or its own
+    /// centered line above the artwork.
+    private func titleButton(_ title: String, hasChapters: Bool, inBar: Bool) -> some View {
+        Button {
+            showChapters = true
+        } label: {
+            Text(title)
+                .font(inBar ? nil : .system(size: 16, weight: .medium))
+                // tighter than the bar's own text; watchOS draws every font width as standard here
+                .tracking(inBar ? 0 : -0.4)
+                .lineLimit(1)
+                // in the bar fixed: unbounded, it drops the clock
+                .frame(width: inBar ? Self.titleWidth : nil, alignment: .leading)
+                .frame(maxWidth: inBar ? nil : .infinity)
+                // the whole line, not just the glyphs
+                .contentShape(.rect)
+                .transaction(value: title) { $0.animation = nil }
+        }
+        .buttonStyle(.plain)
+        // not `disabled`, which would grey the title out
+        .allowsHitTesting(hasChapters)
+        // in the bar onto the clock's baseline
+        .offset(y: inBar ? -10 : 0)
     }
 
     private func artwork(_ display: WatchPlayerDisplay) -> some View {

@@ -35,6 +35,8 @@ public struct WatchRemoteState: WatchPayload {
     /// How far a seek moves in what is playing, where a tag decided; `nil` leaves the watch its
     /// own defaults. Sent so the watch's buttons and the seek the phone performs are one number.
     public var seekSeconds: Double?
+    /// For the watch's chapter list. Optional so an older context still decodes.
+    public var chapters: [WatchRemoteChapter]?
 
     public init(
         isPlaying: Bool,
@@ -58,7 +60,8 @@ public struct WatchRemoteState: WatchPayload {
         trimSilence: Bool = false,
         canTrimSilence: Bool = false,
         theme: Int? = nil,
-        seekSeconds: Double? = nil
+        seekSeconds: Double? = nil,
+        chapters: [WatchRemoteChapter]? = nil
     ) {
         self.isPlaying = isPlaying
         self.title = title
@@ -82,6 +85,7 @@ public struct WatchRemoteState: WatchPayload {
         self.canTrimSilence = canTrimSilence
         self.theme = theme
         self.seekSeconds = seekSeconds
+        self.chapters = chapters
     }
 
     public var themeColor: ThemeColor {
@@ -113,6 +117,24 @@ public struct WatchRemoteState: WatchPayload {
     public static let requestKey = "watchRemoteStateRequest"
 }
 
+/// One chapter, as much of it as the watch's list shows. The start time is its identity: it is
+/// what both sides can match on without a row.
+public struct WatchRemoteChapter: Codable, Sendable, Hashable {
+    public var title: String?
+    public var startTime: Double
+    public var isActive: Bool
+
+    public init(title: String?, startTime: Double, isActive: Bool) {
+        self.title = title
+        self.startTime = startTime
+        self.isActive = isActive
+    }
+
+    public init(_ chapter: SendableChapter) {
+        self.init(title: chapter.title, startTime: chapter.startTime, isActive: chapter.isActive)
+    }
+}
+
 @frozen public enum WatchRemoteCommand: WatchPayload {
     case togglePlay
     case play(String)
@@ -125,6 +147,8 @@ public struct WatchRemoteState: WatchPayload {
     case next
     case setContinuousPlay(Bool)
     case setTrimSilence(Bool)
+    /// Turns the chapter starting there on or off.
+    case setChapterActive(startTime: Double, isActive: Bool)
     /// Where the watch left an item it played on its own, for the phone to pick up.
     case setProgress(youtubeId: String, seconds: Double)
     /// The watch's own sync mode, reported for analytics — the phone has no other way to see

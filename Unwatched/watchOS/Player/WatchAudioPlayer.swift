@@ -195,6 +195,7 @@ final class WatchAudioPlayer {
                    itemDuration.isFinite, itemDuration > 0 {
                     self.duration = itemDuration
                 }
+                self.skipInactiveChapter()
                 self.persistProgress()
             }
         }
@@ -287,6 +288,10 @@ final class WatchAudioPlayer {
         updateNowPlaying()
     }
 
+    func reloadChapters() {
+        chapters = video?.sortedChapterData ?? []
+    }
+
     var currentChapterTitle: String? {
         chapters.last { $0.startTime <= currentTime }?.title
     }
@@ -320,7 +325,7 @@ final class WatchAudioPlayer {
         }
     }
 
-    private static let chapterSkipBack: Double = 3
+    static let chapterSkipBack: Double = 3
 
     func seek(to seconds: Double) {
         guard let player else { return }

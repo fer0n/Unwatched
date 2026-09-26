@@ -20,16 +20,19 @@ struct WatchSpeedView: View {
     }
 
     var body: some View {
-        List {
-            speedRow
+        // Not a `List`: it has no row spacing on watchOS, so its rows' gaps couldn't be made even.
+        ScrollView {
+            VStack(spacing: Self.rowSpacing) {
+                speedRow
 
-            channelRow
+                channelRow
 
-            if let speedLockTagName {
-                tagRow(speedLockTagName)
+                if let speedLockTagName {
+                    tagRow(speedLockTagName)
+                }
+
+                actionRow
             }
-
-            actionRow
         }
     }
 
@@ -59,9 +62,6 @@ struct WatchSpeedView: View {
                 .disabled(currentSpeed >= (speeds.last ?? 1))
         }
         .watchTile()
-        .listRowBackground(Color.clear)
-        // The buttons run to the edges of the rect, corners included.
-        .listRowInsets(EdgeInsets())
     }
 
     private func stepButton(_ symbol: String, faster: Bool) -> some View {
@@ -114,7 +114,7 @@ struct WatchSpeedView: View {
             setCustomSpeed(!isOn)
         } label: {
             HStack(spacing: 8) {
-                Image(systemName: isOn ? Const.channelSpeedLockFillSF : Const.customPlaybackSpeedOffSF)
+                Image(systemName: isOn ? Const.channelSpeedLockFillSF : Const.channelSpeedLockSF)
                 Text("watchCustomSpeed")
                 Spacer(minLength: 0)
             }
@@ -123,8 +123,6 @@ struct WatchSpeedView: View {
         }
         .buttonStyle(.plain)
         .disabled(!canSetCustomSpeed)
-        .listRowBackground(Color.clear)
-        .listRowInsets(EdgeInsets(top: -Self.tileRowGapFix, leading: 0, bottom: 0, trailing: 0))
     }
 
     // MARK: - Tag override
@@ -149,7 +147,7 @@ struct WatchSpeedView: View {
             setTagSpeed(!isOn)
         } label: {
             HStack(spacing: 8) {
-                Image(systemName: isOn ? Const.tagSpeedLockFillSF : Const.customPlaybackSpeedOffSF)
+                Image(systemName: isOn ? Const.tagSpeedLockFillSF : Const.tagSpeedLockSF)
                 VStack(alignment: .leading, spacing: 0) {
                     Text("watchTagSpeed")
                     Text(verbatim: tagName)
@@ -164,8 +162,6 @@ struct WatchSpeedView: View {
         }
         .buttonStyle(.plain)
         .disabled(hasCustomSpeed)
-        .listRowBackground(Color.clear)
-        .listRowInsets(EdgeInsets(top: -Self.tileRowGapFix, leading: 0, bottom: 0, trailing: 0))
     }
 
     private func setTagSpeed(_ enabled: Bool) {
@@ -212,9 +208,6 @@ struct WatchSpeedView: View {
                 playNext()
             }
         }
-        .listRowBackground(Color.clear)
-        // Takes back the space the full-bleed row above leaves.
-        .listRowInsets(EdgeInsets(top: -Self.actionRowGapFix, leading: 0, bottom: 0, trailing: 0))
     }
 
     private func tile(
@@ -255,6 +248,5 @@ struct WatchSpeedView: View {
     }
 
     private static let tilePadding: CGFloat = 12
-    private static let tileRowGapFix: CGFloat = 15
-    private static let actionRowGapFix: CGFloat = 30
+    private static let rowSpacing: CGFloat = 4
 }

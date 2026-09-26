@@ -53,6 +53,12 @@ enum DebugSeed {
         for video in videos {
             video.subscription = channel
         }
+        videos[0].chapters = [
+            Chapter(title: "Intro", time: 0, duration: 120, endTime: 120),
+            Chapter(title: "The Prisoner's Dilemma, and why it matters", time: 120, duration: 300, endTime: 420),
+            Chapter(title: "Sponsor", time: 420, duration: 60, endTime: 480, isActive: false),
+            Chapter(title: "Tit for Tat", time: 480, duration: 600, endTime: 1080)
+        ]
 
         let episode = Video(
             title: "SoundHelix Song 1",
@@ -73,6 +79,12 @@ enum DebugSeed {
         let tag = Tag(name: "Podcasts", order: 0, symbol: "mic.fill")
         context.insert(tag)
         tag.subscriptions = [podcastShow]
+
+        // One with a speed of its own, for the tag row on the speed page.
+        let science = Tag(name: "Science", order: 1, symbol: "atom")
+        context.insert(science)
+        science.subscriptions = [channel]
+        science.playbackSpeed = 1.5
 
         try? context.save()
         Log.info("DebugSeed: seeded \(all.count) videos")
@@ -105,7 +117,13 @@ enum DebugSeed {
             chapterEndTime: 1800,
             continuousPlay: true,
             trimSilence: true,
-            canTrimSilence: true
+            canTrimSilence: true,
+            chapters: [
+                WatchRemoteChapter(title: "Intro", startTime: 0, isActive: true),
+                WatchRemoteChapter(title: "The Prisoner's Dilemma, and why it matters", startTime: 120, isActive: true),
+                WatchRemoteChapter(title: "Sponsor", startTime: 300, isActive: false),
+                WatchRemoteChapter(title: "Tit for Tat", startTime: 360, isActive: true)
+            ]
         )
         WatchQueueClient.shared.debugSetRemote(state)
 
@@ -212,6 +230,10 @@ enum DebugSeed {
 
         Log.info("DebugSeed: autoplaying '\(video.title)'")
         player.play(video)
+        Task {
+            try? await Task.sleep(for: .seconds(4))
+            WatchNavigator.shared.selectedTab = CommandLine.arguments.contains("show-speed") ? .speed : .player
+        }
 
         Task {
             for _ in 0..<15 {

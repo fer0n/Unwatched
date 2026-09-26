@@ -318,7 +318,8 @@ enum WatchRemoteBridge {
             // Only a downloaded file can be trimmed: the pauses are found by decoding ahead.
             canTrimSilence: video.map { PodcastDownloadManager.shared.downloadedIds.contains($0.youtubeId) } ?? false,
             theme: UserDefaults.standard.integer(forKey: Const.themeColor),
-            seekSeconds: video.flatMap(Tag.seekSecondsTag(for:))?.seekSeconds
+            seekSeconds: video.flatMap(Tag.seekSecondsTag(for:))?.seekSeconds,
+            chapters: video?.sortedChapterData.map(WatchRemoteChapter.init)
         )
     }
 
@@ -356,6 +357,8 @@ enum WatchRemoteBridge {
                 return
             }
             player.setTrimSilence(enabled)
+        case .setChapterActive(let startTime, let isActive):
+            setChapterActive(startTime: startTime, isActive: isActive)
         case .setProgress(let youtubeId, let seconds):
             // The phone's own player owns the position of what it is playing itself.
             guard player.video?.youtubeId != youtubeId,
@@ -371,6 +374,27 @@ enum WatchRemoteBridge {
         WatchQueueProvider.pushRemoteState()
     }
 
+    /// What the chapter list's toggle does, see `ChapterList.toggleChapter`.
+    private static func setChapterActive(startTime: Double, isActive: Bool) {
+        let player = PlayerManager.shared
+        guard let video = player.video,
+              let chapter = video.sortedChapterData.first(where: { $0.startTime == startTime }),
+              chapter.isActive != isActive,
+              isActive || CloudKeyValueStore.hasPremium else { return }
+        if chapter.isIntro {
+            video.keepIntro = isActive
+        } else if chapter.isOutro {
+            video.keepOutro = isActive
+        } else {
+            ChapterService.setChapterActive(isActive, chapter, of: video)
+            video.chaptersDidChange()
+        }
+        try? video.modelContext?.save()
+        player.handleChapterChange()
+        // the page seeks by the chapters it was handed, so the edit has to reach it too
+        player.backend.setChapterMarkers(force: false)
+    }
+
     /// Minus the position: it moves four times a second, and the watch carries it forward itself.
     private static func observe() {
         withObservationTracking {
@@ -379,6 +403,7 @@ enum WatchRemoteBridge {
             _ = player.video?.youtubeId
             _ = player.video?.title
             _ = player.currentChapter?.title
+            _ = player.video?.chapterRevision
         } onChange: {
             Task { @MainActor in
                 WatchQueueProvider.pushRemoteState()

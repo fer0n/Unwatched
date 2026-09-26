@@ -77,6 +77,8 @@ struct WatchPlayerControls: View {
             Image(systemName: WatchSeek.symbol(forward: forward, seconds: abs(seconds)))
                 .font(.title3)
                 .fontWeight(.semibold)
+                // the arrowhead sits above the circle, which reads as the glyph sitting low
+                .offset(y: -1)
         }
         .frame(width: Self.seekSize, height: Self.seekSize)
         .disabled(display.isUpNext)

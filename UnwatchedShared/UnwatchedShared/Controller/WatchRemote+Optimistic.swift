@@ -28,6 +28,11 @@ public extension WatchRemoteState {
             state.continuousPlay = enabled
         case .setTrimSilence(let enabled):
             state.trimSilence = enabled
+        case .setChapterActive(let startTime, let isActive):
+            guard let index = state.chapters?.firstIndex(where: { $0.startTime == startTime }) else {
+                return nil
+            }
+            state.chapters?[index].isActive = isActive
         case .play, .previousChapter, .nextChapter, .next, .setProgress, .reportSyncMode:
             return nil
         }
