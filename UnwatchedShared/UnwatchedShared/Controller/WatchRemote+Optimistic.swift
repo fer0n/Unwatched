@@ -33,6 +33,8 @@ public extension WatchRemoteState {
                 return nil
             }
             state.chapters?[index].isActive = isActive
+        case .setChapter(let startTime):
+            state.position = startTime
         case .play, .previousChapter, .nextChapter, .next, .setProgress, .reportSyncMode:
             return nil
         }

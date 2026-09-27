@@ -6,7 +6,7 @@
 import SwiftUI
 import UnwatchedShared
 
-/// The chapters of what is playing, each one a tap or a swipe from being left out of playback.
+/// The chapters of what is playing: a tap jumps to one, its checkmark or a swipe leaves it out of playback.
 struct WatchChapterList: View {
     @Environment(WatchAudioPlayer.self) private var player
     @Environment(WatchNavigator.self) private var navigator
@@ -52,28 +52,46 @@ struct WatchChapterList: View {
         }
     }
 
-    private func row(_ chapter: WatchRemoteChapter, isCurrent: Bool) -> some View {
-        Button {
+    /// Like the phone's list, a tap on a chapter that is off turns it back on rather than jumping.
+    private func select(_ chapter: WatchRemoteChapter) {
+        guard chapter.isActive else {
             toggle(chapter)
-        } label: {
-            HStack(spacing: 8) {
+            return
+        }
+        if navigator.controlsPhone {
+            Task { await client.send(.setChapter(startTime: chapter.startTime)) }
+        } else {
+            player.seek(to: chapter.startTime)
+        }
+    }
+
+    private func row(_ chapter: WatchRemoteChapter, isCurrent: Bool) -> some View {
+        HStack(spacing: 8) {
+            // plain, so it takes only its own taps and the rest of the row jumps
+            Button {
+                toggle(chapter)
+            } label: {
                 checkmark(chapter.isActive, isCurrent: isCurrent)
-                VStack(alignment: .leading, spacing: 0) {
-                    Text(verbatim: chapter.title ?? Self.time(chapter.startTime))
-                        .font(.footnote)
-                        .strikethrough(!chapter.isActive)
-                        .lineLimit(2)
-                    if chapter.title != nil {
-                        Text(verbatim: Self.time(chapter.startTime))
-                            .font(.caption2.monospacedDigit())
-                            .opacity(0.6)
-                    }
-                }
-                Spacer(minLength: 0)
             }
-            // inverted, like the phone's list and the speed page's tiles that are on
-            .foregroundStyle(isCurrent ? Color.black : Color.primary)
-            .opacity(chapter.isActive ? 1 : 0.5)
+            .buttonStyle(.plain)
+            VStack(alignment: .leading, spacing: 0) {
+                Text(verbatim: chapter.title ?? chapter.startTime.formattedSecondsColon)
+                    .font(.footnote)
+                    .lineLimit(2)
+                if chapter.title != nil {
+                    Text(verbatim: chapter.startTime.formattedSecondsColon)
+                        .font(.caption2.monospacedDigit())
+                        .opacity(0.6)
+                }
+            }
+            Spacer(minLength: 0)
+        }
+        // inverted, like the phone's list and the speed page's tiles that are on
+        .foregroundStyle(isCurrent ? Color.black : Color.primary)
+        .opacity(chapter.isActive ? 1 : 0.5)
+        .contentShape(.rect)
+        .onTapGesture {
+            select(chapter)
         }
         .listRowBackground(
             RoundedRectangle(cornerRadius: WatchTile.radius)
@@ -100,13 +118,5 @@ struct WatchChapterList: View {
                         .font(.footnote.weight(.bold))
                 }
             }
-    }
-
-    private static func time(_ seconds: Double) -> String {
-        let total = Int(seconds)
-        let (hours, minutes, secs) = (total / 3600, total / 60 % 60, total % 60)
-        return hours > 0
-            ? String(format: "%d:%02d:%02d", hours, minutes, secs)
-            : String(format: "%d:%02d", minutes, secs)
     }
 }

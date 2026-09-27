@@ -149,6 +149,8 @@ public struct WatchRemoteChapter: Codable, Sendable, Hashable {
     case setTrimSilence(Bool)
     /// Turns the chapter starting there on or off.
     case setChapterActive(startTime: Double, isActive: Bool)
+    /// Jumps to the chapter starting there.
+    case setChapter(startTime: Double)
     /// Where the watch left an item it played on its own, for the phone to pick up.
     case setProgress(youtubeId: String, seconds: Double)
     /// The watch's own sync mode, reported for analytics — the phone has no other way to see

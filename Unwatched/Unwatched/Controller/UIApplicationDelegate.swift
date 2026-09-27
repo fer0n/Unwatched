@@ -359,6 +359,11 @@ enum WatchRemoteBridge {
             player.setTrimSilence(enabled)
         case .setChapterActive(let startTime, let isActive):
             setChapterActive(startTime: startTime, isActive: isActive)
+        case .setChapter(let startTime):
+            guard let chapter = player.video?.sortedChapterData.first(where: { $0.startTime == startTime }) else {
+                return
+            }
+            player.setChapter(chapter)
         case .setProgress(let youtubeId, let seconds):
             // The phone's own player owns the position of what it is playing itself.
             guard player.video?.youtubeId != youtubeId,
