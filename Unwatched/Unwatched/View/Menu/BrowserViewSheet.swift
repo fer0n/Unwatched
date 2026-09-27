@@ -11,10 +11,9 @@ struct BrowserViewSheet: ViewModifier {
     var navManager: Bindable<NavigationManager>
     @Environment(\.colorScheme) var colorScheme
     @Environment(\.modelContext) var modelContext
-    @Environment(\.horizontalSizeClass) var sizeClass: UserInterfaceSizeClass?
+    @Environment(\.bigScreenLayout) var bigScreen
 
     func body(content: Content) -> some View {
-        let bigScreen = sizeClass == .regular && !Device.isIphone
 
         if bigScreen && !Device.isVision {
             content

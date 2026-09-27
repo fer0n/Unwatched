@@ -7,13 +7,12 @@ import SwiftUI
 
 struct BrowserViewHeader: View {
     @Environment(\.dismiss) var dismiss
-    @Environment(\.horizontalSizeClass) var sizeClass: UserInterfaceSizeClass?
+    @Environment(\.bigScreenLayout) var bigScreen
 
     var body: some View {
         Button {
             dismiss()
         } label: {
-            let bigScreen = sizeClass == .regular
             if bigScreen {
                 Label("close", systemImage: "chevron.down")
                     .labelStyle(.titleAndIcon)

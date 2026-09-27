@@ -35,6 +35,9 @@ import UnwatchedShared
     var allowMinSheet: Bool = true
 
     @ObservationIgnored var landscapeFullscreen: Bool = false
+    @ObservationIgnored var layout: ContentLayout?
+    var bigScreen: Bool { layout?.bigScreen ?? false }
+    var regularSize: Bool { layout?.regularSize ?? false }
     /// Menu state captured when entering portrait fullscreen, so it can be restored on exit.
     @ObservationIgnored var menuStateBeforeFullscreen: MenuState?
     var selectedDetent: PresentationDetent = .height(Const.minSheetDetent)
@@ -87,8 +90,19 @@ import UnwatchedShared
         UserDefaults.standard.set(sheetHeight, forKey: Const.sheetHeight)
     }
 
+    private(set) var fixedSheetHeight: CGFloat?
+    var sheetCoversMiniPlayer = false
+
     var maxSheetHeight: CGFloat {
-        sheetHeight - playerAboveSheetHeight
+        fixedSheetHeight ?? (sheetCoversMiniPlayer ? sheetHeight : sheetHeight - playerAboveSheetHeight)
+    }
+
+    func setFixedSheetHeight(_ height: CGFloat?) {
+        guard height != fixedSheetHeight else { return }
+        fixedSheetHeight = height
+        if height != nil && !isMinimumSheet {
+            setDetentMiniPlayer()
+        }
     }
 
     var isMiniPlayer: Bool {
@@ -132,7 +146,7 @@ import UnwatchedShared
 
     func setDetentVideoPlayer() {
         Log.info("setDetentVideoPlayer()")
-        selectedDetent = .height(playerControlHeight)
+        selectedDetent = .height(fixedSheetHeight == nil ? playerControlHeight : maxSheetHeight)
         setSwipedBelow(true)
     }
 

@@ -28,6 +28,7 @@ struct PlayerContentView: View {
     var hideMiniPlayer: Bool = true
 
     @State var minHeight: CGFloat?
+    @Environment(\.playerFitsSideBySide) private var fitsSideBySide
     @State private var scrolledPage: ControlNavigationTab?
     @Binding var autoHideVM: AutoHideVM
 
@@ -57,7 +58,7 @@ struct PlayerContentView: View {
                 .ignoresSafeArea(edges: .bottom)
                 .opacity(navManager.showMenu ? 1 : 0)
 
-            if !hidePlayerPageIndicator {
+            if !hidePlayerPageIndicator && !sideBySide {
                 PlayerPageControl()
                     .padding(
                         .bottom,
@@ -76,9 +77,26 @@ struct PlayerContentView: View {
     var pages: some View {
         if inlinePlayer != nil {
             livePages
+        } else if sideBySide, let video = player.video {
+            HStack(spacing: 0) {
+                controlsPage
+                    .frame(width: Self.sideBySideControlsWidth)
+                chapterDescriptionPage(video)
+            }
         } else {
             tabPages
         }
+    }
+
+    static let sideBySideControlsWidth: CGFloat = 420
+    static let sideBySideMinWidth: CGFloat = sideBySideControlsWidth + 320
+
+    var sideBySide: Bool {
+        #if os(iOS)
+        !compactSize && fitsSideBySide
+        #else
+        false
+        #endif
     }
 
     @ViewBuilder

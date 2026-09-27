@@ -12,7 +12,7 @@ struct PodcastArtworkTapArea: View {
     @Environment(PlayerManager.self) private var player
     @Environment(NavigationManager.self) private var navManager
     @Environment(SheetPositionReader.self) private var sheetPos
-    @Environment(\.horizontalSizeClass) private var sizeClass
+    @Environment(\.bigScreenLayout) private var bigScreenLayout
     @Environment(\.dismiss) private var dismiss
 
     var body: some View {
@@ -24,7 +24,7 @@ struct PodcastArtworkTapArea: View {
                     navManager: navManager,
                     player: player,
                     sheetPos: sheetPos,
-                    sizeClass: sizeClass,
+                    bigScreen: bigScreenLayout,
                     dismiss: dismiss
                 ).open(subscription)
             }

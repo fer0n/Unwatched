@@ -11,6 +11,17 @@ struct AppNotificationOverlayModifier: ViewModifier {
 
     func body(content: Content) -> some View {
         content
+            .modifier(AppNotificationOverlay(appNotificationVM: appNotificationVM, topPadding: topPadding))
+            .environment(appNotificationVM)
+    }
+}
+
+struct AppNotificationOverlay: ViewModifier {
+    var appNotificationVM: AppNotificationVM
+    var topPadding: CGFloat
+
+    func body(content: Content) -> some View {
+        content
             .overlay(alignment: .top) {
                 AppNotificationView(
                     notification: appNotificationVM.currentNotification,
@@ -20,7 +31,6 @@ struct AppNotificationOverlayModifier: ViewModifier {
                 .offset(y: appNotificationVM.isPresented ? 0 : -150)
                 .opacity(appNotificationVM.isPresented ? 1 : 0)
             }
-            .environment(appNotificationVM)
     }
 }
 
@@ -29,5 +39,9 @@ extension View {
         modifier(AppNotificationOverlayModifier(
                     topPadding: topPadding)
         )
+    }
+
+    func appNotificationOverlay(_ appNotificationVM: AppNotificationVM, topPadding: CGFloat = 2) -> some View {
+        modifier(AppNotificationOverlay(appNotificationVM: appNotificationVM, topPadding: topPadding))
     }
 }

@@ -15,7 +15,7 @@ struct InboxCardStack: View {
     @Environment(TinyUndoManager.self) private var undoManager
     @Environment(NavigationManager.self) private var navManager
     @Environment(SheetPositionReader.self) private var sheetPos
-    @Environment(\.horizontalSizeClass) private var horizontalSizeClass
+    @Environment(\.bigScreenLayout) private var bigScreenLayout
     @Environment(\.verticalSizeClass) private var verticalSizeClass
 
     let entries: [InboxEntry]
@@ -70,7 +70,7 @@ struct InboxCardStack: View {
         GeometryReader { geo in
             // iPad sidebar and iPhone landscape genuinely differ in height by orientation;
             // only the portrait iPhone sheet needs flooring against its own drag jitter
-            let isFixedPortraitSheet = !Device.isBigScreen(horizontalSizeClass) && verticalSizeClass != .compact
+            let isFixedPortraitSheet = !bigScreenLayout && verticalSizeClass != .compact
             let minHeight = isFixedPortraitSheet ? sheetPos.playerControlHeight : 0
             let available = CGSize(width: geo.size.width, height: max(geo.size.height, minHeight))
             let layout = InboxCard.Layout(available: available, minDetailHeight: minDetailHeight)

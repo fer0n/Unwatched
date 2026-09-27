@@ -16,12 +16,16 @@ struct FullscreenPlayerControls: View {
     let showLeft: Bool
     /// Use the secondary color for the buttons (landscape) instead of primary (portrait overlay).
     var secondary: Bool = false
+    var axis: Axis = .vertical
 
     var body: some View {
-        let size: CGFloat = 32
+        let size: CGFloat = axis == .vertical ? 32 : 30
+        let layout = axis == .vertical
+            ? AnyLayout(VStackLayout(spacing: 0))
+            : AnyLayout(HStackLayout(spacing: Self.rowSpacing))
 
-        VStack(spacing: 0) {
-            Spacer()
+        layout {
+            gap
 
             PlayerMoreMenuButton(
                 sleepTimerVM: sleepTimerVM,
@@ -34,9 +38,10 @@ struct FullscreenPlayerControls: View {
                     .frame(width: size, height: size)
                     .modifier(PlayerControlButtonStyle(isOn: sleepTimerVM.isOn))
             }
+            .modifier(RowSlot(axis: axis, size: size))
 
-            Spacer()
-            Spacer()
+            gap
+            gap
 
             NextChapterButton(isCircleVariant: true) { image in
                 VStack(spacing: 0) {
@@ -44,33 +49,38 @@ struct FullscreenPlayerControls: View {
                         .resizable()
                         .frame(width: size, height: size)
                         .modifier(PlayerControlButtonStyle())
-                    ChapterTimeRemaining()
-                        .font(.system(size: 12).monospacedDigit())
-                        .lineLimit(1)
-                        .opacity(0.8)
-                        .fontWidth(.condensed)
-                        .fontWeight(.medium)
-                        .foregroundStyle(Color.foregroundGray.opacity(0.5))
+                    if axis == .vertical {
+                        ChapterTimeRemaining()
+                            .font(.system(size: 12).monospacedDigit())
+                            .lineLimit(1)
+                            .opacity(0.8)
+                            .fontWidth(.condensed)
+                            .fontWeight(.medium)
+                            .foregroundStyle(Color.foregroundGray.opacity(0.5))
+                    }
                 }
             }
             .buttonStyle(.plain)
             // always shown; disabled (greyed out) when there is no next chapter
             .disabled(player.nextChapter == nil)
+            .modifier(RowSlot(axis: axis, size: size))
 
-            Spacer()
-            Spacer()
+            gap
+            gap
 
             FullscreenChapterDescriptionButton(
                 arrowEdge: arrowEdge,
                 menuOpen: $autoHideVM.keepVisible,
                 size: size,
+                showPadding: axis == .vertical,
                 openTrigger: autoHideVM.descriptionPopoverRequest
             )
             .buttonStyle(.plain)
             .frame(minHeight: size)
+            .modifier(RowSlot(axis: axis, size: size))
 
-            Spacer()
-            Spacer()
+            gap
+            gap
 
             FullscreenSpeedControl(
                 autoHideVM: $autoHideVM,
@@ -78,9 +88,10 @@ struct FullscreenPlayerControls: View {
                 size: size
             )
             .buttonStyle(.plain)
+            .modifier(RowSlot(axis: axis, size: size))
 
-            Spacer()
-            Spacer()
+            gap
+            gap
 
             CoreNextButton(extendedContextMenu: true,
                            isCircleVariant: true) { image, isOn in
@@ -89,9 +100,10 @@ struct FullscreenPlayerControls: View {
                     .frame(width: size, height: size)
                     .modifier(PlayerControlButtonStyle(isOn: isOn))
             }
+            .modifier(RowSlot(axis: axis, size: size))
 
-            Spacer()
-            Spacer()
+            gap
+            gap
 
             #if os(iOS)
             Group {
@@ -105,17 +117,41 @@ struct FullscreenPlayerControls: View {
             }
             .buttonStyle(.plain)
             .animation(.default, value: preferPlayerType)
+            .modifier(RowSlot(axis: axis, size: size))
             #endif
 
-            Spacer()
+            gap
         }
         .foregroundStyle(Color.neutralAccentColor)
         .fontWeight(.bold)
         .environment(\.colorScheme, .dark)
         .environment(\.playerControlsSecondary, secondary)
-        .padding(.vertical)
+        .padding(axis == .vertical ? .vertical : [])
         .frame(minWidth: 35)
+        .fixedSize(horizontal: axis == .horizontal, vertical: false)
         .preferredColorScheme(.dark)
+    }
+
+    static let rowSpacing: CGFloat = 14
+
+    private struct RowSlot: ViewModifier {
+        let axis: Axis
+        let size: CGFloat
+
+        func body(content: Content) -> some View {
+            if axis == .horizontal {
+                content.frame(width: size, height: size)
+            } else {
+                content
+            }
+        }
+    }
+
+    @ViewBuilder
+    var gap: some View {
+        if axis == .vertical {
+            Spacer()
+        }
     }
 
     #if os(iOS)

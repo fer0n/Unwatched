@@ -133,6 +133,8 @@ struct PlayerControlsPlayButton: View {
         switch size {
         case .small:
             return 45
+        case .compact:
+            return 60
         case .medium:
             return 80
         case .large:
@@ -142,6 +144,7 @@ struct PlayerControlsPlayButton: View {
 
     enum Size {
         case small
+        case compact
         case medium
         case large
     }

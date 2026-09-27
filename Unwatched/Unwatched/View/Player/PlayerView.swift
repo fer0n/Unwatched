@@ -11,6 +11,7 @@ import UnwatchedShared
 
 struct PlayerView: View {
     @AppStorage(Const.hideControlsFullscreen) var hideControlsFullscreen = false
+    @Environment(\.landscapeControlBand) var landscapeControlBand
     @AppStorage(Const.fullscreenControlsSetting) var fullscreenControlsSetting: FullscreenControls = .autoHide
     @AppStorage(Const.playVideoFullscreen) var playVideoFullscreen: Bool = false
     @AppStorage(Const.reloadVideoId) var reloadVideoId = ""
@@ -50,7 +51,7 @@ struct PlayerView: View {
             // placeholder overlay: spans the screen, stays behind video and controls
             #if os(iOS)
             .overlay {
-                if layoutMode == .landscapeFullscreen && showFullscreenControls {
+                if layoutMode == .landscapeFullscreen && showSideControls {
                     FullscreenEdgeSwipeArea(
                         autoHideVM: $autoHideVM,
                         showLeft: showLeft
@@ -90,7 +91,7 @@ struct PlayerView: View {
                     .environment(\.layoutDirection, .leftToRight)
                 }
 
-                if layoutMode == .landscapeFullscreen && showFullscreenControls {
+                if layoutMode == .landscapeFullscreen && showSideControls {
                     FullscreenPlayerControlsWrapper(
                         autoHideVM: $autoHideVM,
                         sleepTimerVM: sleepTimerVM,
@@ -103,7 +104,7 @@ struct PlayerView: View {
                             ? .rightToLeft
                             : .leftToRight)
             #endif
-            .frame(maxWidth: !showFullscreenControls
+            .frame(maxWidth: !showSideControls
                     ? .infinity
                     : nil)
             .overlay(alignment: .trailing) {
@@ -123,6 +124,7 @@ struct PlayerView: View {
             .fullscreenSafeArea(enable: landscapeFullscreen)
             // force reload if value changed (requires settings update)
             .id("videoPlayer-\(playVideoFullscreen)-\(reloadVideoId)-\(switchManager.activeType.usesWebPlayer)")
+            .environment(\.sleepTimerVM, sleepTimerVM)
             .onChange(of: reloadVideoId) {
                 autoHideVM.reset()
             }
@@ -200,6 +202,10 @@ struct PlayerView: View {
 
     var hideMiniPlayer: Bool {
         sheetPos.hideMiniPlayer(showMenu: navManager.showMenu, landscapeFullscreen: landscapeFullscreen)
+    }
+
+    var showSideControls: Bool {
+        showFullscreenControls && landscapeControlBand == nil
     }
 
     var showFullscreenControls: Bool {

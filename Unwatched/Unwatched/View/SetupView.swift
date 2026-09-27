@@ -11,7 +11,6 @@ import UnwatchedShared
 
 struct SetupView: View {
     @Environment(\.scenePhase) var scenePhase
-    @Environment(\.horizontalSizeClass) var horizontalSizeClass: UserInterfaceSizeClass?
     @Environment(RefreshManager.self) var refresher
     @Environment(\.colorScheme) var colorScheme
     @Environment(PlayerManager.self) var player

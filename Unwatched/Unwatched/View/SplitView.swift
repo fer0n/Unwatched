@@ -176,12 +176,18 @@ struct MacOSSplitView: View {
 
 struct IOSSPlitView: View {
     @Environment(\.dynamicTypeSize) var dynamicTypeSize
-    @AppStorage(Const.hideControlsFullscreen) var hideControlsFullscreen = false
+    @AppStorage(Const.hideControlsFullscreen) var hideControlsSetting = false
 
     let proxy: GeometryProxy
     let bigScreen: Bool
     let isLandscape: Bool
     let landscapeFullscreen: Bool
+    var fold: CGRect?
+    var restoringFullscreen = false
+
+    var hideControlsFullscreen: Bool {
+        hideControlsSetting || restoringFullscreen
+    }
 
     var body: some View {
         layout {
@@ -190,16 +196,18 @@ struct IOSSPlitView: View {
                 horizontalLayout: hideControlsFullscreen && isLandscape,
                 landscapeFullscreen: landscapeFullscreen,
                 hideControls: hideControlsFullscreen,
-                )
+                fold: bigScreen ? nil : fold
+            )
             .frame(maxHeight: .infinity)
+            .ignoresSafeArea(edges: overlayCarriesControls ? .vertical : [])
             .environment(\.layoutDirection, .leftToRight)
 
             if bigScreen && !hideControlsFullscreen {
                 MenuView()
-                    .frame(maxWidth: menuWidth,
-                           maxHeight: isLandscape
-                            ? nil
-                            : proxy.size.height * 0.4)
+                    .frame(minWidth: fold == nil ? nil : menuWidth,
+                           maxWidth: menuWidth,
+                           minHeight: fold == nil ? nil : menuHeight,
+                           maxHeight: menuHeight)
                     .setColorScheme()
                     .if(isLandscape) { view in
                         view.clipShape(RoundedRectangle(
@@ -210,7 +218,7 @@ struct IOSSPlitView: View {
                     .transition(
                         isLandscape
                             ? .move(edge: .trailing)
-                            : .offset(y: proxy.size.height * 0.4 + proxy.safeAreaInsets.bottom)
+                            : .offset(y: (menuHeight ?? 0) + proxy.safeAreaInsets.bottom)
                     )
                     .environment(\.layoutDirection, .leftToRight)
                     #if os(visionOS)
@@ -225,10 +233,14 @@ struct IOSSPlitView: View {
         #endif
     }
 
+    var overlayCarriesControls: Bool {
+        bigScreen && isLandscape && PlayerScrubberOverlay.replacesInlineScrubber(hideControls: hideControlsFullscreen)
+    }
+
     var layout: AnyLayout {
         isLandscape
-            ? AnyLayout(HStackLayout(spacing: horizontalSpacing))
-            : AnyLayout(VStackLayout())
+            ? AnyLayout(HStackLayout(spacing: fold?.width ?? horizontalSpacing))
+            : AnyLayout(VStackLayout(spacing: fold?.height))
     }
 
     var horizontalSpacing: Double {
@@ -248,8 +260,12 @@ struct IOSSPlitView: View {
     }
 
     var menuWidth: CGFloat? {
-        isLandscape
-            ? min(proxy.size.width * 0.4, sidebarWidth)
-            : nil
+        guard isLandscape else { return nil }
+        return fold?.minX ?? min(proxy.size.width * 0.4, sidebarWidth)
+    }
+
+    var menuHeight: CGFloat? {
+        guard !isLandscape else { return nil }
+        return fold.map { proxy.size.height - $0.maxY } ?? proxy.size.height * 0.4
     }
 }

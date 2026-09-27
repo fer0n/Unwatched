@@ -198,11 +198,7 @@ final class WebPlayerWarmup: NSObject {
     @MainActor
     private func hideBehindKeyWindow(_ webView: WKWebView) {
         #if os(iOS)
-        let window = UIApplication.shared.connectedScenes
-            .compactMap { $0 as? UIWindowScene }
-            .flatMap(\.windows)
-            .first { $0.isKeyWindow }
-        window?.insertSubview(webView, at: 0)
+        Self.keyWindow?.insertSubview(webView, at: 0)
         setHidden(webView, true)
         #endif
     }
@@ -274,13 +270,23 @@ final class WebPlayerWarmup: NSObject {
     @MainActor
     private static var warmupSize: CGSize {
         #if os(iOS)
-        let bounds = UIScreen.main.bounds
+        let bounds = keyWindow?.bounds ?? CGRect(x: 0, y: 0, width: 640, height: 640)
         let width = min(bounds.width, bounds.height)
         #else
         let width: CGFloat = 640
         #endif
         return CGSize(width: width, height: (width / Const.defaultVideoAspectRatio).rounded())
     }
+
+    #if os(iOS)
+    @MainActor
+    private static var keyWindow: UIWindow? {
+        UIApplication.shared.connectedScenes
+            .compactMap { $0 as? UIWindowScene }
+            .flatMap(\.windows)
+            .first { $0.isKeyWindow }
+    }
+    #endif
 }
 
 extension WebPlayerWarmup: WKNavigationDelegate {

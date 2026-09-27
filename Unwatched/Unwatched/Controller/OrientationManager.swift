@@ -39,6 +39,7 @@ import UnwatchedShared
     @MainActor
     static func changeOrientation(to orientation: UIInterfaceOrientationMask) {
         guard UIDevice.isIphone,
+              !SheetPositionReader.shared.regularSize,
               let windowScene = UIApplication.shared.connectedScenes.first as? UIWindowScene else {
             return
         }
@@ -56,7 +57,7 @@ import UnwatchedShared
     @MainActor
     static func updatePodcastOrientationLock() {
         guard UIDevice.isIphone else { return }
-        let locked = PlayerManager.shared.isAudioOnly
+        let locked = PlayerManager.shared.isAudioOnly && !SheetPositionReader.shared.regularSize
         guard locked != podcastOrientationLocked else { return }
         podcastOrientationLocked = locked
 

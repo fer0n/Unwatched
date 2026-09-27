@@ -61,15 +61,8 @@ struct SubscriptionListSection: View {
         // workaround: transparent tabbar in library tab otherwise due to async loading
         if subscriptionsVM.subscriptions.isEmpty && subscriptionsVM.isLoading {
             Spacer()
-                .frame(height: {
-                    #if os(iOS)
-                    return UIScreen.main.bounds.size.height
-                    #elseif os(visionOS)
-                    return 800
-                    #else
-                    return NSScreen.main?.frame.size.height ?? 800
-                    #endif
-                }())
+                // sizing by the list itself loops
+                .frame(height: SheetPositionReader.shared.sheetHeight)
         }
     }
 

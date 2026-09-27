@@ -44,15 +44,8 @@ struct AsyncPlaceholderWorkaround: View {
 
         if videoListVM.videos.isEmpty && videoListVM.isLoading {
             Spacer()
-                .frame(height: {
-                    #if os(iOS)
-                    return UIScreen.main.bounds.size.height
-                    #elseif os(visionOS)
-                    return 800
-                    #else
-                    return NSScreen.main?.frame.size.height ?? 800
-                    #endif
-                }())
+                // sizing by the list itself loops
+                .frame(height: SheetPositionReader.shared.sheetHeight)
                 .myListRowBackground()
         }
     }

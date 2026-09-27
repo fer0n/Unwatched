@@ -24,6 +24,7 @@ struct PlayerControls: View {
     var sleepTimerVM: SleepTimerViewModel
 
     @Binding var minHeight: CGFloat?
+    @Environment(\.playerControlsShortOnHeight) var shortOnHeight
     @Binding var autoHideVM: AutoHideVM
 
     var speedSpacing: CGFloat {
@@ -60,130 +61,51 @@ struct PlayerControls: View {
     }
 
     var body: some View {
-        let layout = compactSize
-            ? AnyLayout(HStackLayout(spacing: 20))
-            : AnyLayout(VStackLayout(spacing: player.isTallAspectRatio ? 15 : 25))
-
         let outerLayout = horizontalLayout
             ? AnyLayout(HStackLayout(spacing: 10))
             : AnyLayout(VStackLayout(spacing: 0))
         ZStack {
-            outerLayout {
-                if showSubscriptionRow && !player.isTallAspectRatio {
-                    HStack(alignment: .center, spacing: 0) {
-                        InteractiveSubscriptionTitle(
-                            subscription: player.video?.subscription,
-                            showImage: true
-                        )
-                        .font(.headline)
-                        .fontWeight(.medium)
-                        .fontWidth(.condensed)
-                        .lineLimit(1)
-                        .frame(maxWidth: .infinity, alignment: .leading)
-                        .padding(.horizontal)
-                        .foregroundStyle(.secondary)
-
-                        CoreRotateOrientationButton { image in
-                            image
-                                .font(.system(size: 18, weight: .medium))
-                                .padding()
-                        }
-                        .opacity(player.video != nil ? 1 : 0)
+            if singleRow {
+                ViewThatFits(in: .horizontal) {
+                    HStack(spacing: 10) {
+                        controlsBlock
+                        scrubber
+                            .frame(minWidth: 280)
                     }
-                    .padding(.top, Const.iOS26_1 ? 7 : 0)
-                    .padding(.horizontal, Const.iOS26_1 ? 5 : 0)
-                }
-
-                if showSubscriptionRow && player.isTallAspectRatio {
-                    HStack(alignment: .center, spacing: 0) {
-                        InteractiveSubscriptionTitle(
-                            subscription: player.video?.subscription,
-                            showImage: true
-                        )
-                        .font(.headline)
-                        .fontWeight(.medium)
-                        .fontWidth(.condensed)
-                        .lineLimit(1)
-                        .frame(maxWidth: .infinity, alignment: .leading)
-                        .padding(.horizontal)
-                        .foregroundStyle(.secondary)
-
-                        ToggleTallFullscreenButton { image in
-                            image
-                                .font(.system(size: 18, weight: .medium))
-                                .padding()
-                        }
-                        .opacity(player.video != nil ? 1 : 0)
+                    VStack(spacing: 0) {
+                        scrubber
+                        controlsBlock
                     }
-                    .padding(.top, Const.iOS26_1 ? 7 : 0)
-                    .padding(.horizontal, Const.iOS26_1 ? 5 : 0)
                 }
+            } else {
+                outerLayout {
+                    if showSubscriptionRow {
+                        subscriptionRow
+                    }
 
-                if !player.embeddingDisabled && !compactSize && !player.isTallAspectRatio {
-                    controlsSpacer(max: 6)
-                }
+                    if !player.embeddingDisabled && !compactSize && !tightLayout {
+                        controlsSpacer(max: 6)
+                    }
 
-                if !singleRow {
                     scrubber
-                }
+                        .padding(.bottom, compactSize ? 10 : 0)
 
-                if !player.embeddingDisabled && !compactSize && !player.isTallAspectRatio {
-                    controlsSpacer(max: 26)
-                }
-
-                layout {
-                    // side by side, the play buttons lead
-                    if compactSize {
-                        playbackButtons
-                        actionsRow
-                    } else {
-                        actionsRow
-                        playbackButtons
+                    if !player.embeddingDisabled && !compactSize && !tightLayout {
+                        controlsSpacer(max: 26)
                     }
 
-                    if player.isTallAspectRatio {
-                        // make sure play button vertical spacing is equal
-                        Spacer()
-                            .frame(height: 0)
-                    }
-                }
-                .padding(.horizontal, 15)
-                .padding(.bottom, !compactSize ? 20 : 0)
-                .frame(maxWidth: 800)
+                    controlsBlock
 
-                if singleRow {
-                    scrubber
-                }
-
-                if !player.embeddingDisabled && !compactSize && !player.isTallAspectRatio {
-                    controlsSpacer(max: 16)
-                }
-                if !compactSize {
-                    Button {
-                        player.setShowMenu()
-                    } label: {
-                        VStack {
-                            Image(systemName: "chevron.up")
-                                .font(.system(size: 30))
-                                .fontWeight(.regular)
-                            Text("showMenu")
-                                .font(.caption)
-                                .textCase(.uppercase)
-                                .padding(.bottom, 3)
-                                .fixedSize()
-                                .fontWeight(.bold)
-                        }
+                    if !player.embeddingDisabled && !compactSize && !player.isTallAspectRatio {
+                        controlsSpacer(max: 16)
                     }
-                    .font(.headline)
-                    .fontWeight(.bold)
-                    .foregroundStyle(Color.automaticBlack.opacity(0.5))
-                    .padding(8)
-                    .buttonStyle(.plain)
-                    .opacity(navManager.showMenu ? 0 : 1)
+                    if !compactSize {
+                        showMenuButton
+                    }
                 }
             }
-            .opacity(showControls ? 1 : 0)
         }
+        .opacity(showControls ? 1 : 0)
         .background {
             PlayerBackgroundGestureRecognizer()
         }
@@ -214,12 +136,53 @@ struct PlayerControls: View {
         )
     }
 
+    var controlsBlock: some View {
+        let layout = compactSize
+            ? AnyLayout(HStackLayout(spacing: 20))
+            : AnyLayout(VStackLayout(spacing: shortOnHeight ? 8 : tightLayout ? 15 : 25))
+
+        return layout {
+            if compactSize {
+                if singleRow {
+                    controlsRow
+                } else {
+                    ViewThatFits(in: .horizontal) {
+                        controlsRow
+                        VStack(spacing: 15) {
+                            actionsRow
+                            playbackButtons(small: true, playSize: .compact)
+                        }
+                    }
+                }
+            } else {
+                actionsRow
+                playbackButtons(small: hasSmallControls)
+            }
+
+            if player.isTallAspectRatio {
+                // make sure play button vertical spacing is equal
+                Spacer()
+                    .frame(height: 0)
+            }
+        }
+        .padding(.horizontal, 15)
+        .padding(.bottom, !compactSize ? 20 : 0)
+        .frame(maxWidth: 800)
+    }
+
+    var controlsRow: some View {
+        HStack(spacing: 20) {
+            playbackButtons(small: hasSmallControls)
+            actionsRow
+        }
+    }
+
     var scrubber: some View {
         ChapterMiniControlView(
             compactSize: compactSize,
             autoHideVM: autoHideVM,
-            limitHeight: horizontalLayout || player.isTallAspectRatio,
-            inlineTime: horizontalLayout || player.isTallAspectRatio,
+            limitHeight: horizontalLayout || tightLayout,
+            inlineTime: horizontalLayout || tightLayout,
             )
         .contentShape(Rectangle())
         .padding(.horizontal)
@@ -231,25 +194,25 @@ struct PlayerControls: View {
             minSpacing: speedSpacing,
             compactSize: compactSize,
             showRotateButton: showRotateFullscreen && player.embeddingDisabled,
+            showHideControlsButton: enableHideControls,
             sleepTimerVM: sleepTimerVM,
             autoHideVM: $autoHideVM
         )
     }
 
-    var playbackButtons: some View {
-        HStack(spacing: hasSmallControls ? speedSpacing : nil) {
-            SeekButton(forward: false, isSmall: hasSmallControls)
+    func playbackButtons(
+        small: Bool,
+        playSize: PlayerControlsPlayButton.Size? = nil
+    ) -> some View {
+        HStack(spacing: small ? speedSpacing : nil) {
+            SeekButton(forward: false, isSmall: small)
                 .frame(maxWidth: compactSize ? nil : .infinity)
 
-            PlayerControlsPlayButton(size: playButtonSize)
+            PlayerControlsPlayButton(size: playSize ?? (small ? .small : playButtonSize))
                 .frame(maxWidth: compactSize ? nil : .infinity)
 
-            SeekButton(forward: true, isSmall: hasSmallControls)
+            SeekButton(forward: true, isSmall: small)
                 .frame(maxWidth: compactSize ? nil : .infinity)
-
-            if enableHideControls {
-                HideControlsButton(isSmall: true)
-            }
         }
         .padding(.horizontal, compactSize ? 0 : 20)
         .frame(maxWidth: compactSize ? nil : Const.playerRowMaxWidth)
@@ -270,13 +233,76 @@ struct PlayerControls: View {
     var playButtonSize: PlayerControlsPlayButton.Size {
         horizontalLayout
             ? .small
-            : player.embeddingDisabled || compactSize
+            : player.embeddingDisabled || compactSize || shortOnHeight
             ? .medium
             : .large
     }
 
+    var tightLayout: Bool {
+        player.isTallAspectRatio || shortOnHeight
+    }
+
     var hasSmallControls: Bool {
         !player.embeddingDisabled && horizontalLayout && compactSize
+    }
+}
+
+extension PlayerControls {
+    var subscriptionRow: some View {
+        HStack(alignment: .center, spacing: 0) {
+            InteractiveSubscriptionTitle(
+                subscription: player.video?.subscription,
+                showImage: true
+            )
+            .font(.headline)
+            .fontWeight(.medium)
+            .fontWidth(.condensed)
+            .lineLimit(1)
+            .frame(maxWidth: .infinity, alignment: .leading)
+            .padding(.horizontal)
+            .foregroundStyle(.secondary)
+
+            Group {
+                if player.isTallAspectRatio {
+                    ToggleTallFullscreenButton(contentImage: fullscreenButtonLabel)
+                } else {
+                    CoreRotateOrientationButton(contentImage: fullscreenButtonLabel)
+                }
+            }
+            .opacity(player.video != nil ? 1 : 0)
+        }
+        .padding(.top, Const.iOS26_1 ? 7 : 0)
+        .padding(.horizontal, Const.iOS26_1 ? 5 : 0)
+    }
+
+    func fullscreenButtonLabel(_ image: Image) -> some View {
+        image
+            .font(.system(size: 18, weight: .medium))
+            .padding()
+    }
+
+    var showMenuButton: some View {
+        Button {
+            player.setShowMenu()
+        } label: {
+            VStack {
+                Image(systemName: "chevron.up")
+                    .font(.system(size: 30))
+                    .fontWeight(.regular)
+                Text("showMenu")
+                    .font(.caption)
+                    .textCase(.uppercase)
+                    .padding(.bottom, 3)
+                    .fixedSize()
+                    .fontWeight(.bold)
+            }
+        }
+        .font(.headline)
+        .fontWeight(.bold)
+        .foregroundStyle(Color.automaticBlack.opacity(0.5))
+        .padding(8)
+        .buttonStyle(.plain)
+        .opacity(navManager.showMenu ? 0 : 1)
     }
 }
 

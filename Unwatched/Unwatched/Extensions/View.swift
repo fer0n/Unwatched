@@ -170,3 +170,16 @@ extension DynamicViewContent {
         }
     }
 }
+
+#if os(iOS)
+extension View {
+    @ViewBuilder
+    func horizontalBars() -> some View {
+        if #available(iOS 27.1, *) {
+            toolbarVerticalBehavior(.disabled)
+        } else {
+            self
+        }
+    }
+}
+#endif

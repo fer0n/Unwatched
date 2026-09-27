@@ -12,6 +12,7 @@ struct MenuViewSheet: ViewModifier {
 
     var allowPlayerControlHeight: Bool
     var landscapeFullscreen: Bool
+    var floatingSheet: Bool
     var disableSheet: Bool
     var proxy: GeometryProxy
 
@@ -19,13 +20,18 @@ struct MenuViewSheet: ViewModifier {
         @Bindable var navManager = navManager
 
         content
-            .sheet(isPresented: disableSheet ? .constant(false) : $navManager.showMenu) {
+            // not .constant(false): only a changing value re-presents the sheet
+            .sheet(isPresented: Binding(
+                get: { navManager.showMenu && !disableSheet },
+                set: { if !disableSheet { navManager.showMenu = $0 } }
+            )) {
                 ZStack {
                     MenuView()
                         .transparentNavBarWorkaround()
                         .menuSheetDetents(
                             allowPlayerControlHeight: allowPlayerControlHeight,
                             landscapeFullscreen: landscapeFullscreen,
+                            floating: floatingSheet,
                             proxy: proxy
                         )
 
@@ -42,10 +48,12 @@ struct MenuViewSheet: ViewModifier {
 extension View {
     func menuViewSheet(allowPlayerControlHeight: Bool,
                        landscapeFullscreen: Bool,
+                       floatingSheet: Bool,
                        disableSheet: Bool,
                        proxy: GeometryProxy) -> some View {
         self.modifier(MenuViewSheet(allowPlayerControlHeight: allowPlayerControlHeight,
                                     landscapeFullscreen: landscapeFullscreen,
+                                    floatingSheet: floatingSheet,
                                     disableSheet: disableSheet,
                                     proxy: proxy))
     }

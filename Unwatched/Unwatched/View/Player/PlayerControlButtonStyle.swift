@@ -27,10 +27,15 @@ struct PlayerControlButtonStyle: ViewModifier {
             .glassEffect(.regular, in: Circle())
             #endif
             .overlay {
-                badge
-                    .offset(x: 11, y: 10)
-                    .opacity(isOn ? 1 : 0)
-                    .animation(.default, value: isOn)
+                // glass at zero opacity still shows over bright video
+                ZStack {
+                    if isOn {
+                        badge
+                            .offset(x: 11, y: 10)
+                            .transition(.opacity)
+                    }
+                }
+                .animation(.default, value: isOn)
             }
     }
 

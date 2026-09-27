@@ -10,6 +10,7 @@ import UnwatchedShared
 
 struct MenuView: View {
     @Environment(NavigationManager.self) var navManager
+    @Environment(\.bigScreenLayout) var bigScreenLayout
 
     var body: some View {
         @Bindable var navManager = navManager
@@ -29,13 +30,14 @@ struct MenuView: View {
     @ViewBuilder
     var tabs: some View {
         #if os(iOS)
-        if MenuTabBarController.usesProminentPlayButton {
+        if MenuTabBarController.usesProminentPlayButton && !bigScreenLayout {
             MenuTabBar()
                 .ignoresSafeArea()
         } else {
             // no role: .search here — a search-role tab always renders detached from the
             // others, which only makes sense once the play button takes that treatment instead
             tabView(searchRole: nil)
+                .horizontalBars()
         }
         #else
         tabView(searchRole: .search)

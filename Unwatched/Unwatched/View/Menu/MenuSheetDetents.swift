@@ -7,12 +7,15 @@ import SwiftUI
 import UnwatchedShared
 
 struct MenuSheetDetents: ViewModifier {
+    static let floatingSheetMargin: CGFloat = 8
+
     @Environment(SheetPositionReader.self) var sheetPos
     @Environment(NavigationManager.self) var navManager
     @Environment(PlayerManager.self) var player
 
     var allowPlayerControlHeight: Bool
     var landscapeFullscreen: Bool
+    var floating: Bool
     var proxy: GeometryProxy
 
     @State var hasVideo = true
@@ -23,13 +26,15 @@ struct MenuSheetDetents: ViewModifier {
         content
             .modifier(AnimatableDetents(
                 selectedDetent: $sheetPos.selectedDetent,
-                // no minimized bar in portrait fullscreen -> dragging down dismisses back to fullscreen
-                allowMinSheet: sheetPos.allowMinSheet && hasVideo && !player.tallFullscreenActive,
+                // no minimized bar in fullscreen -> dragging down dismisses back to fullscreen
+                allowMinSheet: sheetPos.allowMinSheet && hasVideo
+                    && !player.tallFullscreenActive && !landscapeFullscreen,
                 preferLarge: !hasVideo,
-                allowPlayerControlHeight: allowPlayerControlHeight,
+                allowPlayerControlHeight: allowPlayerControlHeight && sheetPos.fixedSheetHeight == nil,
                 maxSheetHeight: sheetPos.maxSheetHeight,
                 playerControlHeight: sheetPos.playerControlHeight,
-                ))
+                floatingInset: floatingInset
+            ))
             .presentationBackgroundInteraction(.enabled)
             .presentationContentInteraction(.scrolls)
             .ignoresSafeArea(.all)
@@ -73,16 +78,24 @@ struct MenuSheetDetents: ViewModifier {
     }
 }
 
+extension MenuSheetDetents {
+    var floatingInset: CGFloat {
+        floating ? max(0, proxy.safeAreaInsets.bottom - Self.floatingSheetMargin) : 0
+    }
+}
+
 extension View {
     func menuSheetDetents(
         allowPlayerControlHeight: Bool = false,
         landscapeFullscreen: Bool = false,
+        floating: Bool = false,
         proxy: GeometryProxy
     ) -> some View {
         self.modifier(
             MenuSheetDetents(
                 allowPlayerControlHeight: allowPlayerControlHeight,
                 landscapeFullscreen: landscapeFullscreen,
+                floating: floating,
                 proxy: proxy
             )
         )

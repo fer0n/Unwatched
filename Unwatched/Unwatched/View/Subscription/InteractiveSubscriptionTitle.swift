@@ -10,7 +10,7 @@ struct InteractiveSubscriptionTitle: View, Equatable {
     @Environment(PlayerManager.self) var player
     @Environment(NavigationManager.self) var navManager
     @Environment(SheetPositionReader.self) var sheetPos
-    @Environment(\.horizontalSizeClass) var sizeClass: UserInterfaceSizeClass?
+    @Environment(\.bigScreenLayout) var bigScreenLayout
     @Environment(\.dismiss) var dismiss
     @Environment(\.isInMenuStack) var isInMenuStack
 
@@ -80,7 +80,7 @@ struct InteractiveSubscriptionTitle: View, Equatable {
             navManager: navManager,
             player: player,
             sheetPos: sheetPos,
-            sizeClass: sizeClass,
+            bigScreen: bigScreenLayout,
             dismiss: dismiss
         ).open(sub)
     }
@@ -103,12 +103,12 @@ struct OpenSubscriptionAction {
     let navManager: NavigationManager
     let player: PlayerManager
     let sheetPos: SheetPositionReader
-    let sizeClass: UserInterfaceSizeClass?
+    let bigScreen: Bool
     let dismiss: DismissAction
 
     func open(_ sub: Subscription) {
         dismiss()
-        if sheetPos.isMinimumSheet && !Device.isBigScreen(sizeClass) {
+        if sheetPos.isMinimumSheet && !bigScreen {
             Task {
                 // workaround: view appearing while still being cut off due to sheet position
                 navManager.pushSubscription(subscription: sub)

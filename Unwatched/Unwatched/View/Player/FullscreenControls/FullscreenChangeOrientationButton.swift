@@ -45,6 +45,7 @@ enum FullscreenExitAction {
                 player.togglePip()
             }
         )
+        guard !SheetPositionReader.shared.regularSize else { return actions }
         actions.append(
             showLeft
                 ? MenuAction(String(localized: "fullscreenRight"), systemImage: Const.enableFullscreenSF) {
@@ -60,6 +61,10 @@ enum FullscreenExitAction {
     static func exit(player: PlayerManager) {
         if player.tallFullscreenActive {
             player.setTallFullscreen(false)
+        } else if SheetPositionReader.shared.bigScreen {
+            withAnimation {
+                UserDefaults.standard.set(false, forKey: Const.hideControlsFullscreen)
+            }
         } else {
             OrientationManager.changeOrientation(to: .portrait)
         }

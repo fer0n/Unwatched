@@ -136,15 +136,30 @@ struct ScrubberThumbnailOverlay: View {
 struct PlayerScrubberOverlay: View {
     var vm: PlayerScrubberOverlayVM
     @Environment(PlayerManager.self) var player
-    @Environment(\.horizontalSizeClass) private var sizeClass: UserInterfaceSizeClass?
+    @Environment(\.bigScreenLayout) private var bigScreenLayout
+    @AppStorage(Const.hideControlsFullscreen) private var hideControlsFullscreen = false
+    @Environment(\.sleepTimerVM) private var sleepTimerVM
+    @Environment(\.landscapeControlBand) private var landscapeControlBand
 
     var body: some View {
-        if !Device.isBigScreen(sizeClass) && player.video?.isAudioOnly != true {
+        if (!bigScreenLayout || Self.replacesInlineScrubber(hideControls: hideControlsFullscreen))
+            && landscapeControlBand?.edge != .bottom
+            && player.video?.isAudioOnly != true {
             pillStack
                 .padding(.bottom, 30)
                 .opacity(vm.showScrubber ? 1 : 0)
                 .animation(.easeOut(duration: 0.15), value: vm.showScrubber)
         }
+    }
+
+    private var showsControlsRow: Bool {
+        (bigScreenLayout || landscapeControlBand?.edge == .top) && sleepTimerVM != nil
+    }
+
+    @MainActor
+    static func replacesInlineScrubber(hideControls: Bool) -> Bool {
+        hideControls && (Device.isIphone || Device.isIpad)
+            && !PlayerSwitchManager.shared.activeType.isYoutubeEmbedded
     }
 
     @ViewBuilder
@@ -159,6 +174,24 @@ struct PlayerScrubberOverlay: View {
     }
 
     private var pills: some View {
+        HStack(alignment: .bottom, spacing: 0) {
+            scrubberPills
+
+            if showsControlsRow, let sleepTimerVM {
+                FullscreenPlayerControls(
+                    autoHideVM: .constant(AutoHideVM.shared),
+                    arrowEdge: .bottom,
+                    sleepTimerVM: sleepTimerVM,
+                    showLeft: false,
+                    secondary: true,
+                    axis: .horizontal
+                )
+                .padding(.trailing, 30)
+            }
+        }
+    }
+
+    private var scrubberPills: some View {
         VStack(alignment: .leading, spacing: 3) {
             if let title = (player.currentChapterPreview ?? player.currentChapter)?.title {
                 Text(title)
@@ -169,8 +202,10 @@ struct PlayerScrubberOverlay: View {
                     .padding(.vertical, 6)
                     .backgroundTransparentEffect(fallback: .ultraThinMaterial, shape: Capsule())
                     .frame(maxWidth: .infinity, alignment: .leading)
-                    .containerRelativeFrame(.horizontal) { width, _ in
-                        (width - 60) * 0.75
+                    .if(!showsControlsRow) {
+                        $0.containerRelativeFrame(.horizontal) { width, _ in
+                            (width - 60) * 0.75
+                        }
                     }
                     .padding(.leading, 30)
                     .transition(.opacity.combined(with: .scale(0.95, anchor: .bottomLeading)))
@@ -191,7 +226,8 @@ struct PlayerScrubberOverlay: View {
             .padding(.horizontal, 12)
             .padding(.vertical, 8)
             .backgroundTransparentEffect(fallback: .ultraThinMaterial, shape: Capsule())
-            .padding(.horizontal, 30)
+            .padding(.leading, 30)
+            .padding(.trailing, showsControlsRow ? FullscreenPlayerControls.rowSpacing : 30)
         }
     }
 }

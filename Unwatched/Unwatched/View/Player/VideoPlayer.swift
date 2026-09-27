@@ -24,9 +24,12 @@ struct VideoPlayer: View {
     var horizontalLayout = false
     var landscapeFullscreen = true
     let hideControls: Bool
+    var fold: CGRect?
+    @Environment(\.landscapeControlBand) var landscapeControlBand
+    @State private var appNotificationVM = AppNotificationVM()
 
     var body: some View {
-        let enableHideControls = Device.requiresFullscreenWebWorkaround && compactSize
+        let enableHideControls = compactSize && (Device.requiresFullscreenWebWorkaround || Device.isIphone)
         let padding: CGFloat = horizontalLayout ? 3 : 8
 
         VStack(spacing: 0) {
@@ -49,6 +52,7 @@ struct VideoPlayer: View {
                 .layoutPriority(2)
             } else if !usePodcastLayout {
                 playerView(enableHideControls: enableHideControls)
+                    .frame(height: videoFold?.minY)
                     .hideCursorOnInactive(
                         after: 2,
                         isEnabled: hideCursorOverVideoEnabled,
@@ -79,6 +83,10 @@ struct VideoPlayer: View {
                             .padding(.vertical, padding)
                     }
                 } else {
+                    if let videoFold {
+                        Color.clear
+                            .frame(height: videoFold.height)
+                    }
                     PlayerContentView(compactSize: compactSize,
                                       horizontalLayout: horizontalLayout,
                                       enableHideControls: enableHideControls,
@@ -95,16 +103,34 @@ struct VideoPlayer: View {
             }
             #endif
         }
-        .appNotificationOverlay()
+        .appNotificationOverlay(appNotificationVM)
         .tint(.neutralAccentColor)
         .onPlayerPlayingChange { _ in
             if player.video?.isNew == true {
                 player.video?.isNew = false
             }
         }
-        .ignoresSafeArea(edges: layoutMode.ignoredSafeAreaEdges(embeddingDisabled: player.embeddingDisabled))
+        .ignoresSafeArea(edges: keepsOffCameraEdge
+                            ? (landscapeControlBand?.edge == .top ? .bottom : .top)
+                            : layoutMode.ignoredSafeAreaEdges(embeddingDisabled: player.embeddingDisabled))
+        .frame(maxHeight: keepsOffCameraEdge ? .infinity : nil)
+        .overlay(alignment: .bottom) {
+            if let controlBand {
+                FullscreenControlBand(
+                    band: controlBand,
+                    autoHideVM: $autoHideVM,
+                    sleepTimerVM: sleepTimerVM
+                )
+            }
+        }
+        .environment(appNotificationVM)
         .onChange(of: landscapeFullscreen) {
             handleFullscreenChange(.landscape, active: landscapeFullscreen)
+        }
+        .onAppear {
+            if landscapeFullscreen {
+                handleFullscreenChange(.landscape, active: true)
+            }
         }
         .onChange(of: player.tallFullscreenActive) {
             handleFullscreenChange(.portrait, active: player.tallFullscreenActive)
@@ -248,12 +274,34 @@ struct VideoPlayer: View {
             && !autoHideVM.showDescription
     }
 
+    var overlayCarriesControls: Bool {
+        horizontalLayout && PlayerScrubberOverlay.replacesInlineScrubber(hideControls: hideControls)
+    }
+
     var showFullscreenControlsCompactSize: Bool {
-        compactSize && (
+        if overlayCarriesControls {
+            return false
+        }
+        return compactSize && (
             fullscreenControlsSetting != .disabled
                 || Device.isMac && (!navManager.isMacosFullscreen || !horizontalLayout)
                 || !Device.isMac && !horizontalLayout
         )
+    }
+}
+
+extension VideoPlayer {
+    var videoFold: CGRect? {
+        guard !compactSize, !usePodcastLayout, !layoutMode.isFullscreen else { return nil }
+        return fold
+    }
+
+    var keepsOffCameraEdge: Bool {
+        layoutMode == .landscapeFullscreen && !isFakePip && landscapeControlBand != nil
+    }
+
+    var controlBand: ControlBand? {
+        keepsOffCameraEdge && landscapeControlBand?.edge == .bottom ? landscapeControlBand : nil
     }
 }
 

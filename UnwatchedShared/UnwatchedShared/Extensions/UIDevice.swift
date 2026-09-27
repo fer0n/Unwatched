@@ -28,8 +28,11 @@ public struct Device {
     }
 
     @MainActor
-    public static func isBigScreen(_ sizeClass: UserInterfaceSizeClass?) -> Bool {
-        sizeClass == .regular && !isIphone
+    public static func isBigScreen(
+        _ horizontal: UserInterfaceSizeClass?,
+        _ vertical: UserInterfaceSizeClass?
+    ) -> Bool {
+        horizontal == .regular && (!isIphone || vertical == .regular)
     }
 
     #if os(iOS)

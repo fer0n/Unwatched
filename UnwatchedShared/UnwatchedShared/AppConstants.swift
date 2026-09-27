@@ -397,6 +397,7 @@ public struct Const {
     public static let playVideoFullscreen = "playVideoFullscreen"
     public static let backgroundPlayback = "backgroundPlayback"
     public static let hideControlsFullscreen = "hideControlsFullscreen"
+    public static let bigScreenFullscreenToRestore = "bigScreenFullscreenToRestore"
     public static let surroundingEffect = "surroundingEffect"
     public static let returnToQueue = "returnToQueue"
     public static let rotateOnPlay = "rotateOnPlay"

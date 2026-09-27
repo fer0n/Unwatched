@@ -15,6 +15,7 @@ struct PlayerActionsRow: View {
     let minSpacing: CGFloat
     let compactSize: Bool
     let showRotateButton: Bool
+    var showHideControlsButton = false
     var sleepTimerVM: SleepTimerViewModel
     @Binding var autoHideVM: AutoHideVM
 
@@ -59,6 +60,10 @@ struct PlayerActionsRow: View {
 
             if showRotateButton {
                 RotateOrientationButton()
+            }
+
+            if showHideControlsButton {
+                HideControlsButton(isSmall: true)
             }
         }
         .clipped()

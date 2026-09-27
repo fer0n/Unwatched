@@ -13,4 +13,10 @@ extension EnvironmentValues {
     @Entry var playerControlsSecondary: Bool = false
 
     @Entry var isInMenuStack: Bool = false
+
+    @Entry var bigScreenLayout: Bool = false
+    @Entry var playerControlsShortOnHeight: Bool = false
+    @Entry var playerFitsSideBySide: Bool = false
+    @Entry var landscapeControlBand: ControlBand?
+    @Entry var sleepTimerVM: SleepTimerViewModel?
 }
