@@ -100,14 +100,7 @@ struct SpeedMenuContent: View {
         Button {
             option.isOn.wrappedValue.toggle()
         } label: {
-            Label {
-                Text("Tag")
-                Text(verbatim: option.tagName)
-            } icon: {
-                Image(
-                    systemName: option.isOn.wrappedValue ? Const.tagSpeedLockFillSF : Const.tagSpeedLockSF
-                )
-            }
+            Label(option.title, systemImage: option.symbol)
         }
         .disabled(!option.isEnabled)
     }

@@ -347,8 +347,8 @@ extension PlayerManager {
     var speedLockSF: String {
         if video?.subscription?.customSpeedSetting != nil {
             Const.channelSpeedLockFillSF
-        } else if hasSpeedLock {
-            Const.tagSpeedLockFillSF
+        } else if let tag = video.flatMap(Tag.playbackSpeedTag(for:)) {
+            tag.displaySymbol
         } else {
             Const.customPlaybackSpeedOffSF
         }
@@ -360,6 +360,15 @@ struct TagSpeedLockOption {
     let isOn: Binding<Bool>
     let isEnabled: Bool
     let tagName: String
+    var title: String {
+        "\(String(localized: "Tag")): \(tagName)"
+    }
+    let onSymbol: String
+    let offSymbol: String
+
+    var symbol: String {
+        isOn.wrappedValue ? onSymbol : offSymbol
+    }
 
     @MainActor
     static func forPlayer(_ player: PlayerManager, onToggle: (() -> Void)? = nil) -> TagSpeedLockOption? {
@@ -375,8 +384,27 @@ struct TagSpeedLockOption {
                 }
             ),
             isEnabled: video.subscription?.customSpeedSetting == nil,
-            tagName: tag.name
+            tagName: tag.name,
+            onSymbol: tag.displaySymbol,
+            offSymbol: offSymbol(for: tag.displaySymbol)
         )
+    }
+
+    /// The tag's symbol without its fill, or the plain tag when it has no unfilled variant.
+    private static func offSymbol(for symbol: String) -> String {
+        let unfilled = symbol.replacingOccurrences(of: ".fill", with: "")
+        guard unfilled != symbol, symbolExists(unfilled) else {
+            return Const.tagSpeedLockSF
+        }
+        return unfilled
+    }
+
+    private static func symbolExists(_ name: String) -> Bool {
+        #if os(macOS)
+        NSImage(systemSymbolName: name, accessibilityDescription: nil) != nil
+        #else
+        UIImage(systemName: name) != nil
+        #endif
     }
 }
 

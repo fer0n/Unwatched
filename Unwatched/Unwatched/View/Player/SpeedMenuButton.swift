@@ -118,11 +118,8 @@ struct SpeedMenuButton<Label: View>: UIViewControllerRepresentable {
 
     private func tagLockAction(_ option: TagSpeedLockOption) -> UIAction {
         UIAction(
-            title: String(localized: "Tag"),
-            subtitle: option.tagName,
-            image: UIImage(
-                systemName: option.isOn.wrappedValue ? Const.tagSpeedLockFillSF : Const.tagSpeedLockSF
-            ),
+            title: option.title,
+            image: UIImage(systemName: option.symbol),
             attributes: option.isEnabled ? .keepsMenuPresented : [.disabled, .keepsMenuPresented]
         ) { _ in
             option.isOn.wrappedValue.toggle()

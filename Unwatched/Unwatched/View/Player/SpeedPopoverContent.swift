@@ -104,7 +104,7 @@ struct SpeedPopoverContent: View {
 
     func trimSilenceButton(_ option: TrimSilenceOption) -> some View {
         optionButton(
-            "trimSilence",
+            Text("trimSilence"),
             image: option.isOn.wrappedValue ? Const.trimSilenceSF : Const.trimSilenceOffSF,
             isOn: option.isOn.wrappedValue,
             subtitle: {
@@ -120,15 +120,10 @@ struct SpeedPopoverContent: View {
 
     func tagLockButton(_ option: TagSpeedLockOption) -> some View {
         optionButton(
-            "Tag",
-            image: option.isOn.wrappedValue ? Const.tagSpeedLockFillSF : Const.tagSpeedLockSF,
+            Text(verbatim: option.title),
+            image: option.symbol,
             isOn: option.isOn.wrappedValue,
-            subtitle: {
-                Text(verbatim: option.tagName)
-                    .font(.caption)
-                    .lineLimit(1)
-                    .frame(maxWidth: .infinity, alignment: .leading)
-            },
+            subtitle: { EmptyView() },
             action: { option.isOn.wrappedValue.toggle() }
         )
         .enabled(option.isEnabled)
@@ -136,7 +131,7 @@ struct SpeedPopoverContent: View {
 
     var customSettingButton: some View {
         optionButton(
-            customSettingLabel,
+            Text(customSettingLabel),
             image: isOn ? Const.channelSpeedLockFillSF : Const.channelSpeedLockSF,
             isOn: isOn,
             subtitle: { },
@@ -146,7 +141,7 @@ struct SpeedPopoverContent: View {
     }
 
     func optionButton<Subtitle: View>(
-        _ title: LocalizedStringResource,
+        _ title: Text,
         image: String,
         isOn: Bool,
         @ViewBuilder subtitle: () -> Subtitle,
@@ -157,7 +152,7 @@ struct SpeedPopoverContent: View {
                 HStack(spacing: spacing) {
                     Image(systemName: image)
                         .contentTransition(.symbolEffect(.replace))
-                    Text(title)
+                    title
                         .lineLimit(1)
                     Spacer(minLength: 0)
                 }
