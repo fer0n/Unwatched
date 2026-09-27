@@ -50,12 +50,20 @@ extension ChapterDescriptionView {
         }
         ToolbarItem(placement: .topBarTrailing) {
             Menu {
-                if video.inboxEntry == nil {
-                    Button("moveToInbox", systemImage: "tray.and.arrow.down", action: moveToInbox)
-                }
-                if canBeCleared {
-                    Button(clearLabel, systemImage: Const.clearNoFillSF, action: clearVideo)
-                }
+                VideoListItemMoreMenuView(
+                    videoData: video,
+                    config: VideoListItemConfig(video),
+                    setWatched: setWatched,
+                    addVideoToTopQueue: addToQueueNext,
+                    addVideoToBottomQueue: addToQueueLast,
+                    clearVideoEverywhere: clearVideo,
+                    canBeCleared: canBeCleared,
+                    toggleBookmark: toggleBookmark,
+                    toggleIsNew: toggleIsNew,
+                    moveToInbox: moveToInbox,
+                    openUrlInApp: { navManager.openUrlInApp(.url($0)) },
+                    viewChannel: viewChannel
+                )
             } label: {
                 Image(systemName: "ellipsis")
             }
@@ -148,6 +156,35 @@ extension ChapterDescriptionView {
         }
         Signal.videoAction("inbox", .detail)
         handleDone(undo: undo)
+    }
+
+    func setWatched(_ watched: Bool) {
+        let requiresQueueChange = watched && requiresQueueChange()
+        VideoService.setVideoWatched(video, watched: watched, modelContext: modelContext)
+        if requiresQueueChange {
+            handlePotentialQueueChange()
+        }
+        Signal.videoAction(watched ? "watched" : "unwatched", .detail)
+        if watched {
+            handleDone(undo: nil)
+        } else {
+            hapticToggle.toggle()
+        }
+    }
+
+    func toggleBookmark() {
+        VideoService.toggleBookmark(video)
+        Signal.videoAction("bookmark", .detail)
+        hapticToggle.toggle()
+    }
+
+    func toggleIsNew() {
+        video.isNew.toggle()
+        hapticToggle.toggle()
+    }
+
+    func viewChannel() {
+        navManager.pushSubscription(subscription: video.subscription)
     }
 
     func handlePotentialQueueChange() {

@@ -20,8 +20,9 @@ struct VideoListItemMoreMenuView: View {
     var toggleIsNew: () -> Void
     var moveToInbox: () -> Void
     var openUrlInApp: (String) -> Void
-    var clearList: (ClearList, ClearDirection) -> Void
-    var deleteVideo: () -> Void
+    var clearList: ((ClearList, ClearDirection) -> Void)?
+    /// nil hides delete, e.g. on the video's own detail page
+    var deleteVideo: (() -> Void)?
     var viewChannel: (() -> Void)?
 
     var body: some View {
@@ -101,10 +102,12 @@ struct VideoListItemMoreMenuView: View {
                 ShareLink(item: shareUrl)
             }
 
-            ClearAboveBelowButtons(clearList: clearList, config: config, videoId: videoData.youtubeId)
-                .tint(.red)
+            if let clearList {
+                ClearAboveBelowButtons(clearList: clearList, config: config, videoId: videoData.youtubeId)
+                    .tint(.red)
+            }
 
-            if config.showDelete || videoData.subscriptionData == nil {
+            if let deleteVideo, config.showDelete || videoData.subscriptionData == nil {
                 Divider()
 
                 ConfirmableMenuButton(helperText: "reallyDeleteVideo") {
@@ -115,6 +118,7 @@ struct VideoListItemMoreMenuView: View {
                 }
             }
         }
+        .symbolVariant(.fill)
         .tint(Color.automaticBlack)
     }
 
