@@ -216,7 +216,7 @@ struct SubscriptionSegmentSetting: View {
 
 /// The chapter titles this channel skips automatically, and a way to stop skipping one.
 struct SubscriptionAutoSkipSetting: View {
-    @CloudStorage(Const.autoSkipRecurringChapters) var autoSkipRecurringChapters: Bool = true
+    @PremiumCloudStorage(Const.autoSkipRecurringChapters) var autoSkipRecurringChapters = true
 
     var subscription: Subscription
 

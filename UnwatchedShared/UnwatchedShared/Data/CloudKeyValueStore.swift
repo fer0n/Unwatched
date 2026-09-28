@@ -125,4 +125,12 @@ public extension CloudKeyValueStore {
     static var hasPremium: Bool {
         shared.bool(forKey: Const.unwatchedPremiumAcknowledged)
     }
+
+    static func premiumBool(forKey key: String, default defaultValue: Bool) -> Bool {
+        premiumGated(shared.object(forKey: key) as? Bool ?? defaultValue, premium: hasPremium)
+    }
+
+    static func premiumGated(_ enabled: Bool, premium: Bool) -> Bool {
+        enabled && premium
+    }
 }

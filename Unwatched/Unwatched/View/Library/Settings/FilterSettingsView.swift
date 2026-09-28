@@ -11,7 +11,7 @@ struct FilterSettingsView: View {
     @CloudStorage(Const.defaultShortsSetting) var defaultShortsSetting: ShortsSetting = .show
     @CloudStorage(Const.defaultLiveStreamSetting) var defaultLiveStreamSetting: LiveStreamSetting = .show
     @CloudStorage(Const.skipChapterText) var skipChapterText: String = ""
-    @CloudStorage(Const.autoSkipRecurringChapters) var autoSkipRecurringChapters: Bool = true
+    @PremiumCloudStorage(Const.autoSkipRecurringChapters) var autoSkipRecurringChapters = true
     @CloudStorage(Const.filterVideoTitleText) var filterVideoTitleText: String = ""
 
     @Environment(\.modelContext) var modelContext
