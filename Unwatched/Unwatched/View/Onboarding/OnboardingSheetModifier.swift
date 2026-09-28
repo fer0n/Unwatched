@@ -50,9 +50,11 @@ struct OnboardingSheetModifier: ViewModifier {
     }
 
     private func presentSettingsSplashIfNeeded() {
-        if !settingsSplashShown {
-            navManager.presentSettingsSplash()
+        guard !settingsSplashShown else { return }
+        if UserDataService.enableRecommendationsForBrowserTabUsersIfNeeded() {
+            navManager.searchTabShouldAutoFocus = false
         }
+        navManager.presentSettingsSplash()
     }
 }
 

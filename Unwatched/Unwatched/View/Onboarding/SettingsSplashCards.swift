@@ -82,9 +82,17 @@ extension SplashCard where Footer == EmptyView {
         systemName: String,
         title: LocalizedStringKey,
         subtitle: LocalizedStringKey?,
+        premium: Bool = false,
         @ViewBuilder trailing: @escaping () -> Trailing
     ) {
-        self.init(systemName: systemName, title: title, subtitle: subtitle, trailing: trailing, footer: { EmptyView() })
+        self.init(
+            systemName: systemName,
+            title: title,
+            subtitle: subtitle,
+            premium: premium,
+            trailing: trailing,
+            footer: { EmptyView() }
+        )
     }
 }
 

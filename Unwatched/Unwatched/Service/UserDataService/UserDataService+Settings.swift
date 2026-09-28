@@ -79,6 +79,19 @@ extension UserDataService {
         }
     }
 
+    static func enableRecommendationsForBrowserTabUsersIfNeeded(defaults: UserDefaults = .standard) -> Bool {
+        guard defaults.object(forKey: Const.showSearchRecommendations) == nil else {
+            return false
+        }
+        let displayMode = defaults.object(forKey: Const.browserDisplayMode) as? Int
+        let hadBrowserTab = displayMode == BrowserDisplayMode.inApp.rawValue
+            || (displayMode == nil && defaults.bool(forKey: Const.browserAsTab))
+        if hadBrowserTab {
+            defaults.set(true, forKey: Const.showSearchRecommendations)
+        }
+        return hadBrowserTab
+    }
+
     /// The totals used to be counted on the episode's clock, which runs at the playback rate, and
     /// there's no rate left to divide them by after the fact.
     static func resetTrimSilenceStatsIfNeeded(defaults: UserDefaults = .standard) {

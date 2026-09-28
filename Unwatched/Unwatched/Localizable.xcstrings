@@ -20419,6 +20419,40 @@
         }
       }
     },
+    "settingsSplashAutoDeleteBackupsHelper" : {
+      "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Dünnt ältere automatische Backups mit der Zeit aus. Manuelle Backups und die der letzten Woche bleiben immer erhalten."
+          }
+        },
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Thins out older automatic backups over time. Manual backups and those from the last week are always kept."
+          }
+        },
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Reduce con el tiempo las copias de seguridad automáticas antiguas. Las copias manuales y las de la última semana se conservan siempre."
+          }
+        },
+        "fr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Réduit progressivement les anciennes sauvegardes automatiques. Les sauvegardes manuelles et celles de la dernière semaine sont toujours conservées."
+          }
+        },
+        "pl" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Z czasem przerzedza starsze automatyczne kopie zapasowe. Ręczne kopie i te z ostatniego tygodnia są zawsze zachowywane."
+          }
+        }
+      }
+    },
     "settingsSplashBlockItDescription" : {
       "localizations" : {
         "de" : {
@@ -20759,6 +20793,40 @@
         }
       }
     },
+    "settingsSplashLiveStreamsHelper" : {
+      "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Standard für neue Livestreams. Kann für einzelne Kanäle überschrieben werden."
+          }
+        },
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Default for new live streams. Can be overwritten for individual channels."
+          }
+        },
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Opción predeterminada para nuevos directos. Se puede cambiar para canales concretos."
+          }
+        },
+        "fr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Réglage par défaut pour les nouveaux directs. Peut être modifié pour chaque chaîne."
+          }
+        },
+        "pl" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Domyślne ustawienie dla nowych transmisji na żywo. Można je zmienić dla poszczególnych kanałów."
+          }
+        }
+      }
+    },
     "settingsSplashNativePlayerDescription" : {
       "localizations" : {
         "de" : {
@@ -20925,6 +20993,40 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "Subskrybuj audycje i płynnie przechodź między filmami z YouTube a odcinkami audio, także offline. Skracaj ciszę i generuj transkrypcje z Premium."
+          }
+        }
+      }
+    },
+    "settingsSplashRecommendationsHelper" : {
+      "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Zeigt YouTube-Empfehlungen im Such-Tab, bevor du etwas eingibst."
+          }
+        },
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Shows YouTube recommendations in the Search tab before you type anything."
+          }
+        },
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Muestra recomendaciones de YouTube en la pestaña de búsqueda antes de que escribas algo."
+          }
+        },
+        "fr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Affiche des recommandations YouTube dans l’onglet Recherche avant que vous ne saisissiez quoi que ce soit."
+          }
+        },
+        "pl" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Pokazuje polecane z YouTube na karcie wyszukiwania, zanim cokolwiek wpiszesz."
           }
         }
       }

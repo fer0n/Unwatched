@@ -158,6 +158,10 @@ private struct SplashFeaturesPage: View {
 private struct SplashSettingsPage: View {
     @AppStorage(Const.markWatchedOnEnded) var markWatchedOnEnded: Bool = true
     @AppStorage(Const.returnToQueue) var returnToQueue: Bool = true
+    @AppStorage(Const.showSearchRecommendations) var showSearchRecommendations: Bool = false
+    @AppStorage(Const.autoDeleteBackups) var autoDeleteBackups = true
+    @PremiumCloudStorage(Const.autoSkipRecurringChapters) var autoSkipRecurringChapters = true
+    @CloudStorage(Const.defaultLiveStreamSetting) var defaultLiveStreamSetting: LiveStreamSetting = .show
     @CloudStorage(Const.autoDeleteWatchedVideos) var autoDeleteWatchedVideos: Int = 180
     @CloudStorage(Const.autoDeleteOrphanedVideos) var autoDeleteOrphanedVideos: Int = 30
     @CloudStorage(Const.autoDeleteInboxVideosLimit) var autoDeleteInboxVideosLimit: Int = 100
@@ -181,6 +185,37 @@ private struct SplashSettingsPage: View {
                 isOn: $returnToQueue
             )
 
+            toggleCard(
+                systemName: "hand.thumbsup.fill",
+                title: "showSearchRecommendations",
+                subtitle: "settingsSplashRecommendationsHelper",
+                isOn: $showSearchRecommendations
+            )
+
+            toggleCard(
+                systemName: Const.nextChapterSF,
+                title: "autoSkipRecurringChapters",
+                subtitle: "autoSkipRecurringChaptersFooter",
+                isOn: $autoSkipRecurringChapters,
+                premium: true
+            )
+
+            SplashCard(
+                systemName: "dot.radiowaves.left.and.right",
+                title: "liveStreamSetting",
+                subtitle: "settingsSplashLiveStreamsHelper",
+                premium: true
+            ) {
+                Picker("liveStreamSetting", selection: $defaultLiveStreamSetting) {
+                    ForEach(LiveStreamSetting.allCases.filter { $0 != .defaultSetting }, id: \.self) {
+                        Text($0.description)
+                    }
+                }
+                .pickerStyle(.menu)
+                .labelsHidden()
+                .requiresPremium(defaultLiveStreamSetting == .show)
+            }
+
             SplashCard(
                 systemName: "archivebox.fill",
                 title: "keepVideos",
@@ -203,6 +238,13 @@ private struct SplashSettingsPage: View {
                         .padding(.top, 2)
                 }
             }
+
+            toggleCard(
+                systemName: "externaldrive.fill",
+                title: "autoDeleteBackups",
+                subtitle: "settingsSplashAutoDeleteBackupsHelper",
+                isOn: $autoDeleteBackups
+            )
         }
     }
 
@@ -210,11 +252,13 @@ private struct SplashSettingsPage: View {
         systemName: String,
         title: LocalizedStringKey,
         subtitle: LocalizedStringKey,
-        isOn: Binding<Bool>
+        isOn: Binding<Bool>,
+        premium: Bool = false
     ) -> some View {
-        SplashCard(systemName: systemName, title: title, subtitle: subtitle) {
+        SplashCard(systemName: systemName, title: title, subtitle: subtitle, premium: premium) {
             Toggle(title, isOn: isOn)
                 .labelsHidden()
+                .requiresPremium(premium)
         }
     }
 }
