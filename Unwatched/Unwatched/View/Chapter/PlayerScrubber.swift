@@ -112,12 +112,20 @@ struct PlayerScrubber: View {
                     if let video = player.video,
                        let total = video.duration {
 
-                        HStack(spacing: 0) {
-                            fillColor
-                                .opacity(isGestureActive ? 0.8 : 0.6)
-                                .frame(width: currentScrubberPosition)
-                            Color.clear
-                        }
+                        // a scale rather than a width, so animating it skips layout
+                        fillColor
+                            .opacity(isGestureActive ? 0.8 : 0.6)
+                            .scaleEffect(
+                                x: scrubberWidth > 0 ? currentScrubberPosition / scrubberWidth : 0,
+                                anchor: .leading
+                            )
+                            // a new video snaps into place
+                            .transaction(value: player.video?.youtubeId) { $0.animation = nil }
+                            // keeps the snappier animation a web player seek brings along
+                            .transaction(value: player.currentTime) { transaction in
+                                guard transaction.animation == nil, !isGestureActive else { return }
+                                transaction.animation = .playbackTick
+                            }
 
                         ProgressBarChapterIndicators(
                             video: player.video,
