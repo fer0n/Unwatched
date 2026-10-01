@@ -42,8 +42,9 @@ struct CoreRefreshButton: View {
         .fontWeight(.bold)
     }
 
+    /// Stays up while reloading, so a failure that persists doesn't flicker away and back.
     private var showsFailure: Bool {
-        refresher.lastRefreshFailed && !refresher.isLoading
+        refresher.lastRefreshFailed
     }
 
     private var refreshIconName: String {
