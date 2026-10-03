@@ -107,6 +107,7 @@ struct PlayerEmbedded: View {
         .overlay {
             FullscreenOverlayControls(
                 overlayVM: $overlayVM,
+                videoEnded: player.videoEnded,
                 enabled: customUI ? hideMiniPlayer : showFullscreenControls,
                 show: showOverlay
             )

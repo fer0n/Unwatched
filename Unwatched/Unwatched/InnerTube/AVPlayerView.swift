@@ -145,6 +145,7 @@ struct AVPlayerView: View {
                     .overlay {
                         FullscreenOverlayControls(
                             overlayVM: $overlayVM,
+                            videoEnded: player.videoEnded,
                             enabled: hideMiniPlayer,
                             show: showOverlay
                         )

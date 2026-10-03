@@ -46,6 +46,9 @@ struct FullscreenOverlayControls: View {
     @Environment(PlayerManager.self) var player
     @Binding var overlayVM: OverlayFullscreenVM
 
+    /// Passed in rather than read here: after Next on the overlay nothing else redraws the player,
+    /// and the overlay's own `videoEnded` update got lost, leaving it up over the next video.
+    var videoEnded: Bool
     var enabled: Bool
     var show: Bool
 
@@ -94,8 +97,8 @@ struct FullscreenOverlayControls: View {
             }
             .frame(maxWidth: 500)
             .padding(.horizontal, 10)
-            .opacity(player.videoEnded && enabled && show ? 1 : 0)
-            .allowsHitTesting(player.videoEnded && enabled && show)
+            .opacity(videoEnded && enabled && show ? 1 : 0)
+            .allowsHitTesting(videoEnded && enabled && show)
             .animation(.default, value: show)
         }
     }
@@ -157,6 +160,7 @@ enum OverlayIcon: Equatable {
 
         FullscreenOverlayControls(
             overlayVM: $overlayVM,
+            videoEnded: true,
             enabled: true,
             show: true,
             )
