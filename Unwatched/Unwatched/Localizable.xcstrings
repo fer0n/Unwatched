@@ -17380,36 +17380,70 @@
         }
       }
     },
-    "refreshFailedMessage" : {
+    "refreshFailedMessage %lld %lld" : {
       "localizations" : {
         "de" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Laden fehlgeschlagen – YouTube RSS-Feeds sind möglicherweise nicht erreichbar"
+            "value" : "Erfolgreich geladen:\n\n• YouTube: %1$lld/%2$lld\n\nYouTube-Feeds sind möglicherweise nicht erreichbar."
           }
         },
         "en" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Refresh failed – YouTube RSS feeds might be down"
+            "value" : "Refresh succeeded for\n\n• YouTube: %1$lld/%2$lld\n\nYouTube feeds might be down."
           }
         },
         "es" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Error al actualizar – los feeds RSS de YouTube podrían estar caídos"
+            "value" : "Actualizados correctamente:\n\n• YouTube: %1$lld/%2$lld\n\nLos feeds de YouTube podrían estar caídos."
           }
         },
         "fr" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Échec de l'actualisation – les flux RSS YouTube sont peut-être indisponibles"
+            "value" : "Actualisés avec succès :\n\n• YouTube : %1$lld/%2$lld\n\nLes flux YouTube sont peut-être indisponibles."
           }
         },
         "pl" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Nie udało się odświeżyć – kanały RSS YouTube mogą być niedostępne"
+            "value" : "Pomyślnie odświeżono:\n\n• YouTube: %1$lld/%2$lld\n\nKanały YouTube mogą być niedostępne."
+          }
+        }
+      }
+    },
+    "refreshFailedMessage %lld %lld podcasts %lld %lld" : {
+      "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Erfolgreich geladen:\n\n• YouTube: %1$lld/%2$lld\n• Podcasts: %3$lld/%4$lld\n\nYouTube-Feeds sind möglicherweise nicht erreichbar."
+          }
+        },
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Refresh succeeded for\n\n• YouTube: %1$lld/%2$lld\n• Podcasts: %3$lld/%4$lld\n\nYouTube feeds might be down."
+          }
+        },
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Actualizados correctamente:\n\n• YouTube: %1$lld/%2$lld\n• Pódcasts: %3$lld/%4$lld\n\nLos feeds de YouTube podrían estar caídos."
+          }
+        },
+        "fr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Actualisés avec succès :\n\n• YouTube : %1$lld/%2$lld\n• Podcasts : %3$lld/%4$lld\n\nLes flux YouTube sont peut-être indisponibles."
+          }
+        },
+        "pl" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Pomyślnie odświeżono:\n\n• YouTube: %1$lld/%2$lld\n• Podcasty: %3$lld/%4$lld\n\nKanały YouTube mogą być niedostępne."
           }
         }
       }

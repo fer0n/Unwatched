@@ -130,6 +130,9 @@ extension VideoActor {
         let total = youtubeOutcomes.count
         newVideos.failedYoutubeFeedsCount = failed
         newVideos.totalYoutubeFeedsCount = total
+        let podcastOutcomes = outcomes.filter(\.isPodcast)
+        newVideos.failedPodcastFeedsCount = podcastOutcomes.count(where: \.didFail)
+        newVideos.totalPodcastFeedsCount = podcastOutcomes.count
 
         let youtubeOutage = total > 1 && Const.isRefreshOutage(failed: failed, total: total)
         if youtubeOutage {

@@ -44,6 +44,8 @@ enum RefreshSource {
 
     var failedYoutubeFeedsCount = 0
     var totalYoutubeFeedsCount = 0
+    var failedPodcastFeedsCount = 0
+    var totalPodcastFeedsCount = 0
 
     var lastRefreshFailed: Bool {
         Const.isRefreshOutage(failed: failedYoutubeFeedsCount, total: totalYoutubeFeedsCount)
@@ -196,6 +198,8 @@ enum RefreshSource {
             if isFullRefresh {
                 failedYoutubeFeedsCount = result.failedYoutubeFeedsCount
                 totalYoutubeFeedsCount = result.totalYoutubeFeedsCount
+                failedPodcastFeedsCount = result.failedPodcastFeedsCount
+                totalPodcastFeedsCount = result.totalPodcastFeedsCount
             }
         } catch {
             Log.info("Error during refresh: \(error)")
@@ -203,6 +207,8 @@ enum RefreshSource {
                 // couldn't even get as far as fetching individual feeds — treat as a total failure
                 failedYoutubeFeedsCount = 1
                 totalYoutubeFeedsCount = 1
+                failedPodcastFeedsCount = 0
+                totalPodcastFeedsCount = 0
             }
         }
         await cleanup(hardRefresh: hardRefresh)

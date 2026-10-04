@@ -27,7 +27,7 @@ struct CoreRefreshButton: View {
             }
             .accessibilityLabel("refresh")
             .contextMenu {
-                MenuSection(showsFailure ? "refreshFailedMessage" : nil) {
+                MenuSection(showsFailure ? failureMessage : nil) {
                     Button {
                         Task { @MainActor in
                             await refresh(hardRefresh: true)
@@ -45,6 +45,17 @@ struct CoreRefreshButton: View {
     /// Stays up while reloading, so a failure that persists doesn't flicker away and back.
     private var showsFailure: Bool {
         refresher.lastRefreshFailed
+    }
+
+    private var failureMessage: LocalizedStringKey {
+        let total = refresher.totalYoutubeFeedsCount
+        let succeeded = total - refresher.failedYoutubeFeedsCount
+        let totalPodcasts = refresher.totalPodcastFeedsCount
+        let succeededPodcasts = totalPodcasts - refresher.failedPodcastFeedsCount
+        guard totalPodcasts > 0 else {
+            return "refreshFailedMessage \(succeeded) \(total)"
+        }
+        return "refreshFailedMessage \(succeeded) \(total) podcasts \(succeededPodcasts) \(totalPodcasts)"
     }
 
     private var refreshIconName: String {

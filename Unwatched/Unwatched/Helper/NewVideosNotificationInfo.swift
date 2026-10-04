@@ -15,6 +15,8 @@ struct NewVideosNotificationInfo {
     var addEntriesOnReceive = false
     var failedYoutubeFeedsCount = 0
     var totalYoutubeFeedsCount = 0
+    var failedPodcastFeedsCount = 0
+    var totalPodcastFeedsCount = 0
 
     var videoCount: Int {
         inbox.values.flatMap { $0 }.count + queue.values.flatMap { $0 }.count
