@@ -84,6 +84,7 @@ import UnwatchedShared
         tab = try container.decode(NavigationTab.self, forKey: .tab)
         askForReviewPoints = try container.decode(Int.self, forKey: .askForReviewPoints)
         askForReviewCount = try container.decodeIfPresent(Int.self, forKey: .askForReviewCount) ?? 0
+        playerTab = (try? container.decodeIfPresent(ControlNavigationTab.self, forKey: .playerTab)) ?? .controls
 
         let decoded = try container.decode(NavigationPath.CodableRepresentation.self, forKey: .presentedLibrary)
         presentedLibrary = NavigationPath(decoded)
@@ -109,6 +110,7 @@ import UnwatchedShared
         try container.encode(tab, forKey: .tab)
         try container.encode(askForReviewPoints, forKey: .askForReviewPoints)
         try container.encode(askForReviewCount, forKey: .askForReviewCount)
+        try container.encode(playerTab, forKey: .playerTab)
 
         if let representation = presentedLibrary.codable {
             try container.encode(representation, forKey: .presentedLibrary)
@@ -321,7 +323,8 @@ enum NavManagerCodingKeys: CodingKey {
          presentedSubscriptionInbox,
          columnVisibility,
          queueTagId,
-         queueTag
+         queueTag,
+         playerTab
 }
 
 enum NavigationTab: String, Codable, CustomStringConvertible {
@@ -362,7 +365,7 @@ enum NavigationTab: String, Codable, CustomStringConvertible {
     }
 }
 
-enum ControlNavigationTab: Int {
+enum ControlNavigationTab: Int, Codable {
     case controls
     case chapterDescription
 }
