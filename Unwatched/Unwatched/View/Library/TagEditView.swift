@@ -267,7 +267,7 @@ extension TagEditView {
                 }
             }
 
-            MySection(footer: "seekSecondsTagHelper") {
+            MySection {
                 Toggle(isOn: hasCustomSeekSeconds) {
                     Text("customSeekDuration")
                 }

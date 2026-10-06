@@ -11570,7 +11570,7 @@
         "en" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Automatically marks a video as watched and loads the next one in the queue when it finishes playing."
+            "value" : "Automatically marks a video as watched and loads the next one in the Queue when it finishes playing."
           }
         },
         "es" : {
@@ -11672,7 +11672,7 @@
         "en" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "\"Unimportant\" are videos that haven't been watched, are not in the queue or inbox and are older than one week. It's best to leave this off, as backup files will likely be much smaller."
+            "value" : "\"Unimportant\" are videos that haven't been watched, are not in the Queue or Inbox and are older than one week. It's best to leave this off, as backup files will likely be much smaller."
           }
         },
         "es" : {
@@ -12386,7 +12386,7 @@
         "en" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Skips to the next video in the queue."
+            "value" : "Skips to the next video in the Queue."
           }
         },
         "es" : {
@@ -13679,7 +13679,7 @@
         "en" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "There’s no video in the queue."
+            "value" : "There’s no video in the Queue."
           }
         },
         "es" : {
@@ -15514,31 +15514,31 @@
         "de" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Gilt für Videos dieses Tags anstelle der Standardgeschwindigkeit. Die eigene Geschwindigkeit eines Kanals hat weiterhin Vorrang."
+            "value" : "Die eigene Geschwindigkeit eines Kanals hat Vorrang."
           }
         },
         "en" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Applies to videos of this tag instead of the default speed. A channel's own speed still takes precedence."
+            "value" : "A channel's custom speed takes precedence."
           }
         },
         "es" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Se aplica a los vídeos de esta etiqueta en lugar de la velocidad predeterminada. La velocidad propia de un canal sigue teniendo prioridad."
+            "value" : "La velocidad personalizada de un canal tiene prioridad."
           }
         },
         "fr" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "S'applique aux vidéos de ce tag à la place de la vitesse par défaut. La vitesse propre à une chaîne reste prioritaire."
+            "value" : "La vitesse personnalisée d'une chaîne est prioritaire."
           }
         },
         "pl" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Dotyczy filmów z tym tagiem zamiast domyślnej prędkości. Własna prędkość kanału nadal ma pierwszeństwo."
+            "value" : "Własna prędkość kanału ma pierwszeństwo."
           }
         }
       }
@@ -16370,7 +16370,7 @@
         "en" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "The tag whose queue to play. Leave empty to continue with the current one."
+            "value" : "The tag whose Queue to play. Leave empty to continue with the current one."
           }
         },
         "es" : {
@@ -16472,7 +16472,7 @@
         "en" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "How much of the queue is kept on disk, so episodes play offline. Only podcast episodes can be downloaded."
+            "value" : "How much of the Queue is kept on disk, so episodes play offline. Only podcast episodes can be downloaded."
           }
         },
         "es" : {
@@ -17147,31 +17147,31 @@
         "de" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Der Tag-Umschalter in der Queue wechselt nur zwischen Einträgen mit Schnellwechsel."
+            "value" : "Du kannst jederzeit nach links oder rechts wischen, um zwischen Tags zu wechseln. Haben Tags Schnellwechsel aktiviert, wechselt das Wischen nur zwischen diesen. Ein Tippen auf den Titel schaltet sie dann der Reihe nach durch, statt das Menü zu öffnen, und mit langem Drücken gelangst du zu jedem Tag."
           }
         },
         "en" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "The tag switcher in the queue only steps through entries with quick switch turned on."
+            "value" : "You can always swipe left or right to switch between tags. If any tags have quick switch turned on, swiping only switches between those. Tapping the title then cycles through them instead of opening the menu, and a long press lets you go to any tag."
           }
         },
         "es" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "El selector de etiquetas en la cola solo recorre las entradas con el cambio rápido activado."
+            "value" : "Siempre puedes deslizar a la izquierda o a la derecha para cambiar entre etiquetas. Si alguna etiqueta tiene el cambio rápido activado, al deslizar solo se cambia entre esas. Tocar el título las recorre entonces en lugar de abrir el menú, y una pulsación larga te permite ir a cualquier etiqueta."
           }
         },
         "fr" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Le sélecteur de tag dans la file d'attente ne parcourt que les entrées avec le changement rapide activé."
+            "value" : "Vous pouvez toujours balayer vers la gauche ou la droite pour passer d'un tag à l'autre. Si des tags ont le changement rapide activé, le balayage ne passe que par ceux-ci. Toucher le titre les fait alors défiler au lieu d'ouvrir le menu, et un appui long permet d'aller à n'importe quel tag."
           }
         },
         "pl" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Przełącznik tagów w kolejce przechodzi tylko przez pozycje z włączonym szybkim przełączaniem."
+            "value" : "Zawsze możesz przesunąć w lewo lub w prawo, aby przełączać się między tagami. Jeśli któreś tagi mają włączone szybkie przełączanie, przesuwanie przełącza tylko między nimi. Stuknięcie tytułu przełącza je wtedy po kolei zamiast otwierać menu, a długie naciśnięcie pozwala przejść do dowolnego tagu."
           }
         }
       }
@@ -19407,7 +19407,7 @@
         "en" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Find videos and channels to watch and add to your queue."
+            "value" : "Find videos and channels to watch and add to your Queue."
           }
         },
         "es" : {
@@ -19803,40 +19803,6 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "Przewiń do przodu (%llds)"
-          }
-        }
-      }
-    },
-    "seekSecondsTagHelper" : {
-      "localizations" : {
-        "de" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Gilt für Videos dieses Tags anstelle der globalen Einstellung."
-          }
-        },
-        "en" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Applies to videos of this tag instead of the global setting."
-          }
-        },
-        "es" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Se aplica a los vídeos de esta etiqueta en lugar del ajuste global."
-          }
-        },
-        "fr" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "S'applique aux vidéos de ce tag à la place du réglage global."
-          }
-        },
-        "pl" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Dotyczy filmów z tym tagiem zamiast ustawienia globalnego."
           }
         }
       }
@@ -21314,7 +21280,7 @@
         "en" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Play your queue or a tag, play next, merge chapters."
+            "value" : "Play your Queue or a tag, play next, merge chapters."
           }
         },
         "es" : {
@@ -21416,7 +21382,7 @@
         "en" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Organize videos, channels and your queue. Each tag can have its own seek duration and continuous play setting."
+            "value" : "Organize videos, channels and your Queue. Each tag can have its own seek duration and continuous play setting."
           }
         },
         "es" : {
@@ -23411,7 +23377,7 @@
         "en" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Plays the topmost video in the queue in the background, without opening the app. Requires the native player."
+            "value" : "Plays the topmost video in the Queue in the background, without opening the app. Requires the native player."
           }
         },
         "es" : {
@@ -23881,31 +23847,31 @@
         "de" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Gilt für Videos dieses Tags anstelle der globalen Einstellung."
+            "value" : "Schlägt die Einträge dieses Tags im Kontrollzentrum und auf dem Sperrbildschirm vor."
           }
         },
         "en" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Applies to videos of this tag instead of the global setting."
+            "value" : "Suggests this tag's entries in Control Center and on the Lock Screen."
           }
         },
         "es" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Se aplica a los vídeos de esta etiqueta en lugar del ajuste global."
+            "value" : "Sugiere las entradas de esta etiqueta en el Centro de control y en la pantalla de bloqueo."
           }
         },
         "fr" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "S'applique aux vidéos de ce tag à la place du réglage global."
+            "value" : "Suggère les entrées de ce tag dans le Centre de contrôle et sur l'écran verrouillé."
           }
         },
         "pl" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Dotyczy filmów z tym tagiem zamiast ustawienia globalnego."
+            "value" : "Proponuje pozycje z tym tagiem w centrum sterowania i na ekranie blokady."
           }
         }
       }
@@ -25415,31 +25381,31 @@
         "de" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Für Videos mit Kapiteln kannst du im Voraus die Kapitel abwählen, die du überspringen möchtest. Das ist nicht auf das aktuelle Video oder die Warteschlange beschränkt."
+            "value" : "Für Videos mit Kapiteln kannst du die Kapitel, die du überspringen möchtest, im Voraus abwählen, auch bei Videos, die gerade nicht laufen. Kapitel mit demselben Titel werden dann auch in künftigen Videos des Kanals übersprungen. Halte ein Kapitel gedrückt und ziehe es, um die Reihenfolge der Wiedergabe zu ändern."
           }
         },
         "en" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "For videos that provide chapters, you can untick chapters you want to skip in advance. This is also possible for videos that are queued up and not currently playing."
+            "value" : "For videos that provide chapters, you can untick the ones you want to skip in advance, even for videos that aren't playing yet. Chapters with the same title are then skipped in that channel's future videos too. Long press and drag a chapter to change the order they play in."
           }
         },
         "es" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Para los videos que proporcionan capítulos, puedes desmarcar los capítulos que quieras omitir por adelantado. Esto también es posible para los videos que están en cola y no se están reproduciendo actualmente."
+            "value" : "En los vídeos con capítulos, puedes desmarcar por adelantado los que quieras omitir, incluso en vídeos que aún no se están reproduciendo. Los capítulos con el mismo título también se omitirán en los próximos vídeos de ese canal. Mantén pulsado un capítulo y arrástralo para cambiar el orden de reproducción."
           }
         },
         "fr" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Pour les vidéos qui proposent des chapitres, vous pouvez décocher les chapitres que vous souhaitez ignorer à l'avance. C'est également possible pour les vidéos en file d'attente qui ne sont pas en cours de lecture."
+            "value" : "Pour les vidéos qui proposent des chapitres, vous pouvez décocher à l'avance ceux que vous souhaitez ignorer, même pour des vidéos qui ne sont pas en cours de lecture. Les chapitres portant le même titre seront aussi ignorés dans les prochaines vidéos de cette chaîne. Maintenez un chapitre appuyé et faites-le glisser pour changer l'ordre de lecture."
           }
         },
         "pl" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "W filmach z rozdziałami możesz wcześniej odznaczyć rozdziały, które chcesz pominąć. Dotyczy to również filmów w kolejce, które nie są aktualnie odtwarzane."
+            "value" : "W filmach z rozdziałami możesz wcześniej odznaczyć rozdziały, które chcesz pominąć, także w filmach, które nie są jeszcze odtwarzane. Rozdziały o tym samym tytule zostaną pominięte również w przyszłych filmach tego kanału. Przytrzymaj i przeciągnij rozdział, aby zmienić kolejność odtwarzania."
           }
         }
       }
@@ -25483,31 +25449,31 @@
         "de" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Tippe auf das „Schloss“-Symbol im Player, um die ausgewählte Wiedergabegeschwindigkeit auf den aktuellen Kanal zu beschränken."
+            "value" : "Tippe im Player auf das Schloss neben der Geschwindigkeit, um sie für den aktuellen Kanal zu behalten. Über das Geschwindigkeitsmenü kannst du sie auch für den Tag des Videos festlegen. Die Geschwindigkeit eines Kanals hat Vorrang."
           }
         },
         "en" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Tap the “lock” icon inside the player to restrict the selected playback speed to the current channel."
+            "value" : "Tap the lock next to the speed in the player to keep that speed for the current channel. The speed menu can also lock it to the video's tag. A channel's speed takes precedence."
           }
         },
         "es" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Toca el icono de \"candado\" dentro del reproductor para restringir la velocidad de reproducción seleccionada al canal actual."
+            "value" : "Toca el candado junto a la velocidad en el reproductor para mantenerla en el canal actual. Desde el menú de velocidad también puedes fijarla para la etiqueta del vídeo. La velocidad de un canal tiene prioridad."
           }
         },
         "fr" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Appuyez sur l'icône \"verrou\" dans le lecteur pour restreindre la vitesse de lecture sélectionnée à la chaîne actuelle."
+            "value" : "Touchez le cadenas à côté de la vitesse dans le lecteur pour la conserver pour la chaîne actuelle. Le menu de vitesse permet aussi de la fixer pour le tag de la vidéo. La vitesse d'une chaîne est prioritaire."
           }
         },
         "pl" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Kliknij ikonę “kłódki” w odtwarzaczu, aby zastosować wybraną prędkość odtwarzania tylko na tym kanale."
+            "value" : "Stuknij kłódkę obok prędkości w odtwarzaczu, aby zachować ją dla bieżącego kanału. W menu prędkości możesz też przypisać ją do tagu filmu. Prędkość kanału ma pierwszeństwo."
           }
         }
       }
@@ -25517,31 +25483,31 @@
         "de" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Swipe Gesten"
+            "value" : "Video-Gesten"
           }
         },
         "en" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Swipe Actions"
+            "value" : "Video Gestures"
           }
         },
         "es" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Acciones de deslizamiento"
+            "value" : "Gestos de vídeo"
           }
         },
         "fr" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Actions par glissement"
+            "value" : "Gestes vidéo"
           }
         },
         "pl" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Akcje gestów"
+            "value" : "Gesty wideo"
           }
         }
       }
@@ -25554,13 +25520,13 @@
               "applevision" : {
                 "stringUnit" : {
                   "state" : "translated",
-                  "value" : "**Unterstützte Videogesten:**\n• Nach links/rechts wischen: Kapitel wechseln\n• In die Mitte tippen: abspielen/pausieren\n• Nach oben/unten wischen: Wiedergabegeschwindigkeit erhöhen/verringern"
+                  "value" : "**Unterstützte Videogesten:**\n• Nach links/rechts wischen: Kapitel wechseln\n• In die Mitte tippen: abspielen/pausieren\n• Links/rechts doppelt tippen: zurück-/vorspulen\n• Nach oben/unten wischen: Wiedergabegeschwindigkeit erhöhen/verringern"
                 }
               },
               "other" : {
                 "stringUnit" : {
                   "state" : "translated",
-                  "value" : "**Unterstützte Video Gesten:**\n• Links/rechts swipen: Kapitel wechseln\n• Mitte antippen: Play/pause\n• Hoch/runter swipen: Vollbild an/aus\n• Rechts/links lange halten: Schneller/langsamer abspielen\n• Mini-player swipe nach unten: PiP"
+                  "value" : "**Unterstützte Video Gesten:**\n• Links/rechts swipen: Kapitel wechseln\n• Mitte antippen: Play/pause\n• Links/rechts doppeltippen: Zurück-/vorspulen\n• Hoch/runter swipen: Vollbild an/aus\n• Rechts/links lange halten: Schneller/langsamer abspielen\n• Mini-player swipe nach unten: PiP"
                 }
               }
             }
@@ -25572,13 +25538,13 @@
               "applevision" : {
                 "stringUnit" : {
                   "state" : "translated",
-                  "value" : "**Supported video gestures:**\n• Swipe left/right: Jump chapters\n• Tap center: Play/pause\n• Swipe up/down: Speed up/slow down playback"
+                  "value" : "**Supported video gestures:**\n• Swipe left/right: Jump chapters\n• Tap center: Play/pause\n• Double tap left/right: Seek back/forward\n• Swipe up/down: Speed up/slow down playback"
                 }
               },
               "other" : {
                 "stringUnit" : {
                   "state" : "translated",
-                  "value" : "**Supported video gestures:**\n• Swipe left/right: Jump chapters\n• Tap center: Play/pause\n• Swipe up/down: Enter/exit fullscreen\n• Long press right/left: Speed up/slow down playback\n• Swipe down in portrait: Enter PiP"
+                  "value" : "**Supported video gestures:**\n• Swipe left/right: Jump chapters\n• Tap center: Play/pause\n• Double tap left/right: Seek back/forward\n• Swipe up/down: Enter/exit fullscreen\n• Long press right/left: Speed up/slow down playback\n• Swipe down in portrait: Enter PiP"
                 }
               }
             }
@@ -25590,13 +25556,13 @@
               "applevision" : {
                 "stringUnit" : {
                   "state" : "translated",
-                  "value" : "**Gestos de vídeo compatibles:**\n• Deslizar a la izquierda/derecha: Saltar capítulos\n• Tocar en el centro: reproducir/pausar\n• Deslizar hacia arriba/abajo: acelerar/reducir la velocidad de reproducción"
+                  "value" : "**Gestos de vídeo compatibles:**\n• Deslizar a la izquierda/derecha: Saltar capítulos\n• Tocar en el centro: reproducir/pausar\n• Tocar dos veces a la izquierda/derecha: retroceder/avanzar\n• Deslizar hacia arriba/abajo: acelerar/reducir la velocidad de reproducción"
                 }
               },
               "other" : {
                 "stringUnit" : {
                   "state" : "translated",
-                  "value" : "**Gestos de video compatibles:**\n• Deslizar izquierda/derecha: Saltar capítulos\n• Tocar centro: Reproducir/pausar\n• Deslizar arriba/abajo: Entrar/salir de pantalla completa\n• Mantener pulsado derecha/izquierda: Acelerar/ralentizar reproducción\n• Deslizar hacia abajo en modo vertical: Entrar en PiP"
+                  "value" : "**Gestos de video compatibles:**\n• Deslizar izquierda/derecha: Saltar capítulos\n• Tocar centro: Reproducir/pausar\n• Doble toque izquierda/derecha: Retroceder/avanzar\n• Deslizar arriba/abajo: Entrar/salir de pantalla completa\n• Mantener pulsado derecha/izquierda: Acelerar/ralentizar reproducción\n• Deslizar hacia abajo en modo vertical: Entrar en PiP"
                 }
               }
             }
@@ -25608,13 +25574,13 @@
               "applevision" : {
                 "stringUnit" : {
                   "state" : "translated",
-                  "value" : "**Gestes vidéo pris en charge :**\n• Balayer vers la gauche/droite : changer de chapitre\n• Taper au centre : lecture/pause\n• Balayer vers le haut/bas : accélérer/ralentir la lecture"
+                  "value" : "**Gestes vidéo pris en charge :**\n• Balayer vers la gauche/droite : changer de chapitre\n• Taper au centre : lecture/pause\n• Taper deux fois à gauche/droite : reculer/avancer\n• Balayer vers le haut/bas : accélérer/ralentir la lecture"
                 }
               },
               "other" : {
                 "stringUnit" : {
                   "state" : "translated",
-                  "value" : "**Gestes vidéo pris en charge :**\n• Glisser vers la gauche/droite : Changer de chapitre\n• Toucher le centre : Lecture/pause\n• Glisser vers le haut/bas : Activer/quitter le plein écran\n• Appui long droite/gauche : Accélérer/ralentir la lecture\n• Glisser vers le bas en mode portrait : Activer PiP"
+                  "value" : "**Gestes vidéo pris en charge :**\n• Glisser vers la gauche/droite : Changer de chapitre\n• Toucher le centre : Lecture/pause\n• Toucher deux fois à gauche/droite : Reculer/avancer\n• Glisser vers le haut/bas : Activer/quitter le plein écran\n• Appui long droite/gauche : Accélérer/ralentir la lecture\n• Glisser vers le bas en mode portrait : Activer PiP"
                 }
               }
             }
@@ -25626,13 +25592,13 @@
               "applevision" : {
                 "stringUnit" : {
                   "state" : "translated",
-                  "value" : "**Odtwarzacz obsługuje gesty:**\n• Przesuń w lewo/prawo: Przełącz rozdział\n• Stuknij na środku: odtwórz/pauzuj\n• Przesuń w górę/w dół: przyspiesz/zwolnij odtwarzanie"
+                  "value" : "**Odtwarzacz obsługuje gesty:**\n• Przesuń w lewo/prawo: Przełącz rozdział\n• Stuknij na środku: odtwórz/pauzuj\n• Stuknij dwukrotnie z lewej/prawej: przewiń do tyłu/do przodu\n• Przesuń w górę/w dół: przyspiesz/zwolnij odtwarzanie"
                 }
               },
               "other" : {
                 "stringUnit" : {
                   "state" : "translated",
-                  "value" : "**Odtwarzacz obsługuje gesty:**\n• Przesuń w lewo/prawo: Przełącz rozdział\n• Kliknij na środku: Odtwórz/Wstrzymaj\n• Przesuń w górę/dół: Wejdź/wyjdź z pełnego ekranu\n• Przytrzymaj w prawo/lewo: Przyspiesz/zwolnij odtwarzanie\n• Przesuń w dół w pionie: Wejdź w PiP"
+                  "value" : "**Odtwarzacz obsługuje gesty:**\n• Przesuń w lewo/prawo: Przełącz rozdział\n• Kliknij na środku: Odtwórz/Wstrzymaj\n• Stuknij dwukrotnie z lewej/prawej: Przewiń do tyłu/do przodu\n• Przesuń w górę/dół: Wejdź/wyjdź z pełnego ekranu\n• Przytrzymaj w prawo/lewo: Przyspiesz/zwolnij odtwarzanie\n• Przesuń w dół w pionie: Wejdź w PiP"
                 }
               }
             }

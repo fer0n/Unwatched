@@ -70,7 +70,10 @@ struct SettingsView: View {
                             Text(verbatim: "OPML")
                         }
                     } label: {
+                        // a menu label only takes taps on its content, unlike a button row
                         LibraryNavListItem("importSubscriptions", systemName: "square.and.arrow.down.fill")
+                            .frame(maxWidth: .infinity, alignment: .leading)
+                            .contentShape(.rect)
                     }
                     .settingsListRow()
                     ExportSubscriptionsShareLink {
