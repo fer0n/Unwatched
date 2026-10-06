@@ -12,7 +12,7 @@ class PopupPresenter: ObservableObject {
     private var popupWindow: UIWindow?
 
     func show<Content: View>(@ViewBuilder content: @escaping (@escaping () -> Void) -> Content) {
-        guard let scene = UIApplication.shared.connectedScenes.first as? UIWindowScene else { return }
+        guard let scene = SceneDelegate.windowScene else { return }
 
         popupWindow = UIWindow(windowScene: scene)
         popupWindow?.backgroundColor = .clear

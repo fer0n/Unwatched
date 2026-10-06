@@ -40,7 +40,7 @@ import UnwatchedShared
     static func changeOrientation(to orientation: UIInterfaceOrientationMask) {
         guard UIDevice.isIphone,
               !SheetPositionReader.shared.regularSize,
-              let windowScene = UIApplication.shared.connectedScenes.first as? UIWindowScene else {
+              let windowScene = SceneDelegate.windowScene else {
             return
         }
         windowScene.requestGeometryUpdate(.iOS(interfaceOrientations: orientation))
@@ -61,7 +61,7 @@ import UnwatchedShared
         guard locked != podcastOrientationLocked else { return }
         podcastOrientationLocked = locked
 
-        guard let windowScene = UIApplication.shared.connectedScenes.first as? UIWindowScene else {
+        guard let windowScene = SceneDelegate.windowScene else {
             return
         }
         windowScene.windows.first?.rootViewController?.setNeedsUpdateOfSupportedInterfaceOrientations()

@@ -244,6 +244,10 @@ enum WebViewWarmup {
 class SceneDelegate: UIResponder, UIWindowSceneDelegate {
     private let refresher = RefreshManager.shared
 
+    /// The app's own scene, cached when UIKit hands it over — avoids walking
+    /// `UIApplication.shared.connectedScenes` from unrelated call sites.
+    @MainActor private(set) static weak var windowScene: UIWindowScene?
+
     func windowScene(
         _ windowScene: UIWindowScene,
         performActionFor shortcutItem: UIApplicationShortcutItem,
@@ -259,6 +263,9 @@ class SceneDelegate: UIResponder, UIWindowSceneDelegate {
         willConnectTo session: UISceneSession,
         options connectionOptions: UIScene.ConnectionOptions
     ) {
+        if session.role == .windowApplication {
+            Self.windowScene = scene as? UIWindowScene
+        }
         if let shortcutItem = connectionOptions.shortcutItem {
             if shortcutItem.type == Const.shortcutItemPasteAndPlay {
                 refresher.triggerPasteAction = true
