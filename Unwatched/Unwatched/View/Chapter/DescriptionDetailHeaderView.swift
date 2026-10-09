@@ -4,6 +4,7 @@
 //
 
 import SwiftUI
+import SwiftData
 import UnwatchedShared
 
 struct DescriptionDetailHeaderView: View {
@@ -109,7 +110,18 @@ private struct VideoDetailProgress: View {
 struct VideoDetailStatusIcons: View {
     @Environment(PlayerManager.self) private var player
 
+    // video.queueEntry traps once another context deletes the entry
+    @Query private var queueEntries: [QueueEntry]
+
     let video: Video
+
+    init(video: Video) {
+        self.video = video
+        let videoId = video.persistentModelID
+        var descriptor = FetchDescriptor<QueueEntry>(predicate: #Predicate { $0.video?.persistentModelID == videoId })
+        descriptor.fetchLimit = 1
+        _queueEntries = Query(descriptor)
+    }
 
     var body: some View {
         HStack(spacing: 10) {
@@ -136,7 +148,7 @@ struct VideoDetailStatusIcons: View {
             statuses.append(Status(title: Text("nowPlaying"), systemImage: "play.fill"))
         }
         // the playing video sits at the top of the queue; its position says nothing there
-        if let order = video.queueEntry?.order, !isPlaying || order != 0 {
+        if let order = queueEntries.first?.order, !isPlaying || order != 0 {
             statuses.append(Status(
                 title: order == 0 ? Text("queue") : Text("queuePosition \(order)"),
                 systemImage: "arrow.uturn.right"

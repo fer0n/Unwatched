@@ -5,6 +5,7 @@
 
 import XCTest
 import SwiftData
+import SwiftUI
 import UnwatchedShared
 
 /// The whole suite shares one in-memory store and other files assert on absolute counts, so
@@ -162,4 +163,76 @@ class RefreshUnderCleanupTests: XCTestCase {
 actor DeletionCounter {
     private(set) var count = 0
     func add(_ number: Int) { count += number }
+}
+
+@MainActor
+class DeletedQueueEntryTests: XCTestCase {
+    private var container: ModelContainer!
+
+    override func setUp() async throws {
+        let url = FileManager.default.temporaryDirectory
+            .appendingPathComponent("status-icons-\(UUID().uuidString).store")
+        container = try ModelContainer(
+            for: DataProvider.schema,
+            configurations: ModelConfiguration(schema: DataProvider.schema, url: url, cloudKitDatabase: .none)
+        )
+    }
+
+    private func seedQueuedVideo(order: Int) throws -> (video: Video, entryId: PersistentIdentifier) {
+        let seed = ModelContext(container)
+        let seeded = Video(title: "queued", url: URL(string: "https://youtu.be/queued"), youtubeId: "queued")
+        seed.insert(seeded)
+        let entry = QueueEntry(video: seeded, order: order)
+        seed.insert(entry)
+        seeded.queueEntry = entry
+        try seed.save()
+        let video = try XCTUnwrap(container.mainContext.fetch(FetchDescriptor<Video>()).first)
+        return (video, entry.persistentModelID)
+    }
+
+    private func renderedLabels(for video: Video) -> [String] {
+        let host = UIHostingController(rootView: VideoDetailStatusIcons(video: video)
+                                        .environment(PlayerManager())
+                                        .modelContainer(container))
+        let window = UIWindow(frame: CGRect(x: 0, y: 0, width: 400, height: 100))
+        window.rootViewController = host
+        window.makeKeyAndVisible()
+        host.view.layoutIfNeeded()
+        RunLoop.main.run(until: .now + 0.3)
+        defer { window.isHidden = true }
+        return Self.labels(in: host.view)
+    }
+
+    private static func labels(in element: Any) -> [String] {
+        let object = element as? NSObject
+        var found = [String]()
+        if let label = object?.accessibilityLabel, !label.isEmpty {
+            found.append(label)
+        }
+        for child in object?.accessibilityElements ?? [] {
+            found += labels(in: child)
+        }
+        for subview in (element as? UIView)?.subviews ?? [] {
+            found += labels(in: subview)
+        }
+        return found
+    }
+
+    func testEntryDeletedElsewhereDoesNotTrap() throws {
+        let (video, entryId) = try seedQueuedVideo(order: 3)
+
+        let background = ModelContext(container)
+        background.delete(try XCTUnwrap(background.model(for: entryId) as? QueueEntry))
+        try background.save()
+
+        let labels = renderedLabels(for: video)
+        XCTAssertFalse(labels.contains { $0.localizedCaseInsensitiveContains("queue") }, "deleted entry still shown: \(labels)")
+    }
+
+    func testExistingEntryShowsItsPosition() throws {
+        let (video, _) = try seedQueuedVideo(order: 3)
+
+        let labels = renderedLabels(for: video)
+        XCTAssertTrue(labels.contains { $0 == "queuePosition 3" || $0 == "Queue #3" }, "got \(labels)")
+    }
 }
