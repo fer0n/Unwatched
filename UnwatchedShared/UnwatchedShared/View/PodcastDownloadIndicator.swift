@@ -25,10 +25,12 @@ public struct PodcastDownloadIndicator: View {
             Image(systemName: isTranscribing ? Const.transcribingSF : Const.downloadedSF)
                 .font(.system(size: iconSize))
                 .fontWeight(.heavy)
+                .contentTransition(.symbolEffect(.replace))
                 .padding(padding)
                 .foregroundStyle(.primary.opacity(0.9))
                 .background(.thinMaterial)
                 .clipShape(RoundedRectangle(cornerRadius: radius, style: .continuous))
+                .animation(.default, value: isTranscribing)
                 .accessibilityElement(children: .ignore)
                 .accessibilityValue(isTranscribing ? Text("generatingTranscript") : Text("downloaded"))
         }
