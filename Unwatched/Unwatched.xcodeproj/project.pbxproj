@@ -76,6 +76,8 @@
 		8801CBC73067B097007E4C90 /* ChapterDescriptionView+Actions.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8801CBC63067B097007E4C90 /* ChapterDescriptionView+Actions.swift */; };
 		8801CBC83067B097007E4C90 /* ChapterDescriptionView+Actions.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8801CBC63067B097007E4C90 /* ChapterDescriptionView+Actions.swift */; };
 		8802F84F2C691A51008A7778 /* ImageServiceTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8802F84E2C691A51008A7778 /* ImageServiceTests.swift */; };
+		CD0FBE0000000000000000C1 /* SearchRecommendationsTip.swift in Sources */ = {isa = PBXBuildFile; fileRef = CD0FBE0000000000000000C0 /* SearchRecommendationsTip.swift */; };
+		CD0FBE0000000000000000C2 /* SearchRecommendationsTip.swift in Sources */ = {isa = PBXBuildFile; fileRef = CD0FBE0000000000000000C0 /* SearchRecommendationsTip.swift */; };
 		8802F8512C6950A3008A7778 /* HideShortsTip.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8802F8502C6950A2008A7778 /* HideShortsTip.swift */; };
 		8802F8522C6950A3008A7778 /* HideShortsTip.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8802F8502C6950A2008A7778 /* HideShortsTip.swift */; };
 		8804A3ED2B8B6B5B00D3F4F1 /* DescriptionDetailHeaderView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8804A3EC2B8B6B5B00D3F4F1 /* DescriptionDetailHeaderView.swift */; };
@@ -1254,6 +1256,7 @@
 		8801CBC23067AF93007E4C90 /* NavigationManager+Routes.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "NavigationManager+Routes.swift"; sourceTree = "<group>"; };
 		8801CBC63067B097007E4C90 /* ChapterDescriptionView+Actions.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "ChapterDescriptionView+Actions.swift"; sourceTree = "<group>"; };
 		8802F84E2C691A51008A7778 /* ImageServiceTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ImageServiceTests.swift; sourceTree = "<group>"; };
+		CD0FBE0000000000000000C0 /* SearchRecommendationsTip.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SearchRecommendationsTip.swift; sourceTree = "<group>"; };
 		8802F8502C6950A2008A7778 /* HideShortsTip.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = HideShortsTip.swift; sourceTree = "<group>"; };
 		8804A3EC2B8B6B5B00D3F4F1 /* DescriptionDetailHeaderView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DescriptionDetailHeaderView.swift; sourceTree = "<group>"; };
 		8804A3EE2B8B88A000D3F4F1 /* VideoListItemDetails.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = VideoListItemDetails.swift; sourceTree = "<group>"; };
@@ -1927,6 +1930,7 @@
 				88EEFDE72B72E12500A1F441 /* InboxTip.swift */,
 				888C49BD2B5EADCA00CDEC76 /* YtBrowserTip.swift */,
 				8802F8502C6950A2008A7778 /* HideShortsTip.swift */,
+				CD0FBE0000000000000000C0 /* SearchRecommendationsTip.swift */,
 				CD0FBE0000000000000000B0 /* ThemedTipViewStyle.swift */,
 			);
 			path = Tips;
@@ -3699,6 +3703,7 @@
 				88F3A997DF2BBC79986AE6FC /* PlayerManager+ChapterBoundary.swift in Sources */,
 				88AA10A22F0000000000A0A2 /* PlayerManager+Queue.swift in Sources */,
 				8802F8522C6950A3008A7778 /* HideShortsTip.swift in Sources */,
+				CD0FBE0000000000000000C2 /* SearchRecommendationsTip.swift in Sources */,
 				CD0FBE0000000000000000B2 /* ThemedTipViewStyle.swift in Sources */,
 				883A0F712E5F5D9E000CE416 /* PremiumNavListItem.swift in Sources */,
 				88F2876D2DEAF3E600309C36 /* ClearAllInboxEntriesButton.swift in Sources */,
@@ -4136,6 +4141,7 @@
 				8808A9152B937C66004D7CE2 /* PresentationDetent.swift in Sources */,
 				88B0C1622C427940006D2423 /* PlayerView.swift in Sources */,
 				8802F8512C6950A3008A7778 /* HideShortsTip.swift in Sources */,
+				CD0FBE0000000000000000C1 /* SearchRecommendationsTip.swift in Sources */,
 				CD0FBE0000000000000000B1 /* ThemedTipViewStyle.swift in Sources */,
 				882153522FC03C6900167AEE /* MiniPlayerLayout.swift in Sources */,
 				882153622FC03C6900167AEF /* PlayerObservers.swift in Sources */,

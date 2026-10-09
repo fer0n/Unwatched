@@ -28,6 +28,8 @@ private extension View {
 /// suggestions overlay can't be recoloured.
 struct SearchSuggestionsView: View {
     @AppStorage(Const.showSearchRecommendations) var showRecommendations: Bool = false
+    @State private var recommendationsTipShown = false
+    @State private var hasTyped = false
 
     let vm: SearchVM
     @FocusState.Binding var searchFocused: Bool
@@ -47,31 +49,13 @@ struct SearchSuggestionsView: View {
                 .listRowSeparatorTint(Color.automaticBlack.opacity(0.08))
             } else if showsHomeFeed {
                 homeFeedSection
-            } else if !vm.recentSearches.isEmpty {
-                Section {
-                    ForEach(vm.recentSearches.prefix(10), id: \.self) { recent in
-                        suggestionRow(recent, systemImage: "clock.arrow.circlepath") {
-                            searchFocused = false
-                            onSelect(recent)
-                        }
-                        .swipeActions(edge: .trailing) {
-                            Button(role: .destructive) {
-                                vm.removeRecentSearch(recent)
-                            } label: {
-                                Label("delete", systemImage: "trash")
-                            }
-                        }
-                    }
-                    Button(role: .destructive) {
-                        vm.clearRecentSearches()
-                    } label: {
-                        suggestionLabel(Text("clearRecentSearches"), systemImage: "xmark.circle")
-                    }
-                    // macOS would otherwise use the bordered style and draw its own capsule.
-                    .buttonStyle(.plain)
-                    .suggestionRowBackground()
+            } else {
+                if showsRecommendationsTip {
+                    SearchRecommendationsTipView { searchFocused = false }
                 }
-                .listRowSeparatorTint(Color.automaticBlack.opacity(0.08))
+                if !vm.recentSearches.isEmpty {
+                    recentSearchesSection
+                }
             }
         }
         .scrollContentBackground(.hidden)
@@ -80,7 +64,7 @@ struct SearchSuggestionsView: View {
             await vm.reloadHomeFeed()
         }
         .overlay {
-            if vm.query.isEmpty && vm.recentSearches.isEmpty && !showsHomeFeed {
+            if vm.query.isEmpty && vm.recentSearches.isEmpty && !showsHomeFeed && !showsRecommendationsTip {
                 ContentUnavailableView(
                     "searchPromptTitle",
                     systemImage: "magnifyingglass",
@@ -89,6 +73,16 @@ struct SearchSuggestionsView: View {
             }
         }
         .task(id: vm.query) { vm.updateSuggestions() }
+        .onChange(of: vm.query, initial: true) {
+            if !vm.query.isEmpty {
+                hasTyped = true
+            }
+        }
+        .task {
+            for await shouldDisplay in SearchRecommendationsTip().shouldDisplayUpdates {
+                recommendationsTipShown = shouldDisplay
+            }
+        }
         .task(id: showRecommendations) {
             if showRecommendations {
                 vm.loadHomeFeedIfNeeded()
@@ -99,6 +93,37 @@ struct SearchSuggestionsView: View {
     var showsHomeFeed: Bool {
         showRecommendations && vm.query.isEmpty && !searchFocused
             && (!vm.homeFeed.isEmpty || vm.isLoadingHomeFeed)
+    }
+
+    var showsRecommendationsTip: Bool {
+        recommendationsTipShown && !showRecommendations && !hasTyped
+    }
+
+    var recentSearchesSection: some View {
+        Section {
+            ForEach(vm.recentSearches.prefix(10), id: \.self) { recent in
+                suggestionRow(recent, systemImage: "clock.arrow.circlepath") {
+                    searchFocused = false
+                    onSelect(recent)
+                }
+                .swipeActions(edge: .trailing) {
+                    Button(role: .destructive) {
+                        vm.removeRecentSearch(recent)
+                    } label: {
+                        Label("delete", systemImage: "trash")
+                    }
+                }
+            }
+            Button(role: .destructive) {
+                vm.clearRecentSearches()
+            } label: {
+                suggestionLabel(Text("clearRecentSearches"), systemImage: "xmark.circle")
+            }
+            // macOS would otherwise use the bordered style and draw its own capsule.
+            .buttonStyle(.plain)
+            .suggestionRowBackground()
+        }
+        .listRowSeparatorTint(Color.automaticBlack.opacity(0.08))
     }
 
     var homeFeedSection: some View {
