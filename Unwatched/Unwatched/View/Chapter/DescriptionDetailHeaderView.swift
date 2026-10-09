@@ -55,7 +55,7 @@ struct DescriptionDetailHeaderView: View {
             } else if let publishedText {
                 Text(verbatim: publishedText)
             }
-            Spacer(minLength: 0)
+            Spacer(minLength: 16)
             VideoDetailStatusIcons(video: video)
         }
         .font(.subheadline)
