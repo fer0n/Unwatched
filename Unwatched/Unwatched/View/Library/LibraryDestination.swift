@@ -48,6 +48,8 @@ extension View {
                         PlayerTypeSettingsView()
                     case .settingsPodcastDownloads:
                         PodcastDownloadSettingsView()
+                    case .settingsChapters:
+                        ChapterSettingsView()
                     case .help:
                         HelpView()
                     case .filter:
@@ -91,6 +93,7 @@ enum LibraryDestination: Codable, Hashable {
          stats,
          settingsPlayerType,
          settingsPodcastDownloads,
+         settingsChapters,
          tag(String)
 }
 
@@ -109,7 +112,7 @@ private struct TagDestinationView: View {
         if let tag = tags.first {
             TagVideosView(tag: tag)
         } else {
-            ContentUnavailableView("noTagFound", systemImage: Const.filterTagSF)
+            ContentUnavailableView("noTagFound", systemImage: Const.tagSF)
         }
     }
 }

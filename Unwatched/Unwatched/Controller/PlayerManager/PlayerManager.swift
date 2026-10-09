@@ -200,6 +200,7 @@ import UnwatchedShared
         handleChapterRefresh()
         BrowserManager.shared.releaseWebViewSoon()
         PodcastDownloadManager.shared.scheduleSync()
+        ChapterAutomation.scheduleRun()
         if deferVideoDate != nil {
             deferVideoDate = nil
         }

@@ -1160,6 +1160,40 @@
         }
       }
     },
+    "allowNotifications" : {
+      "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Mitteilungen erlauben"
+          }
+        },
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Allow Notifications"
+          }
+        },
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Permitir notificaciones"
+          }
+        },
+        "fr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Autoriser les notifications"
+          }
+        },
+        "pl" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Zezwól na powiadomienia"
+          }
+        }
+      }
+    },
     "allowRefreshDuringSyncFooter" : {
       "localizations" : {
         "de" : {
@@ -3439,6 +3473,142 @@
         }
       }
     },
+    "chapterAutomationCurrent" : {
+      "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Aktuell"
+          }
+        },
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Current"
+          }
+        },
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Actual"
+          }
+        },
+        "fr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "En cours"
+          }
+        },
+        "pl" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Bieżący"
+          }
+        }
+      }
+    },
+    "chapterAutomationNext" : {
+      "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Aktuell & Nächstes"
+          }
+        },
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Current & Next"
+          }
+        },
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Actual y siguiente"
+          }
+        },
+        "fr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "En cours et suivant"
+          }
+        },
+        "pl" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Bieżący i następny"
+          }
+        }
+      }
+    },
+    "chapterAutomationScopeFooter" : {
+      "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Sendet sie automatisch für das aktuelle Element oder das aktuelle und das nächste. YouTube-Videos haben erst ein Transkript, wenn sie abgespielt werden."
+          }
+        },
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Sends it automatically for the current item, or the current and the next. YouTube videos only have a transcript once they've started playing."
+          }
+        },
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "La envía automáticamente para el elemento actual, o el actual y el siguiente. Los videos de YouTube solo tienen transcripción una vez que empiezan a reproducirse."
+          }
+        },
+        "fr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "L'envoie automatiquement pour l'élément en cours, ou l'élément en cours et le suivant. Les vidéos YouTube n'ont de transcription qu'une fois la lecture commencée."
+          }
+        },
+        "pl" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Wysyła je automatycznie dla bieżącego elementu albo bieżącego i następnego. Filmy z YouTube mają transkrypt dopiero po rozpoczęciu odtwarzania."
+          }
+        }
+      }
+    },
+    "chapterCount" : {
+      "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Anzahl der Kapitel"
+          }
+        },
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Chapter Count"
+          }
+        },
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Número de capítulos"
+          }
+        },
+        "fr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Nombre de chapitres"
+          }
+        },
+        "pl" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Liczba rozdziałów"
+          }
+        }
+      }
+    },
     "chapterDescription" : {
       "localizations" : {
         "de" : {
@@ -3609,6 +3779,414 @@
         }
       }
     },
+    "chapterGenerationAll" : {
+      "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Alle"
+          }
+        },
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "All"
+          }
+        },
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Todo"
+          }
+        },
+        "fr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Tout"
+          }
+        },
+        "pl" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Wszystko"
+          }
+        }
+      }
+    },
+    "chapterGenerationFooter" : {
+      "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Für welche Videos und Folgen Kapitel erstellt werden. „Ohne Kapitel“ überspringt alles, was bereits eigene Kapitel hat. Jeder Kanal kann das in seinen Einstellungen überschreiben."
+          }
+        },
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Which videos and episodes get chapters generated. “Without Chapters” skips anything that already has chapters of its own. Each channel can override this in its settings."
+          }
+        },
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Para qué vídeos y episodios se generan capítulos. «Sin capítulos» omite todo lo que ya tiene capítulos propios. Cada canal puede cambiarlo en sus ajustes."
+          }
+        },
+        "fr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Les vidéos et épisodes pour lesquels des chapitres sont générés. « Sans chapitres » ignore tout ce qui a déjà ses propres chapitres. Chaque chaîne peut modifier ce réglage dans ses paramètres."
+          }
+        },
+        "pl" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Dla których filmów i odcinków generowane są rozdziały. „Bez rozdziałów” pomija wszystko, co ma już własne rozdziały. Każdy kanał może to zmienić w swoich ustawieniach."
+          }
+        }
+      }
+    },
+    "chapterGenerationSelectedChannels" : {
+      "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Ausgewählte Kanäle"
+          }
+        },
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Selected Channels"
+          }
+        },
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Canales seleccionados"
+          }
+        },
+        "fr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Chaînes sélectionnées"
+          }
+        },
+        "pl" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Wybrane kanały"
+          }
+        }
+      }
+    },
+    "chapterGenerationTranscribeFooter" : {
+      "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Für welche Videos und Folgen Kapitel erstellt werden. „Ohne Kapitel“ überspringt alles, was bereits eigene Kapitel hat. Jeder Kanal kann das in seinen Einstellungen überschreiben. Podcast-Folgen werden dafür auf diesem Gerät transkribiert. Das ist ressourcenintensiv: Es dauert eine Weile und verbraucht viel Akku. Die aktuelle und die nächste Folge werden nach dem Laden transkribiert; ein vom Podcast veröffentlichtes Transkript wird stattdessen mit dem Audio abgeglichen. Pausiert im Stromsparmodus."
+          }
+        },
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Which videos and episodes get chapters generated. “Without Chapters” skips anything that already has chapters of its own. Each channel can override this in its settings. Podcast episodes are transcribed on this device for this, which is resource intensive: it takes a while and uses a lot of battery. The current and the next episode are transcribed once downloaded; a transcript the show publishes is checked against the audio instead. Paused in Low Power Mode."
+          }
+        },
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Para qué vídeos y episodios se generan capítulos. «Sin capítulos» omite todo lo que ya tiene capítulos propios. Cada canal puede cambiarlo en sus ajustes. Para ello, los episodios de podcast se transcriben en este dispositivo, lo que consume muchos recursos: tarda un tiempo y gasta mucha batería. El episodio actual y el siguiente se transcriben una vez descargados; si el programa publica una transcripción, se compara con el audio. Se pausa en el modo de bajo consumo."
+          }
+        },
+        "fr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Les vidéos et épisodes pour lesquels des chapitres sont générés. « Sans chapitres » ignore tout ce qui a déjà ses propres chapitres. Chaque chaîne peut modifier ce réglage dans ses paramètres. Pour cela, les épisodes de podcast sont transcrits sur cet appareil, ce qui est gourmand en ressources : cela prend du temps et consomme beaucoup de batterie. L'épisode en cours et le suivant sont transcrits une fois téléchargés ; une transcription publiée par l'émission est plutôt comparée à l'audio. Suspendu en mode économie d'énergie."
+          }
+        },
+        "pl" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Dla których filmów i odcinków generowane są rozdziały. „Bez rozdziałów” pomija wszystko, co ma już własne rozdziały. Każdy kanał może to zmienić w swoich ustawieniach. W tym celu odcinki podcastów są transkrybowane na tym urządzeniu, co jest zasobożerne: trwa to chwilę i zużywa dużo baterii. Bieżący i następny odcinek są transkrybowane po pobraniu; transkrypt opublikowany przez podcast jest zamiast tego porównywany z dźwiękiem. Wstrzymywane w trybie niskiego zużycia energii."
+          }
+        }
+      }
+    },
+    "chapterGenerationWithoutChapters" : {
+      "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Ohne Kapitel"
+          }
+        },
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Without Chapters"
+          }
+        },
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Sin capítulos"
+          }
+        },
+        "fr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Sans chapitres"
+          }
+        },
+        "pl" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Bez rozdziałów"
+          }
+        }
+      }
+    },
+    "chapterIssueNotifications" : {
+      "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Mitteilungen sind aus"
+          }
+        },
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Notifications Are Off"
+          }
+        },
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Las notificaciones están desactivadas"
+          }
+        },
+        "fr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Les notifications sont désactivées"
+          }
+        },
+        "pl" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Powiadomienia są wyłączone"
+          }
+        }
+      }
+    },
+    "chapterIssueNotificationsMessage" : {
+      "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Die Kapitelerstellung startet deine Kurzbefehle-Automation mit einer Mitteilung. Erlaube Mitteilungen für Unwatched."
+          }
+        },
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Chapter generation starts your Shortcuts automation with a notification. Allow notifications for Unwatched."
+          }
+        },
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "La generación de capítulos inicia tu automatización de Atajos con una notificación. Permite las notificaciones de Unwatched."
+          }
+        },
+        "fr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "La génération de chapitres lance votre automatisation Raccourcis par une notification. Autorisez les notifications d'Unwatched."
+          }
+        },
+        "pl" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Generowanie rozdziałów uruchamia automatyzację Skrótów powiadomieniem. Zezwól na powiadomienia od Unwatched."
+          }
+        }
+      }
+    },
+    "chapterIssueShortcutNotRunning" : {
+      "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Automation wurde nicht ausgeführt"
+          }
+        },
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Automation Didn't Run"
+          }
+        },
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "La automatización no se ejecutó"
+          }
+        },
+        "fr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "L'automatisation ne s'est pas exécutée"
+          }
+        },
+        "pl" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Automatyzacja nie została uruchomiona"
+          }
+        }
+      }
+    },
+    "chapterIssueShortcutNotRunningMessage" : {
+      "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Nach den letzten Mitteilungen „Transcript Available“ lief der Kurzbefehl nicht. Prüfe in der Kurzbefehle-App, ob die Automation existiert und sofort ausgeführt wird."
+          }
+        },
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "The shortcut didn't run after the last few “Transcript Available” notifications. In the Shortcuts app, check that the automation exists and runs immediately."
+          }
+        },
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "El atajo no se ejecutó tras las últimas notificaciones «Transcript Available». En la app Atajos, comprueba que la automatización existe y se ejecuta de inmediato."
+          }
+        },
+        "fr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Le raccourci ne s'est pas exécuté après les dernières notifications « Transcript Available ». Dans l'app Raccourcis, vérifiez que l'automatisation existe et s'exécute immédiatement."
+          }
+        },
+        "pl" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Skrót nie uruchomił się po ostatnich powiadomieniach „Transcript Available”. W aplikacji Skróty sprawdź, czy automatyzacja istnieje i uruchamia się natychmiast."
+          }
+        }
+      }
+    },
+    "chapterIssueShortcutOutdated" : {
+      "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Kurzbefehl braucht ein Update"
+          }
+        },
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Shortcut Needs an Update"
+          }
+        },
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "El atajo necesita una actualización"
+          }
+        },
+        "fr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Le raccourci doit être mis à jour"
+          }
+        },
+        "pl" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Skrót wymaga aktualizacji"
+          }
+        }
+      }
+    },
+    "chapterIssueShortcutOutdatedMessage" : {
+      "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Nach den letzten Mitteilungen „Transcript Available“ lief der Kurzbefehl nicht, und er ist veraltet. Installiere den neuesten Kurzbefehl in den Kapiteleinstellungen."
+          }
+        },
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "The shortcut didn't run after the last few “Transcript Available” notifications, and it's out of date. Install the latest one in the chapter settings."
+          }
+        },
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "El atajo no se ejecutó tras las últimas notificaciones «Transcript Available» y está desactualizado. Instala el más reciente en los ajustes de capítulos."
+          }
+        },
+        "fr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Le raccourci ne s'est pas exécuté après les dernières notifications « Transcript Available » et il est obsolète. Installez le plus récent dans les réglages des chapitres."
+          }
+        },
+        "pl" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Skrót nie uruchomił się po ostatnich powiadomieniach „Transcript Available” i jest nieaktualny. Zainstaluj najnowszy w ustawieniach rozdziałów."
+          }
+        }
+      }
+    },
+    "chapterIssueTranscriptionFailed" : {
+      "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Transkription fehlgeschlagen"
+          }
+        },
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Transcription Failed"
+          }
+        },
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "La transcripción falló"
+          }
+        },
+        "fr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "La transcription a échoué"
+          }
+        },
+        "pl" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Transkrypcja nie powiodła się"
+          }
+        }
+      }
+    },
     "chapterMode" : {
       "localizations" : {
         "de" : {
@@ -3741,6 +4319,40 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "Rozdziały"
+          }
+        }
+      }
+    },
+    "chapterSettings" : {
+      "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Kapiteleinstellungen"
+          }
+        },
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Chapter Settings"
+          }
+        },
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Ajustes de capítulos"
+          }
+        },
+        "fr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Réglages des chapitres"
+          }
+        },
+        "pl" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Ustawienia rozdziałów"
           }
         }
       }
@@ -6261,40 +6873,6 @@
         }
       }
     },
-    "disablePip" : {
-      "localizations" : {
-        "de" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "PiP Deaktivieren"
-          }
-        },
-        "en" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Disable PiP"
-          }
-        },
-        "es" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Desactivar PiP"
-          }
-        },
-        "fr" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Désactiver PiP"
-          }
-        },
-        "pl" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Wyłącz PiP"
-          }
-        }
-      }
-    },
     "dismissHint" : {
       "localizations" : {
         "de" : {
@@ -7245,6 +7823,40 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "Włącz"
+          }
+        }
+      }
+    },
+    "enableChapterShortcutAutomation" : {
+      "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Automatische Kapitelerstellung"
+          }
+        },
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Chapter Generation Automation"
+          }
+        },
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Automatización de generación de capítulos"
+          }
+        },
+        "fr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Automatisation de la génération de chapitres"
+          }
+        },
+        "pl" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Automatyzacja generowania rozdziałów"
           }
         }
       }
@@ -8507,6 +9119,40 @@
         }
       }
     },
+    "generateFor" : {
+      "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Erstellen für"
+          }
+        },
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Generate For"
+          }
+        },
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Generar para"
+          }
+        },
+        "fr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Générer pour"
+          }
+        },
+        "pl" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Generuj dla"
+          }
+        }
+      }
+    },
     "generateTranscript" : {
       "localizations" : {
         "de" : {
@@ -8639,6 +9285,74 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "Generowanie transkryptów"
+          }
+        }
+      }
+    },
+    "getChapters" : {
+      "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Kapitel abrufen"
+          }
+        },
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Get Chapters"
+          }
+        },
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Obtener capítulos"
+          }
+        },
+        "fr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Obtenir les chapitres"
+          }
+        },
+        "pl" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Pobierz rozdziały"
+          }
+        }
+      }
+    },
+    "getChaptersDescription" : {
+      "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Ruft die Kapitel des aktuellen Videos ab, oder eines angegebenen Videos, wenn eine URL bereitgestellt wird, als Zeilen mit Zeitstempel, in denen Sponsor- und Eigenwerbungs-Segmente markiert sind."
+          }
+        },
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Gets the chapters of the current video, or of a specified video if a video URL is provided, as timestamped lines with sponsor and self-promotion segments marked."
+          }
+        },
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Obtiene los capítulos del video actual, o de un video especificado si se proporciona una URL, como líneas con marca de tiempo en las que se marcan los segmentos de patrocinio y autopromoción."
+          }
+        },
+        "fr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Récupère les chapitres de la vidéo actuelle, ou d'une vidéo spécifiée si une URL est fournie, sous forme de lignes horodatées où les segments de sponsor et d'auto-promotion sont signalés."
+          }
+        },
+        "pl" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Pobiera rozdziały bieżącego wideo lub wskazanego wideo, jeśli podano adres URL, jako wiersze ze znacznikami czasu, w których oznaczono segmenty sponsorowane i autopromocję."
           }
         }
       }
@@ -10607,40 +11321,6 @@
         }
       }
     },
-    "installShortcut" : {
-      "localizations" : {
-        "de" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Kurzbefehl installieren"
-          }
-        },
-        "en" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Install Shortcut"
-          }
-        },
-        "es" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Instalar atajo"
-          }
-        },
-        "fr" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Installer le raccourci"
-          }
-        },
-        "pl" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Zainstaluj skrót"
-          }
-        }
-      }
-    },
     "keepVideos" : {
       "localizations" : {
         "de" : {
@@ -11185,6 +11865,40 @@
         }
       }
     },
+    "loadChapters" : {
+      "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Kapitel laden"
+          }
+        },
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Load Chapters"
+          }
+        },
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Cargar capítulos"
+          }
+        },
+        "fr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Charger les chapitres"
+          }
+        },
+        "pl" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Wczytywanie rozdziałów"
+          }
+        }
+      }
+    },
     "loading" : {
       "localizations" : {
         "de" : {
@@ -11589,6 +12303,108 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "Automatycznie oznacza wideo jako obejrzane i wczytuje następne w kolejce po zakończeniu odtwarzania."
+          }
+        }
+      }
+    },
+    "maximumTranscriptions" : {
+      "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Maximale Transkriptionen"
+          }
+        },
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Maximum Transcriptions"
+          }
+        },
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Transcripciones máximas"
+          }
+        },
+        "fr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Transcriptions maximales"
+          }
+        },
+        "pl" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Maksymalna liczba transkrypcji"
+          }
+        }
+      }
+    },
+    "maximumTranscriptionsFooter" : {
+      "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Weitere Folgen in der Queue werden bis zu dieser Anzahl im Hintergrund transkribiert, während das Gerät lädt."
+          }
+        },
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Further episodes in the queue, up to this number, are transcribed in the background while the device is charging."
+          }
+        },
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Los siguientes episodios de la cola, hasta este número, se transcriben en segundo plano mientras el dispositivo se carga."
+          }
+        },
+        "fr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Les épisodes suivants de la file d'attente, jusqu'à ce nombre, sont transcrits en arrière-plan pendant la charge de l'appareil."
+          }
+        },
+        "pl" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Kolejne odcinki w kolejce, do tej liczby, są transkrybowane w tle podczas ładowania urządzenia."
+          }
+        }
+      }
+    },
+    "mediaFilter" : {
+      "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Medienfilter"
+          }
+        },
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Media Filter"
+          }
+        },
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Filtro de medios"
+          }
+        },
+        "fr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Filtre de médias"
+          }
+        },
+        "pl" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Filtr multimediów"
           }
         }
       }
@@ -14926,6 +15742,40 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "Otwieranie linków"
+          }
+        }
+      }
+    },
+    "openShortcuts" : {
+      "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Kurzbefehle öffnen"
+          }
+        },
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Open Shortcuts"
+          }
+        },
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Abrir Atajos"
+          }
+        },
+        "fr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Ouvrir Raccourcis"
+          }
+        },
+        "pl" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Otwórz Skróty"
           }
         }
       }
@@ -19841,6 +20691,40 @@
         }
       }
     },
+    "segmentCount" : {
+      "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Anzahl der Segmente"
+          }
+        },
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Segment Count"
+          }
+        },
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Número de segmentos"
+          }
+        },
+        "fr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Nombre de segments"
+          }
+        },
+        "pl" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Liczba segmentów"
+          }
+        }
+      }
+    },
     "segmentSettingNothing" : {
       "localizations" : {
         "de" : {
@@ -21507,6 +22391,74 @@
         }
       }
     },
+    "setupShortcut" : {
+      "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Kapitel-Kurzbefehl einrichten"
+          }
+        },
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Setup Generation Shortcut"
+          }
+        },
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Configurar atajo de generación"
+          }
+        },
+        "fr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Configurer le raccourci de génération"
+          }
+        },
+        "pl" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Skonfiguruj skrót generowania"
+          }
+        }
+      }
+    },
+    "setupShortcutRequired" : {
+      "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Kapitel-Kurzbefehl einrichten (erforderlich)"
+          }
+        },
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Setup Generation Shortcut (required)"
+          }
+        },
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Configurar atajo de generación (obligatorio)"
+          }
+        },
+        "fr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Configurer le raccourci de génération (requis)"
+          }
+        },
+        "pl" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Skonfiguruj skrót generowania (wymagane)"
+          }
+        }
+      }
+    },
     "shareExtensionAction" : {
       "localizations" : {
         "de" : {
@@ -21882,70 +22834,36 @@
         }
       }
     },
-    "shortcutError" : {
+    "shortcutAutomationFooter" : {
       "localizations" : {
         "de" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Kurzbefehl fehlgeschlagen"
+            "value" : "Erstelle in der Kurzbefehle-App eine Automation, die den Kurzbefehl bei der Unwatched-Mitteilung „Transcript Available“ ausführt. Die Cloud-KI-Taste sendet sie für das angezeigte Video."
           }
         },
         "en" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Shortcut Failed"
+            "value" : "Create an automation in the Shortcuts app that runs the shortcut on Unwatched's notification \"Transcript Available\". The Cloud AI button sends it for the video shown."
           }
         },
         "es" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Fallo del atajo"
+            "value" : "Crea una automatización en la app Atajos que ejecute el atajo con la notificación «Transcript Available» de Unwatched. El botón IA en la nube la envía para el video mostrado."
           }
         },
         "fr" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Échec du raccourci"
+            "value" : "Créez une automatisation dans l'app Raccourcis qui exécute le raccourci à la notification « Transcript Available » d'Unwatched. Le bouton IA Cloud l'envoie pour la vidéo affichée."
           }
         },
         "pl" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Błąd skrótu"
-          }
-        }
-      }
-    },
-    "shortcuts" : {
-      "localizations" : {
-        "de" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Kurzbefehle"
-          }
-        },
-        "en" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Shortcuts"
-          }
-        },
-        "es" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Atajos"
-          }
-        },
-        "fr" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Raccourcis"
-          }
-        },
-        "pl" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Skróty"
+            "value" : "Utwórz w aplikacji Skróty automatyzację, która uruchamia skrót po powiadomieniu „Transcript Available” od Unwatched. Przycisk Chmurowa AI wysyła je dla wyświetlanego filmu."
           }
         }
       }
@@ -22856,36 +23774,70 @@
         }
       }
     },
-    "skipSponsorSegmentsHelper" : {
+    "skippingChapters" : {
       "localizations" : {
         "de" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Erfordert SponsorBlock Kapitel. Stelle sicher dass dein YouTube Premium Account angemeldet ist."
+            "value" : "Kapitel überspringen"
           }
         },
         "en" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Requires SponsorBlock chapters. Make sure you’re signed into your YouTube Premium account."
+            "value" : "Skipping Chapters"
           }
         },
         "es" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Requiere capítulos de SponsorBlock. Asegúrate de haber iniciado sesión en tu cuenta de YouTube Premium."
+            "value" : "Omitir capítulos"
           }
         },
         "fr" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Nécessite les chapitres SponsorBlock. Assurez-vous d’être connecté à votre compte YouTube Premium."
+            "value" : "Ignorer des chapitres"
           }
         },
         "pl" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Wymaga rozdziałów SponsorBlock. Upewnij się, że jesteś zalogowany na swoje konto YouTube Premium."
+            "value" : "Pomijanie rozdziałów"
+          }
+        }
+      }
+    },
+    "skipSponsorSegmentsHelper" : {
+      "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Wie Sponsor- und Eigenwerbungs-Segmente aus SponsorBlock oder der Kapitelerstellung angezeigt werden. Zum Überspringen ist YouTube Premium erforderlich."
+          }
+        },
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "How sponsor and self-promotion segments from SponsorBlock or chapter generation are shown. Skipping them requires YouTube Premium."
+          }
+        },
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Cómo se muestran los segmentos de patrocinio y autopromoción de SponsorBlock o de la generación de capítulos. Omitirlos requiere YouTube Premium."
+          }
+        },
+        "fr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Comment les segments de sponsor et d'auto-promotion issus de SponsorBlock ou de la génération de chapitres sont affichés. Les ignorer nécessite YouTube Premium."
+          }
+        },
+        "pl" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Jak wyświetlane są segmenty sponsorowane i autopromocji z SponsorBlock lub z generowania rozdziałów. Pomijanie ich wymaga YouTube Premium."
           }
         }
       }
@@ -23201,65 +24153,31 @@
         "de" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Kapitel abrufen"
+            "value" : "SponsorBlock-Kapitel abrufen"
           }
         },
         "en" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Fetch Chapters"
+            "value" : "Fetch SponsorBlock Chapters"
           }
         },
         "es" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Obtener capítulos"
+            "value" : "Obtener capítulos de SponsorBlock"
           }
         },
         "fr" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Récupérer les chapitres"
+            "value" : "Récupérer les chapitres SponsorBlock"
           }
         },
         "pl" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Pobierz rozdziały"
-          }
-        }
-      }
-    },
-    "sponsorBlockSettings" : {
-      "localizations" : {
-        "de" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "SponsorBlock"
-          }
-        },
-        "en" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "SponsorBlock"
-          }
-        },
-        "es" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "SponsorBlock"
-          }
-        },
-        "fr" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "SponsorBlock"
-          }
-        },
-        "pl" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "SponsorBlock"
+            "value" : "Pobieraj rozdziały SponsorBlock"
           }
         }
       }
@@ -27143,6 +28061,40 @@
         }
       }
     },
+    "updateShortcut" : {
+      "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Kapitel-Kurzbefehl aktualisieren"
+          }
+        },
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Update Generation Shortcut"
+          }
+        },
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Actualizar atajo de generación"
+          }
+        },
+        "fr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Mettre à jour le raccourci de génération"
+          }
+        },
+        "pl" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Zaktualizuj skrót generowania"
+          }
+        }
+      }
+    },
     "useDefault" : {
       "localizations" : {
         "de" : {
@@ -27479,40 +28431,6 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "Opis"
-          }
-        }
-      }
-    },
-    "videoFilter" : {
-      "localizations" : {
-        "de" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Medien"
-          }
-        },
-        "en" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Media"
-          }
-        },
-        "es" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Multimedia"
-          }
-        },
-        "fr" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Médias"
-          }
-        },
-        "pl" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Multimedia"
           }
         }
       }
@@ -28703,6 +29621,40 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "URL YouTube"
+          }
+        }
+      }
+    },
+    "youtubeVideos" : {
+      "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "YouTube-Videos"
+          }
+        },
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "YouTube Videos"
+          }
+        },
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Videos de YouTube"
+          }
+        },
+        "fr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Vidéos YouTube"
+          }
+        },
+        "pl" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Filmy z YouTube"
           }
         }
       }

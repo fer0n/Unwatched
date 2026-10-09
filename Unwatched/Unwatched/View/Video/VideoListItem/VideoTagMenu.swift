@@ -36,7 +36,7 @@ struct VideoTagMenu: View {
                     .disabled(viaChannel)
                 }
             } label: {
-                Label("tags", systemImage: Const.filterTagSF)
+                Label("tags", systemImage: Const.tagSF)
             }
         }
     }

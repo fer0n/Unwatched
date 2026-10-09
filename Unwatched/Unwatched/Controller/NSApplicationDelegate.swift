@@ -8,8 +8,13 @@ import Foundation
 import AppKit
 import OSLog
 import UnwatchedShared
+import UserNotifications
 
-class AppDelegate: NSObject, NSApplicationDelegate, ObservableObject, NSWindowDelegate {
+class AppDelegate: NSObject,
+                   NSApplicationDelegate,
+                   ObservableObject,
+                   NSWindowDelegate,
+                   UNUserNotificationCenterDelegate {
     weak var mainWindow: NSWindow?
 
     func applicationWillTerminate(_ notification: Notification) {
@@ -33,8 +38,17 @@ class AppDelegate: NSObject, NSApplicationDelegate, ObservableObject, NSWindowDe
         restoreWindowFrame()
         handleFullscreenOnLaunch()
         MenuHighlightSuppressor.start()
+        UNUserNotificationCenter.current().delegate = self
+        ChapterAutomation.setup()
 
         SetupView.onLaunch()
+    }
+
+    nonisolated func userNotificationCenter(
+        _ center: UNUserNotificationCenter,
+        willPresent notification: UNNotification
+    ) async -> UNNotificationPresentationOptions {
+        ChapterAutomation.isAutomationNotification(notification) ? .banner : []
     }
 
     @MainActor

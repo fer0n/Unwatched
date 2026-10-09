@@ -307,7 +307,7 @@ public struct Const {
 
     // MARK: - SF Symbols
     public static let queueTagSF = "rectangle.stack"
-    public static let filterTagSF = "line.3.horizontal.decrease"
+    public static let tagSF = "tag.fill"
     public static let untaggedSF = "tag.slash.fill"
     public static let inboxTabEmptySF = "tray"
     public static let clearSF = "xmark.circle.fill"
@@ -528,6 +528,13 @@ public struct Const {
     /// Days a downloaded episode is kept after it's been watched; 0 deletes it right away
     public static let podcastDownloadKeepDays = "podcastDownloadKeepDays"
     public static let podcastDownloadOnCellular = "podcastDownloadOnCellular"
+
+    public static let chapterShortcutAutomation = "chapterShortcutAutomation"
+    public static let chapterAutomationPodcasts = "chapterAutomationPodcasts"
+    public static let chapterAutomationVideos = "chapterAutomationVideos"
+    public static let chapterGenerationMode = "chapterGenerationMode"
+    public static let maxAutoTranscriptions = "maxAutoTranscriptions"
+    public static let installedChapterShortcut = "installedChapterShortcut"
 
     public static let shareExtensionAction = "shareExtensionAction"
     public static let shareExtensionAskedToRemember = "shareExtensionAskedToRemember"

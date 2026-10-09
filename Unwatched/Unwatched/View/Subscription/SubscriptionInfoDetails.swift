@@ -130,6 +130,8 @@ struct SubscriptionInfoDetails: View {
 
                         SubscriptionSegmentSetting(subscription: subscription, category: .selfPromo)
 
+                        SubscriptionChapterGenerationSetting(subscription: subscription)
+
                         SubscriptionTitleFilterButton(
                             showFilter: $showFilter,
                             hasFilter: !subscription.filterText.isEmpty

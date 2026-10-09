@@ -23,6 +23,7 @@ struct AppNotificationView: View {
                 Text(notification?.title ?? "")
                     .foregroundStyle(.primary)
                     .fontWeight(.semibold)
+                    .multilineTextAlignment(.leading)
             }
 
             if let error = notification?.error {
@@ -42,7 +43,8 @@ struct AppNotificationView: View {
         in: AppNotificationView.clipShape
         )
         #endif
-        .fixedSize()
+        .fixedSize(horizontal: false, vertical: true)
+        .padding(.horizontal)
         .simultaneousGesture(
             DragGesture()
                 .onEnded { value in

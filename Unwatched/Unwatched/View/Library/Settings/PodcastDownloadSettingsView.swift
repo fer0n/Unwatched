@@ -60,6 +60,7 @@ struct PodcastDownloadSettingsView: View {
                     }
                 }
             }
+            .animation(.default, value: storedBytes > 0)
             .myNavigationTitle("podcastDownloads")
         }
         .onChange(of: limitHours) { sync() }

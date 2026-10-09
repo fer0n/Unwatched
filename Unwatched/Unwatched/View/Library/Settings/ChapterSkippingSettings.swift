@@ -1,5 +1,5 @@
 //
-//  SponsorBlockSettingsView.swift
+//  ChapterSkippingSettings.swift
 //  Unwatched
 //
 
@@ -7,8 +7,11 @@ import SwiftUI
 import UnwatchedShared
 import SwiftData
 
-struct SponsorBlockSettingsView: View {
+struct ChapterSkippingSettings: View {
+    @CloudStorage(Const.skipChapterText) var skipChapterText: String = ""
+    @PremiumCloudStorage(Const.autoSkipRecurringChapters) var autoSkipRecurringChapters = true
     @CloudStorage(Const.mergeSponsorBlockChapters) var mergeSponsorBlockChapters: Bool = false
+    @AppStorage(Const.chapterGenerationMode) var generationMode = ChapterGenerationMode.off
     @CloudStorage(Const.youtubePremium) var youtubePremium: Bool = false
     @CloudStorage(Const.sponsorSegmentSetting)
     var sponsorSegmentSetting: SponsorBlockSegmentSetting = SponsorBlockSegmentSetting.sponsorDefault
@@ -20,25 +23,20 @@ struct SponsorBlockSettingsView: View {
     @State var showAlert = false
 
     var body: some View {
-        MySection("sponsorBlockSettings", footer: "sponsorBlockSettingsHelper") {
-            Toggle(isOn: $mergeSponsorBlockChapters) {
-                Text("sponsorBlockChapters")
-            }
+        MySection("skippingChapters", footer: "autoSkipRecurringChaptersFooter", showPremiumIndicator: true) {
+            Toggle("autoSkipRecurringChapters", isOn: $autoSkipRecurringChapters)
         }
+        .requiresPremium()
 
-        MySection(footer: "skipSponsorSegmentsHelper") {
-            SegmentSettingPicker(
-                title: "sponsorSegments",
-                selection: $sponsorSegmentSetting,
-                allowsSkipping: youtubePremium
-            )
-            SegmentSettingPicker(
-                title: "selfPromoSegments",
-                selection: $selfPromoSegmentSetting,
-                allowsSkipping: youtubePremium
-            )
+        MySection(footer: "chapterFilterFooter", showPremiumIndicator: true) {
+            TextField("keywords", text: $skipChapterText)
+                .autocorrectionDisabled()
+                #if os(iOS)
+                .textInputAutocapitalization(.never)
+                .submitLabel(.done)
+            #endif
         }
-        .disabled(!mergeSponsorBlockChapters)
+        .requiresPremium(skipChapterText.isEmpty)
 
         MySection(footer: "considerGettingYoutubePremium") {
             HStack {
@@ -71,6 +69,20 @@ struct SponsorBlockSettingsView: View {
                                 Button("cancel", role: .cancel) {}
                             },
                             message: { Text("considerGettingYoutubePremium") })
+
+        MySection(footer: "skipSponsorSegmentsHelper") {
+            SegmentSettingPicker(
+                title: "sponsorSegments",
+                selection: $sponsorSegmentSetting,
+                allowsSkipping: youtubePremium
+            )
+            SegmentSettingPicker(
+                title: "selfPromoSegments",
+                selection: $selfPromoSegmentSetting,
+                allowsSkipping: youtubePremium
+            )
+        }
+        .disabled(!mergeSponsorBlockChapters && generationMode == .off)
     }
 
     func stopSkipping() {
@@ -160,6 +172,6 @@ struct RightCheckboxToggleStyle: ToggleStyle {
 
 #Preview {
     List {
-        SponsorBlockSettingsView()
+        ChapterSkippingSettings()
     }
 }

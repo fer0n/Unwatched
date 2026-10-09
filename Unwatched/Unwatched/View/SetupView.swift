@@ -241,6 +241,7 @@ struct SetupView: View {
         prefetchAudioArtworkIfNeeded()
         PodcastDownloadManager.shared.onEpisodeDownloaded = { youtubeId in
             ChapterService.loadPodcastChapters(youtubeId: youtubeId)
+            ChapterAutomation.scheduleRun()
         }
         PodcastDownloadManager.shared.onEpisodeDownloadFailed = {
             Signal.error("podcastDownloadFailed")

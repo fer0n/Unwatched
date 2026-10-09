@@ -61,8 +61,8 @@ struct QueueTagMenu<MenuLabel: View>: View {
 
     private var symbol: String {
         switch navManager.queueTag {
-        case .all: Const.filterTagSF
-        case .tag: navManager.queueTag.tag(in: tags)?.displaySymbol ?? Const.filterTagSF
+        case .all: Const.tagSF
+        case .tag: navManager.queueTag.tag(in: tags)?.displaySymbol ?? Const.tagSF
         }
     }
 

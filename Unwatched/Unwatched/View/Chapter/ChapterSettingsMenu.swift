@@ -29,7 +29,7 @@ struct ChapterSettingsMenu: View {
             chapterSection
 
             Section {
-                CloudAiButton(dismissOnPaywall: true) {
+                CloudAiButton(video: video, dismissOnPaywall: true) {
                     Text("cloudAI")
                     Text("shortcut")
                     Image(systemName: "sparkles")

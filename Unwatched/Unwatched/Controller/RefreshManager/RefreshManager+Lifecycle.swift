@@ -21,6 +21,7 @@ extension RefreshManager {
             UserDefaults.standard.set(false, forKey: Const.requiresDurationFetch)
         }
         PodcastDownloadManager.shared.scheduleSync()
+        ChapterAutomation.scheduleRun()
 
         guard enableIcloudSync else {
             cancelCloudKitListener()

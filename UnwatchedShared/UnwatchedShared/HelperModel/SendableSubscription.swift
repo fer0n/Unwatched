@@ -25,6 +25,7 @@ public struct SendableSubscription: SubscriptionData, Sendable, Codable, Hashabl
 
     public var sponsorSegmentSetting: SponsorBlockSegmentSetting?
     public var selfPromoSegmentSetting: SponsorBlockSegmentSetting?
+    public var chapterGeneration: Bool?
 
     public var customSpeedSetting: Double?
     public var customAspectRatio: Double?
@@ -63,6 +64,7 @@ public struct SendableSubscription: SubscriptionData, Sendable, Codable, Hashabl
         liveStreamSetting: LiveStreamSetting = .defaultSetting,
         sponsorSegmentSetting: SponsorBlockSegmentSetting? = nil,
         selfPromoSegmentSetting: SponsorBlockSegmentSetting? = nil,
+        chapterGeneration: Bool? = nil,
         customSpeedSetting: Double? = nil,
         customAspectRatio: Double? = nil,
         skipIntroSeconds: Double? = nil,
@@ -92,6 +94,7 @@ public struct SendableSubscription: SubscriptionData, Sendable, Codable, Hashabl
         self.liveStreamSetting = liveStreamSetting
         self.sponsorSegmentSetting = sponsorSegmentSetting
         self.selfPromoSegmentSetting = selfPromoSegmentSetting
+        self.chapterGeneration = chapterGeneration
         self.customSpeedSetting = customSpeedSetting
         self.customAspectRatio = customAspectRatio
         self.skipIntroSeconds = skipIntroSeconds
@@ -146,6 +149,7 @@ public struct SendableSubscription: SubscriptionData, Sendable, Codable, Hashabl
         )
         subscription.shortsSetting = shortsSetting
         subscription.liveStreamSetting = liveStreamSetting
+        subscription.chapterGeneration = chapterGeneration
         return subscription
     }
 
@@ -170,6 +174,7 @@ public struct SendableSubscription: SubscriptionData, Sendable, Codable, Hashabl
             .flatMap { SponsorBlockSegmentSetting(rawValue: $0) }
         selfPromoSegmentSetting = try container.decodeIfPresent(Int.self, forKey: .selfPromoSegmentSetting)
             .flatMap { SponsorBlockSegmentSetting(rawValue: $0) }
+        chapterGeneration = try container.decodeIfPresent(Bool.self, forKey: .chapterGeneration)
         customSpeedSetting = try container.decodeIfPresent(Double.self, forKey: .customSpeedSetting)
         customAspectRatio = try container.decodeIfPresent(Double.self, forKey: .customAspectRatio)
         skipIntroSeconds = try container.decodeIfPresent(Double.self, forKey: .skipIntroSeconds)
@@ -208,6 +213,7 @@ public struct SendableSubscription: SubscriptionData, Sendable, Codable, Hashabl
         }
         try container.encodeIfPresent(sponsorSegmentSetting?.rawValue, forKey: .sponsorSegmentSetting)
         try container.encodeIfPresent(selfPromoSegmentSetting?.rawValue, forKey: .selfPromoSegmentSetting)
+        try container.encodeIfPresent(chapterGeneration, forKey: .chapterGeneration)
         try container.encodeIfPresent(customSpeedSetting, forKey: .customSpeedSetting)
         try container.encodeIfPresent(customAspectRatio, forKey: .customAspectRatio)
         try container.encodeIfPresent(skipIntroSeconds, forKey: .skipIntroSeconds)
@@ -235,6 +241,7 @@ public struct SendableSubscription: SubscriptionData, Sendable, Codable, Hashabl
              liveStreamSetting,
              sponsorSegmentSetting,
              selfPromoSegmentSetting,
+             chapterGeneration,
              customSpeedSetting,
              customAspectRatio,
              skipIntroSeconds,

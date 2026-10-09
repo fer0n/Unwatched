@@ -111,7 +111,7 @@ struct SubscriptionService {
     }
 
     /// Downgrades every channel that skips SponsorBlock segments to only showing them, see
-    /// `SponsorBlockSettingsView.stopSkipping`.
+    /// `ChapterSkippingSettings.stopSkipping`.
     static func stopSkippingSegments(_ modelContext: ModelContext) {
         guard let subs = try? modelContext.fetch(FetchDescriptor<Subscription>()) else {
             Log.info("stopSkippingSegments: no subscriptions found")

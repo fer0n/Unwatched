@@ -25,6 +25,7 @@ import UnwatchedShared
     var showSettingsSplash = false
 
     var isMacosFullscreen = false
+    var settingsWindowTab = SettingsWindowTab.general
 
     var playerTab: ControlNavigationTab = .controls
     @ObservationIgnored var scrollToCurrentChapter = false

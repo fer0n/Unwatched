@@ -10,9 +10,6 @@ import SwiftData
 struct FilterSettingsView: View {
     @CloudStorage(Const.defaultShortsSetting) var defaultShortsSetting: ShortsSetting = .show
     @CloudStorage(Const.defaultLiveStreamSetting) var defaultLiveStreamSetting: LiveStreamSetting = .show
-    @CloudStorage(Const.skipChapterText) var skipChapterText: String = ""
-    @PremiumCloudStorage(Const.autoSkipRecurringChapters) var autoSkipRecurringChapters = true
-    @CloudStorage(Const.filterVideoTitleText) var filterVideoTitleText: String = ""
 
     @Environment(\.modelContext) var modelContext
 
@@ -24,17 +21,7 @@ struct FilterSettingsView: View {
             MyBackgroundColor()
 
             MyForm {
-                MySection("videoFilter", footer: "shortsSettingsFooter") {
-                    #if os(iOS)
-                    NavigationLink(value: LibraryDestination.titleFilter) {
-                        HStack {
-                            Text("videoTitle")
-                            PremiumIndicator()
-                                .foregroundStyle(.secondary)
-                        }
-                    }
-                    .containsPremium()
-                    #endif
+                MySection(footer: "shortsSettingsFooter") {
                     Picker("shortsSetting", selection: $defaultShortsSetting) {
                         ForEach(ShortsSetting.allCases.filter { $0 != .defaultSetting }, id: \.self) {
                             Text($0.description(defaultSetting: ""))
@@ -64,26 +51,20 @@ struct FilterSettingsView: View {
                 }
                 .requiresPremium(defaultLiveStreamSetting == .show)
 
-                #if os(macOS)
+                #if os(iOS)
+                MySection {
+                    NavigationLink(value: LibraryDestination.titleFilter) {
+                        HStack {
+                            Text("videoTitle")
+                            PremiumIndicator()
+                                .foregroundStyle(.secondary)
+                        }
+                    }
+                }
+                .containsPremium()
+                #else
                 TitleFilterView()
                 #endif
-
-                MySection("chapters", footer: "chapterFilterFooter", showPremiumIndicator: true) {
-                    TextField("keywords", text: $skipChapterText)
-                        .autocorrectionDisabled()
-                        #if os(iOS)
-                        .textInputAutocapitalization(.never)
-                        .submitLabel(.done)
-                    #endif
-                }
-                .requiresPremium(skipChapterText.isEmpty)
-
-                MySection(footer: "autoSkipRecurringChaptersFooter") {
-                    Toggle("autoSkipRecurringChapters", isOn: $autoSkipRecurringChapters)
-                }
-                .requiresPremium()
-
-                SponsorBlockSettingsView()
             }
             .confirmationDialog(
                 "removeShortsFromInbox",
@@ -97,7 +78,7 @@ struct FilterSettingsView: View {
                 }
             )
         }
-        .myNavigationTitle("filterSettings")
+        .myNavigationTitle("mediaFilter")
         #if !os(visionOS)
         .navigationSubtitle("settingsSync")
         #endif

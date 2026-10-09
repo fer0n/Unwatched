@@ -4,6 +4,7 @@
 //
 
 import OSLog
+import SwiftUI
 import UnwatchedShared
 
 extension NavigationManager {
@@ -79,10 +80,40 @@ extension NavigationManager {
         }
     }
 
+    #if os(macOS)
+    func openChapterSettings(_ openSettings: OpenSettingsAction) {
+        settingsWindowTab = .chapters
+        openSettings()
+    }
+    #else
+    func openChapterSettings() {
+        clearNavigationStack(.library)
+        presentedLibrary.append(LibraryDestination.settings)
+        presentedLibrary.append(LibraryDestination.settingsChapters)
+        navigateTo(.library)
+    }
+    #endif
+
     func pushToLibrary(_ sendableSub: SendableSubscription) {
         if lastLibrarySubscriptionId != sendableSub.persistentId {
             presentedLibrary.append(sendableSub)
             lastLibrarySubscriptionId = sendableSub.persistentId
         }
+    }
+}
+
+struct OpenChapterSettingsAction: DynamicProperty {
+    @Environment(NavigationManager.self) private var navManager
+    #if os(macOS)
+    @Environment(\.openSettings) private var openSettings
+    #endif
+
+    @MainActor
+    func callAsFunction() {
+        #if os(macOS)
+        navManager.openChapterSettings(openSettings)
+        #else
+        navManager.openChapterSettings()
+        #endif
     }
 }

@@ -105,6 +105,13 @@ extension Const {
         Const.podcastDownloadKeepDays: 1,
         Const.podcastDownloadOnCellular: false,
 
+        // Chapters
+        Const.chapterShortcutAutomation: false,
+        Const.chapterAutomationPodcasts: ChapterAutomationScope.off.rawValue,
+        Const.chapterAutomationVideos: ChapterAutomationScope.off.rawValue,
+        Const.chapterGenerationMode: ChapterGenerationMode.off.rawValue,
+        Const.maxAutoTranscriptions: ChapterAutomation.liveTranscriptions,
+
         // Premium
         Const.hidePremium: false
     ]

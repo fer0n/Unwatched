@@ -104,6 +104,8 @@ public final class Subscription: SubscriptionData, CustomStringConvertible, Expo
         set { _selfPromoSegmentSetting = newValue?.rawValue }
     }
 
+    public var chapterGeneration: Bool?
+
     public var customSpeedSetting: Double?
     public var customAspectRatio: Double?
     public var skipIntroSeconds: Double?
@@ -207,6 +209,7 @@ public final class Subscription: SubscriptionData, CustomStringConvertible, Expo
             liveStreamSetting: liveStreamSetting,
             sponsorSegmentSetting: sponsorSegmentSetting,
             selfPromoSegmentSetting: selfPromoSegmentSetting,
+            chapterGeneration: chapterGeneration,
             customSpeedSetting: customSpeedSetting,
             customAspectRatio: customAspectRatio,
             skipIntroSeconds: skipIntroSeconds,

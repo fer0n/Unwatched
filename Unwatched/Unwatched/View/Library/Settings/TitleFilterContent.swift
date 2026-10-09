@@ -49,8 +49,8 @@ struct TitleFilterContent: View {
         }
         #if os(visionOS)
         .hoverEffect(.empty)
-        .myListRowBackground()
         #endif
+        .myListRowBackground()
         .listRowSeparator(.hidden)
         .requiresPremium(filterText.isEmpty)
         .task {

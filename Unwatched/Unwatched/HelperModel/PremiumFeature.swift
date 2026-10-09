@@ -87,7 +87,7 @@ enum PremiumFeature: String, CaseIterable {
         case .trimSilence:
             return "waveform"
         case .tags:
-            return "tag.fill"
+            return Const.tagSF
         case .videoTitleFilter:
             return Const.filterSF
         case .liveStreamFilter:

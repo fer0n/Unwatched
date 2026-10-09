@@ -6,58 +6,40 @@
 import SwiftUI
 import UnwatchedShared
 
+enum SettingsWindowTab {
+    case general, appearance, playback, mediaFilter, chapters, userData, debug, privacy
+}
+
 struct SettingsWindowView: View {
     @AppStorage(Const.themeColor) var theme: ThemeColor = .defaultTheme
+    @Environment(NavigationManager.self) var navManager
 
     var body: some View {
-        TabView {
-            settingsTab {
+        @Bindable var navManager = navManager
+        TabView(selection: $navManager.settingsWindowTab) {
+            settingsTab(.general, "generalSettings", systemImage: Const.settingsViewSF) {
                 GeneralSettingsView()
             }
-            .tabItem {
-                Label("generalSettings", systemImage: Const.settingsViewSF)
-            }
-
-            settingsTab {
+            settingsTab(.appearance, "appearance", systemImage: Const.appearanceSettingsSF) {
                 AppearanceSettingsView()
             }
-            .tabItem {
-                Label("appearance", systemImage: Const.appearanceSettingsSF)
-            }
-
-            settingsTab {
+            settingsTab(.playback, "playback", systemImage: Const.playbackSettingsSF) {
                 PlaybackSettingsView()
             }
-            .tabItem {
-                Label("playback", systemImage: Const.playbackSettingsSF)
-            }
-
-            settingsTab {
+            settingsTab(.mediaFilter, "mediaFilter", systemImage: Const.filterSettingsSF) {
                 FilterSettingsView()
             }
-            .tabItem {
-                Label("filterSettings", systemImage: Const.filterSettingsSF)
+            settingsTab(.chapters, "chapters", systemImage: Const.chaptersSF) {
+                ChapterSettingsView()
             }
-
-            settingsTab {
+            settingsTab(.userData, "userData", systemImage: Const.userDataSettingsSF) {
                 UserDataSettingsView()
             }
-            .tabItem {
-                Label("userData", systemImage: Const.userDataSettingsSF)
-            }
-
-            settingsTab {
+            settingsTab(.debug, "debug", systemImage: Const.debugSettingsSF) {
                 DebugView()
             }
-            .tabItem {
-                Label("debug", systemImage: Const.debugSettingsSF)
-            }
-
-            settingsTab {
+            settingsTab(.privacy, "privacyPolicy", systemImage: "checkmark.shield.fill") {
                 PrivacySettingsView()
-            }
-            .tabItem {
-                Label("privacyPolicy", systemImage: "checkmark.shield.fill")
             }
         }
         .frame(width: 700, height: 500)
@@ -68,12 +50,21 @@ struct SettingsWindowView: View {
         #endif
     }
 
-    private func settingsTab<Content: View>(@ViewBuilder content: () -> Content) -> some View {
+    private func settingsTab<Content: View>(
+        _ tab: SettingsWindowTab,
+        _ title: LocalizedStringKey,
+        systemImage: String,
+        @ViewBuilder content: () -> Content
+    ) -> some View {
         ScrollView {
             content()
                 .settingsView()
                 .padding(.vertical)
         }
+        .tabItem {
+            Label(title, systemImage: systemImage)
+        }
+        .tag(tab)
     }
 }
 

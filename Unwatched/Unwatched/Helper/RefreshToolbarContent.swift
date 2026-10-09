@@ -97,16 +97,16 @@ struct RefreshToolbarContent: ToolbarContent {
     var forceNeutral: Bool = false
 
     var body: some ToolbarContent {
-        if BrowserManager.shared.youtubeLoginLost {
+        if WarningsButton.hasWarnings {
             #if os(iOS)
             // keeps it apart from the undo button, which shares the leading side
             ToolbarSpacer(.fixed, placement: .cancellationAction)
             ToolbarItem(placement: .cancellationAction) {
-                YoutubeLoginWarningButton()
+                WarningsButton()
             }
             #else
             ToolbarItem(placement: .confirmationAction) {
-                YoutubeLoginWarningButton()
+                WarningsButton()
             }
             #if os(macOS)
             ToolbarSpacer(.fixed, placement: .confirmationAction)

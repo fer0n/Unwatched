@@ -5,6 +5,7 @@
 	<key>BGTaskSchedulerPermittedIdentifiers</key>
 	<array>
 		<string>com.pentlandFirth.Unwatched.refreshVideos</string>
+		<string>com.pentlandFirth.Unwatched.autoTranscribe</string>
 	</array>
 	<key>CFBundleURLTypes</key>
 	<array>
@@ -86,6 +87,7 @@
 	<array>
 		<string>audio</string>
 		<string>fetch</string>
+		<string>processing</string>
 		<string>remote-notification</string>
 	</array>
 	<key>UTExportedTypeDeclarations</key>

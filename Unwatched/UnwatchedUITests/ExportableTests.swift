@@ -381,6 +381,7 @@ class ExportableTests: XCTestCase {
         sub.mostRecentVideoDate = Date()
         sub.shortsSetting = .hide
         sub.liveStreamSetting = .show
+        sub.chapterGeneration = false
         let context = DataProvider.newContext()
         context.insert(sub)
         try? context.save()
@@ -408,6 +409,7 @@ class ExportableTests: XCTestCase {
             XCTAssertEqual(importedSub.customSpeedSetting, sub.customSpeedSetting)
             XCTAssertEqual(importedSub.shortsSetting, .hide)
             XCTAssertEqual(importedSub.liveStreamSetting, .show)
+            XCTAssertEqual(importedSub.chapterGeneration, false)
 
             XCTAssertEqual(importedSub.customAspectRatio, sub.customAspectRatio)
             XCTAssertEqual(importedSub.customAspectRatio, customAspectRatio)

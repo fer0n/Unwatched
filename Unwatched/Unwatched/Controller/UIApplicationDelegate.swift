@@ -23,6 +23,7 @@ class AppDelegate: NSObject, UIApplicationDelegate, UNUserNotificationCenterDele
         Signal.setup()
         notificationCenter.delegate = self
         setupNotificationCategories(notificationCenter)
+        ChapterAutomation.setup()
         SetupView.onLaunch()
         #if os(iOS)
         MediaSuggestionService.setup()
@@ -78,6 +79,10 @@ class AppDelegate: NSObject, UIApplicationDelegate, UNUserNotificationCenterDele
         withCompletionHandler completionHandler: @escaping (UNNotificationPresentationOptions) -> Void
     ) {
         Log.info("Received in-App notification: \(notification)")
+        if ChapterAutomation.isAutomationNotification(notification) {
+            completionHandler([.banner])
+            return
+        }
         handleDeferedNotification(notification)
         completionHandler([])
     }

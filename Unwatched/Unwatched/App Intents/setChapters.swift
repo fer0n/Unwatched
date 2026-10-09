@@ -30,6 +30,7 @@ struct SetChapters: AppIntent {
     @MainActor
     func perform() async throws -> some IntentResult {
         Signal.log(mode == .merge ? "Shortcut.SetChapters.merge" : "Shortcut.SetChapters")
+        ChapterAutomationStatus.shared.recordShortcutRun()
 
         let hasPremium = CloudKeyValueStore.hasPremium
         guard hasPremium else {

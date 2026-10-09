@@ -81,7 +81,7 @@ struct QuickSwitchToggle: View {
 
     var body: some View {
         Toggle(isOn: $isOn) {
-            Label("quickSwitch", systemImage: Const.filterTagSF)
+            Label("quickSwitch", systemImage: Const.tagSF)
         }
     }
 }

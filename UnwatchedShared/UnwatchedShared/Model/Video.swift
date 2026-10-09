@@ -52,6 +52,7 @@ public final class Video: VideoData, CustomStringConvertible, Exportable {
     public var downloadedDate: Date?
     /// Podcasting 2.0 `podcast:chapters` JSON, fetched the first time the episode plays.
     public var chaptersUrl: URL?
+    public var chapterGenerationDate: Date?
 
     public var createdDate: Date?
     public var isNew: Bool = false

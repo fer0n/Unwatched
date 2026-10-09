@@ -39,22 +39,16 @@ struct SettingsView: View {
                     }
 
                     NavigationLink(value: LibraryDestination.filter) {
-                        Label("filterSettings", systemImage: Const.filterSettingsSF)
+                        Label("mediaFilter", systemImage: Const.filterSettingsSF)
+                    }
+
+                    NavigationLink(value: LibraryDestination.settingsChapters) {
+                        Label("chapters", systemImage: Const.chaptersSF)
                     }
 
                     NavigationLink(value: LibraryDestination.settingsAppearance) {
                         Label("appearance", systemImage: Const.appearanceSettingsSF)
                     }
-                }
-
-                MySection("shortcuts") {
-                    CloudAiButton {
-                        LibraryNavListItem(
-                            "generateChapters",
-                            systemName: "sparkles"
-                        )
-                    }
-                    .requiresPremium()
                 }
 
                 MySection("userData") {

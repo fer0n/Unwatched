@@ -50,7 +50,7 @@ struct SubscriptionTagsSetting: View {
         } label: {
             let assigned = assignedTags
             CapsuleLabel(text: label(assigned)) {
-                Image(systemName: assigned.count == 1 ? assigned[0].displaySymbol : Const.filterTagSF)
+                Image(systemName: assigned.count == 1 ? assigned[0].displaySymbol : Const.tagSF)
             }
         }
         .buttonStyle(CapsuleButtonStyle(primary: false))

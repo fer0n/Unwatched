@@ -7,50 +7,28 @@ import SwiftUI
 import UnwatchedShared
 
 struct CloudAiButton<Label: View>: View {
-    @Environment(PlayerManager.self) var player
+    @Environment(AppNotificationVM.self) var appNotificationVM
     @Environment(\.dismiss) var dismiss
-    @Environment(\.openURL) var openURL
+    private let openChapterSettings = OpenChapterSettingsAction()
 
+    let video: Video?
     var dismissOnPaywall: Bool = false
     @ViewBuilder var label: () -> Label
 
     var body: some View {
         Button {
-            let hasAccess = guardPremium(onInteraction: dismissOnPaywall ? { dismiss() } : nil)
-            guard hasAccess else { return }
-
-            let name = "Generate Chapters"
-            var components = URLComponents()
-            let enablePip = !player.pipEnabled && player.isPlaying
-
-            var successUrl = "unwatched://shortcut-success"
-            var errorUrl = "unwatched://shortcut-error"
-
-            if enablePip {
-                successUrl += "?disablePip=true"
-                errorUrl += "?disablePip=true"
-            }
-
-            components.scheme = "shortcuts"
-            components.host = "x-callback-url"
-            components.path = "/run-shortcut"
-            components.queryItems = [
-                URLQueryItem(name: "name", value: name),
-                URLQueryItem(name: "x-success", value: successUrl),
-                URLQueryItem(name: "x-error", value: errorUrl)
-            ]
-            if let url = components.url {
-                if enablePip {
-                    player.setPip(true)
-                    Task {
-                        try? await Task.sleep(for: .seconds(0.2))
-                        openURL(url)
-                    }
-                } else {
-                    openURL(url)
+            guard guardPremium(onInteraction: dismissOnPaywall ? { dismiss() } : nil) else { return }
+            Task {
+                guard let video, await ChapterAutomation.isSetUp() else {
+                    openChapterSettings()
+                    return
                 }
-            } else {
-                openURL(UrlService.generateChaptersShortcutUrl)
+                do {
+                    try await ChapterAutomation.loadTranscript(video)
+                    await ChapterAutomation.sendNotification(for: video)
+                } catch {
+                    appNotificationVM.show(error.localizedDescription, isError: true)
+                }
             }
         } label: {
             label()

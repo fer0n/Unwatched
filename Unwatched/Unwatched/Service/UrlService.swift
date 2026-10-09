@@ -16,8 +16,8 @@ struct UrlService {
     static let youtubeStartPage = URL(staticString: "https://m.youtube.com?autoplay=0")
     static let youtubeStartPageString = "https://m.youtube.com?autoplay=0"
 
-    static let generateChaptersShortcutUrl = URL(
-        staticString: "https://www.icloud.com/shortcuts/de93db94377f4849a3b2174d31b57fd3"
+    static let chapterAutomationShortcutUrl = URL(
+        staticString: "https://www.icloud.com/shortcuts/25063c13f7fe4efcb64f07fb7f798d0b"
     )
     static let youtubeTakeoutUrl = URL(staticString: "https://takeout.google.com/takeout/custom/youtube")
     static let youtubeLoginUrl = URL(staticString: "https://www.youtube.com/signin")
@@ -51,7 +51,7 @@ struct UrlService {
         return addEpisodeId(video.youtubeId, to: url)?.absoluteString ?? url.absoluteString
     }
 
-    private static func addEpisodeId(_ youtubeId: String, to url: URL) -> URL? {
+    static func addEpisodeId(_ youtubeId: String, to url: URL) -> URL? {
         guard var components = URLComponents(url: url, resolvingAgainstBaseURL: false) else {
             return nil
         }

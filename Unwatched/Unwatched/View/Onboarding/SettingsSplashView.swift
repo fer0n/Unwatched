@@ -72,7 +72,7 @@ private struct SplashFeaturesPage: View {
     private let features = [
         Feature(systemName: "antenna.radiowaves.left.and.right",
                 title: "podcasts", subtitle: "settingsSplashPodcastsDescription"),
-        Feature(systemName: "tag.fill",
+        Feature(systemName: Const.tagSF,
                 title: "tags", subtitle: "settingsSplashTagsDescription", premium: true),
         Feature(systemName: "applewatch",
                 title: "settingsSplashWatchTitle", subtitle: "settingsSplashWatchDescription"),
