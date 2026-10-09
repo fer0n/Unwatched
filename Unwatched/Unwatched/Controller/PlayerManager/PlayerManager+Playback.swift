@@ -123,6 +123,9 @@ extension PlayerManager {
             Log.info("updateElapsedTime: nothing to update")
             return
         }
+        if isPlaying {
+            publishPosition(time, throttled: !immediate)
+        }
         // An unchanged value can still be waiting on a debounced save, so `immediate` writes anyway
         guard video?.elapsedSeconds != time || immediate else {
             Log.info("updateElapsedTime: no change")
@@ -215,6 +218,7 @@ extension PlayerManager {
         }
         if !self.isPlaying {
             self.isPlaying = true
+            noteLocalInteraction()
         }
         #if os(iOS)
         if let video {
@@ -230,6 +234,7 @@ extension PlayerManager {
     private func stoppedPlaying() {
         if self.isPlaying {
             self.isPlaying = false
+            publishPosition()
         }
         clearVideoEnded()
         changeChapterTask?.cancel()
@@ -294,6 +299,7 @@ extension PlayerManager {
             backend.seek(to: target)
             currentTime = target
             clearVideoEnded()
+            handleLocalSeek(target)
             return true
         }
         return false
@@ -308,6 +314,7 @@ extension PlayerManager {
         backend.seek(to: target)
         clearVideoEnded()
         updateElapsedTime(target, videoId: video?.youtubeId)
+        handleLocalSeek(target)
     }
 
     @MainActor
@@ -649,7 +656,7 @@ extension PlayerManager {
             return
         }
         let context = DataProvider.mainContext
-        loadTopmostVideoFromQueue(modelContext: context, updateTime: false)
+        loadTopmostVideoFromQueue(modelContext: context)
     }
 }
 

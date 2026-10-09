@@ -188,6 +188,7 @@ import UnwatchedShared
             return
         }
         resetVideoIndependentValues()
+        applyRemotePosition(seek: false)
         signalMediaType()
         #if os(iOS)
         // after the reset, whose `revertNativeFallback` would undo it
@@ -258,8 +259,7 @@ import UnwatchedShared
         after task: (Task<(), Error>)? = nil,
         modelContext: ModelContext? = nil,
         source: VideoSource = .nextUp,
-        playIfCurrent: Bool = false,
-        updateTime: Bool = false
+        playIfCurrent: Bool = false
     ) {
         Log.info("loadTopmostVideoFromQueue")
         let container = DataProvider.shared.container
@@ -270,18 +270,6 @@ import UnwatchedShared
             if let topVideo {
                 if topVideo.youtubeId != currentVideoId || playIfCurrent {
                     self.setNextVideo(topVideo, source)
-                } else if updateTime && topVideo.youtubeId == currentVideoId,
-                          let topVideoTime = topVideo.elapsedSeconds {
-                    let time = currentTime ?? topVideoTime
-                    let delta = topVideoTime - time
-
-                    if abs(delta) <= Const.updateTimeMinimum {
-                        Log.info("updateTime: same video, same time: \(topVideoTime)")
-                        return
-                    }
-                    currentTime = topVideoTime
-                    self.seek(to: topVideoTime)
-                    Log.info("updateTime \(topVideoTime)")
                 }
             } else {
                 hardClearVideo()

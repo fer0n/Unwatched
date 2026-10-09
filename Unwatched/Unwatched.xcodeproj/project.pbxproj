@@ -657,7 +657,9 @@
 		88AA01222F000001000000C2 /* CopyUrlButton.swift in Sources */ = {isa = PBXBuildFile; fileRef = 88AA01212F000001000000C1 /* CopyUrlButton.swift */; };
 		88AA01232F000001000000C3 /* CopyUrlButton.swift in Sources */ = {isa = PBXBuildFile; fileRef = 88AA01212F000001000000C1 /* CopyUrlButton.swift */; };
 		88AA10010001000000000002 /* PlayerSwitchManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = 88AA10010001000000000001 /* PlayerSwitchManager.swift */; };
+		88AB5C010000000000000002 /* PlaybackPositionSync.swift in Sources */ = {isa = PBXBuildFile; fileRef = 88AB5C010000000000000001 /* PlaybackPositionSync.swift */; };
 		88AA10010001000000000003 /* PlayerSwitchManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = 88AA10010001000000000001 /* PlayerSwitchManager.swift */; };
+		88AB5C010000000000000003 /* PlaybackPositionSync.swift in Sources */ = {isa = PBXBuildFile; fileRef = 88AB5C010000000000000001 /* PlaybackPositionSync.swift */; };
 		88AA10010001000000000012 /* WebPlayerWarmup.swift in Sources */ = {isa = PBXBuildFile; fileRef = 88AA10010001000000000011 /* WebPlayerWarmup.swift */; };
 		88AA10010001000000000013 /* WebPlayerWarmup.swift in Sources */ = {isa = PBXBuildFile; fileRef = 88AA10010001000000000011 /* WebPlayerWarmup.swift */; };
 		88AA10010001000000000022 /* PlayerWebView+Adopt.swift in Sources */ = {isa = PBXBuildFile; fileRef = 88AA10010001000000000021 /* PlayerWebView+Adopt.swift */; };
@@ -692,7 +694,9 @@
 		88AA10912F0000000000A091 /* QueueListView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 88AA10902F0000000000A090 /* QueueListView.swift */; };
 		88AA10922F0000000000A092 /* QueueListView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 88AA10902F0000000000A090 /* QueueListView.swift */; };
 		88AA10A12F0000000000A0A1 /* PlayerManager+Queue.swift in Sources */ = {isa = PBXBuildFile; fileRef = 88AA10A02F0000000000A0A0 /* PlayerManager+Queue.swift */; };
+		88AB5C010000000000000005 /* PlayerManager+PositionSync.swift in Sources */ = {isa = PBXBuildFile; fileRef = 88AB5C010000000000000004 /* PlayerManager+PositionSync.swift */; };
 		88AA10A22F0000000000A0A2 /* PlayerManager+Queue.swift in Sources */ = {isa = PBXBuildFile; fileRef = 88AA10A02F0000000000A0A0 /* PlayerManager+Queue.swift */; };
+		88AB5C010000000000000006 /* PlayerManager+PositionSync.swift in Sources */ = {isa = PBXBuildFile; fileRef = 88AB5C010000000000000004 /* PlayerManager+PositionSync.swift */; };
 		88AA1F0130000002000000A2 /* RefreshManager+Lifecycle.swift in Sources */ = {isa = PBXBuildFile; fileRef = 88AA1F0130000001000000A1 /* RefreshManager+Lifecycle.swift */; };
 		88AA1F0130000003000000A3 /* RefreshManager+Lifecycle.swift in Sources */ = {isa = PBXBuildFile; fileRef = 88AA1F0130000001000000A1 /* RefreshManager+Lifecycle.swift */; };
 		88AA20112F0000000000B011 /* VideoTagMenu.swift in Sources */ = {isa = PBXBuildFile; fileRef = 88AA20102F0000000000B010 /* VideoTagMenu.swift */; };
@@ -1543,6 +1547,7 @@
 		88AA01112F000001000000B1 /* TrimSilenceOption.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TrimSilenceOption.swift; sourceTree = "<group>"; };
 		88AA01212F000001000000C1 /* CopyUrlButton.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CopyUrlButton.swift; sourceTree = "<group>"; };
 		88AA10010001000000000001 /* PlayerSwitchManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PlayerSwitchManager.swift; sourceTree = "<group>"; };
+		88AB5C010000000000000001 /* PlaybackPositionSync.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PlaybackPositionSync.swift; sourceTree = "<group>"; };
 		88AA10010001000000000011 /* WebPlayerWarmup.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = WebPlayerWarmup.swift; sourceTree = "<group>"; };
 		88AA10010001000000000021 /* PlayerWebView+Adopt.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "PlayerWebView+Adopt.swift"; sourceTree = "<group>"; };
 		88AA10012F0000000000A001 /* MigrationTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MigrationTests.swift; sourceTree = "<group>"; };
@@ -1565,6 +1570,7 @@
 		88AA10802F0000000000A080 /* TagEditChannels.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TagEditChannels.swift; sourceTree = "<group>"; };
 		88AA10902F0000000000A090 /* QueueListView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = QueueListView.swift; sourceTree = "<group>"; };
 		88AA10A02F0000000000A0A0 /* PlayerManager+Queue.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "PlayerManager+Queue.swift"; sourceTree = "<group>"; };
+		88AB5C010000000000000004 /* PlayerManager+PositionSync.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "PlayerManager+PositionSync.swift"; sourceTree = "<group>"; };
 		88AA1F0130000001000000A1 /* RefreshManager+Lifecycle.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "RefreshManager+Lifecycle.swift"; sourceTree = "<group>"; };
 		88AA20012F1000000000B001 /* MediaSuggestionService.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MediaSuggestionService.swift; sourceTree = "<group>"; };
 		88AA20022F1000000000B002 /* PlayMediaIntentHandler.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PlayMediaIntentHandler.swift; sourceTree = "<group>"; };
@@ -1965,6 +1971,7 @@
 				8804A3F62B8B96FF00D3F4F1 /* PlayerManager+Chapters.swift */,
 				88753A6147C4E5846DAE6938 /* PlayerManager+ChapterBoundary.swift */,
 				88AA10A02F0000000000A0A0 /* PlayerManager+Queue.swift */,
+				88AB5C010000000000000004 /* PlayerManager+PositionSync.swift */,
 			);
 			path = PlayerManager;
 			sourceTree = "<group>";
@@ -2287,6 +2294,7 @@
 				881DBDEB2B4D22770082BEFB /* NavigationManager.swift */,
 				8801CBC23067AF93007E4C90 /* NavigationManager+Routes.swift */,
 				88AA10010001000000000001 /* PlayerSwitchManager.swift */,
+				88AB5C010000000000000001 /* PlaybackPositionSync.swift */,
 				88190E3A2B99D30300F048C3 /* RefreshManager */,
 				8808A9162B93CDBA004D7CE2 /* NotificationManager.swift */,
 				883CA81D2B5BD3ED00028D52 /* SubscribeManager.swift */,
@@ -3684,6 +3692,7 @@
 				88AA10010001000000000013 /* WebPlayerWarmup.swift in Sources */,
 				88AA10010001000000000023 /* PlayerWebView+Adopt.swift in Sources */,
 				88AA10010001000000000003 /* PlayerSwitchManager.swift in Sources */,
+				88AB5C010000000000000003 /* PlaybackPositionSync.swift in Sources */,
 				889AF8E42C50ECA9001CEDE6 /* AsyncButton.swift in Sources */,
 				8868178C2D773BD300E06A0D /* FaqWindow.swift in Sources */,
 				88F287692DEAF2F400309C36 /* ClearAllQueueEntriesButton.swift in Sources */,
@@ -3707,6 +3716,7 @@
 				889AF8F92C50ECCA001CEDE6 /* PlayerManager+Chapters.swift in Sources */,
 				88F3A997DF2BBC79986AE6FC /* PlayerManager+ChapterBoundary.swift in Sources */,
 				88AA10A22F0000000000A0A2 /* PlayerManager+Queue.swift in Sources */,
+				88AB5C010000000000000006 /* PlayerManager+PositionSync.swift in Sources */,
 				8802F8522C6950A3008A7778 /* HideShortsTip.swift in Sources */,
 				CD0FBE0000000000000000C2 /* SearchRecommendationsTip.swift in Sources */,
 				CD0FBE0000000000000000B2 /* ThemedTipViewStyle.swift in Sources */,
@@ -4084,6 +4094,7 @@
 				88AA10010001000000000012 /* WebPlayerWarmup.swift in Sources */,
 				88AA10010001000000000022 /* PlayerWebView+Adopt.swift in Sources */,
 				88AA10010001000000000002 /* PlayerSwitchManager.swift in Sources */,
+				88AB5C010000000000000002 /* PlaybackPositionSync.swift in Sources */,
 				889924862C485E3B001185A6 /* LibraryVideoSection.swift in Sources */,
 				88AA10492F0000000000A049 /* TagSymbolPicker.swift in Sources */,
 				88AA10712F0000000000A071 /* TagSymbols.swift in Sources */,
@@ -4112,6 +4123,7 @@
 				8804A3F72B8B96FF00D3F4F1 /* PlayerManager+Chapters.swift in Sources */,
 				8809F1B2CCBBBF181BDFD3D9 /* PlayerManager+ChapterBoundary.swift in Sources */,
 				88AA10A12F0000000000A0A1 /* PlayerManager+Queue.swift in Sources */,
+				88AB5C010000000000000005 /* PlayerManager+PositionSync.swift in Sources */,
 				88D29AE72B751B6900BDBFDF /* VideoSorting.swift in Sources */,
 				887E82AA2CD8FC4600B196EA /* VideoEntity.swift in Sources */,
 				88AA10222F0000000000A022 /* TagEntity.swift in Sources */,
