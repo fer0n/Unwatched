@@ -6,12 +6,12 @@
 import XCTest
 import UnwatchedShared
 
+private func entries(_ texts: [(Double, String)], duration: Double = 5) -> [TranscriptEntry] {
+    texts.map { TranscriptEntry(start: $0.0, duration: duration, text: $0.1) }
+}
+
 @MainActor
 final class TranscriptAlignmentTests: XCTestCase {
-
-    private func entries(_ texts: [(Double, String)], duration: Double = 5) -> [TranscriptEntry] {
-        texts.map { TranscriptEntry(start: $0.0, duration: duration, text: $0.1) }
-    }
 
     // MARK: - Applying an alignment
 
@@ -233,5 +233,48 @@ final class TranscriptAlignmentTests: XCTestCase {
             return gap.audioStart
         }
         XCTAssertEqual(gapStarts, [20, 100])
+    }
+}
+
+final class TranscriptActiveEntryTests: XCTestCase {
+
+    func testAPauseKeepsTheLastLineActive() {
+        let transcript = entries([(0, "a"), (5, "b")], duration: 2)
+        XCTAssertEqual(transcript.activeIndex(at: 3.5), 0)
+    }
+
+    func testOverlappingCaptionsActivateOnlyTheLatest() {
+        let transcript = entries([(0, "a"), (3, "b"), (6, "c")], duration: 6)
+        XCTAssertEqual(transcript.activeIndex(at: 4), 1)
+        XCTAssertEqual(transcript.activeIndex(at: 7), 2)
+    }
+
+    func testAZeroLengthEntryCanBeActive() {
+        let transcript = entries([(0, "a"), (4, "b")], duration: 0)
+        XCTAssertEqual(transcript.activeIndex(at: 1), 0)
+        XCTAssertEqual(transcript.activeIndex(at: 4), 1)
+    }
+
+    func testNothingIsActiveBeforeTheFirstLine() {
+        XCTAssertNil(entries([(10, "a")]).activeIndex(at: 5))
+        XCTAssertNil([TranscriptEntry]().activeIndex(at: 5))
+    }
+
+    func testTheLastLineStaysActivePastTheEnd() {
+        let transcript = entries([(0, "a"), (5, "b")], duration: 2)
+        XCTAssertEqual(transcript.activeIndex(at: 900), 1)
+    }
+
+    func testInsideAnUncoveredGapNothingIsActive() {
+        let transcript = entries([(0, "a"), (50, "b")])
+        let gaps: [TranscriptAlignment.Gap] = [.init(audioStart: 10, audioEnd: 40)]
+        XCTAssertNil(transcript.activeIndex(at: 20, gaps: gaps))
+        XCTAssertEqual(transcript.activeIndex(at: 45, gaps: gaps), 0)
+    }
+
+    func testATranscribedGapLineIsActive() {
+        let transcript = entries([(0, "a"), (15, "transcribed"), (50, "b")])
+        let gaps: [TranscriptAlignment.Gap] = [.init(audioStart: 10, audioEnd: 40)]
+        XCTAssertEqual(transcript.activeIndex(at: 16, gaps: gaps), 1)
     }
 }

@@ -9,7 +9,7 @@ import UnwatchedShared
 struct TranscriptList: View {
     @Environment(PlayerManager.self) var player
     let transcript: [TranscriptDisplayItem]
-    let activeTime: Double
+    let activeEntryId: UUID?
     let isCurrentVideo: Bool
     let isSearching: Bool
 
@@ -33,7 +33,7 @@ struct TranscriptList: View {
         if !isCurrentVideo {
             return true
         }
-        return entry.start < activeTime && (entry.start + entry.duration) >= activeTime
+        return entry.id == activeEntryId
     }
 
     func handleTap(_ entry: TranscriptEntry) {

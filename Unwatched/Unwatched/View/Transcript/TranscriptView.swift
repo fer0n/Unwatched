@@ -39,7 +39,7 @@ struct TranscriptView: View {
                         Section {
                             TranscriptList(
                                 transcript: viewModel.filteredTranscript,
-                                activeTime: activeTime,
+                                activeEntryId: activeEntryId,
                                 isCurrentVideo: isCurrentVideo,
                                 isSearching: !viewModel.text.debounced.isEmpty
                             )
@@ -194,27 +194,25 @@ struct TranscriptView: View {
         return "transcriptUnavailable"
     }
 
-    var activeTime: Double {
-        (player.currentTime ?? 0) + 1
+    private var captionReadAhead: Double {
+        video.isPodcast ? 0 : 1
     }
 
     var activeEntryId: UUID? {
-        guard isCurrentVideo, let transcript = viewModel.transcript else { return nil }
-        let time = activeTime
-        return transcript.first(where: {
-            $0.start < time && ($0.start + $0.duration) >= time
-        })?.id
+        entryId(before: 0)
     }
 
     var scrollTargetId: UUID? {
-        guard isCurrentVideo, let transcript = viewModel.transcript else { return nil }
-        let time = activeTime
-        guard let activeIndex = transcript.firstIndex(where: {
-            $0.start < time && ($0.start + $0.duration) >= time
-        }) else { return nil }
+        entryId(before: 3)
+    }
 
-        let targetIndex = max(0, activeIndex - 3)
-        return transcript[targetIndex].id
+    private func entryId(before offset: Int) -> UUID? {
+        guard isCurrentVideo, let transcript = viewModel.transcript else { return nil }
+        let time = (player.currentTime ?? 0) + captionReadAhead
+        guard let index = transcript.activeIndex(at: time, gaps: viewModel.alignment?.gaps ?? []) else {
+            return nil
+        }
+        return transcript[max(0, index - offset)].id
     }
 
     var refreshId: String {
