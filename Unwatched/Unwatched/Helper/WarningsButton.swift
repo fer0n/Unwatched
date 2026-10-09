@@ -4,12 +4,14 @@
 //
 
 import SwiftUI
+import SwiftData
 import UnwatchedShared
 
 struct WarningsButton: View {
     @Environment(NavigationManager.self) var navManager
     @Environment(\.colorScheme) var colorScheme
     @Environment(\.openURL) var openURL
+    @Environment(\.modelContext) var modelContext
     private let openChapterSettings = OpenChapterSettingsAction()
 
     @State private var showPopover = false
@@ -17,8 +19,13 @@ struct WarningsButton: View {
 
     private static var browserManager: BrowserManager { .shared }
     private static var chapterIssue: ChapterAutomationIssue? { ChapterAutomationStatus.shared.issue }
+    private static var podcastTagHint: PodcastTagHint { .shared }
 
     static var hasWarnings: Bool {
+        hasActualWarnings || podcastTagHint.isShown
+    }
+
+    private static var hasActualWarnings: Bool {
         browserManager.youtubeLoginLost || chapterIssue != nil
     }
 
@@ -26,9 +33,9 @@ struct WarningsButton: View {
         Button {
             showPopover = true
         } label: {
-            Image(systemName: Const.refreshWarningSF)
+            Image(systemName: Self.hasActualWarnings ? Const.refreshWarningSF : Const.infoSF)
         }
-        .accessibilityLabel("refreshWarning")
+        .accessibilityLabel(Self.hasActualWarnings ? "refreshWarning" : "podcastTagHint")
         .font(.footnote)
         .fontWeight(.bold)
         .myTint(neutral: true)
@@ -42,6 +49,12 @@ struct WarningsButton: View {
                         Divider()
                     }
                     chapterWarning(issue)
+                }
+                if Self.podcastTagHint.isShown {
+                    if Self.hasActualWarnings {
+                        Divider()
+                    }
+                    podcastTagHintContent
                 }
             }
             .presentationCompactAdaptation(.popover)
@@ -94,6 +107,23 @@ struct WarningsButton: View {
                 }
                 .buttonStyle(.borderedProminent)
             }
+        }
+    }
+
+    private var podcastTagHintContent: some View {
+        WarningPopoverContent(
+            systemImage: "headphones",
+            title: "podcastTagHint",
+            message: Text("podcastTagHintMessage")
+        ) {
+            Button("dismissHint") {
+                Self.podcastTagHint.dismiss()
+            }
+            .buttonStyle(.bordered)
+            Button("createTag") {
+                Self.podcastTagHint.createTag(in: modelContext)
+            }
+            .buttonStyle(.borderedProminent)
         }
     }
 

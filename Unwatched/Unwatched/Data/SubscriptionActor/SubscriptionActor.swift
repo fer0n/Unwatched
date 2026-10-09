@@ -113,6 +113,7 @@ actor SubscriptionActor: SharedContextActor {
     ) async throws -> [SubscriptionState] {
         var results = [(state: SubscriptionState, inserted: Subscription?)]()
         Log.info("addSubscriptions")
+        let hadNoPodcasts = hasNoPodcasts()
         try await withThrowingTaskGroup(of: (SubscriptionState, SendableSubscription?).self) { group in
             if !subscriptionInfo.isEmpty {
                 for info in subscriptionInfo {
@@ -151,6 +152,9 @@ actor SubscriptionActor: SharedContextActor {
                 }
                 results.append((subState, sub))
             }
+        }
+        if hadNoPodcasts && results.contains(where: { $0.inserted?.isPodcast == true }) {
+            setUpFirstPodcast()
         }
         try modelContext.save()
         return results.map { state, sub in
@@ -267,6 +271,9 @@ actor SubscriptionActor: SharedContextActor {
         if let existing = getPodcast(feedUrl) {
             unarchive(existing)
         } else {
+            if hasNoPodcasts() {
+                setUpFirstPodcast()
+            }
             var sub = sendableSub
             sub.isPodcast = true
             modelContext.insert(sub.createSubscription())

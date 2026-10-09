@@ -458,6 +458,9 @@ public struct Const {
 
     /// Quick switch for the two queue slices that aren't tags, and so have nowhere else to keep it
     public static let quickSwitchAllVideos = "quickSwitchAllVideos"
+    public static let firstPodcastAdded = "firstPodcastAdded"
+    public static let podcastTagHint = "podcastTagHint"
+    public static let infoSF = "info"
     public static let disableCaptions = "disableCaptions"
     public static let autoCaptionsOnSeekBack = "autoCaptionsOnSeekBack"
     public static let swipeGestureUp = "swipeGestureUp"

@@ -85,7 +85,7 @@ public final class Tag: CustomStringConvertible, Exportable {
         order: Int = Int.max,
         createdDate: Date? = .now,
         symbol: String? = nil,
-        quickSwitch: Bool = true,
+        quickSwitch: Bool = false,
         mode: TagMode = .include,
         podcasts: TagPodcasts = .listed,
         continuousPlay: Bool? = nil,

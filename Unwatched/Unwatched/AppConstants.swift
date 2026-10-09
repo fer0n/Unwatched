@@ -24,6 +24,7 @@ extension Const {
 
         // Queue
         Const.quickSwitchAllVideos: true,
+        Const.firstPodcastAdded: false,
 
         // Keep Media
         Const.autoDeleteWatchedVideos: 180,

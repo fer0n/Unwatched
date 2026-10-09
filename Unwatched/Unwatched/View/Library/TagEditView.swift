@@ -185,10 +185,8 @@ struct TagEditView: View {
         dismiss()
     }
 
-    /// Skips `Int.max`, the model's default, which a restored tag can still carry.
     private var nextTagOrder: Int {
-        let highest = otherTags().map(\.order).filter { $0 != Int.max }.max() ?? -1
-        return min(highest, Int.max - 1) + 1
+        Tag.nextOrder(after: otherTags())
     }
 
     private func save() {
