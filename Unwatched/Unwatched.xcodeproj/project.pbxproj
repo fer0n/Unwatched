@@ -807,7 +807,9 @@
 		88CD38952E21480200E7B21C /* DeleteTranscriptCacheButton.swift in Sources */ = {isa = PBXBuildFile; fileRef = 88CD38942E21480200E7B21C /* DeleteTranscriptCacheButton.swift */; };
 		88CD38962E21480200E7B21C /* DeleteTranscriptCacheButton.swift in Sources */ = {isa = PBXBuildFile; fileRef = 88CD38942E21480200E7B21C /* DeleteTranscriptCacheButton.swift */; };
 		88CD38A12E20E66300E7B21C /* TranscriptService+Alignment.swift in Sources */ = {isa = PBXBuildFile; fileRef = 88CD38A02E20E66300E7B21C /* TranscriptService+Alignment.swift */; };
+		88CD38B12E20E66300E7B21C /* TranscriptService+GenerationCoordinator.swift in Sources */ = {isa = PBXBuildFile; fileRef = 88CD38B02E20E66300E7B21C /* TranscriptService+GenerationCoordinator.swift */; };
 		88CD38A22E20E66300E7B21C /* TranscriptService+Alignment.swift in Sources */ = {isa = PBXBuildFile; fileRef = 88CD38A02E20E66300E7B21C /* TranscriptService+Alignment.swift */; };
+		88CD38B22E20E66300E7B21C /* TranscriptService+GenerationCoordinator.swift in Sources */ = {isa = PBXBuildFile; fileRef = 88CD38B02E20E66300E7B21C /* TranscriptService+GenerationCoordinator.swift */; };
 		3FD83A5903F361C5B3C7F494 /* ChapterAutomation.swift in Sources */ = {isa = PBXBuildFile; fileRef = 394947244B7EEF58E34F1187 /* ChapterAutomation.swift */; };
 		21EF80BE424329041483DFC1 /* ChapterAutomationStatus.swift in Sources */ = {isa = PBXBuildFile; fileRef = 041149DD7EB262E63C101CA7 /* ChapterAutomationStatus.swift */; };
 		BCFC9C6ECD12C28EFE982AAD /* ChapterAutomationSettings.swift in Sources */ = {isa = PBXBuildFile; fileRef = FC26B48EF88832652EFF106A /* ChapterAutomationSettings.swift */; };
@@ -1629,6 +1631,7 @@
 		88CD38912E213D3400E7B21C /* TranscriptList.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TranscriptList.swift; sourceTree = "<group>"; };
 		88CD38942E21480200E7B21C /* DeleteTranscriptCacheButton.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DeleteTranscriptCacheButton.swift; sourceTree = "<group>"; };
 		88CD38A02E20E66300E7B21C /* TranscriptService+Alignment.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "TranscriptService+Alignment.swift"; sourceTree = "<group>"; };
+		88CD38B02E20E66300E7B21C /* TranscriptService+GenerationCoordinator.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "TranscriptService+GenerationCoordinator.swift"; sourceTree = "<group>"; };
 		394947244B7EEF58E34F1187 /* ChapterAutomation.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ChapterAutomation.swift; sourceTree = "<group>"; };
 		041149DD7EB262E63C101CA7 /* ChapterAutomationStatus.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ChapterAutomationStatus.swift; sourceTree = "<group>"; };
 		FC26B48EF88832652EFF106A /* ChapterAutomationSettings.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ChapterAutomationSettings.swift; sourceTree = "<group>"; };
@@ -2430,6 +2433,7 @@
 				88DFC0C52B448C01001895C8 /* VideoService.swift */,
 				88CD38832E20E66300E7B21C /* TranscriptService.swift */,
 				88CD38A02E20E66300E7B21C /* TranscriptService+Alignment.swift */,
+				88CD38B02E20E66300E7B21C /* TranscriptService+GenerationCoordinator.swift */,
 				394947244B7EEF58E34F1187 /* ChapterAutomation.swift */,
 				041149DD7EB262E63C101CA7 /* ChapterAutomationStatus.swift */,
 				FC26B48EF88832652EFF106A /* ChapterAutomationSettings.swift */,
@@ -3613,6 +3617,7 @@
 				88274F00301E47250033352A /* DescriptionEdgeSwipe.swift in Sources */,
 				88CD38842E20E66300E7B21C /* TranscriptService.swift in Sources */,
 				88CD38A12E20E66300E7B21C /* TranscriptService+Alignment.swift in Sources */,
+				88CD38B12E20E66300E7B21C /* TranscriptService+GenerationCoordinator.swift in Sources */,
 				3FD83A5903F361C5B3C7F494 /* ChapterAutomation.swift in Sources */,
 				21EF80BE424329041483DFC1 /* ChapterAutomationStatus.swift in Sources */,
 				BCFC9C6ECD12C28EFE982AAD /* ChapterAutomationSettings.swift in Sources */,
@@ -4346,6 +4351,7 @@
 				883F41072BDEDE7000535952 /* HandleVideoUrlDropModifier.swift in Sources */,
 				88CD38852E20E66300E7B21C /* TranscriptService.swift in Sources */,
 				88CD38A22E20E66300E7B21C /* TranscriptService+Alignment.swift in Sources */,
+				88CD38B22E20E66300E7B21C /* TranscriptService+GenerationCoordinator.swift in Sources */,
 				1DA143348ACECD3958B545C5 /* ChapterAutomation.swift in Sources */,
 				F9D7B5BBE00CFD94E8C781AA /* ChapterAutomationStatus.swift in Sources */,
 				A7D9B2188ADA1C528F02D732 /* ChapterAutomationSettings.swift in Sources */,

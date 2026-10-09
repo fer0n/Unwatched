@@ -21,7 +21,8 @@ public struct PodcastDownloadIndicator: View {
     public var body: some View {
         // a download in flight shows up in the progress bar instead
         if video.isPodcast, PodcastDownloadManager.shared.downloadedIds.contains(video.youtubeId) {
-            Image(systemName: Const.downloadedSF)
+            let isTranscribing = TranscriptionActivity.shared.youtubeId == video.youtubeId
+            Image(systemName: isTranscribing ? Const.transcribingSF : Const.downloadedSF)
                 .font(.system(size: iconSize))
                 .fontWeight(.heavy)
                 .padding(padding)
@@ -29,7 +30,7 @@ public struct PodcastDownloadIndicator: View {
                 .background(.thinMaterial)
                 .clipShape(RoundedRectangle(cornerRadius: radius, style: .continuous))
                 .accessibilityElement(children: .ignore)
-                .accessibilityValue("downloaded")
+                .accessibilityValue(isTranscribing ? Text("generatingTranscript") : Text("downloaded"))
         }
     }
 }

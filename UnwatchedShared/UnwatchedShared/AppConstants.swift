@@ -358,6 +358,7 @@ public struct Const {
     public static let youtubeSF = "play.rectangle.fill"
     public static let podcastSF = "waveform"
     public static let downloadedSF = "arrow.down"
+    public static let transcribingSF = "gearshape.fill"
     public static let viewOnYouTubeSF = "arrow.up.right"
 
     public static let nextChapterSF = "chevron.right.2"
