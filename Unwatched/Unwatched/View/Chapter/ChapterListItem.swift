@@ -3,6 +3,7 @@ import UnwatchedShared
 
 struct ChapterListItem: View {
     var chapter: SendableChapter
+    var originalNumber: Int?
     var toggleChapter: (_ chapter: SendableChapter) -> Void
     var spacing: CGFloat = 5
 
@@ -53,9 +54,20 @@ struct ChapterListItem: View {
                     .foregroundStyle(Color.backgroundColor)
 
                 if chapter.isActive {
-                    Image(systemName: Const.checkmarkSF)
-                        .fontWeight(.bold)
-                        .foregroundStyle(Color.neutralAccentColor)
+                    Group {
+                        if let originalNumber {
+                            Text(originalNumber, format: .number)
+                                .fontWeight(.black)
+                                .monospacedDigit()
+                                .lineLimit(1)
+                                .minimumScaleFactor(0.5)
+                                .frame(maxWidth: frameSize - 6)
+                        } else {
+                            Image(systemName: Const.checkmarkSF)
+                        }
+                    }
+                    .fontWeight(.bold)
+                    .foregroundStyle(Color.neutralAccentColor)
                 }
             }
             .animation(nil, value: chapter.isActive)
@@ -109,7 +121,25 @@ struct ChapterListItem: View {
         ), toggleChapter: { _ in }
         )
         .background(Color.gray)
+
+        ForEach([3, 1, 12, 2], id: \.self) { number in
+            ChapterListItem(
+                chapter: SendableChapter(title: "Reordered, originally \(number)", startTime: 102),
+                originalNumber: number,
+                toggleChapter: { _ in }
+            )
+            .background(Color.gray)
+        }
+
+        ChapterListItem(
+            chapter: SendableChapter(title: "Reordered and disabled", startTime: 102, isActive: false),
+            originalNumber: 4,
+            toggleChapter: { _ in }
+        )
+        .background(Color.gray)
     }
+    .padding()
+    .environment(PlayerManager())
 }
 
 #Preview {

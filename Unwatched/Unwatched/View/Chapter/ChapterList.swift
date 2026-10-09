@@ -29,6 +29,9 @@ struct ChapterList: View {
         // body's observation scope, so a read in there never marks the list as depending on the current
         // chapter and the highlight stays at whatever it was when the rows were first built
         let currentChapterId = player.currentChapter?.chapterId
+        let sortedChapters = video.sortedChapterData
+        let chapters = ChapterService.inPlaybackOrder(sortedChapters)
+        let originalNumbers = Self.originalNumbers(sorted: sortedChapters, ordered: chapters)
         if !chapters.isEmpty {
             LazyVStack(spacing: isCompact ? 4 : 10) {
                 ForEach(chapters, id: \.chapterId) { chapter in
@@ -38,6 +41,7 @@ struct ChapterList: View {
 
                     ChapterListItem(
                         chapter: chapter,
+                        originalNumber: originalNumbers[chapter.chapterId],
                         toggleChapter: toggleChapter,
                         spacing: padding
                     )
@@ -113,6 +117,19 @@ struct ChapterList: View {
 
     var chapters: [SendableChapter] {
         video.orderedChapterData
+    }
+
+    /// Each chapter's position in the incoming start-time order, but only once the user has dragged
+    /// them out of it — empty otherwise. The generated intro/outro hold the ends and aren't numbered.
+    static func originalNumbers(sorted: [SendableChapter], ordered: [SendableChapter]) -> [String: Int] {
+        guard sorted.map(\.chapterId) != ordered.map(\.chapterId) else {
+            return [:]
+        }
+        let numbered = sorted.filter { !$0.isIntro && !$0.isOutro }
+        return Dictionary(
+            numbered.enumerated().map { ($0.element.chapterId, $0.offset + 1) },
+            uniquingKeysWith: { first, _ in first }
+        )
     }
 
     /// The generated intro/outro cover the start and the end of the video by definition, so they
