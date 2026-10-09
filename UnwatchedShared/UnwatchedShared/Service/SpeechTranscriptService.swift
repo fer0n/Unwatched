@@ -118,15 +118,21 @@ public enum SpeechTranscriptService {
         }
 
         do {
-            if let lastSampleTime = try await analyzer.analyzeSequence(from: file) {
-                try await analyzer.finalizeAndFinish(through: lastSampleTime)
-            } else {
-                await analyzer.cancelAndFinishNow()
+            // the analyzer ignores task cancellation
+            try await withTaskCancellationHandler {
+                if let lastSampleTime = try await analyzer.analyzeSequence(from: file) {
+                    try await analyzer.finalizeAndFinish(through: lastSampleTime)
+                } else {
+                    await analyzer.cancelAndFinishNow()
+                }
+            } onCancel: {
+                Task { await analyzer.cancelAndFinishNow() }
             }
+            try Task.checkCancellation()
         } catch {
             collector.cancel()
             await analyzer.cancelAndFinishNow()
-            throw error
+            throw Task.isCancelled ? CancellationError() : error
         }
         return try await collector.value
     }

@@ -121,6 +121,8 @@ extension ChapterAutomation {
             } else {
                 ChapterAutomationStatus.shared.transcriptionError = nil
             }
+        } catch where TranscriptService.GenerationCoordinator.shared.wasCancelled {
+            skippedIds.insert(youtubeId)
         } catch is CancellationError {
             hasPendingWork = true
         } catch {

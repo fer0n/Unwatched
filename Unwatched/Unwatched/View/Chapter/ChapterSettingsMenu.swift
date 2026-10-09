@@ -103,15 +103,23 @@ struct ChapterSettingsMenu: View {
     var transcriptSection: some View {
         if let video, let transcriptVM, showsTranscriptActions {
             Section {
-                Button {
-                    guard guardPremium(onInteraction: { dismiss() }) else { return }
-                    Signal.log("Transcript.Generate", parameters: ["source": "menu"])
-                    transcriptVM.generateTranscript(for: video, force: true)
-                } label: {
-                    Label("generateTranscript", systemImage: "text.quote")
+                if transcriptVM.isGenerating {
+                    Button(role: .destructive) {
+                        Signal.log("Transcript.Cancel")
+                        TranscriptService.GenerationCoordinator.shared.cancel(youtubeId: video.youtubeId)
+                    } label: {
+                        Label("cancelTranscription", systemImage: "xmark")
+                    }
+                } else {
+                    Button {
+                        guard guardPremium(onInteraction: { dismiss() }) else { return }
+                        Signal.log("Transcript.Generate", parameters: ["source": "menu"])
+                        transcriptVM.generateTranscript(for: video, force: true)
+                    } label: {
+                        Label("generateTranscript", systemImage: "text.quote")
+                    }
+                    .containsPremium()
                 }
-                .disabled(transcriptVM.isGenerating)
-                .containsPremium()
 
                 if showsAlign {
                     Button {

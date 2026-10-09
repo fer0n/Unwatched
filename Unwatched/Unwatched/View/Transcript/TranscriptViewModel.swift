@@ -243,7 +243,9 @@ extension TranscriptView {
 
                 if coordinator.finishedYoutubeId == youtubeId && coordinator.finishedVersion != handledFinishedVersion {
                     handledFinishedVersion = coordinator.finishedVersion
-                    if coordinator.error == nil {
+                    if coordinator.wasCancelled {
+                        cancelProgress()
+                    } else if coordinator.error == nil {
                         await finishProgress()
                         let payload = await TranscriptService.podcastTranscriptPayload(for: video).value
                         withAnimation {

@@ -194,6 +194,7 @@ struct TranscriptService {
                 // reports progress of its own
                 progress(0.1 + fraction * 0.9)
             }
+            try Task.checkCancellation()
             let cleaned = analyseBreaks(entries)
             await repo.cacheTranscript(cleaned, for: youtubeId, origin: .generated)
             return cleaned
@@ -241,6 +242,7 @@ struct TranscriptService {
         private(set) var progress: Double = 0
         private(set) var isGenerating = false
         private(set) var error: String?
+        private(set) var wasCancelled = false
 
         /// Bumped when a generation finishes, so a view that already has a (possibly empty) transcript
         /// loaded for this episode knows the cache changed and it should reload.
@@ -262,6 +264,7 @@ struct TranscriptService {
             youtubeId = id
             progress = 0
             error = nil
+            wasCancelled = false
             isGenerating = true
 
             let task = TranscriptService.generateTranscript(for: video, force: force) { [weak self] fraction in
@@ -291,6 +294,14 @@ struct TranscriptService {
             }
 
             return task
+        }
+
+        @MainActor
+        func cancel(youtubeId id: String) {
+            guard isGenerating, youtubeId == id, let activeTask else { return }
+            Log.info("cancelling the transcript generation for \(id)")
+            wasCancelled = true
+            activeTask.cancel()
         }
     }
 
