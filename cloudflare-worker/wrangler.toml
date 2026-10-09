@@ -9,6 +9,11 @@ CF_ACCOUNT_ID = "2206bad495d854f040f37fc989b8305e"
 pattern = "signal.octabits.net"
 custom_domain = true
 
+# Redirects for links the app ships with (see src/links.js).
+[[routes]]
+pattern = "unwatched.octabits.net"
+custom_domain = true
+
 [[analytics_engine_datasets]]
 binding = "ANALYTICS"
 dataset = "unwatched_analytics_v3"

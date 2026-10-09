@@ -83,6 +83,7 @@ in development instead of only being proven after release.
 ## Dashboard (Worker)
 
 - `src/index.js` — ingestion (`POST /`, bearer `API_SECRET`) + dashboard auth.
+- `src/links.js` — 302 redirects on `unwatched.octabits.net` for links the app ships with (`/beta` → TestFlight), so a target can change without an app update. That host serves nothing else.
 - `src/dashboard.js` — `handleDashboardData(env, channel)` (SQL queries) + `DASHBOARD_HTML` (inline UI).
 - Auth: HTTP Basic, upgraded to a 30-day rolling `HttpOnly; Secure` cookie (`dashboard_auth`, SHA-256 of the password).
 - Analytics Engine SQL is a ClickHouse subset. Confirmed available: `count(DISTINCT …)`, `toStartOfDay`, `toStartOfInterval`, `now()`. No `uniq()`.
