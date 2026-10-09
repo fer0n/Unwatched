@@ -20558,31 +20558,31 @@
         "de" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Die Suche kann YouTube-Empfehlungen anzeigen, solange nichts eingegeben ist."
+            "value" : "Die Suche kann YouTube-Empfehlungen anzeigen, solange nichts eingegeben ist. Du kannst das jederzeit in den Einstellungen ändern."
           }
         },
         "en" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Search can show YouTube recommendations while you're not typing."
+            "value" : "Search can show YouTube recommendations while you're not typing. You can change this anytime in Settings."
           }
         },
         "es" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "La búsqueda puede mostrar recomendaciones de YouTube mientras no escribes."
+            "value" : "La búsqueda puede mostrar recomendaciones de YouTube mientras no escribes. Puedes cambiarlo en cualquier momento en Ajustes."
           }
         },
         "fr" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "La recherche peut afficher des recommandations YouTube tant que vous ne tapez rien."
+            "value" : "La recherche peut afficher des recommandations YouTube tant que vous ne tapez rien. Vous pouvez modifier ce choix à tout moment dans les réglages."
           }
         },
         "pl" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Wyszukiwanie może pokazywać polecane z YouTube, gdy nic nie wpisujesz."
+            "value" : "Wyszukiwanie może pokazywać polecane z YouTube, gdy nic nie wpisujesz. Możesz to zmienić w dowolnym momencie w ustawieniach."
           }
         }
       }
