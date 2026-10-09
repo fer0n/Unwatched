@@ -97,7 +97,7 @@ extension ChapterService {
     /// Hands the player a video it is already showing, so an edit to its chapters reaches playback.
     @MainActor
     private static func notifyPlayer(of video: Video, refresh: Bool = false) {
-        guard video.youtubeId == PlayerManager.shared.video?.youtubeId else {
+        guard isInPlayer(video) else {
             return
         }
         if refresh {
@@ -108,6 +108,11 @@ extension ChapterService {
         }
         // the page seeks by the chapters it was handed, so an edit has to reach it too
         PlayerManager.shared.backend.setChapterMarkers(force: false)
+    }
+
+    @MainActor
+    private static func isInPlayer(_ video: Video) -> Bool {
+        video.youtubeId == PlayerManager.shared.video?.youtubeId
     }
 
     private static func clearChapterOrder(of video: Video) {
@@ -235,6 +240,10 @@ extension ChapterService {
         video.chaptersDidChange()
         try? context.save()
 
-        notifyPlayer(of: video, refresh: true)
+        if isInPlayer(video) {
+            notifyPlayer(of: video, refresh: true)
+        } else if video.isPodcast {
+            loadPodcastChapters(for: video)
+        }
     }
 }
