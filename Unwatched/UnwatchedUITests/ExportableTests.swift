@@ -126,7 +126,7 @@ class ExportableTests: XCTestCase {
         tag.setCovers(tech, true)
         tag.setCovers(music, true)
 
-        let rest = Tag(name: "Rest", order: 4, mode: .untagged)
+        let rest = Tag(name: "Rest", order: 4, mode: .untagged, podcasts: .hidden)
         context.insert(rest)
 
         try? context.save()
@@ -139,6 +139,7 @@ class ExportableTests: XCTestCase {
             let tags = try context.fetch(FetchDescriptor<Tag>(sortBy: [SortDescriptor(\Tag.order)]))
             XCTAssertEqual(tags.count, 2)
             XCTAssertEqual(tags.last?.mode, .untagged, "a tag's mode has to survive the round trip")
+            XCTAssertEqual(tags.last?.podcasts, .hidden)
 
             let restored = try XCTUnwrap(tags.first)
             XCTAssertEqual(restored.name, "Listening")

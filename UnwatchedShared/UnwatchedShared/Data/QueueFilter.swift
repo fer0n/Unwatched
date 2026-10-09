@@ -16,16 +16,20 @@ public struct QueueFilter: Hashable, Sendable {
 
     public let isExcluding: Bool
 
+    public let podcasts: TagPodcasts
+
     public static let all = QueueFilter(subscriptionIds: nil)
 
     public init(
         subscriptionIds: [PersistentIdentifier]?,
         videoIds: [String] = [],
-        isExcluding: Bool = false
+        isExcluding: Bool = false,
+        podcasts: TagPodcasts = .listed
     ) {
         self.subscriptionIds = subscriptionIds
         self.videoIds = videoIds
         self.isExcluding = isExcluding
+        self.podcasts = podcasts
     }
 
     /// - Parameter tags: every tag, for what an `untagged` tag measures against.
@@ -34,21 +38,28 @@ public struct QueueFilter: Hashable, Sendable {
             self = .all
             return
         }
+        let podcasts = tag.effectivePodcasts(in: tags)
         switch tag.mode {
         case .include:
-            self.init(tag.subscriptions, tag.videos)
+            self.init(tag.subscriptions, tag.videos, podcasts: podcasts)
         case .exclude:
-            self.init(tag.subscriptions, tag.videos, isExcluding: true)
+            self.init(tag.subscriptions, tag.videos, isExcluding: true, podcasts: podcasts)
         case .untagged:
-            self.init(Tag.coveredSubscriptions(tags), Tag.coveredVideos(tags), isExcluding: true)
+            self.init(Tag.coveredSubscriptions(tags), Tag.coveredVideos(tags), isExcluding: true, podcasts: podcasts)
         }
     }
 
-    private init(_ subscriptions: [Subscription]?, _ videos: [Video]?, isExcluding: Bool = false) {
+    private init(
+        _ subscriptions: [Subscription]?,
+        _ videos: [Video]?,
+        isExcluding: Bool = false,
+        podcasts: TagPodcasts
+    ) {
         self.init(
             subscriptionIds: (subscriptions ?? []).map(\.persistentModelID),
             videoIds: (videos ?? []).map(\.youtubeId),
-            isExcluding: isExcluding
+            isExcluding: isExcluding,
+            podcasts: podcasts
         )
     }
 
@@ -85,8 +96,24 @@ public struct QueueFilter: Hashable, Sendable {
         return descriptor
     }
 
-    /// `flatMap`, not optional chaining: only that shape translates to a plain `IN`.
     private var predicate: Predicate<QueueEntry>? {
+        guard let slice = slicePredicate else { return nil }
+        switch podcasts {
+        case .listed:
+            return slice
+        case .all:
+            return #Predicate<QueueEntry> { entry in
+                (entry.video.flatMap { video in video.mediaUrl != nil } ?? false) || slice.evaluate(entry)
+            }
+        case .hidden:
+            return #Predicate<QueueEntry> { entry in
+                (entry.video.flatMap { video in video.mediaUrl == nil } ?? true) && slice.evaluate(entry)
+            }
+        }
+    }
+
+    /// `flatMap`, not optional chaining: only that shape translates to a plain `IN`.
+    private var slicePredicate: Predicate<QueueEntry>? {
         guard let subscriptionIds else { return nil }
         let isExcluding = isExcluding
         guard !videoIds.isEmpty else {

@@ -46,6 +46,12 @@ struct TagVideosView: View {
     }
 
     private var membership: TagMembership {
+        var membership = modeMembership
+        membership.podcasts = tag.effectivePodcasts(in: tags)
+        return membership
+    }
+
+    private var modeMembership: TagMembership {
         switch tag.mode {
         case .include:
             TagMembership(
@@ -114,19 +120,29 @@ struct TagMembership: Equatable {
     var addedVideoIds: [String] = []
     var removedVideoIds: [String] = []
     var isExcluding: Bool = false
+    var podcasts: TagPodcasts = .listed
 
     /// A subtractive tag always shows whatever it hasn't taken away.
     var isEmpty: Bool {
-        !isExcluding && subscriptionIds.isEmpty && addedVideoIds.isEmpty
+        !isExcluding && subscriptionIds.isEmpty && addedVideoIds.isEmpty && podcasts != .all
     }
 
     var filter: Predicate<Video>? {
-        VideoListView.getVideoFilter(
+        let slice = VideoListView.getVideoFilter(
             subscriptionIds: subscriptionIds,
             addedVideoIds: addedVideoIds,
             removedVideoIds: removedVideoIds,
             isExcluding: isExcluding
         )
+        guard let slice else { return nil }
+        switch podcasts {
+        case .listed:
+            return slice
+        case .all:
+            return #Predicate<Video> { video in video.mediaUrl != nil || slice.evaluate(video) }
+        case .hidden:
+            return #Predicate<Video> { video in video.mediaUrl == nil && slice.evaluate(video) }
+        }
     }
 }
 

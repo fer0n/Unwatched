@@ -22,6 +22,8 @@ public struct SendableTag: Sendable, Codable, Hashable {
     /// Raw and optional so an unknown mode doesn't fail the whole decode.
     public var mode: Int?
 
+    public var podcasts: Int?
+
     /// `nil` means the tag has no opinion, see `Tag.continuousPlay`.
     public var continuousPlay: Bool?
 
@@ -43,6 +45,7 @@ public struct SendableTag: Sendable, Codable, Hashable {
         symbol: String? = nil,
         quickSwitch: Bool? = nil,
         mode: Int? = nil,
+        podcasts: Int? = nil,
         continuousPlay: Bool? = nil,
         suggestVideos: Bool? = nil,
         seekSeconds: Double? = nil,
@@ -56,6 +59,7 @@ public struct SendableTag: Sendable, Codable, Hashable {
         self.symbol = symbol
         self.quickSwitch = quickSwitch
         self.mode = mode
+        self.podcasts = podcasts
         self.continuousPlay = continuousPlay
         self.suggestVideos = suggestVideos
         self.seekSeconds = seekSeconds
@@ -71,6 +75,7 @@ public struct SendableTag: Sendable, Codable, Hashable {
             symbol: symbol,
             quickSwitch: quickSwitch ?? true,
             mode: mode.flatMap(TagMode.init(rawValue:)) ?? .include,
+            podcasts: podcasts.flatMap(TagPodcasts.init(rawValue:)) ?? .listed,
             continuousPlay: continuousPlay,
             suggestVideos: suggestVideos,
             seekSeconds: seekSeconds,

@@ -169,9 +169,7 @@ struct TagEditView: View {
             }
             tag.setCovers(subscription, !tag.covers(subscription))
         }
-        if !isNew {
-            save()
-        }
+        saveIfExisting()
     }
 
     private func create() {
@@ -195,6 +193,12 @@ struct TagEditView: View {
 
     private func save() {
         try? modelContext.save()
+    }
+
+    private func saveIfExisting() {
+        if !isNew {
+            save()
+        }
     }
 
     private func delete() {
@@ -243,11 +247,11 @@ extension TagEditView {
                 Text("tagMode")
             }
             .onChange(of: tag.mode) {
-                if !isNew {
-                    save()
-                }
+                saveIfExisting()
             }
         }
+
+        PodcastsSection(tag: tag, onChange: saveIfExisting)
 
         MySection(footer: "quickSwitchHelper") {
             Toggle(isOn: $tag.quickSwitch) {
@@ -313,7 +317,7 @@ extension TagEditView {
 
             ChannelsSection(
                 title: tag.mode == .exclude ? "excludedChannels" : "channels",
-                subscriptions: subscriptions,
+                subscriptions: tag.podcasts == .listed ? subscriptions : subscriptions.filter { !$0.isPodcast },
                 otherTagsBySubscription: otherTagsBySubscription,
                 isCovered: isCovered,
                 toggle: toggle

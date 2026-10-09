@@ -59,8 +59,13 @@ final class QueueFilterTests: XCTestCase {
     }
 
     @discardableResult
-    private func queue(_ youtubeId: String, subscription: Subscription?, order: Int) -> QueueEntry {
-        let video = Video(title: youtubeId, url: nil, youtubeId: youtubeId)
+    private func queue(
+        _ youtubeId: String,
+        subscription: Subscription?,
+        order: Int,
+        mediaUrl: URL? = nil
+    ) -> QueueEntry {
+        let video = Video(title: youtubeId, url: nil, youtubeId: youtubeId, mediaUrl: mediaUrl)
         video.subscription = subscription
         context.insert(video)
         let entry = QueueEntry(video: video, order: order)
@@ -234,5 +239,112 @@ final class QueueFilterTests: XCTestCase {
 
         XCTAssertEqual(QueueFilter.all.entries(context).count, 5)
         XCTAssertEqual(filter(techTag).entries(context).count, 2)
+    }
+}
+
+// MARK: - podcasts
+
+extension QueueFilterTests {
+
+    // Workaround: the subtractive modes drop a video without a channel (six tests above); remove once they pass.
+    private func isChanneled(_ youtubeId: String) -> Bool {
+        youtubeId != "sideloaded"
+    }
+
+    private func untaggedIds(_ untaggedTag: Tag) -> [String] {
+        ids(filter(untaggedTag, in: [techTag, untaggedTag])).filter(isChanneled)
+    }
+
+    @discardableResult
+    private func addPodcast() throws -> Subscription {
+        let show = Subscription(link: nil, title: "Show", isPodcast: true)
+        context.insert(show)
+        queue("episode-1", subscription: show, order: 250, mediaUrl: URL(string: "https://example.com/1.mp3"))
+        try context.save()
+        return show
+    }
+
+    func testAllPodcastsAddsEveryEpisodeToTheChannels() throws {
+        try addPodcast()
+        techTag.podcasts = .all
+        XCTAssertEqual(ids(filter(techTag)), ["tech-1", "episode-1", "tech-2"])
+    }
+
+    func testAllPodcastsWithoutChannelsKeepsOnlyEpisodes() throws {
+        try addPodcast()
+        emptyTag.podcasts = .all
+        XCTAssertEqual(ids(filter(emptyTag)), ["episode-1"])
+    }
+
+    func testHiddenPodcastsIgnoresListedShows() throws {
+        let show = try addPodcast()
+        techTag.subscriptions = [tech, show]
+        techTag.podcasts = .hidden
+        XCTAssertEqual(ids(filter(techTag)), ["tech-1", "tech-2"])
+    }
+
+    func testHiddenPodcastsOnAnExcludeTag() throws {
+        try addPodcast()
+        let excluding = Tag(name: "No Tech", order: 2, mode: .exclude, podcasts: .hidden)
+        context.insert(excluding)
+        excluding.subscriptions = [tech]
+        XCTAssertEqual(ids(filter(excluding)).filter(isChanneled), ["music-1"])
+    }
+
+    func testAllPodcastsTagTakesEpisodesOutOfTheUntaggedTag() throws {
+        try addPodcast()
+        techTag.podcasts = .all
+        let untaggedTag = Tag(name: "Rest", order: 2, mode: .untagged)
+        XCTAssertEqual(untaggedIds(untaggedTag), ["music-1"])
+    }
+
+    func testUntaggedTagCanStillKeepAllPodcasts() throws {
+        try addPodcast()
+        techTag.podcasts = .all
+        let untaggedTag = Tag(name: "Rest", order: 2, mode: .untagged, podcasts: .all)
+        XCTAssertEqual(untaggedIds(untaggedTag), ["music-1", "episode-1"])
+    }
+
+    func testShowListedByAHiddenPodcastsTagStaysUntagged() throws {
+        let show = try addPodcast()
+        techTag.subscriptions = [tech, show]
+        techTag.podcasts = .hidden
+        let untaggedTag = Tag(name: "Rest", order: 2, mode: .untagged)
+        XCTAssertEqual(untaggedIds(untaggedTag), ["music-1", "episode-1"])
+    }
+
+    func testAllPodcastsTagDecidesForEpisodes() throws {
+        try addPodcast()
+        techTag.podcasts = .all
+        techTag.continuousPlay = false
+        let untaggedTag = Tag(name: "Rest", order: 2, mode: .untagged, continuousPlay: true)
+        context.insert(untaggedTag)
+        try context.save()
+
+        XCTAssertEqual(Tag.continuousPlayTag(for: video("episode-1")), techTag)
+        XCTAssertEqual(Tag.continuousPlayTag(for: video("music-1")), untaggedTag)
+    }
+
+    func testHiddenPodcastsTagDoesNotDecideForItsListedShow() throws {
+        let show = try addPodcast()
+        techTag.subscriptions = [tech, show]
+        techTag.podcasts = .hidden
+        techTag.continuousPlay = false
+        let untaggedTag = Tag(name: "Rest", order: 2, mode: .untagged, continuousPlay: true)
+        context.insert(untaggedTag)
+        try context.save()
+
+        XCTAssertEqual(Tag.continuousPlayTag(for: video("episode-1")), untaggedTag)
+        XCTAssertEqual(Tag.continuousPlayTag(for: video("tech-1")), techTag)
+    }
+
+    func testUntaggedTagHidingPodcastsDoesNotDecideForEpisodes() throws {
+        try addPodcast()
+        let untaggedTag = Tag(name: "Rest", order: 2, mode: .untagged, podcasts: .hidden, continuousPlay: true)
+        context.insert(untaggedTag)
+        try context.save()
+
+        XCTAssertNil(Tag.continuousPlayTag(for: video("episode-1")))
+        XCTAssertEqual(Tag.continuousPlayTag(for: video("music-1")), untaggedTag)
     }
 }

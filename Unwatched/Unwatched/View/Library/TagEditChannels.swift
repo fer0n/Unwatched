@@ -13,6 +13,26 @@ struct TagBadge: Identifiable, Hashable {
     let symbol: String
 }
 
+struct PodcastsSection: View {
+    @Bindable var tag: Tag
+    let onChange: () -> Void
+
+    var body: some View {
+        MySection(footer: tag.podcasts.helper) {
+            Picker(selection: $tag.podcasts.animation()) {
+                ForEach(TagPodcasts.allCases) { podcasts in
+                    Text(podcasts.title).tag(podcasts)
+                }
+            } label: {
+                Text("podcasts")
+            }
+            .onChange(of: tag.podcasts) {
+                onChange()
+            }
+        }
+    }
+}
+
 struct ChannelsSection: View {
     let title: LocalizedStringKey
     let subscriptions: [Subscription]

@@ -27,6 +27,14 @@ import SwiftData
     }
 }
 
+@frozen public enum TagPodcasts: Int, Codable, Sendable, CaseIterable, Identifiable {
+    case listed = 0
+    case all = 1
+    case hidden = 2
+
+    public var id: Int { rawValue }
+}
+
 /// A named slice of the queue: the channels it holds, plus the videos it names on top of them.
 @Model
 public final class Tag: CustomStringConvertible, Exportable {
@@ -66,6 +74,12 @@ public final class Tag: CustomStringConvertible, Exportable {
         set { _mode = newValue.rawValue }
     }
 
+    public var _podcasts: Int? = TagPodcasts.listed.rawValue
+    public var podcasts: TagPodcasts {
+        get { _podcasts.flatMap(TagPodcasts.init(rawValue:)) ?? .listed }
+        set { _podcasts = newValue.rawValue }
+    }
+
     public init(
         name: String,
         order: Int = Int.max,
@@ -73,6 +87,7 @@ public final class Tag: CustomStringConvertible, Exportable {
         symbol: String? = nil,
         quickSwitch: Bool = true,
         mode: TagMode = .include,
+        podcasts: TagPodcasts = .listed,
         continuousPlay: Bool? = nil,
         suggestVideos: Bool? = nil,
         seekSeconds: Double? = nil,
@@ -84,6 +99,7 @@ public final class Tag: CustomStringConvertible, Exportable {
         self.symbol = symbol
         self.quickSwitch = quickSwitch
         self._mode = mode.rawValue
+        self._podcasts = podcasts.rawValue
         self.continuousPlay = continuousPlay
         self.suggestVideos = suggestVideos
         self.seekSeconds = seekSeconds
@@ -102,15 +118,22 @@ public final class Tag: CustomStringConvertible, Exportable {
 
     /// What "untagged" measures against: only `include` tags claim what they hold.
     public static func coveredSubscriptions(_ tags: [Tag]) -> [Subscription] {
-        covered(tags, \.subscriptions)
+        covered(tags, \.subscriptions, isPodcast: \.isPodcast)
     }
 
     public static func coveredVideos(_ tags: [Tag]) -> [Video] {
-        covered(tags, \.videos)
+        covered(tags, \.videos, isPodcast: \.isPodcast)
     }
 
-    private static func covered<T>(_ tags: [Tag], _ members: KeyPath<Tag, [T]?>) -> [T] {
-        tags.filter { $0.mode == .include }.flatMap { $0[keyPath: members] ?? [] }
+    private static func covered<T>(_ tags: [Tag], _ members: KeyPath<Tag, [T]?>, isPodcast: KeyPath<T, Bool>) -> [T] {
+        tags.filter { $0.mode == .include }.flatMap { tag in
+            (tag[keyPath: members] ?? []).filter { tag.podcasts != .hidden || !$0[keyPath: isPodcast] }
+        }
+    }
+
+    public func effectivePodcasts(in tags: [Tag]) -> TagPodcasts {
+        let anotherTagHasAll = tags.contains { $0.mode == .include && $0.podcasts == .all }
+        return podcasts == .listed && mode == .untagged && anotherTagHasAll ? .hidden : podcasts
     }
 
     /// The tag whose continuous play setting a video follows.
@@ -148,18 +171,22 @@ public final class Tag: CustomStringConvertible, Exportable {
     }
 
     private static func decidingTags(for video: Video) -> [Tag] {
-        let claiming = ((video.tags ?? []) + (video.subscription?.tags ?? [])).filter { $0.mode == .include }
-        return claiming.isEmpty ? untaggedTags(for: video) : claiming
+        let isEpisode = video.isPodcast
+        let listing = ((video.tags ?? []) + (video.subscription?.tags ?? []))
+            .filter { $0.mode == .include && (!isEpisode || $0.podcasts == .listed) }
+        guard isEpisode || listing.isEmpty else { return listing }
+
+        let tags = fetchTags(for: video)
+        let claiming = isEpisode ? listing + tags.filter { $0.mode == .include && $0.podcasts == .all } : listing
+        guard claiming.isEmpty else { return claiming }
+        return tags.filter { $0.mode == .untagged && !(isEpisode && $0.podcasts == .hidden) }
     }
 
-    /// The `untagged` tags a video falls into, which is all of them once no `include` tag claims it — the same slice
-    /// `QueueFilter` gives them. Fetched rather than read off the video: a tag that holds nothing of its own is not
-    /// reachable through the video's relationships.
-    private static func untaggedTags(for video: Video) -> [Tag] {
+    /// Fetched rather than read off the video: a tag that holds nothing of its own is not reachable through the
+    /// video's relationships.
+    private static func fetchTags(for video: Video) -> [Tag] {
         guard let context = video.modelContext else { return [] }
-        let untagged = TagMode.untagged.rawValue
-        let descriptor = FetchDescriptor<Tag>(predicate: #Predicate<Tag> { $0._mode == untagged })
-        return (try? context.fetch(descriptor)) ?? []
+        return (try? context.fetch(FetchDescriptor<Tag>())) ?? []
     }
 
     public func covers(_ subscription: Subscription?) -> Bool {
@@ -210,6 +237,7 @@ public final class Tag: CustomStringConvertible, Exportable {
             symbol: symbol,
             quickSwitch: quickSwitch,
             mode: mode.rawValue,
+            podcasts: podcasts.rawValue,
             continuousPlay: continuousPlay,
             suggestVideos: suggestVideos,
             seekSeconds: seekSeconds,

@@ -23,3 +23,21 @@ extension TagMode {
         }
     }
 }
+
+extension TagPodcasts {
+    var title: LocalizedStringKey {
+        switch self {
+        case .listed: "tagPodcastsListed"
+        case .all: "tagPodcastsAll"
+        case .hidden: "tagPodcastsHidden"
+        }
+    }
+
+    var helper: LocalizedStringKey {
+        switch self {
+        case .listed: "tagPodcastsListedHelper"
+        case .all: "tagPodcastsAllHelper"
+        case .hidden: "tagPodcastsHiddenHelper"
+        }
+    }
+}
