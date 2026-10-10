@@ -215,9 +215,10 @@ Supporting pieces, all in `+Loading.swift`:
   **`APIError.ageRestricted`** (see `verdict(_:)`) is recorded but does *not* cancel the group —
   TVEmbedded and AndroidVR can still serve an age gate — and is only acted on once every client
   has come back empty.
-- **`+Fallback.swift`** holds what happens then: `handleScheduledVideo` and
-  `handleAgeRestrictedVideo`, the latter handing off to the YouTube page when the native player
-  is only standing in for a failed embed.
+- **`+Fallback.swift`** holds what happens then: `handleScheduledVideo`, and `failPlayback`
+  for every terminal failure (age gate, IP block, exhausted retries, unrecoverable item error),
+  which hands off to the YouTube page instead of showing the error when the native player is
+  only standing in for a failed embed (foreground only).
 - **`handleItemFailure`** routes mid-playback `.failed` through
   **`qualityRecoveryAction`** (403/quality-cap/H.264 decode → re-`exhaustiveRetry`;
   else surface the error).

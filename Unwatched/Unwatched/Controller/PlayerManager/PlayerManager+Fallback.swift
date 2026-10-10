@@ -51,15 +51,19 @@ extension PlayerManager {
         nativeFallbackActive = false
         // a player the user picked since stands
         guard PlayerTypeSetting.stored == .native else { return false }
+        restorePickedPlayer()
+        return true
+    }
+
+    /// Switches back to the player type the fallback replaced.
+    @MainActor
+    func restorePickedPlayer() {
         UserDefaults.standard.set(PlayerTypeSetting.storedPrevious.rawValue, forKey: Const.playerType)
         PlayerSwitchManager.shared.handleSettingChanged()
-        // nothing commanded the native player to stop, so it would keep playing the previous video
-        // behind the page. Ordered after the switch, so the audio session is handed over rather
-        // than deactivated; skipped when the new video plays natively anyway (a podcast episode).
+        // after the switch, so the audio session is handed over; podcasts stay native
         if !PlayerSwitchManager.shared.nativeIsCurrent {
             AVPlayerViewModel.shared.cleanup()
         }
-        return true
     }
 
     /// The same revert at launch, where there is no player to swap yet and no `PlayerSwitchManager`

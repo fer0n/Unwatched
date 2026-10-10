@@ -271,9 +271,7 @@ extension AVPlayerViewModel {
             if let ipBlockError {
                 Log.error("[AVPlayerView] IP blocked during parallel fetch: \(videoId)")
                 Signal.error("youtubeIpBlocked")
-                player.isLoading = nil
-                loadError = ipBlockError
-                clearPendingReposition()
+                failPlayback(ipBlockError)
                 return
             }
             guard !Task.isCancelled, player.video?.youtubeId == videoId else { return }
@@ -311,9 +309,7 @@ extension AVPlayerViewModel {
         guard !Task.isCancelled, player.video?.youtubeId == videoId else { return }
         Log.error("[AVPlayerView] all retry attempts exhausted: \(videoId)")
         Signal.error("nativeStreamUnavailable")
-        player.isLoading = nil
-        loadError = APIError.unavailable("Unable to play this video")
-        clearPendingReposition()
+        failPlayback(APIError.unavailable("Unable to play this video"))
     }
 
     /// Tries HLS → adaptive composition → (optionally) muxed from one `PlayerInfo`.
@@ -810,9 +806,7 @@ extension AVPlayerViewModel {
         }
         guard !hasRetriedPlayback else {
             Log.error("[AVPlayerView] retry already attempted, giving up: \(videoId)")
-            player.isLoading = nil
-            loadError = item.error
-            clearPendingReposition()
+            failPlayback(item.error)
             return
         }
         let nsErr = (item.error as NSError?) ?? NSError(domain: "AVFoundationErrorDomain", code: 0)
@@ -823,9 +817,7 @@ extension AVPlayerViewModel {
         case .fail(let err):
             Log.error("[AVPlayerView] unrecoverable failure: \(videoId)")
             Signal.error("nativePlaybackFailed")
-            player.isLoading = nil
-            loadError = err ?? item.error
-            clearPendingReposition()
+            failPlayback(err ?? item.error)
         case .revertToAuto:
             Log.info("[AVPlayerView] quality \(player.selectedVideoQuality)p failed — reverting to Auto and retrying: \(videoId)")
             player.reportVideoQuality(0)
