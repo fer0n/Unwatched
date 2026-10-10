@@ -10,19 +10,29 @@ struct UndoToolbarButton: ToolbarContent {
     @Environment(TinyUndoManager.self) private var undoManager
 
     var body: some ToolbarContent {
+        #if os(macOS)
+        // Workaround: an item added live sits 4pt too close to the next (macOS 26/27)
+        undoItem
+        #else
         if undoManager.canUndo {
-            ToolbarItem(placement: .cancellationAction) {
-                Button {
-                    undoManager.undo()
-                } label: {
-                    Image(systemName: "arrow.uturn.backward")
-                }
-                .keyboardShortcut("z", modifiers: .command)
-                .accessibilityLabel("undo")
-                .font(.footnote)
-                .fontWeight(.bold)
-                .myTint(neutral: true)
+            undoItem
+        }
+        #endif
+    }
+
+    private var undoItem: some ToolbarContent {
+        ToolbarItem(placement: .cancellationAction) {
+            Button {
+                undoManager.undo()
+            } label: {
+                Image(systemName: "arrow.uturn.backward")
             }
+            .keyboardShortcut("z", modifiers: .command)
+            .disabled(!undoManager.canUndo)
+            .accessibilityLabel("undo")
+            .font(.footnote)
+            .fontWeight(.bold)
+            .myTint(neutral: true)
         }
     }
 }
