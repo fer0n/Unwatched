@@ -19,9 +19,11 @@ private extension View {
 
 /// Shows query suggestions or recent searches while searching, and recommendations otherwise.
 ///
-/// A single stable `List` root (sections switch, empty state as an overlay) instead of
-/// swapping between different root views keeps swipe-to-delete smooth — a root swap
-/// mid-swipe forces SwiftUI to rebuild the whole subtree and stutters the gesture.
+/// The suggestions share a single stable `List` root (sections switch, empty state as an
+/// overlay) instead of swapping between different root views to keep swipe-to-delete smooth —
+/// a root swap mid-swipe forces SwiftUI to rebuild the whole subtree and stutters the gesture.
+/// Recommendations get their own plain `List` so they match the queue's full-width rows; that
+/// swap only happens on a focus change, never mid-swipe.
 ///
 /// Renders inline (rather than via `.searchSuggestions`) so it shares the app background
 /// and looks identical whether or not the search field is focused — the native
@@ -36,40 +38,11 @@ struct SearchSuggestionsView: View {
     let onSelect: (String) -> Void
 
     var body: some View {
-        List {
-            if !vm.query.isEmpty {
-                Section {
-                    ForEach(vm.suggestions, id: \.self) { suggestion in
-                        suggestionRow(suggestion, systemImage: "magnifyingglass") {
-                            searchFocused = false
-                            onSelect(suggestion)
-                        }
-                    }
-                }
-                .listRowSeparatorTint(Color.automaticBlack.opacity(0.08))
-            } else if showsHomeFeed {
-                homeFeedSection
+        Group {
+            if showsHomeFeed {
+                homeFeedList
             } else {
-                if showsRecommendationsTip {
-                    SearchRecommendationsTipView { searchFocused = false }
-                }
-                if !vm.recentSearches.isEmpty {
-                    recentSearchesSection
-                }
-            }
-        }
-        .scrollContentBackground(.hidden)
-        .refreshable {
-            guard showsHomeFeed else { return }
-            await vm.reloadHomeFeed()
-        }
-        .overlay {
-            if vm.query.isEmpty && vm.recentSearches.isEmpty && !showsHomeFeed && !showsRecommendationsTip {
-                ContentUnavailableView(
-                    "searchPromptTitle",
-                    systemImage: "magnifyingglass",
-                    description: Text("searchPromptDescription")
-                )
+                suggestionsList
             }
         }
         .task(id: vm.query) { vm.updateSuggestions() }
@@ -86,6 +59,39 @@ struct SearchSuggestionsView: View {
         .task(id: showRecommendations) {
             if showRecommendations {
                 vm.loadHomeFeedIfNeeded()
+            }
+        }
+    }
+
+    var suggestionsList: some View {
+        List {
+            if !vm.query.isEmpty {
+                Section {
+                    ForEach(vm.suggestions, id: \.self) { suggestion in
+                        suggestionRow(suggestion, systemImage: "magnifyingglass") {
+                            searchFocused = false
+                            onSelect(suggestion)
+                        }
+                    }
+                }
+                .listRowSeparatorTint(Color.automaticBlack.opacity(0.08))
+            } else {
+                if showsRecommendationsTip {
+                    SearchRecommendationsTipView { searchFocused = false }
+                }
+                if !vm.recentSearches.isEmpty {
+                    recentSearchesSection
+                }
+            }
+        }
+        .scrollContentBackground(.hidden)
+        .overlay {
+            if vm.query.isEmpty && vm.recentSearches.isEmpty && !showsRecommendationsTip {
+                ContentUnavailableView(
+                    "searchPromptTitle",
+                    systemImage: "magnifyingglass",
+                    description: Text("searchPromptDescription")
+                )
             }
         }
     }
@@ -126,8 +132,8 @@ struct SearchSuggestionsView: View {
         .listRowSeparatorTint(Color.automaticBlack.opacity(0.08))
     }
 
-    var homeFeedSection: some View {
-        Section {
+    var homeFeedList: some View {
+        List {
             SearchVideoRows(videos: vm.homeFeed, vm: vm) { video in
                 vm.loadMoreHomeFeedIfNeeded(currentItem: video)
             }
@@ -139,7 +145,12 @@ struct SearchSuggestionsView: View {
                     .myListRowBackground()
             }
         }
+        .scrollContentBackground(.hidden)
+        .listStyle(.plain)
         .environment(\.videoListContext, .search)
+        .refreshable {
+            await vm.reloadHomeFeed()
+        }
     }
 
     /// A tappable suggestion/recent row that runs `action` for its term.
