@@ -216,17 +216,21 @@ extension TranscriptView {
         @MainActor
         func syncGeneration(for youtubeId: String) {
             let coordinator = TranscriptService.GenerationCoordinator.shared
-            if coordinator.youtubeId == youtubeId {
-                if coordinator.isGenerating && !isGenerating {
+            if coordinator.youtubeId == youtubeId, coordinator.isGenerating {
+                if !isGenerating {
                     isFadingOutProgress = false
                 }
-                isGenerating = coordinator.isGenerating
+                isGenerating = true
                 sweepProgress = coordinator.progress
-                generationError = coordinator.error
+                generationError = nil
             } else if isGenerating {
                 isGenerating = false
-                sweepProgress = 0
-                generationError = nil
+                if coordinator.youtubeId == youtubeId {
+                    generationError = coordinator.error
+                } else {
+                    generationError = nil
+                    cancelProgress()
+                }
             }
         }
 
@@ -237,15 +241,18 @@ extension TranscriptView {
             let coordinator = TranscriptService.GenerationCoordinator.shared
             let youtubeId = video.youtubeId
             var handledFinishedVersion = coordinator.finishedYoutubeId == youtubeId ? coordinator.finishedVersion : -1
+            if !coordinator.isGenerating, !isAligning, sweepProgress > 0, !isFadingOutProgress {
+                handledFinishedVersion = -1
+            }
 
             while true {
                 syncGeneration(for: youtubeId)
 
                 if coordinator.finishedYoutubeId == youtubeId && coordinator.finishedVersion != handledFinishedVersion {
                     handledFinishedVersion = coordinator.finishedVersion
-                    if coordinator.wasCancelled {
+                    if coordinator.wasCancelled || coordinator.error != nil {
                         cancelProgress()
-                    } else if coordinator.error == nil {
+                    } else {
                         await finishProgress()
                         let payload = await TranscriptService.podcastTranscriptPayload(for: video).value
                         withAnimation {

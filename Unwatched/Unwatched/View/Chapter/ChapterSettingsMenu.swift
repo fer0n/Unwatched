@@ -52,7 +52,8 @@ struct ChapterSettingsMenu: View {
             }
         }
         .overlay {
-            ProgressSweep(progress: progress, isFadingOut: isFadingOutProgress)
+            let sweep = sweep
+            ProgressSweep(progress: sweep.progress, isFadingOut: sweep.isFadingOut)
         }
         .foregroundStyle(Color.automaticBlack)
         .font(.subheadline)
@@ -166,12 +167,19 @@ struct ChapterSettingsMenu: View {
 
     /// Read from the progress itself rather than an is-running flag, which drops before the sweep
     /// has finished running out.
-    var progress: Double {
-        max(viewModel.sweepProgress, transcriptVM?.sweepProgress ?? 0)
-    }
-
-    var isFadingOutProgress: Bool {
-        viewModel.isFadingOutProgress || transcriptVM?.isFadingOutProgress == true
+    var sweep: (progress: Double, isFadingOut: Bool) {
+        var sources: [any ProgressSweeping] = [viewModel]
+        if let transcriptVM {
+            sources.append(transcriptVM)
+        }
+        let running = sources
+            .filter { !$0.isFadingOutProgress && $0.sweepProgress > 0 }
+            .map(\.sweepProgress)
+            .max()
+        if let running {
+            return (running, false)
+        }
+        return (sources.map(\.sweepProgress).max() ?? 0, true)
     }
 
     var isWorking: Bool {
