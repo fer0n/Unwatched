@@ -58,18 +58,20 @@ struct ChapterListItem: View {
                         if let originalNumber {
                             Text(originalNumber, format: .number)
                                 .fontWeight(.black)
-                                .monospacedDigit()
                                 .lineLimit(1)
                                 .minimumScaleFactor(0.5)
                                 .frame(maxWidth: frameSize - 6)
+                                .transition(.blurReplace)
                         } else {
                             Image(systemName: Const.checkmarkSF)
+                                .transition(.blurReplace)
                         }
                     }
                     .fontWeight(.bold)
                     .foregroundStyle(Color.neutralAccentColor)
                 }
             }
+            .animation(.snappy, value: originalNumber)
             .animation(nil, value: chapter.isActive)
         }
         .buttonStyle(.plain)
