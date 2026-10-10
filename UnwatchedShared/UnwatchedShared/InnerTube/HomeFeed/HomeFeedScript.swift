@@ -30,6 +30,11 @@ enum HomeFeedScript {
         const buf = await crypto.subtle.digest('SHA-1', new TextEncoder().encode(s));
         return [...new Uint8Array(buf)].map(b => b.toString(16).padStart(2, '0')).join('');
     };
+    // the page uses the account's language; parseRelativeDate only reads English "3 days ago"
+    const englishContext = () => {
+        const ctx = cfg('INNERTUBE_CONTEXT');
+        return { ...ctx, client: { ...ctx.client, hl: 'en' } };
+    };
     const headers = {
         'Content-Type': 'application/json',
         'X-Youtube-Client-Name': String(cfg('INNERTUBE_CONTEXT_CLIENT_NAME')),
@@ -54,7 +59,7 @@ enum HomeFeedScript {
         method: 'POST',
         credentials: 'include',
         headers,
-        body: JSON.stringify(Object.assign({ context: cfg('INNERTUBE_CONTEXT') }, payload))
+        body: JSON.stringify(Object.assign({ context: englishContext() }, payload))
     });
     if (!response.ok) return { status: response.status, body: null };
     // the search parser would read a mix or playlist lockup as its first video
