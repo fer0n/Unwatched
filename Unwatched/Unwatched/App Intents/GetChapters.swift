@@ -20,6 +20,7 @@ struct GetChapters: AppIntent {
         Signal.log("Shortcut.GetChapters")
         ChapterAutomationStatus.shared.recordShortcutRun()
         let video = try VideoService.getVideoOrCurrent(videoUrl)
+        ChapterAutomationProgress.shared.shortcutRead(video.youtubeId)
         if video.isPodcast {
             _ = await ChapterService.fetchPodcastChapters(for: video)
         }

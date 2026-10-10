@@ -51,6 +51,7 @@ struct SetChapters: AppIntent {
             }
             ChapterService.mergeSegments(segments, into: video)
         }
+        ChapterAutomationProgress.shared.chaptersSet(video.youtubeId)
         return .result()
     }
 

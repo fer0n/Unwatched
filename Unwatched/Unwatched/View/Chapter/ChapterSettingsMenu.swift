@@ -11,6 +11,7 @@ struct ChapterSettingsMenu: View {
     @Environment(\.dismiss) var dismiss
     @CloudStorage(Const.unwatchedPremiumAcknowledged) var premium: Bool = false
     @State var viewModel = GenerateChaptersButtonViewModel()
+    private let cloudProgress = ChapterAutomationProgress.shared
 
     /// The video being shown, which is not always the one playing.
     let video: Video?
@@ -172,6 +173,9 @@ struct ChapterSettingsMenu: View {
         if let transcriptVM {
             sources.append(transcriptVM)
         }
+        if isCloudVideo {
+            sources.append(cloudProgress)
+        }
         let running = sources
             .filter { !$0.isFadingOutProgress && $0.sweepProgress > 0 }
             .map(\.sweepProgress)
@@ -183,7 +187,14 @@ struct ChapterSettingsMenu: View {
     }
 
     var isWorking: Bool {
-        viewModel.isLoading || transcriptVM?.isGenerating == true || transcriptVM?.isAligning == true
+        viewModel.isLoading
+            || transcriptVM?.isGenerating == true
+            || transcriptVM?.isAligning == true
+            || (isCloudVideo && cloudProgress.isRunning)
+    }
+
+    var isCloudVideo: Bool {
+        video.map { $0.youtubeId == cloudProgress.youtubeId } ?? false
     }
 
     var showsTranscriptActions: Bool {

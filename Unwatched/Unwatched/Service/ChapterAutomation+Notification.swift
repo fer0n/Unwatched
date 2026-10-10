@@ -77,6 +77,7 @@ extension ChapterAutomation {
         }
         Log.info("ChapterAutomation: notified for \(youtubeId)")
         status.recordNotification()
+        ChapterAutomationProgress.shared.notified(youtubeId)
         video.chapterGenerationDate = .now
         try? video.modelContext?.save()
         Task {

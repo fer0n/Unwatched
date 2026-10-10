@@ -45,6 +45,7 @@ struct GetTranscript: AppIntent {
         }
 
         let video = try VideoService.getVideoOrCurrent(videoUrl)
+        ChapterAutomationProgress.shared.shortcutRead(video.youtubeId)
         var transcriptUrl: String?
         if video.youtubeId == PlayerManager.shared.video?.youtubeId {
             transcriptUrl = PlayerManager.shared.transcriptUrl

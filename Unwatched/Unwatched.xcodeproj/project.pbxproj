@@ -25,6 +25,7 @@
 		1DA143348ACECD3958B545C5 /* ChapterAutomation.swift in Sources */ = {isa = PBXBuildFile; fileRef = 394947244B7EEF58E34F1187 /* ChapterAutomation.swift */; };
 		203308CB040C66E6793E132B /* SubscribeErrorPopover.swift in Sources */ = {isa = PBXBuildFile; fileRef = A0C99D870F964FB8714AE40E /* SubscribeErrorPopover.swift */; };
 		21EF80BE424329041483DFC1 /* ChapterAutomationStatus.swift in Sources */ = {isa = PBXBuildFile; fileRef = 041149DD7EB262E63C101CA7 /* ChapterAutomationStatus.swift */; };
+		8F2B52A72DFCC8483F242355 /* ChapterAutomationProgress.swift in Sources */ = {isa = PBXBuildFile; fileRef = 000BD68B55430E9A0CA01D60 /* ChapterAutomationProgress.swift */; };
 		26D9959208BC1172F032E4FA /* ProgressSweeping.swift in Sources */ = {isa = PBXBuildFile; fileRef = 914DBFB3838DE775FA55911F /* ProgressSweeping.swift */; };
 		2764CEA90622AE11F8B7EF99 /* ProgressSweeping.swift in Sources */ = {isa = PBXBuildFile; fileRef = 914DBFB3838DE775FA55911F /* ProgressSweeping.swift */; };
 		27D59BC2152E1D6D07916DDA /* CGSize.swift in Sources */ = {isa = PBXBuildFile; fileRef = 11282F2B5571721EF8905E29 /* CGSize.swift */; };
@@ -1056,6 +1057,7 @@
 		F8D9061B3C542158EB020B4C /* LiveStreamSetting.swift in Sources */ = {isa = PBXBuildFile; fileRef = E4989576097A7A55509DB7E5 /* LiveStreamSetting.swift */; };
 		F9AB3ED53B652DBC9FCD09B3 /* ChapterAutomation+Transcription.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1E5B5B0D8E178E17B73C45A9 /* ChapterAutomation+Transcription.swift */; };
 		F9D7B5BBE00CFD94E8C781AA /* ChapterAutomationStatus.swift in Sources */ = {isa = PBXBuildFile; fileRef = 041149DD7EB262E63C101CA7 /* ChapterAutomationStatus.swift */; };
+		B7AAA71946287F903DEBDF53 /* ChapterAutomationProgress.swift in Sources */ = {isa = PBXBuildFile; fileRef = 000BD68B55430E9A0CA01D60 /* ChapterAutomationProgress.swift */; };
 		FB4428F3BA5B869873A29447 /* GetChapters.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6540BCF99D884837FD85C560 /* GetChapters.swift */; };
 		FCA2BC461F954555A5700E6A /* PodcastEpisodeListView.swift in Sources */ = {isa = PBXBuildFile; fileRef = E7FF2D549D5945F281ABE152 /* PodcastEpisodeListView.swift */; };
 		FE100001AA000000001000C1 /* AVPlayerView.swift in Sources */ = {isa = PBXBuildFile; fileRef = FE100001AA000000001000B1 /* AVPlayerView.swift */; };
@@ -1220,6 +1222,7 @@
 
 /* Begin PBXFileReference section */
 		041149DD7EB262E63C101CA7 /* ChapterAutomationStatus.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ChapterAutomationStatus.swift; sourceTree = "<group>"; };
+		000BD68B55430E9A0CA01D60 /* ChapterAutomationProgress.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ChapterAutomationProgress.swift; sourceTree = "<group>"; };
 		0EACF91AE60C2997A88E1E50 /* InboxCardScrollSwipe.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = InboxCardScrollSwipe.swift; sourceTree = "<group>"; };
 		11282F2B5571721EF8905E29 /* CGSize.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CGSize.swift; sourceTree = "<group>"; };
 		12DD3D7D2C5077368D185474 /* TranscriptError.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TranscriptError.swift; sourceTree = "<group>"; };
@@ -2444,6 +2447,7 @@
 				88CD38B02E20E66300E7B21C /* TranscriptService+GenerationCoordinator.swift */,
 				394947244B7EEF58E34F1187 /* ChapterAutomation.swift */,
 				041149DD7EB262E63C101CA7 /* ChapterAutomationStatus.swift */,
+				000BD68B55430E9A0CA01D60 /* ChapterAutomationProgress.swift */,
 				FC26B48EF88832652EFF106A /* ChapterAutomationSettings.swift */,
 				1E5B5B0D8E178E17B73C45A9 /* ChapterAutomation+Transcription.swift */,
 				6B07B12CB9A84ECC29F6B7C4 /* ChapterAutomation+Notification.swift */,
@@ -3628,6 +3632,7 @@
 				88CD38B12E20E66300E7B21C /* TranscriptService+GenerationCoordinator.swift in Sources */,
 				3FD83A5903F361C5B3C7F494 /* ChapterAutomation.swift in Sources */,
 				21EF80BE424329041483DFC1 /* ChapterAutomationStatus.swift in Sources */,
+				8F2B52A72DFCC8483F242355 /* ChapterAutomationProgress.swift in Sources */,
 				BCFC9C6ECD12C28EFE982AAD /* ChapterAutomationSettings.swift in Sources */,
 				06106D608246499FEAC55683 /* ChapterAutomation+Transcription.swift in Sources */,
 				00C549039F6D4EED1B59E47B /* ChapterAutomation+Notification.swift in Sources */,
@@ -4366,6 +4371,7 @@
 				88CD38B22E20E66300E7B21C /* TranscriptService+GenerationCoordinator.swift in Sources */,
 				1DA143348ACECD3958B545C5 /* ChapterAutomation.swift in Sources */,
 				F9D7B5BBE00CFD94E8C781AA /* ChapterAutomationStatus.swift in Sources */,
+				B7AAA71946287F903DEBDF53 /* ChapterAutomationProgress.swift in Sources */,
 				A7D9B2188ADA1C528F02D732 /* ChapterAutomationSettings.swift in Sources */,
 				F9AB3ED53B652DBC9FCD09B3 /* ChapterAutomation+Transcription.swift in Sources */,
 				03667C06FB1150A94E377CAC /* ChapterAutomation+Notification.swift in Sources */,
