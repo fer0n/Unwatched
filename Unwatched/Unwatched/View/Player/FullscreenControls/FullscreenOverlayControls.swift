@@ -112,6 +112,7 @@ enum OverlayIcon: Equatable {
     case seekForward
     case seekBackward
     case watched
+    case cleared
     case nextVideo
     case queued
     case speedUp
@@ -125,6 +126,7 @@ enum OverlayIcon: Equatable {
         case .next: return "chevron.right.circle.fill"
         case .previous: return "chevron.left.circle.fill"
         case .watched: return "checkmark.circle.fill"
+        case .cleared: return Const.clearSF
         case .nextVideo: return "\(Const.nextVideoSF).circle.fill"
         case .seekBackward: return "arrow.counterclockwise.circle.fill"
         case .seekForward: return "arrow.clockwise.circle.fill"

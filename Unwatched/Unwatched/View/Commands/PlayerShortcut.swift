@@ -19,6 +19,7 @@ enum PlayerShortcut: String, CaseIterable {
     case temporarySpeedUp
     case temporarySlowDown
     case markWatched
+    case clearVideo
     case nextVideo
     case speedUp
     case slowDown
@@ -46,6 +47,7 @@ enum PlayerShortcut: String, CaseIterable {
         case .temporarySpeedUp: return "temporarySpeedUp"
         case .temporarySlowDown: return "temporarySlowDown"
         case .markWatched: return "markWatched"
+        case .clearVideo: return "clearVideo"
         case .nextVideo: return "nextVideo"
         case .speedUp: return "speedUp"
         case .slowDown: return "slowDown"
@@ -75,6 +77,7 @@ enum PlayerShortcut: String, CaseIterable {
         case .temporarySpeedUp: return [("d", [])]
         case .temporarySlowDown: return [("s", [])]
         case .markWatched: return [("w", .shift)]
+        case .clearVideo: return [("c", .shift)]
         case .nextVideo: return [("n", .shift)]
         case .speedUp: return [(.upArrow, []), (">", [])]
         case .slowDown: return [(.downArrow, []), ("<", [])]
@@ -168,6 +171,9 @@ enum PlayerShortcut: String, CaseIterable {
         case .markWatched:
             markVideoWatched()
             OverlayFullscreenVM.shared.show(.watched)
+        case .clearVideo:
+            clearVideo()
+            OverlayFullscreenVM.shared.show(.cleared)
         case .nextVideo:
             markVideoWatched(playNext: true)
             OverlayFullscreenVM.shared.show(.nextVideo)
@@ -239,6 +245,19 @@ enum PlayerShortcut: String, CaseIterable {
             player.autoSetNextVideo(playNext ? .userInteraction : .nextUp, context)
 
             _ = VideoService.setVideoWatchedAsync(video.id)
+            try? context.save()
+
+            TinyUndoManager.shared.registerAction(.moveToQueue([video.id], position: 0))
+        }
+    }
+
+    @MainActor
+    func clearVideo() {
+        let player = PlayerManager.shared
+
+        if let video = player.video {
+            let context = DataProvider.newContext()
+            player.clearVideo(context)
             try? context.save()
 
             TinyUndoManager.shared.registerAction(.moveToQueue([video.id], position: 0))

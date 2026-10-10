@@ -43,6 +43,7 @@ struct PlayerCommands: Commands {
 
         CommandMenu("video") {
             PlayerShortcut.markWatched.render()
+            PlayerShortcut.clearVideo.render()
             PlayerShortcut.nextVideo.render()
 
             Section {
