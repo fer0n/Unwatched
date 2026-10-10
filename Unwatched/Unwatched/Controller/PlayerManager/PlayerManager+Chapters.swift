@@ -245,12 +245,22 @@ extension PlayerManager {
     func handleChapterRefresh(forceRefresh: Bool = false) {
         Log.info("handleChapterRefresh")
         ChapterService.filterChapters(in: video)
+        let hasSegments = skipMergedSegments()
+        let isPodcast = video?.isPodcast == true
 
-        if let video, video.isPodcast {
+        if let video, isPodcast {
             ChapterService.loadPodcastChapters(for: video)
-            // the rows may already be there (a second refresh, or chapters from the feed): without this nothing picks
-            // the current one until playback crosses a chapter boundary
+        }
+        // a podcast's rows may already be there (a second refresh, or chapters from the feed): without this nothing
+        // picks the current one until playback crosses a chapter boundary
+        if hasSegments || isPodcast {
             handleChapterChange()
+        }
+        if hasSegments {
+            // the engine draws its own markers, and the set it has is now out of date
+            backend.setChapterMarkers(force: false)
+        }
+        if isPodcast {
             return
         }
 
@@ -268,17 +278,6 @@ extension PlayerManager {
         let sendableChapters = video?.ownChapterData ?? []
         let duration = video?.duration
         let settings = video?.sponsorBlockSettings ?? SponsorBlockSettings()
-        if let mergedChapters = video?.mergedChapters {
-            ChapterService.skipSponsorBlockSegments(
-                in: mergedChapters,
-                sponsorSetting: settings.sponsor,
-                selfPromoSetting: settings.selfPromo
-            )
-            video?.chaptersDidChange()
-            self.handleChapterChange()
-            // the engine draws its own markers, and the set it has is now out of date
-            self.backend.setChapterMarkers(force: false)
-        }
 
         Task {
             do {
@@ -295,11 +294,7 @@ extension PlayerManager {
                     return
                 }
                 Log.info("SponsorBlock: Refreshed")
-                ChapterService.skipSponsorBlockSegments(
-                    in: &newChapters,
-                    sponsorSetting: settings.sponsor,
-                    selfPromoSetting: settings.selfPromo
-                )
+                ChapterService.skipSponsorBlockSegments(in: &newChapters, settings: settings)
 
                 ChapterService.updateIfNeeded(newChapters, video)
                 try video?.modelContext?.save()
@@ -310,6 +305,16 @@ extension PlayerManager {
             self.handleChapterChange()
             self.backend.setChapterMarkers(force: false)
         }
+    }
+
+    @MainActor
+    private func skipMergedSegments() -> Bool {
+        guard let video, let segments = video.mergedChapters, !segments.isEmpty else {
+            return false
+        }
+        ChapterService.skipSponsorBlockSegments(in: segments, settings: video.sponsorBlockSettings)
+        video.chaptersDidChange()
+        return true
     }
 
     /// Seeking backward walks the chapters the way they play, skipping inactive ones.

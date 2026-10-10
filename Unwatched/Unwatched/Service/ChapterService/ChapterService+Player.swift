@@ -62,12 +62,7 @@ extension ChapterService {
         var newChapters = videoChapters.isEmpty
             ? generateChapters(from: cleanedSegments, videoDuration: video.duration)
             : mergeSponsorSegments(videoChapters, sponsorSegments: cleanedSegments, duration: video.duration)
-        let settings = video.sponsorBlockSettings
-        skipSponsorBlockSegments(
-            in: &newChapters,
-            sponsorSetting: settings.sponsor,
-            selfPromoSetting: settings.selfPromo
-        )
+        skipSponsorBlockSegments(in: &newChapters, settings: video.sponsorBlockSettings)
         Log.info("mergeSegments, new: \(newChapters)")
 
         updateIfNeeded(newChapters, video)
@@ -82,6 +77,8 @@ extension ChapterService {
             Log.warning("insertChapters: video has no context")
             return
         }
+        var chapters = chapters
+        skipSponsorBlockSegments(in: &chapters, settings: video.sponsorBlockSettings)
         if reconcileChapters(chapters, for: video).hasChanges {
             CleanupService.deleteMergedChapters(from: video, context)
             // rows now describe this video; a derived copy alongside them would only drift

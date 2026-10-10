@@ -262,6 +262,14 @@ public struct ChapterService {
         }
     }
 
+    public static func skipSponsorBlockSegments(in chapters: inout [SendableChapter], settings: SponsorBlockSettings) {
+        skipSponsorBlockSegments(in: &chapters, sponsorSetting: settings.sponsor, selfPromoSetting: settings.selfPromo)
+    }
+
+    public static func skipSponsorBlockSegments(in chapters: [Chapter], settings: SponsorBlockSettings) {
+        skipSponsorBlockSegments(in: chapters, sponsorSetting: settings.sponsor, selfPromoSetting: settings.selfPromo)
+    }
+
     public static func filterChapters(in video: Video?) {
         let filterStrings = skipChapterFilters()
         guard !filterStrings.isEmpty else { return }
