@@ -243,14 +243,14 @@ actor CleanupActor: SharedContextActor {
     ) -> RemovedDuplicatesInfo {
         duplicateInfo = RemovedDuplicatesInfo()
 
-        if quickCheck && !hasDuplicateRecentVideosOrEntries() {
-            Log.info("Has duplicate inbox entries")
+        removeSubscriptionDuplicates()
+        if quickCheck && duplicateInfo.countSubscriptions == 0 && !hasDuplicateRecentVideosOrEntries() {
+            Log.info("No recent duplicates, skipping cleanup")
             return duplicateInfo
         }
         Log.info("removing duplicates now, \(videoOnly ? "only videos" : "all")")
 
         if !videoOnly {
-            removeSubscriptionDuplicates()
             removeEmptySubscriptions()
             removeEmptyChapters()
             removeEmptyInboxEntries()
@@ -383,14 +383,7 @@ actor CleanupActor: SharedContextActor {
             return
         }
         // grouped, not `getDuplicates`, so each duplicate is paired with its keeper
-        let grouped = Dictionary(grouping: subs, by: { sub -> String in
-            // podcasts carry neither id: keyed by anything else they would all collapse into one group and every show
-            // but one would be deleted
-            if sub.isPodcast {
-                return "podcast:" + (sub.link?.absoluteString ?? "\(sub.persistentModelID.hashValue)")
-            }
-            return (sub.youtubeChannelId ?? "") + (sub.youtubePlaylistId ?? "")
-        })
+        let grouped = Dictionary(grouping: subs, by: duplicateKey)
         var removedCount = 0
         for (_, group) in grouped where group.count > 1 {
             let sortedGroup = sortSubscriptions(group)
@@ -399,16 +392,22 @@ actor CleanupActor: SharedContextActor {
             }
             for duplicate in sortedGroup.dropFirst() {
                 moveTags(from: duplicate, to: keeper, \.tags)
-                if let videos = duplicate.videos {
-                    for video in videos {
-                        CleanupService.deleteVideo(video, modelContext)
-                    }
+                for video in duplicate.videos ?? [] {
+                    video.subscription = keeper
                 }
                 modelContext.delete(duplicate)
                 removedCount += 1
             }
         }
         duplicateInfo.countSubscriptions = removedCount
+    }
+
+    private func duplicateKey(_ sub: Subscription) -> String {
+        let youtubeKey = (sub.youtubeChannelId ?? "") + (sub.youtubePlaylistId ?? "")
+        if !sub.isPodcast && !youtubeKey.isEmpty {
+            return youtubeKey
+        }
+        return "link:" + (sub.link?.absoluteString ?? "\(sub.persistentModelID.hashValue)")
     }
 
     func removeEmptySubscriptions() {
