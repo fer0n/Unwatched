@@ -18,16 +18,44 @@ struct DescriptionDetailView: View {
 
     var body: some View {
         if let description {
-            Self.text(for: description, actionColor: theme.darkContrastColor)
-                .textRenderer(ActionCapsuleRenderer(color: theme.darkColor))
-                .textSelection(.enabled)
-                .myTint()
-                .environment(\.openURL, OpenURLAction(handler: handleYoutubeAction))
-                .sensoryFeedback(Const.sensoryFeedback, trigger: hapticToggle)
+            VStack(alignment: .leading, spacing: 0) {
+                ForEach(Array(Self.chunks(of: description).enumerated()), id: \.offset) { _, chunk in
+                    Self.text(for: chunk, actionColor: theme.darkContrastColor)
+                        .textRenderer(ActionCapsuleRenderer(color: theme.darkColor))
+                }
+            }
+            .textSelection(.enabled)
+            .myTint()
+            .environment(\.openURL, OpenURLAction(handler: handleYoutubeAction))
+            .sensoryFeedback(Const.sensoryFeedback, trigger: hapticToggle)
         }
     }
 
-    // A single Text keeps the description one selectable block; actions are separate so the renderer finds them
+    // iOS draws nothing for a very tall Text with a custom renderer
+    private static func chunks(of description: String) -> [String] {
+        var chunks: [String] = []
+        var current: [Substring] = []
+        var length = 0
+        for line in description.split(separator: "\n", omittingEmptySubsequences: false) {
+            if !current.isEmpty, length + line.count > chunkLength {
+                var carried: [Substring] = []
+                while current.count > 1, current.last?.isEmpty == true {
+                    carried.append(current.removeLast())
+                }
+                chunks.append(current.joined(separator: "\n"))
+                current = carried
+                length = carried.count
+            }
+            current.append(line)
+            length += line.count + 1
+        }
+        chunks.append(current.joined(separator: "\n"))
+        return chunks
+    }
+
+    private static let chunkLength = 1500
+
+    // Actions are separate so the renderer finds them
     private static func text(for description: String, actionColor: Color) -> Text {
         var interpolation = LocalizedStringKey.StringInterpolation(literalCapacity: 0, interpolationCount: 0)
         for segment in segments(description, actionColor: actionColor) {
