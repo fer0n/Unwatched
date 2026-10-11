@@ -23,6 +23,9 @@ class PlayerWebViewCoordinator: NSObject, WKNavigationDelegate, WKScriptMessageH
     @MainActor
     func retire() {
         retired = true
+        // the page can no longer send the matching release
+        parent.autoHideVM.setKeepVisible(false, "overlay")
+        parent.autoHideVM.setKeepVisible(false, "longTouch")
     }
 
     @MainActor
