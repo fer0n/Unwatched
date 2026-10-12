@@ -9,6 +9,7 @@ import UnwatchedShared
 struct CloudAiButton<Label: View>: View {
     @Environment(AppNotificationVM.self) var appNotificationVM
     @Environment(\.dismiss) var dismiss
+    @Environment(\.openURL) var openURL
     private let openChapterSettings = OpenChapterSettingsAction()
 
     let video: Video?
@@ -20,7 +21,11 @@ struct CloudAiButton<Label: View>: View {
             guard guardPremium(onInteraction: dismissOnPaywall ? { dismiss() } : nil) else { return }
             Task {
                 guard let video, await ChapterAutomation.isSetUp() else {
-                    openChapterSettings()
+                    if ChapterAutomation.isAutomationEnabled && ChapterAutomation.isShortcutOutdated {
+                        openURL(ChapterAutomation.installShortcut())
+                    } else {
+                        openChapterSettings()
+                    }
                     return
                 }
                 do {

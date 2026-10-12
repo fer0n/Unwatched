@@ -12,7 +12,6 @@ struct WarningsButton: View {
     @Environment(\.colorScheme) var colorScheme
     @Environment(\.openURL) var openURL
     @Environment(\.modelContext) var modelContext
-    private let openChapterSettings = OpenChapterSettingsAction()
 
     @State private var showPopover = false
     @State private var actionOnDismiss: (() -> Void)?
@@ -102,7 +101,7 @@ struct WarningsButton: View {
             if let actionTitle = issue.actionTitle {
                 Button(actionTitle) {
                     closeThen {
-                        issue.resolve(openURL: openURL, openChapterSettings: openChapterSettings)
+                        issue.resolve(openURL: openURL)
                     }
                 }
                 .buttonStyle(.borderedProminent)

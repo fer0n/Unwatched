@@ -110,9 +110,7 @@ struct ChapterSettingsView: View {
 
     private var installShortcutButton: some View {
         Button(shortcutButtonTitle) {
-            let url = UrlService.chapterAutomationShortcutUrl
-            installedShortcut = url.absoluteString
-            openURL(url)
+            openURL(ChapterAutomation.installShortcut())
         }
         .settingsListRow()
     }

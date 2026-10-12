@@ -4158,31 +4158,31 @@
         "de" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Nach den letzten Mitteilungen „Transcript Available“ lief der Kurzbefehl nicht, und er ist veraltet. Installiere den neuesten Kurzbefehl in den Kapiteleinstellungen."
+            "value" : "Nach den letzten Mitteilungen „Transcript Available“ lief der Kurzbefehl nicht, und er ist veraltet. Installiere den neuesten Kurzbefehl."
           }
         },
         "en" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "The shortcut didn't run after the last few “Transcript Available” notifications, and it's out of date. Install the latest one in the chapter settings."
+            "value" : "The shortcut didn't run after the last few “Transcript Available” notifications, and it's out of date. Install the latest one."
           }
         },
         "es" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "El atajo no se ejecutó tras las últimas notificaciones «Transcript Available» y está desactualizado. Instala el más reciente en los ajustes de capítulos."
+            "value" : "El atajo no se ejecutó tras las últimas notificaciones «Transcript Available» y está desactualizado. Instala el más reciente."
           }
         },
         "fr" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Le raccourci ne s'est pas exécuté après les dernières notifications « Transcript Available » et il est obsolète. Installez le plus récent dans les réglages des chapitres."
+            "value" : "Le raccourci ne s'est pas exécuté après les dernières notifications « Transcript Available » et il est obsolète. Installez le plus récent."
           }
         },
         "pl" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Skrót nie uruchomił się po ostatnich powiadomieniach „Transcript Available” i jest nieaktualny. Zainstaluj najnowszy w ustawieniach rozdziałów."
+            "value" : "Skrót nie uruchomił się po ostatnich powiadomieniach „Transcript Available” i jest nieaktualny. Zainstaluj najnowszy."
           }
         }
       }
@@ -4358,6 +4358,7 @@
       }
     },
     "chapterSettings" : {
+      "extractionState" : "stale",
       "localizations" : {
         "de" : {
           "stringUnit" : {

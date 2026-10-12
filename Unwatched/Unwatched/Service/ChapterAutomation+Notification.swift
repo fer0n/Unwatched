@@ -20,6 +20,16 @@ extension ChapterAutomation {
             == UrlService.chapterAutomationShortcutUrl.absoluteString
     }
 
+    static var isShortcutOutdated: Bool {
+        CloudKeyValueStore.shared.string(forKey: Const.installedChapterShortcut) != nil && !isShortcutCurrent
+    }
+
+    static func installShortcut() -> URL {
+        let url = UrlService.chapterAutomationShortcutUrl
+        CloudStorageSync.shared.set(url.absoluteString, for: Const.installedChapterShortcut)
+        return url
+    }
+
     static func isSetUp() async -> Bool {
         guard isAutomationEnabled, isShortcutCurrent else { return false }
         return await canNotify()

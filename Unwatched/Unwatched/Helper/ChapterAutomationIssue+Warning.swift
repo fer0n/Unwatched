@@ -28,7 +28,7 @@ extension ChapterAutomationIssue {
     var actionTitle: LocalizedStringKey? {
         switch self {
         case .notificationsDisabled: "allowNotifications"
-        case .shortcutOutdated: "chapterSettings"
+        case .shortcutOutdated: "updateShortcut"
         case .shortcutNotRunning: "openShortcuts"
         case .transcriptionFailed: nil
         }
@@ -39,7 +39,7 @@ extension ChapterAutomationIssue {
     }
 
     @MainActor
-    func resolve(openURL: OpenURLAction, openChapterSettings: OpenChapterSettingsAction) {
+    func resolve(openURL: OpenURLAction) {
         switch self {
         case .notificationsDisabled:
             Task {
@@ -50,7 +50,7 @@ extension ChapterAutomationIssue {
                 ChapterAutomationStatus.shared.refresh()
             }
         case .shortcutOutdated:
-            openChapterSettings()
+            openURL(ChapterAutomation.installShortcut())
         case .shortcutNotRunning:
             openURL(Self.shortcutsUrl)
         case .transcriptionFailed:
