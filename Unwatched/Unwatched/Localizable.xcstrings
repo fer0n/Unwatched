@@ -19529,31 +19529,31 @@
         "de" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Alle deine aktuellen Daten werden gelöscht und das ausgewählte Backup wird wiederhergestellt."
+            "value" : "Ersetzt alle aktuellen Daten. Wenn du iCloud-Sync nutzt, wähle stattdessen „Nur Einstellungen wiederherstellen“, da eine vollständige Wiederherstellung wahrscheinlich Duplikate verursacht und die Synchronisierung verlangsamt."
           }
         },
         "en" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "All your current data will be deleted and the selected backup will be restored."
+            "value" : "Replaces all current data. If you use iCloud sync, choose \"Restore Settings Only\" instead, as a full restore will likely cause duplicates and slow down syncing."
           }
         },
         "es" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Todos tus datos actuales serán eliminados y la copia de seguridad seleccionada será restaurada."
+            "value" : "Reemplaza todos los datos actuales. Si usas la sincronización con iCloud, elige «Restaurar solo la configuración», ya que una restauración completa probablemente creará duplicados y ralentizará la sincronización."
           }
         },
         "fr" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Toutes vos données actuelles seront supprimées et la sauvegarde sélectionnée sera restaurée."
+            "value" : "Remplace toutes les données actuelles. Si vous utilisez la synchronisation iCloud, choisissez plutôt « Restaurer uniquement les paramètres », car une restauration complète risque de créer des doublons et de ralentir la synchronisation."
           }
         },
         "pl" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Wszystkie Twoje obecne dane zostaną usunięte, a wybrana kopia zapasowa zostanie przywrócona."
+            "value" : "Zastępuje wszystkie obecne dane. Jeśli używasz synchronizacji iCloud, wybierz „Przywróć tylko ustawienia”, ponieważ pełne przywrócenie prawdopodobnie utworzy duplikaty i spowolni synchronizację."
           }
         }
       }
@@ -22398,31 +22398,31 @@
         "de" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Prüfe deine Einstellungen"
+            "value" : "Neue Einstellungen"
           }
         },
         "en" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Check Your Settings"
+            "value" : "New Settings"
           }
         },
         "es" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Revisa tus ajustes"
+            "value" : "Nuevos ajustes"
           }
         },
         "fr" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Vérifiez vos réglages"
+            "value" : "Nouveaux réglages"
           }
         },
         "pl" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Sprawdź ustawienia"
+            "value" : "Nowe ustawienia"
           }
         }
       }
