@@ -7,6 +7,8 @@ import TipKit
 import UnwatchedShared
 
 struct SearchRecommendationsTip: Tip {
+    @AppStorage(Const.themeColor) var theme = ThemeColor()
+
     static let enableActionId = "enable"
 
     var title: Text {
@@ -25,9 +27,12 @@ struct SearchRecommendationsTip: Tip {
     var actions: [Action] {
         Action {
             Text("searchRecommendationsTipNo")
+                .foregroundStyle(theme.contrastColor)
         }
+        // macOS ignores the tint here
         Action(id: Self.enableActionId) {
             Text("searchRecommendationsTipYes")
+                .foregroundStyle(theme.color)
         }
     }
 }
@@ -49,8 +54,14 @@ struct SearchRecommendationsTipView: View {
             tip.invalidate(reason: .actionPerformed)
         }
         .tipBackground(Color.insetBackgroundColor)
+        .listRowSeparator(.hidden)
+        #if os(macOS)
+        .listRowBackground(Color.clear)
+        .tint(theme.color.mix(with: .black, by: 0.2))
+        #else
         .listRowBackground(Color.backgroundColor)
         .tint(theme.color)
+        #endif
     }
 }
 
