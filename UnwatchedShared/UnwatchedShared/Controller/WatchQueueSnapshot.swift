@@ -102,25 +102,4 @@ public struct WatchQueueSnapshot: WatchPayload {
     public static let requestKey = "watchQueueRequest"
     public static let payloadKey = "watchQueueSnapshot"
     public static let limit = 30
-
-    public struct Totals: WatchPayload {
-        public var videos: Int
-        public var subscriptions: Int
-        public var queue: Int
-        public var tags: Int
-        public var chapters: Int
-
-        public init(videos: Int, subscriptions: Int, queue: Int, tags: Int, chapters: Int) {
-            self.videos = videos
-            self.subscriptions = subscriptions
-            self.queue = queue
-            self.tags = tags
-            self.chapters = chapters
-        }
-
-        public var total: Int { videos + subscriptions + queue + tags + chapters }
-
-        public static let requestKey = "watchSyncTotalsRequest"
-        public static let payloadKey = "watchSyncTotals"
-    }
 }

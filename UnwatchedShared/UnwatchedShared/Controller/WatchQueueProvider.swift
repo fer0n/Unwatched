@@ -55,16 +55,6 @@ actor WatchQueueSnapshotActor: SharedContextActor {
 
         return WatchQueueSnapshot(items: items, tags: tags)
     }
-
-    func totals() throws -> WatchQueueSnapshot.Totals {
-        WatchQueueSnapshot.Totals(
-            videos: try modelContext.fetchCount(FetchDescriptor<Video>()),
-            subscriptions: try modelContext.fetchCount(FetchDescriptor<Subscription>()),
-            queue: try modelContext.fetchCount(FetchDescriptor<QueueEntry>()),
-            tags: try modelContext.fetchCount(FetchDescriptor<Tag>()),
-            chapters: try modelContext.fetchCount(FetchDescriptor<Chapter>())
-        )
-    }
 }
 
 public final class WatchQueueProvider: NSObject, WCSessionDelegate {
@@ -185,8 +175,8 @@ public final class WatchQueueProvider: NSObject, WCSessionDelegate {
                 try? await Task.sleep(for: Self.settleDelay)
                 replyHandler(Self.remoteStateReply())
             }
-        } else if message[WatchQueueSnapshot.Totals.requestKey] != nil {
-            reply(to: replyHandler) { try await WatchQueueSnapshotActor().totals() }
+        } else if message[SyncTotals.requestKey] != nil {
+            reply(to: replyHandler) { try await SyncTotals.counted(in: DataProvider.shared.container) }
         } else if message[WatchQueueSnapshot.requestKey] != nil {
             reply(to: replyHandler) {
                 try await WatchQueueSnapshotActor().snapshot(limit: WatchQueueSnapshot.limit)

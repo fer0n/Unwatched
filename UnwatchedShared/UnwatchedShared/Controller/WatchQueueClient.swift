@@ -42,9 +42,9 @@ public final class WatchQueueClient: NSObject, WCSessionDelegate {
     /// round trip between taps.
     public private(set) var pendingSpeed: Double?
 
-    public private(set) var totals: WatchQueueSnapshot.Totals? = {
+    public private(set) var totals: SyncTotals? = {
         guard let data = UserDefaults.standard.data(forKey: Const.watchSyncTotals) else { return nil }
-        return try? WatchQueueSnapshot.Totals.decoded(data)
+        return try? SyncTotals.decoded(data)
     }()
 
     @ObservationIgnored private var speedTask: Task<Void, Never>?
@@ -278,8 +278,8 @@ public final class WatchQueueClient: NSObject, WCSessionDelegate {
         guard WCSession.isSupported() else { return }
         await waitForActivation()
         do {
-            let totals: WatchQueueSnapshot.Totals = try await request(
-                WatchQueueSnapshot.Totals.requestKey
+            let totals: SyncTotals = try await request(
+                SyncTotals.requestKey
             )
             self.totals = totals
             UserDefaults.standard.set(try totals.encoded(), forKey: Const.watchSyncTotals)

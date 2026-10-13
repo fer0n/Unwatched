@@ -241,7 +241,7 @@ struct UnwatchedWatchApp: App {
             // One poller for the syncing row, the sync screen and the hand-over above.
             .task(id: progressTrackingKey) {
                 guard fullSync, scenePhase == .active else { return }
-                await progress.track(in: DataProvider.shared.container.mainContext)
+                await progress.track(in: DataProvider.shared.container)
             }
             #if DEBUG
             .task {
