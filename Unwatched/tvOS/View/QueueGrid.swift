@@ -24,7 +24,8 @@ struct QueueGrid: View {
         openYouTube: @escaping (String?) async -> Bool,
         playInApp: @escaping (Video) -> Void
     ) {
-        _queue = Query(filter.descriptor(), animation: .default)
+        // Not animated: sync imports re-diffing every item made focus stutter on older Apple TVs
+        _queue = Query(filter.descriptor())
         self.isFiltered = filter.isActive
         self.tagMenu = tagMenu
         self.openYouTube = openYouTube
