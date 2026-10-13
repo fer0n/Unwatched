@@ -13,6 +13,8 @@ public struct VideoListItemThumbnail: View {
     let config: VideoListItemConfig
     let fixedSize: CGSize?
     let largeThumbnail: Bool
+    let cornerRadius: CGFloat
+    let barHeight: CGFloat?
 
     let imageUrls: [URL?]
 
@@ -20,12 +22,16 @@ public struct VideoListItemThumbnail: View {
         _ video: VideoData,
         config: VideoListItemConfig,
         size: CGSize? = nil,
-        largeThumbnail: Bool = false
+        largeThumbnail: Bool = false,
+        cornerRadius: CGFloat = Const.videoCornerRadius,
+        barHeight: CGFloat? = nil
     ) {
         self.video = video
         self.config = config
         self.fixedSize = size
         self.largeThumbnail = largeThumbnail
+        self.cornerRadius = cornerRadius
+        self.barHeight = barHeight
         self.imageUrls = [
             ThumbnailUrlService.getImageUrl(video.displayThumbnailUrl, largeThumbnail ? .large : .small),
             ThumbnailUrlService.getImageUrl(video.displayThumbnailUrl, .medium)
@@ -51,11 +57,11 @@ public struct VideoListItemThumbnail: View {
     }
 
     private var shape: RoundedRectangle {
-        RoundedRectangle(cornerRadius: Const.videoCornerRadius)
+        RoundedRectangle(cornerRadius: cornerRadius)
     }
 
     private var thumbnailOverlay: some View {
-        VideoListItemThumbnailOverlay(video: video, videoDuration: config.videoDuration)
+        VideoListItemThumbnailOverlay(video: video, videoDuration: config.videoDuration, barHeight: barHeight)
     }
 
     /// Podcast cover art is square: filling a 16:9 thumbnail with it cuts off the top and the bottom, so it keeps its

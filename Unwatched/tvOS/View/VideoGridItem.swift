@@ -16,23 +16,14 @@ struct VideoGridItem: View {
 
     var body: some View {
         VStack(alignment: .leading) {
-            CachedImageView(imageUrl: video.displayThumbnailUrl) { image in
-                image
-                    .resizable()
-                    .aspectRatio(contentMode: .fill)
-                    .frame(
-                        width: width,
-                        height: width / (16/9)
-                    )
-                    .clipped()
-            } placeholder: {
-                ThumbnailPlaceholder(width)
-            }
-            .overlay {
-                VideoListItemThumbnailOverlay(video: video, barHeight: 8)
-            }
-            .clipShape(RoundedRectangle(cornerRadius: 35))
-            .aspectRatio(contentMode: .fit)
+            VideoListItemThumbnail(
+                video,
+                config: VideoListItemConfig(),
+                size: CGSize(width: width, height: width / Const.defaultVideoAspectRatio),
+                largeThumbnail: true,
+                cornerRadius: 35,
+                barHeight: 8
+            )
 
             Text(video.title)
                 .lineLimit(2)
