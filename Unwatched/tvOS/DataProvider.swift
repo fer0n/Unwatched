@@ -176,7 +176,18 @@ extension DataProvider {
             thumbnailUrl: URL(string: "https://i4.ytimg.com/vi/kw9atgKVs7w/hqdefault.jpg")
         )
 
+        let podcastShow = Subscription(link: nil, title: "SoundHelix", youtubeChannelId: "demo-podcast")
+        podcastShow.isPodcast = true
+        podcastShow.thumbnailUrl = URL(string: "https://lagedernation.org/wp-content/blogs.dir/10/files/2020/06/apple_podcast_artwork_reverse.png")
+        context.insert(podcastShow)
+        let episodeUrl = URL(string: "https://www.soundhelix.com/examples/mp3/SoundHelix-Song-1.mp3")
+        let episode = Video(title: "SoundHelix Song 1", url: episodeUrl, youtubeId: "demo-episode-1")
+        episode.mediaUrl = episodeUrl
+        episode.isAudioOnly = true
+        episode.subscription = podcastShow
+
         let videos = [
+            episode,
             vid1,
             vid2,
             vid3,

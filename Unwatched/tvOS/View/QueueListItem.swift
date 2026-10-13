@@ -112,7 +112,7 @@ struct QueueEntryListItem: View {
 
     private func handleItemClick(_ video: Video?) async {
         guard let video else { return }
-        switch playbackMode {
+        switch video.isPodcast ? .inApp : playbackMode {
         case .inApp:
             // The player marks the video watched itself: it knows when playback actually
             // started, and how far it got.

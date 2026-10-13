@@ -77,6 +77,7 @@ struct TvPlayerView: View {
                         // would leave the overlay's buttons unreachable.
                         isActive: viewModel.state == .playing,
                         speed: viewModel.playbackSpeed,
+                        artworkUrl: video.isPodcast ? video.displayThumbnailUrl : nil,
                         onExit: { dismiss() }
                     )
                     .ignoresSafeArea()
@@ -178,10 +179,12 @@ struct TvPlayerView: View {
 
             // The video can still be watched even when no stream could be resolved for it
             // (age-restricted videos, for instance, never resolve).
-            Button("playbackModeYouTube") {
-                Task {
-                    _ = await openYouTube(video.youtubeId)
-                    dismiss()
+            if !video.isPodcast {
+                Button("playbackModeYouTube") {
+                    Task {
+                        _ = await openYouTube(video.youtubeId)
+                        dismiss()
+                    }
                 }
             }
             Button("close") {
@@ -189,72 +192,6 @@ struct TvPlayerView: View {
             }
         }
         .frame(maxWidth: 700)
-    }
-}
-
-// MARK: - SystemVideoPlayer
-
-private struct SystemVideoPlayer: UIViewControllerRepresentable {
-    let player: AVPlayer
-    /// While inactive the controller neither shows its transport bar nor takes focus, which hands
-    /// both over to whatever is layered on top of it.
-    let isActive: Bool
-    /// Preselects the speed the app resolved for this video in the player's own speed menu.
-    let speed: Double
-    let onExit: () -> Void
-
-    func makeCoordinator() -> Coordinator {
-        Coordinator(onExit: onExit)
-    }
-
-    func makeUIViewController(context: Context) -> AVPlayerViewController {
-        let controller = AVPlayerViewController()
-        controller.player = player
-        // The Menu button has to be caught here: it never reaches SwiftUI's `onExitCommand`
-        // while the player controller holds focus, which would leave no way out of the player.
-        let menuPress = UITapGestureRecognizer(
-            target: context.coordinator,
-            action: #selector(Coordinator.handleMenuPress)
-        )
-        menuPress.allowedPressTypes = [NSNumber(value: UIPress.PressType.menu.rawValue)]
-        controller.view.addGestureRecognizer(menuPress)
-        return controller
-    }
-
-    func updateUIViewController(_ controller: AVPlayerViewController, context: Context) {
-        context.coordinator.onExit = onExit
-        if controller.player !== player {
-            controller.player = player
-            // A new player means a new video: its speed deserves selecting again.
-            context.coordinator.didSelectSpeed = false
-        }
-        controller.showsPlaybackControls = isActive
-        controller.view.isUserInteractionEnabled = isActive
-
-        // Selected once per video: after that the choice belongs to the viewer, who can change it
-        // in the player's speed menu for as long as the video runs.
-        if !context.coordinator.didSelectSpeed {
-            context.coordinator.didSelectSpeed = true
-            controller.speeds = SpeedHelper.selectable(including: speed).map {
-                AVPlaybackSpeed(rate: Float($0), localizedName: SpeedHelper.label($0))
-            }
-            if let match = controller.speeds.first(where: { SpeedHelper.isSame(Double($0.rate), speed) }) {
-                controller.selectSpeed(match)
-            }
-        }
-    }
-
-    final class Coordinator: NSObject {
-        var onExit: () -> Void
-        var didSelectSpeed = false
-
-        init(onExit: @escaping () -> Void) {
-            self.onExit = onExit
-        }
-
-        @objc func handleMenuPress() {
-            onExit()
-        }
     }
 }
 

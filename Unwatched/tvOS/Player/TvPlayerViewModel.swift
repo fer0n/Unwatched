@@ -43,6 +43,10 @@ final class TvPlayerViewModel {
     }
 
     func start() async {
+        if let mediaUrl = video.mediaUrl {
+            play(AVPlayerItem(url: mediaUrl))
+            return
+        }
         if let item = await TvStreamResolver.hdItem(for: video.youtubeId) {
             guard !Task.isCancelled, !stopped else { return }
             playingHD = true
@@ -98,7 +102,10 @@ final class TvPlayerViewModel {
     // MARK: - Playback
 
     private func play(_ item: AVPlayerItem) {
-        try? AVAudioSession.sharedInstance().setCategory(.playback, mode: .moviePlayback)
+        try? AVAudioSession.sharedInstance().setCategory(
+            .playback,
+            mode: video.isPodcast ? .spokenAudio : .moviePlayback
+        )
         try? AVAudioSession.sharedInstance().setActive(true)
 
         item.externalMetadata = [titleMetadata()]
