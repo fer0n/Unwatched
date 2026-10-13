@@ -189,42 +189,17 @@ public struct Const {
 
     // "Trim silence" drops the samples inside a pause as the episode plays (see `SilenceRemover`).
 
-    /// Room tone kept at each end of a shortened pause, so a splice isn't a cut into speech.
-    public static let silenceGuardBand: Double = 0.04
+    /// A block counts as quiet when no sample in it peaks above this.
+    public static let silenceThresholdDb: Double = -48
 
-    /// Shortest a pause is allowed to become, and the share of itself a longer one keeps — a long pause cut to the
-    /// same length as a short one loses the beat the speaker put there.
-    public static let silenceTargetPause: Double = 0.09
-    public static let silenceKeepFraction: Double = 0.07
-    /// Left between the two ends, so the shortest pause still has a beat in it.
-    public static let silenceMinimumInterior: Double = 0.03
+    /// Every quiet block of this many frames plays as `silenceKeptFrames`: its start cross-faded into its end. Fixed
+    /// frame counts rather than seconds, so a pause keeps the same share of itself whatever its length.
+    public static let silenceBlockFrames = 148
+    public static let silenceKeptFrames = 46
 
-    /// Shortest run of quiet that counts as a pause, and the least it has to save to be worth a splice.
-    public static let silenceMinimumPause: Double = 0.18
-    public static let silenceMinimumSaving: Double = 0.04
-
-    /// Range the running threshold is held to, whatever the episode's levels suggest.
-    public static let silenceThresholdFloorDb: Double = -60
-    public static let silenceThresholdCeilingDb: Double = -30
-
-    /// What one level reading covers: fine enough for gaps between words, coarse enough to ignore a glottal stop.
-    public static let silenceWindow: Double = 0.01
-
-    /// Left unjudged after a reset, while the level trackers are still settling.
-    public static let silenceWarmup: Double = 0.5
-
-    /// Room tone joined to room tone still clicks without a ramp.
-    public static let silenceSpliceFade: Double = 0.006
-
-    /// Longest pause buffered; a longer gap is trimmed in two steps, which sounds the same.
-    public static let silenceMaximumHeldPause: Double = 20
-
-    /// The cut sits this far above the noise floor, and this far below the speech level.
-    public static let silenceNoiseMarginDb: Double = 8
-    public static let silenceSpeechSeparationDb: Double = 12
-
-    /// Lowest level the remover distinguishes; digital silence reads as this.
-    public static let silenceAnalysisFloorDb: Double = -80
+    /// Blocks are judged a buffer of this many frames at a time, and none spans two: the end of each buffer always
+    /// plays as is, so a long pause keeps a little more than its blocks alone would.
+    public static let silenceSegmentFrames = 4096
 
     public static let autoRefreshIntervalSeconds: Double = 10 * 60
 

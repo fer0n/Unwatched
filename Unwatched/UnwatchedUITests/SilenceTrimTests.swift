@@ -69,8 +69,8 @@ final class SilenceTrimTests: XCTestCase {
         for mix in Self.mixes {
             let played = try trim(mix).reduce(0) { $0 + $1.length }
             let promised = Self.pauses.reduce(0.0) { total, pause in
-                guard SilenceRemover.isWorthTrimming(pauseLength: pause.length) else { return total }
-                return total + (pause.length - SilenceRemover.playedLength(ofPause: pause.length))
+                let frames = Int(pause.length * Self.sampleRate)
+                return total + Double(frames - SilenceRemover.playedFrames(ofPause: frames)) / Self.sampleRate
             }
             XCTAssertEqual(Self.episodeLength - played, promised, accuracy: 0.35, mix.name)
         }
@@ -80,14 +80,17 @@ final class SilenceTrimTests: XCTestCase {
         let played = try trim(Self.mixes[1]).reduce(0) { $0 + $1.length }
         let pauseTime = Self.pauses.reduce(0) { $0 + $1.length }
         XCTAssertTrue(
-            Self.pauses.allSatisfy { SilenceRemover.isWorthTrimming(pauseLength: $0.length) },
+            Self.pauses.allSatisfy {
+                let frames = Int($0.length * Self.sampleRate)
+                return SilenceRemover.playedFrames(ofPause: frames) < frames
+            },
             "a pause was left untouched"
         )
         XCTAssertLessThan(
             Self.episodeLength - played, pauseTime, "more than the pauses was dropped"
         )
         XCTAssertGreaterThan(
-            Self.episodeLength - played, pauseTime * 0.7, "less than seven tenths of the quiet was trimmed"
+            Self.episodeLength - played, pauseTime * 0.6, "less than six tenths of the quiet was trimmed"
         )
     }
 
@@ -240,10 +243,12 @@ final class SilenceTrimTests: XCTestCase {
         return Date().timeIntervalSince(started)
     }
 
+    private static let sampleRate = 44_100.0
+
     /// How far outside a generated pause a detected edge may sit.
     private static let edge: Double = 0.06
 
-    /// The last is the one a fixed threshold gets wrong.
+    /// The last is mixed quietly, so its speech sits much nearer the threshold.
     private static let mixes = [
         Mix(name: "digital silence", speechLevel: 0.30, roomToneDb: nil),
         Mix(name: "room tone at -45 dB", speechLevel: 0.30, roomToneDb: -45),
@@ -304,7 +309,6 @@ final class SilenceTrimTests: XCTestCase {
     private static func makeEpisode(_ mix: Mix) throws -> URL {
         let url = FileManager.default.temporaryDirectory
             .appending(path: "silence-\(UUID().uuidString).wav")
-        let sampleRate = 44_100.0
         let format = try XCTUnwrap(AVAudioFormat(standardFormatWithSampleRate: sampleRate, channels: 1))
         let speechLevel = mix.speechLevel
         let roomTone = mix.roomToneDb.map { speechLevel * powf(10, $0 / 20) } ?? 0

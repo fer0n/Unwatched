@@ -5,7 +5,6 @@
 
 import Accelerate
 import AVFoundation
-import OSLog
 
 /// A stretch of the file that survived trimming.
 public struct TrimmedChunk {
@@ -16,190 +15,182 @@ public struct TrimmedChunk {
     public var frameLength: AVAudioFrameCount { buffer.frameLength }
 }
 
-/// Shortens pauses by dropping samples out of them as the episode plays: a run of quiet is held
-/// until the speech after it arrives, and its own length says how much to keep.
+/// Shortens pauses by dropping samples out of them as the episode plays: every block of quiet is cross-faded down
+/// to a fraction of itself, so a pause keeps the same share of its length however long it is.
 public final class SilenceRemover {
     private let format: AVAudioFormat
-
-    private let window: Int
-    private let fade: Int
-    private let maximumHeld: Int
-    private let warmupWindows: Int
+    private let threshold: Float
+    private let block = Const.silenceBlockFrames
+    private let kept = Const.silenceKeptFrames
+    private let segment = Const.silenceSegmentFrames
+    private let fadeOut: [Float]
+    private let fadeIn: [Float]
 
     /// The audio not yet handed out, one array per channel.
     private var channels: [[Float]]
     /// The file frame `channels[.][0]` was read from.
     private var base: AVAudioFramePosition = 0
-    /// How much of `channels` has been measured.
+    /// Where playback started from, which the segments are counted from.
+    private var origin: AVAudioFramePosition = 0
+    /// Where the next block would start.
     private var cursor = 0
+    /// The first sample not yet copied into `output`.
     private var pieceStart = 0
-    /// Where the pause being held started, nil while what's accumulating is audible.
-    private var run: Int?
 
-    private var windowsSeen = 0
-    private var primed = false
-    private var noiseFloorDb: Double = 0
-    private var speechLevelDb: Double = 0
+    /// What plays next, gathered until it's handed out.
+    private var output: [[Float]]
+    private var outputFileStart: AVAudioFramePosition = 0
+    /// Audio after a shortened block can't share its piece: the piece's clock would run on from the wrong frame.
+    private var outputEndsInBlock = false
 
     public init(format: AVAudioFormat, startingAt fileFrame: AVAudioFramePosition = 0) {
         self.format = format
-        window = max(1, Int(format.sampleRate * Const.silenceWindow))
-        fade = max(1, Int(format.sampleRate * Const.silenceSpliceFade))
-        maximumHeld = Int(format.sampleRate * Const.silenceMaximumHeldPause)
-        warmupWindows = Int(Const.silenceWarmup / Const.silenceWindow)
+        threshold = powf(10, Float(Const.silenceThresholdDb) / 20)
+        let kept = Const.silenceKeptFrames
+        fadeOut = (0..<kept).map { 1 - Float($0) / Float(kept) }
+        fadeIn = fadeOut.reversed()
         channels = Array(repeating: [], count: Int(format.channelCount))
+        output = channels
         base = fileFrame
+        origin = fileFrame
     }
 
     /// What a seek needs: the audio either side of it is no longer adjacent.
     public func reset(startingAt fileFrame: AVAudioFramePosition) {
-        for index in channels.indices { channels[index].removeAll(keepingCapacity: true) }
+        for index in channels.indices {
+            channels[index].removeAll(keepingCapacity: true)
+            output[index].removeAll(keepingCapacity: true)
+        }
         base = fileFrame
+        origin = fileFrame
         cursor = 0
         pieceStart = 0
-        run = nil
-        windowsSeen = 0
-        primed = false
+        outputEndsInBlock = false
     }
 
     // MARK: - Feeding
 
-    /// Returns what should play, in order — several pieces, one, or none while a pause is held.
+    /// Returns what should play, in order.
     public func process(_ buffer: AVAudioPCMBuffer) -> [TrimmedChunk] {
         append(buffer)
         var out: [TrimmedChunk] = []
 
-        while cursor + window <= channels[0].count {
-            if isSilent(level(at: cursor, count: window)) {
-                if run == nil {
-                    if cursor > pieceStart, let piece = chunk(pieceStart..<cursor) { out.append(piece) }
-                    pieceStart = cursor
-                    run = cursor
-                }
-                cursor += window
-                if let start = run, cursor - start >= maximumHeld {
-                    out += close(run: start..<cursor)
-                }
-            } else {
-                if let start = run {
-                    out += close(run: start..<cursor)
-                }
-                cursor += window
+        while cursor + block <= channels[0].count {
+            let position = Int(base - origin) + cursor
+            let boundary = (position / segment + 1) * segment
+            if position + block > boundary {
+                cursor += boundary - position
+                continue
             }
-        }
-
-        if run == nil, cursor > pieceStart, let piece = chunk(pieceStart..<cursor) {
-            out.append(piece)
+            if let loud = lastLoudSample(in: cursor..<(cursor + block)) {
+                // no block that starts at or before it can be quiet
+                cursor = loud + 1
+                continue
+            }
+            if pieceStart < cursor {
+                appendRaw(pieceStart..<cursor, into: &out)
+            }
+            appendShortened(blockAt: cursor)
+            cursor += block
             pieceStart = cursor
         }
+
+        appendRaw(pieceStart..<cursor, into: &out)
+        pieceStart = cursor
+        flush(into: &out)
         compact()
         return out
     }
 
-    /// Hands out what is left, including samples that never filled a window.
+    /// Hands out what is left, including samples that never filled a block.
     public func finish() -> [TrimmedChunk] {
-        let end = channels[0].count
         var out: [TrimmedChunk] = []
-        if let start = run {
-            out += close(run: start..<end)
-        } else if end > pieceStart, let piece = chunk(pieceStart..<end) {
-            out.append(piece)
-        }
-        cursor = end
-        pieceStart = end
+        appendRaw(pieceStart..<channels[0].count, into: &out)
+        flush(into: &out)
+        cursor = channels[0].count
+        pieceStart = cursor
         compact()
         return out
-    }
-
-    // MARK: - Splicing
-
-    /// A held pause either plays whole, or its two ends play and its middle never does.
-    private func close(run range: Range<Int>) -> [TrimmedChunk] {
-        defer {
-            run = nil
-            pieceStart = range.upperBound
-        }
-        let frames = range.count
-        let seconds = Double(frames) / format.sampleRate
-        guard Self.isWorthTrimming(pauseLength: seconds) else {
-            return chunk(range).map { [$0] } ?? []
-        }
-        let kept = Int((Self.playedLength(ofPause: seconds) * format.sampleRate).rounded())
-        // the fades come out of what is kept
-        guard kept > 2 * fade, kept + 2 * fade < frames else {
-            return chunk(range).map { [$0] } ?? []
-        }
-
-        let head = kept / 2
-        let tail = kept - head
-        return [
-            chunk(range.lowerBound..<(range.lowerBound + head), fadeOutLast: fade),
-            chunk((range.upperBound - tail)..<range.upperBound, fadeInFirst: fade)
-        ].compactMap { $0 }
     }
 
     // MARK: - How much of a pause survives
 
-    /// What a pause of `length` is allowed to shrink to.
-    public static func playedLength(ofPause length: Double) -> Double {
-        let target = Swift.max(Const.silenceTargetPause, length * Const.silenceKeepFraction)
-        let floor = 2 * Const.silenceGuardBand + Const.silenceMinimumInterior
-        return Swift.max(floor, Swift.min(length, target))
+    /// What a pause of `frames` plays as: every whole block shrinks, the part that doesn't fill one plays as is.
+    public static func playedFrames(ofPause frames: Int) -> Int {
+        let blocks = frames / Const.silenceBlockFrames
+        return blocks * Const.silenceKeptFrames + frames % Const.silenceBlockFrames
     }
 
-    /// Whether the saving is worth a splice at all.
-    public static func isWorthTrimming(pauseLength length: Double) -> Bool {
-        guard length >= Const.silenceMinimumPause else { return false }
-        return length - playedLength(ofPause: length) >= Const.silenceMinimumSaving
+    // MARK: - Splicing
+
+    /// The block's start fades out over its end, so the samples between them never play.
+    private func appendShortened(blockAt start: Int) {
+        if output[0].isEmpty {
+            outputFileStart = base + AVAudioFramePosition(start)
+        }
+        let tail = start + block - kept
+        for index in channels.indices {
+            var mixed = [Float](repeating: 0, count: kept)
+            channels[index].withUnsafeBufferPointer { samples in
+                guard let pointer = samples.baseAddress else { return }
+                vDSP_vmma(pointer + start, 1, fadeOut, 1, pointer + tail, 1, fadeIn, 1, &mixed, 1, vDSP_Length(kept))
+            }
+            output[index] += mixed
+        }
+        outputEndsInBlock = true
+    }
+
+    private func appendRaw(_ range: Range<Int>, into out: inout [TrimmedChunk]) {
+        guard !range.isEmpty else { return }
+        if outputEndsInBlock {
+            flush(into: &out)
+        }
+        if output[0].isEmpty {
+            outputFileStart = base + AVAudioFramePosition(range.lowerBound)
+        }
+        for index in channels.indices {
+            output[index] += channels[index][range]
+        }
+    }
+
+    private func flush(into out: inout [TrimmedChunk]) {
+        defer { outputEndsInBlock = false }
+        let frames = AVAudioFrameCount(output[0].count)
+        guard frames > 0, let buffer = AVAudioPCMBuffer(pcmFormat: format, frameCapacity: frames),
+              let data = buffer.floatChannelData else {
+            return
+        }
+        buffer.frameLength = frames
+        for index in output.indices {
+            output[index].withUnsafeBufferPointer { samples in
+                guard let pointer = samples.baseAddress else { return }
+                data[index].update(from: pointer, count: Int(frames))
+            }
+            output[index].removeAll(keepingCapacity: true)
+        }
+        out.append(TrimmedChunk(buffer: buffer, fileStart: outputFileStart))
     }
 
     // MARK: - Level
 
-    /// dBFS over `count` frames.
-    private func level(at index: Int, count: Int) -> Double {
-        var total: Float = 0
+    /// The last sample in `range` that any channel peaks above the threshold at, nil if the whole range is quiet.
+    private func lastLoudSample(in range: Range<Int>) -> Int? {
+        var last: Int?
         for channel in channels {
-            var meanSquare: Float = 0
-            channel.withUnsafeBufferPointer { pointer in
-                guard let start = pointer.baseAddress else { return }
-                vDSP_measqv(start + index, 1, &meanSquare, vDSP_Length(count))
+            channel.withUnsafeBufferPointer { samples in
+                var index = range.upperBound - 1
+                let floor = Swift.max(range.lowerBound, (last ?? -1) + 1)
+                while index >= floor {
+                    if abs(samples[index]) > threshold {
+                        last = index
+                        return
+                    }
+                    index -= 1
+                }
             }
-            total += meanSquare
         }
-        let mean = total / Float(channels.count)
-        guard mean > 0 else { return Const.silenceAnalysisFloorDb }
-        return max(Const.silenceAnalysisFloorDb, 10 * log10(Double(mean)))
+        return last
     }
-
-    /// Above the running noise floor but never near the speech level, so a quiet show stays intelligible.
-    private var threshold: Double {
-        let ceiling = min(Const.silenceThresholdCeilingDb, speechLevelDb - Const.silenceSpeechSeparationDb)
-        return min(max(noiseFloorDb + Const.silenceNoiseMarginDb, Const.silenceThresholdFloorDb), ceiling)
-    }
-
-    private func isSilent(_ db: Double) -> Bool {
-        if !primed {
-            noiseFloorDb = db
-            speechLevelDb = db
-            primed = true
-        }
-        noiseFloorDb += (db - noiseFloorDb) * (db < noiseFloorDb ? Self.floorFall : Self.floorRise)
-        speechLevelDb += (db - speechLevelDb) * (db > speechLevelDb ? Self.speechRise : Self.speechFall)
-        windowsSeen += 1
-        guard windowsSeen > warmupWindows else { return false }
-        return db < threshold
-    }
-
-    /// One window's share of an exponential move, for a time constant in seconds.
-    private static func coefficient(_ seconds: Double) -> Double {
-        1 - exp(-Const.silenceWindow / seconds)
-    }
-
-    // the floor falls fast and rises slowly so speech can't drag it up; the speech level does the opposite
-    private static let floorFall = coefficient(0.15)
-    private static let floorRise = coefficient(6)
-    private static let speechRise = coefficient(0.05)
-    private static let speechFall = coefficient(4)
 
     // MARK: - Buffers
 
@@ -214,40 +205,11 @@ public final class SilenceRemover {
         }
     }
 
-    private func chunk(_ range: Range<Int>, fadeOutLast: Int = 0, fadeInFirst: Int = 0) -> TrimmedChunk? {
-        let frames = AVAudioFrameCount(range.count)
-        guard frames > 0, let buffer = AVAudioPCMBuffer(pcmFormat: format, frameCapacity: frames),
-              let data = buffer.floatChannelData else {
-            return nil
-        }
-        buffer.frameLength = frames
-        for index in channels.indices {
-            channels[index].withUnsafeBufferPointer { pointer in
-                guard let start = pointer.baseAddress else { return }
-                data[index].update(from: start + range.lowerBound, count: range.count)
-            }
-            if fadeOutLast > 0 {
-                ramp(data[index] + (range.count - fadeOutLast), count: fadeOutLast, from: 1, to: 0)
-            }
-            if fadeInFirst > 0 {
-                ramp(data[index], count: fadeInFirst, from: 0, to: 1)
-            }
-        }
-        return TrimmedChunk(buffer: buffer, fileStart: base + AVAudioFramePosition(range.lowerBound))
-    }
-
-    private func ramp(_ samples: UnsafeMutablePointer<Float>, count: Int, from: Float, to: Float) {
-        var value = from
-        var step = (to - from) / Float(count)
-        vDSP_vrampmul(samples, 1, &value, &step, samples, 1, vDSP_Length(count))
-    }
-
     private func compact() {
         guard pieceStart > 0 else { return }
         for index in channels.indices { channels[index].removeFirst(pieceStart) }
         base += AVAudioFramePosition(pieceStart)
         cursor -= pieceStart
-        run = run.map { $0 - pieceStart }
         pieceStart = 0
     }
 }
