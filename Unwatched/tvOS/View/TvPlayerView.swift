@@ -16,7 +16,7 @@ struct TvPlayerView: View {
     @Environment(\.dismiss) var dismiss
     @AppStorage(Const.markAsWatched) var markAsWatched: Bool = false
 
-    @Query(sort: \QueueEntry.order) private var queue: [QueueEntry]
+    @Query private var queue: [QueueEntry]
 
     @State private var viewModel: TvPlayerViewModel?
     /// What's on screen right now: the player can move on to the next queue video without
@@ -26,8 +26,9 @@ struct TvPlayerView: View {
 
     var openYouTube: (String?) async -> Bool
 
-    init(video: Video, openYouTube: @escaping (String?) async -> Bool) {
+    init(video: Video, filter: QueueFilter, openYouTube: @escaping (String?) async -> Bool) {
         _video = State(initialValue: video)
+        _queue = Query(filter.descriptor())
         self.openYouTube = openYouTube
     }
 
@@ -258,6 +259,6 @@ private struct SystemVideoPlayer: UIViewControllerRepresentable {
 }
 
 #Preview {
-    TvPlayerView(video: Video.getDummy(), openYouTube: { _ in false })
+    TvPlayerView(video: Video.getDummy(), filter: .all, openYouTube: { _ in false })
         .modelContainer(DataProvider.previewContainerFilled)
 }

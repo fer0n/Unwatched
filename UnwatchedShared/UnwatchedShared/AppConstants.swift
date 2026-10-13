@@ -33,6 +33,7 @@ public struct Const {
     public static let watchQueueFromPhone = "watchQueueFromPhone"
     public static let watchSelectedTagName = "watchSelectedTagName"
     public static let watchControlsPhone = "watchControlsPhone"
+    public static let tvSelectedTagName = "tvSelectedTagName"
     public static let requiresDurationFetch = "requiresDurationFetch"
     public static let wasLoggedIntoYoutube = "wasLoggedIntoYoutube"
 

@@ -209,6 +209,13 @@ extension DataProvider {
             context.insert(queueEntry)
         }
 
+        let swift = Tag(name: "Swift", order: 0, symbol: "swift")
+        swift.videos = [vid7, vid12, vid23]
+        let vr = Tag(name: "VR", order: 1, symbol: "visionpro")
+        vr.videos = [vid1, vid4, vid8, vid16, vid19]
+        context.insert(swift)
+        context.insert(vr)
+
         try? context.save()
     }
 }
