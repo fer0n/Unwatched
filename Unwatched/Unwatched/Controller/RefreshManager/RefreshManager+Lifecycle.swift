@@ -68,6 +68,9 @@ extension RefreshManager {
         syncDoneTask?.cancel()
         autoRefreshTask?.cancel()
         repeatingRefreshTask?.cancel()
+        if enableIcloudSync {
+            Task { await SyncTotals.publish(from: DataProvider.shared.container) }
+        }
     }
 
     func handleAutoBackup() {

@@ -185,4 +185,5 @@ struct QueueEntryListItem: View {
         .modelContainer(DataProvider.previewContainerFilled)
         .environment(ImageCacheManager())
         .environment(SyncManager())
+        .environment(SyncProgress())
 }

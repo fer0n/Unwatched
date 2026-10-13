@@ -51,9 +51,13 @@ struct QueueGrid: View {
 
     private var grid: some View {
         ScrollView {
-            tagMenu
-                .frame(maxWidth: .infinity, alignment: .leading)
-                .padding(.horizontal, 30)
+            HStack {
+                tagMenu
+                Spacer()
+                SyncStatusLabel()
+                    .font(.caption)
+            }
+            .padding(.horizontal, 30)
             LazyVGrid(
                 columns: [GridItem(
                     .adaptive(

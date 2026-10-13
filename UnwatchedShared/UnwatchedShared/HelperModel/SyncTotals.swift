@@ -3,6 +3,7 @@
 //  UnwatchedShared
 //
 
+import Foundation
 import SwiftData
 
 public struct SyncTotals: Codable, Equatable, Sendable {
@@ -28,6 +29,22 @@ public struct SyncTotals: Codable, Equatable, Sendable {
         try await Task.detached(priority: .utility) {
             try SyncTotals(counting: ModelContext(container))
         }.value
+    }
+}
+
+public extension SyncTotals {
+    static var published: SyncTotals? {
+        NSUbiquitousKeyValueStore.default.data(forKey: Const.syncTotals).flatMap { try? decoded($0) }
+    }
+
+    static func publish(from container: ModelContainer) async {
+        guard let totals = try? await counted(in: container),
+              totals.total > 0,
+              totals != published,
+              let data = try? totals.encoded() else {
+            return
+        }
+        NSUbiquitousKeyValueStore.default.set(data, forKey: Const.syncTotals)
     }
 }
 

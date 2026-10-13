@@ -32,6 +32,19 @@ struct TvSettingsView: View {
             Section(footer: Text("markWatchedSettingHelper")) {
                 Toggle("markWatchedSetting", isOn: $markAsWatched)
             }
+            Section {
+                VStack(spacing: 20) {
+                    HStack {
+                        Text("icloudSync")
+                        Spacer()
+                        SyncStatusLabel()
+                    }
+                    SyncCountsView()
+                }
+            } footer: {
+                Text("syncCountsFooter")
+                    .multilineTextAlignment(.center)
+            }
             Spacer()
         }
         .frame(maxWidth: 800)
@@ -79,5 +92,7 @@ struct TvSettingsView: View {
 #Preview {
     TvSettingsView()
         .environment(ImageCacheManager())
+        .environment(SyncManager())
+        .environment(SyncProgress())
         .modelContainer(DataProvider.previewContainerFilled)
 }

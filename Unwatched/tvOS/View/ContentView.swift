@@ -10,6 +10,9 @@ import UnwatchedShared
 struct ContentView: View {
     @State var imageManager = ImageCacheManager()
     @State var syncer = SyncManager()
+    @State var progress = SyncProgress()
+    @Environment(\.modelContext) private var modelContext
+    @Environment(\.scenePhase) private var scenePhase
 
     var body: some View {
         TabView {
@@ -24,6 +27,12 @@ struct ContentView: View {
         }
         .environment(imageManager)
         .environment(syncer)
+        .environment(progress)
+        .task(id: scenePhase) {
+            guard scenePhase == .active else { return }
+            NSUbiquitousKeyValueStore.default.synchronize()
+            await progress.track(in: modelContext.container)
+        }
     }
 }
 

@@ -8,8 +8,6 @@ import UnwatchedShared
 import SwiftData
 
 struct EmptyQueueView: View {
-    @Environment(SyncManager.self) var syncer
-
     var body: some View {
         VStack(spacing: 20) {
             Image(systemName: "cloud.fill")
@@ -24,8 +22,8 @@ struct EmptyQueueView: View {
                 .foregroundStyle(.secondary)
                 .multilineTextAlignment(.center)
 
-            ProgressView()
-                .opacity(syncer.isSyncing ? 1 : 0)
+            SyncStatusLabel()
+                .font(.caption)
                 .padding(.top, 10)
 
             #if DEBUG
@@ -58,4 +56,5 @@ struct AddTestDataButton: View {
 #Preview {
     EmptyQueueView()
         .environment(SyncManager())
+        .environment(SyncProgress())
 }

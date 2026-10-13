@@ -25,6 +25,7 @@ public struct Const {
     public static let allowOnMatch = "allowOnMatch"
     public static let nowPlayingVideo = "nowPlayingVideo"
     public static let playbackPositionRecord = "playbackPositionRecord"
+    public static let syncTotals = "syncTotals"
     public static let localPlaybackInteractions = "localPlaybackInteractions"
     public static let enableIcloudSync = "enableIcloudSync"
     public static let watchFullSync = "watchFullSync"
