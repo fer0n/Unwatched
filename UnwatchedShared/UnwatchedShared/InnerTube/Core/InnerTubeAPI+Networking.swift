@@ -7,9 +7,65 @@ import FoundationNetworking
 
 private let tubeLog = Logger(subsystem: appSubsystem, category: "InnerTube")
 
+/// Extracts the visitor identifier embedded in a YouTube watch page.
+/// YouTube currently emits either the uppercase ytcfg key or lower-camel JSON key.
+func extractYouTubeVisitorData(from html: String) -> String? {
+    let patterns = [
+        #"\"VISITOR_DATA\"\s*:\s*\"([^\"]+)\""#,
+        #"\"visitorData\"\s*:\s*\"([^\"]+)\""#,
+    ]
+    for pattern in patterns {
+        guard let regex = try? NSRegularExpression(pattern: pattern),
+              let match = regex.firstMatch(
+                in: html, range: NSRange(html.startIndex..., in: html)
+              ),
+              let range = Range(match.range(at: 1), in: html) else { continue }
+        let encodedValue = String(html[range])
+        let quotedJSON = Data("\"\(encodedValue)\"".utf8)
+        let value = (try? JSONDecoder().decode(String.self, from: quotedJSON))
+            ?? encodedValue.replacingOccurrences(of: #"\u003d"#, with: "=")
+        if !value.isEmpty { return value }
+    }
+    return nil
+}
+
 // MARK: - Networking
 
 extension InnerTubeAPI {
+
+    // MARK: - YouTube webpage session seeding
+
+    /// Establishes the same anonymous YouTube session that current yt-dlp creates
+    /// before its JS-less VisionOS player request. The watch-page response seeds
+    /// youtube.com cookies and exposes visitorData required to avoid false
+    /// `LOGIN_REQUIRED` bot-detection responses on otherwise public videos.
+    func seedVisionOSSession(videoId: String) async {
+        var components = URLComponents(string: "https://www.youtube.com/watch")!
+        components.queryItems = [
+            URLQueryItem(name: "v", value: videoId),
+            URLQueryItem(name: "bpctr", value: "9999999999"),
+            URLQueryItem(name: "has_verified", value: "1"),
+        ]
+        guard let url = components.url else { return }
+
+        var request = URLRequest(url: url, cachePolicy: .reloadIgnoringLocalCacheData,
+                                 timeoutInterval: 15)
+        // Unwatched: the session has no cookie store
+        request.setValue("SOCS=CAI", forHTTPHeaderField: "Cookie")
+        request.setValue(InnerTubeClients.WebSafari.userAgent, forHTTPHeaderField: "User-Agent")
+        request.setValue("en-US,en;q=0.9", forHTTPHeaderField: "Accept-Language")
+        guard let (data, response) = try? await session.data(for: request),
+              let http = response as? HTTPURLResponse,
+              (200..<300).contains(http.statusCode),
+              let html = String(data: data, encoding: .utf8) else { return }
+
+        if let value = extractYouTubeVisitorData(from: html) {
+            visitorData = value
+            tubeLog.notice("VisionOS session seeded (visitorData len=\(value.count, privacy: .public))")
+            return
+        }
+        tubeLog.notice("VisionOS session watch page loaded without visitorData")
+    }
 
     // MARK: - signatureTimestamp fetch
 
@@ -176,6 +232,40 @@ extension InnerTubeAPI {
         } else {
             let topKeys = Array(json.keys.prefix(6))
             tubeLog.notice("✅ /player (iOS, auth) HTTP \(statusCode, privacy: .public) keys: \(topKeys, privacy: .public)")
+        }
+        return json
+    }
+
+    /// visionOS player transport mirrored from current yt-dlp: www.youtube.com,
+    /// public web API key, client 101 headers, and no OAuth/PO token.
+    func postVisionOS(body: [String: Any]) async throws -> [String: Any] {
+        guard var comps = URLComponents(url: baseURL.appendingPathComponent("player"),
+                                        resolvingAgainstBaseURL: false) else {
+            throw APIError.invalidURL("player")
+        }
+        comps.queryItems = [
+            URLQueryItem(name: "key", value: apiKey),
+            URLQueryItem(name: "prettyPrint", value: "false"),
+        ]
+        guard let url = comps.url else { throw APIError.invalidURL("player") }
+        var request = URLRequest(url: url)
+        request.httpMethod = "POST"
+        request.setValue("application/json", forHTTPHeaderField: "Content-Type")
+        request.setValue("https://www.youtube.com", forHTTPHeaderField: "Origin")
+        request.setValue(InnerTubeClients.VisionOS.userAgent, forHTTPHeaderField: "User-Agent")
+        request.setValue(InnerTubeClients.VisionOS.nameID, forHTTPHeaderField: "X-YouTube-Client-Name")
+        request.setValue(InnerTubeClients.VisionOS.version, forHTTPHeaderField: "X-YouTube-Client-Version")
+        if let vd = visitorData {
+            request.setValue(vd, forHTTPHeaderField: "X-Goog-Visitor-Id")
+        }
+        request.httpBody = try JSONSerialization.data(withJSONObject: body)
+        let (data, response) = try await session.data(for: request)
+        let statusCode = (response as? HTTPURLResponse)?.statusCode ?? 0
+        guard let http = response as? HTTPURLResponse, (200..<300).contains(http.statusCode) else {
+            throw APIError.httpError(statusCode)
+        }
+        guard let json = try JSONSerialization.jsonObject(with: data) as? [String: Any] else {
+            throw APIError.decodingError("Root JSON is not a dictionary")
         }
         return json
     }
@@ -450,7 +540,9 @@ extension InnerTubeAPI {
 
     /// WEB client with macOS Safari UA — mirrors yt-dlp's `web_safari` client (nameID=1).
     /// Unlike the Chrome-UA WEB client, this returns `hlsManifestUrl` for non-embeddable videos.
-    func postWebSafari(body: [String: Any], visitorIdOverride: String? = nil) async throws -> [String: Any] {
+    func postWebSafari(
+        body: [String: Any], visitorIdOverride: String? = nil, allowBearerFallback: Bool = false
+    ) async throws -> [String: Any] {
         guard var comps = URLComponents(url: baseURL.appendingPathComponent("player"),
                                         resolvingAgainstBaseURL: false) else {
             throw APIError.invalidURL("player")
@@ -470,16 +562,19 @@ extension InnerTubeAPI {
         // adaptive stream URLs that the CDN serves without pot= enforcement.
         // Without auth, YouTube returns rqh=1 URLs that require pot= and still 403 on the
         // CDN probe when match=false (webVD ≠ apiVD). With SAPISID, Path A wins reliably.
-        // Falls back to Bearer+AuthUser (same as yt-dlp web OAuth pattern) when SAPISID is nil.
+        // Bearer is opt-in: for playback, www.youtube.com is documented throughout this file as
+        // rejecting the TV device-code Bearer token with HTTP 400, and PR #129 removed an
+        // unconditional Bearer fallback here while fixing playback. Only the tracking-URL fetch
+        // opts in, where a 400 just means no account-bound URLs rather than broken playback.
         let authStatus: String
         if let sid = sapisid {
             request.setValue(InnerTubeAPI.sapisidhash(sapisid: sid), forHTTPHeaderField: "Authorization")
             request.setValue("1", forHTTPHeaderField: "X-Origin")
             authStatus = "SAPISIDHASH"
-        } else if let token = authToken {
+        } else if allowBearerFallback, let token = authToken {
             request.setValue("Bearer \(token)", forHTTPHeaderField: "Authorization")
             request.setValue("0", forHTTPHeaderField: "X-Goog-AuthUser")
-            authStatus = "Bearer+AuthUser"
+            authStatus = "Bearer"
         } else {
             authStatus = "unauthenticated"
         }
@@ -651,6 +746,7 @@ extension InnerTubeAPI {
         }
         return json
     }
+
 }
 
 // MARK: - SAPISIDHASH helper

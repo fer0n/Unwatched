@@ -36,8 +36,8 @@ so future merges are a straight diff-and-apply):
 - Exception, both directions, for seamless player switching (see `PlayerSwitchManager`):
   `AVPlayerPrefetchManager.shared.warmUp` is called from `PlayerSwitchManager` to
   pre-build the *current* video before any `AVPlayerViewModel` exists — hence the
-  singleton — and `AVPlayerViewModel`/`PlayerCaptionOverlay` read
-  `PlayerSwitchManager.shared` to tell a hand-over apart from a teardown.
+  singleton — and `AVPlayerViewModel`, `PlayerScrubberOverlay` and `BackgroundPlaybackManager`
+  read `PlayerSwitchManager.shared` to tell a hand-over apart from a teardown.
 - Pre-fetch, caching, and quality logic live inside `InnerTube/`; surrounding player
   UI only triggers them via `PlayerManager` state changes.
 
@@ -46,8 +46,12 @@ so future merges are a straight diff-and-apply):
 ## Upstream source
 
 - **Repo:** `../SmartTubeIOS` (sibling checkout, alongside this repo)
-- **Package path:** `SmartTubeIOS/Sources/SmartTubeIOSCore/`
-- **Last synced commit:** `efb7dc5` — update after every sync
+- **Package paths** (inside that repo): `SmartTubeIOS/Sources/SmartTubeIOSCore/` for `Core/` and
+  `AudioTrack`/`HLSAudioLanguageParser`; `SmartTubeIOS/Sources/SmartTubeIOS/Services/` for
+  `YTHLSProxyLoader` and `YouTubeWebViewHLSExtractor`
+- **Last synced commit:** `e659ce9` — update after every sync
+- **Upstream is swift-formatted since `a1dbf49`**, Unwatched's copies are not, so a whole-file
+  `diff` is mostly line-wrapping noise. Diff by commit instead (see *How to upgrade*).
 
 ---
 
@@ -57,7 +61,11 @@ so future merges are a straight diff-and-apply):
 UnwatchedShared/UnwatchedShared/InnerTube/
   Core/                    ← SmartTubeIOS API layer; adapted for Unwatched (see below)
     AppSubsystem.swift, CaptionTrack.swift, InnerTubeAPI*.swift,
-    InnerTubeClients.swift, InnerTubeModels.swift, ITVideo.swift
+    InnerTubeClients.swift, InnerTubeModels.swift, ITVideo.swift,
+    RetryWithBackoff.swift, QualityRecoveryPolicy.swift, SearchFilter.swift,
+    HLSManifestParser.swift (partial)
+  Channel/, HomeFeed/      ← Unwatched-owned InnerTubeAPI extensions (channel videos, live
+                             streams, home feed); not upstream
 
 Unwatched/Unwatched/InnerTube/
   SmartTube/               ← nearly-vanilla SmartTubeIOS files; minimise changes
@@ -130,14 +138,31 @@ showed no length. Re-apply on every sync.
 | `InnerTubeModels.swift` | same | Keep `originalAudioLanguage` in `PlayerInfo` — see below |
 | `RetryWithBackoff.swift` | same | Near drop-in; logger swapped to OSLog on `appSubsystem` |
 | `QualityRecoveryPolicy.swift` | same | `quality` param: `AppSettings.VideoQuality` → `Int` (0 = Auto) |
+| `SearchFilter.swift` | same | Drop-in; strip `package` |
+| `HLSManifestParser.swift` | same | **Partial** — only `filterHLSMasterManifest` and its two helpers (tvOS uses it); the parsers upstream also keeps there aren't used |
+| `InnerTubeAPI+Browse.swift`, `+VideoRenderers.swift` | `InnerTubeAPI+Search.swift` | **Not a mirror** — a trimmed port of the search/lockup parsers only (see above). Pull renderer fixes by hand when they touch `videoRenderer`/`reelItemRenderer`/`lockupViewModel` parsing |
 
 Not mirrored (app-level, not needed here): `BrowseViewModel`, `HomeViewModel`,
-`SearchViewModel`, `PlaylistViewModel`, `DownloadStore`, `HLSManifestCache/Parser`,
+`SearchViewModel`, `PlaylistViewModel`, `DownloadStore`, `HLSManifestCache`,
 `SponsorBlockService/SkipManager`, `iCloudSyncManager`, `LocalSubscription*`, `RSS*`,
 `VideoPreloadCache`, etc.
 
+**visionOS client** (`fetchPlayerInfoVisionOS`, `InnerTubeClients.VisionOS`) — yt-dlp's
+first-choice JS-less client, no PO token. Probed 2026-10-14: it returned `hlsManifestUrl` for every
+playable test video (H.264 to 1080p, VP9 above that to 4K; 1080p segments at ~25× realtime), while
+the iOS client returned HLS for 1 in 10 ("Stream URLs require decryption" for the rest). tvOS
+plays it first (`TvStreamResolver.hdItem`), with `TvHLSMasterLoader` passing the master through
+`filterHLSMasterManifest` to keep only `avc1` ≤ 1080p; if that item fails before it starts, tvOS
+falls back to the old 360p chain. The iOS player doesn't use it yet — a candidate for
+`primaryRace`/`exhaustiveRetry`, which would give HD without waiting for the WKWebView extraction.
+Upstream applies the same filter inside `YTHLSProxyLoader` (`2320131`); that loader change was
+not pulled, since tvOS doesn't compile the loader (`#if canImport(WebKit)`).
+
 Worth cherry-picking in the future:
-- `WatchtimeTracker.swift` — wires up `generateCPN`/`reportPlaybackStarted`/`reportWatchtime`
+- `WatchtimeTracker.swift` — wires up `generateCPN`/`reportPlaybackStarted`/`reportWatchtime`.
+  Upstream rewrote the pings (PR #152 and follow-ups): they now need the `ei`/`vm`/`of` session
+  params from `PlaybackTrackingURLs` (`fetchHistoryTrackingURLs`) plus `lengthSeconds`, and are
+  skipped without them.
 - `VideoPreloadCache` + `BotGuardWebViewRunner` — unlocks upstream's full Phase -1a/-2/-1b
   3-way race (cached-WKHLS shortcut + BotGuard-minted CDN tokens). Big dependency surface;
   Unwatched's `primaryRace` (iOS-HLS vs WKWebView extraction) is the lightweight substitute.
@@ -164,6 +189,11 @@ field not in upstream — preserve it in the struct and in `applyingPoToken(_:)`
 carries the Unwatched-only `ageRestricted` case (alongside `ipBlocked`/`scheduled`) — preserve it
 and its `errorDescription`.
 
+**`InnerTubeAPI+Networking.swift`:** `seedVisionOSSession` sends the `SOCS=CAI` consent cookie as a
+`Cookie` header instead of writing it to `HTTPCookieStorage.shared`. `InnerTubeAPI`'s session has no
+cookie store (see its `init`), so upstream's cookie would never be sent, and `.shared` is the iOS
+web view's cookie file.
+
 **`InnerTubeAPI+Player.swift`:** keep `import NaturalLanguage` and the
 `originalAudioLanguage` detection block inside `parsePlayerInfo` (uses
 `NLLanguageRecognizer` on title+description). Keep `ITVideo(` constructor calls. Keep the
@@ -176,14 +206,18 @@ retry loop keeps going.
 
 ## How to upgrade
 
-1. `cd ../SmartTubeIOS && git pull && git log --oneline -5`
-2. Diff each mirrored file against its Unwatched counterpart, e.g.:
+1. `cd ../SmartTubeIOS && git pull`
+2. List what changed in each mirrored file since the last sync, skipping the format commit, e.g.:
    ```
-   diff ../SmartTubeIOS/Sources/SmartTubeIOSCore/<file>.swift Core/<file>.swift
+   git log --oneline <last-synced>..HEAD -- SmartTubeIOS/Sources/SmartTubeIOSCore/<file>.swift
+   git diff -w <last-synced> HEAD -- <path>   # or per commit: git show <sha> -- <path>
    ```
-   (same for `SmartTube/` files, path `.../Sources/SmartTubeIOSCore/<file>.swift`)
-3. Apply upstream changes, then re-apply the adaptations above.
-4. Update `AVPlayerView.swift` — see below.
+   Most upstream commits are app-only (UI, widgets, TestFlight builds); only the mirrored paths
+   matter. Client version bumps in `InnerTubeClients.swift` are the most valuable part.
+3. Apply upstream changes, then re-apply the adaptations above. Patches made from pre-format
+   commits mostly apply with `patch` after `sed 's/package /public /'`; hunks touching
+   comments Unwatched trimmed need placing by hand.
+4. Work through *After a sync* below.
 5. Bump **Last synced commit** in this file.
 
 ---
@@ -191,7 +225,7 @@ retry loop keeps going.
 ## Playback orchestration (`AVPlayerViewModel+Loading.swift`)
 
 `fetchAndPlay` mirrors the *attempt loop* of upstream `PlaybackViewModel.exhaustiveRetry`
-(the bottom half, lines 241-454 upstream) — not the top-half Phase -1a/-2/-1b race,
+(the bottom half) — not the top-half Phase -1a/-2/-1b race,
 which depends on `VideoPreloadCache`/`BotGuardWebViewRunner` (not mirrored). Flow:
 
 1. **Fast path** — cached WKWebView HLS URL (`WKHLSManager.validEntry`).
@@ -226,19 +260,18 @@ Supporting pieces, all in `+Loading.swift`:
 Keep this attempt-loop structurally aligned with upstream so a `diff` still maps.
 Don't pull upstream's race/cache helpers without mirroring their infrastructure.
 
-## AVPlayerView.swift
+## After a sync
 
-Consumes the Core layer. After a sync, check for:
+The view models (`AVPlayerViewModel*.swift`) consume the Core layer. Check for:
 
-1. New `APIError` cases in `InnerTubeModels.swift` → handle in `fetchAndPlay`'s `catch`.
+1. New `APIError` cases in `InnerTubeModels.swift` → classify in `verdict(_:)` (`+Loading`), act on in `+Fallback`.
 2. New `PlayerInfo` fields → expose in the player if user-facing.
 3. New `InnerTubeAPI` methods that improve reliability/quality, e.g.
    `fetchPlayerInfoAndroidVR` (audio-only, no PO token) or
    `fetchPlayerInfoForDownload` (muxed MP4, future download feature).
 4. Quality switching — `rebuildCompositionForQuality` uses `VideoFormat.url` from
    `PlayerInfo.formats` directly; mirror upstream if format filtering/sorting changes.
-5. Watch history — `generateCPN`/`reportPlaybackStarted`/`reportWatchtime` exist on the
-   API but aren't wired up yet; integrate when `WatchtimeTracker` is cherry-picked.
+5. Watch history — the tracking API exists but isn't wired up; see `WatchtimeTracker` above.
 
 ---
 

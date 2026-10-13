@@ -33,6 +33,9 @@ final class TvPlayerViewModel {
     private var timeObserver: Any?
     private var endObserver: NSObjectProtocol?
     private var statusObservation: NSKeyValueObservation?
+    /// Whether the current item is the HD stream, which falls back to 360p if it never starts.
+    private var playingHD = false
+    private var stopped = false
 
     init(video: Video, modelContext: ModelContext) {
         self.video = video
@@ -40,9 +43,20 @@ final class TvPlayerViewModel {
     }
 
     func start() async {
+        if let item = await TvStreamResolver.hdItem(for: video.youtubeId) {
+            guard !Task.isCancelled, !stopped else { return }
+            playingHD = true
+            play(item)
+            return
+        }
+        await playFallback()
+    }
+
+    private func playFallback() async {
+        playingHD = false
         do {
             let url = try await TvStreamResolver.streamURL(for: video.youtubeId)
-            guard !Task.isCancelled else { return }
+            guard !Task.isCancelled, !stopped else { return }
             play(AVPlayerItem(url: url))
         } catch {
             Log.error("Playback failed for \(video.youtubeId): \(error.localizedDescription)")
@@ -53,6 +67,7 @@ final class TvPlayerViewModel {
     /// Stops playback and stores where the viewer left off. Called when the player goes away,
     /// however it goes away.
     func stop() {
+        stopped = true
         // A video that ran to the end has no position left to remember — saving here would
         // put the last frame back as its resume point.
         if state != .ended {
@@ -60,6 +75,10 @@ final class TvPlayerViewModel {
         }
         player.pause()
         player.replaceCurrentItem(with: nil)
+        removeObservers()
+    }
+
+    private func removeObservers() {
         if let timeObserver {
             player.removeTimeObserver(timeObserver)
             self.timeObserver = nil
@@ -84,6 +103,7 @@ final class TvPlayerViewModel {
 
         item.externalMetadata = [titleMetadata()]
         item.navigationMarkerGroups = TvChapters.markerGroups(for: video)
+        removeObservers()
         player.replaceCurrentItem(with: item)
         // `defaultRate` rather than `rate`: it also applies when the system player's own play
         // button resumes playback, so the speed survives a pause.
@@ -119,6 +139,9 @@ final class TvPlayerViewModel {
             if state == .loading {
                 state = .playing
             }
+        case .failed where playingHD && state == .loading:
+            Log.error("HD stream failed for \(video.youtubeId), falling back: \(message ?? "unknown reason")")
+            Task { await playFallback() }
         case .failed:
             Log.error("Playback failed for \(video.youtubeId): \(message ?? "unknown reason")")
             state = .failed(message ?? String(localized: "videoNoStream"))

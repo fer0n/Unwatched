@@ -10,7 +10,7 @@ public enum InnerTubeClients {
     public enum Web {
         public static let name      = "WEB"
         public static let nameID    = "1"
-        public static let version   = "2.20260206.01.00"
+        public static let version   = "2.20260708.00.00"
         /// Browser UA used by the YouTube web client.
         public static let userAgent = "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/120.0.0.0 Safari/537.36"
     }
@@ -18,7 +18,7 @@ public enum InnerTubeClients {
     public enum iOS {
         public static let name      = "iOS"
         public static let nameID    = "5"
-        public static let version   = "21.02.3"
+        public static let version   = "21.26.4"
         /// Returns the running iOS version formatted as "MAJOR_MINOR_PATCH" (or "MAJOR_MINOR"
         /// when the patch is 0). Dynamically derived from ProcessInfo so the User-Agent always
         /// reflects the actual device OS — prevents YouTube from rejecting requests sent from
@@ -41,7 +41,7 @@ public enum InnerTubeClients {
     public enum Android {
         public static let name              = "ANDROID"
         public static let nameID            = "3"
-        public static let version           = "21.02.35"
+        public static let version           = "21.26.364"
         public static let androidSdkVersion = 30  // Android 11
         public static let userAgent         = "com.google.android.youtube/\(version) (Linux; U; Android 11) gzip"
     }
@@ -58,6 +58,19 @@ public enum InnerTubeClients {
         public static let userAgent = "com.google.android.apps.youtube.vr.oculus/\(version) (Linux; U; Android 12L; eureka-user Build/SQ3A.220605.009.A1) gzip"
     }
 
+    /// visionOS client — current yt-dlp's first-choice JS-less client.
+    /// Unlike Android/iOS/WEB, its current upstream policy does not require a GVS
+    /// PO token. It is useful on tvOS because both platforms use Apple media codecs.
+    public enum VisionOS {
+        public static let name      = "VISIONOS"
+        public static let nameID    = "101"
+        public static let version   = "1.02"
+        public static let userAgent = "Mozilla/5.0 (Macintosh; Intel Mac OS X 15_7_3) AppleWebKit/605.1.15 (KHTML, like Gecko) Version/26.0 Safari/605.1.15"
+        /// Higher HLS tiers are currently VP9/AV1; tvOS AVFoundation needs the
+        /// H.264 ladder, which tops out at 1080p for this client.
+        public static let maximumHLSHeight = 1080
+    }
+
     /// Web Embedded Player client — the current YouTube iframe embedded player.
     /// Replaces the deprecated TVHTML5_SIMPLY_EMBEDDED_PLAYER (nameID=85) which was
     /// removed from yt-dlp in 2026 after YouTube blocked it with "no longer supported".
@@ -66,7 +79,7 @@ public enum InnerTubeClients {
     public enum TVEmbedded {
         public static let name    = "WEB_EMBEDDED_PLAYER"
         public static let nameID  = "56"
-        public static let version = "1.20260115.01.00"
+        public static let version = "2.20260708.00.00"
     }
 
     /// Mobile web client (YouTube m.youtube.com, iPad Safari).
@@ -78,7 +91,7 @@ public enum InnerTubeClients {
     public enum MWEB {
         public static let name      = "MWEB"
         public static let nameID    = "2"
-        public static let version   = "2.20260115.01.00"
+        public static let version   = "2.20260708.05.00"
         public static let userAgent = "Mozilla/5.0 (iPad; CPU OS 16_7_10 like Mac OS X) AppleWebKit/605.1.15 (KHTML, like Gecko) Version/16.6 Mobile/15E148 Safari/604.1,gzip(gfe)"
     }
 
@@ -89,7 +102,7 @@ public enum InnerTubeClients {
     public enum WebCreator {
         public static let name    = "WEB_CREATOR"
         public static let nameID  = "62"
-        public static let version = "1.20240723.03.00"
+        public static let version = "1.20260708.06.00"
     }
 
     /// WEB client with macOS Safari UA — mirrors yt-dlp's `web_safari` client config.
@@ -99,15 +112,15 @@ public enum InnerTubeClients {
     public enum WebSafari {
         public static let name      = "WEB"
         public static let nameID    = "1"
-        public static let version   = "2.20260114.08.00"
+        public static let version   = "2.20260708.00.00"
         public static let userAgent = "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/605.1.15 (KHTML, like Gecko) Version/15.5 Safari/605.1.15,gzip(gfe)"
     }
 
     public enum TV {
         public static let name      = "TVHTML5"
         public static let nameID    = "7"
-        public static let version   = "7.20260311.12.00"
-        public static let userAgent = "Mozilla/5.0 (ChromiumStylePlatform) Cobalt/Version"
+        public static let version   = "7.20260707.07.00"
+        public static let userAgent = "Mozilla/5.0 (ChromiumStylePlatform) Cobalt/25.lts.30.1034943-gold (unlike Gecko), Unknown_TV_Unknown_0/Unknown (Unknown, Unknown)"
     }
 
     public static let maxVideoResults = 20

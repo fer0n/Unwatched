@@ -720,31 +720,31 @@
         "de" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Videos werden in Unwatched wiedergegeben. YouTube liefert anderen Apps nur 360p."
+            "value" : "Videos werden in Unwatched in bis zu 1080p wiedergegeben."
           }
         },
         "en" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Videos play in Unwatched. YouTube only serves 360p to other apps."
+            "value" : "Videos play in Unwatched, in up to 1080p."
           }
         },
         "es" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Los videos se reproducen en Unwatched. YouTube solo ofrece 360p a otras apps."
+            "value" : "Los videos se reproducen en Unwatched, en hasta 1080p."
           }
         },
         "fr" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Les vidéos sont lues dans Unwatched. YouTube ne fournit que du 360p aux autres apps."
+            "value" : "Les vidéos sont lues dans Unwatched, jusqu'en 1080p."
           }
         },
         "pl" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Filmy są odtwarzane w Unwatched. YouTube udostępnia innym aplikacjom tylko 360p."
+            "value" : "Filmy są odtwarzane w Unwatched w jakości do 1080p."
           }
         }
       }

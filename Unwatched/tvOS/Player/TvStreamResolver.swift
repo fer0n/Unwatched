@@ -3,29 +3,44 @@
 //  UnwatchedTV
 //
 
-import Foundation
+import AVFoundation
 import UnwatchedShared
 
-/// Resolves a video to a URL AVPlayer can play, using the shared InnerTube client.
+/// Resolves a video to something AVPlayer can play, using the shared InnerTube client.
 ///
-/// Only the app-flavoured clients are asked. The web ones answer "the page needs to be reloaded"
-/// or "video unavailable" unless the request carries a browser session — visitor data, a signature
-/// timestamp and a proof-of-origin token minted by YouTube's own JavaScript — none of which is
-/// obtainable on tvOS, where there is no WKWebView.
+/// **HD:** the VISIONOS client is the one client that still returns an HLS manifest for
+/// video-on-demand without a browser session — H.264 up to 1080p, no proof-of-origin token, and the
+/// CDN serves it far faster than realtime. Its master also lists VP9 variants, which
+/// `TvHLSMasterLoader` filters out.
 ///
-/// **Why 360p:** `preferredStreamURL` hands back an HLS manifest when there is one, which for
-/// video-on-demand there no longer is — leaving the muxed file, and YouTube only muxes 360p. The HD
-/// streams next to it are video-only and audio-only, and their CDN URLs are throttled to roughly a
-/// third of realtime without that same proof-of-origin token (measured: ~50 KB/s against the
-/// ~610 KB/s a 1080p stream needs, with 403s for anything read ahead of the pacing budget). They
-/// also refuse any request without a closed byte range, which AVFoundation doesn't send. The muxed
-/// file has neither problem — it downloads far faster than realtime. Anything better needs the web
-/// player, which is why the iPhone and iPad app keeps one.
+/// **360p fallback:** the app-flavoured clients. Their `preferredStreamURL` is HLS when there is
+/// one (live), otherwise the muxed file, and YouTube only muxes 360p. The HD streams next to it are
+/// video-only and audio-only, and their CDN URLs are throttled to roughly a third of realtime
+/// without a proof-of-origin token, which needs YouTube's own JavaScript — so a web view, and tvOS
+/// has none. The web clients answer "the page needs to be reloaded" or "video unavailable" for the
+/// same reason.
 enum TvStreamResolver {
     /// One instance for the app: it holds the session, the visitor data and a network-path monitor
     /// that resets it, all of which are worth keeping across videos.
     private static let api = InnerTubeAPI()
 
+    /// The filtered VISIONOS HLS stream, or nil when that client has none for this video.
+    static func hdItem(for youtubeId: String) async -> AVPlayerItem? {
+        do {
+            guard let master = try await api.fetchPlayerInfoVisionOS(videoId: youtubeId).hlsURL,
+                  let asset = TvHLSMasterLoader.asset(for: master) else {
+                Log.info("VisionOS client returned no HLS for \(youtubeId)")
+                return nil
+            }
+            Log.info("VisionOS client resolved an HD stream for \(youtubeId)")
+            return AVPlayerItem(asset: asset)
+        } catch {
+            Log.info("VisionOS client failed for \(youtubeId): \(error.localizedDescription)")
+            return nil
+        }
+    }
+
+    /// The 360p fallback: a muxed file, or HLS for live streams.
     static func streamURL(for youtubeId: String) async throws -> URL {
         // The iOS client resolves the most videos, so it goes first even though it rarely has a
         // muxed format; Android is what usually supplies one.
