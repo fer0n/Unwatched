@@ -18,6 +18,15 @@ extension DataProvider {
         return container
     }()
 
+    #if DEBUG
+    @MainActor
+    static func seedIfRequested(_ context: ModelContext) {
+        guard CommandLine.arguments.contains("seed-demo"),
+              (try? context.fetchCount(FetchDescriptor<QueueEntry>())) == 0 else { return }
+        fillWithTestData(context)
+    }
+    #endif
+
     static func fillWithTestData(_ context: ModelContext) {
         let vid1 = Video(
             title: "MudRunner VR Review on Meta Quest 3: Where We're Going, We Don't Need Roads…",

@@ -14,6 +14,11 @@ struct UnwatchedTVApp: App {
     var body: some Scene {
         WindowGroup {
             ContentView()
+                #if DEBUG
+                .task {
+                    DataProvider.seedIfRequested(sharedModelContainer.mainContext)
+                }
+            #endif
         }
         .modelContainer(sharedModelContainer)
     }
