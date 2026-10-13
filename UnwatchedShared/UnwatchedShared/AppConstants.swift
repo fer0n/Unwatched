@@ -424,6 +424,8 @@ public struct Const {
     public static let defaultLiveStreamSetting = "defaultLiveStreamSetting"
     public static let hiddenLiveStreamIds = "hiddenLiveStreamIds"
     public static let hiddenLiveStreamIdsLimit = 500
+    public static let feedFallbackChannels = "feedFallbackChannels"
+    public static let feedFallbackConcurrency = 4
 
     public static let navigationManager = "NavigationManager"
     public static let playerManager = "PlayerManager"

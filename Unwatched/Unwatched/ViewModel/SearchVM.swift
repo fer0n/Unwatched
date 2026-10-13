@@ -334,7 +334,7 @@ final class SearchVM {
         return SendableVideo(
             youtubeId: video.id,
             title: video.title,
-            url: URL(string: "https://www.youtube.com/watch?v=\(video.id)"),
+            url: YoutubeUrlParser.watchUrl(youtubeId: video.id),
             thumbnailUrl: video.thumbnailURL ?? video.highQualityThumbnailURL,
             youtubeChannelId: video.channelId,
             feedTitle: channelTitle,

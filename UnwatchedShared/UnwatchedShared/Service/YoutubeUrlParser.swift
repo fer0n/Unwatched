@@ -112,6 +112,10 @@ public enum YoutubeUrlParser {
         url.absoluteString.contains("youtube.com/feeds/videos.xml")
     }
 
+    public static func watchUrl(youtubeId: String) -> URL? {
+        URL(string: "https://www.youtube.com/watch?v=\(youtubeId)")
+    }
+
     public static func getFeedUrl(fromChannelId channelId: String) throws -> URL {
         if let channelFeedUrl = URL(string: "https://www.youtube.com/feeds/videos.xml?channel_id=\(channelId)") {
             return channelFeedUrl

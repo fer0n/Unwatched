@@ -155,7 +155,7 @@ public struct YoutubeDataAPI {
         return SendableVideo(
             youtubeId: videoId,
             title: snippet.title,
-            url: URL(string: "https://www.youtube.com/watch?v=\(videoId)")!,
+            url: YoutubeUrlParser.watchUrl(youtubeId: videoId),
             thumbnailUrl: url,
             youtubeChannelId: snippet.channelId,
             feedTitle: snippet.channelTitle,

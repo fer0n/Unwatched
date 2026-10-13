@@ -279,8 +279,9 @@ extension VideoActor {
 
     func triageSubscriptionVideos(_ sub: Subscription,
                                   videos: [Video],
-                                  defaultPlacement: DefaultVideoPlacement) -> [Video] {
-        var videosToAdd = triageCandidates(videos, sub: sub)
+                                  defaultPlacement: DefaultVideoPlacement,
+                                  catchUp: FeedFallbackState.CatchUp? = nil) -> [Video] {
+        var videosToAdd = catchUp?.triageCandidates(videos) ?? triageCandidates(videos, sub: sub)
         videosToAdd = getFilteredByVideoTitleText(videosToAdd, sub, defaultPlacement)
 
         var placement = sub.videoPlacement

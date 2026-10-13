@@ -9,12 +9,16 @@ struct FetchResult: Sendable {
     let sub: SendableSubscription
     let videos: [SendableVideo]
     let errorMessage: String?
+    var feedUnavailable = false
+    var isFallback = false
 
     var outcome: [FetchOutcome] {
         guard let subscriptionId = sub.persistentId else { return [] }
         return [FetchOutcome(subscriptionId: subscriptionId, isPodcast: sub.isPodcast, errorMessage: errorMessage)]
     }
 }
+
+typealias FetchedVideoIds = (loadedVideos: [PersistentIdentifier], addedVideos: [PersistentIdentifier])
 
 /// What a refresh run has to say about one feed, see `VideoActor.recordFetchOutcomes`.
 struct FetchOutcome: Sendable {
@@ -218,13 +222,19 @@ actor VideoActor: SharedContextActor {
 
             // Ids, not models: this accumulates across every subscription's feed request, so
             // models kept here would outlive the shared context's turn on this job.
-            var newVideoInfo = [(loadedVideos: [PersistentIdentifier], addedVideos: [PersistentIdentifier])]()
+            var newVideoInfo = [FetchedVideoIds]()
             var outcomes = [FetchOutcome]()
+            var unavailableSubs = [SendableSubscription]()
             for try await fetched in group {
                 outcomes.append(contentsOf: fetched.outcome)
+                if fetched.feedUnavailable {
+                    unavailableSubs.append(fetched.sub)
+                }
                 newVideoInfo.append(try await handleFetched(fetched, placementInfo))
             }
-            recordFetchOutcomes(outcomes)
+            let fallback = try await handleFallbackIfOutage(outcomes, unavailableSubs, placementInfo)
+            newVideoInfo += fallback.videoInfo
+            recordFetchOutcomes(outcomes, recovered: fallback.recovered)
             if fetchDurations {
                 try await handleFetchDurationsLoaded(
                     newVideoInfo,
@@ -239,27 +249,8 @@ actor VideoActor: SharedContextActor {
         return newVideos
     }
 
-    private func handleFetched(
-        _ fetched: FetchResult,
-        _ placementInfo: DefaultVideoPlacement
-    ) async throws -> (loadedVideos: [PersistentIdentifier], addedVideos: [PersistentIdentifier]) {
-        let result = await handleNewVideos(
-            fetched.sub,
-            fetched.videos,
-            defaultPlacement: placementInfo
-        )
-        if result.addedVideos.count > 0 {
-            // save sooner if videos got added
-            try modelContext.save()
-        }
-        return (
-            loadedVideos: result.loadedVideos.map(\.persistentModelID),
-            addedVideos: result.addedVideos.map(\.persistentModelID)
-        )
-    }
-
     private func handleFetchDurationsLoaded(
-        _ newVideoInfo: [(loadedVideos: [PersistentIdentifier], addedVideos: [PersistentIdentifier])],
+        _ newVideoInfo: [FetchedVideoIds],
         onlyForAdded: Bool = true
     ) async throws {
         Log.info("handleFetchDurationsLoaded")
@@ -274,7 +265,8 @@ actor VideoActor: SharedContextActor {
     public func handleNewVideos(
         _ sub: SendableSubscription,
         _ videos: [SendableVideo],
-        defaultPlacement: DefaultVideoPlacement
+        defaultPlacement: DefaultVideoPlacement,
+        catchUp: FeedFallbackState.CatchUp? = nil
     ) async -> (loadedVideos: [Video], addedVideos: [Video]) {
         guard let subModel = getSubscription(via: sub) else {
             Log.info("missing info when trying to load videos")
@@ -296,7 +288,8 @@ actor VideoActor: SharedContextActor {
         let videoModels = insertVideoModels(from: toInsert, to: subModel)
         let addedVideos = triageSubscriptionVideos(subModel,
                                                    videos: videoModels,
-                                                   defaultPlacement: defaultPlacement)
+                                                   defaultPlacement: defaultPlacement,
+                                                   catchUp: catchUp)
         updateRecentVideoDate(subModel, mostRecentDate)
         return (videoModels, addedVideos)
     }
@@ -434,6 +427,26 @@ actor VideoActor: SharedContextActor {
 }
 
 extension VideoActor {
+    func handleFetched(
+        _ fetched: FetchResult,
+        _ placementInfo: DefaultVideoPlacement
+    ) async throws -> FetchedVideoIds {
+        let result = await handleNewVideos(
+            fetched.sub,
+            fetched.videos,
+            defaultPlacement: placementInfo,
+            catchUp: finishFallback(after: fetched)
+        )
+        if result.addedVideos.count > 0 {
+            // save sooner if videos got added
+            try modelContext.save()
+        }
+        return (
+            loadedVideos: result.loadedVideos.map(\.persistentModelID),
+            addedVideos: result.addedVideos.map(\.persistentModelID)
+        )
+    }
+
     static func isYtShort(_ imageUrl: URL?) async -> (Bool?, Data?) {
         do {
             if let url = imageUrl {

@@ -118,25 +118,35 @@ extension VideoActor {
             Log.error(
                 "Failed to fetch videos for subscription: \(sub.title), error: \(error.localizedDescription)"
             )
-            return FetchResult(sub: sub, videos: [], errorMessage: error.localizedDescription)
+            return FetchResult(
+                sub: sub,
+                videos: [],
+                errorMessage: error.localizedDescription,
+                feedUnavailable: (error as? URLError)?.code == .badServerResponse
+            )
         }
+    }
+
+    func isYoutubeOutage(_ outcomes: [FetchOutcome]) -> Bool {
+        let youtubeOutcomes = outcomes.filter { !$0.isPodcast }
+        let total = youtubeOutcomes.count
+        return total > 1 && Const.isRefreshOutage(failed: youtubeOutcomes.count(where: \.didFail), total: total)
     }
 
     /// Writes the run's per-feed outcomes onto the subscriptions, so a feed that keeps failing can be told apart from
     /// one that failed once.
-    func recordFetchOutcomes(_ outcomes: [FetchOutcome]) {
+    func recordFetchOutcomes(_ outcomes: [FetchOutcome], recovered: Set<PersistentIdentifier> = []) {
         let youtubeOutcomes = outcomes.filter { !$0.isPodcast }
-        let failed = youtubeOutcomes.count(where: \.didFail)
-        let total = youtubeOutcomes.count
-        newVideos.failedYoutubeFeedsCount = failed
-        newVideos.totalYoutubeFeedsCount = total
+        newVideos.failedYoutubeFeedsCount = youtubeOutcomes.count { $0.didFail && !recovered.contains($0.subscriptionId) }
+        newVideos.totalYoutubeFeedsCount = youtubeOutcomes.count
         let podcastOutcomes = outcomes.filter(\.isPodcast)
         newVideos.failedPodcastFeedsCount = podcastOutcomes.count(where: \.didFail)
         newVideos.totalPodcastFeedsCount = podcastOutcomes.count
 
-        let youtubeOutage = total > 1 && Const.isRefreshOutage(failed: failed, total: total)
+        let youtubeOutage = isYoutubeOutage(outcomes)
         if youtubeOutage {
-            Log.info("recordFetchOutcomes: \(failed)/\(total) YouTube feeds failed, treating as an outage")
+            Log.info("recordFetchOutcomes: \(youtubeOutcomes.count(where: \.didFail))/\(youtubeOutcomes.count) "
+                        + "YouTube feeds failed, treating as an outage")
         }
 
         for outcome in outcomes where outcome.isPodcast || !youtubeOutage {
