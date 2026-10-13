@@ -27,7 +27,7 @@ struct QueueTagMenu: View {
             if let selection {
                 Label(selection.name, systemImage: selection.displaySymbol)
             } else {
-                Label("allVideos", systemImage: "line.3.horizontal.decrease")
+                Label("tags", systemImage: Const.tagSF)
             }
         }
     }
