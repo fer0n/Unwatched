@@ -30,6 +30,15 @@ struct AppCommands: Commands {
                 } label: {
                     Text("goToTab")
                 }
+
+                #if os(macOS)
+                // the sidebar's back button can't always be clicked (#227)
+                Button("goBack") {
+                    navManager.popCurrentTab()
+                }
+                .keyboardShortcut("[", modifiers: .command)
+                .disabled(!navManager.canPopCurrentTab)
+                #endif
             }
 
             Section {

@@ -52,6 +52,27 @@ extension NavigationManager {
         }
     }
 
+    var canPopCurrentTab: Bool {
+        switch tab {
+        case .inbox: !presentedInbox.isEmpty
+        case .queue: !presentedQueue.isEmpty
+        case .library: !presentedLibrary.isEmpty
+        case .search: !presentedSearch.isEmpty
+        case .browser: false
+        }
+    }
+
+    func popCurrentTab() {
+        guard canPopCurrentTab else { return }
+        switch tab {
+        case .inbox: presentedInbox.removeLast()
+        case .queue: presentedQueue.removeLast()
+        case .library: presentedLibrary.removeLast()
+        case .search: presentedSearch.removeLast()
+        case .browser: break
+        }
+    }
+
     private func popVideo(from path: inout [MenuRoute]) {
         if case .video = path.last {
             path.removeLast()
