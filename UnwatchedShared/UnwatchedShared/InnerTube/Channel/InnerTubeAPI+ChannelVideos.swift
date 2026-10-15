@@ -8,6 +8,13 @@ import OSLog
 
 private let log = Logger(subsystem: appSubsystem, category: "InnerTubeChannelVideos")
 
+extension ITVideo {
+    /// Hidden from the RSS feed and unplayable for non-members. Matched by label: requests are made with `hl: en`.
+    public var isMembersOnly: Bool {
+        badges.contains("Members only")
+    }
+}
+
 extension InnerTubeAPI {
     public func fetchChannelVideos(channelId: String, continuationToken: String? = nil) async throws -> SearchPage {
         let data = try await browse(browseId: channelId, params: "EgZ2aWRlb3PyBgQKAjoA", continuationToken: continuationToken)
@@ -85,6 +92,8 @@ extension InnerTubeAPI {
             .compactMap { text in self.parseRelativeDate(text).map { (text: text, date: $0) } }
             .first
         let byline = channelId == nil ? parts.lazy.compactMap(channelByline).first : nil
+        let labels = rows.flatMap { $0["badges"] as? [[String: Any]] ?? [] }
+            .compactMap { ($0["badgeViewModel"] as? [String: Any])?["badgeText"] as? String }
 
         let overlays = ((lockup["contentImage"] as? [String: Any])?["thumbnailViewModel"] as? [String: Any])?["overlays"] as? [[String: Any]] ?? []
         let badges = overlays.flatMap {
@@ -102,7 +111,8 @@ extension InnerTubeAPI {
             channelId: channelId ?? byline?.id,
             duration: duration,
             publishedAt: published?.date,
-            publishedTimeText: published?.text
+            publishedTimeText: published?.text,
+            badges: labels
         )
     }
 

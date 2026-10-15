@@ -167,4 +167,16 @@ class FeedFallbackNetworkTests: XCTestCase {
             XCTAssertNil(video.updatedDate)
         }
     }
+
+    /// Nightshift posts members-only videos to its Videos tab regularly; the RSS feed leaves them out.
+    func testSkipsMembersOnlyVideos() async throws {
+        let api = InnerTubeAPI()
+        let channelId = "UCq8ZAAsI89IoJ-fn1gYpO3g"
+        let page = try await api.fetchChannelVideos(channelId: channelId)
+        XCTAssertTrue(page.videos.prefix(15).contains(where: \.isMembersOnly))
+
+        let candidates = try await FeedFallbackService.candidates(api, channelId: channelId, after: .distantPast)
+        XCTAssertFalse(candidates.isEmpty)
+        XCTAssertFalse(candidates.contains(where: \.isMembersOnly))
+    }
 }
