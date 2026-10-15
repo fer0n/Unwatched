@@ -14,27 +14,43 @@ struct SidebarPage: ViewModifier {
         content
             .navigationBarBackButtonHidden()
             .safeAreaInset(edge: .top, spacing: 0) {
-                if navManager.isMacosFullscreen {
-                    Color.clear.frame(height: Self.fullscreenHeaderHeight)
+                if headerInContent {
+                    Color.clear.frame(height: Self.contentHeaderHeight)
                 }
             }
             .overlayPreferenceValue(SidebarPageKey.self) { page in
                 GeometryReader { proxy in
                     let fullscreen = navManager.isMacosFullscreen
-                    let height = fullscreen ? Self.fullscreenHeaderHeight : proxy.safeAreaInsets.top
+                    let inContent = headerInContent
+                    let height = inContent ? Self.contentHeaderHeight : proxy.safeAreaInsets.top
 
                     SidebarPageHeader(page: page, showsActions: fullscreen)
-                        .padding(.leading, fullscreen ? 12 : Self.trafficLightsWidth)
-                        .padding(.trailing, fullscreen ? 12 : Self.toolbarItemWidth * CGFloat(page.actions.count + 1))
+                        .padding(.leading, inContent ? 12 : Self.trafficLightsWidth)
+                        .padding(.trailing, inContent ? 12 : Self.toolbarItemWidth * CGFloat(page.actions.count + 1))
                         .frame(height: height)
-                        .offset(y: -height)
+                        .offset(y: inContent ? 0 : -height)
                 }
+                // fullscreen: measured from the page's top, the inset below is all there is
+                .ignoresSafeArea(edges: navManager.isMacosFullscreen ? .top : [])
             }
     }
 
+    /// The header gets its own row instead of sitting in the titlebar strip
+    private var headerInContent: Bool {
+        navManager.isMacosFullscreen || Self.headerBelowTitlebar
+    }
+
+    /// macOS 26's titlebar keeps the clicks meant for a header drawn in it (#227)
+    static let headerBelowTitlebar: Bool = {
+        if #available(macOS 27, *) {
+            return false
+        }
+        return true
+    }()
+
     static let trafficLightsWidth: CGFloat = 86
     static let toolbarItemWidth: CGFloat = 48
-    static let fullscreenHeaderHeight: CGFloat = 52
+    static let contentHeaderHeight: CGFloat = 52
 }
 
 private struct SidebarPageHeader: View {

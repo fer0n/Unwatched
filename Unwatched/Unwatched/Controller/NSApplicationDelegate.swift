@@ -96,6 +96,14 @@ class AppDelegate: NSObject,
         }
     }
 
+    // A pinned fullscreen toolbar is its own window over the top 52pt, on top of SidebarPage's header
+    func window(
+        _ window: NSWindow,
+        willUseFullScreenPresentationOptions proposedOptions: NSApplication.PresentationOptions = []
+    ) -> NSApplication.PresentationOptions {
+        proposedOptions.union([.autoHideToolbar, .autoHideMenuBar])
+    }
+
     @MainActor
     func windowWillEnterFullScreen(_ notification: Notification) {
         Log.info("windowWillEnterFullScreen")

@@ -1327,6 +1327,9 @@
         }
       }
     },
+    "tags" : {
+
+    },
     "videoNoStream" : {
       "localizations" : {
         "de" : {
