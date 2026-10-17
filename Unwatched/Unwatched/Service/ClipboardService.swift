@@ -12,7 +12,7 @@ import UniformTypeIdentifiers
 
 struct ClipboardService {
     static func get() -> String? {
-        #if os(iOS)
+        #if os(iOS) || os(visionOS)
         return UIPasteboard.general.string
         #elseif os(macOS)
         return NSPasteboard.general.string(forType: .string)
@@ -22,7 +22,7 @@ struct ClipboardService {
     }
 
     static func set(_ text: String) {
-        #if os(iOS)
+        #if os(iOS) || os(visionOS)
         UIPasteboard.general.setValue(
             text,
             forPasteboardType: UTType.plainText.identifier
