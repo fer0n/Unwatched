@@ -334,6 +334,8 @@
 		8857669A2C1B9034003687D5 /* AppConstants.swift in Sources */ = {isa = PBXBuildFile; fileRef = 881E51362B59CAFF006384E4 /* AppConstants.swift */; };
 		885B11A92FE923A300B2311C /* UnwatchedShared.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 88B7FFA12C99DE8F00CD917E /* UnwatchedShared.framework */; platformFilters = (ios, macos, xros, ); };
 		885CC15C2FD1E01A00A6549A /* ZoomPanGestureView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 885CC15B2FD1E01A00A6549A /* ZoomPanGestureView.swift */; };
+		7CA8BDCA731DD62389F7DD8E /* PinchPanGestureRecognizer.swift in Sources */ = {isa = PBXBuildFile; fileRef = 90718CF9780D2F36404128E9 /* PinchPanGestureRecognizer.swift */; };
+		2981DDF0BD1B17E98CA7C303 /* PagerPanLock.swift in Sources */ = {isa = PBXBuildFile; fileRef = 248BC558FCF75A956A5A3093 /* PagerPanLock.swift */; };
 		885D6A712F5A173F00961381 /* FakePipButton.swift in Sources */ = {isa = PBXBuildFile; fileRef = 885D6A702F5A173F00961381 /* FakePipButton.swift */; };
 		885D6A722F5A173F00961381 /* FakePipButton.swift in Sources */ = {isa = PBXBuildFile; fileRef = 885D6A702F5A173F00961381 /* FakePipButton.swift */; };
 		886025DB0D31699E80FA0FD5 /* PlayerManagerTestCase.swift in Sources */ = {isa = PBXBuildFile; fileRef = 88C240A5A3CC92DB16D543CF /* PlayerManagerTestCase.swift */; };
@@ -1108,6 +1110,8 @@
 		FE7A00000000000000000012 /* YTHLSProxyLoader.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8841286E2FC838A7001B06AE /* YTHLSProxyLoader.swift */; };
 		FE7A00000000000000000013 /* YouTubeWebViewHLSExtractor.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8841286D2FC838A7001B06AE /* YouTubeWebViewHLSExtractor.swift */; };
 		FE7A00000000000000000014 /* ZoomPanGestureView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 885CC15B2FD1E01A00A6549A /* ZoomPanGestureView.swift */; };
+		AAAE745A96FB143D33C48E35 /* PinchPanGestureRecognizer.swift in Sources */ = {isa = PBXBuildFile; fileRef = 90718CF9780D2F36404128E9 /* PinchPanGestureRecognizer.swift */; };
+		4823416A34B9B0861290898C /* PagerPanLock.swift in Sources */ = {isa = PBXBuildFile; fileRef = 248BC558FCF75A956A5A3093 /* PagerPanLock.swift */; };
 		FE7A00000000000000000105 /* AVPlayerViewModel+Fallback.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2E0DD1B9C0A34CB595032684 /* AVPlayerViewModel+Fallback.swift */; };
 		FE8A33BC936977DFEC5CE9B6 /* TranscriptError.swift in Sources */ = {isa = PBXBuildFile; fileRef = 12DD3D7D2C5077368D185474 /* TranscriptError.swift */; };
 		FE9450DABB70B202FC000EB3 /* InboxCardPlacement.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8368DEA68B942E193EDDF71B /* InboxCardPlacement.swift */; };
@@ -1430,6 +1434,8 @@
 		8852B02A2D346B8B0047C498 /* FilterSettingsView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FilterSettingsView.swift; sourceTree = "<group>"; };
 		885723012E6596F6006D1EE9 /* Signal.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Signal.swift; sourceTree = "<group>"; };
 		885CC15B2FD1E01A00A6549A /* ZoomPanGestureView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ZoomPanGestureView.swift; sourceTree = "<group>"; };
+		90718CF9780D2F36404128E9 /* PinchPanGestureRecognizer.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PinchPanGestureRecognizer.swift; sourceTree = "<group>"; };
+		248BC558FCF75A956A5A3093 /* PagerPanLock.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PagerPanLock.swift; sourceTree = "<group>"; };
 		885D6A702F5A173F00961381 /* FakePipButton.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FakePipButton.swift; sourceTree = "<group>"; };
 		88624DE699CAF49A1F248A23 /* MenuTabBarCoordinator.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MenuTabBarCoordinator.swift; sourceTree = "<group>"; };
 		88628038B1DCA12EDFBCE942 /* ChapterGapMonitoringTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ChapterGapMonitoringTests.swift; sourceTree = "<group>"; };
@@ -2937,6 +2943,8 @@
 				FE100001AA000000001000B1 /* AVPlayerView.swift */,
 				FE100001AA000000001000B2 /* PodcastArtwork.swift */,
 				885CC15B2FD1E01A00A6549A /* ZoomPanGestureView.swift */,
+				90718CF9780D2F36404128E9 /* PinchPanGestureRecognizer.swift */,
+				248BC558FCF75A956A5A3093 /* PagerPanLock.swift */,
 				8816E3902FEB16D0004EB1ED /* InnerTubeAPI+Metadata.swift */,
 				8816E3A12FEB16D0004EB1ED /* InnerTubeAPI+Storyboard.swift */,
 				8816E3A32FEB16D0004EB1ED /* ScrubberThumbnails.swift */,
@@ -3363,6 +3371,8 @@
 				FE7A00000000000000000012 /* YTHLSProxyLoader.swift in Sources */,
 				FE7A00000000000000000013 /* YouTubeWebViewHLSExtractor.swift in Sources */,
 				FE7A00000000000000000014 /* ZoomPanGestureView.swift in Sources */,
+				AAAE745A96FB143D33C48E35 /* PinchPanGestureRecognizer.swift in Sources */,
+				4823416A34B9B0861290898C /* PagerPanLock.swift in Sources */,
 				FE100002AA0000000010F206 /* ChannelHeaderView.swift in Sources */,
 				FE100002AA0000000010F205 /* ChannelPreviewView.swift in Sources */,
 				FE1000FF000000000000C003 /* PodcastPreviewView.swift in Sources */,
@@ -4078,6 +4088,8 @@
 				88DFC0B12B44843A001895C8 /* ContentView.swift in Sources */,
 				8891F0B02B4E9F330098A3FB /* String.swift in Sources */,
 				885CC15C2FD1E01A00A6549A /* ZoomPanGestureView.swift in Sources */,
+				7CA8BDCA731DD62389F7DD8E /* PinchPanGestureRecognizer.swift in Sources */,
+				2981DDF0BD1B17E98CA7C303 /* PagerPanLock.swift in Sources */,
 				884CC88D2DC3890F00FC59DF /* QueueTabItemView.swift in Sources */,
 				888B09202E2382AA0014C66C /* TranscriptParser.swift in Sources */,
 				8816A2002CCD0D19001FE63E /* PipButton.swift in Sources */,

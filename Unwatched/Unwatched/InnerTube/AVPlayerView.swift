@@ -73,9 +73,25 @@ struct AVPlayerView: View {
         .overlay {
             ScrubberThumbnailOverlay()
         }
-        .clipShape(RoundedRectangle(
-                    cornerRadius: Const.videoPlayerCornerRadius,
-                    style: .continuous))
+        .clipShape(Self.surfaceShape)
+    }
+
+    private static let surfaceShape = RoundedRectangle(cornerRadius: Const.videoPlayerCornerRadius,
+                                                       style: .continuous)
+
+    private var zoomedPlayerView: some View {
+        videoPlayerView
+            .scaleEffect(videoZoom)
+            .offset(x: panOffset.width, y: panOffset.height)
+            .clipShape(Self.surfaceShape)
+    }
+
+    private func zoomPan(enabled: Bool, resetsOnEnd: Bool = false) -> ZoomPanModifier {
+        ZoomPanModifier(zoom: $videoZoom,
+                        offset: $panOffset,
+                        isGesturing: $isTwoFingerGesturing,
+                        enabled: enabled,
+                        resetsOnEnd: resetsOnEnd)
     }
 
     private var isAudioOnly: Bool {
@@ -119,13 +135,7 @@ struct AVPlayerView: View {
             if plainArtwork {
                 artworkLayout
             } else if hideMiniPlayer {
-                videoPlayerView
-                    .scaleEffect(videoZoom)
-                    .offset(x: panOffset.width, y: panOffset.height)
-                    .clipShape(RoundedRectangle(
-                        cornerRadius: Const.videoPlayerCornerRadius,
-                        style: .continuous
-                    ))
+                zoomedPlayerView
                     .transitionCover(player.transitionCovered)
                     .modifier(PlayerGestureOverlay(
                         handleSwipe: handleSwipe,
@@ -135,10 +145,7 @@ struct AVPlayerView: View {
                         isExternallyPinching: isTwoFingerGesturing,
                         enabled: true
                     ))
-                    .modifier(ZoomPanModifier(zoom: $videoZoom,
-                                              offset: $panOffset,
-                                              isGesturing: $isTwoFingerGesturing,
-                                              enabled: true))
+                    .modifier(zoomPan(enabled: true))
                     .overlay(alignment: .bottomLeading) {
                         subscriptionBadge
                     }
@@ -177,7 +184,7 @@ struct AVPlayerView: View {
     /// Cover art in one view across both states instead of a branch each, so its size, rounding and inset interpolate
     /// as the mini player comes and goes rather than popping.
     private var artworkLayout: some View {
-        videoPlayerView
+        zoomedPlayerView
             .frame(width: hideMiniPlayer ? nil : miniPlayerWidth,
                    height: hideMiniPlayer ? nil : PlayerView.miniPlayerHeight)
             .transitionCover(player.transitionCovered)
@@ -190,6 +197,7 @@ struct AVPlayerView: View {
                         .onTapGesture { handleMiniPlayerTap() }
                 }
             }
+            .modifier(zoomPan(enabled: hideMiniPlayer, resetsOnEnd: true))
             .overlay(alignment: .bottomLeading) {
                 // fades rather than vanishing, so it goes with the art shrinking
                 subscriptionBadge
