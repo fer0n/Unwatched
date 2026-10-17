@@ -103,7 +103,7 @@ struct CleanupService {
         video.chapters = []
         video.mergedChapters = []
         let youtubeId = video.youtubeId
-        #if os(iOS)
+        #if os(iOS) || os(visionOS)
         Task {
             await NotificationManager.cancelNotificationForVideo(youtubeId)
         }
