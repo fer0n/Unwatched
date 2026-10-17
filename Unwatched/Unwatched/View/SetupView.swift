@@ -59,13 +59,15 @@ struct SetupView: View {
                     ? nil
                     : MacOSSplitView.minWindowWidth(sidebarHidden: navManager.isSidebarHidden))
             #endif
-            #if os(iOS)
+            #if os(iOS) || os(visionOS)
             .onChange(of: scenePhase, initial: true) {
                 switch scenePhase {
                 case .active:
                     LaunchTrace.mark(LaunchTrace.Phase.sceneActive)
                     Log.info("scenePhase: active")
+                    #if os(iOS)
                     BackgroundMonitor.handleActive()
+                    #endif
                     NotificationManager.handleNotifications(checkDeferred: true)
 
                     Task {
@@ -80,11 +82,15 @@ struct SetupView: View {
                     }
                 case .inactive:
                     Log.info("scenePhase: inactive")
+                    #if os(iOS)
                     BackgroundMonitor.handleInactive()
+                    #endif
                 case .background:
                     Log.info("scenePhase: background")
                     SetupView.handleAppClosed()
+                    #if os(iOS)
                     BackgroundMonitor.handleBackground()
+                    #endif
                     Signal.flushOnBackground()
                 default:
                     break
@@ -111,11 +117,6 @@ struct SetupView: View {
                 Task {
                     await BrowserManager.shared.logYoutubeCookies("launch")
                 }
-                #if os(visionOS)
-                Task {
-                    await browserManager.checkYoutubeLogin()
-                }
-                #endif
             }
             #if os(iOS) || os(visionOS)
             // `.active` is the first point at which the app is on screen — `sceneDidBecomeActive`
@@ -164,7 +165,7 @@ struct SetupView: View {
         PlayerManager.shared.updateElapsedTime(immediate: true)
         VideoService.commitPendingVideoUpdates()
         StatsService.shared.flush()
-        #if os(iOS)
+        #if os(iOS) || os(visionOS)
         NotificationManager.handleNotifications()
         #endif
         Task {
