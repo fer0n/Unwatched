@@ -46,6 +46,12 @@ extension View {
         self.listRowBackground(MyRowBackgroundColor())
     }
 
+    func listRowTip() -> some View {
+        self
+            .tipBackground(Color.insetBackgroundColor)
+            .myListRowBackground()
+    }
+
     func myListInsetBackground() -> some View {
         self
             #if !os(visionOS)

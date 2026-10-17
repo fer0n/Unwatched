@@ -56,8 +56,7 @@ struct HideShortsTipView: View {
         TipView(HideShortsTip()) { _ in
             hideShorts()
         }
-        .tipBackground(Color.insetBackgroundColor)
-        .listRowBackground(Color.backgroundColor)
+        .listRowTip()
         .tint(theme.color)
     }
 }

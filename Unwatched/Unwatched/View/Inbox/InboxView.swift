@@ -121,7 +121,6 @@ private struct InboxContent: View {
 
             if hasEntries {
                 InboxSwipeTipView()
-                    .myListRowBackground()
                     .listRowSeparator(.hidden)
             }
 

@@ -14,7 +14,7 @@ struct InboxSwipeTipView: View {
 
     var body: some View {
         TipView(swipeTip)
-            .tipBackground(Color.insetBackgroundColor)
+            .listRowTip()
             .swipeActions(edge: .leading, allowsFullSwipe: true) {
                 Button(action: invalidateTip) {
                     Image(systemName: "text.insert")

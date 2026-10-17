@@ -53,13 +53,13 @@ struct SearchRecommendationsTipView: View {
             }
             tip.invalidate(reason: .actionPerformed)
         }
-        .tipBackground(Color.insetBackgroundColor)
         .listRowSeparator(.hidden)
         #if os(macOS)
+        .tipBackground(Color.insetBackgroundColor)
         .listRowBackground(Color.clear)
         .tint(theme.color.mix(with: .black, by: 0.2))
         #else
-        .listRowBackground(Color.backgroundColor)
+        .listRowTip()
         .tint(theme.color)
         #endif
     }
