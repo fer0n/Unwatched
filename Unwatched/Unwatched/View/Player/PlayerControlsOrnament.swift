@@ -89,7 +89,8 @@ struct PlayerControlsOrnament: View {
                     inlineTime: true,
                     translucent: true,
                     showBackground: false,
-                    fillColor: .white
+                    fillColor: .white,
+                    showThumbnailPreview: true
                 )
                 .frame(width: 400)
 

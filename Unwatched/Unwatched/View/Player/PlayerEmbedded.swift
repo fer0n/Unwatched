@@ -81,6 +81,10 @@ struct PlayerEmbedded: View {
         }
         .scaleEffect(customControlsActive ? videoZoom : 1.0)
         .offset(customControlsActive ? panOffset : .zero)
+        #elseif os(visionOS)
+        .overlay {
+        ScrubberThumbnailOverlay()
+        }
         #endif
         .clipShape(RoundedRectangle(
                     cornerRadius: Const.videoPlayerCornerRadius,
