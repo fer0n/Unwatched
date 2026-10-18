@@ -17,8 +17,9 @@ public struct PodcastFeed: Sendable {
 public enum PodcastService {
     /// Podcast episodes reuse `youtubeId` as their stable identity — it's what queue entries, chapters and stats are
     /// keyed by.
-    public static func episodeId(guid: String) -> String {
-        let digest = Insecure.SHA1.hash(data: Data(guid.utf8))
+    public static func episodeId(guid: String, isPrivateFeed: Bool = false) -> String {
+        let key = isPrivateFeed ? "private\n" + guid : guid
+        let digest = Insecure.SHA1.hash(data: Data(key.utf8))
         let hex = digest.map { String(format: "%02x", $0) }.joined()
         return "pod-" + hex.prefix(24)
     }

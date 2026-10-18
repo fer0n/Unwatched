@@ -18,6 +18,7 @@ public final class PodcastFeedParser: NSObject, XMLParserDelegate {
     public var showDescription = ""
     /// The show's `<language>`, as the feed writes it (e.g. "de", "en-US"). Not persisted.
     public private(set) var showLanguage: String?
+    public let isPrivateFeed: Bool
 
     private let limitEpisodes: Int?
 
@@ -49,8 +50,9 @@ public final class PodcastFeedParser: NSObject, XMLParserDelegate {
         var transcripts: [PodcastTranscriptSource] = []
     }
 
-    public init(limitEpisodes: Int? = nil) {
+    public init(limitEpisodes: Int? = nil, isPrivateFeed: Bool = false) {
         self.limitEpisodes = limitEpisodes
+        self.isPrivateFeed = isPrivateFeed
     }
 
     /// True when the data looks like a podcast (RSS 2.0) feed rather than YouTube's Atom feed.
@@ -65,7 +67,7 @@ public final class PodcastFeedParser: NSObject, XMLParserDelegate {
 
     public static func parse(_ data: Data, limitEpisodes: Int? = nil) -> PodcastFeedParser {
         let parser = XMLParser(data: data)
-        let delegate = PodcastFeedParser(limitEpisodes: limitEpisodes)
+        let delegate = PodcastFeedParser(limitEpisodes: limitEpisodes, isPrivateFeed: isPrivateFeed(data))
         parser.delegate = delegate
         parser.shouldProcessNamespaces = false
         delegate.parsingSucceeded = parser.parse()
@@ -216,7 +218,10 @@ public final class PodcastFeedParser: NSObject, XMLParserDelegate {
             Log.info("podcast episode without enclosure: \(item.title)")
             return
         }
-        let id = PodcastService.episodeId(guid: item.guid.isEmpty ? enclosure : item.guid)
+        let id = PodcastService.episodeId(
+            guid: item.guid.isEmpty ? enclosure : item.guid,
+            isPrivateFeed: isPrivateFeed
+        )
         if !item.transcripts.isEmpty {
             transcriptSources[id] = item.transcripts
         }

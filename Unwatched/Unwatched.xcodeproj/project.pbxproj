@@ -1084,6 +1084,7 @@
 		FE1000FF000000000000C002 /* PodcastPreviewView.swift in Sources */ = {isa = PBXBuildFile; fileRef = FE1000FF000000000000C001 /* PodcastPreviewView.swift */; };
 		FE1000FF000000000000C003 /* PodcastPreviewView.swift in Sources */ = {isa = PBXBuildFile; fileRef = FE1000FF000000000000C001 /* PodcastPreviewView.swift */; };
 		FE1000FF000000000000C012 /* PodcastFeedParserTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = FE1000FF000000000000C011 /* PodcastFeedParserTests.swift */; };
+		5542A21616C2A5562836703A /* PodcastPrivateFeedTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5D8C9530CD3AAAF94FF91E67 /* PodcastPrivateFeedTests.swift */; };
 		FE1000FF000000000000C112 /* TranscriptAlignmentTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = FE1000FF000000000000C111 /* TranscriptAlignmentTests.swift */; };
 		FE1000FF000000000000C212 /* Mp3ClockTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = FE1000FF000000000000C211 /* Mp3ClockTests.swift */; };
 		FE1000FF000000000000C312 /* GapChapterLabelTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = FE1000FF000000000000C311 /* GapChapterLabelTests.swift */; };
@@ -1815,6 +1816,7 @@
 		FE100002AA0000000010F007 /* SearchFilterMenu.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SearchFilterMenu.swift; sourceTree = "<group>"; };
 		FE1000FF000000000000C001 /* PodcastPreviewView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PodcastPreviewView.swift; sourceTree = "<group>"; };
 		FE1000FF000000000000C011 /* PodcastFeedParserTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PodcastFeedParserTests.swift; sourceTree = "<group>"; };
+		5D8C9530CD3AAAF94FF91E67 /* PodcastPrivateFeedTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PodcastPrivateFeedTests.swift; sourceTree = "<group>"; };
 		FE1000FF000000000000C111 /* TranscriptAlignmentTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TranscriptAlignmentTests.swift; sourceTree = "<group>"; };
 		FE1000FF000000000000C211 /* Mp3ClockTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Mp3ClockTests.swift; sourceTree = "<group>"; };
 		FE1000FF000000000000C311 /* GapChapterLabelTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = GapChapterLabelTests.swift; sourceTree = "<group>"; };
@@ -2117,6 +2119,7 @@
 				88AA10072F0000000000A0F7 /* FilteredQueueWriteTests.swift */,
 				88AA10092F0000000000A009 /* SearchMaterializeTests.swift */,
 				FE1000FF000000000000C011 /* PodcastFeedParserTests.swift */,
+				5D8C9530CD3AAAF94FF91E67 /* PodcastPrivateFeedTests.swift */,
 				FE1000FF000000000000C111 /* TranscriptAlignmentTests.swift */,
 				FE1000FF000000000000C211 /* Mp3ClockTests.swift */,
 				FE1000FF000000000000C311 /* GapChapterLabelTests.swift */,
@@ -3439,6 +3442,7 @@
 				88AA10082F0000000000A0F8 /* FilteredQueueWriteTests.swift in Sources */,
 				88AA100A2F0000000000A00A /* SearchMaterializeTests.swift in Sources */,
 				FE1000FF000000000000C012 /* PodcastFeedParserTests.swift in Sources */,
+				5542A21616C2A5562836703A /* PodcastPrivateFeedTests.swift in Sources */,
 				FE1000FF000000000000C112 /* TranscriptAlignmentTests.swift in Sources */,
 				FE1000FF000000000000C212 /* Mp3ClockTests.swift in Sources */,
 				FE1000FF000000000000C312 /* GapChapterLabelTests.swift in Sources */,
