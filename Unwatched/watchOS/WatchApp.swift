@@ -93,7 +93,7 @@ struct UnwatchedWatchApp: App {
     /// The phone's own theme, written here by `WatchQueueClient` whenever the phone sends state.
     @AppStorage(Const.themeColor) private var theme: ThemeColor = .defaultTheme
     @State private var player = WatchAudioPlayer()
-    @State private var imageCacheManager = ImageCacheManager()
+    @State private var imageCacheManager = ImageCacheManager.shared
     @State private var syncer = SyncManager()
     @WKApplicationDelegateAdaptor private var appDelegate: WatchAppDelegate
     @State private var navigator = WatchNavigator.shared

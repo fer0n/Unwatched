@@ -26,6 +26,9 @@ public struct WatchRemoteState: WatchPayload {
     public var hasPreviousChapter: Bool
     public var hasNextChapter: Bool
     public var chapterTitle: String?
+    public var chapterImageUrl: URL?
+    /// Set when only the phone can resolve `chapterImageUrl`, see `ChapterImageStore`.
+    public var chapterImageData: Data?
     public var chapterEndTime: Double?
     public var continuousPlay: Bool
     public var trimSilence: Bool
@@ -55,6 +58,8 @@ public struct WatchRemoteState: WatchPayload {
         hasPreviousChapter: Bool = false,
         hasNextChapter: Bool = false,
         chapterTitle: String? = nil,
+        chapterImageUrl: URL? = nil,
+        chapterImageData: Data? = nil,
         chapterEndTime: Double? = nil,
         continuousPlay: Bool = false,
         trimSilence: Bool = false,
@@ -79,6 +84,8 @@ public struct WatchRemoteState: WatchPayload {
         self.hasPreviousChapter = hasPreviousChapter
         self.hasNextChapter = hasNextChapter
         self.chapterTitle = chapterTitle
+        self.chapterImageUrl = chapterImageUrl
+        self.chapterImageData = chapterImageData
         self.chapterEndTime = chapterEndTime
         self.continuousPlay = continuousPlay
         self.trimSilence = trimSilence

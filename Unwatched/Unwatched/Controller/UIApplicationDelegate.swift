@@ -298,16 +298,20 @@ class SceneDelegate: UIResponder, UIWindowSceneDelegate {
 /// The watch's player, driving this one through the hooks `WatchQueueProvider` calls in on.
 @MainActor
 enum WatchRemoteBridge {
+    private static var loadedChapterImage: (url: URL, data: Data)?
+
     static func setup() {
         guard WatchQueueProvider.setup() else { return }
         WatchQueueProvider.remoteState = { state() }
         WatchQueueProvider.remoteCommand = { apply($0) }
         observe()
+        loadChapterImage()
     }
 
     private static func state() -> WatchRemoteState {
         let player = PlayerManager.shared
         let video = player.video
+        let chapterImage = currentChapterImage()
         return WatchRemoteState(
             isPlaying: player.isPlaying,
             title: video?.title,
@@ -324,6 +328,8 @@ enum WatchRemoteBridge {
             hasPreviousChapter: player.previousChapter != nil,
             hasNextChapter: player.nextChapter != nil,
             chapterTitle: player.currentChapter?.titleText,
+            chapterImageUrl: chapterImage.url,
+            chapterImageData: chapterImage.data,
             chapterEndTime: player.currentEndTime,
             continuousPlay: UserDefaults.standard.bool(forKey: Const.continuousPlay),
             trimSilence: UserDefaults.standard.bool(forKey: Const.trimSilence),
@@ -420,12 +426,33 @@ enum WatchRemoteBridge {
             _ = player.video?.youtubeId
             _ = player.video?.title
             _ = player.currentChapter?.title
+            _ = player.currentChapter?.imageUrl
             _ = player.video?.chapterRevision
         } onChange: {
             Task { @MainActor in
                 WatchQueueProvider.pushRemoteState()
+                loadChapterImage()
                 observe()
             }
+        }
+    }
+
+    /// A local image goes out only with its bytes: the watch wouldn't retry a URL it failed to load.
+    private static func currentChapterImage() -> (url: URL?, data: Data?) {
+        guard let url = PlayerManager.shared.currentChapter?.imageUrl else { return (nil, nil) }
+        guard ChapterImageStore.isLocal(url) else { return (url, nil) }
+        guard let loaded = loadedChapterImage, loaded.url == url else { return (nil, nil) }
+        return (url, loaded.data)
+    }
+
+    private static func loadChapterImage() {
+        guard let url = PlayerManager.shared.currentChapter?.imageUrl,
+              ChapterImageStore.isLocal(url),
+              loadedChapterImage?.url != url else { return }
+        Task {
+            guard let data = await ChapterImageStore.watchData(for: url) else { return }
+            loadedChapterImage = (url, data)
+            WatchQueueProvider.pushRemoteState()
         }
     }
 }

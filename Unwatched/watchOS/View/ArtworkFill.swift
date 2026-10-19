@@ -17,7 +17,7 @@ import UnwatchedShared
 /// Podcast cover art is genuinely square, has no bars to crop, and would lose its top and bottom to
 /// that pass — so it fills the container directly.
 struct ArtworkFill: View {
-    let url: URL?
+    let urls: [URL?]
     let isSquare: Bool
     var maxPixelSize: CGFloat = 320
 
@@ -36,7 +36,7 @@ struct ArtworkFill: View {
     }
 
     private var image: some View {
-        CachedImageView(urls: [url], maxPixelSize: maxPixelSize) { image in
+        CachedImageView(urls: urls, maxPixelSize: maxPixelSize) { image in
             image
                 .resizable()
                 .scaledToFill()

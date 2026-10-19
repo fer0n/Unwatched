@@ -292,8 +292,8 @@ final class WatchAudioPlayer {
         chapters = video?.sortedChapterData ?? []
     }
 
-    var currentChapterTitle: String? {
-        chapters.last { $0.startTime <= currentTime }?.title
+    var currentChapter: SendableChapter? {
+        chapters.last { $0.startTime <= currentTime }
     }
 
     /// Where the current chapter ends, or the item.

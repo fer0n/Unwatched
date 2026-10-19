@@ -151,7 +151,7 @@ struct WatchPlayerView: View {
     private func fittedArtwork(_ display: WatchPlayerDisplay) -> some View {
         // `.fill` pushes the controls off screen for a square cover
         let shape = RoundedRectangle(cornerRadius: 8)
-        return ArtworkFill(url: display.artworkUrl, isSquare: display.isSquare)
+        return ArtworkFill(urls: display.artworkUrls, isSquare: display.isSquare)
             .aspectRatio(display.isSquare ? 1 : Const.defaultVideoAspectRatio, contentMode: .fit)
             .clipShape(shape)
             .artworkBorder(shape)

@@ -34,7 +34,7 @@ struct WatchQueueRow: View {
         HStack(spacing: 8) {
             Color.gray.opacity(0.3)
                 .overlay {
-                    ArtworkFill(url: artworkUrl, isSquare: isSquare, maxPixelSize: Self.side * 3)
+                    ArtworkFill(urls: [artworkUrl], isSquare: isSquare, maxPixelSize: Self.side * 3)
                 }
                 .frame(width: Self.side, height: Self.side)
                 .clipShape(.rect(cornerRadius: 5))

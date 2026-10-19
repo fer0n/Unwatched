@@ -106,6 +106,12 @@ public final class WatchQueueClient: NSObject, WCSessionDelegate {
     /// the watch has to draw itself in it at launch, before the phone has been asked anything.
     @MainActor
     private func adopt(_ state: WatchRemoteState) {
+        if let url = state.chapterImageUrl, let data = state.chapterImageData,
+           ImageCacheManager.shared[url.absoluteString] == nil {
+            ImageCacheManager.shared[url.absoluteString] = ImageCacheInfo(
+                url: url, data: data, persistImage: false, persistColor: false
+            )
+        }
         remote = state
         if let theme = state.theme,
            theme != UserDefaults.standard.integer(forKey: Const.themeColor) {

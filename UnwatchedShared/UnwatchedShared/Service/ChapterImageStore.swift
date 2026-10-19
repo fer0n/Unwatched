@@ -20,4 +20,16 @@ public enum ChapterImageStore {
         await ImageService.replaceImage(url: url, data: data)
         return url
     }
+
+    public static func isLocal(_ url: URL) -> Bool {
+        url.scheme == scheme
+    }
+
+#if os(iOS)
+    /// Small enough to send to the watch.
+    public static func watchData(for url: URL) async -> Data? {
+        guard let data = await ImageService.imageData(for: url) else { return nil }
+        return PlatformImage(downsampling: data, maxPixelSize: 240)?.jpegData(compressionQuality: 0.7)
+    }
+#endif
 }
