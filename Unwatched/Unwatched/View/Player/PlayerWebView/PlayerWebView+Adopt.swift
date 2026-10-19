@@ -20,10 +20,12 @@ extension PlayerWebView {
         backend.appliedUIMode = warmed.uiMode
 
         attach(coordinator, to: webView)
+        // also when the silent start timed out: the warm-up muted the page before trying, and
+        // `setupVideo()` would keep re-applying that on every media element rebuild
+        evaluateJavaScript(webView, PlayerWebView.muteScript(false))
 
         if warmed.didStart {
             player.unstarted = false
-            evaluateJavaScript(webView, PlayerWebView.muteScript(false))
         } else {
             // the page still shows YouTube's poster until it starts, so it has to be covered from
             // the moment the swap happens, not a frame later
