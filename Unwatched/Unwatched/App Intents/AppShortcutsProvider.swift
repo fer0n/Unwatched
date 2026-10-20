@@ -23,7 +23,7 @@ struct UnwatchedAppShortcuts: AppShortcutsProvider {
         )
         AppShortcut(
             intent: GetCurrentVideo(),
-            phrases: ["Get Current Video from ${applicationName}"],
+            phrases: ["Get Current Media from ${applicationName}", "Get Current Video from ${applicationName}"],
             shortTitle: "getCurrentVideo",
             systemImageName: "info.circle.fill"
         )

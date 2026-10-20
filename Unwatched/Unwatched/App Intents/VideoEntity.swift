@@ -19,24 +19,48 @@ struct VideoEntity: AppEntity {
     @Property(title: "channelTitle")
     var channelTitle: String?
 
+    @Property(title: "mediaType")
+    var type: MediaType
+
+    @Property(title: "mediaCurrentTime")
+    var currentTime: Double?
+
+    @Property(title: "mediaDuration")
+    var duration: Double?
+
     var displayRepresentation: DisplayRepresentation {
         DisplayRepresentation(stringLiteral: "\(title)")
     }
 
-    static let typeDisplayRepresentation: TypeDisplayRepresentation = "Video"
+    static let typeDisplayRepresentation: TypeDisplayRepresentation = "video"
 
     static let defaultQuery = VideoEntityQuery()
 
-    init(
-        id: String,
-        title: String,
-        url: URL?,
-        channelTitle: String?
-    ) {
-        self.id = id
-        self.title = title
-        self.url = url
-        self.channelTitle = channelTitle
+    @MainActor
+    init(_ video: Video) {
+        let player = PlayerManager.shared
+        let isLoaded = player.video?.youtubeId == video.youtubeId
+        self.id = video.youtubeId
+        self.title = video.title
+        self.url = video.url
+        self.channelTitle = video.subscription?.title
+        self.type = video.isPodcast ? .podcast : .video
+        self.currentTime = (isLoaded ? player.currentTime : nil) ?? video.elapsedSeconds
+        self.duration = video.duration
+    }
+}
+
+enum MediaType: String, AppEnum {
+    case video
+    case podcast
+
+    static var typeDisplayRepresentation: TypeDisplayRepresentation { "mediaTypeType" }
+
+    static var caseDisplayRepresentations: [MediaType: DisplayRepresentation] {
+        [
+            .video: "mediaTypeVideo",
+            .podcast: "mediaTypePodcast"
+        ]
     }
 }
 

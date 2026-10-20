@@ -4,8 +4,6 @@
 //
 
 import AppIntents
-import Intents
-import SwiftData
 import UnwatchedShared
 
 struct GetCurrentVideo: AppIntent {
@@ -15,20 +13,8 @@ struct GetCurrentVideo: AppIntent {
     @MainActor
     func perform() async throws -> some IntentResult & ReturnsValue<VideoEntity> {
         Signal.log("Shortcut.GetCurrentVideo")
-        let context = DataProvider.mainContext
-        let sort = SortDescriptor<QueueEntry>(\.order)
-        let fetch = FetchDescriptor<QueueEntry>(sortBy: [sort])
-        let entries = try context.fetch(fetch)
-        if let video = entries.first?.video {
-            let result = VideoEntity(
-                id: video.youtubeId,
-                title: video.title,
-                url: video.url,
-                channelTitle: video.subscription?.title
-            )
-            return .result(value: result)
-        }
-        throw VideoError.noVideoFound
+        let video = try VideoService.getVideoOrCurrent(nil)
+        return .result(value: VideoEntity(video))
     }
 
     static var parameterSummary: some ParameterSummary {

@@ -50,7 +50,7 @@ private struct InboxContent: View {
     }
 
     init(oldestFirst: Bool) {
-        _inboxEntries = Query(InboxContent.descriptor(oldestFirst), animation: .default)
+        _inboxEntries = Query(InboxEntry.descriptor(oldestFirst: oldestFirst), animation: .default)
     }
 
     var body: some View {
@@ -211,15 +211,6 @@ private struct InboxContent: View {
         case .moveToInbox:
             break
         }
-    }
-
-    /// Oldest first fetches the oldest entries, not the newest ones in reverse
-    static func descriptor(_ oldestFirst: Bool) -> FetchDescriptor<InboxEntry> {
-        var descriptor = FetchDescriptor<InboxEntry>(
-            sortBy: [SortDescriptor(\InboxEntry.date, order: oldestFirst ? .forward : .reverse)]
-        )
-        descriptor.fetchLimit = Const.inboxFetchLimit
-        return descriptor
     }
 }
 

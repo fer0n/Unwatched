@@ -679,11 +679,17 @@ extension VideoService {
             return loadedVideo
         }
 
-        let context = DataProvider.mainContext
-        guard let fetchedVideo = QueueFilter.all.entries(context, limit: 1).first?.video else {
+        guard let currentVideo = currentVideo() else {
             throw VideoError.noVideoFound
         }
-        return fetchedVideo
+        return currentVideo
+    }
+
+    @MainActor
+    private static func currentVideo() -> Video? {
+        let player = PlayerManager.shared
+        let context = DataProvider.mainContext
+        return player.video ?? QueueFilter(player.playbackTag, context).videos(context, limit: 1).first
     }
 
     /// Which of several episodes sharing one url is meant. A link made before `UrlService.episodeIdKey`
