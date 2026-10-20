@@ -969,6 +969,20 @@ final class ChapterServiceTests: XCTestCase {
                     SendableChapter(title: "Outro", startTime: 10 * 60 + 15),
                 ]
             ),
+            (
+                """
+                Show notes: https://atp.fm/atp-tier-list-emoji
+
+                Welcome (00:00:00)
+                Backhand index finger pointing up (00:02:17)
+                Final ranking [02:18:25]
+                """,
+                [
+                    SendableChapter(title: "Welcome", startTime: 0, endTime: 2 * 60 + 17),
+                    SendableChapter(title: "Backhand index finger pointing up", startTime: 2 * 60 + 17, endTime: 2 * 3600 + 18 * 60 + 25),
+                    SendableChapter(title: "Final ranking", startTime: 2 * 3600 + 18 * 60 + 25)
+                ]
+            ),
 
             // time then title
             (
