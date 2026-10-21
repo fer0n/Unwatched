@@ -222,7 +222,11 @@ public final class Video: VideoData, CustomStringConvertible, Exportable {
             chaptersUrl: chaptersUrl,
             createdDate: createdDate,
             hasInboxEntry: inboxEntry != nil,
-            queueEntry: queueEntry?.toExport,
+            // built from self rather than `queueEntry.toExport`, which faults the entry's `video`
+            // back in; that fault crashed the backup when the entry was deleted mid-export
+            queueEntry: queueEntry.map {
+                SendableQueueEntry(videoId: persistentModelID.hashValue, order: $0.order)
+            },
             isNew: isNew,
             )
     }

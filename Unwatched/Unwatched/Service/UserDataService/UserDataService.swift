@@ -17,9 +17,13 @@ struct UserDataService {
 
         func fetchMapExportable<T: PersistentModel & Exportable>(
             _ model: T.Type,
-            _ fetchDesc: FetchDescriptor<T>? = nil
+            _ fetchDesc: FetchDescriptor<T>? = nil,
+            prefetching: [PartialKeyPath<T>] = []
         ) -> [T.ExportType] {
-            let fetch = fetchDesc ?? FetchDescriptor<T>()
+            // Prefetched relationships load with the fetch. Faulting them in later crashes
+            // (SwiftData assertion) if another context deleted the row mid-export.
+            var fetch = fetchDesc ?? FetchDescriptor<T>()
+            fetch.relationshipKeyPathsForPrefetching = prefetching
             if let items = try? context.fetch(fetch) {
                 return items.compactMap { $0.toExport }
             }
@@ -27,7 +31,7 @@ struct UserDataService {
         }
 
         let fetchVideos = getVideoFetchIfMinimal()
-        let fetched = fetchMapExportable(Video.self, fetchVideos)
+        let fetched = fetchMapExportable(Video.self, fetchVideos, prefetching: [\.queueEntry])
         Log.info("fetched \(fetched.count)")
         backup.videos = fetched
         if fetchVideos != nil {
@@ -47,8 +51,8 @@ struct UserDataService {
             }
         }
         backup.settings         = getSettings()
-        backup.queueEntries     = fetchMapExportable(QueueEntry.self)
-        backup.inboxEntries     = fetchMapExportable(InboxEntry.self)
+        backup.queueEntries     = fetchMapExportable(QueueEntry.self, prefetching: [\.video])
+        backup.inboxEntries     = fetchMapExportable(InboxEntry.self, prefetching: [\.video])
         var subs                = fetchMapExportable(Subscription.self)
         subs = subs.map { var sub = $0; sub.persistentId = nil; return sub }
         backup.subscriptions = subs.filter({ !$0.isArchived || !$0.videosIds.isEmpty })
