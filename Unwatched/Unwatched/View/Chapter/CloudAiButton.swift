@@ -29,8 +29,9 @@ struct CloudAiButton<Label: View>: View {
                     return
                 }
                 do {
-                    try await ChapterAutomation.loadTranscript(video)
+                    try await ChapterAutomation.loadTranscript(video, generateIfMissing: true)
                     await ChapterAutomation.sendNotification(for: video)
+                } catch is CancellationError {
                 } catch {
                     appNotificationVM.show(error.localizedDescription, isError: true)
                 }
