@@ -15,6 +15,7 @@ struct MacOSSplitView: View {
     let isLandscape: Bool
     let landscapeFullscreen: Bool
     let breakpoint: CGFloat = 200
+    @State private var titlebarHeight: CGFloat = 0
 
     static let sidebarWidth: (min: CGFloat, ideal: CGFloat, max: CGFloat) = (320, 350, 450)
 
@@ -61,6 +62,8 @@ struct MacOSSplitView: View {
                 #endif
             }
             .edgesIgnoringSafeArea(.vertical)
+            // the reader's own proxy reports no inset once it ignores the safe area
+            .onGeometryChange(for: CGFloat.self) { $0.safeAreaInsets.top } action: { titlebarHeight = $0 }
             #if os(macOS)
             .overlay {
                 if !isFakePip && !navManager.isMacosFullscreen {
@@ -91,7 +94,9 @@ struct MacOSSplitView: View {
     func spaceRequiresHorizontalLayout(_ size: CGSize) -> Bool {
         let videoAspectRatio = player.videoAspectRatio
         let videoHeight =  size.width / videoAspectRatio
-        let remainingHeight = size.height - videoHeight
+        // with the sidebar hidden, the traffic lights sit over the video: switch early enough to clear them
+        let reservedHeight = detailOnly ? titlebarHeight : 0
+        let remainingHeight = size.height - reservedHeight - videoHeight
         return remainingHeight < breakpoint
     }
 

@@ -44,6 +44,7 @@
 		4BCA070FBD40CC0CC0A5001A /* ChapterSettingsView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 27693FCF8A1DE498E1EB353F /* ChapterSettingsView.swift */; };
 		50431C1FF762446807317790 /* CloudAiButton.swift in Sources */ = {isa = PBXBuildFile; fileRef = 160A9D24CBE56DCB823A70A9 /* CloudAiButton.swift */; };
 		544B2D64C800397EDBC8422C /* ChapterSettingsView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 27693FCF8A1DE498E1EB353F /* ChapterSettingsView.swift */; };
+		5542A21616C2A5562836703A /* PodcastPrivateFeedTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5D8C9530CD3AAAF94FF91E67 /* PodcastPrivateFeedTests.swift */; };
 		55A9DF11DDE89BB7A5CDC45F /* PodcastChapterArtworkTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = C485C322062FFD77AA82DBD1 /* PodcastChapterArtworkTests.swift */; };
 		5A4E5E0000000000000000B2 /* UnwatchedShareExtension.appex in Embed Foundation Extensions */ = {isa = PBXBuildFile; fileRef = 5A4E5E0000000000000000A2 /* UnwatchedShareExtension.appex */; platformFilters = (ios, xros, ); settings = {ATTRIBUTES = (RemoveHeadersOnCopy, ); }; };
 		5A4E5E0000000000000001B1 /* UnwatchedShareExtension/ShareCardView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5A4E5E0000000000000001A1 /* UnwatchedShareExtension/ShareCardView.swift */; platformFilters = (ios, xros, ); };
@@ -398,7 +399,6 @@
 		887E82A82CD8FC1000B196EA /* AddYoutubeURL.swift in Sources */ = {isa = PBXBuildFile; fileRef = 887E82A72CD8FC1000B196EA /* AddYoutubeURL.swift */; };
 		887E82AA2CD8FC4600B196EA /* VideoEntity.swift in Sources */ = {isa = PBXBuildFile; fileRef = 887E82A92CD8FC4600B196EA /* VideoEntity.swift */; };
 		887E82AC2CD8FC8B00B196EA /* GetCurrentVideo.swift in Sources */ = {isa = PBXBuildFile; fileRef = 887E82AB2CD8FC8B00B196EA /* GetCurrentVideo.swift */; };
-		88C0FFEE2F40000000000A02 /* GetMediaList.swift in Sources */ = {isa = PBXBuildFile; fileRef = 88C0FFEE2F40000000000A01 /* GetMediaList.swift */; };
 		887E82AE2CD8FD2F00B196EA /* WatchInUnwatched.swift in Sources */ = {isa = PBXBuildFile; fileRef = 887E82AD2CD8FD2F00B196EA /* WatchInUnwatched.swift */; };
 		887E82B02CD8FD8800B196EA /* Notification.swift in Sources */ = {isa = PBXBuildFile; fileRef = 887E82AF2CD8FD8500B196EA /* Notification.swift */; };
 		887E82B12CD8FD8800B196EA /* Notification.swift in Sources */ = {isa = PBXBuildFile; fileRef = 887E82AF2CD8FD8500B196EA /* Notification.swift */; };
@@ -714,7 +714,6 @@
 		88AA40072F2000000000D007 /* PreviousVideoChapter.swift in Sources */ = {isa = PBXBuildFile; fileRef = 88F85F4C2E100AD000FB15A1 /* PreviousVideoChapter.swift */; };
 		88AA40082F2000000000D008 /* AddSubscription.swift in Sources */ = {isa = PBXBuildFile; fileRef = 881EEE542D02F0D40028EAF8 /* AddSubscription.swift */; };
 		88AA40092F2000000000D009 /* GetCurrentVideo.swift in Sources */ = {isa = PBXBuildFile; fileRef = 887E82AB2CD8FC8B00B196EA /* GetCurrentVideo.swift */; };
-		88C0FFEE2F40000000000A03 /* GetMediaList.swift in Sources */ = {isa = PBXBuildFile; fileRef = 88C0FFEE2F40000000000A01 /* GetMediaList.swift */; };
 		88AA40102F2000000000D010 /* setChapters.swift in Sources */ = {isa = PBXBuildFile; fileRef = 88CD909F2E2BC74400CD756D /* setChapters.swift */; };
 		88AA40112F2000000000D011 /* WatchInUnwatched.swift in Sources */ = {isa = PBXBuildFile; fileRef = 887E82AD2CD8FD2F00B196EA /* WatchInUnwatched.swift */; };
 		88AA40122F2000000000D012 /* SetContinuousPlay.swift in Sources */ = {isa = PBXBuildFile; fileRef = 880882062E564EBF008C38DA /* SetContinuousPlay.swift */; };
@@ -755,6 +754,8 @@
 		88BF35992BC96C37005FA53E /* TextFieldClearButton.swift in Sources */ = {isa = PBXBuildFile; fileRef = 88BF35982BC96C37005FA53E /* TextFieldClearButton.swift */; };
 		88BFA0EA2C871E8A0095EFBA /* AutoHideVM.swift in Sources */ = {isa = PBXBuildFile; fileRef = 88BFA0E92C871E8A0095EFBA /* AutoHideVM.swift */; };
 		88BFA0EB2C871E8A0095EFBA /* AutoHideVM.swift in Sources */ = {isa = PBXBuildFile; fileRef = 88BFA0E92C871E8A0095EFBA /* AutoHideVM.swift */; };
+		88C0FFEE2F40000000000A02 /* GetMediaList.swift in Sources */ = {isa = PBXBuildFile; fileRef = 88C0FFEE2F40000000000A01 /* GetMediaList.swift */; };
+		88C0FFEE2F40000000000A03 /* GetMediaList.swift in Sources */ = {isa = PBXBuildFile; fileRef = 88C0FFEE2F40000000000A01 /* GetMediaList.swift */; };
 		88C10D772D088543005EDB4B /* ShortsSetting.swift in Sources */ = {isa = PBXBuildFile; fileRef = 88C10D762D08853E005EDB4B /* ShortsSetting.swift */; };
 		88C10D782D088543005EDB4B /* ShortsSetting.swift in Sources */ = {isa = PBXBuildFile; fileRef = 88C10D762D08853E005EDB4B /* ShortsSetting.swift */; };
 		88C194742BBFC8440073E2E1 /* SubscriptionActor+Info.swift in Sources */ = {isa = PBXBuildFile; fileRef = 88C194732BBFC8440073E2E1 /* SubscriptionActor+Info.swift */; };
@@ -1086,7 +1087,6 @@
 		FE1000FF000000000000C002 /* PodcastPreviewView.swift in Sources */ = {isa = PBXBuildFile; fileRef = FE1000FF000000000000C001 /* PodcastPreviewView.swift */; };
 		FE1000FF000000000000C003 /* PodcastPreviewView.swift in Sources */ = {isa = PBXBuildFile; fileRef = FE1000FF000000000000C001 /* PodcastPreviewView.swift */; };
 		FE1000FF000000000000C012 /* PodcastFeedParserTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = FE1000FF000000000000C011 /* PodcastFeedParserTests.swift */; };
-		5542A21616C2A5562836703A /* PodcastPrivateFeedTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5D8C9530CD3AAAF94FF91E67 /* PodcastPrivateFeedTests.swift */; };
 		FE1000FF000000000000C112 /* TranscriptAlignmentTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = FE1000FF000000000000C111 /* TranscriptAlignmentTests.swift */; };
 		FE1000FF000000000000C212 /* Mp3ClockTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = FE1000FF000000000000C211 /* Mp3ClockTests.swift */; };
 		FE1000FF000000000000C312 /* GapChapterLabelTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = FE1000FF000000000000C311 /* GapChapterLabelTests.swift */; };
@@ -1269,6 +1269,7 @@
 		5A4E5E0000000000000001A6 /* UnwatchedShareExtension/ShareCardView+ChannelPreview.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "UnwatchedShareExtension/ShareCardView+ChannelPreview.swift"; sourceTree = "<group>"; };
 		5A7C1E90B2D34F6A8C1D0E01 /* SubscriptionVideoList.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SubscriptionVideoList.swift; sourceTree = "<group>"; };
 		5A7C1E90B2D34F6A8C1D0E11 /* SubscriptionVideoListVM.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SubscriptionVideoListVM.swift; sourceTree = "<group>"; };
+		5D8C9530CD3AAAF94FF91E67 /* PodcastPrivateFeedTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PodcastPrivateFeedTests.swift; sourceTree = "<group>"; };
 		6540BCF99D884837FD85C560 /* GetChapters.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = GetChapters.swift; sourceTree = "<group>"; };
 		67E1C9774B64420098EC98D5 /* PodcastEpisodeCacheTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PodcastEpisodeCacheTests.swift; sourceTree = "<group>"; };
 		6B07B12CB9A84ECC29F6B7C4 /* ChapterAutomation+Notification.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "ChapterAutomation+Notification.swift"; sourceTree = "<group>"; };
@@ -1479,7 +1480,6 @@
 		887E82A72CD8FC1000B196EA /* AddYoutubeURL.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AddYoutubeURL.swift; sourceTree = "<group>"; };
 		887E82A92CD8FC4600B196EA /* VideoEntity.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = VideoEntity.swift; sourceTree = "<group>"; };
 		887E82AB2CD8FC8B00B196EA /* GetCurrentVideo.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = GetCurrentVideo.swift; sourceTree = "<group>"; };
-		88C0FFEE2F40000000000A01 /* GetMediaList.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = GetMediaList.swift; sourceTree = "<group>"; };
 		887E82AD2CD8FD2F00B196EA /* WatchInUnwatched.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = WatchInUnwatched.swift; sourceTree = "<group>"; };
 		887E82AF2CD8FD8500B196EA /* Notification.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Notification.swift; sourceTree = "<group>"; };
 		887EB2DD2CFE167600F9D517 /* MenuSheetDetents.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MenuSheetDetents.swift; sourceTree = "<group>"; };
@@ -1620,6 +1620,7 @@
 		88BF31042CAE812D00AE26EC /* LocalizedStringKey.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LocalizedStringKey.swift; sourceTree = "<group>"; };
 		88BF35982BC96C37005FA53E /* TextFieldClearButton.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TextFieldClearButton.swift; sourceTree = "<group>"; };
 		88BFA0E92C871E8A0095EFBA /* AutoHideVM.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AutoHideVM.swift; sourceTree = "<group>"; };
+		88C0FFEE2F40000000000A01 /* GetMediaList.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = GetMediaList.swift; sourceTree = "<group>"; };
 		88C10D762D08853E005EDB4B /* ShortsSetting.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ShortsSetting.swift; sourceTree = "<group>"; };
 		88C194732BBFC8440073E2E1 /* SubscriptionActor+Info.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "SubscriptionActor+Info.swift"; sourceTree = "<group>"; };
 		88C194762BBFCE9A0073E2E1 /* WatchedButton.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = WatchedButton.swift; sourceTree = "<group>"; };
@@ -1819,7 +1820,6 @@
 		FE100002AA0000000010F007 /* SearchFilterMenu.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SearchFilterMenu.swift; sourceTree = "<group>"; };
 		FE1000FF000000000000C001 /* PodcastPreviewView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PodcastPreviewView.swift; sourceTree = "<group>"; };
 		FE1000FF000000000000C011 /* PodcastFeedParserTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PodcastFeedParserTests.swift; sourceTree = "<group>"; };
-		5D8C9530CD3AAAF94FF91E67 /* PodcastPrivateFeedTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PodcastPrivateFeedTests.swift; sourceTree = "<group>"; };
 		FE1000FF000000000000C111 /* TranscriptAlignmentTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TranscriptAlignmentTests.swift; sourceTree = "<group>"; };
 		FE1000FF000000000000C211 /* Mp3ClockTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Mp3ClockTests.swift; sourceTree = "<group>"; };
 		FE1000FF000000000000C311 /* GapChapterLabelTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = GapChapterLabelTests.swift; sourceTree = "<group>"; };
@@ -4697,7 +4697,7 @@
 				ASSETCATALOG_COMPILER_APPICON_NAME = "App Icon & Top Shelf Image";
 				CODE_SIGN_ENTITLEMENTS = tvOS/tvOS.entitlements;
 				CODE_SIGN_STYLE = Automatic;
-				CURRENT_PROJECT_VERSION = 15;
+				CURRENT_PROJECT_VERSION = 16;
 				DEVELOPMENT_ASSET_PATHS = "\"tvOS/Preview Content\"";
 				DEVELOPMENT_TEAM = HU6B6E9383;
 				ENABLE_PREVIEWS = YES;
@@ -4712,7 +4712,7 @@
 					"$(inherited)",
 					"@executable_path/Frameworks",
 				);
-				MARKETING_VERSION = 1.1;
+				MARKETING_VERSION = 1.2;
 				PRODUCT_BUNDLE_IDENTIFIER = com.pentlandFirth.Unwatched;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SDKROOT = appletvos;
@@ -4729,7 +4729,7 @@
 				ASSETCATALOG_COMPILER_APPICON_NAME = "App Icon & Top Shelf Image";
 				CODE_SIGN_ENTITLEMENTS = tvOS/tvOS.entitlements;
 				CODE_SIGN_STYLE = Automatic;
-				CURRENT_PROJECT_VERSION = 15;
+				CURRENT_PROJECT_VERSION = 16;
 				DEVELOPMENT_ASSET_PATHS = "\"tvOS/Preview Content\"";
 				DEVELOPMENT_TEAM = HU6B6E9383;
 				ENABLE_PREVIEWS = YES;
@@ -4744,7 +4744,7 @@
 					"$(inherited)",
 					"@executable_path/Frameworks",
 				);
-				MARKETING_VERSION = 1.1;
+				MARKETING_VERSION = 1.2;
 				PRODUCT_BUNDLE_IDENTIFIER = com.pentlandFirth.Unwatched;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SDKROOT = appletvos;
