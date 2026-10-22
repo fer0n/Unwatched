@@ -11,6 +11,7 @@ struct CloudAiButton<Label: View>: View {
     @Environment(\.dismiss) var dismiss
     @Environment(\.openURL) var openURL
     private let openChapterSettings = OpenChapterSettingsAction()
+    @State private var isPreparing = false
 
     let video: Video?
     var dismissOnPaywall: Bool = false
@@ -28,8 +29,10 @@ struct CloudAiButton<Label: View>: View {
                     }
                     return
                 }
+                isPreparing = true
+                defer { isPreparing = false }
                 do {
-                    try await ChapterAutomation.loadTranscript(video, generateIfMissing: true)
+                    try await ChapterAutomation.loadTranscript(video, repair: true)
                     await ChapterAutomation.sendNotification(for: video)
                 } catch is CancellationError {
                 } catch {
@@ -39,5 +42,6 @@ struct CloudAiButton<Label: View>: View {
         } label: {
             label()
         }
+        .disabled(isPreparing)
     }
 }

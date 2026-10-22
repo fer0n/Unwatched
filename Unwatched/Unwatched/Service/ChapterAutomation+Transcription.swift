@@ -64,11 +64,7 @@ extension ChapterAutomation {
     }
 
     private static func needsSpeechWork(_ payload: TranscriptPayload) -> Bool {
-        payload.entries.isEmpty || isUnchecked(payload)
-    }
-
-    private static func isUnchecked(_ payload: TranscriptPayload) -> Bool {
-        payload.origin == .published && payload.alignment == nil
+        payload.entries.isEmpty || needsAlignmentCheck(payload)
     }
 
     private static func cachedPayload(_ youtubeId: String) async -> TranscriptPayload? {
@@ -87,7 +83,7 @@ extension ChapterAutomation {
         let payload = await TranscriptService.podcastTranscriptPayload(for: video).value
         if payload.entries.isEmpty {
             await transcribe(video)
-        } else if isUnchecked(payload) {
+        } else if needsAlignmentCheck(payload) {
             await alignIfDrifted(video)
         }
     }
@@ -135,16 +131,9 @@ extension ChapterAutomation {
     private static func alignIfDrifted(_ video: Video) async {
         let youtubeId = video.youtubeId
         guard beginSpeechWork(youtubeId) else { return }
-        guard let drifted = await TranscriptService.detectTranscriptDrift(for: video).value else {
-            skippedIds.insert(youtubeId)
-            return
-        }
-        guard drifted else { return }
-        Log.info("ChapterAutomation: aligning \(youtubeId)")
         do {
-            let aligned = try await TranscriptService.alignTranscript(for: video) { _ in }.value
-            if let alignment = aligned.alignment {
-                await GapChapterService.insertGapChapters(for: video, alignment: alignment, transcript: aligned.entries)
+            if try await alignTranscriptIfDrifted(video) == .unavailable {
+                skippedIds.insert(youtubeId)
             }
         } catch {
             skippedIds.insert(youtubeId)
@@ -152,4 +141,5 @@ extension ChapterAutomation {
             Log.warning("ChapterAutomation: alignment failed for \(youtubeId): \(error.localizedDescription)")
         }
     }
+
 }

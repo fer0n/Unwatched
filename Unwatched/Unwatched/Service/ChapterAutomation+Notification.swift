@@ -44,24 +44,6 @@ extension ChapterAutomation {
         _ = try? await UNUserNotificationCenter.current().requestAuthorization(options: [.alert, .badge, .sound])
     }
 
-    static func loadTranscript(_ video: Video, generateIfMissing: Bool = false) async throws {
-        var entries = video.isPodcast
-            ? await TranscriptService.podcastTranscriptPayload(for: video).value.entries
-            : try await TranscriptService.getTranscript(from: transcriptUrl(video), youtubeId: video.youtubeId)
-        if entries.isEmpty && video.isPodcast && generateIfMissing && TranscriptService.canGenerateTranscript {
-            Log.info("ChapterAutomation: generating the missing transcript for \(video.youtubeId)")
-            entries = try await TranscriptService.GenerationCoordinator.shared.generate(for: video).value
-        }
-        if entries.isEmpty {
-            throw TranscriptError.emptyTranscript
-        }
-    }
-
-    private static func transcriptUrl(_ video: Video) -> String? {
-        let player = PlayerManager.shared
-        return player.video?.youtubeId == video.youtubeId ? player.transcriptUrl : nil
-    }
-
     static func sendNotification(for video: Video) async {
         let youtubeId = video.youtubeId
         let status = ChapterAutomationStatus.shared
