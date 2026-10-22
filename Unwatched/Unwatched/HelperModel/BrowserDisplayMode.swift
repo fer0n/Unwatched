@@ -6,7 +6,7 @@
 import UnwatchedShared
 
 public enum BrowserDisplayMode: Int, Codable, CaseIterable, Sendable {
-    // Controls where "View on YouTube" style links open. Raw values are kept stable
+    // Controls where "View in Browser" style links open. Raw values are kept stable
     // for clean migration of older settings: inApp reuses the former asTab slot (0,
     // also in-app), external keeps 3, disabled keeps 2. The removed asSheet (1) falls
     // back to .inApp. Declaration order drives the picker order (In-App, External,

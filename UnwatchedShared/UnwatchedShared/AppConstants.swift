@@ -338,7 +338,7 @@ public struct Const {
     public static let podcastSF = "waveform"
     public static let downloadedSF = "arrow.down"
     public static let transcribingSF = "gearshape.fill"
-    public static let viewOnYouTubeSF = "arrow.up.right"
+    public static let viewInBrowserSF = "arrow.up.right"
 
     public static let nextChapterSF = "chevron.right.2"
     public static let previousChapterSF = "chevron.left.2"

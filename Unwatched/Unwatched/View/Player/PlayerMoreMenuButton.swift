@@ -171,14 +171,14 @@ struct PlayerMoreMenuContent: View {
             ReloadPlayerButton()
             Divider()
 
-            if browserDisplayMode != .disabled, let video = player.video, !video.isPodcast, let url = video.url {
+            if browserDisplayMode != .disabled, let url = player.video?.url {
                 Button {
                     navManager.showMenu = true
                     openUrl(url)
                     Signal.interaction("Player.MoreMenu", "openInBrowser")
                 } label: {
                     Text("openInAppBrowser")
-                    Image(systemName: Const.viewOnYouTubeSF)
+                    Image(systemName: Const.viewInBrowserSF)
                         .padding(5)
                 }
             }

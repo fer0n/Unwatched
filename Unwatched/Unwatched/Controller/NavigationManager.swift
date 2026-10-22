@@ -207,7 +207,7 @@ import UnwatchedShared
 
     @MainActor
     func openUrlInApp(_ url: BrowserUrl?) {
-        // "Open Links" setting: route "View on YouTube" links to the external browser
+        // "Open Links" setting: route "View in Browser" links to the external browser
         // when chosen, do nothing when disabled, otherwise show them in the in-app
         // browser sheet. The Search tab's result fallback bypasses this and always uses
         // the in-app browser directly.

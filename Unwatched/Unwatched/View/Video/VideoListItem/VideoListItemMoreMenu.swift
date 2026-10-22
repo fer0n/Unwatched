@@ -92,7 +92,7 @@ struct VideoListItemMoreMenuView: View {
             }
 
             if browserDisplayMode != .disabled, let url = videoData.url {
-                Button("openInAppBrowser", systemImage: Const.viewOnYouTubeSF) {
+                Button("openInAppBrowser", systemImage: Const.viewInBrowserSF) {
                     openUrlInApp(url.absoluteString)
                 }
                 .fontWeight(.black)

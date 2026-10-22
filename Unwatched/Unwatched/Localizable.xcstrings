@@ -11940,31 +11940,31 @@
         "de" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Wähle im Player „…“ → „In YouTube öffnen“. Dort kann man sich anmelden, das Video liken oder Kommentare ansehen. Alternativ lange auf den Videotitel unterhalb der Fortschrittsanzeige des Players tippen."
+            "value" : "Wähle im Player „…“ → „Im Browser ansehen“. Dort kann man sich anmelden, das Video liken oder Kommentare ansehen. Alternativ lange auf den Videotitel unterhalb der Fortschrittsanzeige des Players tippen."
           }
         },
         "en" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Inside the player, select “…” → “View on YouTube”. From there, you can sign in, like the video, or view comments. Alternatively, you can tap and hold on the video title beneath the player’s progress bar."
+            "value" : "Inside the player, select “…” → “View in Browser”. From there, you can sign in, like the video, or view comments. Alternatively, you can tap and hold on the video title beneath the player’s progress bar."
           }
         },
         "es" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Dentro del reproductor, selecciona “…” → “Ver en YouTube”. Desde allí, puedes iniciar sesión, dar me gusta al video o ver los comentarios. Alternativamente, puedes mantener presionado el título del video debajo de la barra de progreso del reproductor."
+            "value" : "Dentro del reproductor, selecciona “…” → “Ver en el navegador”. Desde allí, puedes iniciar sesión, dar me gusta al video o ver los comentarios. Alternativamente, puedes mantener presionado el título del video debajo de la barra de progreso del reproductor."
           }
         },
         "fr" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Dans le lecteur, sélectionnez « … » → « Voir sur YouTube ». De là, vous pouvez vous connecter, liker la vidéo ou voir les commentaires. Alternativement, vous pouvez appuyer longuement sur le titre de la vidéo sous la barre de progression du lecteur."
+            "value" : "Dans le lecteur, sélectionnez « … » → « Voir dans le navigateur ». De là, vous pouvez vous connecter, liker la vidéo ou voir les commentaires. Alternativement, vous pouvez appuyer longuement sur le titre de la vidéo sous la barre de progression du lecteur."
           }
         },
         "pl" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "W odtwarzaczu wybierz „…” → „Otwórz w YouTube”. Stamtąd możesz się zalogować, polubić wideo lub zobaczyć komentarze. Alternatywnie możesz dotknąć i przytrzymać tytuł wideo pod paskiem postępu odtwarzacza."
+            "value" : "W odtwarzaczu wybierz „…” → „Zobacz w przeglądarce”. Stamtąd możesz się zalogować, polubić wideo lub zobaczyć komentarze. Alternatywnie możesz dotknąć i przytrzymać tytuł wideo pod paskiem postępu odtwarzacza."
           }
         }
       }
@@ -16263,31 +16263,31 @@
         "de" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Auf YouTube anzeigen"
+            "value" : "Im Browser ansehen"
           }
         },
         "en" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "View on YouTube"
+            "value" : "View in Browser"
           }
         },
         "es" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Ver en YouTube"
+            "value" : "Ver en el navegador"
           }
         },
         "fr" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Voir sur YouTube"
+            "value" : "Voir dans le navigateur"
           }
         },
         "pl" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Zobacz na YouTube"
+            "value" : "Zobacz w przeglądarce"
           }
         }
       }
@@ -16468,31 +16468,31 @@
         "de" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Kein YouTube-Link in der Zwischenablage"
+            "value" : "Kein Link in der Zwischenablage"
           }
         },
         "en" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "No YouTube link in the clipboard"
+            "value" : "No link in the clipboard"
           }
         },
         "es" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "No hay ningún enlace de YouTube en el portapapeles"
+            "value" : "No hay ningún enlace en el portapapeles"
           }
         },
         "fr" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Aucun lien YouTube dans le presse-papiers"
+            "value" : "Aucun lien dans le presse-papiers"
           }
         },
         "pl" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Brak linku YouTube w schowku"
+            "value" : "Brak linku w schowku"
           }
         }
       }
@@ -27585,31 +27585,31 @@
         "de" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Auf YouTube ansehen"
+            "value" : "Im Browser ansehen"
           }
         },
         "en" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "View on YouTube"
+            "value" : "View in Browser"
           }
         },
         "es" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Ver en YouTube"
+            "value" : "Ver en el navegador"
           }
         },
         "fr" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Voir sur YouTube"
+            "value" : "Voir dans le navigateur"
           }
         },
         "pl" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Zobacz na YouTube"
+            "value" : "Zobacz w przeglądarce"
           }
         }
       }
@@ -27619,31 +27619,31 @@
         "de" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Aus dem “…”-Button Menü im Player kann “Auf YouTube ansehen” ausgewählt werden. Das gleiche ist durch tippen und halten auf den Video Titel/das aktuelle Kapitel möglich."
+            "value" : "Aus dem “…”-Button Menü im Player kann “Im Browser ansehen” ausgewählt werden. Das gleiche ist durch tippen und halten auf den Video Titel/das aktuelle Kapitel möglich."
           }
         },
         "en" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "You can select “View on YouTube” from the “…”-menu inside the player, or you can long press the video title/current chapter."
+            "value" : "You can select “View in Browser” from the “…”-menu inside the player, or you can long press the video title/current chapter."
           }
         },
         "es" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Puedes seleccionar \"Ver en YouTube\" desde el menú \"…\" dentro del reproductor, o puedes mantener pulsado el título del video/capítulo actual."
+            "value" : "Puedes seleccionar \"Ver en el navegador\" desde el menú \"…\" dentro del reproductor, o puedes mantener pulsado el título del video/capítulo actual."
           }
         },
         "fr" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Vous pouvez sélectionner \"Voir sur YouTube\" depuis le menu \"...\" dans le lecteur, ou faire un appui long sur le titre de la vidéo/chapitre actuel."
+            "value" : "Vous pouvez sélectionner \"Voir dans le navigateur\" depuis le menu \"...\" dans le lecteur, ou faire un appui long sur le titre de la vidéo/chapitre actuel."
           }
         },
         "pl" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Możesz wybrać “Zobacz na YouTube” z menu “…” w odtwarzaczu lub przytrzymać tytuł filmu/aktualny rozdział."
+            "value" : "Możesz wybrać “Zobacz w przeglądarce” z menu “…” w odtwarzaczu lub przytrzymać tytuł filmu/aktualny rozdział."
           }
         }
       }
