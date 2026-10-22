@@ -37,17 +37,20 @@ struct UrlService {
         "https://youtu.be/\(youtubeId)" + (timestamp.map { "?t=\(Int($0))" } ?? "")
     }
 
-    /// Names the episode a shared podcast link stands for. Many feeds give every item the show's
-    /// page as its `<link>`, so the url alone doesn't say which episode is meant. It goes in the
-    /// fragment: never sent to the server, ignored by every browser, and ours to read back.
-    static let episodeIdKey = "unw"
+    /// Names one of several episodes that share a url.
+    static let episodeIdKey = "u"
+    private static let legacyEpisodeIdKey = "unw"
+    private static let episodeIdPrefixLength = 8
 
-    /// The link to share for a video.
     static func getShareUrl(_ video: any VideoData, timestamp: Double? = nil) -> String? {
         guard video.isPodcast else {
             return getShortenedUrl(video.youtubeId, timestamp: timestamp)
         }
         guard let url = video.url else { return nil }
+        let context = (video as? Video)?.modelContext ?? DataProvider.newContext()
+        guard VideoService.isUrlShared(url, context: context) else {
+            return url.absoluteString
+        }
         return addEpisodeId(video.youtubeId, to: url)?.absoluteString ?? url.absoluteString
     }
 
@@ -55,24 +58,29 @@ struct UrlService {
         guard var components = URLComponents(url: url, resolvingAgainstBaseURL: false) else {
             return nil
         }
-        components.fragment = "\(episodeIdKey)=\(youtubeId)"
+        let shortId = youtubeId.trimmingPrefix(PodcastService.episodeIdPrefix).prefix(episodeIdPrefixLength)
+        components.fragment = "\(episodeIdKey)=\(shortId)"
         return components.url
     }
 
-    /// The episode a link made by `getShareUrl` points at, if it says.
-    static func getEpisodeIdFromUrl(_ url: URL) -> String? {
+    static func getEpisodeIdPrefix(from url: URL) -> String? {
         guard let fragment = URLComponents(url: url, resolvingAgainstBaseURL: false)?.fragment else {
             return nil
         }
-        let prefix = "\(episodeIdKey)="
-        guard fragment.hasPrefix(prefix) else { return nil }
-        let episodeId = String(fragment.dropFirst(prefix.count))
-        return episodeId.isEmpty ? nil : episodeId
+        if let legacyId = value(of: legacyEpisodeIdKey, in: fragment) {
+            return String(legacyId)
+        }
+        return value(of: episodeIdKey, in: fragment).map { PodcastService.episodeIdPrefix + $0 }
     }
 
-    /// The url as the episode has it stored, without the marker `getShareUrl` added.
+    private static func value(of key: String, in fragment: String) -> Substring? {
+        let prefix = "\(key)="
+        guard fragment.hasPrefix(prefix), fragment.count > prefix.count else { return nil }
+        return fragment.dropFirst(prefix.count)
+    }
+
     static func removingEpisodeId(from url: URL) -> URL {
-        guard getEpisodeIdFromUrl(url) != nil,
+        guard getEpisodeIdPrefix(from: url) != nil,
               var components = URLComponents(url: url, resolvingAgainstBaseURL: false) else {
             return url
         }

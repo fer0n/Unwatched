@@ -51,35 +51,6 @@ final class UrlServiceTests: XCTestCase {
         }
     }
 
-    @MainActor
-    func testPodcastShareUrlNamesTheEpisode() async {
-        // many feeds give every episode the show's page as its link, so the url alone can't tell them apart
-        let video = Video(
-            title: "An Expert on Conflict",
-            url: URL(string: "https://www.nytimes.com/the-daily")!,
-            youtubeId: "pod-8c7d1765d3f9cae4b1388003",
-            thumbnailUrl: nil,
-            publishedDate: nil,
-            mediaUrl: URL(string: "https://example.com/episode.mp3")!
-        )
-
-        let shared = UrlService.getShareUrl(video)
-        XCTAssertEqual(shared, "https://www.nytimes.com/the-daily#unw=pod-8c7d1765d3f9cae4b1388003")
-
-        let sharedUrl = URL(string: shared!)!
-        XCTAssertEqual(UrlService.getEpisodeIdFromUrl(sharedUrl), "pod-8c7d1765d3f9cae4b1388003")
-        XCTAssertEqual(UrlService.removingEpisodeId(from: sharedUrl).absoluteString, "https://www.nytimes.com/the-daily")
-
-        let plain = URL(string: "https://www.nytimes.com/the-daily")!
-        XCTAssertNil(UrlService.getEpisodeIdFromUrl(plain))
-        XCTAssertEqual(UrlService.removingEpisodeId(from: plain), plain)
-
-        // a fragment that isn't ours stays put
-        let anchored = URL(string: "https://example.com/show#chapter-2")!
-        XCTAssertNil(UrlService.getEpisodeIdFromUrl(anchored))
-        XCTAssertEqual(UrlService.removingEpisodeId(from: anchored), anchored)
-    }
-
     func testApplePodcastsCollectionId() {
         let values: [(String, String?)] = [
             ("https://podcasts.apple.com/us/podcast/the-daily/id1200361736", "1200361736"),
@@ -91,6 +62,64 @@ final class UrlServiceTests: XCTestCase {
         ]
         for (url, expected) in values {
             XCTAssertEqual(PodcastSearchService.collectionId(from: URL(string: url)!), expected, url)
+        }
+    }
+}
+
+final class PodcastShareUrlTests: XCTestCase {
+    let showPage = URL(string: "https://www.nytimes.com/the-daily")!
+    var container: ModelContainer!
+
+    override func setUpWithError() throws {
+        let config = ModelConfiguration(schema: DataProvider.schema, isStoredInMemoryOnly: true)
+        container = try ModelContainer(for: DataProvider.schema, configurations: [config])
+    }
+
+    @MainActor
+    private func insertEpisode(_ youtubeId: String, url: URL) throws -> Video {
+        let video = Video(
+            title: youtubeId,
+            url: url,
+            youtubeId: youtubeId,
+            thumbnailUrl: nil,
+            publishedDate: nil,
+            mediaUrl: URL(string: "https://example.com/\(youtubeId).mp3")!
+        )
+        container.mainContext.insert(video)
+        try container.mainContext.save()
+        return video
+    }
+
+    @MainActor
+    func testSharedUrlGetsShortMarker() throws {
+        let video = try insertEpisode("pod-8c7d1765d3f9cae4b1388003", url: showPage)
+        _ = try insertEpisode("pod-1f2e3d4c5b6a798877665544", url: showPage)
+
+        let shared = try XCTUnwrap(UrlService.getShareUrl(video))
+        XCTAssertEqual(shared, "https://www.nytimes.com/the-daily#u=8c7d1765")
+
+        let sharedUrl = try XCTUnwrap(URL(string: shared))
+        XCTAssertEqual(UrlService.getEpisodeIdPrefix(from: sharedUrl), "pod-8c7d1765")
+        XCTAssertEqual(UrlService.removingEpisodeId(from: sharedUrl), showPage)
+    }
+
+    @MainActor
+    func testUniqueUrlHasNoMarker() throws {
+        let video = try insertEpisode("pod-aaaabbbbccccddddeeeeffff", url: showPage)
+        XCTAssertEqual(UrlService.getShareUrl(video), showPage.absoluteString)
+    }
+
+    func testLegacyMarkerReadsFullId() throws {
+        let legacy = try XCTUnwrap(URL(string: "https://www.nytimes.com/the-daily#unw=pod-8c7d1765d3f9cae4b1388003"))
+        XCTAssertEqual(UrlService.getEpisodeIdPrefix(from: legacy), "pod-8c7d1765d3f9cae4b1388003")
+        XCTAssertEqual(UrlService.removingEpisodeId(from: legacy), showPage)
+    }
+
+    func testUrlWithoutMarkerIsUnchanged() throws {
+        let anchored = try XCTUnwrap(URL(string: "https://example.com/show#chapter-2"))
+        for url in [showPage, anchored] {
+            XCTAssertNil(UrlService.getEpisodeIdPrefix(from: url))
+            XCTAssertEqual(UrlService.removingEpisodeId(from: url), url)
         }
     }
 }
