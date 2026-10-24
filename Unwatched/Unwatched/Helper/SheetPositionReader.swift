@@ -44,12 +44,11 @@ import UnwatchedShared
     @ObservationIgnored var needsRestoreMiniPlayer: Bool = false
     @ObservationIgnored var sheetHeight: CGFloat = .zero
     @ObservationIgnored private(set) var sheetDistanceToTop: CGFloat = .zero
-    @ObservationIgnored var playerContentViewHeight: CGFloat?
 
     @ObservationIgnored var debouncedPlayerControlHeight: Task<(), Never>?
 
     @MainActor
-    func setPlayerControlHeight(_ height: CGFloat) {
+    func setPlayerControlHeight(_ height: CGFloat, updateDetent: Bool = true) {
         debouncedPlayerControlHeight?.cancel()
         debouncedPlayerControlHeight = Task {
             do {
@@ -58,6 +57,7 @@ import UnwatchedShared
                 // what `PlayerContentView` reserves on the way back from landscape, where it can't
                 // read this object without subscribing to the animation below
                 UserDefaults.standard.set(height, forKey: Const.playerControlHeight)
+                guard updateDetent else { return }
 
                 // workaround: without task, sheet disappear animation breaks
                 // when video aspect ratio is different for the new video
@@ -145,6 +145,10 @@ import UnwatchedShared
     }
 
     func setDetentVideoPlayer() {
+        guard !PlayerManager.shared.limitHeight else {
+            setDetentMiniPlayer()
+            return
+        }
         Log.info("setDetentVideoPlayer()")
         selectedDetent = .height(fixedSheetHeight == nil ? playerControlHeight : maxSheetHeight)
         setSwipedBelow(true)

@@ -18,6 +18,8 @@ struct AnimatableDetents: ViewModifier, @preconcurrency Animatable {
 
     @State var enableLarge = true
     @State var enableMaxSheetHeight = true
+    @State var enablePlayerControlHeight = true
+    @State var restorePlayerControlHeight = false
 
     var animatableData: CGFloat {
         get { playerControlHeight }
@@ -53,12 +55,37 @@ struct AnimatableDetents: ViewModifier, @preconcurrency Animatable {
                     }
                 }
             }
+            .task(id: allowPlayerControlHeight) {
+                await updatePlayerControlDetent()
+            }
+    }
+
+    /// Removing the detent the sheet rests on snaps it to the smallest one, so leave it first
+    private func updatePlayerControlDetent() async {
+        let sheetPos = SheetPositionReader.shared
+        if allowPlayerControlHeight {
+            enablePlayerControlHeight = true
+            guard restorePlayerControlHeight else { return }
+            restorePlayerControlHeight = false
+            try? await Task.sleep(for: .milliseconds(200))
+            if sheetPos.isMiniPlayer {
+                sheetPos.setDetentVideoPlayer()
+            }
+        } else {
+            if sheetPos.isVideoPlayer {
+                restorePlayerControlHeight = true
+                sheetPos.setDetentMiniPlayer()
+                try? await Task.sleep(for: .milliseconds(300))
+                guard !Task.isCancelled else { return }
+            }
+            enablePlayerControlHeight = false
+        }
     }
 
     var detents: Set<PresentationDetent> {
         Set([])
             .union(allowMinSheet ? [.height(Const.minSheetDetent)] : [])
-            .union(allowPlayerControlHeight ? [.height(animatableData - floatingInset)] : [])
+            .union(enablePlayerControlHeight ? [.height(animatableData - floatingInset)] : [])
             .union(enableLarge ? [.large] : [])
             .union(enableMaxSheetHeight ? [.height(maxSheetHeight - floatingInset)] : [])
     }

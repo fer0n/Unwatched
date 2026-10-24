@@ -38,9 +38,12 @@ struct PlayerContentView: View {
     /// The persisted height, not `SheetPositionReader`'s — reading the observable one here would
     /// tie every frame of its height animation to this view.
     private var reservedControlHeight: CGFloat? {
-        guard player.limitHeight || compactSize else { return nil }
         let stored = UserDefaults.standard.double(forKey: Const.playerControlHeight)
         return stored > 0 ? stored : nil
+    }
+
+    private var controlsSizeContent: Bool {
+        player.limitHeight || compactSize
     }
 
     var body: some View {
@@ -48,10 +51,12 @@ struct PlayerContentView: View {
 
         ZStack {
             pages
-                .frame(minHeight: minHeight ?? reservedControlHeight)
+                .frame(minHeight: controlsSizeContent ? minHeight ?? reservedControlHeight : nil)
                 .playerTabHaptic()
                 .onSizeChange { size in
-                    SheetPositionReader.shared.playerContentViewHeight = size.height
+                    if !controlsSizeContent {
+                        SheetPositionReader.shared.setPlayerControlHeight(size.height)
+                    }
                 }
 
             PlayerBottomShadow(height: shadowHeight)

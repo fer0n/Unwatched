@@ -538,11 +538,7 @@ extension PlayerManager {
         let sheetPos = SheetPositionReader.shared
         updateElapsedTime()
         if !sheetPos.landscapeFullscreen {
-            if limitHeight {
-                sheetPos.setDetentMiniPlayer()
-            } else {
-                sheetPos.setDetentVideoPlayer()
-            }
+            sheetPos.setDetentVideoPlayer()
         }
         if sheetPos.bigScreen || Device.isVision {
             UserDefaults.standard.set(false, forKey: Const.hideControlsFullscreen)
