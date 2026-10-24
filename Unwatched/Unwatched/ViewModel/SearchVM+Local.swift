@@ -16,6 +16,11 @@ extension SearchVM {
         enabledSources.contains(.youtube) && UserDefaults.standard.bool(forKey: Const.searchAlwaysUseYoutube)
     }
 
+    var uploadDateApplies: Bool {
+        let filtersYoutube = enabledSources.contains(.youtube) && !searchesYoutubeInBrowser
+        return filtersYoutube || !enabledSources.isDisjoint(with: [.bookmarks, .library])
+    }
+
     /// The YouTube results minus anything already listed in the local sections above,
     /// so a video that's in the library isn't shown twice.
     var youtubeResults: [SendableVideo] {
@@ -97,12 +102,17 @@ extension SearchVM {
         localTask?.cancel()
         let query = activeQuery
         let sources = enabledSources.subtracting([.youtube])
+        let publishedAfter = uploadDate.startDate
         guard !sources.isEmpty else {
             localResults = LocalSearchResults()
             return
         }
         localTask = Task {
-            let found = await LocalSearchService.search(query: query, sources: sources)
+            let found = await LocalSearchService.search(
+                query: query,
+                sources: sources,
+                publishedAfter: publishedAfter
+            )
             if Task.isCancelled || query != activeQuery { return }
             withAnimation {
                 localResults = found

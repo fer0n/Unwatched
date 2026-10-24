@@ -30,11 +30,16 @@ enum LocalSearchService {
     static let minQueryLength = 2
 
     private static let maxSubscriptions = 3
-    private static let maxVideos = 5
+    private static let maxBookmarks = 5
+    private static let maxLibraryVideos = 20
     /// How many rows a fetch pulls in before scoring picks the best ones.
     private static let candidateLimit = 100
 
-    static func search(query: String, sources: Set<SearchSource>) async -> LocalSearchResults {
+    static func search(
+        query: String,
+        sources: Set<SearchSource>,
+        publishedAfter: Date? = nil
+    ) async -> LocalSearchResults {
         let query = query.folded
         let tokens = query.split(whereSeparator: \.isWhitespace).map(String.init)
         guard query.count >= minQueryLength,
@@ -51,16 +56,17 @@ enum LocalSearchService {
         }
         if sources.contains(.bookmarks) {
             results.bookmarks = Array(
-                await videos(longestToken, query, tokens, bookmarkedOnly: true).prefix(maxVideos)
+                await videos(longestToken, query, tokens, bookmarkedOnly: true, publishedAfter)
+                    .prefix(maxBookmarks)
             )
         }
         if sources.contains(.library) {
             // Bookmarks have their own section — don't repeat them here when it's shown.
             let alreadyShown = Set(results.bookmarks.map(\.youtubeId))
             results.videos = Array(
-                await videos(longestToken, query, tokens, bookmarkedOnly: false)
+                await videos(longestToken, query, tokens, bookmarkedOnly: false, publishedAfter)
                     .filter { !alreadyShown.contains($0.youtubeId) }
-                    .prefix(maxVideos)
+                    .prefix(maxLibraryVideos)
             )
         }
 
@@ -85,15 +91,16 @@ enum LocalSearchService {
         _ fetchToken: String,
         _ query: String,
         _ tokens: [String],
-        bookmarkedOnly: Bool
+        bookmarkedOnly: Bool,
+        _ publishedAfter: Date?
     ) async -> [SendableVideo] {
-        let filter: Predicate<Video> = bookmarkedOnly
-            ? #Predicate<Video> {
-                $0.bookmarkedDate != nil && $0.title.localizedStandardContains(fetchToken)
-            }
-            : #Predicate<Video> {
-                $0.title.localizedStandardContains(fetchToken)
-            }
+        let distantPast = Date.distantPast
+        let publishedAfter = publishedAfter ?? distantPast
+        let filter = #Predicate<Video> {
+            (!bookmarkedOnly || $0.bookmarkedDate != nil)
+                && ($0.publishedDate ?? distantPast) >= publishedAfter
+                && $0.title.localizedStandardContains(fetchToken)
+        }
         let sort = bookmarkedOnly
             ? [SortDescriptor<Video>(\.bookmarkedDate, order: .reverse)]
             : [SortDescriptor<Video>(\.publishedDate, order: .reverse)]

@@ -8,10 +8,8 @@ import UnwatchedShared
 
 /// The rows behind both the pushed results page and the macOS pane.
 struct SearchResultsList: View {
-    private static let collapsedPodcastCount = 3
-
     let vm: SearchVM
-    @State private var showAllPodcasts = false
+    @State private var expandedSources: Set<SearchSource> = []
 
     var body: some View {
         List {
@@ -34,7 +32,7 @@ struct SearchResultsList: View {
 
             if !vm.localResults.videos.isEmpty {
                 section(.library) {
-                    videoRows(vm.localResults.videos)
+                    libraryRows
                 }
             }
 
@@ -63,7 +61,7 @@ struct SearchResultsList: View {
         .listStyle(.plain)
         .environment(\.videoListContext, .search)
         .onChange(of: vm.activeQuery) {
-            showAllPodcasts = false
+            expandedSources = []
         }
     }
 
@@ -96,36 +94,45 @@ struct SearchResultsList: View {
         }
     }
 
-    /// Podcast hits are a sidebar to the search, not its subject: only a few show until asked.
     @ViewBuilder
     var podcastRows: some View {
-        let shown = showAllPodcasts
-            ? vm.podcastResults
-            : Array(vm.podcastResults.prefix(Self.collapsedPodcastCount))
-
-        ForEach(shown, id: \.link) { sub in
+        ForEach(collapsed(vm.podcastResults, in: .podcasts), id: \.link) { sub in
             NavigationLink(value: SearchRoute.subscription(sub)) {
                 SearchSubscriptionListItem(subscription: sub)
             }
         }
         .myListRowBackground()
 
-        if !showAllPodcasts && vm.podcastResults.count > Self.collapsedPodcastCount {
+        showMoreButton(for: .podcasts, total: vm.podcastResults.count)
+    }
+
+    @ViewBuilder
+    var libraryRows: some View {
+        videoRows(collapsed(vm.localResults.videos, in: .library))
+        showMoreButton(for: .library, total: vm.localResults.videos.count)
+    }
+
+    func collapsedCount(for source: SearchSource) -> Int {
+        source == .podcasts ? 1 : 3
+    }
+
+    func collapsed<Item>(_ items: [Item], in source: SearchSource) -> [Item] {
+        expandedSources.contains(source) ? items : Array(items.prefix(collapsedCount(for: source)))
+    }
+
+    @ViewBuilder
+    func showMoreButton(for source: SearchSource, total: Int) -> some View {
+        if !expandedSources.contains(source) && total > collapsedCount(for: source) {
             Button {
-                withAnimation { showAllPodcasts = true }
+                withAnimation { _ = expandedSources.insert(source) }
             } label: {
                 HStack(spacing: 4) {
                     Text("showMoreResults")
                     Image(systemName: "chevron.down")
                 }
-                .font(.subheadline)
-                .fontWeight(.medium)
                 .padding(.vertical, 5)
             }
-            .buttonStyle(.plain)
-            .foregroundStyle(.secondary)
-            .listRowSeparator(.hidden)
-            .myListRowBackground()
+            .showMoreRow()
         }
     }
 
@@ -155,40 +162,5 @@ struct SearchResultsList: View {
                 vm.loadMoreIfNeeded(currentItem: video)
             }
         }
-    }
-}
-
-struct SearchVideoRows: View {
-    let videos: [SendableVideo]
-    let vm: SearchVM
-    var onAppear: (SendableVideo) -> Void = { _ in }
-
-    var body: some View {
-        ForEach(videos, id: \.youtubeId) { video in
-            VideoListItem(
-                video,
-                video.youtubeId,
-                config: VideoListItemConfig(
-                    hasInboxEntry: video.hasInboxEntry,
-                    hasQueueEntry: video.queueEntry != nil,
-                    videoDuration: video.duration,
-                    watched: video.watchedDate != nil,
-                    deferred: video.deferDate != nil,
-                    isNew: video.isNew,
-                    showAllStatus: true,
-                    showContextMenu: true,
-                    showDelete: false
-                ),
-                onChange: { _, _ in
-                    vm.refreshStatus(for: video.youtubeId)
-                }
-            )
-            .equatable()
-            .videoListItemEntry()
-            .onAppear {
-                onAppear(video)
-            }
-        }
-        .myListRowBackground()
     }
 }

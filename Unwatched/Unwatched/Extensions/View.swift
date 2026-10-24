@@ -46,6 +46,16 @@ extension View {
         self.listRowBackground(MyRowBackgroundColor())
     }
 
+    func showMoreRow() -> some View {
+        self
+            .font(.subheadline)
+            .fontWeight(.medium)
+            .buttonStyle(.plain)
+            .foregroundStyle(.secondary)
+            .listRowSeparator(.hidden)
+            .myListRowBackground()
+    }
+
     func listRowTip() -> some View {
         self
             .tipBackground(Color.insetBackgroundColor)

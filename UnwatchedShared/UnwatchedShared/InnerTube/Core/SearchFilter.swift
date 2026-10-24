@@ -37,7 +37,7 @@ public struct SearchFilter: Sendable, Equatable {
         }
     }
 
-    public enum UploadDate: Int, CaseIterable, Sendable {
+    @frozen public enum UploadDate: Int, CaseIterable, Sendable {
         case anytime   = 0   // default — no param emitted
         case lastHour  = 1
         case today     = 2
@@ -53,6 +53,18 @@ public struct SearchFilter: Sendable, Equatable {
             case .thisWeek:  return String(localized: "searchDateThisWeek")
             case .thisMonth: return String(localized: "searchDateThisMonth")
             case .thisYear:  return String(localized: "searchDateThisYear")
+            }
+        }
+
+        public var startDate: Date? {
+            let calendar = Calendar.current
+            switch self {
+            case .anytime:   return nil
+            case .lastHour:  return calendar.date(byAdding: .hour, value: -1, to: .now)
+            case .today:     return calendar.date(byAdding: .day, value: -1, to: .now)
+            case .thisWeek:  return calendar.date(byAdding: .day, value: -7, to: .now)
+            case .thisMonth: return calendar.date(byAdding: .month, value: -1, to: .now)
+            case .thisYear:  return calendar.date(byAdding: .year, value: -1, to: .now)
             }
         }
     }

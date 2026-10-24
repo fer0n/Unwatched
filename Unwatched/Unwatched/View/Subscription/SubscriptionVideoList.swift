@@ -52,16 +52,11 @@ struct SubscriptionVideoList: View, Equatable {
                     Image(systemName: viewModel.loadFailed ? "arrow.clockwise" : "chevron.down")
                 }
             }
-            .font(.subheadline)
-            .fontWeight(.medium)
             .padding(.vertical, 5)
             .frame(maxWidth: .infinity)
         }
-        .buttonStyle(.plain)
-        .foregroundStyle(.secondary)
         .disabled(viewModel.isLoading)
-        .listRowSeparator(.hidden)
-        .myListRowBackground()
+        .showMoreRow()
     }
 
     var rows: [Row] {
