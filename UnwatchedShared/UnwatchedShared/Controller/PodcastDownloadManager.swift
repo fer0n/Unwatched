@@ -69,7 +69,8 @@ public final class PodcastDownloadManager {
         guard PodcastDownloadStore.directory != nil, !isSyncing else { return }
 
         let defaults = UserDefaults.standard
-        let limitHours = defaults.integer(forKey: Const.podcastDownloadLimitHours)
+        let limitHours = defaults.object(forKey: Const.podcastDownloadLimitHours) as? Int
+            ?? Const.podcastDownloadDefaultHours
         // Switched off with nothing left behind: going further would spin up the background session for no reason.
         guard limitHours != 0 || !downloadedIds.isEmpty || !downloadingIds.isEmpty else { return }
 
@@ -77,7 +78,8 @@ public final class PodcastDownloadManager {
         defer { isSyncing = false }
 
         let playing = playingYoutubeId
-        let keepDays = defaults.object(forKey: Const.podcastDownloadKeepDays) as? Int ?? 1
+        let keepDays = defaults.object(forKey: Const.podcastDownloadKeepDays) as? Int
+            ?? Const.podcastDownloadDefaultKeepDays
         let plan: PodcastDownloadPlan
         if let planContext {
             plan = PodcastDownloadPlanner.plan(

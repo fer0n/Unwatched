@@ -7,8 +7,8 @@ import SwiftUI
 import UnwatchedShared
 
 struct PodcastDownloadSettingsView: View {
-    @AppStorage(Const.podcastDownloadLimitHours) var limitHours: Int = 0
-    @AppStorage(Const.podcastDownloadKeepDays) var keepDays: Int = 1
+    @AppStorage(Const.podcastDownloadLimitHours) var limitHours = Const.podcastDownloadDefaultHours
+    @AppStorage(Const.podcastDownloadKeepDays) var keepDays = Const.podcastDownloadDefaultKeepDays
     @AppStorage(Const.podcastDownloadOnCellular) var onCellular: Bool = false
 
     @State private var storedBytes: Int64 = 0

@@ -10,7 +10,7 @@ import UnwatchedShared
 /// Episodes only: a YouTube video's stream URL is minted per playback and expires.
 struct WatchDownloadsSection: View {
     /// Per device, like the phone's: `UserDefaults` doesn't sync, and a wrist has its own room.
-    @AppStorage(Const.podcastDownloadLimitHours) private var downloadHours = 0
+    @AppStorage(Const.podcastDownloadLimitHours) private var downloadHours = Const.podcastDownloadDefaultHours
     @Environment(\.modelContext) private var modelContext
     @State private var downloads = PodcastDownloadManager.shared
     @State private var downloadedBytes: Int64 = 0

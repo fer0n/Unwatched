@@ -102,8 +102,8 @@ extension Const {
         Const.autoDeleteBackups: true,
 
         // Podcast downloads
-        Const.podcastDownloadLimitHours: 0,
-        Const.podcastDownloadKeepDays: 1,
+        Const.podcastDownloadLimitHours: Const.podcastDownloadDefaultHours,
+        Const.podcastDownloadKeepDays: Const.podcastDownloadDefaultKeepDays,
         Const.podcastDownloadOnCellular: false,
 
         // Chapters
