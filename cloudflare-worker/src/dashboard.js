@@ -129,7 +129,7 @@ const VALUE_SETTINGS = [
   ["autoDeleteWatchedVideos", 180, "Auto-delete Watched", null, "d"],
   ["autoDeleteOrphanedVideos", 30, "Auto-delete Orphaned", null, "d"],
   ["autoDeleteInboxVideosLimit", 100, "Inbox Limit", null, ""],
-  ["podcastDownloadLimitHours", 0, "Podcast Download Limit", null, "h"],
+  ["podcastDownloadLimitHours", 5, "Podcast Download Limit", null, "h"],
   ["podcastDownloadKeepDays", 1, "Podcast Keep", null, "d"],
 ];
 
@@ -269,21 +269,23 @@ function tallyRawBuckets(latestRows, paramKey) {
   return counts;
 }
 
-// Count distinct users per value of a free-form (but low-cardinality) param.
-// One entry per user: the specific hardware model the snapshot carried, falling back
-// to the coarse category ("iPhone") for snapshots written before deviceModel shipped.
-// Merged here rather than charted side by side so a single pie answers "what do people
-// run on" without silently dropping everyone on an older build.
+// One entry per user, grouped by device type: { "iPhone": { "iPhone17,3": 4, … } }.
+// The type is the coarse category every snapshot carries; the model inside it is the
+// hardware identifier, or "Unknown model" for snapshots written before deviceModel shipped.
 function tallyDevices(rows) {
   const counts = {};
   for (const row of rows) {
     const params = parseParams(row.params);
-    const value = params.deviceModel || params.device;
-    if (value == null || value === "") continue;
-    counts[value] = (counts[value] || 0) + 1;
+    const type = params.device || "Unknown";
+    const model = params.deviceModel || "Unknown model";
+    if (!params.device && !params.deviceModel) continue;
+    counts[type] = counts[type] || {};
+    counts[type][model] = (counts[type][model] || 0) + 1;
   }
   return counts;
 }
+
+// Count distinct users per value of a free-form (but low-cardinality) param.
 
 function tallyParam(rows, paramKey) {
   const counts = {};
@@ -669,6 +671,15 @@ export const DASHBOARD_HTML = `<!DOCTYPE html>
   .pie-legend div { display: flex; align-items: center; gap: 0.4rem; min-width: 0; }
   .pie-legend div span:last-child, .pie-legend div { overflow: hidden; text-overflow: ellipsis; }
   .pie-legend .muted { color: #777; }
+  .pie-pick {
+    display: flex; align-items: center; gap: 0.4rem; min-width: 0; text-align: left;
+    background: none; border: 1px solid transparent; border-radius: 6px;
+    color: inherit; font: inherit; padding: 0.15rem 0.35rem; margin: -0.15rem -0.35rem; cursor: pointer;
+  }
+  .pie-pick span:last-child { overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+  .pie-pick:hover { background: #242424; }
+  .pie-pick.selected { background: #242424; border-color: #3a3a3a; }
+  .pie-detail { margin-top: 0.5rem; }
 
   .card { background: #1b1b1b; border: 1px solid #2a2a2a; border-radius: 10px; padding: 1rem; }
   .card svg { display: block; width: 100%; height: auto; }
@@ -740,14 +751,17 @@ export const DASHBOARD_HTML = `<!DOCTYPE html>
 
 <h2>Devices &amp; OS</h2>
 <div class="hint" id="platformHint"></div>
+<div class="hint">Pick a type to see its individual devices or versions.</div>
 <div class="grid-2">
   <div>
     <div class="chart-meta"><span><b>Device</b></span></div>
     <div class="pie-chart" id="devicePie"></div>
+    <div class="pie-detail" id="deviceDetail" hidden></div>
   </div>
   <div>
     <div class="chart-meta"><span><b>OS version</b></span></div>
     <div class="pie-chart" id="osPie"></div>
+    <div class="pie-detail" id="osDetail" hidden></div>
   </div>
 </div>
 <h2>Apple Watch</h2>
@@ -831,6 +845,14 @@ export const DASHBOARD_HTML = `<!DOCTYPE html>
 const COLORS = { on: '#4ade80', off: '#fb923c', notTouched: '#555' };
 // Ordered small -> large so bucket ranges read as a cool-to-warm gradient.
 const BUCKET_COLORS = ['#1e3a8a', '#2563eb', '#3b82f6', '#60a5fa', '#38bdf8', '#22d3ee', '#34d399', '#a3e635', '#facc15'];
+// Bars of these settings take the colour the value stands for, rather than a palette slot.
+// themeColor: the app's ThemeColor (ThemeColor.swift), as iOS renders it in dark mode.
+const VALUE_SETTING_COLORS = {
+  themeColor: {
+    'Red': '#ff453a', 'Orange': '#ff9f0a', 'Yellow': '#ffd60a', 'Green': '#30d158', 'Dark green': '#3a8451',
+    'Mint': '#63e6e2', 'Teal': '#40c8e0', 'Blue': '#0a84ff', 'Purple': '#bf5af2', 'Black/White': '#eeeeee',
+  },
+};
 const SETTINGS_COLLAPSED_COUNT = 8;
 const RECENT_COLLAPSED_COUNT = 5;
 
@@ -993,13 +1015,15 @@ function renderValueSettings(el, toggleBtn, values) {
   const cards = Object.keys(values).map(function (key, index) {
     const s = values[key];
     const total = s.total || 1;
+    const valueColors = VALUE_SETTING_COLORS[key];
     const rows = sortedEntries(s.values).map(function (e, i) {
       const isDefault = e[0] === s.defaultLabel;
       return {
         label: e[0] + (s.unit ? ' ' + s.unit : '') + (isDefault ? ' (default)' : ''),
         count: e[1],
         countText: e[1] + ' · ' + Math.round(e[1] / total * 100) + '%',
-        color: isDefault ? COLORS.notTouched : BUCKET_COLORS[(index + i) % BUCKET_COLORS.length],
+        color: valueColors && valueColors[e[0]] ? valueColors[e[0]]
+          : isDefault ? COLORS.notTouched : BUCKET_COLORS[(index + i) % BUCKET_COLORS.length],
       };
     });
     return barChartCard(s.label, 'changed by ' + s.changed + ' (' + Math.round(s.changed / total * 100) + '%)', rows);
@@ -1044,71 +1068,111 @@ function renderPie(el, buckets) {
   el.innerHTML = pieSVG(segments) + '<div class="pie-legend">' + legend + '</div>';
 }
 
-// Distinct base hues per family so e.g. all "iOS 26.x" — or all "iPhone 16.x" —
-// read as one colour family, shaded by sub-variant: easy to eyeball a generation's
-// total at a glance, and how it splits.
-const FAMILY_HUES = [210, 28, 145, 275, 0, 190, 50, 320];
+// One distinct hue per group (device type, OS release); a group's detail bars are
+// shades of that hue, so the detail view reads as a zoom into its pie segment.
+const GROUP_HUES = [210, 28, 145, 275, 0, 190, 50, 320];
 
-// Renders a pie whose segments are grouped into colour families: 'parse(label, count)'
-// returns { label, count, key (family), shade (sub-variant within the family) } for
-// each entry, and 'sortFn' orders entries so a family's shades land together (newest
-// shade first) and families are grouped. Same family -> same hue; within a family,
-// each distinct shade gets progressively lighter.
-function renderFamilyPie(el, counts, parse, sortFn) {
-  const parsed = Object.entries(counts).map(function (e) { return parse(e[0], e[1]); });
-  parsed.sort(sortFn);
-
-  const hueByKey = {};
-  const shadesByKey = {};
-  parsed.forEach(function (p) {
-    if (!(p.key in hueByKey)) hueByKey[p.key] = FAMILY_HUES[Object.keys(hueByKey).length % FAMILY_HUES.length];
-    if (!shadesByKey[p.key]) shadesByKey[p.key] = [];
-    if (shadesByKey[p.key].indexOf(p.shade) === -1) shadesByKey[p.key].push(p.shade);
-  });
-  // Lightness is spread over the family's actual shade count rather than stepped by a
-  // fixed amount, so a family with many shades (iOS + iPadOS + visionOS on one release)
-  // doesn't wrap around and hand two of them the same colour.
-  const colorFor = function (p) {
-    const shades = shadesByKey[p.key];
-    const idx = shades.indexOf(p.shade);
-    const t = shades.length > 1 ? idx / (shades.length - 1) : 0;
-    return 'hsl(' + hueByKey[p.key] + ', 62%, ' + Math.round(40 + t * 36) + '%)';
-  };
-
-  const total = parsed.reduce(function (s, p) { return s + p.count; }, 0);
-  const segments = parsed.map(function (p) { return { value: p.count, color: colorFor(p) }; });
-  const legend = parsed.map(function (p) {
-    const pct = total ? Math.round(p.count / total * 100) : 0;
-    return '<div><span class="swatch" style="background:' + colorFor(p) + '"></span>' + p.label + ': ' + p.count + ' (' + pct + '%)</div>';
-  }).join('');
-  el.innerHTML = pieSVG(segments) + '<div class="pie-legend">' + (legend || '<div class="muted">No data yet.</div>') + '</div>';
+function groupColor(hue, t) {
+  return 'hsl(' + hue + ', 62%, ' + Math.round(40 + (t || 0) * 36) + '%)';
 }
 
-function renderOsPie(el, osCounts) {
-  renderFamilyPie(el, osCounts, function (label, count) {
-    // Backslashes doubled: this sits inside DASHBOARD_HTML's outer template literal,
-    // so a single \s/\d would have its backslash silently eaten when that literal is
-    // evaluated (\s, \d aren't recognized string escapes) — this regex would otherwise
-    // require literal "s"/"d" characters instead of whitespace/digits at runtime.
-    const m = String(label).match(/^(.*?)\\s*(\\d+)(?:\\.(\\d+))?/);
-    const platform = m ? m[1].trim() : label;
-    const major = m ? parseInt(m[2], 10) : 0;
-    const minor = m && m[3] ? parseInt(m[3], 10) : 0;
-    // The family is the major version alone, not platform + major: iOS 26 and iPadOS 26
-    // are the same OS release, so they should read as one colour and differ only in shade.
-    // What we want to eyeball here is "who is on 26 yet", not "who is on an iPad".
-    return { label: label, count: count, key: 'os ' + major, shade: platform + ' ' + minor, platform: platform, major: major, minor: minor };
+// Pie of group totals with a clickable legend: picking a group shows its individual
+// entries as bars underneath ('detailEl'), picking it again hides them.
+// groups: { groupLabel: { entryLabel: count } }. 'order' sorts the group labels,
+// 'detailOrder' sorts one group's [label, count] entries.
+function renderGroupedPie(el, detailEl, groups, order, detailOrder) {
+  const labels = Object.keys(groups).sort(function (a, b) { return order(a, b, groups); });
+  const totals = labels.map(function (g) {
+    return Object.values(groups[g]).reduce(function (s, n) { return s + n; }, 0);
+  });
+  const total = totals.reduce(function (s, n) { return s + n; }, 0);
+  const hues = labels.map(function (_, i) { return GROUP_HUES[i % GROUP_HUES.length]; });
+  let selected = null;
+
+  const render = function () {
+    const segments = labels.map(function (g, i) { return { value: totals[i], color: groupColor(hues[i]) }; });
+    const legend = labels.map(function (g, i) {
+      const pct = total ? Math.round(totals[i] / total * 100) : 0;
+      return '<button type="button" class="pie-pick' + (g === selected ? ' selected' : '') + '" data-group="' + i + '">' +
+        '<span class="swatch" style="background:' + groupColor(hues[i]) + '"></span>' +
+        '<span>' + g + ': ' + totals[i] + ' (' + pct + '%)</span></button>';
+    }).join('');
+    el.innerHTML = pieSVG(segments) + '<div class="pie-legend">' + (legend || '<div class="muted">No data yet.</div>') + '</div>';
+    el.querySelectorAll('.pie-pick').forEach(function (btn) {
+      btn.onclick = function () {
+        const g = labels[Number(btn.dataset.group)];
+        selected = selected === g ? null : g;
+        render();
+      };
+    });
+
+    detailEl.innerHTML = '';
+    detailEl.hidden = selected === null;
+    if (selected === null) return;
+    const gi = labels.indexOf(selected);
+    const entries = Object.entries(groups[selected]).sort(detailOrder);
+    const rows = entries.map(function (e, i) {
+      return {
+        label: e[0],
+        count: e[1],
+        countText: e[1] + ' · ' + Math.round(e[1] / totals[gi] * 100) + '%',
+        color: groupColor(hues[gi], entries.length > 1 ? i / (entries.length - 1) : 0),
+      };
+    });
+    detailEl.appendChild(barChartCard(selected, totals[gi] + ' users', rows));
+  };
+  render();
+}
+
+function byTotalDesc(a, b, groups) {
+  const sum = function (g) { return Object.values(groups[g]).reduce(function (s, n) { return s + n; }, 0); };
+  return sum(b) - sum(a) || a.localeCompare(b);
+}
+
+function byCountDesc(a, b) {
+  return b[1] - a[1] || a[0].localeCompare(b[0]);
+}
+
+// Parses "iOS 26.1" into its platform and version numbers.
+function parseOs(label) {
+  // Backslashes doubled: this sits inside DASHBOARD_HTML's outer template literal,
+  // so a single \s/\d would have its backslash silently eaten when that literal is
+  // evaluated (\s, \d aren't recognized string escapes) — this regex would otherwise
+  // require literal "s"/"d" characters instead of whitespace/digits at runtime.
+  const m = String(label).match(/^(.*?)\\s*(\\d+)(?:\\.(\\d+))?/);
+  return {
+    platform: m ? m[1].trim() : String(label),
+    major: m ? parseInt(m[2], 10) : 0,
+    minor: m && m[3] ? parseInt(m[3], 10) : 0,
+  };
+}
+
+// Grouped by major version alone, not platform + major: iOS 26 and iPadOS 26 are the
+// same OS release, and what we want to eyeball here is "who is on 26 yet", not "who
+// is on an iPad" — that's the device pie's job.
+function renderOsPie(el, detailEl, osCounts) {
+  const groups = {};
+  Object.entries(osCounts).forEach(function (e) {
+    const p = parseOs(e[0]);
+    const g = p.major ? 'OS ' + p.major : String(e[0]);
+    groups[g] = groups[g] || {};
+    groups[g][e[0]] = e[1];
+  });
+  const majorOf = function (g) { return parseInt(String(g).replace('OS ', ''), 10) || 0; };
+  renderGroupedPie(el, detailEl, groups, function (a, b) {
+    return majorOf(b) - majorOf(a) || a.localeCompare(b);
   }, function (a, b) {
-    // Newest release first, platforms grouped inside it, newest minor first.
-    return b.major - a.major || a.platform.localeCompare(b.platform) || b.minor - a.minor;
+    const pa = parseOs(a[0]), pb = parseOs(b[0]);
+    return pa.platform.localeCompare(pb.platform) || pb.minor - pa.minor;
   });
 }
 
 // Raw hardware identifier (Signal.deviceModel, e.g. "iPhone17,3") -> marketing name.
 // Kept here rather than on-device so a new device Apple ships just needs a worker
 // deploy, not an app update — an unmapped identifier still renders fine, just under
-// its raw id instead of a friendly name. Source: https://gist.github.com/adamawolf/3048717
+// its raw id instead of a friendly name. Source: https://gist.github.com/adamawolf/3048717 (iPad17,x, the M5 iPad Pro, isn't in it yet)
 const DEVICE_MODEL_NAMES = {
+  'iPhone10,1': 'iPhone 8', 'iPhone10,4': 'iPhone 8', 'iPhone10,2': 'iPhone 8 Plus', 'iPhone10,5': 'iPhone 8 Plus',
   'iPhone10,3': 'iPhone X', 'iPhone10,6': 'iPhone X',
   'iPhone11,2': 'iPhone XS', 'iPhone11,4': 'iPhone XS Max', 'iPhone11,6': 'iPhone XS Max', 'iPhone11,8': 'iPhone XR',
   'iPhone12,1': 'iPhone 11', 'iPhone12,3': 'iPhone 11 Pro', 'iPhone12,5': 'iPhone 11 Pro Max', 'iPhone12,8': 'iPhone SE 2nd Gen',
@@ -1118,7 +1182,7 @@ const DEVICE_MODEL_NAMES = {
   'iPhone15,2': 'iPhone 14 Pro', 'iPhone15,3': 'iPhone 14 Pro Max', 'iPhone15,4': 'iPhone 15', 'iPhone15,5': 'iPhone 15 Plus',
   'iPhone16,1': 'iPhone 15 Pro', 'iPhone16,2': 'iPhone 15 Pro Max',
   'iPhone17,1': 'iPhone 16 Pro', 'iPhone17,2': 'iPhone 16 Pro Max', 'iPhone17,3': 'iPhone 16', 'iPhone17,4': 'iPhone 16 Plus', 'iPhone17,5': 'iPhone 16e',
-  'iPhone18,1': 'iPhone 17 Pro', 'iPhone18,2': 'iPhone 17 Pro Max', 'iPhone18,3': 'iPhone 17', 'iPhone18,4': 'iPhone Air', 'iPhone18,5': 'iPhone 17e',
+  'iPhone18,1': 'iPhone 17 Pro', 'iPhone18,2': 'iPhone 17 Pro Max', 'iPhone18,3': 'iPhone 17', 'iPhone18,4': 'iPhone Air', 'iPhone18,5': 'iPhone 17e', 'iPhone19,4': 'iPhone Duo',
   'iPad5,3': 'iPad Air 2', 'iPad5,4': 'iPad Air 2', 'iPad5,1': 'iPad mini 4', 'iPad5,2': 'iPad mini 4',
   'iPad6,3': 'iPad Pro 9.7-inch', 'iPad6,4': 'iPad Pro 9.7-inch', 'iPad6,7': 'iPad Pro 12.9-inch', 'iPad6,8': 'iPad Pro 12.9-inch',
   'iPad6,11': 'iPad 5th Gen', 'iPad6,12': 'iPad 5th Gen',
@@ -1142,23 +1206,22 @@ const DEVICE_MODEL_NAMES = {
   'iPad16,1': 'iPad mini 7th Gen', 'iPad16,2': 'iPad mini 7th Gen',
   'iPad16,3': 'iPad Pro 11-inch 5th Gen', 'iPad16,4': 'iPad Pro 11-inch 5th Gen', 'iPad16,5': 'iPad Pro 12.9-inch 7th Gen', 'iPad16,6': 'iPad Pro 12.9-inch 7th Gen',
   'iPad16,8': 'iPad Air 11-inch 8th Gen', 'iPad16,9': 'iPad Air 11-inch 8th Gen', 'iPad16,10': 'iPad Air 13-inch 8th Gen', 'iPad16,11': 'iPad Air 13-inch 8th Gen',
+  'iPad17,1': 'iPad Pro 11-inch 6th Gen', 'iPad17,2': 'iPad Pro 11-inch 6th Gen', 'iPad17,3': 'iPad Pro 13-inch 7th Gen', 'iPad17,4': 'iPad Pro 13-inch 7th Gen',
   'RealityDevice14,1': 'Vision Pro',
   'i386': 'Simulator', 'x86_64': 'Simulator', 'arm64': 'Simulator',
 };
 
-function renderDevicePie(el, modelCounts) {
-  renderFamilyPie(el, modelCounts, function (raw, count) {
-    const label = DEVICE_MODEL_NAMES[raw] || raw;
-    // Same regex idea as OS parsing: split off the generation number, everything
-    // after it (" Pro Max", " Plus", "e", …) is the shade within that generation.
-    // Backslashes doubled — see the comment on the OS regex above for why.
-    const m = label.match(/^(.*?)\\s*(\\d+)(.*)$/);
-    const family = m ? m[1].trim() + ' ' + m[2] : label;
-    const shade = m ? m[3].trim() : '';
-    return { label: label, count: count, key: family, family: m ? m[1].trim() : label, major: m ? parseInt(m[2], 10) : 0, shade: shade };
-  }, function (a, b) {
-    return a.family.localeCompare(b.family) || b.major - a.major || a.shade.localeCompare(b.shade);
+// groups: { device type: { raw hardware identifier: count } } — see tallyDevices.
+function renderDevicePie(el, detailEl, deviceTypes) {
+  const groups = {};
+  Object.keys(deviceTypes).forEach(function (type) {
+    groups[type] = {};
+    Object.entries(deviceTypes[type]).forEach(function (e) {
+      const name = DEVICE_MODEL_NAMES[e[0]] || e[0];
+      groups[type][name] = (groups[type][name] || 0) + e[1];
+    });
   });
+  renderGroupedPie(el, detailEl, groups, byTotalDesc, byCountDesc);
 }
 
 function fmtNum(n) {
@@ -1533,8 +1596,8 @@ fetch('/dashboard/data' + channelQuery).then(r => r.json()).then(data => {
 
   document.getElementById('platformHint').textContent =
     'Based on ' + data.platform.sampleSize + ' users active in the last ' + data.platform.windowDays + ' days';
-  renderDevicePie(document.getElementById('devicePie'), data.platform.devices);
-  renderOsPie(document.getElementById('osPie'), data.platform.os);
+  renderDevicePie(document.getElementById('devicePie'), document.getElementById('deviceDetail'), data.platform.devices);
+  renderOsPie(document.getElementById('osPie'), document.getElementById('osDetail'), data.platform.os);
   renderWatchFullSync(
     document.getElementById('watchFullSyncCard'),
     document.getElementById('watchFullSyncHint'),
