@@ -148,6 +148,13 @@ struct PlayerView: View {
         .onChange(of: !player.unstarted || player.video == nil) { _, done in
             if done { player.endVideoTransition() }
         }
+        #if os(iOS)
+        .verticalSwipeGesture(
+            disableGesture: player.video != nil,
+            onSwipeUp: { handleSwipe(.up) },
+            onSwipeDown: { handleSwipe(.down) }
+        )
+        #endif
         .dateSelectorSheet()
         #if !os(visionOS)
         .persistentSystemOverlays(
@@ -277,98 +284,6 @@ struct PlayerView: View {
 
     func handleMiniPlayerTap() {
         sheetPos.setDetentMinimumSheet()
-    }
-
-    func handleSwipe(_ direction: SwipeDirecton) {
-        // workaround: when using landscapeFullscreen directly, it captures the initial value
-        let landscapeFullscreen = SheetPositionReader.shared.landscapeFullscreen
-        // workaround: read live value from UserDefaults to avoid stale closure capture
-        let hideControlsFullscreen = Const.hideControlsFullscreen.bool ?? false
-        func setHideControlsFullscreen(_ value: Bool) {
-            UserDefaults.standard.set(value, forKey: Const.hideControlsFullscreen)
-        }
-        switch direction {
-        case .up:
-            guard Const.swipeGestureUp.bool ?? true else {
-                return
-            }
-            #if os(macOS)
-            return
-            #elseif os(visionOS)
-            _ = PlayerManager.shared.tempSpeedChange(faster: true)
-            return
-            #else
-            if enableHideControls {
-                setHideControlsFullscreen(true)
-            } else if !landscapeFullscreen {
-                #if os(iOS)
-                if PlayerManager.shared.tallFullscreenActive {
-                    // already in portrait fullscreen -> reveal menu, stay fullscreen
-                    player.setShowMenu()
-                } else if PlayerManager.shared.isTallAspectRatio {
-                    player.setTallFullscreen(true)
-                } else {
-                    OrientationManager.changeOrientation(to: .landscapeRight)
-                }
-                #endif
-            } else {
-                player.setShowMenu()
-            }
-            #endif
-        case .down:
-            guard Const.swipeGestureDown.bool ?? true else {
-                return
-            }
-            #if os(macOS)
-            return
-            #elseif os(visionOS)
-            _ = PlayerManager.shared.tempSpeedChange()
-            return
-            #else
-            if enableHideControls && hideControlsFullscreen {
-                setHideControlsFullscreen(false)
-            } else if landscapeFullscreen {
-                #if os(iOS)
-                OrientationManager.changeOrientation(to: .portrait)
-                #endif
-            } else if PlayerManager.shared.tallFullscreenActive {
-                if NavigationManager.shared.showMenu {
-                    // menu is revealed over portrait fullscreen -> hide it, stay fullscreen
-                    NavigationManager.shared.showMenu = false
-                } else {
-                    player.setTallFullscreen(false)
-                }
-            } else {
-                player.setPip(true)
-            }
-            #endif
-        case .left:
-            guard Const.swipeGestureLeft.bool ?? true else {
-                return
-            }
-            #if os(visionOS)
-            if PlayerManager.shared.seekForward() {
-                OverlayFullscreenVM.shared.show(.seekForward)
-            }
-            return
-            #endif
-            if !player.unstarted && player.goToNextChapter() {
-                overlayVM.show(.next)
-            }
-        case .right:
-            guard Const.swipeGestureRight.bool ?? true else {
-                return
-            }
-            #if os(visionOS)
-            if PlayerManager.shared.seekBackward() {
-                OverlayFullscreenVM.shared.show(.seekBackward)
-            }
-            return
-            #endif
-            if !player.unstarted && player.goToPreviousChapter() {
-                overlayVM.show(.previous)
-            }
-        }
     }
 
     /// Paged inline (an audio episode) draws the artwork layout, which has no fullscreen overlay

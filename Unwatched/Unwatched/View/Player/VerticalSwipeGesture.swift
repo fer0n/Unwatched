@@ -6,41 +6,34 @@
 import SwiftUI
 
 struct VerticalSwipeGesture: ViewModifier {
-    @State var viewModel = ViewModel()
+    @GestureState private var handled = false
 
     let disableGesture: Bool
     let onSwipeUp: () -> Void
     let onSwipeDown: () -> Void
+
+    private let threshold: CGFloat = 30
 
     func body(content: Content) -> some View {
         content
             .gesture(
                 disableGesture
                     ? nil
-                    : DragGesture(minimumDistance: 30, coordinateSpace: .local)
-                    .onChanged { value in
-                        if viewModel.stop { return }
-                        let state = value.translation.height
-                        if state < -30 {
+                    : DragGesture(minimumDistance: threshold, coordinateSpace: .local)
+                    .updating($handled) { value, handled, _ in
+                        guard !handled else { return }
+                        let deltaY = value.translation.height
+                        if deltaY < -threshold {
                             onSwipeUp()
-                            viewModel.stop = true
-                        } else if state > 30 {
+                            handled = true
+                        } else if deltaY > threshold {
                             onSwipeDown()
-                            viewModel.stop = true
-                        } else if value.translation.width.magnitude > 30 {
-                            viewModel.stop = true
+                            handled = true
+                        } else if value.translation.width.magnitude > threshold {
+                            handled = true
                         }
                     }
-                    .onEnded { _ in
-                        viewModel.stop = false
-                    }
             )
-    }
-}
-
-extension VerticalSwipeGesture {
-    class ViewModel {
-        var stop = false
     }
 }
 
