@@ -35,6 +35,7 @@ struct SetupView: View {
             .myTint()
             .environment(sheetPos)
             .watchNotificationHandler()
+            .priorityKeyCommands()
             .environment(navManager)
             #if os(macOS)
             .environment(\.originalColorScheme, SystemAppearance.shared.colorScheme)

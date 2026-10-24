@@ -170,7 +170,9 @@
 		881E51442B5A75AD006384E4 /* SubscriptionListView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 881E51432B5A75AD006384E4 /* SubscriptionListView.swift */; };
 		881EEE552D02F0D40028EAF8 /* AddSubscription.swift in Sources */ = {isa = PBXBuildFile; fileRef = 881EEE542D02F0D40028EAF8 /* AddSubscription.swift */; };
 		881EEF4D2D0308240028EAF8 /* PlayerCommands.swift in Sources */ = {isa = PBXBuildFile; fileRef = 881EEF4C2D0308240028EAF8 /* PlayerCommands.swift */; };
+		AB1CDE012ED0000000000002 /* PriorityKeyCommands.swift in Sources */ = {isa = PBXBuildFile; fileRef = AB1CDE012ED0000000000001 /* PriorityKeyCommands.swift */; };
 		881EEF4E2D0308240028EAF8 /* PlayerCommands.swift in Sources */ = {isa = PBXBuildFile; fileRef = 881EEF4C2D0308240028EAF8 /* PlayerCommands.swift */; };
+		AB1CDE012ED0000000000003 /* PriorityKeyCommands.swift in Sources */ = {isa = PBXBuildFile; fileRef = AB1CDE012ED0000000000001 /* PriorityKeyCommands.swift */; };
 		881F573F2C4A5D3300559BF9 /* BrowserViewSheet.swift in Sources */ = {isa = PBXBuildFile; fileRef = 881F573E2C4A5D3300559BF9 /* BrowserViewSheet.swift */; };
 		881F57412C4A5DD900559BF9 /* BrowserViewHeader.swift in Sources */ = {isa = PBXBuildFile; fileRef = 881F57402C4A5DD800559BF9 /* BrowserViewHeader.swift */; };
 		881F57432C4A830300559BF9 /* OrientationManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = 881F57422C4A830300559BF9 /* OrientationManager.swift */; };
@@ -1348,6 +1350,7 @@
 		881E51432B5A75AD006384E4 /* SubscriptionListView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SubscriptionListView.swift; sourceTree = "<group>"; };
 		881EEE542D02F0D40028EAF8 /* AddSubscription.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AddSubscription.swift; sourceTree = "<group>"; };
 		881EEF4C2D0308240028EAF8 /* PlayerCommands.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PlayerCommands.swift; sourceTree = "<group>"; };
+		AB1CDE012ED0000000000001 /* PriorityKeyCommands.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PriorityKeyCommands.swift; sourceTree = "<group>"; };
 		881F573E2C4A5D3300559BF9 /* BrowserViewSheet.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BrowserViewSheet.swift; sourceTree = "<group>"; };
 		881F57402C4A5DD800559BF9 /* BrowserViewHeader.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BrowserViewHeader.swift; sourceTree = "<group>"; };
 		881F57422C4A830300559BF9 /* OrientationManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = OrientationManager.swift; sourceTree = "<group>"; };
@@ -2719,6 +2722,7 @@
 			children = (
 				886817872D77379800E06A0D /* AppCommands.swift */,
 				881EEF4C2D0308240028EAF8 /* PlayerCommands.swift */,
+				AB1CDE012ED0000000000001 /* PriorityKeyCommands.swift */,
 				88D127C02D927C370052F42D /* PlayerShortcut.swift */,
 			);
 			path = Commands;
@@ -3650,6 +3654,7 @@
 				88AA10922F0000000000A092 /* QueueListView.swift in Sources */,
 				88AA10132F0000000000A013 /* QueueTagMenu.swift in Sources */,
 				881EEF4D2D0308240028EAF8 /* PlayerCommands.swift in Sources */,
+				AB1CDE012ED0000000000002 /* PriorityKeyCommands.swift in Sources */,
 				8816A2FD2CCD5125001FE63E /* PageControl.swift in Sources */,
 				889AF8CE2C50ECA9001CEDE6 /* AsyncSharableUrl.swift in Sources */,
 				889AF8CF2C50ECA9001CEDE6 /* SubscriptionSorting.swift in Sources */,
@@ -4394,6 +4399,7 @@
 				8852493F2D16E5D2004C983E /* FullscreenChangeOrientationButton.swift in Sources */,
 				88F347212CF6003D00A2EEB0 /* SheetOverlayMinimumSize.swift in Sources */,
 				881EEF4E2D0308240028EAF8 /* PlayerCommands.swift in Sources */,
+				AB1CDE012ED0000000000003 /* PriorityKeyCommands.swift in Sources */,
 				8809D8942DE8E54500B28165 /* HiddenEntriesInfo.swift in Sources */,
 				88C4F6952F24C82E005893C5 /* CleanupHiddenShortsView.swift in Sources */,
 				88C4F6A52F24C82E005893D1 /* PodcastDownloadSettingsView.swift in Sources */,
