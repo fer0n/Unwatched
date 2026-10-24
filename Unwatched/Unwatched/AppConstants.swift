@@ -26,6 +26,9 @@ extension Const {
         Const.quickSwitchAllVideos: true,
         Const.firstPodcastAdded: false,
 
+        // Playback
+        Const.playbackSpeed: 1.0,
+
         // Keep Media
         Const.autoDeleteWatchedVideos: 180,
         Const.autoDeleteOrphanedVideos: 30,

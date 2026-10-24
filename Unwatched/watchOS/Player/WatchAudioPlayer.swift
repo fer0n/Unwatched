@@ -4,6 +4,7 @@
 //
 
 import AVFoundation
+import Combine
 import MediaPlayer
 import Observation
 import SwiftData
@@ -35,7 +36,10 @@ final class WatchAudioPlayer {
     /// the tag lookup fetches, and the controls read this once a second while playing.
     private(set) var seekIntervals = WatchSeek.default
 
-    @ObservationIgnored private var player: AVPlayer?
+    @ObservationIgnored private(set) var player: AVPlayer?
+    @ObservationIgnored private var speedSync: AnyCancellable?
+    /// Bumped on every speed change: neither the key-value store nor SwiftData publishes to Observation.
+    var speedRevision = 0
     @ObservationIgnored private var timeObserver: Any?
     @ObservationIgnored private var endObserver: NSObjectProtocol?
     @ObservationIgnored private var loadTask: Task<Void, Never>?
@@ -48,6 +52,9 @@ final class WatchAudioPlayer {
 
     init() {
         setupRemoteCommands()
+        speedSync = CloudKeyValueStore.defaultPlaybackSpeedChanges.sink { [weak self] _ in
+            self?.speedChanged()
+        }
         PodcastDownloadManager.shared.onEpisodeDownloaded = { [weak self] youtubeId in
             guard let self, let video, video.youtubeId == youtubeId else { return }
             loadPodcastChapters(for: video)
@@ -234,58 +241,6 @@ final class WatchAudioPlayer {
             }
             player.play()
         }
-    }
-
-    // MARK: - Speed
-
-    /// Neither of the two places a speed lives -- `UserDefaults` and a SwiftData property on the
-    /// subscription -- notifies Observation when it changes, so a view reading `playbackSpeed`
-    /// would never redraw. Reading this in the getter and bumping it on every write is what makes
-    /// the computed value publish.
-    private var speedRevision = 0
-
-    /// The channel's or tag's own speed if there is one, otherwise this device's default speed. The default
-    /// is a per-device setting: `UserDefaults` doesn't sync, so the phone's value doesn't apply here.
-    var playbackSpeed: Double {
-        _ = speedRevision
-        if let custom = video?.customPlaybackSpeed, custom > 0 {
-            return custom
-        }
-        let stored = UserDefaults.standard.double(forKey: Const.playbackSpeed)
-        return stored > 0 ? stored : 1
-    }
-
-    /// Writes to whichever source is currently in effect, mirroring the phone: a channel or tag with its
-    /// own speed keeps that override, everything else falls back to the shared per-device default.
-    func setPlaybackSpeed(_ value: Double) {
-        if video?.updateCustomPlaybackSpeed(value) != true {
-            UserDefaults.standard.set(value, forKey: Const.playbackSpeed)
-        }
-        speedRevision += 1
-        applyPlaybackSpeed()
-    }
-
-    func setCustomSpeedEnabled(_ enabled: Bool) {
-        guard let subscription = video?.subscription else { return }
-        subscription.customSpeedSetting = enabled ? playbackSpeed : nil
-        speedRevision += 1
-        applyPlaybackSpeed()
-    }
-
-    func setTagSpeedEnabled(_ enabled: Bool) {
-        guard let video, let tag = Tag.speedLockTag(for: video) else { return }
-        tag.playbackSpeed = enabled ? playbackSpeed : nil
-        speedRevision += 1
-        applyPlaybackSpeed()
-    }
-
-    private func applyPlaybackSpeed() {
-        let rate = Float(playbackSpeed)
-        player?.defaultRate = rate
-        if isPlaying {
-            player?.rate = rate
-        }
-        updateNowPlaying()
     }
 
     func reloadChapters() {

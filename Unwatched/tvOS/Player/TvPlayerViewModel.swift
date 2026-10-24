@@ -157,14 +157,12 @@ final class TvPlayerViewModel {
         }
     }
 
-    /// The channel's or tag's own speed if there is one, otherwise this device's default speed. The default
-    /// is a per-device setting: UserDefaults doesn't sync, so the iPhone's value doesn't apply here.
+    /// The channel's or tag's own speed, otherwise the synced default.
     var playbackSpeed: Double {
         if let custom = video.customPlaybackSpeed, custom > 0 {
             return custom
         }
-        let stored = UserDefaults.standard.double(forKey: Const.playbackSpeed)
-        return stored > 0 ? stored : 1
+        return CloudKeyValueStore.defaultPlaybackSpeed
     }
 
     /// Title for the system player's info panel.

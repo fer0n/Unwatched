@@ -9,7 +9,7 @@ import UnwatchedShared
 struct TvSettingsView: View {
     @AppStorage(Const.markAsWatched) var markAsWatched: Bool = false
     @AppStorage(Const.tvPlaybackMode) var playbackMode: TvPlaybackMode = .youtubeApp
-    @AppStorage(Const.playbackSpeed) var playbackSpeed: Double = 1
+    @State var playbackSpeed = CloudKeyValueStore.defaultPlaybackSpeed
 
     private let speeds = SpeedHelper.selectable
 
@@ -48,6 +48,7 @@ struct TvSettingsView: View {
             Spacer()
         }
         .frame(maxWidth: 800)
+        .onReceive(CloudKeyValueStore.defaultPlaybackSpeedChanges) { playbackSpeed = $0 }
     }
 
     /// A stepper rather than a picker: 15 speeds don't fit a segmented control, and stepping is
@@ -86,6 +87,7 @@ struct TvSettingsView: View {
         // A stored value can sit outside the stepped range; snapping into it keeps the buttons
         // from doing nothing.
         playbackSpeed = next ?? (faster ? speeds.last : speeds.first) ?? 1
+        CloudKeyValueStore.defaultPlaybackSpeed = playbackSpeed
     }
 }
 

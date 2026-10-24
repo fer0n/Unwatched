@@ -739,7 +739,9 @@
 		88AB5C010000000000000002 /* PlaybackPositionSync.swift in Sources */ = {isa = PBXBuildFile; fileRef = 88AB5C010000000000000001 /* PlaybackPositionSync.swift */; };
 		88AB5C010000000000000003 /* PlaybackPositionSync.swift in Sources */ = {isa = PBXBuildFile; fileRef = 88AB5C010000000000000001 /* PlaybackPositionSync.swift */; };
 		88AB5C010000000000000005 /* PlayerManager+PositionSync.swift in Sources */ = {isa = PBXBuildFile; fileRef = 88AB5C010000000000000004 /* PlayerManager+PositionSync.swift */; };
+		88AB5C020000000000000005 /* PlayerManager+SpeedSync.swift in Sources */ = {isa = PBXBuildFile; fileRef = 88AB5C020000000000000004 /* PlayerManager+SpeedSync.swift */; };
 		88AB5C010000000000000006 /* PlayerManager+PositionSync.swift in Sources */ = {isa = PBXBuildFile; fileRef = 88AB5C010000000000000004 /* PlayerManager+PositionSync.swift */; };
+		88AB5C020000000000000006 /* PlayerManager+SpeedSync.swift in Sources */ = {isa = PBXBuildFile; fileRef = 88AB5C020000000000000004 /* PlayerManager+SpeedSync.swift */; };
 		88ABDF442D64F0A400DBD7F8 /* CustomSettingsToggleStyle.swift in Sources */ = {isa = PBXBuildFile; fileRef = 88ABDF432D64F0A400DBD7F8 /* CustomSettingsToggleStyle.swift */; };
 		88ABDF452D64F0A400DBD7F8 /* CustomSettingsToggleStyle.swift in Sources */ = {isa = PBXBuildFile; fileRef = 88ABDF432D64F0A400DBD7F8 /* CustomSettingsToggleStyle.swift */; };
 		88AD06672B74ADE900151B07 /* AddToLibraryView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 88AD06662B74ADE900151B07 /* AddToLibraryView.swift */; };
@@ -1618,6 +1620,7 @@
 		88AB10002F9C000100AAAA01 /* ScrollWheelStepper.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ScrollWheelStepper.swift; sourceTree = "<group>"; };
 		88AB5C010000000000000001 /* PlaybackPositionSync.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PlaybackPositionSync.swift; sourceTree = "<group>"; };
 		88AB5C010000000000000004 /* PlayerManager+PositionSync.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "PlayerManager+PositionSync.swift"; sourceTree = "<group>"; };
+		88AB5C020000000000000004 /* PlayerManager+SpeedSync.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "PlayerManager+SpeedSync.swift"; sourceTree = "<group>"; };
 		88ABDF432D64F0A400DBD7F8 /* CustomSettingsToggleStyle.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CustomSettingsToggleStyle.swift; sourceTree = "<group>"; };
 		88AD06662B74ADE900151B07 /* AddToLibraryView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AddToLibraryView.swift; sourceTree = "<group>"; };
 		88AEB5D62B98A69300A2FF0D /* Logger.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Logger.swift; sourceTree = "<group>"; };
@@ -2012,6 +2015,7 @@
 				88753A6147C4E5846DAE6938 /* PlayerManager+ChapterBoundary.swift */,
 				88AA10A02F0000000000A0A0 /* PlayerManager+Queue.swift */,
 				88AB5C010000000000000004 /* PlayerManager+PositionSync.swift */,
+				88AB5C020000000000000004 /* PlayerManager+SpeedSync.swift */,
 			);
 			path = PlayerManager;
 			sourceTree = "<group>";
@@ -3786,6 +3790,7 @@
 				88F3A997DF2BBC79986AE6FC /* PlayerManager+ChapterBoundary.swift in Sources */,
 				88AA10A22F0000000000A0A2 /* PlayerManager+Queue.swift in Sources */,
 				88AB5C010000000000000006 /* PlayerManager+PositionSync.swift in Sources */,
+				88AB5C020000000000000006 /* PlayerManager+SpeedSync.swift in Sources */,
 				8802F8522C6950A3008A7778 /* HideShortsTip.swift in Sources */,
 				CD0FBE0000000000000000C2 /* SearchRecommendationsTip.swift in Sources */,
 				CD0FBE0000000000000000B2 /* ThemedTipViewStyle.swift in Sources */,
@@ -4198,6 +4203,7 @@
 				8809F1B2CCBBBF181BDFD3D9 /* PlayerManager+ChapterBoundary.swift in Sources */,
 				88AA10A12F0000000000A0A1 /* PlayerManager+Queue.swift in Sources */,
 				88AB5C010000000000000005 /* PlayerManager+PositionSync.swift in Sources */,
+				88AB5C020000000000000005 /* PlayerManager+SpeedSync.swift in Sources */,
 				88D29AE72B751B6900BDBFDF /* VideoSorting.swift in Sources */,
 				887E82AA2CD8FC4600B196EA /* VideoEntity.swift in Sources */,
 				88AA10222F0000000000A022 /* TagEntity.swift in Sources */,

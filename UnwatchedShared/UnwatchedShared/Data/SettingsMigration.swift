@@ -33,6 +33,7 @@ public enum SettingsMigration {
     ) {
         migrateHideShorts(defaults, cloud)
         migrateSyncedSettingsToKeyValueStore(defaults, cloud)
+        migratePlaybackSpeed(defaults, cloud)
     }
 
     /// V1p3 -> V1p4: the `hideShorts` bool became the three-state `defaultShortsSetting`.
@@ -73,6 +74,17 @@ public enum SettingsMigration {
         }
 
         defaults.set(true, forKey: didMigrateToKeyValueStore)
+    }
+
+    /// Per-device until now. An already synced speed wins over this device's.
+    private static func migratePlaybackSpeed(_ defaults: SettingsStore, _ cloud: SettingsStore) {
+        guard let speed = defaults.object(forKey: Const.playbackSpeed) else {
+            return
+        }
+        if cloud.object(forKey: Const.playbackSpeed) == nil {
+            cloud.set(speed, forKey: Const.playbackSpeed)
+        }
+        defaults.removeObject(forKey: Const.playbackSpeed)
     }
 
     private static let didMigrateToKeyValueStore = "v1p9toV1p10DidMigrate"

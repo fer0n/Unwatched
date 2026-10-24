@@ -95,6 +95,26 @@ final class SettingsMigrationTests: XCTestCase {
         XCTAssertEqual(cloud.object(forKey: Const.skipChapterText) as? String, "changed by user")
     }
 
+    func testPlaybackSpeedMovesToKeyValueStore() {
+        let defaults = MemoryStore([Const.playbackSpeed: 1.5])
+        let cloud = MemoryStore()
+
+        SettingsMigration.run(defaults: defaults, cloud: cloud)
+
+        XCTAssertEqual(cloud.object(forKey: Const.playbackSpeed) as? Double, 1.5)
+        XCTAssertNil(defaults.object(forKey: Const.playbackSpeed))
+    }
+
+    func testPlaybackSpeedKeepsAlreadySyncedValue() {
+        let defaults = MemoryStore([Const.playbackSpeed: 1.5])
+        let cloud = MemoryStore([Const.playbackSpeed: 2.0])
+
+        SettingsMigration.run(defaults: defaults, cloud: cloud)
+
+        XCTAssertEqual(cloud.object(forKey: Const.playbackSpeed) as? Double, 2.0)
+        XCTAssertNil(defaults.object(forKey: Const.playbackSpeed))
+    }
+
     /// Repeated launches must not undo the first run's work.
     func testRepeatedRunsAreStable() {
         let defaults = MemoryStore([Const.hideShorts: true, Const.skipChapterText: "keep"])

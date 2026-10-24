@@ -7,7 +7,9 @@ import UnwatchedShared
 @Observable class PlayerManager: Codable {
     @MainActor
     static let shared: PlayerManager = {
-        PlayerManager.load()
+        let player = PlayerManager.load()
+        player.followSyncedPlaybackSpeed()
+        return player
     }()
 
     @MainActor
@@ -56,7 +58,9 @@ import UnwatchedShared
 
     var defaultPlaybackSpeed: Double = 1 {
         didSet {
-            UserDefaults.standard.set(defaultPlaybackSpeed, forKey: Const.playbackSpeed)
+            // writing back an unchanged, possibly stale value would override other devices
+            guard defaultPlaybackSpeed != CloudKeyValueStore.defaultPlaybackSpeed else { return }
+            CloudKeyValueStore.defaultPlaybackSpeed = defaultPlaybackSpeed
         }
     }
     /// Held-down speed change.
@@ -88,9 +92,7 @@ import UnwatchedShared
     }
 
     func initPlaybackSpeed() {
-        if let speed = UserDefaults.standard.value(forKey: Const.playbackSpeed) as? Double, speed > 0 {
-            defaultPlaybackSpeed = speed
-        }
+        defaultPlaybackSpeed = CloudKeyValueStore.defaultPlaybackSpeed
     }
 
     static func load() -> PlayerManager {
