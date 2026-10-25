@@ -159,7 +159,9 @@ struct PlayerControls: View {
                 playbackButtons(small: hasSmallControls)
             }
 
-            if player.isTallAspectRatio {
+            // not in the compact layout's HStack: there the spacer competes with the ViewThatFits for width, and
+            // the two never settle on a split, so layout reruns every frame
+            if player.isTallAspectRatio && !compactSize {
                 // make sure play button vertical spacing is equal
                 Spacer()
                     .frame(height: 0)
