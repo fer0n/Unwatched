@@ -350,10 +350,11 @@ extension VideoService {
 
     static func addForeignUrlsReturningIds(
         _ urls: [URL],
-        in videoPlacement: VideoPlacementArea
+        in videoPlacement: VideoPlacementArea,
+        at index: Int = 1
     ) async throws -> [PersistentIdentifier] {
         try await Task.detached {
-            try await VideoActor().addForeignUrls(urls, in: videoPlacement, at: 1, markAsNew: false)
+            try await VideoActor().addForeignUrls(urls, in: videoPlacement, at: index, markAsNew: false)
         }.value
     }
 
