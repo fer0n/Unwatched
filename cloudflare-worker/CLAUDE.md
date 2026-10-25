@@ -99,8 +99,6 @@ in development instead of only being proven after release.
 ```
 npm run dev                    # local (note: Secure cookie won't persist over http://localhost)
 npx wrangler deploy --dry-run  # bundle without shipping — the only real syntax check
-npm run deploy                 # wrangler deploy
-npm run tail                   # live logs
 ```
 
 `node --check src/dashboard.js` is **not** enough: the whole UI lives inside the `DASHBOARD_HTML`

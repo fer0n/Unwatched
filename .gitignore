@@ -2,7 +2,8 @@
 **/credentials.swift
 
 # Claude Code local config
-.claude/
+.claude/*
+!.claude/skills/
 
 # Cloudflare Worker
 cloudflare-worker/node_modules/
@@ -15,9 +16,6 @@ Unwatched.xcodeproj/project.xcworkspace/xcshareddata
 Unwatched.xcodeproj/project.xcworkspace/contents.xcworkspacedata
 .DS_Store
 Unwatched.xcodeproj/xcshareddata/xcschemes/Unwatched.xcscheme
-
-# Claude Code local config
-.claude/
 
 
 # Xcode

@@ -4,9 +4,9 @@
 in the shared framework because three targets need it: the iPhone/iPad player, tvOS (which has no
 WKWebView and so drives `InnerTubeAPI` directly), and the app's search.
 
-**Before changing anything here, read `Unwatched/Unwatched/InnerTube/CLAUDE.md`** — the upstream
-sync procedure, the per-file adaptations to re-apply on every sync, and the design constraints all
-live there. Two that bite immediately:
+**Before changing anything here, read `Unwatched/Unwatched/InnerTube/CLAUDE.md`** for the design
+constraints, and load the `innertube-upstream-sync` skill for the upstream sync procedure and the
+per-file adaptations to re-apply on every sync. Two that bite immediately:
 
 - Keep these files as close to upstream as possible; Unwatched-specific logic belongs in the
   app-target files or in a separate `InnerTube/…` extension file outside `Core/`.

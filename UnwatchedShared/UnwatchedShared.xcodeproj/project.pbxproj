@@ -13,6 +13,9 @@
 /* Begin PBXFileSystemSynchronizedBuildFileExceptionSet section */
 		880187842C9960060071C0F5 /* Exceptions for "UnwatchedShared" folder in "UnwatchedShared" target */ = {
 			isa = PBXFileSystemSynchronizedBuildFileExceptionSet;
+			membershipExceptions = (
+				InnerTube/CLAUDE.md,
+			);
 			publicHeaders = (
 				UnwatchedShared.h,
 			);
