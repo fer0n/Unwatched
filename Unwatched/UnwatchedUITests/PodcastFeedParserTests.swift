@@ -157,13 +157,20 @@ class PodcastFeedParserTests: XCTestCase {
         XCTAssertNil(episodes[1].thumbnailUrl)
     }
 
+    func testEpisodeRepeatingTheShowImageHasNoThumbnail() throws {
+        let xml = Self.showNotesXml.replacingOccurrences(
+            of: "http://example.com/one.jpg",
+            with: "https://example.com/art.jpg"
+        )
+        XCTAssertNil(try parseNotesFeed(xml).episodes.first?.thumbnailUrl)
+    }
+
     private var notesFeed: PodcastFeed {
-        get throws {
-            try PodcastService.parseFeed(
-                Data(Self.showNotesXml.utf8),
-                feedUrl: URL(string: "https://example.com/notes.xml")!
-            )
-        }
+        get throws { try parseNotesFeed(Self.showNotesXml) }
+    }
+
+    private func parseNotesFeed(_ xml: String) throws -> PodcastFeed {
+        try PodcastService.parseFeed(Data(xml.utf8), feedUrl: URL(string: "https://example.com/notes.xml")!)
     }
 
     /// Show notes are mostly links, and `DescriptionDetailView` renders them as markdown, so an anchor has to survive

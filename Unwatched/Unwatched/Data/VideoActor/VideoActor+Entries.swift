@@ -151,12 +151,12 @@ extension VideoActor {
         }
 
         var deleteImage: URL?
-        // a podcast episode is also allowed to lose its image: a feed that stops giving an item its
-        // own `<itunes:image>` means the show's cover from now on, and episodes imported before the
-        // parser stopped copying that cover onto them clear here on the next refresh
         let mayClearThumbnail = updatedVideo.thumbnailUrl != nil || updatedVideo.isPodcast
         if video.thumbnailUrl != updatedVideo.thumbnailUrl && mayClearThumbnail {
-            deleteImage = video.thumbnailUrl
+            let isShowCover = video.thumbnailUrl == video.subscription?.thumbnailUrl
+            if !isShowCover {
+                deleteImage = video.thumbnailUrl
+            }
             video.thumbnailUrl = updatedVideo.thumbnailUrl
         }
 

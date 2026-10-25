@@ -190,15 +190,28 @@ public final class PodcastFeedParser: NSObject, XMLParserDelegate {
     }
 
     public func parserDidEndDocument(_ parser: XMLParser) {
-        buildSubscriptionInfo()
+        finishParsing()
     }
 
     public func parser(_ parser: XMLParser, parseErrorOccurred parseError: any Error) {
         // an aborted parse (episode limit reached) still has everything it was asked for
-        buildSubscriptionInfo()
+        finishParsing()
     }
 
     // MARK: - Building
+
+    private func finishParsing() {
+        buildSubscriptionInfo()
+        dropShowImageFromEpisodes()
+    }
+
+    /// Many feeds repeat the show's cover as every item's `<itunes:image>`.
+    private func dropShowImageFromEpisodes() {
+        guard let showImage = subscriptionInfo?.thumbnailUrl else { return }
+        for index in episodes.indices where episodes[index].thumbnailUrl == showImage {
+            episodes[index].thumbnailUrl = nil
+        }
+    }
 
     private func buildSubscriptionInfo() {
         guard subscriptionInfo == nil, !showTitle.isEmpty else { return }
@@ -238,8 +251,6 @@ public final class PodcastFeedParser: NSObject, XMLParserDelegate {
                 youtubeId: id,
                 title: item.title,
                 url: URL(string: item.link) ?? mediaUrl,
-                // only the episode's own image: an item without one has none, and the show's cover stands in at
-                // display time (`VideoData.displayThumbnailUrl`).
                 thumbnailUrl: PodcastService.secureUrl(string: item.imageUrl),
                 duration: duration,
                 chapters: chapters,
