@@ -3,7 +3,7 @@
 //  UnwatchedShared
 //
 
-import Foundation
+import AVFoundation
 import OSLog
 
 public enum PodcastDownloadStore {
@@ -51,6 +51,15 @@ public enum PodcastDownloadStore {
     /// enclosure's extension would come from.
     public static func downloadedFile(for youtubeId: String) -> URL? {
         episodeFiles().first { episodeId(of: $0) == youtubeId }
+    }
+
+    public static func downloadedDuration(for youtubeId: String) async -> Double? {
+        guard let file = downloadedFile(for: youtubeId) else { return nil }
+        let asset = AVURLAsset(url: file, options: [AVURLAssetPreferPreciseDurationAndTimingKey: true])
+        guard let duration = try? await asset.load(.duration).seconds, duration.isFinite, duration > 0 else {
+            return nil
+        }
+        return duration
     }
 
     public static func downloadedIds() -> Set<String> {

@@ -241,13 +241,7 @@ struct SetupView: View {
         #endif
         PlayerManager.shared.restoreNowPlayingVideo()
         prefetchAudioArtworkIfNeeded()
-        PodcastDownloadManager.shared.onEpisodeDownloaded = { youtubeId in
-            ChapterService.loadPodcastChapters(youtubeId: youtubeId)
-            ChapterAutomation.scheduleRun()
-        }
-        PodcastDownloadManager.shared.onEpisodeDownloadFailed = {
-            Signal.error("podcastDownloadFailed")
-        }
+        setupPodcastDownloads()
         VideoService.fetchVideoDurationsQueueInbox()
         sendSettings()
     }
@@ -303,6 +297,22 @@ struct SetupView: View {
             }
             Signal.log("SubscriptionCount", parameters: params)
         }
+    }
+}
+
+extension SetupView {
+    static func setupPodcastDownloads() {
+        PodcastDownloadManager.shared.onEpisodeDownloaded = { youtubeId in
+            Task {
+                await VideoService.fillPodcastDurationFromDownload(youtubeId: youtubeId)
+                ChapterService.loadPodcastChapters(youtubeId: youtubeId)
+                ChapterAutomation.scheduleRun()
+            }
+        }
+        PodcastDownloadManager.shared.onEpisodeDownloadFailed = {
+            Signal.error("podcastDownloadFailed")
+        }
+        Task { await VideoService.fillPodcastDurationsFromDownloads() }
     }
 }
 

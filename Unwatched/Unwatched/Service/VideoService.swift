@@ -198,6 +198,11 @@ extension VideoService {
         _ = forceUpdateVideo(modelId, duration: duration)
     }
 
+    static func updateDurationAndChapters(_ video: Video, duration: Double) {
+        updateDuration(video, duration: duration)
+        ChapterService.updateDuration(video, duration: duration)
+    }
+
     static func forceUpdateVideo(
         _ videoModelId: PersistentIdentifier,
         duration: Double? = nil,

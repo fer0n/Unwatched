@@ -971,8 +971,7 @@ extension AVPlayerViewModel {
         syncPlayPause(persistTime: false)
         updateNowPlayingInfo(elapsed: elapsed)
         if let duration, !duration.isNaN, !duration.isInfinite, duration > 0, let video = player.video {
-            VideoService.updateDuration(video, duration: duration)
-            ChapterService.updateDuration(video, duration: duration)
+            VideoService.updateDurationAndChapters(video, duration: duration)
         }
         player.handleChapterRefresh()
     }

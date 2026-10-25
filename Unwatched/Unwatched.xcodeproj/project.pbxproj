@@ -65,7 +65,9 @@
 		63D218143A793B23E784C56E /* CapsuleLabel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 24EB98A6B9324001ABEE8DE1 /* CapsuleLabel.swift */; };
 		6E4AEBEE463448C2BCDC7B25 /* PodcastEpisodeCacheTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 67E1C9774B64420098EC98D5 /* PodcastEpisodeCacheTests.swift */; };
 		6F19F90DEA57474D9B415781 /* VideoService+ShareLink.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1B2820AA9BAF4DF3B49491E3 /* VideoService+ShareLink.swift */; };
+		2D3D87D601EC4B44A66CE454 /* VideoService+PodcastDuration.swift in Sources */ = {isa = PBXBuildFile; fileRef = A8FCE69404F1493990C3AC1E /* VideoService+PodcastDuration.swift */; };
 		734CD64A858649A5ABFDDDD4 /* VideoService+ShareLink.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1B2820AA9BAF4DF3B49491E3 /* VideoService+ShareLink.swift */; };
+		8F29C3344A674EB8AA11C393 /* VideoService+PodcastDuration.swift in Sources */ = {isa = PBXBuildFile; fileRef = A8FCE69404F1493990C3AC1E /* VideoService+PodcastDuration.swift */; };
 		79FA11A5B74A4C5FBA7686EA /* AVPlayerStreamHelpers.swift in Sources */ = {isa = PBXBuildFile; fileRef = BE66417B2F2F4BB8AA39AE78 /* AVPlayerStreamHelpers.swift */; };
 		7A11CE01AA0000000000B001 /* SpeedMenuButton.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7A11CE01AA0000000000A001 /* SpeedMenuButton.swift */; };
 		7A11CE01AA0000000000B002 /* SpeedMenuButton.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7A11CE01AA0000000000A001 /* SpeedMenuButton.swift */; };
@@ -1254,6 +1256,7 @@
 		160A9D24CBE56DCB823A70A9 /* CloudAiButton.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CloudAiButton.swift; sourceTree = "<group>"; };
 		1AA236FA6C1832F0339BC5A6 /* TranscriptResult.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TranscriptResult.swift; sourceTree = "<group>"; };
 		1B2820AA9BAF4DF3B49491E3 /* VideoService+ShareLink.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "VideoService+ShareLink.swift"; sourceTree = "<group>"; };
+		A8FCE69404F1493990C3AC1E /* VideoService+PodcastDuration.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "VideoService+PodcastDuration.swift"; sourceTree = "<group>"; };
 		1B91BD33FE5E8E8E9DEC6FB2 /* TwoRowChipLayout.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TwoRowChipLayout.swift; sourceTree = "<group>"; };
 		1E5B5B0D8E178E17B73C45A9 /* ChapterAutomation+Transcription.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "ChapterAutomation+Transcription.swift"; sourceTree = "<group>"; };
 		20A57C76B1628092FD746792 /* InboxCardSwipe.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = InboxCardSwipe.swift; sourceTree = "<group>"; };
@@ -2491,6 +2494,7 @@
 				88146F412C74EDE500704B90 /* ChapterService */,
 				88DFC0C52B448C01001895C8 /* VideoService.swift */,
 				1B2820AA9BAF4DF3B49491E3 /* VideoService+ShareLink.swift */,
+				A8FCE69404F1493990C3AC1E /* VideoService+PodcastDuration.swift */,
 				88CD38832E20E66300E7B21C /* TranscriptService.swift */,
 				88CD38A02E20E66300E7B21C /* TranscriptService+Alignment.swift */,
 				88CD38B02E20E66300E7B21C /* TranscriptService+GenerationCoordinator.swift */,
@@ -3459,6 +3463,7 @@
 				88E58AAD2D0768CE008C4F31 /* ExtendedPlayerActions.swift in Sources */,
 				889AF9542C50ED05001CEDE6 /* VideoService.swift in Sources */,
 				6F19F90DEA57474D9B415781 /* VideoService+ShareLink.swift in Sources */,
+				2D3D87D601EC4B44A66CE454 /* VideoService+PodcastDuration.swift in Sources */,
 				88F347202CF6003D00A2EEB0 /* SheetOverlayMinimumSize.swift in Sources */,
 				880E87052F656315001DAAE8 /* PlayerShadow.swift in Sources */,
 				880E87062F656315001DAAE8 /* PlayerPageControl.swift in Sources */,
@@ -4212,6 +4217,7 @@
 				88AA10622F0000000000A062 /* NavigationTitleLabel.swift in Sources */,
 				88DFC0C62B448C01001895C8 /* VideoService.swift in Sources */,
 				734CD64A858649A5ABFDDDD4 /* VideoService+ShareLink.swift in Sources */,
+				8F29C3344A674EB8AA11C393 /* VideoService+PodcastDuration.swift in Sources */,
 				883D450030180A4E00950B89 /* SearchVM+Status.swift in Sources */,
 				DE7E9D8B4E6BDCF26351ACA0 /* SearchVM+HomeFeed.swift in Sources */,
 				88899D932E035E54002C05BC /* TitleFilterView.swift in Sources */,

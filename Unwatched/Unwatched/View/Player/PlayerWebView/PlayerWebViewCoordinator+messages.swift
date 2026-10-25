@@ -318,12 +318,7 @@ extension PlayerWebViewCoordinator {
         }
 
         if let video = parent.player.video {
-            VideoService.updateDuration(video, duration: duration)
-
-            ChapterService.updateDuration(
-                video,
-                duration: duration
-            )
+            VideoService.updateDurationAndChapters(video, duration: duration)
         }
     }
 
