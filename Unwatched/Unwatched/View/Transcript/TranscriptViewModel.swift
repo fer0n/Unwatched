@@ -285,7 +285,7 @@ extension TranscriptView {
                 driftDetected = false
             }
             guard transcript == nil else {
-                Log.info("Transcript already loaded for \(youtubeId)")
+                Log.chapters.info("Transcript already loaded for \(youtubeId)")
                 return
             }
 
@@ -306,7 +306,7 @@ extension TranscriptView {
                     )
                 origin = .published
             }
-            Log.info("Transcript loaded for \(youtubeId): \(transcript?.count ?? 0) entries")
+            Log.chapters.info("Transcript loaded for \(youtubeId): \(transcript?.count ?? 0) entries")
             transcriptYoutubeId = youtubeId
         }
     }

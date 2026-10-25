@@ -65,7 +65,7 @@ import UnwatchedShared
                 hasNewSubscriptions = true
             }
         } catch {
-            Log.error("podcast subscription error: \(error)")
+            Log.refresh.error("podcast subscription error: \(error)")
             Signal.error("podcastSubscribeFailed")
             errorMessage = error.localizedDescription
             isSubscribedSuccess = wasSubscribed
@@ -95,7 +95,7 @@ import UnwatchedShared
 
     func unsubscribe(_ info: SubscriptionInfo) async {
         if info.channelId == nil && info.playlistId == nil {
-            Log.warning("unsubscribe - SubscriptionInfo has no channelId/playlistId: \(info)")
+            Log.refresh.warning("unsubscribe - SubscriptionInfo has no channelId/playlistId: \(info)")
             return
         }
         isSubscribedSuccess = nil
@@ -105,7 +105,7 @@ import UnwatchedShared
             try await task.value
             isSubscribedSuccess = false
         } catch {
-            Log.error("unsubscribe error: \(error)")
+            Log.refresh.error("unsubscribe error: \(error)")
         }
         isLoading = false
     }
@@ -120,7 +120,7 @@ import UnwatchedShared
             isSubscribedSuccess = true
             hasNewSubscriptions = true
         } catch {
-            Log.error("addNewSubscription error: \(error)")
+            Log.refresh.error("addNewSubscription error: \(error)")
             isSubscribedSuccess = false
             if let info = subscriptionInfo, info.title != nil,
                info.channelId != nil || info.playlistId != nil {
@@ -143,7 +143,7 @@ import UnwatchedShared
             isSubscribedSuccess = true
             hasNewSubscriptions = true
         } catch {
-            Log.error("addWithoutRSS error: \(error)")
+            Log.refresh.error("addWithoutRSS error: \(error)")
             errorMessage = error.localizedDescription
             isSubscribedSuccess = false
         }
@@ -153,7 +153,7 @@ import UnwatchedShared
     func handleSubscription(_ videoId: PersistentIdentifier) async {
         let context = DataProvider.newContext()
         guard let video: Video = context.existingModel(for: videoId) else {
-            Log.info("handleSubscription: video not found")
+            Log.refresh.info("handleSubscription: video not found")
             return
         }
         isSubscribedSuccess = nil
@@ -162,7 +162,7 @@ import UnwatchedShared
         let isSubscribed = isSubscribed(video: video)
         if isSubscribed {
             guard let subId = video.subscription?.id else {
-                Log.info("no subId to un/subscribe")
+                Log.refresh.info("no subId to un/subscribe")
                 isLoading = false
                 return
             }
@@ -180,7 +180,7 @@ import UnwatchedShared
                     subscriptionId: subId)
                 isSubscribedSuccess = true
             } catch {
-                Log.error("error subscribing: \(error)")
+                Log.refresh.error("error subscribing: \(error)")
                 isSubscribedSuccess = false
             }
             isLoading = false
@@ -216,7 +216,7 @@ import UnwatchedShared
         isLoading = true
         defer { isLoading = false }
 
-        Log.info("load new")
+        Log.refresh.info("load new")
         do {
             let subs = try await SubscriptionService.addSubscriptions(
                 subscriptionInfo: subscriptionInfo
@@ -230,7 +230,7 @@ import UnwatchedShared
             self.isSubscribedSuccess = true
             return subs
         } catch {
-            Log.error("\(error)")
+            Log.refresh.error("\(error)")
             self.errorMessage = error.localizedDescription
             self.showDropResults = true
         }

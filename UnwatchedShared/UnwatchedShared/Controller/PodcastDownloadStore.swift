@@ -25,7 +25,7 @@ public enum PodcastDownloadStore {
             values.isExcludedFromBackup = true
             try url.setResourceValues(values)
         } catch {
-            Log.error("podcast downloads unavailable: \(error.localizedDescription)")
+            Log.podcasts.error("podcast downloads unavailable: \(error.localizedDescription)")
             return nil
         }
         return url

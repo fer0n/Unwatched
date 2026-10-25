@@ -26,7 +26,7 @@ extension ChapterService {
         merged: Bool = false
     ) -> (chapters: [Chapter], hasChanges: Bool) {
         guard let modelContext = video.modelContext else {
-            Log.warning("reconcileChapters: video has no context")
+            Log.chapters.warning("reconcileChapters: video has no context")
             return ([], false)
         }
         let desired = desired.sorted { $0.startTime < $1.startTime }
@@ -39,7 +39,7 @@ extension ChapterService {
         for (chapter, row) in zip(desired, paired) {
             if let row {
                 if !chapterEqual(chapter, row) {
-                    Log.info("Update needed: \(row.description) vs \(chapter)")
+                    Log.chapters.info("Update needed: \(row.description) vs \(chapter)")
                     overwrite(row, with: chapter)
                     hasChanges = true
                 }

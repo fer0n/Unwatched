@@ -128,7 +128,7 @@ extension VideoActor {
     }
 
     func detectShortAndAdjustEntries(_ video: Video) async {
-        Log.info("detectShortAndAdjustEntries: \(video.title)")
+        Log.refresh.info("detectShortAndAdjustEntries: \(video.title)")
         let (isYtShort, _) = await VideoActor.isYtShort(video.thumbnailUrl)
         video.isYtShort = isYtShort
         if isYtShort == true && (video.subscription?.shortsSetting.shouldHide() ?? false) {
@@ -142,7 +142,7 @@ extension VideoActor {
     /// Only writes what actually changed: this now runs on every refresh for a podcast, and an unconditional
     /// assignment would dirty every episode each time for iCloud to sync back.
     func updateVideoAndGetImageToDelete(_ video: Video, _ updatedVideo: SendableVideo) -> URL? {
-        Log.info("updateExistingVideo: \(video.title)")
+        Log.refresh.info("updateExistingVideo: \(video.title)")
         if video.title != updatedVideo.title {
             video.title = updatedVideo.title
         }
@@ -223,7 +223,7 @@ extension VideoActor {
     func updateRecentVideoDate(_ subscription: Subscription, _ date: Date?) {
         if let mostRecentDate = date, date != nil,
            date ?? .distantPast > subscription.mostRecentVideoDate ?? .distantPast {
-            Log.info("updateRecentVideoDate \(mostRecentDate)")
+            Log.refresh.info("updateRecentVideoDate \(mostRecentDate)")
             subscription.mostRecentVideoDate = mostRecentDate
         }
     }
@@ -302,7 +302,7 @@ extension VideoActor {
     }
 
     func handleVideoPlacement(_ videos: [Video], placement: VideoPlacement) {
-        Log.info("handleVideoPlacement")
+        Log.refresh.info("handleVideoPlacement")
         switch placement {
         case .inbox:
             addVideosTo(videos, placement: .inbox)
@@ -372,7 +372,7 @@ extension VideoActor {
             )
             try modelContext.save()
         } else {
-            Log.info("clearEntries: model not found")
+            Log.refresh.info("clearEntries: model not found")
         }
     }
 
@@ -461,7 +461,7 @@ extension VideoActor {
         case .queue:
             clearQueue(direction, index: index, filter: filter, modelContext)
         @unknown default:
-            Log.warning("Clear list value not implemented")
+            Log.refresh.warning("Clear list value not implemented")
         }
         try modelContext.save()
     }
@@ -511,13 +511,13 @@ extension VideoActor {
         let fetch = FetchDescriptor<Video>(predicate: #Predicate { $0.deferDate != nil && $0.deferDate ?? past <= now })
         let videos = try? modelContext.fetch(fetch)
 
-        Log.info("consumeDeferredVideos: \(videos?.count ?? 0)")
+        Log.refresh.info("consumeDeferredVideos: \(videos?.count ?? 0)")
 
         for video in videos ?? [] {
             video.deferDate = nil
 
             if let clearedId = clearedYouTubeId, video.youtubeId == clearedId {
-                Log.info("consumeDeferredVideos: already cleared \(video.title)")
+                Log.refresh.info("consumeDeferredVideos: already cleared \(video.title)")
                 continue
             }
 
@@ -556,7 +556,7 @@ extension VideoActor {
     }
 
     func fetchVideoDurationsQueueInbox() async throws -> [VideoDurationInfo] {
-        Log.info("fetchVideoDurationsQueueInbox")
+        Log.refresh.info("fetchVideoDurationsQueueInbox")
         return try await fetchVideoDurations(for: [], includeEntries: true)
     }
 
@@ -572,7 +572,7 @@ extension VideoActor {
         if includeEntries {
             let entryVideos = getEntryVideosWithoutDuration()
             checkVideos.append(contentsOf: entryVideos)
-            Log.info("getVideosToFetchDurationFor: \(entryVideos.count) entry videos without duration")
+            Log.refresh.info("getVideosToFetchDurationFor: \(entryVideos.count) entry videos without duration")
         }
 
         let staleCutoffDate = Date().addingTimeInterval(-Const.durationFetchInterval)
@@ -610,10 +610,10 @@ extension VideoActor {
         if slotsToFill > 0 {
             let additionalVideos = Array(availableOptionalVideos.prefix(slotsToFill))
             toFetchVideos.append(contentsOf: additionalVideos)
-            Log.info("getVideosToFetchDurationFor: \(additionalVideos.count) batch filler")
+            Log.refresh.info("getVideosToFetchDurationFor: \(additionalVideos.count) batch filler")
         }
 
-        Log.info("getVideosToFetchDurationFor: Total: \(toFetchVideos.count)")
+        Log.refresh.info("getVideosToFetchDurationFor: Total: \(toFetchVideos.count)")
         return toFetchVideos
     }
 
@@ -638,9 +638,9 @@ extension VideoActor {
         optional optionalVideoIds: [PersistentIdentifier] = [],
         includeEntries: Bool = true,
         ) async throws -> [VideoDurationInfo] {
-        Log.info("fetchUpdateDurations, videos: \(videoIds.count)")
+        Log.refresh.info("fetchUpdateDurations, videos: \(videoIds.count)")
         guard !videoIds.isEmpty || includeEntries else {
-            Log.info("fetchUpdateDurations, no videos without duration")
+            Log.refresh.info("fetchUpdateDurations, no videos without duration")
             return []
         }
 

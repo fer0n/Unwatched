@@ -30,7 +30,7 @@ class PlayerWebViewCoordinator: NSObject, WKNavigationDelegate, WKScriptMessageH
 
     @MainActor
     func webViewWebContentProcessDidTerminate(_ webView: WKWebView) {
-        Log.info("webViewWebContentProcessDidTerminate")
+        Log.player.info("webViewWebContentProcessDidTerminate")
         // reloading a page nothing shows any more would only take the player's state with it
         guard !retired else { return }
         parent.player.isLoading = Date()
@@ -47,7 +47,7 @@ class PlayerWebViewCoordinator: NSObject, WKNavigationDelegate, WKScriptMessageH
             let payload = body[safe: 1]
             let payloadString = payload.map { String($0) }
             if topic != "currentTime" {
-                Log.info(">\(messageBody)")
+                Log.player.info(">\(messageBody)")
             }
             handleJsMessages(String(topic), payloadString)
         }
@@ -57,7 +57,7 @@ class PlayerWebViewCoordinator: NSObject, WKNavigationDelegate, WKScriptMessageH
         guard !retired else {
             // its view is gone: initialising it, clearing `isLoading` or — worst — consuming the auto-start would all
             // be done on the player's behalf by a page nobody can see
-            Log.info("didFinish: page already dismantled")
+            Log.player.info("didFinish: page already dismantled")
             return
         }
         // everything below is for this page, so it has to be the one commands reach
@@ -70,7 +70,7 @@ class PlayerWebViewCoordinator: NSObject, WKNavigationDelegate, WKScriptMessageH
             player: parent.player
         )
         let script = PlayerWebView.initScript(options)
-        Log.info("InitScriptOptions: \(options)")
+        Log.player.info("InitScriptOptions: \(options)")
         parent.evaluateJavaScript(webView, script)
         withAnimation {
             parent.player.unstarted = true
@@ -87,7 +87,7 @@ extension PlayerWebViewCoordinator: UIScrollViewDelegate {
     func scrollViewDidEndZooming(_ scrollView: UIScrollView, with view: UIView?, atScale scale: CGFloat) {
         if scale <= 1 && !zoomWorkaroundActive {
             guard let webView = parent.backend.webView else {
-                Log.error("scrollViewDidEndZooming: no webView")
+                Log.player.error("scrollViewDidEndZooming: no webView")
                 return
             }
 

@@ -76,7 +76,7 @@ public enum ID3ChapterReader {
         let flags = head[5]
         // unsynchronisation rewrites frame bytes; rare, and not worth undoing for a nicety
         guard flags & 0x80 == 0 else {
-            Log.info("ID3ChapterReader: unsynchronised tag, skipping")
+            Log.chapters.info("ID3ChapterReader: unsynchronised tag, skipping")
             return nil
         }
 
@@ -273,7 +273,7 @@ public enum ID3ChapterReader {
             }
             return Array(data)
         } catch {
-            Log.info("ID3ChapterReader: \(error.localizedDescription)")
+            Log.chapters.info("ID3ChapterReader: \(error.localizedDescription)")
             return nil
         }
     }
@@ -290,7 +290,7 @@ public enum ID3ChapterReader {
             // a server that ignores the range hands back the whole episode; take the head of it
             return Array(data.prefix(range.count))
         } catch {
-            Log.info("ID3ChapterReader: \(error.localizedDescription)")
+            Log.chapters.info("ID3ChapterReader: \(error.localizedDescription)")
             return nil
         }
     }

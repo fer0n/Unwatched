@@ -49,7 +49,7 @@ extension PlayerManager {
     @MainActor
     func clearVideo(_ modelContext: ModelContext) {
         guard let video else {
-            Log.warning("No container when trying to clear video")
+            Log.player.warning("No container when trying to clear video")
             return
         }
         withAnimation {

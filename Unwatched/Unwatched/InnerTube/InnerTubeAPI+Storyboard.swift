@@ -27,7 +27,7 @@ extension InnerTubeAPI {
         let data = try await postPlayer(body: body)
         guard let storyboards = data["storyboards"] as? [String: Any] else {
             let status = (data["playabilityStatus"] as? [String: Any])?["status"] as? String ?? "?"
-            Log.info("[Storyboard] \(videoId): response has no `storyboards` field "
+            Log.player.info("[Storyboard] \(videoId): response has no `storyboards` field "
                         + "(playabilityStatus=\(status); top keys: \(data.keys.sorted().joined(separator: ", ")))")
             return nil
         }
@@ -35,12 +35,12 @@ extension InnerTubeAPI {
             let renderer = storyboards["playerStoryboardSpecRenderer"] as? [String: Any],
             let spec = renderer["spec"] as? String
         else {
-            Log.info("[Storyboard] \(videoId): no playerStoryboardSpecRenderer.spec "
+            Log.player.info("[Storyboard] \(videoId): no playerStoryboardSpecRenderer.spec "
                         + "(storyboards keys: \(storyboards.keys.sorted().joined(separator: ", ")))")
             return nil
         }
         guard let parsed = StoryboardSpec(spec: spec) else {
-            Log.error("[Storyboard] \(videoId): failed to parse spec: \(spec.prefix(200))")
+            Log.player.error("[Storyboard] \(videoId): failed to parse spec: \(spec.prefix(200))")
             return nil
         }
         return parsed

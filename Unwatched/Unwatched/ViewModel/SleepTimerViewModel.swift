@@ -57,9 +57,9 @@ import UnwatchedShared
     }
 
     func addTime(_ minutes: Int) {
-        Log.info("addTime \(minutes)")
+        Log.player.info("addTime \(minutes)")
         remainingSeconds += minutes * 60
-        Log.info("remainingSeconds \(self.remainingSeconds)")
+        Log.player.info("remainingSeconds \(self.remainingSeconds)")
         resetAudioFadeOut()
     }
 
@@ -76,7 +76,7 @@ import UnwatchedShared
         } else if remainingSeconds > 0 {
             remainingSeconds -= 1
         } else {
-            Log.info("onEnded \(self.remainingSeconds)")
+            Log.player.info("onEnded \(self.remainingSeconds)")
             onEnded?(startFadeOutTime.map { Double($0) })
             stopTimer()
         }

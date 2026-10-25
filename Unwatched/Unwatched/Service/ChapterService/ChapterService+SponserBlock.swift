@@ -25,16 +25,16 @@ extension ChapterService {
             selfPromoSetting: settings.selfPromo
         )
         if categories.isEmpty {
-            Log.info("SponsorBlock: every segment category is turned off")
+            Log.chapters.info("SponsorBlock: every segment category is turned off")
             return nil
         }
 
         if !shouldRefreshSponserBlock(videoId, forceRefresh, overrideSettingOn) {
-            Log.info("SponsorBlock: not refreshing")
+            Log.chapters.info("SponsorBlock: not refreshing")
             return nil
         }
 
-        Log.info("SponsorBlock, old: \(videoChapters)")
+        Log.chapters.info("SponsorBlock, old: \(videoChapters)")
 
         let segments = try await SponsorBlockAPI.skipSegments(for: youtubeId, categories: categories)
         let externalChapters = SponsorBlockAPI.getChapters(from: segments)
@@ -55,7 +55,7 @@ extension ChapterService {
             )
         }
 
-        Log.info("SponsorBlock, new: \(newChapters)")
+        Log.chapters.info("SponsorBlock, new: \(newChapters)")
         return newChapters
     }
 
@@ -115,7 +115,7 @@ extension ChapterService {
     }
 
     private static func handleMissingEndTime(_ chapter: SendableChapter) -> [SendableChapter] {
-        Log.warning("Failed to update chapters: Chapter \(chapter.title ?? "[unknown title]") has no end time")
+        Log.chapters.warning("Failed to update chapters: Chapter \(chapter.title ?? "[unknown title]") has no end time")
         return [chapter]
     }
 
@@ -233,7 +233,7 @@ extension ChapterService {
 
         for chapter in chapters {
             guard let endTime = chapter.endTime else {
-                Log.info("generateChapters: chapter has no end time")
+                Log.chapters.info("generateChapters: chapter has no end time")
                 continue
             }
 
@@ -287,13 +287,13 @@ extension ChapterService {
     ) -> Bool {
         let settingOn = settingOn ?? CloudKeyValueStore.shared.bool(forKey: Const.mergeSponsorBlockChapters)
         if !settingOn {
-            Log.info("SponsorBlock: Turned off in settings")
+            Log.chapters.info("SponsorBlock: Turned off in settings")
             return false
         }
 
         let context = DataProvider.newContext()
         guard let video: Video = context.existingModel(for: videoId) else {
-            Log.info("SponsorBlock: No video model, not loading")
+            Log.chapters.info("SponsorBlock: No video model, not loading")
             return false
         }
 
@@ -302,7 +302,7 @@ extension ChapterService {
         if let publishedDate = video.publishedDate {
             let oneDay: TimeInterval = 60 * 60 * 24
             if Date().timeIntervalSince(publishedDate) < oneDay {
-                Log.info("SponsorBlock: refresh recent \(publishedDate)")
+                Log.chapters.info("SponsorBlock: refresh recent \(publishedDate)")
                 shouldRefresh = true
             }
         }
@@ -310,17 +310,17 @@ extension ChapterService {
         if let lastUpdate = video.sponserBlockUpdateDate {
             let threeDays: TimeInterval = 60 * 60 * 24 * 3
             if Date().timeIntervalSince(lastUpdate) > threeDays {
-                Log.info("SponsorBlock: last refresh old enough")
+                Log.chapters.info("SponsorBlock: last refresh old enough")
                 shouldRefresh = true
             }
         } else {
 
             // updateDate not saved properly?
             if video.mergedChapters?.isEmpty ?? true {
-                Log.info("SponsorBlock: never refreshed")
+                Log.chapters.info("SponsorBlock: never refreshed")
                 shouldRefresh = true
             } else {
-                Log.info("SponsorBlock: no date, but mergedChapters exist")
+                Log.chapters.info("SponsorBlock: no date, but mergedChapters exist")
             }
         }
 
@@ -334,7 +334,7 @@ extension ChapterService {
     static func fillOutEmptyEndTimes(chapters: inout [Chapter], duration: Double, context: ModelContext) -> Bool {
         // Go through, set missing end-dates to the start date of the following chapter.
         // Add a "filler" chapter at the end if the duration doesn't match the length.
-        Log.info("fillOutEmptyEndTimes")
+        Log.chapters.info("fillOutEmptyEndTimes")
 
         if chapters.isEmpty {
             return false

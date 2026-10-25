@@ -94,7 +94,7 @@ extension PlayerWebViewCoordinator {
 
     func handleKeyboard(_ payload: String?) {
         guard let payload, !payload.isEmpty else {
-            Log.warning("handleKeyboard: Empty payload")
+            Log.player.warning("handleKeyboard: Empty payload")
             return
         }
 
@@ -102,7 +102,7 @@ extension PlayerWebViewCoordinator {
         guard components.count == 5 else { return }
         let keyRaw = String(components[0])
         guard let key = PlayerShortcut.parseKey(keyRaw) else {
-            Log.warning("Key not recognized: \(keyRaw)")
+            Log.player.warning("Key not recognized: \(keyRaw)")
             return
         }
 
@@ -120,7 +120,7 @@ extension PlayerWebViewCoordinator {
         if let shortcut = PlayerShortcut.fromKeyCombo(key: key, modifiers: modifiers) {
             shortcut.trigger()
         } else {
-            Log.info("No shortcut found to trigger for: \(keyRaw) + \(modifiers)")
+            Log.player.info("No shortcut found to trigger for: \(keyRaw) + \(modifiers)")
         }
     }
 
@@ -129,7 +129,7 @@ extension PlayerWebViewCoordinator {
             return
         }
         if let date = Date.parseYtOfflineDate(payload) {
-            Log.info("handleOffline: defer video to: \(date)")
+            Log.player.info("handleOffline: defer video to: \(date)")
             parent.player.deferVideoDate = date
             parent.player.pause()
         }
@@ -142,12 +142,12 @@ extension PlayerWebViewCoordinator {
         }
 
         guard let youtubeId = UrlService.getYoutubeIdFromUrl(url: url) else {
-            Log.info("handleUrlClicked: not a youtube url")
+            Log.player.info("handleUrlClicked: not a youtube url")
             NavigationManager.shared.openUrlInApp(.url(payload))
             return
         }
         if youtubeId == parent.player.video?.youtubeId {
-            Log.info("handleUrlClicked: current video")
+            Log.player.info("handleUrlClicked: current video")
             return
         }
 
@@ -186,7 +186,7 @@ extension PlayerWebViewCoordinator {
     func handleSwipe(_ payload: String?) {
         guard let direction = payload,
               let parsed = SwipeDirecton(rawValue: direction) else {
-            Log.warning("No side given for longTouch")
+            Log.player.warning("No side given for longTouch")
             return
         }
         parent.handleSwipe(parsed)
@@ -195,13 +195,13 @@ extension PlayerWebViewCoordinator {
     func handleAspectRatio(_ payload: String?) {
         guard let value = payload,
               let aspectRatio = Double(value) else {
-            Log.warning("Aspect ratio couldn't be parsed: \(payload ?? "-")")
+            Log.player.warning("Aspect ratio couldn't be parsed: \(payload ?? "-")")
             return
         }
         // videoWidth/videoHeight is 0/0 while there's no video track, which the page sends as
         // "NaN"/"Infinity" — both of which `Double(_:)` happily parses.
         guard aspectRatio.isUsableAspectRatio else {
-            Log.warning("Aspect ratio isn't a usable number: \(value)")
+            Log.player.warning("Aspect ratio isn't a usable number: \(value)")
             return
         }
         parent.player.handleAspectRatio(aspectRatio)
@@ -220,7 +220,7 @@ extension PlayerWebViewCoordinator {
 
     func handleOverlay(_ payload: String?) {
         guard let payload else {
-            Log.warning("No payload given for handleOverlay")
+            Log.player.warning("No payload given for handleOverlay")
             return
         }
         withAnimation(.default.speed(2)) {
@@ -237,7 +237,7 @@ extension PlayerWebViewCoordinator {
 
     func handleLongTouchStart(_ payload: String?) {
         guard let side = payload else {
-            Log.warning("No side given for longTouch")
+            Log.player.warning("No side given for longTouch")
             return
         }
         if side == "left" {
@@ -254,7 +254,7 @@ extension PlayerWebViewCoordinator {
     }
 
     func updateUnstarted() {
-        Log.info("updateUnstarted")
+        Log.player.info("updateUnstarted")
         if parent.player.unstarted {
             withAnimation {
                 parent.player.unstarted = false
@@ -267,7 +267,7 @@ extension PlayerWebViewCoordinator {
         if let urlString, let url = URL(string: urlString),
            let videoId = UrlService.getYoutubeIdFromUrl(url: url),
            videoId != parent.player.video?.youtubeId {
-            Log.info("ended: \(videoId) is no longer the current video")
+            Log.player.info("ended: \(videoId) is no longer the current video")
             return
         }
         flushStats()
@@ -296,7 +296,7 @@ extension PlayerWebViewCoordinator {
     func handleVideoData(_ payload: String?) {
         guard let payload,
               let jsonData = payload.data(using: .utf8) else {
-            Log.warning("No payload given for handleTitleUpdate")
+            Log.player.warning("No payload given for handleTitleUpdate")
             return
         }
         let decoder = JSONDecoder()
@@ -306,14 +306,14 @@ extension PlayerWebViewCoordinator {
             let video = VideoService.updateVideoData(videoId, videoData: result)
             parent.player.setNextVideo(video, .hotSwap)
         } catch {
-            Log.warning("couldn't decode result: \(error)")
+            Log.player.warning("couldn't decode result: \(error)")
         }
     }
 
     func handleDuration(_ payload: String?) {
-        Log.info("handleDuration")
+        Log.player.info("handleDuration")
         guard let payload, let duration = Double(payload), duration > 0 else {
-            Log.info("handleDuration: not updating")
+            Log.player.info("handleDuration: not updating")
             return
         }
 
@@ -323,7 +323,7 @@ extension PlayerWebViewCoordinator {
     }
 
     func handleError(_ payload: String?, youtube: Bool = false) {
-        Log.error("video player error: \(payload ?? "Unknown")")
+        Log.player.error("video player error: \(payload ?? "Unknown")")
 
         // Only the embedded player reports errors — the init script's checker is behind
         // `if (!isNonEmbedding)` — and it re-checks up to 10s after load. So once a fallback is
@@ -337,7 +337,7 @@ extension PlayerWebViewCoordinator {
         // *why* this failed — and hand an age gate on to the YouTube page from there
         if switchToNativePlayer() { return }
         #endif
-        Log.info("videoPlayer: embedded error, switching to the YouTube page")
+        Log.player.info("videoPlayer: embedded error, switching to the YouTube page")
         parent.player.swapToWebsitePlayer()
     }
 
@@ -349,7 +349,7 @@ extension PlayerWebViewCoordinator {
         // already there: the erroring embed is on its way out
         guard current != .native else { return true }
         guard PlayerManager.nativeFallbackEnabled else { return false }
-        Log.info("videoPlayer: embedded error, switching to the native player")
+        Log.player.info("videoPlayer: embedded error, switching to the native player")
         UserDefaults.standard.set(current.rawValue, forKey: Const.previousPlayerType)
         UserDefaults.standard.set(PlayerTypeSetting.native.rawValue, forKey: Const.playerType)
         parent.player.nativeFallbackActive = true

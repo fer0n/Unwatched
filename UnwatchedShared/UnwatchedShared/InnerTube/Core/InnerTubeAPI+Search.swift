@@ -1,8 +1,6 @@
 import Foundation
 import os
 
-private let tubeLog = Logger(subsystem: appSubsystem, category: "InnerTubeSearch")
-
 // MARK: - YouTube search (InnerTube WEB client)
 //
 // Ported from SmartTubeIOSCore (InnerTubeAPI+Browse.swift / InnerTubeAPI+VideoRenderers.swift),
@@ -41,7 +39,7 @@ extension InnerTubeAPI {
         }
         let data = try await post(endpoint: "search", body: body)
         let page = parseSearchPage(from: data)
-        tubeLog.notice("search '\(query, privacy: .public)' → \(page.videos.count, privacy: .public) videos, nextPage=\(page.nextPageToken != nil ? "yes" : "no", privacy: .public)")
+        Log.innerTube.notice("search '\(query)' → \(page.videos.count) videos, nextPage=\(page.nextPageToken != nil ? "yes" : "no")")
         return page
     }
 
@@ -94,7 +92,7 @@ extension InnerTubeAPI {
         body["params"] = "EglwbGF5bGlzdHPyBgQKAkIA"
         let data = try await post(endpoint: "browse", body: body)
         let playlists = parseChannelPlaylists(from: data)
-        tubeLog.notice("channel \(channelId, privacy: .public) playlists → \(playlists.count, privacy: .public)")
+        Log.innerTube.notice("channel \(channelId) playlists → \(playlists.count)")
         return playlists
     }
 

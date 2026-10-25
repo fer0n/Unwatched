@@ -58,7 +58,7 @@ extension AVPlayerViewModel {
     @MainActor
     func recoverFromStall() {
         guard stallRecoveryTask == nil else { return }
-        Log.info("[AVPlayerView] stalled, waiting to resume")
+        Log.player.info("[AVPlayerView] stalled, waiting to resume")
         stallRecoveryTask = Task { @MainActor [weak self] in
             var waited: Double = 0
             while !Task.isCancelled, waited < Self.stallRecoveryTimeout {
@@ -66,7 +66,7 @@ extension AVPlayerViewModel {
                 // resumed on its own (the podcast path waits to minimize stalling and does)
                 guard avPlayer.rate == 0 else { break }
                 if avPlayer.currentItem?.isPlaybackLikelyToKeepUp == true {
-                    Log.info("[AVPlayerView] resuming after stall")
+                    Log.player.info("[AVPlayerView] resuming after stall")
                     startAtCurrentSpeed()
                     break
                 }
@@ -78,7 +78,7 @@ extension AVPlayerViewModel {
             stallRecoveryTask = nil
             // gave up: the buffer never refilled, so stop claiming the video is playing
             if waited >= Self.stallRecoveryTimeout, player.isPlaying, avPlayer.rate == 0 {
-                Log.info("[AVPlayerView] stall didn't recover")
+                Log.player.info("[AVPlayerView] stall didn't recover")
                 player.reportPaused()
             }
         }

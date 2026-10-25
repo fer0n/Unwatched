@@ -136,7 +136,7 @@ public extension SponsorBlockSegmentSetting {
         guard let wasSkipping = legacyValue else { return }
 
         let migrated: SponsorBlockSegmentSetting = wasSkipping ? .showAndSkip : .show
-        Log.info("Migrating skipSponsorSegments (\(wasSkipping)) to sponsorSegmentSetting \(migrated.rawValue)")
+        Log.chapters.info("Migrating skipSponsorSegments (\(wasSkipping)) to sponsorSegmentSetting \(migrated.rawValue)")
         store.set(Int64(migrated.rawValue), forKey: Const.sponsorSegmentSetting)
 
         store.removeObject(forKey: Const.skipSponsorSegments)

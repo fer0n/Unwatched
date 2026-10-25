@@ -40,7 +40,7 @@ struct GenerationService {
         _ transcript: [TranscriptEntry]
     ) async throws -> [SendableChapter]? {
         let usableChunks = getUsableChunks(transcript)
-        Log.info("usableChunks \(usableChunks)")
+        Log.chapters.info("usableChunks \(usableChunks)")
         if usableChunks.isEmpty {
             return nil
         }
@@ -49,7 +49,7 @@ struct GenerationService {
         var isFirstChunk = true
         for chunk in usableChunks {
             let transcriptRepresentation = chunk.map(\.minimalTextRepresentation).joined(separator: "\n")
-            Log.info("chunk \(transcriptRepresentation)")
+            Log.chapters.info("chunk \(transcriptRepresentation)")
             // swiftlint:disable all
             var instructions = """
             You are a video content analyzer specializing in creating chapter breakdowns from transcripts. Your job is to identify natural content segments and create meaningful chapter divisions that help viewers navigate video content efficiently.
@@ -89,7 +89,7 @@ struct GenerationService {
             # Transcript
             \(transcriptRepresentation)
             """
-            Log.info("prompt \(prompt)")
+            Log.chapters.info("prompt \(prompt)")
             let partialChapters = try await getChapters(instructions, prompt, isStart: isFirstChunk)
             chapters.append(contentsOf: partialChapters)
             isFirstChunk = false
@@ -122,7 +122,7 @@ struct GenerationService {
         _ prompt: String,
         isStart: Bool = true
     ) async throws -> [GeneratedChapter] {
-        Log.info("instructions \(instructions) \n\nprompt \(prompt)")
+        Log.chapters.info("instructions \(instructions) \n\nprompt \(prompt)")
         let session = LanguageModelSession(instructions: instructions)
         let response = try await session.respond(to: prompt, generating: ChapterGeneration.self)
         return response.content.chapters

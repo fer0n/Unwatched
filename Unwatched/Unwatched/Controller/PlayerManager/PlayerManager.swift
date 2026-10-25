@@ -101,7 +101,7 @@ import UnwatchedShared
             loadedPlayer.initPlaybackSpeed()
             return loadedPlayer
         } else {
-            Log.warning("player not found")
+            Log.player.warning("player not found")
             return PlayerManager()
         }
     }
@@ -186,7 +186,7 @@ import UnwatchedShared
     @MainActor
     private func handleNewVideoSet(_ oldValue: Video?) {
         if video?.youtubeId == oldValue?.youtubeId {
-            Log.info("Existing video set")
+            Log.player.info("Existing video set")
             return
         }
         resetVideoIndependentValues()
@@ -263,7 +263,7 @@ import UnwatchedShared
         source: VideoSource = .nextUp,
         playIfCurrent: Bool = false
     ) {
-        Log.info("loadTopmostVideoFromQueue")
+        Log.player.info("loadTopmostVideoFromQueue")
         let container = DataProvider.shared.container
         let currentVideoId = video?.youtubeId
 
@@ -301,7 +301,7 @@ import UnwatchedShared
 
     @MainActor
     func handleHotSwap() {
-        Log.info("handleHotSwap")
+        Log.player.info("handleHotSwap")
         isLoading = Date()
         canPlayPip = false
         previousIsPlaying = isPlaying
@@ -312,12 +312,12 @@ import UnwatchedShared
 
     @MainActor
     func repairReload(force: Bool = false) {
-        Log.info("repairReload")
+        Log.player.info("repairReload")
         if (isLoading != nil || unstarted) && !force {
             return
         }
         hotReloadPlayer()
-        Log.info("videoHealth: repair - triggerReload")
+        Log.player.info("videoHealth: repair - triggerReload")
     }
 
     static func reloadPlayer() {
@@ -345,7 +345,7 @@ import UnwatchedShared
             return
         }
         #endif
-        Log.info("restoreVideo")
+        Log.player.info("restoreVideo")
         loadTopmostVideoFromQueue(source: .restore)
     }
 
@@ -366,12 +366,12 @@ import UnwatchedShared
     @MainActor
     func handleAspectRatio(_ aspectRatio: Double) {
         guard aspectRatio.isUsableAspectRatio else {
-            Log.warning("Ignoring unusable aspect ratio: \(aspectRatio)")
+            Log.player.warning("Ignoring unusable aspect ratio: \(aspectRatio)")
             return
         }
         guard let video,
               let subscription = video.subscription else {
-            Log.info("No video/subscription to set aspect ratio for")
+            Log.player.info("No video/subscription to set aspect ratio for")
             return
         }
 
@@ -387,7 +387,7 @@ import UnwatchedShared
         // The same video reports its ratio over and over: every HLS variant switch does, and resizing the player
         // (swiping the sheet up) makes AVFoundation pick another variant.
         guard !aspectRatio.isNearlySameAspectRatio(as: videoAspectRatio) else { return }
-        Log.info("handleAspectRatio \(aspectRatio)")
+        Log.player.info("handleAspectRatio \(aspectRatio)")
 
         let cleanedAspectRatio = aspectRatio.cleanedAspectRatio
 
@@ -491,7 +491,7 @@ extension PlayerManager {
 
     @MainActor
     func markVideoWatched(showMenu: Bool = true, source: VideoSource = .nextUp) {
-        Log.info("markVideoWatched")
+        Log.player.info("markVideoWatched")
         if let video {
             let modelContext = DataProvider.mainContext
             try? modelContext.save()

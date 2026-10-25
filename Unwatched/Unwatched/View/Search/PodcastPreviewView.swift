@@ -194,7 +194,7 @@ struct PodcastPreviewView: View {
                 return episode
             }
         } catch {
-            Log.error("PodcastPreview load failed: \(error)")
+            Log.podcasts.error("PodcastPreview load failed: \(error)")
             loadFailed = true
         }
     }

@@ -48,13 +48,13 @@ extension ChapterAutomation {
         let youtubeId = video.youtubeId
         let status = ChapterAutomationStatus.shared
         guard await canNotify() else {
-            Log.warning("ChapterAutomation: notifications not allowed, holding \(youtubeId)")
+            Log.chapters.warning("ChapterAutomation: notifications not allowed, holding \(youtubeId)")
             status.isNotificationBlocked = true
             return
         }
         status.isNotificationBlocked = false
         guard let link = notificationLink(for: video) else {
-            Log.warning("ChapterAutomation: no link for \(youtubeId)")
+            Log.chapters.warning("ChapterAutomation: no link for \(youtubeId)")
             return
         }
         let content = UNMutableNotificationContent()
@@ -68,10 +68,10 @@ extension ChapterAutomation {
         do {
             try await center.add(UNNotificationRequest(identifier: identifier, content: content, trigger: nil))
         } catch {
-            Log.error("ChapterAutomation: notification failed: \(error)")
+            Log.chapters.error("ChapterAutomation: notification failed: \(error)")
             return
         }
-        Log.info("ChapterAutomation: notified for \(youtubeId)")
+        Log.chapters.info("ChapterAutomation: notified for \(youtubeId)")
         status.recordNotification()
         ChapterAutomationProgress.shared.notified(youtubeId)
         video.chapterGenerationDate = .now

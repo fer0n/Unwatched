@@ -111,7 +111,7 @@ final class AVPlayerPrefetchManager {
     @MainActor
     func discardUnlessHolding(_ videoId: String?) {
         guard let held = result?.videoId ?? prefetchingVideoId, held != videoId else { return }
-        Log.info("[AVPlayerView] discarding stale prefetch: \(held)")
+        Log.player.info("[AVPlayerView] discarding stale prefetch: \(held)")
         cancelAll()
     }
 
@@ -161,7 +161,7 @@ final class AVPlayerPrefetchManager {
         if let time, time > 1 {
             player.seek(to: CMTime(seconds: time, preferredTimescale: 600))
         }
-        Log.info("[AVPlayerView] prefetch warming started")
+        Log.player.info("[AVPlayerView] prefetch warming started")
     }
 
     /// Whether the stream URL can be fetched at all — the fast "no" the warmed item can't give:
@@ -195,7 +195,7 @@ final class AVPlayerPrefetchManager {
             guard let self, !Task.isCancelled, self.result?.videoId == videoId else {
                 return
             }
-            Log.info("[AVPlayerView] prefetch stream probe: \(status) — \(videoId)")
+            Log.player.info("[AVPlayerView] prefetch stream probe: \(status) — \(videoId)")
             self.warmupProbeFailed = !(200...299).contains(status)
         }
     }
@@ -221,10 +221,10 @@ extension AVPlayerPrefetchManager {
     }
 
     private func buildResult(videoId: String) async -> PrefetchResult? {
-        Log.info("[AVPlayerView] prefetch starting: \(videoId)")
+        Log.player.info("[AVPlayerView] prefetch starting: \(videoId)")
 
         if let cached = await MainActor.run(body: { WKHLSManager.shared.validEntry(for: videoId) }) {
-            Log.info("[AVPlayerView] prefetch wkHLS cache hit: \(videoId)")
+            Log.player.info("[AVPlayerView] prefetch wkHLS cache hit: \(videoId)")
             return await buildWebViewHLSResult(url: cached.url, nSolver: cached.nSolver,
                                                poToken: cached.poToken, originalAudioLanguage: "",
                                                videoId: videoId)
@@ -240,7 +240,7 @@ extension AVPlayerPrefetchManager {
         if let hit = results.first(where: { $0.info.hlsURL != nil }), let hlsURL = hit.info.hlsURL {
             let headers = StreamHeaders.hls(forClient: hit.client)
             let asset = AVURLAsset(url: hlsURL, options: ["AVURLAssetHTTPHeaderFieldsKey": headers])
-            Log.info("[AVPlayerView] prefetch built asset (HLS/\(hit.client)): \(videoId)")
+            Log.player.info("[AVPlayerView] prefetch built asset (HLS/\(hit.client)): \(videoId)")
             return PrefetchResult(videoId: videoId, asset: asset,
                                   playerInfo: hit.info, client: hit.client, headers: headers,
                                   originalAudioLanguage: hit.info.originalAudioLanguage,
@@ -260,7 +260,7 @@ extension AVPlayerPrefetchManager {
             let userAgent = AVPlayerViewModel.userAgent(forStreamURL: muxedURL)
             let asset = AVURLAsset(url: muxedURL,
                                    options: ["AVURLAssetHTTPHeaderFieldsKey": ["User-Agent": userAgent]])
-            Log.info("[AVPlayerView] prefetch built asset (muxed/\(hit.client)): \(videoId)")
+            Log.player.info("[AVPlayerView] prefetch built asset (muxed/\(hit.client)): \(videoId)")
             return PrefetchResult(videoId: videoId, asset: asset,
                                   playerInfo: hit.info, client: hit.client, headers: [:],
                                   originalAudioLanguage: hit.info.originalAudioLanguage,
@@ -269,7 +269,7 @@ extension AVPlayerPrefetchManager {
                                   qualities: StreamQualityHelper.videoQualities(from: hit.info, muxedOnly: true))
         }
 
-        Log.info("[AVPlayerView] prefetch found no playable stream: \(videoId)")
+        Log.player.info("[AVPlayerView] prefetch found no playable stream: \(videoId)")
         return nil
     }
 
@@ -335,7 +335,7 @@ extension AVPlayerPrefetchManager {
         guard let (data, response) = try? await URLSession.app.data(for: request),
               let http = response as? HTTPURLResponse, http.statusCode == 200,
               let manifestText = String(data: data, encoding: .utf8), !manifestText.isEmpty else {
-            Log.info("[AVPlayerView] prefetch wkHLS manifest probe failed: \(videoId)")
+            Log.player.info("[AVPlayerView] prefetch wkHLS manifest probe failed: \(videoId)")
             return nil
         }
         guard let proxyURL = url.proxyURL else { return nil }
@@ -344,7 +344,7 @@ extension AVPlayerPrefetchManager {
         asset.resourceLoader.setDelegate(proxyLoader, queue: .global(qos: .userInitiated))
         let qualities = StreamQualityHelper.qualitiesFromHLSManifest(manifestText)
         let audioTracks = parseHLSAudioLanguages(from: manifestText)
-        Log.info("[AVPlayerView] prefetch built asset (wkHLS): \(videoId)")
+        Log.player.info("[AVPlayerView] prefetch built asset (wkHLS): \(videoId)")
         return PrefetchResult(videoId: videoId, asset: asset,
                               playerInfo: playerInfo, client: nil, headers: [:],
                               originalAudioLanguage: originalAudioLanguage,

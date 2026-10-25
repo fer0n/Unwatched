@@ -18,7 +18,7 @@ public extension ChapterService {
             pattern: #"^\h*\W*?(\d+(?:\:\d+)+(?:\.\d+)?)\h*(?:[\-–—]+|to\b)\h*(\d+(?:\:\d+)+(?:\.\d+)?)\h*(.*)$"#,
             options: [.anchorsMatchLines]
         ) else {
-            Log.error("extractSegments: could not create regex")
+            Log.chapters.error("extractSegments: could not create regex")
             return []
         }
 

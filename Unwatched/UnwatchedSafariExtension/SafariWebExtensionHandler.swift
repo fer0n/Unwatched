@@ -4,7 +4,12 @@
 //
 
 import SafariServices
-import os.log
+import OSLog
+
+private let logger = Logger(
+    subsystem: "com.pentlandFirth.Unwatched.UnwatchedSafariExtension",
+    category: "SafariExtension"
+)
 
 class SafariWebExtensionHandler: NSObject, NSExtensionRequestHandling {
 
@@ -15,11 +20,10 @@ class SafariWebExtensionHandler: NSObject, NSExtensionRequestHandling {
 
         let message: Any? = request?.userInfo?[SFExtensionMessageKey]
 
-        os_log(
-            .default,
-            "Received message from browser.runtime.sendNativeMessage: %@ (profile: %@)",
-            String(describing: message),
-            profile?.uuidString ?? "none"
+        let messageText = String(describing: message)
+        let profileText = profile?.uuidString ?? "none"
+        logger.log(
+            "Received native message: \(messageText, privacy: .public) (profile: \(profileText, privacy: .public))"
         )
 
         let response = NSExtensionItem()

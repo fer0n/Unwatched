@@ -59,7 +59,7 @@ actor VideoActor: SharedContextActor {
                 playlistIds.append(playlistId)
             } else {
                 containsError = true
-                Log.warning("Url doesn't seem to be for a playlist or video: \(url.absoluteString)")
+                Log.refresh.warning("Url doesn't seem to be for a playlist or video: \(url.absoluteString)")
             }
         }
 
@@ -86,7 +86,7 @@ actor VideoActor: SharedContextActor {
     private func addForeignPlaylist(playlistId: String,
                                     in videoplacement: VideoPlacementArea,
                                     at index: Int) async throws -> [Video] {
-        Log.info("addForeignPlaylist")
+        Log.refresh.info("addForeignPlaylist")
         var videos = [Video]()
         let playlistVideos = try await YoutubeDataAPI.getYtVideoInfoFromPlaylist(playlistId)
         for sendableVideo in playlistVideos {
@@ -97,7 +97,7 @@ actor VideoActor: SharedContextActor {
                     videos.append(video)
                     try await handleNewForeignVideo(video, feedTitle: feedTitle)
                 } else {
-                    Log.warning("Video couldn't be created")
+                    Log.refresh.warning("Video couldn't be created")
                 }
             }
         }
@@ -115,7 +115,7 @@ actor VideoActor: SharedContextActor {
                                   at index: Int,
                                   markAsNew: Bool
     ) async throws -> [Video] {
-        Log.info("addForeignVideos?")
+        Log.refresh.info("addForeignVideos?")
         var videos = [Video]()
         for (youtubeId, startAt) in videoIds {
             var video = videoAlreadyExists(youtubeId)
@@ -127,7 +127,7 @@ actor VideoActor: SharedContextActor {
                 }
             }
             guard let video else {
-                Log.warning("Video couldn't be created for youtubeId: \(youtubeId)")
+                Log.refresh.warning("Video couldn't be created for youtubeId: \(youtubeId)")
                 continue
             }
             if let startAt {
@@ -172,8 +172,8 @@ actor VideoActor: SharedContextActor {
         let gotDescription = !(info.description?.isEmpty ?? true)
         if (needsDescription && !gotDescription) || (needsChannel && info.channelId == nil) {
             let fallback = try? await YoutubeDataAPI.getYtVideoInfo(youtubeId)
-            Log.info("fetchMissingInfo: \(youtubeId) — InnerTube incomplete, Data API "
-                        + (fallback == nil ? "failed too" : "succeeded"))
+            Log.refresh.info("fetchMissingInfo: \(youtubeId) — InnerTube incomplete, Data API "
+                                + (fallback == nil ? "failed too" : "succeeded"))
             info.description = gotDescription ? info.description : fallback?.videoDescription
             info.channelId = info.channelId ?? fallback?.youtubeChannelId
             info.channelTitle = info.channelTitle ?? fallback?.feedTitle
@@ -196,7 +196,7 @@ actor VideoActor: SharedContextActor {
         fetchDurations: Bool,
         ignoreCache: Bool = false
     ) async throws -> NewVideosNotificationInfo {
-        Log.info("loadVideos")
+        Log.refresh.info("loadVideos")
         newVideos = NewVideosNotificationInfo()
         self.ignoreCache = ignoreCache
         defer {
@@ -213,7 +213,7 @@ actor VideoActor: SharedContextActor {
         }
 
         try await withThrowingTaskGroup(of: FetchResult.self) { group in
-            Log.info("loadVideos for \(sendableSubs.count) subscriptions")
+            Log.refresh.info("loadVideos for \(sendableSubs.count) subscriptions")
             for sub in sendableSubs {
                 group.addTask {
                     try await self.fetchVideos(sub)
@@ -253,7 +253,7 @@ actor VideoActor: SharedContextActor {
         _ newVideoInfo: [FetchedVideoIds],
         onlyForAdded: Bool = true
     ) async throws {
-        Log.info("handleFetchDurationsLoaded")
+        Log.refresh.info("handleFetchDurationsLoaded")
         let videoIds = newVideoInfo.flatMap { $0.addedVideos }
         let optionalVideoIds = newVideoInfo.flatMap { $0.loadedVideos }
         let videoInfo = try await fetchVideoDurations(for: videoIds, optional: optionalVideoIds)
@@ -269,7 +269,7 @@ actor VideoActor: SharedContextActor {
         catchUp: FeedFallbackState.CatchUp? = nil
     ) async -> (loadedVideos: [Video], addedVideos: [Video]) {
         guard let subModel = getSubscription(via: sub) else {
-            Log.info("missing info when trying to load videos")
+            Log.refresh.info("missing info when trying to load videos")
             return ([], [])
         }
         let mostRecentDate = getMostRecentDate(videos)
@@ -456,7 +456,7 @@ extension VideoActor {
                 }
             }
         } catch {
-            Log.error("isYtShort detection failed to load image data: \(error)")
+            Log.refresh.error("isYtShort detection failed to load image data: \(error)")
         }
         return (nil, nil)
     }

@@ -16,7 +16,7 @@ import UnwatchedShared
     @MainActor
     func loadUrl(_ url: URL?) {
         if UrlService.isEqual(currentUrl, url, ignoreHost: true) {
-            Log.info("loadUrl: same url, not reloading")
+            Log.browser.info("loadUrl: same url, not reloading")
             return
         }
         currentUrl = url
@@ -82,7 +82,7 @@ import UnwatchedShared
     @MainActor
     func releaseWebView() {
         guard attachCount == 0, let webView else { return }
-        Log.info("releaseWebView")
+        Log.browser.info("releaseWebView")
         webView.stopLoading()
         webView.navigationDelegate = nil
         webView.uiDelegate = nil
@@ -118,7 +118,7 @@ import UnwatchedShared
             .filter { $0.isGoogleDomain || $0.isYoutubeCdnDomain }
             .map { "\($0.name)@\($0.domain)" }
             .sorted()
-        Log.info("youtube cookies (\(context)): \(names.joined(separator: " "))")
+        Log.browser.info("youtube cookies (\(context)): \(names.joined(separator: " "))")
     }
 
     @MainActor
@@ -175,12 +175,12 @@ import UnwatchedShared
             webView.evaluateJavaScript(getCurrentTimeScript()) { (result, error) in
                 var currentTimeResult: Double?
                 if let error {
-                    Log.error("JavaScript evaluation error: \(error)")
+                    Log.browser.error("JavaScript evaluation error: \(error)")
                 } else if let currentTime = result as? Double {
-                    Log.info("Current time: \(currentTime)")
+                    Log.browser.info("Current time: \(currentTime)")
                     currentTimeResult = currentTime
                 } else {
-                    Log.warning("Could not get current time from video")
+                    Log.browser.warning("Could not get current time from video")
                 }
                 continuation.resume(returning: currentTimeResult)
             }

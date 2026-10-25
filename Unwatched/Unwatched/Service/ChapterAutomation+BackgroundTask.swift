@@ -25,7 +25,7 @@ extension ChapterAutomation {
         do {
             try BGTaskScheduler.shared.submit(request)
         } catch {
-            Log.info("ChapterAutomation: couldn't request background task: \(error)")
+            Log.chapters.info("ChapterAutomation: couldn't request background task: \(error)")
         }
     }
 
@@ -38,7 +38,7 @@ extension ChapterAutomation {
     }
 
     private static func handleBackgroundTask(_ task: BGTask) {
-        Log.info("ChapterAutomation: background task started")
+        Log.chapters.info("ChapterAutomation: background task started")
         let isCompleted = OSAllocatedUnfairLock(initialState: false)
         let complete: @Sendable (Bool) -> Void = { success in
             let isFirst = isCompleted.withLock { done in
@@ -50,14 +50,14 @@ extension ChapterAutomation {
             }
         }
         task.expirationHandler = {
-            Log.info("ChapterAutomation: background task expired")
+            Log.chapters.info("ChapterAutomation: background task expired")
             submitBackgroundTask()
             complete(false)
         }
         let run = runNow(whileCharging: true)
         Task {
             await run.value
-            Log.info("ChapterAutomation: background task finished, work left: \(hasPendingWork)")
+            Log.chapters.info("ChapterAutomation: background task finished, work left: \(hasPendingWork)")
             complete(true)
         }
     }

@@ -63,7 +63,7 @@ public enum QueueInsertionService {
             }
             VideoService.syncPodcastDownloads(for: videos.first { $0.mediaUrl != nil })
         } catch {
-            Log.error("insertQueueEntries: \(error)")
+            Log.data.error("insertQueueEntries: \(error)")
         }
     }
 
@@ -99,7 +99,7 @@ public enum QueueInsertionService {
     /// insertion point ran out, or a sync merge left two entries sharing an order — it rewrites
     /// every row, which is what sparse ordering exists to avoid.
     public static func renumber(_ queue: [QueueEntry], modelContext: ModelContext) {
-        Log.info("renumbering \(queue.count) queue entries")
+        Log.data.info("renumbering \(queue.count) queue entries")
         for (entry, order) in zip(queue, QueueOrder.renumbered(count: queue.count)) where entry.order != order {
             entry.order = order
         }

@@ -24,13 +24,13 @@ extension PlayerWebViewCoordinator {
 
     func handlePause(_ payload: String?) {
         guard let payload else {
-            Log.warning("No payload given for handlePause")
+            Log.player.warning("No payload given for handlePause")
             return
         }
         let pause = PausePayload(payload)
         let playbackId = UserDefaults.standard.string(forKey: Const.playbackId) ?? ""
         if pause.playbackId != playbackId {
-            Log.info("handlePause: playbackId mismatch, not pausing")
+            Log.player.info("handlePause: playbackId mismatch, not pausing")
             return
         }
         parent.player.reportPaused()

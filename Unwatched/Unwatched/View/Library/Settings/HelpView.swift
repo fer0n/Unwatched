@@ -7,6 +7,7 @@ import SwiftUI
 import UnwatchedShared
 
 struct HelpView: View {
+    @State private var showReportIssue = false
 
     var body: some View {
         ZStack {
@@ -14,6 +15,12 @@ struct HelpView: View {
 
             MyForm {
                 MySection(footer: "pleaseCheckFaq") {
+                    Button {
+                        showReportIssue = true
+                    } label: {
+                        LibraryNavListItem("reportIssue", systemName: "exclamationmark.bubble.fill")
+                    }
+                    .settingsListRow()
                     Link(destination: UrlService.getEmailUrl(body: Device.versionInfo)) {
                         LibraryNavListItem("contactUs", systemName: Const.contactMailSF)
                     }
@@ -26,7 +33,10 @@ struct HelpView: View {
                 }
             }
         }
-        .myNavigationTitle("emailAndFaq")
+        .myNavigationTitle("feedbackAndFaq")
+        .sheet(isPresented: $showReportIssue) {
+            ReportIssueView()
+        }
     }
 }
 

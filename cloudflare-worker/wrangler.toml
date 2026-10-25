@@ -4,6 +4,8 @@ compatibility_date = "2024-09-23"
 
 [vars]
 CF_ACCOUNT_ID = "2206bad495d854f040f37fc989b8305e"
+REPORT_MAIL_FROM = "reports@octabits.net"
+REPORT_MAIL_TO = "unwatched@icloud.com"
 
 [[routes]]
 pattern = "signal.octabits.net"
@@ -30,3 +32,18 @@ namespace_id = "1001"
 [ratelimits.simple]
 limit = 60
 period = 60
+
+[[kv_namespaces]]
+binding = "REPORTS"
+id = "cf25ec7fd0914dd0b9eabfb5dcd34726"
+
+[[ratelimits]]
+name = "REPORT_LIMITER"
+namespace_id = "1002"
+
+[ratelimits.simple]
+limit = 3
+period = 60
+
+[[send_email]]
+name = "REPORT_MAIL"

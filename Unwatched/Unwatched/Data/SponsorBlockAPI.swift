@@ -29,7 +29,7 @@ struct SponsorBlockAPI {
 
         let (data, _) = try await URLSession.app.data(from: url)
         let decoder = JSONDecoder()
-        Log.info("skipSegments url: \(urlString)")
+        Log.chapters.info("skipSegments url: \(urlString)")
         if let result = try? decoder.decode([SponsorBlockSegmentModel].self, from: data) {
             return result
         } else {
@@ -42,7 +42,7 @@ struct SponsorBlockAPI {
         var result = [SendableChapter]()
         for segment in segments {
             guard let startTime = segment.segment.first else {
-                Log.warning("Start time for sponsored segment could not be found")
+                Log.chapters.warning("Start time for sponsored segment could not be found")
                 continue
             }
             let endTime = segment.segment.last

@@ -26,7 +26,7 @@ enum AirPlayPicker {
             routePickerView = picker
         }
         guard let button = routePickerView?.subviews.first(where: { $0 is UIButton }) as? UIButton else {
-            Log.info("AirPlay button not found")
+            Log.player.info("AirPlay button not found")
             return
         }
         button.sendActions(for: .touchUpInside)

@@ -50,7 +50,7 @@ public enum SpeechTranscriptService {
         guard let locale = await transcriptionLocale(for: language) else {
             throw SpeechTranscriptError.unsupportedLanguage
         }
-        Log.info("transcribing in \(locale.identifier) (feed language: \(language ?? "–"))")
+        Log.chapters.info("transcribing in \(locale.identifier) (feed language: \(language ?? "–"))")
 
         let transcriber = makeTranscriber(locale: locale, timeRanges: true)
         try await installModel(for: transcriber, locale: locale)
@@ -203,7 +203,7 @@ public enum SpeechTranscriptService {
 
     private static func requestInstall(_ transcriber: SpeechTranscriber, locale: Locale) async throws {
         if let installation = try await AssetInventory.assetInstallationRequest(supporting: [transcriber]) {
-            Log.info("downloading speech model for \(locale.identifier)")
+            Log.chapters.info("downloading speech model for \(locale.identifier)")
             try await installation.downloadAndInstall()
         }
     }
@@ -215,7 +215,7 @@ public enum SpeechTranscriptService {
         guard let victim = reserved.first(where: { $0.identifier != locale.identifier }) else {
             return false
         }
-        Log.info("releasing speech model reservation for \(victim.identifier)")
+        Log.chapters.info("releasing speech model reservation for \(victim.identifier)")
         return await AssetInventory.release(reservedLocale: victim)
     }
 }

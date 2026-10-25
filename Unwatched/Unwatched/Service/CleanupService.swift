@@ -10,15 +10,15 @@ import UnwatchedShared
 
 struct CleanupService {
     static func clearOldInboxEntries(keep: Int, _ modelContext: ModelContext) -> Int? {
-        Log.info("removeOldInboxEntries")
+        Log.data.info("removeOldInboxEntries")
         let fetch = FetchDescriptor<InboxEntry>(sortBy: [SortDescriptor(\.date, order: .reverse)])
         guard let entries = try? modelContext.fetch(fetch) else {
-            Log.warning("No inbox entries to cleanup")
+            Log.data.warning("No inbox entries to cleanup")
             return nil
         }
 
         if entries.count <= keep {
-            Log.warning("No inbox entries to remove, only \(entries.count) found")
+            Log.data.warning("No inbox entries to remove, only \(entries.count) found")
             return nil
         }
 
@@ -27,7 +27,7 @@ struct CleanupService {
         for entry in removableEntries {
             modelContext.delete(entry)
         }
-        Log.info("removeOldInboxEntries: \(removedEntryCount)")
+        Log.data.info("removeOldInboxEntries: \(removedEntryCount)")
 
         try? modelContext.save()
         return removedEntryCount
@@ -40,7 +40,7 @@ struct CleanupService {
         RemovedDuplicatesInfo,
         Never
     > {
-        Log.info("cleanupDuplicatesAndInboxDate")
+        Log.data.info("cleanupDuplicatesAndInboxDate")
         return Task.detached {
             let repo = CleanupActor()
             let info = await repo.removeDuplicates(
@@ -184,7 +184,7 @@ struct CleanupService {
             }
             try context.save()
         } catch {
-            Log.error("Failed to delete everything")
+            Log.data.error("Failed to delete everything")
         }
 
         await PodcastDownloadManager.shared.deleteAllDownloads()
@@ -226,7 +226,7 @@ actor CleanupActor: SharedContextActor {
     func cleanupInboxEntryDates() {
         let fetch = FetchDescriptor<InboxEntry>(predicate: #Predicate { $0.date == nil })
         guard let entries = try? modelContext.fetch(fetch) else {
-            Log.info("No inbox entries to cleanup dates")
+            Log.data.info("No inbox entries to cleanup dates")
             return
         }
         for entry in entries {
@@ -245,10 +245,10 @@ actor CleanupActor: SharedContextActor {
 
         removeSubscriptionDuplicates()
         if quickCheck && duplicateInfo.countSubscriptions == 0 && !hasDuplicateRecentVideosOrEntries() {
-            Log.info("No recent duplicates, skipping cleanup")
+            Log.data.info("No recent duplicates, skipping cleanup")
             return duplicateInfo
         }
-        Log.info("removing duplicates now, \(videoOnly ? "only videos" : "all")")
+        Log.data.info("removing duplicates now, \(videoOnly ? "only videos" : "all")")
 
         if !videoOnly {
             removeEmptySubscriptions()
@@ -360,7 +360,7 @@ actor CleanupActor: SharedContextActor {
               !QueueOrder.isValid(queue.map(\.order)) else {
             return
         }
-        Log.info("repairQueueOrder: \(queue.count) entries")
+        Log.data.info("repairQueueOrder: \(queue.count) entries")
         QueueInsertionService.renumber(queue, modelContext: modelContext)
         try? modelContext.save()
     }
@@ -505,7 +505,7 @@ actor CleanupActor: SharedContextActor {
         for video in toDelete {
             CleanupService.deleteVideo(video, modelContext)
         }
-        Log.info("deleteOldWatchedVideos: deleted \(toDelete.count) videos older than \(days) days")
+        Log.data.info("deleteOldWatchedVideos: deleted \(toDelete.count) videos older than \(days) days")
     }
 
     func deleteOrphanedVideos(olderThan days: Int) {
@@ -525,7 +525,7 @@ actor CleanupActor: SharedContextActor {
         for video in toDelete {
             CleanupService.deleteVideo(video, modelContext)
         }
-        Log.info("deleteOrphanedVideos: deleted \(toDelete.count) videos older than \(days) days")
+        Log.data.info("deleteOrphanedVideos: deleted \(toDelete.count) videos older than \(days) days")
     }
 
     /// Returns the persistent IDs of the N most recent videos per active subscription.
@@ -596,7 +596,7 @@ extension CleanupActor {
             CleanupService.deleteVideo(video, modelContext)
         }
         try? modelContext.save()
-        Log.info("deleteStatelessPodcastEpisodes: deleted \(toDelete.count) rows")
+        Log.data.info("deleteStatelessPodcastEpisodes: deleted \(toDelete.count) rows")
     }
 
     private func isStateless(_ video: Video, downloaded: Set<String>) -> Bool {

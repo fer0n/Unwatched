@@ -17,17 +17,17 @@ import UnwatchedShared
         )
         fetch.fetchLimit = 1
         guard let transcript = (try? modelContext.fetch(fetch))?.first else {
-            Log.error("Transcript not found for \(youtubeId)")
+            Log.chapters.error("Transcript not found for \(youtubeId)")
             return nil
         }
-        Log.info("Transcript found for \(youtubeId)")
+        Log.chapters.info("Transcript found for \(youtubeId)")
         let decoder = JSONDecoder()
         if let payload = try? decoder.decode(TranscriptPayload.self, from: transcript.data) {
             return payload
         }
         // written before the origin was recorded: a bare array of entries
         guard let entries = try? decoder.decode([TranscriptEntry].self, from: transcript.data) else {
-            Log.error("Failed to decode transcript data for \(youtubeId)")
+            Log.chapters.error("Failed to decode transcript data for \(youtubeId)")
             return nil
         }
         return TranscriptPayload(entries: entries, origin: .published)
@@ -42,10 +42,10 @@ import UnwatchedShared
     }
 
     func cachePayload(_ payload: TranscriptPayload, for youtubeId: String) {
-        Log.info("cacheTranscript for \(youtubeId)")
+        Log.chapters.info("cacheTranscript for \(youtubeId)")
         let encoder = JSONEncoder()
         guard let encoded = try? encoder.encode(payload) else {
-            Log.warning("Failed to encode transcript for caching")
+            Log.chapters.warning("Failed to encode transcript for caching")
             return
         }
 

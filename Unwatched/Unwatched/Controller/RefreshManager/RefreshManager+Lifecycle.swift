@@ -15,7 +15,7 @@ extension RefreshManager {
         }
         isActive = true
         setupCloudKitListener()
-        Log.info("iCloud sync: refreshOnStartup started")
+        Log.refresh.info("iCloud sync: refreshOnStartup started")
         if Const.requiresDurationFetch.bool ?? false {
             VideoService.fetchVideoDurationsQueueInbox()
             UserDefaults.standard.set(false, forKey: Const.requiresDurationFetch)
@@ -54,13 +54,13 @@ extension RefreshManager {
                     await executeAutoRefresh()
                 }
             } catch {
-                Log.info("error: \(error)")
+                Log.refresh.info("error: \(error)")
             }
         }
     }
 
     func handleBecameInactive() {
-        Log.info("handleBecameInactive")
+        Log.refresh.info("handleBecameInactive")
         isActive = false
         #if !os(macOS)
         cancelCloudKitListener()
@@ -74,7 +74,7 @@ extension RefreshManager {
     }
 
     func handleAutoBackup() {
-        Log.info("handleAutoBackup")
+        Log.refresh.info("handleAutoBackup")
         guard !isBackingUp else {
             return
         }
@@ -82,14 +82,14 @@ extension RefreshManager {
         if let lastAutoBackupDate = lastAutoBackupDate {
             let calendar = Calendar.current
             if calendar.isDateInToday(lastAutoBackupDate) {
-                Log.info("last backup was today")
+                Log.refresh.info("last backup was today")
                 return
             }
         }
 
         let automaticBackups = UserDefaults.standard.object(forKey: Const.automaticBackups) as? Bool ?? true
         guard automaticBackups == true else {
-            Log.info("no auto backup on")
+            Log.refresh.info("no auto backup on")
             return
         }
 
@@ -100,11 +100,11 @@ extension RefreshManager {
             do {
                 try await task.value
             } catch {
-                Log.error("auto backup failed: \(error)")
+                Log.refresh.error("auto backup failed: \(error)")
                 return
             }
             UserDefaults.standard.set(Date(), forKey: Const.lastAutoBackupDate)
-            Log.info("saved backup")
+            Log.refresh.info("saved backup")
 
             // Auto delete
             if UserDefaults.standard.object(forKey: Const.autoDeleteBackups) as? Bool ?? true {
@@ -114,7 +114,7 @@ extension RefreshManager {
     }
 
     func executeAutoRefresh() async {
-        Log.info("iCloud sync: executeRefreshOnStartup refreshOnStartup")
+        Log.refresh.info("iCloud sync: executeRefreshOnStartup refreshOnStartup")
         let autoRefresh = UserDefaults.standard.object(forKey: Const.autoRefresh) as? Bool ?? true
         guard autoRefresh else {
             return
@@ -124,7 +124,7 @@ extension RefreshManager {
         let shouldRefresh = lastAutoRefreshDate == nil ||
             lastAutoRefreshDate!.timeIntervalSinceNow < -Const.autoRefreshIntervalSeconds
         if shouldRefresh {
-            Log.info("refreshing now")
+            Log.refresh.info("refreshing now")
             await refreshAll(source: .automatic)
         }
         scheduleRepeatingRefresh()
@@ -135,10 +135,10 @@ extension RefreshManager {
         repeatingRefreshTask = Task { @MainActor in
             do {
                 try await Task.sleep(s: Const.autoRefreshIntervalSeconds)
-                Log.info("scheduleRepeatingRefresh now")
+                Log.refresh.info("scheduleRepeatingRefresh now")
                 await self.executeAutoRefresh()
             } catch {
-                Log.info("scheduleRepeatingRefresh cancelled/error: \(error)")
+                Log.refresh.info("scheduleRepeatingRefresh cancelled/error: \(error)")
             }
         }
     }

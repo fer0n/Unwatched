@@ -38,7 +38,7 @@ struct PlayNowButton: View {
                     Signal.log("Browser.PlayNow")
                     Signal.playbackStarted("browser")
                 } catch {
-                    Log.warning("PlayNowButton: \(error)")
+                    Log.browser.warning("PlayNowButton: \(error)")
                 }
                 isLoading = false
             }

@@ -209,14 +209,14 @@ private final class PodcastDownloadDelegate: NSObject, URLSessionDownloadDelegat
             return
         }
         guard downloadTask.response?.isSuccessfulHttp != false else {
-            Log.info("podcast download rejected: \(youtubeId)")
+            Log.podcasts.info("podcast download rejected: \(youtubeId)")
             return
         }
         try? FileManager.default.removeItem(at: destination)
         do {
             try FileManager.default.moveItem(at: location, to: destination)
         } catch {
-            Log.error("podcast download failed to store: \(error.localizedDescription)")
+            Log.podcasts.error("podcast download failed to store: \(error.localizedDescription)")
             return
         }
         Task { @MainActor in
@@ -241,7 +241,7 @@ private final class PodcastDownloadDelegate: NSObject, URLSessionDownloadDelegat
     func urlSession(_ session: URLSession, task: URLSessionTask, didCompleteWithError error: (any Error)?) {
         guard let youtubeId = task.taskDescription else { return }
         if let error {
-            Log.info("podcast download ended: \(error.localizedDescription)")
+            Log.podcasts.info("podcast download ended: \(error.localizedDescription)")
         }
         let succeeded = error == nil
         Task { @MainActor in

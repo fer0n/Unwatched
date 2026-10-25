@@ -72,7 +72,7 @@ extension TranscriptService {
 
         func cancel(youtubeId id: String) {
             guard isGenerating, youtubeId == id, let activeTask else { return }
-            Log.info("cancelling the transcript generation for \(id)")
+            Log.chapters.info("cancelling the transcript generation for \(id)")
             wasCancelled = true
             activeTask.cancel()
         }

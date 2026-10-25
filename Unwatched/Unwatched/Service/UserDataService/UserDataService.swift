@@ -32,7 +32,7 @@ struct UserDataService {
 
         let fetchVideos = getVideoFetchIfMinimal()
         let fetched = fetchMapExportable(Video.self, fetchVideos, prefetching: [\.queueEntry])
-        Log.info("fetched \(fetched.count)")
+        Log.data.info("fetched \(fetched.count)")
         backup.videos = fetched
         if fetchVideos != nil {
             _ = fetchMapExportable(Video.self)
@@ -59,7 +59,7 @@ struct UserDataService {
         backup.tags             = fetchMapExportable(Tag.self)
 
         if backup.isEmpty {
-            Log.info("checkIfBackupEmpty")
+            Log.data.info("checkIfBackupEmpty")
             throw UserDataServiceError.noDataToBackupFound
         }
 
@@ -100,7 +100,7 @@ struct UserDataService {
             let includeWatched = UserDefaults.standard.object(
                 forKey: Const.includeWatchHistoryInBackup
             ) as? Bool ?? true
-            Log.info("returning fetch")
+            Log.data.info("returning fetch")
             return FetchDescriptor<Video>(predicate: #Predicate {
                 $0.bookmarkedDate != nil
                     || (includeWatched && $0.watchedDate != nil)
@@ -174,7 +174,7 @@ struct UserDataService {
 
     // loads user data from .unwatchedbackup files
     static func importBackup(_ data: Data, settingsOnly: Bool = false) {
-        Log.info("importBackup, userdataservice")
+        Log.data.info("importBackup, userdataservice")
         let decoder = JSONDecoder()
 
         do {
@@ -184,7 +184,7 @@ struct UserDataService {
                 try restoreVideoData(from: backup)
             }
         } catch {
-            Log.error("error decoding: \(error)")
+            Log.data.error("error decoding: \(error)")
             Signal.error("backupRestoreFailed")
         }
     }
@@ -227,7 +227,7 @@ struct UserDataService {
         do {
             return try UserDataService.exportUserData()
         } catch {
-            Log.error("couldn't export: \(error)")
+            Log.data.error("couldn't export: \(error)")
             throw error
         }
     }
@@ -250,7 +250,7 @@ struct UserDataService {
                 let data = try self.exportFile()
                 try data.write(to: directory)
             } catch {
-                Log.error("saveToIcloud: \(error)")
+                Log.data.error("saveToIcloud: \(error)")
                 throw error
             }
         }
@@ -294,7 +294,7 @@ struct UserDataService {
                 try compress(data).write(to: file)
                 recompressedCount += 1
             } catch {
-                Log.error("recompressExistingBackups: \(error)")
+                Log.data.error("recompressExistingBackups: \(error)")
             }
         }
         return recompressedCount
@@ -309,10 +309,10 @@ struct UserDataService {
             let files = fileNames.map { directory.appendingPathComponent($0) }
 
             let toDelete = filterOutKeeperFiles(files)
-            Log.info("deleting: \(toDelete.count) files")
+            Log.data.info("deleting: \(toDelete.count) files")
             return toDelete
         } catch {
-            Log.error("getFilesToDelete: \(error)")
+            Log.data.error("getFilesToDelete: \(error)")
             return []
         }
     }
@@ -374,7 +374,7 @@ struct UserDataService {
         do {
             try FileManager.default.removeItem(at: filepath)
         } catch {
-            Log.error("deleteFile: \(error)")
+            Log.data.error("deleteFile: \(error)")
         }
     }
 
@@ -382,24 +382,24 @@ struct UserDataService {
         if let containerUrl = FileManager.default.url(
             forUbiquityContainerIdentifier: nil
         )?.appendingPathComponent("Documents/Backups") {
-            Log.info("containerUrl \(containerUrl)")
+            Log.data.info("containerUrl \(containerUrl)")
             if !FileManager.default.fileExists(atPath: containerUrl.path, isDirectory: nil) {
                 guard createIfMissing else {
-                    Log.info("backupsDirectory: doesn't exist")
+                    Log.data.info("backupsDirectory: doesn't exist")
                     return nil
                 }
                 do {
-                    Log.info("create directory")
+                    Log.data.info("create directory")
                     try FileManager.default.createDirectory(
                         at: containerUrl, withIntermediateDirectories: true, attributes: nil
                     )
                 } catch {
-                    Log.error("\(error.localizedDescription)")
+                    Log.data.error("\(error.localizedDescription)")
                 }
             }
             return containerUrl
         }
-        Log.info("backupsDirectory: nil")
+        Log.data.info("backupsDirectory: nil")
         return nil
     }
 
@@ -409,7 +409,7 @@ struct UserDataService {
     }
 
     static func clearMemory() {
-        Log.info("clearMemory")
+        Log.data.info("clearMemory")
         Task { @MainActor in
             BrowserManager.shared.releaseWebView()
             await ImageCacheManager.shared.clearMemory()

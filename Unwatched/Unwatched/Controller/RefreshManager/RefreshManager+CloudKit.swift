@@ -15,7 +15,7 @@ extension RefreshManager {
             return
         }
 
-        Log.info("iCloud sync: Setting up sync notification")
+        Log.sync.info("iCloud sync: Setting up sync notification")
         NotificationCenter.default.publisher(for: NSPersistentCloudKitContainer.eventChangedNotification)
             .sink { [weak self] notification in
                 guard let self,
@@ -45,13 +45,13 @@ extension RefreshManager {
     }
 
     func cancelCloudKitListener() {
-        Log.info("iCloud sync: cancelling sync notification")
+        Log.sync.info("iCloud sync: cancelling sync notification")
         cancellables.removeAll()
         clearSyncState()
     }
 
     func handleIcloudSyncDone() async {
-        Log.info("iCloud sync: handleIcloudSyncDone")
+        Log.sync.info("iCloud sync: handleIcloudSyncDone")
         clearSyncState()
         PlayerManager.shared.handlePotentialUpdate()
         HistoryMaintenance.pruneConsumedHistoryIfDue()
@@ -79,12 +79,12 @@ extension RefreshManager {
             return
         }
         guard !shouldDeferForSync else {
-            Log.info("quickCleanup deferred, iCloud sync in progress")
+            Log.sync.info("quickCleanup deferred, iCloud sync in progress")
             pendingQuickCleanup = true
             return
         }
         pendingQuickCleanup = false
-        Log.info("quickCleanup")
+        Log.sync.info("quickCleanup")
 
         let task = CleanupService.cleanupDuplicatesAndInboxDate(quickCheck: true)
         _ = await task.value

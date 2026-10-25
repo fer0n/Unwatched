@@ -161,13 +161,13 @@ enum RefreshSource {
         source: RefreshSource = .manual
     ) async {
         guard source == .manual || !shouldDeferForSync else {
-            Log.info("refresh deferred, iCloud sync in progress")
+            Log.refresh.info("refresh deferred, iCloud sync in progress")
             return
         }
 
         let canStartLoading = await startLoading()
         guard canStartLoading else {
-            Log.info("currently refreshing, stopping now")
+            Log.refresh.info("currently refreshing, stopping now")
             return
         }
 
@@ -202,7 +202,7 @@ enum RefreshSource {
                 totalPodcastFeedsCount = result.totalPodcastFeedsCount
             }
         } catch {
-            Log.info("Error during refresh: \(error)")
+            Log.refresh.info("Error during refresh: \(error)")
             if isFullRefresh {
                 // couldn't even get as far as fetching individual feeds — treat as a total failure
                 failedYoutubeFeedsCount = 1
@@ -220,15 +220,15 @@ enum RefreshSource {
 extension RefreshManager {
     #if os(iOS)
     func scheduleVideoRefresh() {
-        Log.info("scheduleVideoRefresh()")
+        Log.refresh.info("scheduleVideoRefresh()")
         let request = BGAppRefreshTaskRequest(identifier: Const.backgroundAppRefreshId)
         request.earliestBeginDate = Date(timeIntervalSinceNow: Const.earliestBackgroundBeginSeconds)
         do {
             try BGTaskScheduler.shared.submit(request)
         } catch {
-            Log.info("Error scheduleVideoRefresh: \(error)")
+            Log.refresh.info("Error scheduleVideoRefresh: \(error)")
         }
-        Log.info("Scheduled background task") // Breakpoint 1 HERE
+        Log.refresh.info("Scheduled background task") // Breakpoint 1 HERE
 
         // swiftlint:disable:next line_length
         // e -l objc -- (void)[[BGTaskScheduler sharedScheduler] _simulateLaunchForTaskWithIdentifier:@"com.pentlandFirth.Unwatched.refreshVideos"]
@@ -240,14 +240,14 @@ extension RefreshManager {
 
     func handleBackgroundVideoRefresh() async {
         #if os(iOS)
-        Log.info("Background task running now")
+        Log.refresh.info("Background task running now")
         scheduleVideoRefresh()
 
         NotificationManager.notifyRun(.setup)
 
         let canStartLoading = await startLoading()
         guard canStartLoading else {
-            Log.info("Already refreshing")
+            Log.refresh.info("Already refreshing")
             NotificationManager.notifyRun(.abort)
             return
         }
@@ -266,12 +266,12 @@ extension RefreshManager {
             }
             UserDefaults.standard.set(Date(), forKey: Const.lastAutoRefreshDate)
             if newVideos.videoCount > 0 {
-                Log.info("notifyNewVideos")
+                Log.refresh.info("notifyNewVideos")
                 await NotificationManager.notifyNewVideos(newVideos)
             }
             NotificationManager.notifyRun(.end)
         } catch {
-            Log.error("Error during background refresh: \(error)")
+            Log.refresh.error("Error during background refresh: \(error)")
             Signal.error("backgroundRefreshFailed")
             NotificationManager.notifyRun(.error, error.localizedDescription)
         }

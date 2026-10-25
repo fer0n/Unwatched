@@ -17,7 +17,7 @@ extension ChapterService {
     ) {
         // has to be the video's own context: a filler chapter from a foreign one can't be attached
         guard let context = video.modelContext else {
-            Log.warning("updateDuration: video has no context")
+            Log.chapters.warning("updateDuration: video has no context")
             return
         }
 
@@ -47,7 +47,7 @@ extension ChapterService {
     @discardableResult
     static func mergeSegments(_ segments: [SendableChapter], into video: Video) -> Bool {
         guard let context = video.modelContext else {
-            Log.warning("mergeSegments: video has no context")
+            Log.chapters.warning("mergeSegments: video has no context")
             return false
         }
 
@@ -57,13 +57,13 @@ extension ChapterService {
         }
 
         let videoChapters = video.ownChapterData
-        Log.info("mergeSegments, old: \(videoChapters)")
+        Log.chapters.info("mergeSegments, old: \(videoChapters)")
 
         var newChapters = videoChapters.isEmpty
             ? generateChapters(from: cleanedSegments, videoDuration: video.duration)
             : mergeSponsorSegments(videoChapters, sponsorSegments: cleanedSegments, duration: video.duration)
         skipSponsorBlockSegments(in: &newChapters, settings: video.sponsorBlockSettings)
-        Log.info("mergeSegments, new: \(newChapters)")
+        Log.chapters.info("mergeSegments, new: \(newChapters)")
 
         updateIfNeeded(newChapters, video)
         try? context.save()
@@ -74,7 +74,7 @@ extension ChapterService {
     @MainActor
     static func insertChapters(_ chapters: [SendableChapter], for video: Video) {
         guard let context = video.modelContext else {
-            Log.warning("insertChapters: video has no context")
+            Log.chapters.warning("insertChapters: video has no context")
             return
         }
         var chapters = chapters
@@ -150,7 +150,7 @@ extension ChapterService {
     @MainActor
     static func setChapterOrder(_ chapters: [SendableChapter], of video: Video) {
         guard let context = video.modelContext else {
-            Log.warning("setChapterOrder: video has no context")
+            Log.chapters.warning("setChapterOrder: video has no context")
             return
         }
 
@@ -171,7 +171,7 @@ extension ChapterService {
                 row = unclaimedRow(for: chapter, of: video, taken: taken)
             }
             guard let row, taken.insert(ObjectIdentifier(row)).inserted else {
-                Log.warning("setChapterOrder: no row for \(chapter)")
+                Log.chapters.warning("setChapterOrder: no row for \(chapter)")
                 continue
             }
             rows.append(row)
@@ -205,7 +205,7 @@ extension ChapterService {
     @MainActor
     static func resetChapterOrder(for video: Video) {
         guard let context = video.modelContext else {
-            Log.warning("resetChapterOrder: video has no context")
+            Log.chapters.warning("resetChapterOrder: video has no context")
             return
         }
         clearChapterOrder(of: video)
@@ -219,7 +219,7 @@ extension ChapterService {
     @MainActor
     static func restoreChapters(for video: Video) {
         guard let context = video.modelContext else {
-            Log.warning("restoreChapters: video has no context")
+            Log.chapters.warning("restoreChapters: video has no context")
             return
         }
 

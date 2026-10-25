@@ -117,7 +117,7 @@ final class WatchAudioPlayer {
                 guard !Task.isCancelled else { return }
                 isLoading = false
                 errorMessage = error.localizedDescription
-                Log.error("watch playback failed: \(error)")
+                Log.player.error("watch playback failed: \(error)")
             }
         }
     }
@@ -139,7 +139,7 @@ final class WatchAudioPlayer {
             isLoading = false
             isPlaying = false
             errorMessage = WatchPlaybackError.noStream.localizedDescription
-            Log.error("watch playback: no candidate stream played")
+            Log.player.error("watch playback: no candidate stream played")
             return
         }
         await start(url: candidates.removeFirst(), at: startSeconds)
@@ -168,7 +168,7 @@ final class WatchAudioPlayer {
         }
 
         observe(player, item: item)
-        Log.info("watch playback started at \(Int(seconds))s: \(url.host() ?? "?")")
+        Log.player.info("watch playback started at \(Int(seconds))s: \(url.host() ?? "?")")
         // `defaultRate` rather than plain `play()`: it also applies when the system's own
         // Now Playing controls resume playback, so the speed survives a pause.
         player.defaultRate = Float(playbackSpeed)
@@ -185,7 +185,7 @@ final class WatchAudioPlayer {
             guard item.status == .failed else { return }
             Task { @MainActor [weak self] in
                 guard let self, self.player?.currentItem === item else { return }
-                Log.info("watch playback: candidate failed (\(item.error?.localizedDescription ?? "unknown"))")
+                Log.player.info("watch playback: candidate failed (\(item.error?.localizedDescription ?? "unknown"))")
                 self.teardownPlayer()
                 await self.playNextCandidate()
             }
@@ -405,7 +405,7 @@ final class WatchAudioPlayer {
             try session.setCategory(.playback, mode: .spokenAudio, policy: .longFormAudio)
             return try await session.activate()
         } catch {
-            Log.error("audio session failed: \(error)")
+            Log.player.error("audio session failed: \(error)")
             errorMessage = String(localized: "watchNoAudioRoute")
             return false
         }

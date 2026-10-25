@@ -25,7 +25,7 @@ extension PlayerManager {
     @MainActor
     func armChapterBoundary(_ nextEndTime: Double?, at time: Double) {
         guard let nextEndTime else {
-            Log.info("no more chapters")
+            Log.player.info("no more chapters")
             cancelTimeMonitoring()
             return
         }

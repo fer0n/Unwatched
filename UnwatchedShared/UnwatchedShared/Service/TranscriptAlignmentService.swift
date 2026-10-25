@@ -131,7 +131,7 @@ public enum TranscriptAlignmentService {
             do {
                 sliceUrl = try await reader.slice(at: gap.audioStart, length: gap.duration)
             } catch {
-                Log.warning("gap at \(Int(gap.audioStart))s couldn't be read")
+                Log.chapters.warning("gap at \(Int(gap.audioStart))s couldn't be read")
                 continue
             }
             defer { try? FileManager.default.removeItem(at: sliceUrl) }
@@ -151,7 +151,7 @@ public enum TranscriptAlignmentService {
                     )
                 })
             } catch {
-                Log.info("gap at \(Int(gap.audioStart))s holds no speech")
+                Log.chapters.info("gap at \(Int(gap.audioStart))s holds no speech")
             }
             progress(Double(index + 1) / Double(gaps.count))
         }

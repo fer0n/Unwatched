@@ -32,7 +32,7 @@ public struct ChapterService {
 
             return completingTimeline(chapters, videoDuration: videoDuration)
         } catch {
-            Log.error("Error creating regex: \(error)")
+            Log.chapters.error("Error creating regex: \(error)")
         }
         return []
     }
@@ -205,10 +205,10 @@ public struct ChapterService {
     }
 
     public static func updateIfNeeded(_ chapters: [SendableChapter], _ video: Video?) {
-        Log.info("updateIfNeeded")
+        Log.chapters.info("updateIfNeeded")
         guard let video else {
             // without a video to attach them to, anything built here is an orphan row
-            Log.warning("updateIfNeeded: no video")
+            Log.chapters.warning("updateIfNeeded: no video")
             return
         }
 
@@ -240,7 +240,7 @@ public struct ChapterService {
         where SponsorBlockSegmentSetting.skips(
             chapter.category, sponsorSetting: sponsorSetting, selfPromoSetting: selfPromoSetting
         ) {
-            Log.info("skipping: \(chapter)")
+            Log.chapters.info("skipping: \(chapter)")
             chapters[index].isActive = false
         }
     }
@@ -257,7 +257,7 @@ public struct ChapterService {
         where chapter.isActive && SponsorBlockSegmentSetting.skips(
             chapter.category, sponsorSetting: sponsorSetting, selfPromoSetting: selfPromoSetting
         ) {
-            Log.info("skipping: \(chapter)")
+            Log.chapters.info("skipping: \(chapter)")
             chapter.isActive = false
         }
     }
@@ -280,7 +280,7 @@ public struct ChapterService {
             guard let title = chapter.title, !title.isEmpty else { continue }
 
             if let matchingFilter = filterStrings.first(where: { title.localizedStandardContains($0) }) {
-                Log.info("skipping: '\(title)'; filter: '\(matchingFilter)'")
+                Log.chapters.info("skipping: '\(title)'; filter: '\(matchingFilter)'")
                 chapter.isActive = false
                 hasChanges = true
             }

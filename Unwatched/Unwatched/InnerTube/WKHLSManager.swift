@@ -2,7 +2,6 @@ import Foundation
 import os
 import UnwatchedShared
 
-private let wkHLSLog = Logger(subsystem: appSubsystem, category: "WKHLSManager")
 private let wkHLSDefaultsKey = "wkHLSCache"
 
 // MARK: - WKHLSManager
@@ -46,7 +45,7 @@ final class WKHLSManager {
         cache[videoId] = CachedHLS(url: url, nSolver: nSolver, poToken: poToken)
         saveToDisk()
         let expStr = Self.expiryDate(from: url).map { "expire=\(Int($0.timeIntervalSince1970))" } ?? "no expire"
-        wkHLSLog.notice("✅ [cache] stored \(videoId as NSString) \(expStr as NSString)")
+        Log.hls.notice("✅ [cache] stored \(videoId as NSString) \(expStr as NSString)")
     }
 
     /// Returns a cached entry if it exists and won't expire for at least 5 minutes.
@@ -84,7 +83,7 @@ final class WKHLSManager {
             cache[videoId] = CachedHLS(url: url, nSolver: nSolver, poToken: entry.poToken)
             loaded += 1
         }
-        wkHLSLog.notice("[cache] loaded \(loaded) valid entries from disk")
+        Log.hls.notice("[cache] loaded \(loaded) valid entries from disk")
     }
 
     private func saveToDisk() {
@@ -112,17 +111,17 @@ final class WKHLSManager {
     /// (i.e. after the current video's readyToPlay fires).
     func preExtract(_ videoId: String) async {
         guard validEntry(for: videoId) == nil else {
-            wkHLSLog.notice("[prefetch] already cached: \(videoId as NSString)")
+            Log.hls.notice("[prefetch] already cached: \(videoId as NSString)")
             return
         }
-        wkHLSLog.notice("[prefetch] starting: \(videoId as NSString)")
+        Log.hls.notice("[prefetch] starting: \(videoId as NSString)")
         guard let url = await YouTubeWebViewHLSExtractor.shared.extractHLSURL(videoId: videoId) else {
-            wkHLSLog.notice("[prefetch] nil result: \(videoId as NSString)")
+            Log.hls.notice("[prefetch] nil result: \(videoId as NSString)")
             return
         }
         let nSolver = YouTubeWebViewHLSExtractor.shared.extractedNSolver
         let pot = YouTubeWebViewHLSExtractor.shared.extractedPoToken
         store(url: url, nSolver: nSolver, poToken: pot, for: videoId)
-        wkHLSLog.notice("✅ [prefetch] done: \(videoId as NSString)")
+        Log.hls.notice("✅ [prefetch] done: \(videoId as NSString)")
     }
 }

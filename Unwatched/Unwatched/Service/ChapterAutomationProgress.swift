@@ -67,7 +67,7 @@ final class ChapterAutomationProgress: ProgressSweeping {
         timeoutTask?.cancel()
         timeoutTask = Task {
             guard (try? await Task.sleep(for: duration)) != nil else { return }
-            Log.info("ChapterAutomationProgress: no word from the shortcut for \(youtubeId ?? "-")")
+            Log.chapters.info("ChapterAutomationProgress: no word from the shortcut for \(youtubeId ?? "-")")
             reset()
             cancelProgress()
         }

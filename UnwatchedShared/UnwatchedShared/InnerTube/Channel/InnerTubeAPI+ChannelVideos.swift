@@ -4,9 +4,6 @@
 //
 
 import Foundation
-import OSLog
-
-private let log = Logger(subsystem: appSubsystem, category: "InnerTubeChannelVideos")
 
 extension ITVideo {
     /// Hidden from the RSS feed and unplayable for non-members. Matched by label: requests are made with `hl: en`.
@@ -69,7 +66,7 @@ extension InnerTubeAPI {
                 nextPageToken = token
             }
         }
-        log.notice("\(logName, privacy: .public) videos → \(videos.count, privacy: .public), nextPage=\(nextPageToken != nil ? "yes" : "no", privacy: .public)")
+        Log.innerTube.notice("\(logName) videos → \(videos.count), nextPage=\(nextPageToken != nil ? "yes" : "no")")
         return SearchPage(videos: videos, nextPageToken: nextPageToken)
     }
 

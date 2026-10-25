@@ -215,7 +215,7 @@ public final class PodcastFeedParser: NSObject, XMLParserDelegate {
     private func appendEpisode() {
         guard let enclosure = item.enclosureUrl,
               let mediaUrl = URL(string: enclosure.trimmingCharacters(in: .whitespacesAndNewlines)) else {
-            Log.info("podcast episode without enclosure: \(item.title)")
+            Log.podcasts.info("podcast episode without enclosure: \(item.title)")
             return
         }
         let id = PodcastService.episodeId(

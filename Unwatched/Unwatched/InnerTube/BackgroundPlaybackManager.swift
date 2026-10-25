@@ -47,7 +47,7 @@ final class BackgroundPlaybackManager {
         guard let videoId = player.video?.youtubeId else {
             throw BackgroundPlaybackError.noVideoInQueue
         }
-        Log.info("backgroundPlayback: starting \(videoId)")
+        Log.player.info("backgroundPlayback: starting \(videoId)")
         viewModel.onVideoEnded = { [weak self] in self?.handleVideoEnded() }
 
         if viewModel.loadedVideoId == videoId {
@@ -72,7 +72,7 @@ final class BackgroundPlaybackManager {
             return viewModel.loadError != nil ? .abort : .retry
         }
         guard started else {
-            Log.warning("backgroundPlayback: \(videoId) didn't start")
+            Log.player.warning("backgroundPlayback: \(videoId) didn't start")
             throw BackgroundPlaybackError.couldNotStart
         }
     }
@@ -93,7 +93,7 @@ final class BackgroundPlaybackManager {
     /// 20 second wait for a player that was never allowed to start.
     private func activateAudioSession() throws {
         guard PlayerAudioSession.activate() else {
-            Log.error("backgroundPlayback: audio session unavailable")
+            Log.player.error("backgroundPlayback: audio session unavailable")
             throw BackgroundPlaybackError.couldNotStart
         }
     }
@@ -106,7 +106,7 @@ final class BackgroundPlaybackManager {
         guard PlayerManager.nativeFallbackEnabled else {
             throw BackgroundPlaybackError.nativePlayerRequired
         }
-        Log.info("backgroundPlayback: switching to the native player")
+        Log.player.info("backgroundPlayback: switching to the native player")
         UserDefaults.standard.set(PlayerTypeSetting.stored.rawValue, forKey: Const.previousPlayerType)
         UserDefaults.standard.set(PlayerTypeSetting.native.rawValue, forKey: Const.playerType)
         player.nativeFallbackActive = true
@@ -120,7 +120,7 @@ final class BackgroundPlaybackManager {
             return
         }
         let continuousPlay = UserDefaults.standard.bool(forKey: Const.continuousPlay)
-        Log.info("backgroundPlayback: videoEnded, continuousPlay: \(continuousPlay)")
+        Log.player.info("backgroundPlayback: videoEnded, continuousPlay: \(continuousPlay)")
         guard continuousPlay else {
             if Const.markWatchedOnEnded.bool ?? true {
                 player.markVideoWatched(showMenu: false)

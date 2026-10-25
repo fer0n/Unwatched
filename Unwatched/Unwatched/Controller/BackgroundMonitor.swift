@@ -44,21 +44,21 @@ class BackgroundMonitor {
             do {
                 try await Task.sleep(for: .seconds(1))
             } catch {}
-            Log.info("BackgroundMonitor: forcePlay false")
+            Log.refresh.info("BackgroundMonitor: forcePlay false")
             forcePlay = false
         }
     }
 
     static func handlePlay() {
         if forcePause {
-            Log.info("BackgroundMonitor: pause()")
+            Log.refresh.info("BackgroundMonitor: pause()")
             PlayerManager.shared.pause()
         }
     }
 
     static func handlePause() {
         if forcePlay && Const.backgroundPlayback.bool ?? true {
-            Log.info("BackgroundMonitor: play()")
+            Log.refresh.info("BackgroundMonitor: play()")
             Task {
                 PlayerManager.shared.play()
             }

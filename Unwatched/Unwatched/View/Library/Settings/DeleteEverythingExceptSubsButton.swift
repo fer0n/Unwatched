@@ -62,7 +62,7 @@ struct DeleteEverythingExceptSubsButton: View {
                 try context.save()
                 await CleanupService.deleteEverything(except: Subscription.self)
             } catch {
-                Log.error("Failed to delete everything except subscriptions: \(error)")
+                Log.data.error("Failed to delete everything except subscriptions: \(error)")
             }
 
             _ = ImageService.deleteAllImages()

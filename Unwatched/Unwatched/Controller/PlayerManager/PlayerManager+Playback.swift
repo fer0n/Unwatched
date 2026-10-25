@@ -59,19 +59,19 @@ extension PlayerManager {
 
     @MainActor
     func handleAutoStart(_ url: URL?) {
-        Log.info("handleAutoStart")
+        Log.player.info("handleAutoStart")
         if let url, let videoId = UrlService.getYoutubeIdFromUrl(url: url) {
             guard video?.youtubeId == videoId else {
-                Log.warning("outdated video \(videoId) != \(video?.youtubeId ?? "nil"), stopping")
+                Log.player.warning("outdated video \(videoId) != \(video?.youtubeId ?? "nil"), stopping")
                 return
             }
         }
         guard let source = videoSource else {
-            Log.info("no source, stopping")
+            Log.player.info("no source, stopping")
             endVideoTransition()
             return
         }
-        Log.info("source: \(String(describing: source))")
+        Log.player.info("source: \(String(describing: source))")
         var starting = false
         switch source {
         case .continuousPlay:
@@ -110,17 +110,17 @@ extension PlayerManager {
     func updateElapsedTime(_ time: Double? = nil, videoId: String? = nil, immediate: Bool = false) {
         if videoId != nil && videoId != video?.youtubeId {
             // avoid updating the wrong video
-            Log.info("updateElapsedTime: wrong video to update")
+            Log.player.info("updateElapsedTime: wrong video to update")
             return
         }
-        Log.info("updateElapsedTime")
+        Log.player.info("updateElapsedTime")
 
         if let time, currentTime != time {
             currentTime = time
         }
         guard let time = currentTime,
               let modelId = video?.persistentModelID else {
-            Log.info("updateElapsedTime: nothing to update")
+            Log.player.info("updateElapsedTime: nothing to update")
             return
         }
         if isPlaying {
@@ -128,7 +128,7 @@ extension PlayerManager {
         }
         // An unchanged value can still be waiting on a debounced save, so `immediate` writes anyway
         guard video?.elapsedSeconds != time || immediate else {
-            Log.info("updateElapsedTime: no change")
+            Log.player.info("updateElapsedTime: no change")
             return
         }
 
@@ -165,7 +165,7 @@ extension PlayerManager {
         if self.video?.youtubeId != video.youtubeId {
             setNextVideo(video, .userInteraction)
         } else {
-            Log.info("playVideo: video already playing")
+            Log.player.info("playVideo: video already playing")
             play()
         }
     }
@@ -565,7 +565,7 @@ extension PlayerManager {
 
     @MainActor
     func setVideoEnded(_ value: Bool) {
-        Log.info("setVideoEnded \(value)")
+        Log.player.info("setVideoEnded \(value)")
         if value != videoEnded {
             withAnimation {
                 videoEnded = value
@@ -643,7 +643,7 @@ extension PlayerManager {
 
     @MainActor
     func setAirplayHD(_ value: Bool) {
-        Log.info("setAirplayHD: \(value)")
+        Log.player.info("setAirplayHD: \(value)")
         if airplayHD != value {
             airplayHD = value
             hotReloadPlayer()

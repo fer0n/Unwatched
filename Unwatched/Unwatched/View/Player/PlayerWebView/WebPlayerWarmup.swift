@@ -99,7 +99,7 @@ final class WebPlayerWarmup: NSObject {
             return false
         }
         finished = true
-        Log.info("webWarmup: ready \(ready), playing: \(warmed?.isPlaying == true)")
+        Log.player.info("webWarmup: ready \(ready), playing: \(warmed?.isPlaying == true)")
         return ready && warmed != nil
     }
 
@@ -122,7 +122,7 @@ final class WebPlayerWarmup: NSObject {
             return isPlaying ? .done : .retry
         }
         guard playing else {
-            Log.info("webWarmup: silent start didn't take")
+            Log.player.info("webWarmup: silent start didn't take")
             return false
         }
         await syncPosition(webView)
@@ -155,7 +155,7 @@ final class WebPlayerWarmup: NSObject {
         guard let page, let now = livePosition else {
             return nil
         }
-        Log.info("webWarmup: synced \(String(format: "%.2f", now - page))s behind")
+        Log.player.info("webWarmup: synced \(String(format: "%.2f", now - page))s behind")
         return now - page
     }
 
@@ -218,7 +218,7 @@ final class WebPlayerWarmup: NSObject {
         guard warmed?.isPlaying == true, let webView else {
             return
         }
-        Log.info("webWarmup: pausing warmed page")
+        Log.player.info("webWarmup: pausing warmed page")
         PlayerWebView.evaluateJavaScript(webView, "document.querySelector('video')?.pause();")
         warmed?.isPlaying = false
     }
@@ -231,7 +231,7 @@ final class WebPlayerWarmup: NSObject {
             cancel()
             return nil
         }
-        Log.info("webWarmup: adopting warmed page")
+        Log.player.info("webWarmup: adopting warmed page")
         detachHandlers(from: warmed.webView)
         setHidden(warmed.webView, false)
         reset()
@@ -241,7 +241,7 @@ final class WebPlayerWarmup: NSObject {
     @MainActor
     func cancel() {
         if let webView {
-            Log.info("webWarmup: discarding page")
+            Log.player.info("webWarmup: discarding page")
             detachHandlers(from: webView)
             webView.stopLoading()
             webView.pauseAllMediaPlayback()
@@ -300,7 +300,7 @@ extension WebPlayerWarmup: WKNavigationDelegate {
             cancel()
             return
         }
-        Log.info("webWarmup: didFinish")
+        Log.player.info("webWarmup: didFinish")
         PlayerWebView.evaluateJavaScript(webView, PlayerWebView.initScript(options))
         warmed = Warmed(
             webView: webView,
@@ -324,7 +324,7 @@ extension WebPlayerWarmup: WKNavigationDelegate {
 
     @MainActor
     private func handleFailure(_ error: any Error) {
-        Log.error("webWarmup: didFail \(error)")
+        Log.player.error("webWarmup: didFail \(error)")
         failed = true
     }
 }
@@ -345,7 +345,7 @@ extension WebPlayerWarmup: WKScriptMessageHandler {
         let payload = parts[safe: 1].map { String($0) }
 
         if topic == "youtubeError" {
-            Log.error("webWarmup: page error \(payload ?? "-")")
+            Log.player.error("webWarmup: page error \(payload ?? "-")")
             failed = true
         } else if Self.replayTopics.contains(topic) {
             warmed?.messages.append((topic, payload))

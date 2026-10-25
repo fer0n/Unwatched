@@ -22,7 +22,7 @@ enum HistoryTokenStore {
 
     static func setToken(_ token: DefaultHistoryToken, forModel model: String) {
         guard let data = try? JSONEncoder().encode(token) else {
-            Log.error("setToken: failed to encode history token for \(model)")
+            Log.sync.error("setToken: failed to encode history token for \(model)")
             return
         }
         var tokens = storedTokens()
@@ -59,7 +59,7 @@ enum HistoryMaintenance {
             return
         }
         guard !RefreshManager.shared.isSyncingIcloud else {
-            Log.info("pruneConsumedHistory: deferred, iCloud sync in progress")
+            Log.sync.info("pruneConsumedHistory: deferred, iCloud sync in progress")
             return
         }
         Task.detached {
@@ -88,9 +88,9 @@ enum HistoryMaintenance {
                 await Task.yield()
             }
             UserDefaults.standard.markPerformed(Const.cleanupHistoryTransactions)
-            Log.info("pruneConsumedHistory: pruned before \(cutoff)")
+            Log.sync.info("pruneConsumedHistory: pruned before \(cutoff)")
         } catch {
-            Log.error("pruneConsumedHistory: stopped at \(prunedUpTo): \(error)")
+            Log.sync.error("pruneConsumedHistory: stopped at \(prunedUpTo): \(error)")
         }
     }
 
@@ -144,11 +144,11 @@ enum HistoryMaintenance {
             return try fetchTransactions(after: token)
         } catch let error {
             guard (error as? SwiftDataError) == .historyTokenExpired else {
-                Log.error("findTransactions: \(error)")
+                Log.sync.error("findTransactions: \(error)")
                 return []
             }
             // the bookmarked transaction is gone from the stream, so resync from what's left
-            Log.info("findTransactions: history token expired, resetting")
+            Log.sync.info("findTransactions: history token expired, resetting")
             HistoryTokenStore.removeToken(forModel: tokenKey)
             return (try? fetchTransactions(after: nil)) ?? []
         }
@@ -192,7 +192,7 @@ enum HistoryMaintenance {
         let task = Task.detached {
             var modelUpdates: Set<PersistentIdentifier>?
             let transactions = TransactionVM.findTransactions(after: token, tokenKey: tokenKey)
-            Log.info("modelsHaveChanges: \(transactions.count)")
+            Log.sync.info("modelsHaveChanges: \(transactions.count)")
             if transactions.count <= 20 {
                 // if there's more than 20 changes, simply fetch everything
                 modelUpdates = TransactionVM.getModelUpdates(transactions)

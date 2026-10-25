@@ -18,7 +18,7 @@ extension AVPlayerViewModel {
     /// Loads and plays `videoId`.
     @MainActor
     func fetchAndPlay(videoId: String, useAndroidFallback: Bool = false) async {
-        Log.info("[AVPlayerView] fetchAndPlay: \(videoId) android=\(useAndroidFallback)")
+        Log.player.info("[AVPlayerView] fetchAndPlay: \(videoId) android=\(useAndroidFallback)")
 
         if let video = player.video, let mediaUrl = video.mediaUrl {
             await playDirectMedia(
@@ -30,7 +30,7 @@ extension AVPlayerViewModel {
 
         if !useAndroidFallback,
            let cached = WKHLSManager.shared.validEntry(for: videoId) {
-            Log.info("[AVPlayerView] wkHLS: cache hit for \(videoId)")
+            Log.player.info("[AVPlayerView] wkHLS: cache hit for \(videoId)")
             if await playWebViewHLS(url: cached.url, nSolver: cached.nSolver, poToken: cached.poToken, videoId: videoId) {
                 return
             }
@@ -50,7 +50,7 @@ extension AVPlayerViewModel {
     /// enclosure either plays or the episode is unavailable.
     @MainActor
     func playDirectMedia(url: URL, videoId: String) async {
-        Log.info("[AVPlayerView] direct media: \(videoId)")
+        Log.player.info("[AVPlayerView] direct media: \(videoId)")
         if canTrimSilence(url: url),
            startTrimmedPlayback(url: url, videoId: videoId, startAt: pendingSeekToTime ?? player.getStartPosition()) {
             return
@@ -83,7 +83,7 @@ extension AVPlayerViewModel {
             // IP-block / sign-in / transient: let exhaustiveRetry surface a precise error.
             YouTubeWebViewHLSExtractor.shared.cancel()
             webViewTask.cancel()
-            Log.error("[AVPlayerView] primary iOS fetch failed: \(videoId) — \(error.localizedDescription)")
+            Log.player.error("[AVPlayerView] primary iOS fetch failed: \(videoId) — \(error.localizedDescription)")
             return handleScheduledVideo(error, videoId: videoId)
         }
 
@@ -98,7 +98,7 @@ extension AVPlayerViewModel {
         // playable stream (measured: 3.7 s of a 5.4 s cold load was spent waiting for it, and it
         // had not finished even then). So don't wait: fall through now and let the extraction
         // upgrade the stream in place if it lands while playback is still on the muxed fallback.
-        Log.info("[AVPlayerView] iOS has no HLS — continuing with exhaustiveRetry,"
+        Log.player.info("[AVPlayerView] iOS has no HLS — continuing with exhaustiveRetry,"
                     + " WKWebView extraction upgrades in place: \(videoId)")
         cacheWebViewExtractionWhenDone(webViewTask, videoId: videoId)
         return false
@@ -122,7 +122,7 @@ extension AVPlayerViewModel {
             let nSolver = YouTubeWebViewHLSExtractor.shared.extractedNSolver
             if let pot { await self.api.storeExternalPoToken(pot, for: videoId) }
             WKHLSManager.shared.store(url: url, nSolver: nSolver, poToken: pot, for: videoId)
-            Log.info("[AVPlayerView] late WKWebView extraction cached for \(videoId)")
+            Log.player.info("[AVPlayerView] late WKWebView extraction cached for \(videoId)")
 
             guard !Task.isCancelled, self.player.video?.youtubeId == videoId else { return }
             await self.swapInWebViewHLS(url: url, nSolver: nSolver, poToken: pot, videoId: videoId)
@@ -140,12 +140,12 @@ extension AVPlayerViewModel {
         if let upgrade = backgroundQualityUpgradeTask { _ = await upgrade.value }
         guard !Task.isCancelled, player.video?.youtubeId == videoId else { return }
         guard let startedAt = muxedFallbackStartedAt else {
-            Log.info("[AVPlayerView] late wkHLS: not on the muxed fallback — cached only: \(videoId)")
+            Log.player.info("[AVPlayerView] late wkHLS: not on the muxed fallback — cached only: \(videoId)")
             return
         }
         let age = startedAt.distance(to: Date())
         if age > Self.webViewLateSwapMaxAge {
-            Log.info("[AVPlayerView] late wkHLS: fallback running for \(Int(age))s — cached only: \(videoId)")
+            Log.player.info("[AVPlayerView] late wkHLS: fallback running for \(Int(age))s — cached only: \(videoId)")
             return
         }
 
@@ -154,11 +154,11 @@ extension AVPlayerViewModel {
 
         let fallbackInfo = currentPlayerInfo
         pendingSeekToTime = resume
-        Log.info("[AVPlayerView] late wkHLS: upgrading muxed → HLS: \(videoId)")
+        Log.player.info("[AVPlayerView] late wkHLS: upgrading muxed → HLS: \(videoId)")
         if await playWebViewHLS(url: url, nSolver: nSolver, poToken: poToken, videoId: videoId) { return }
 
         guard !Task.isCancelled, player.video?.youtubeId == videoId, let fallbackInfo else { return }
-        Log.info("[AVPlayerView] late wkHLS: upgrade failed — restoring muxed fallback: \(videoId)")
+        Log.player.info("[AVPlayerView] late wkHLS: upgrade failed — restoring muxed fallback: \(videoId)")
         pendingSeekToTime = resume
         _ = await tryMuxed(videoId: videoId, info: fallbackInfo, client: "Android")
     }
@@ -204,7 +204,7 @@ extension AVPlayerViewModel {
 
         for attempt in 1...3 {
             guard !Task.isCancelled, player.video?.youtubeId == videoId else { return }
-            Log.info("[AVPlayerView] exhaustiveRetry \(attempt)/3: \(videoId)")
+            Log.player.info("[AVPlayerView] exhaustiveRetry \(attempt)/3: \(videoId)")
 
             var pendingNonHLS: [FetchResult] = []
             var androidInfoForMuxed: PlayerInfo?
@@ -269,7 +269,7 @@ extension AVPlayerViewModel {
                 return
             }
             if let ipBlockError {
-                Log.error("[AVPlayerView] IP blocked during parallel fetch: \(videoId)")
+                Log.player.error("[AVPlayerView] IP blocked during parallel fetch: \(videoId)")
                 Signal.error("youtubeIpBlocked")
                 failPlayback(ipBlockError)
                 return
@@ -307,7 +307,7 @@ extension AVPlayerViewModel {
         }
 
         guard !Task.isCancelled, player.video?.youtubeId == videoId else { return }
-        Log.error("[AVPlayerView] all retry attempts exhausted: \(videoId)")
+        Log.player.error("[AVPlayerView] all retry attempts exhausted: \(videoId)")
         Signal.error("nativeStreamUnavailable")
         failPlayback(APIError.unavailable("Unable to play this video"))
     }
@@ -317,7 +317,7 @@ extension AVPlayerViewModel {
     @MainActor
     func tryAllStreams(videoId: String, info: PlayerInfo, client: String,
                        label: String, skipMuxed: Bool) async -> Bool {
-        Log.info("[AVPlayerView] \(label): HLS=\(info.hlsURL != nil) adaptiveV=\(info.bestAdaptiveVideoURL != nil) muxed=\(info.bestMuxedDownloadURL != nil) skipMuxed=\(skipMuxed)")
+        Log.player.info("[AVPlayerView] \(label): HLS=\(info.hlsURL != nil) adaptiveV=\(info.bestAdaptiveVideoURL != nil) muxed=\(info.bestMuxedDownloadURL != nil) skipMuxed=\(skipMuxed)")
 
         // 1. HLS — native AVPlayer ABR, alternate audio renditions.
         if info.hlsURL != nil {
@@ -329,10 +329,10 @@ extension AVPlayerViewModel {
         if info.bestAdaptiveVideoURL != nil, info.bestAdaptiveAudioURL != nil {
             let isVR = client == "AndroidVR"
             if info.containsSabrFormats {
-                Log.info("[AVPlayerView] \(label): adaptive URLs are SABR (c=TVHTML5) — skipping composition")
+                Log.player.info("[AVPlayerView] \(label): adaptive URLs are SABR (c=TVHTML5) — skipping composition")
             } else if info.containsRqhAdaptiveFormats && !isVR {
                 // rqh=1 stalls loadTracks unless the client is CDN-exempt (AndroidVR).
-                Log.info("[AVPlayerView] \(label): adaptive URLs are rqh=1 and client not CDN-exempt — skipping composition")
+                Log.player.info("[AVPlayerView] \(label): adaptive URLs are rqh=1 and client not CDN-exempt — skipping composition")
             } else {
                 if await playAdaptiveComposition(videoId: videoId, info: info, client: client) { return true }
                 if Task.isCancelled || player.video?.youtubeId != videoId { return false }
@@ -394,7 +394,7 @@ extension AVPlayerViewModel {
         }()
         guard let videoURL, let audioURL = info.bestAdaptiveAudioURL else { return false }
 
-        Log.info("[AVPlayerView] adaptive composition starting: \(videoId)")
+        Log.player.info("[AVPlayerView] adaptive composition starting: \(videoId)")
         let ua = Self.userAgent(forStreamURL: videoURL)
         let videoAsset = AVURLAsset(url: videoURL, options: ["AVURLAssetHTTPHeaderFieldsKey": ["User-Agent": ua]])
         let audioAsset = AVURLAsset(url: audioURL, options: ["AVURLAssetHTTPHeaderFieldsKey": ["User-Agent": ua]])
@@ -424,12 +424,12 @@ extension AVPlayerViewModel {
             }
             guard let pairOrNil = await trackStream.first(where: { _ in true }),
                   let pair = pairOrNil else {
-                Log.error("[AVPlayerView] adaptive composition: loadTracks timed out or failed: \(videoId)")
+                Log.player.error("[AVPlayerView] adaptive composition: loadTracks timed out or failed: \(videoId)")
                 return false
             }
 
             guard let sourceVideo = pair.video.first, let sourceAudio = pair.audio.first else {
-                Log.error("[AVPlayerView] adaptive composition: missing video or audio track: \(videoId)")
+                Log.player.error("[AVPlayerView] adaptive composition: missing video or audio track: \(videoId)")
                 return false
             }
 
@@ -439,7 +439,7 @@ extension AVPlayerViewModel {
             let composition = AVMutableComposition()
             guard let compVideo = composition.addMutableTrack(withMediaType: .video, preferredTrackID: kCMPersistentTrackID_Invalid),
                   let compAudio = composition.addMutableTrack(withMediaType: .audio, preferredTrackID: kCMPersistentTrackID_Invalid) else {
-                Log.error("[AVPlayerView] adaptive composition: could not add tracks: \(videoId)")
+                Log.player.error("[AVPlayerView] adaptive composition: could not add tracks: \(videoId)")
                 return false
             }
 
@@ -448,7 +448,7 @@ extension AVPlayerViewModel {
 
             if Task.isCancelled { return false }
 
-            Log.info("[AVPlayerView] adaptive composition built: \(videoId)")
+            Log.player.info("[AVPlayerView] adaptive composition built: \(videoId)")
             let item = AVPlayerItem(asset: composition)
             let qualities = StreamQualityHelper.videoQualities(from: info)
             originalAudioLanguage = info.originalAudioLanguage
@@ -462,7 +462,7 @@ extension AVPlayerViewModel {
             return await attemptItem(item, videoId: videoId)
         } catch {
             if Task.isCancelled { return false }
-            Log.error("[AVPlayerView] adaptive composition failed: \(videoId) — \(error.localizedDescription)")
+            Log.player.error("[AVPlayerView] adaptive composition failed: \(videoId) — \(error.localizedDescription)")
             return false
         }
     }
@@ -473,7 +473,7 @@ extension AVPlayerViewModel {
         guard let muxedURL = info.bestMuxedDownloadURL else { return false }
         // TVHTML5 SABR-protocol URLs serve binary data, not a playable MP4 (AVPlayer -11828).
         if muxedURL.absoluteString.contains("c=TVHTML5") {
-            Log.info("[AVPlayerView] skipping SABR muxed URL (c=TVHTML5): \(videoId)")
+            Log.player.info("[AVPlayerView] skipping SABR muxed URL (c=TVHTML5): \(videoId)")
             return false
         }
         let ua = Self.userAgent(forStreamURL: muxedURL)
@@ -518,18 +518,18 @@ extension AVPlayerViewModel {
 
         guard !Task.isCancelled, player.video?.youtubeId == videoId else { return }
         guard let upgradeInfo else {
-            Log.info("[AVPlayerView] no HLS quality upgrade available — staying on muxed: \(videoId)")
+            Log.player.info("[AVPlayerView] no HLS quality upgrade available — staying on muxed: \(videoId)")
             return
         }
 
         let pos = resumePosition
         let resume = (pos > 0.5 && !pos.isNaN && !pos.isInfinite) ? pos : nil
         pendingSeekToTime = resume
-        Log.info("[AVPlayerView] attempting background HLS quality upgrade: \(videoId)")
+        Log.player.info("[AVPlayerView] attempting background HLS quality upgrade: \(videoId)")
         if await tryHLS(videoId: videoId, info: upgradeInfo, client: "TVEmbedded") { return }
 
         // Upgrade failed — restore the muxed fallback at the saved position.
-        Log.info("[AVPlayerView] HLS upgrade failed — restoring muxed fallback: \(videoId)")
+        Log.player.info("[AVPlayerView] HLS upgrade failed — restoring muxed fallback: \(videoId)")
         pendingSeekToTime = resume
         _ = await tryMuxed(videoId: videoId, info: fallbackInfo, client: "Android")
     }
@@ -538,7 +538,7 @@ extension AVPlayerViewModel {
 
     @MainActor
     func playWebViewHLS(url: URL, nSolver: (unsolved: String, solved: String)?, poToken: String?, videoId: String) async -> Bool {
-        Log.info("[AVPlayerView] wkHLS: probing manifest: \(videoId)")
+        Log.player.info("[AVPlayerView] wkHLS: probing manifest: \(videoId)")
         let ua = WKHLSManager.desktopSafariUA
         var request = URLRequest(url: url, timeoutInterval: 20)
         request.setValue(ua, forHTTPHeaderField: "User-Agent")
@@ -547,7 +547,7 @@ extension AVPlayerViewModel {
               http.statusCode == 200,
               let manifestText = String(data: data, encoding: .utf8),
               !manifestText.isEmpty else {
-            Log.error("[AVPlayerView] wkHLS: manifest fetch failed: \(videoId)")
+            Log.player.error("[AVPlayerView] wkHLS: manifest fetch failed: \(videoId)")
             return false
         }
 
@@ -632,13 +632,13 @@ extension AVPlayerViewModel {
             Task { @MainActor in
                 try? await Task.sleep(nanoseconds: UInt64(timeout * 1_000_000_000))
                 if resumer.resume(false) {
-                    Log.info("[AVPlayerView] resume seek to \(Int(time))s unanswered after \(Int(timeout))s")
+                    Log.player.info("[AVPlayerView] resume seek to \(Int(time))s unanswered after \(Int(timeout))s")
                 }
             }
         }
-        Log.info("[AVPlayerView] resumed at \(Int(time))s (landed: \(landed))")
+        Log.player.info("[AVPlayerView] resumed at \(Int(time))s (landed: \(landed))")
         guard avPlayer.currentItem === item else {
-            Log.info("[AVPlayerView] resume seek outlived its item — the new one has its own pin")
+            Log.player.info("[AVPlayerView] resume seek outlived its item — the new one has its own pin")
             return
         }
         // a target past the seekable range is clamped: publish where it ended up, not where it went
@@ -668,7 +668,7 @@ extension AVPlayerViewModel {
         guard player.video?.youtubeId == videoId, !Task.isCancelled else { return false }
         statusObserverTask?.cancel()
         setupSecondaryObservers(item: item, videoId: videoId)
-        Log.info("[AVPlayerView] attemptItem replaceCurrentItem: \(videoId)")
+        Log.player.info("[AVPlayerView] attemptItem replaceCurrentItem: \(videoId)")
         installItem(item)
 
         let played: Bool = await withCheckedContinuation { (cont: CheckedContinuation<Bool, Never>) in
@@ -680,7 +680,7 @@ extension AVPlayerViewModel {
                     case .readyToPlay:
                         resumer.resume(true); return
                     case .failed:
-                        Log.error("[AVPlayerView] attemptItem failed: \(videoId) — \(item.error?.localizedDescription ?? "unknown")")
+                        Log.player.error("[AVPlayerView] attemptItem failed: \(videoId) — \(item.error?.localizedDescription ?? "unknown")")
                         resumer.resume(false); return
                     default:
                         continue
@@ -692,7 +692,7 @@ extension AVPlayerViewModel {
             Task { @MainActor in
                 try? await Task.sleep(nanoseconds: UInt64(timeout * 1_000_000_000))
                 if resumer.resume(false) {
-                    Log.info("[AVPlayerView] attemptItem timed out (\(Int(timeout))s): \(videoId)")
+                    Log.player.info("[AVPlayerView] attemptItem timed out (\(Int(timeout))s): \(videoId)")
                     obsTask.cancel()
                 }
             }
@@ -732,7 +732,7 @@ extension AVPlayerViewModel {
     /// (quality / language / prefetch paths).
     @MainActor
     func handleReadyToPlay(item: AVPlayerItem, videoId: String) async {
-        Log.info("[AVPlayerView] AVPlayerItem readyToPlay: \(videoId)")
+        Log.player.info("[AVPlayerView] AVPlayerItem readyToPlay: \(videoId)")
         await selectOriginalAudioTrack(for: item)
         let size = avPlayer.currentItem?.presentationSize ?? .zero
         if size.width > 0 && size.height > 0 {
@@ -745,7 +745,7 @@ extension AVPlayerViewModel {
             guard !Task.isCancelled, player.video?.youtubeId == videoId,
                   avPlayer.currentItem === item else { return }
         }
-        Log.info("[AVPlayerView] clearing isLoading (readyToPlay): \(videoId)")
+        Log.player.info("[AVPlayerView] clearing isLoading (readyToPlay): \(videoId)")
         handOverToPlayback(duration: avPlayer.currentItem?.duration.seconds)
     }
 
@@ -758,7 +758,7 @@ extension AVPlayerViewModel {
             for await status in self.statusStream(for: item) {
                 if Task.isCancelled { return }
                 if status == .failed {
-                    Log.error("[AVPlayerView] item failed during playback: \(videoId) — \(item.error?.localizedDescription ?? "unknown")")
+                    Log.player.error("[AVPlayerView] item failed during playback: \(videoId) — \(item.error?.localizedDescription ?? "unknown")")
                     handleItemFailure(item: item, videoId: videoId)
                     return
                 }
@@ -770,7 +770,7 @@ extension AVPlayerViewModel {
     /// the readyToPlay side-effects and failure recovery for items it didn't await inline.
     @MainActor
     func startObservingItem(_ item: AVPlayerItem, videoId: String) {
-        Log.info("[AVPlayerView] startObservingItem: \(videoId)")
+        Log.player.info("[AVPlayerView] startObservingItem: \(videoId)")
         setupSecondaryObservers(item: item, videoId: videoId)
         statusObserverTask?.cancel()
         statusObserverTask = Task { @MainActor in
@@ -780,7 +780,7 @@ extension AVPlayerViewModel {
                 case .readyToPlay:
                     await handleReadyToPlay(item: item, videoId: videoId)
                 case .failed:
-                    Log.error("[AVPlayerView] AVPlayerItem failed: \(videoId) — \(item.error?.localizedDescription ?? "unknown")")
+                    Log.player.error("[AVPlayerView] AVPlayerItem failed: \(videoId) — \(item.error?.localizedDescription ?? "unknown")")
                     handleItemFailure(item: item, videoId: videoId)
                     return
                 case .unknown:
@@ -805,7 +805,7 @@ extension AVPlayerViewModel {
             return
         }
         guard !hasRetriedPlayback else {
-            Log.error("[AVPlayerView] retry already attempted, giving up: \(videoId)")
+            Log.player.error("[AVPlayerView] retry already attempted, giving up: \(videoId)")
             failPlayback(item.error)
             return
         }
@@ -815,18 +815,18 @@ extension AVPlayerViewModel {
                                            hasAppliedH264Cap: hasAppliedH264Cap)
         switch action {
         case .fail(let err):
-            Log.error("[AVPlayerView] unrecoverable failure: \(videoId)")
+            Log.player.error("[AVPlayerView] unrecoverable failure: \(videoId)")
             Signal.error("nativePlaybackFailed")
             failPlayback(err ?? item.error)
         case .revertToAuto:
-            Log.info("[AVPlayerView] quality \(player.selectedVideoQuality)p failed — reverting to Auto and retrying: \(videoId)")
+            Log.player.info("[AVPlayerView] quality \(player.selectedVideoQuality)p failed — reverting to Auto and retrying: \(videoId)")
             player.reportVideoQuality(0)
             reExhaust(videoId: videoId)
         case .retry403Recovery:
-            Log.info("[AVPlayerView] HTTP 403 — re-fetching fresh streams: \(videoId)")
+            Log.player.info("[AVPlayerView] HTTP 403 — re-fetching fresh streams: \(videoId)")
             reExhaust(videoId: videoId)
         case .retryWithH264Cap:
-            Log.info("[AVPlayerView] H.264 decode error — retrying (H.264/avc1 preferred): \(videoId)")
+            Log.player.info("[AVPlayerView] H.264 decode error — retrying (H.264/avc1 preferred): \(videoId)")
             hasAppliedH264Cap = true
             reExhaust(videoId: videoId)
         }
@@ -907,7 +907,7 @@ extension AVPlayerViewModel {
         do {
             try podcastEngine.load(url: url, startAt: startAt)
         } catch {
-            Log.warning("[AVPlayerView] trim silence: \(videoId) wouldn't decode — \(error.localizedDescription)")
+            Log.player.warning("[AVPlayerView] trim silence: \(videoId) wouldn't decode — \(error.localizedDescription)")
             podcastEngine.unload()
             setUsingPodcastEngine(false)
             return false

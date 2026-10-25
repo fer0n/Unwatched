@@ -54,7 +54,7 @@ public struct PodcastEpisodeCache {
         do {
             try context.save()
         } catch {
-            Log.error("PodcastEpisodeCache.store: \(error)")
+            Log.podcasts.error("PodcastEpisodeCache.store: \(error)")
         }
     }
 

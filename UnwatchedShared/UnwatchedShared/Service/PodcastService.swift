@@ -91,7 +91,7 @@ public enum PodcastService {
             guard chapters.count > 1 else { return nil }
             return ChapterService.updateDurationAndEndTime(in: chapters, videoDuration: duration)
         } catch {
-            Log.warning("podcast chapters failed to load: \(error.localizedDescription)")
+            Log.podcasts.warning("podcast chapters failed to load: \(error.localizedDescription)")
             return nil
         }
     }
@@ -141,7 +141,7 @@ public enum PodcastService {
                 )
             }
         } catch {
-            Log.info("embedded chapter groups unavailable: \(error.localizedDescription)")
+            Log.podcasts.info("embedded chapter groups unavailable: \(error.localizedDescription)")
         }
 
         // AVFoundation reads chapter tracks (MPEG-4) — and an MP3's `CHAP` marks, but not the pictures inside
@@ -180,7 +180,7 @@ public enum PodcastService {
             let url = secureUrl(feedUrl) ?? feedUrl
             data = try await VideoCrawler.fetchFeedData(url)
         } catch {
-            Log.warning("podcast chapters feed failed to load: \(error.localizedDescription)")
+            Log.podcasts.warning("podcast chapters feed failed to load: \(error.localizedDescription)")
             return nil
         }
 
@@ -201,7 +201,7 @@ public enum PodcastService {
             let url = secureUrl(feedUrl) ?? feedUrl
             data = try await VideoCrawler.fetchFeedData(url)
         } catch {
-            Log.warning("podcast transcript feed failed to load: \(error.localizedDescription)")
+            Log.podcasts.warning("podcast transcript feed failed to load: \(error.localizedDescription)")
             return PodcastTranscriptLookupResult(.unreachable)
         }
 
@@ -209,7 +209,7 @@ public enum PodcastService {
         let language = parser.showLanguage
         guard let sources = parser.transcriptSources[episodeId],
               let source = PodcastTranscriptSource.best(from: sources) else {
-            Log.info("no podcast:transcript for \(episodeId)")
+            Log.podcasts.info("no podcast:transcript for \(episodeId)")
             return PodcastTranscriptLookupResult(.notPublished, language: language)
         }
         guard let entries = await fetchTranscript(source) else {
@@ -222,13 +222,13 @@ public enum PodcastService {
         do {
             let (data, response) = try await URLSession.app.data(from: source.url)
             guard response.isSuccessfulHttp else {
-                Log.warning("podcast transcript unavailable")
+                Log.podcasts.warning("podcast transcript unavailable")
                 return nil
             }
             let entries = PodcastTranscriptParser.parse(data, format: source.format)
             return entries.isEmpty ? nil : entries
         } catch {
-            Log.warning("podcast transcript failed to load: \(error.localizedDescription)")
+            Log.podcasts.warning("podcast transcript failed to load: \(error.localizedDescription)")
             return nil
         }
     }

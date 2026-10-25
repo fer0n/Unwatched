@@ -34,7 +34,7 @@ public struct YoutubeDataAPI {
     }
 
     public static func getYtChannelId(from handle: String) async throws -> String {
-        Log.info("getYtChannelId")
+        Log.refresh.info("getYtChannelId")
         let apiUrl = "\(baseUrl)channels?key=\(apiKey)&forHandle=\(handle)&part=id"
 
         let response = try await YoutubeDataAPI.handleYoutubeRequest(url: apiUrl, model: YtChannelId.self)
@@ -56,7 +56,7 @@ public struct YoutubeDataAPI {
             let result = try decoder.decode(T.self, from: data)
             return result
         } catch {
-            Log.info("couldn't decode result: \(error)")
+            Log.refresh.info("couldn't decode result: \(error)")
         }
 
         let response = try decoder.decode(YtErrorResponseBody.self, from: data)
@@ -68,7 +68,7 @@ public struct YoutubeDataAPI {
         if youtubeVideoId.isEmpty {
             throw VideoError.noYoutubeId
         }
-        Log.info("getYtVideoInfo")
+        Log.refresh.info("getYtVideoInfo")
         let apiUrl = "\(baseUrl)videos?key=\(apiKey)&id=\(youtubeVideoId)&part=snippet,contentDetails"
 
         let response = try await YoutubeDataAPI.handleYoutubeRequest(url: apiUrl, model: YtVideoInfo.self)
@@ -87,7 +87,7 @@ public struct YoutubeDataAPI {
     }
 
     public static func getYtVideoDurations(_ ids: [String]) async throws -> [VideoDurationInfo] {
-        Log.info("getYtVideoDurations, for: \(ids.count)")
+        Log.refresh.info("getYtVideoDurations, for: \(ids.count)")
         let idsPerRequest = Const.maxVideoIdsPerRequest
 
         return try await withThrowingTaskGroup(of: [VideoDurationInfo].self) { group in
@@ -98,7 +98,7 @@ public struct YoutubeDataAPI {
                 group.addTask {
                     let idString = batchIds.joined(separator: ",")
                     let apiUrl = "\(baseUrl)videos?key=\(premiumApiKey)&id=\(idString)&part=contentDetails"
-                    Log.info("Fetching durations for batch \(index/idsPerRequest + 1)")
+                    Log.refresh.info("Fetching durations for batch \(index/idsPerRequest + 1)")
                     var batchResults: [VideoDurationInfo] = []
 
                     do {
@@ -112,7 +112,7 @@ public struct YoutubeDataAPI {
                             if let duration {
                                 durationSeconds = parseDurationToSeconds(duration)
                             } else {
-                                Log.warning("Failed to parse duration for video ID: \(item.id)")
+                                Log.refresh.warning("Failed to parse duration for video ID: \(item.id)")
                             }
                             batchResults.append(VideoDurationInfo(
                                 youtubeId: item.id,
@@ -122,7 +122,7 @@ public struct YoutubeDataAPI {
                         }
                         return batchResults
                     } catch {
-                        Log.error("Error fetching durations for batch: \(error)")
+                        Log.refresh.error("Error fetching durations for batch: \(error)")
                         throw error
                     }
                 }
@@ -175,7 +175,7 @@ public struct YoutubeDataAPI {
         if youtubePlaylistId.isEmpty {
             throw VideoError.noYoutubePlaylistId
         }
-        Log.info("getYtVideoInfoFromPlaylist")
+        Log.refresh.info("getYtVideoInfoFromPlaylist")
 
         var result = [SendableVideo]()
         var nextPageToken: String?
@@ -192,11 +192,11 @@ public struct YoutubeDataAPI {
                 let video = YoutubeDataAPI.createVideo(item.snippet, videoId: item.contentDetails.videoId)
                 result.append(video)
             }
-            Log.info("getYtVideoInfoFromPlaylist: \(result.count), \(response.pageInfo.resultsPerPage), \(response.pageInfo.totalResults)")
+            Log.refresh.info("getYtVideoInfoFromPlaylist: \(result.count), \(response.pageInfo.resultsPerPage), \(response.pageInfo.totalResults)")
             nextPageToken = response.nextPageToken
         } while nextPageToken != nil && counter < Const.playlistPageRequestLimit
 
-        Log.info("Amount of imported videos: \(result.count)")
+        Log.refresh.info("Amount of imported videos: \(result.count)")
         return result
     }
 }

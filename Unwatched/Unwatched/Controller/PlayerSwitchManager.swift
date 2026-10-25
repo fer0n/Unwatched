@@ -67,7 +67,7 @@ final class PlayerSwitchManager {
             return
         }
 
-        Log.info("playerSwitch: warming up \(type.rawValue)")
+        Log.player.info("playerSwitch: warming up \(type.rawValue)")
         target = type
         warmupTask = Task { [weak self] in
             let ready = await Self.warmUp(for: type)
@@ -78,7 +78,7 @@ final class PlayerSwitchManager {
             guard !Task.isCancelled else {
                 return
             }
-            Log.info("playerSwitch: committing \(type.rawValue), warm: \(ready)")
+            Log.player.info("playerSwitch: committing \(type.rawValue), warm: \(ready)")
             self?.commit(type)
         }
     }
@@ -88,7 +88,7 @@ final class PlayerSwitchManager {
         guard let target else {
             return
         }
-        Log.info("playerSwitch: cancelled \(target.rawValue)")
+        Log.player.info("playerSwitch: cancelled \(target.rawValue)")
         stopWarmup()
         UserDefaults.standard.set(selectedType.rawValue, forKey: Const.playerType)
     }

@@ -64,11 +64,11 @@ public enum SettingsMigration {
         if defaults.object(forKey: didMigrateToKeyValueStore) as? Bool == true {
             return
         }
-        Log.info("Migrating UserDefaults to iCloud KeyValueStore")
+        Log.data.info("Migrating UserDefaults to iCloud KeyValueStore")
 
         for key in syncedKeys {
             guard let value = defaults.object(forKey: key) else { continue }
-            Log.info("Migrate: \(key)")
+            Log.data.info("Migrate: \(key)")
             cloud.set(value, forKey: key)
             defaults.removeObject(forKey: key)
         }

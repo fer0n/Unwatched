@@ -140,7 +140,7 @@ public extension ChapterService {
                 derivedChapterCache[entry.youtubeId] = nil
                 context.delete(entry)
             }
-            Log.info("cleanupDerivedChapters: \(entries.count) entries older than \(days) days")
+            Log.chapters.info("cleanupDerivedChapters: \(entries.count) entries older than \(days) days")
             try? context.save()
         }
     }
@@ -181,7 +181,7 @@ public extension ChapterService {
             return nil
         }
         guard var chapters = try? JSONDecoder().decode([SendableChapter].self, from: entry.data) else {
-            Log.error("loadCached: couldn't decode chapters for \(youtubeId)")
+            Log.chapters.error("loadCached: couldn't decode chapters for \(youtubeId)")
             return nil
         }
         for index in chapters.indices {
@@ -197,7 +197,7 @@ public extension ChapterService {
 
     private static func store(_ chapters: [SendableChapter], youtubeId: String, hash: String) {
         guard let data = try? JSONEncoder().encode(chapters) else {
-            Log.error("store: couldn't encode chapters for \(youtubeId)")
+            Log.chapters.error("store: couldn't encode chapters for \(youtubeId)")
             return
         }
 

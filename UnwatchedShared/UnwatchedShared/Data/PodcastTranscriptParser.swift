@@ -100,7 +100,7 @@ public struct PodcastTranscriptSource: Sendable, Equatable {
 public enum PodcastTranscriptParser {
     public static func parse(_ data: Data, format: PodcastTranscriptFormat?) -> [TranscriptEntry] {
         guard let format = format ?? PodcastTranscriptFormat.sniff(data) else {
-            Log.info("podcast transcript in an unrecognized format")
+            Log.chapters.info("podcast transcript in an unrecognized format")
             return []
         }
         switch format {
@@ -127,7 +127,7 @@ public enum PodcastTranscriptParser {
     /// changes so a dialogue stays attributable.
     private static func parseJson(_ data: Data) -> [TranscriptEntry] {
         guard let document = try? JSONDecoder().decode(Document.self, from: data) else {
-            Log.warning("podcast transcript JSON could not be decoded")
+            Log.chapters.warning("podcast transcript JSON could not be decoded")
             return []
         }
 

@@ -87,7 +87,7 @@ struct SettingsView: View {
                     }
                     .settingsListRow()
                     NavigationLink(value: LibraryDestination.help) {
-                        Label("emailAndFaq", systemImage: Const.contactMailSF)
+                        Label("feedbackAndFaq", systemImage: Const.contactMailSF)
                     }
                     Link(destination: UrlService.githubUrl) {
                         LibraryNavListItem("unwatchedOnGithub", imageName: "github-logo")

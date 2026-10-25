@@ -164,7 +164,7 @@ extension VideoService {
 
     @MainActor
     static func forceUpdateDurations(_ updateInfo: [VideoDurationInfo]) async {
-        print("forceUpdateDurations, \(updateInfo)")
+        Log.debug("forceUpdateDurations, \(updateInfo)")
         let context = DataProvider.mainContext
         for info in updateInfo {
             if let persistentId = info.persistentId,

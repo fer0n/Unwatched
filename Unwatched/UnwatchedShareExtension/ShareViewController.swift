@@ -10,10 +10,9 @@
 import UIKit
 import SwiftUI
 import UniformTypeIdentifiers
-import OSLog
 import UnwatchedShared
 
-private let logger = Logger(subsystem: "com.pentlandFirth.Unwatched.share", category: "ShareExtension")
+private let logger = Log(category: "ShareExtension")
 
 class ShareViewController: UIViewController {
 
@@ -77,7 +76,7 @@ class ShareViewController: UIViewController {
             model.state = .choosing(.channel)
             Task { await loadChannelPreview(url: url) }
         } else {
-            logger.error("not a YouTube link: \(url.absoluteString, privacy: .public)")
+            logger.error("not a YouTube link: \(url.absoluteString)")
             model.state = .notYouTube
         }
     }
@@ -90,7 +89,7 @@ class ShareViewController: UIViewController {
             guard let info = try await YoutubeDataAPI.getYtVideoInfo(youtubeId) else { return }
             model.videoPreview = info
         } catch {
-            logger.error("failed to load share preview: \(error.localizedDescription, privacy: .public)")
+            logger.error("failed to load share preview: \(error.localizedDescription)")
         }
     }
 
@@ -117,7 +116,7 @@ class ShareViewController: UIViewController {
             updated.thumbnailUrl = avatarURL
             model.channelPreview = updated
         } catch {
-            logger.error("failed to load channel avatar: \(error.localizedDescription, privacy: .public)")
+            logger.error("failed to load channel avatar: \(error.localizedDescription)")
         }
     }
 
@@ -191,7 +190,7 @@ class ShareViewController: UIViewController {
                 }
                 await finish()
             } catch {
-                logger.error("share action failed: \(error.localizedDescription, privacy: .public)")
+                logger.error("share action failed: \(error.localizedDescription)")
                 model.loadingAction = nil
                 model.state = .error(String(localized: "Something went wrong"))
             }
@@ -284,7 +283,7 @@ class ShareViewController: UIViewController {
                     model.isSubscribed = true
                 }
             } catch {
-                logger.error("subscribe toggle failed: \(error.localizedDescription, privacy: .public)")
+                logger.error("subscribe toggle failed: \(error.localizedDescription)")
             }
         }
     }

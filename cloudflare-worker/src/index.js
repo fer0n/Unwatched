@@ -1,5 +1,6 @@
 import { isDashboardAuthorized, dashboardCookieHeader, handleDashboardData, handleRecentData, DASHBOARD_HTML } from "./dashboard.js";
 import { LINKS_HOST, handleLink } from "./links.js";
+import { handleReportUpload, handleReportsDashboard, isReportsPath } from "./reports/index.js";
 
 const MAX_EVENTS_PER_REQUEST = 25;
 
@@ -12,7 +13,8 @@ export default {
       return handleLink(url);
     }
 
-    if (url.pathname === "/dashboard" || url.pathname === "/dashboard/data" || url.pathname === "/dashboard/recent") {
+    const isReports = isReportsPath(url.pathname);
+    if (url.pathname === "/dashboard" || url.pathname === "/dashboard/data" || url.pathname === "/dashboard/recent" || isReports) {
       if (!(await isDashboardAuthorized(request, env))) {
         return new Response("Unauthorized", {
           status: 401,
@@ -22,6 +24,11 @@ export default {
       // Refresh the long-lived login cookie on every authorized request so an
       // active user keeps a rolling 30-day window instead of being logged out.
       const setCookie = await dashboardCookieHeader(env);
+      if (isReports) {
+        const res = await handleReportsDashboard(url, env);
+        res.headers.append("Set-Cookie", setCookie);
+        return res;
+      }
       if (url.pathname === "/dashboard/data" || url.pathname === "/dashboard/recent") {
         // Build channel to report on. Unknown/missing values fall back to the default
         // inside the dashboard module, which validates against a fixed set of filters.
@@ -53,6 +60,14 @@ export default {
 
     if (request.headers.get("Authorization") !== `Bearer ${env.API_SECRET}`) {
       return new Response("Unauthorized", { status: 401 });
+    }
+
+    if (url.pathname === "/report") {
+      const { success: reportAllowed } = await env.REPORT_LIMITER.limit({ key: clientIp });
+      if (!reportAllowed) {
+        return new Response("Rate limit exceeded", { status: 429 });
+      }
+      return handleReportUpload(request, env);
     }
 
     let body;

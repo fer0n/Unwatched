@@ -4,9 +4,6 @@
 //
 
 import Foundation
-import OSLog
-
-private let log = Logger(subsystem: appSubsystem, category: "InnerTubeLiveStreams")
 
 extension InnerTubeAPI {
     /// Upcoming, running and past live streams, but not premieres.
@@ -16,7 +13,7 @@ extension InnerTubeAPI {
         body["params"] = "EgdzdHJlYW1z8gYECgJ6AA=="
         let data = try await post(endpoint: "browse", body: body)
         let ids = parseVideoLockupIds(from: data)
-        log.notice("channel \(channelId, privacy: .public) live streams → \(ids.count, privacy: .public)")
+        Log.innerTube.notice("channel \(channelId) live streams → \(ids.count)")
         return ids
     }
 

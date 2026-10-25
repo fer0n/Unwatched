@@ -223,13 +223,13 @@ final class AVPlayerViewModel: PlayerBackend {
     func loadVideoIfNeeded() {
         // a player switch still reaches here: the outgoing subtree gets one update with the new video
         guard PlayerSwitchManager.shared.nativeIsCurrent else {
-            Log.info("loadVideo: skipped, the native player is no longer current")
+            Log.player.info("loadVideo: skipped, the native player is no longer current")
             // a paged player outlives the switch
             stop()
             return
         }
         guard let videoId = player.video?.youtubeId, videoId != loadedVideoId else { return }
-        Log.info("loadVideo: \(videoId)")
+        Log.player.info("loadVideo: \(videoId)")
         loadedVideoId = videoId
         // otherwise the lock screen shows the empty player's zero for the whole load
         lastObservedTime = player.getStartPosition()
@@ -488,7 +488,7 @@ final class AVPlayerViewModel: PlayerBackend {
         if player.video == nil || !handingOver {
             PlayerAudioSession.deactivate()
         } else {
-            Log.info("[AVPlayerView] cleanup: leaving the audio session to the player taking over")
+            Log.player.info("[AVPlayerView] cleanup: leaving the audio session to the player taking over")
         }
     }
 
@@ -513,7 +513,7 @@ final class AVPlayerViewModel: PlayerBackend {
     @MainActor
     private func applyPrefetchResult(_ pre: AVPlayerPrefetchManager.PrefetchResult, videoId: String) async {
         guard !Task.isCancelled else { return }
-        Log.info("[AVPlayerView] using prefetched item for \(videoId)")
+        Log.player.info("[AVPlayerView] using prefetched item for \(videoId)")
         originalAudioLanguage = pre.originalAudioLanguage
         currentPlayerInfo = pre.playerInfo
         currentHLSHeaders = pre.headers
@@ -543,7 +543,7 @@ final class AVPlayerViewModel: PlayerBackend {
         if await attemptItem(AVPlayerItem(asset: pre.asset), videoId: videoId) { return }
 
         guard !Task.isCancelled, player.video?.youtubeId == videoId else { return }
-        Log.info("[AVPlayerView] prefetched item did not become ready — falling back to full load: \(videoId)")
+        Log.player.info("[AVPlayerView] prefetched item did not become ready — falling back to full load: \(videoId)")
         await fetchAndPlay(videoId: videoId)
     }
 }
@@ -570,7 +570,7 @@ enum PlayerAudioSession {
             forName: AVAudioSession.mediaServicesWereResetNotification, object: nil, queue: .main
         ) { _ in
             MainActor.assumeIsolated {
-                Log.error("audio session: media services were reset")
+                Log.player.error("audio session: media services were reset")
                 configured = nil
                 activated = false
             }
@@ -606,20 +606,20 @@ enum PlayerAudioSession {
         } catch {
             configured = nil
             activated = false
-            Log.error("audio session setCategory FAILED: \(error.localizedDescription), on \(describe(session))")
+            Log.player.error("audio session setCategory FAILED: \(error.localizedDescription), on \(describe(session))")
             return false
         }
         // an unsupported mode falls back without throwing
         guard session.category == .playback, session.mode == mode else {
             configured = nil
             activated = false
-            Log.error("audio session did not take \(mode.rawValue), now \(describe(session))")
+            Log.player.error("audio session did not take \(mode.rawValue), now \(describe(session))")
             return false
         }
         configured = (.playback, mode)
         activated = false
         observeMediaServicesResetIfNeeded()
-        Log.info("audio session configured: \(describe(session))")
+        Log.player.info("audio session configured: \(describe(session))")
         return true
         #endif
     }
@@ -638,11 +638,11 @@ enum PlayerAudioSession {
             try session.setActive(true)
         } catch {
             activated = false
-            Log.error("audio session setActive(true) FAILED: \(error.localizedDescription), \(describe(session))")
+            Log.player.error("audio session setActive(true) FAILED: \(error.localizedDescription), \(describe(session))")
             return false
         }
         activated = true
-        Log.info("audio session active: \(describe(session))")
+        Log.player.info("audio session active: \(describe(session))")
         return true
         #endif
     }
@@ -652,7 +652,7 @@ enum PlayerAudioSession {
     static func activateForReportedPlayback() {
         #if !os(macOS)
         guard !activated else { return }
-        Log.info("audio session: playback started without a command, activating late")
+        Log.player.info("audio session: playback started without a command, activating late")
         activate()
         #endif
     }
@@ -670,9 +670,9 @@ enum PlayerAudioSession {
         activated = false
         do {
             try AVAudioSession.sharedInstance().setActive(false, options: .notifyOthersOnDeactivation)
-            Log.info("audio session deactivated")
+            Log.player.info("audio session deactivated")
         } catch {
-            Log.error("audio session setActive(false) failed: \(error.localizedDescription)")
+            Log.player.error("audio session setActive(false) failed: \(error.localizedDescription)")
         }
         #endif
     }

@@ -24,7 +24,7 @@ import CoreData
     }
 
     public func setupCloudKitListener() {
-        Log.info("iCloud sync: Setting up sync notification")
+        Log.sync.info("iCloud sync: Setting up sync notification")
         NotificationCenter.default.publisher(for: NSPersistentCloudKitContainer.eventChangedNotification)
             .sink { [weak self] notification in
                 guard let event = notification.userInfo?[NSPersistentCloudKitContainer.eventNotificationUserInfoKey]
@@ -43,7 +43,7 @@ import CoreData
     }
 
     public func cancelCloudKitListener() {
-        Log.info("iCloud sync: cancelling sync notification")
+        Log.sync.info("iCloud sync: cancelling sync notification")
         cancellables.removeAll()
     }
 
@@ -52,13 +52,13 @@ import CoreData
         if ended {
             runningEvents.remove(identifier)
             if let error {
-                Log.error("iCloud sync: \(type) failed: \(error)")
+                Log.sync.error("iCloud sync: \(type) failed: \(error)")
             } else {
-                Log.info("iCloud sync: \(type) done")
+                Log.sync.info("iCloud sync: \(type) done")
             }
         } else {
             runningEvents.insert(identifier)
-            Log.info("iCloud sync: \(type) started")
+            Log.sync.info("iCloud sync: \(type) started")
         }
 
         let syncing = !runningEvents.isEmpty

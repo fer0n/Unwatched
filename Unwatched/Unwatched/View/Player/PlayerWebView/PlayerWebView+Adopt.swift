@@ -68,7 +68,7 @@ extension PlayerWebView {
             return (result as? Double ?? 0) > 0 ? .done : .retry
         }
         if !sized {
-            Log.warning("adopt: viewport stayed empty")
+            Log.player.warning("adopt: viewport stayed empty")
         }
     }
 

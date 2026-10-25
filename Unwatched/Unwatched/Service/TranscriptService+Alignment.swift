@@ -64,7 +64,7 @@ extension TranscriptService {
                 }
                 return drifted
             } catch {
-                Log.info("alignment check skipped: \(error.localizedDescription)")
+                Log.chapters.info("alignment check skipped: \(error.localizedDescription)")
                 return nil
             }
             #endif

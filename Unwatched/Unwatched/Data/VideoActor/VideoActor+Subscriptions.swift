@@ -17,7 +17,7 @@ extension VideoActor {
         if let subId = sub.persistentId, let modelSub = self[subId, as: Subscription.self] {
             return modelSub
         }
-        Log.info("subscription does not exist: \(sub.title)")
+        Log.refresh.info("subscription does not exist: \(sub.title)")
         return nil
     }
 
@@ -46,7 +46,7 @@ extension VideoActor {
                 if let loadedSub = self[id, as: Subscription.self] {
                     subs.append(loadedSub)
                 } else {
-                    Log.warning("Subscription not found for id: \(id.hashValue)")
+                    Log.refresh.warning("Subscription not found for id: \(id.hashValue)")
                 }
             }
         } else {
@@ -71,15 +71,15 @@ extension VideoActor {
     }
 
     func addSubscriptionsForForeignVideos(_ video: Video, feedTitle: String?) async throws {
-        Log.info("addSubscriptionsForVideos")
+        Log.refresh.info("addSubscriptionsForVideos")
         guard let channelId = video.youtubeChannelId else {
-            Log.info("no channel Id/title found in video")
+            Log.refresh.info("no channel Id/title found in video")
             return
         }
 
         // video already added, done here
         guard video.subscription == nil else {
-            Log.info("video already has a subscription")
+            Log.refresh.info("video already has a subscription")
             return
         }
 
@@ -96,7 +96,7 @@ extension VideoActor {
             title: feedTitle ?? "",
             isArchived: true,
             youtubeChannelId: channelId)
-        Log.info("new sub: \(sub.isArchived)")
+        Log.refresh.info("new sub: \(sub.isArchived)")
 
         modelContext.insert(sub)
         sub.videos?.append(video)
@@ -105,7 +105,7 @@ extension VideoActor {
     /// Fetches all videos for the specified subscription.
     func fetchVideos(_ sub: SendableSubscription) async throws -> FetchResult {
         guard let url = sub.link else {
-            Log.info("sub has no url: \(sub.title)")
+            Log.refresh.info("sub has no url: \(sub.title)")
             return FetchResult(sub: sub, videos: [], errorMessage: nil)
         }
         do {
@@ -115,7 +115,7 @@ extension VideoActor {
             if Task.isCancelled {
                 throw error
             }
-            Log.error(
+            Log.refresh.error(
                 "Failed to fetch videos for subscription: \(sub.title), error: \(error.localizedDescription)"
             )
             return FetchResult(
@@ -145,8 +145,8 @@ extension VideoActor {
 
         let youtubeOutage = isYoutubeOutage(outcomes)
         if youtubeOutage {
-            Log.info("recordFetchOutcomes: \(youtubeOutcomes.count(where: \.didFail))/\(youtubeOutcomes.count) "
-                        + "YouTube feeds failed, treating as an outage")
+            Log.refresh.info("recordFetchOutcomes: \(youtubeOutcomes.count(where: \.didFail))/\(youtubeOutcomes.count) "
+                                + "YouTube feeds failed, treating as an outage")
         }
 
         for outcome in outcomes where outcome.isPodcast || !youtubeOutage {
@@ -169,9 +169,9 @@ extension VideoActor {
         var subs = [Subscription]()
         if subscriptionIds == nil {
             subs = try getAllActiveSubscriptions()
-            Log.info("all subs \(subs)")
+            Log.refresh.info("all subs \(subs)")
         } else {
-            Log.info("found some, fetching")
+            Log.refresh.info("found some, fetching")
             subs = try fetchSubscriptions(subscriptionIds)
         }
         let sendableSubs: [SendableSubscription] = subs.compactMap { $0.toExport }

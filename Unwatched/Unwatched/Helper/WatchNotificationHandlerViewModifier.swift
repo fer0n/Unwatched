@@ -50,7 +50,7 @@ struct WatchNotificationHandlerViewModifier: ViewModifier {
             .onReceive(
                 NotificationCenter.default.publisher(for: UIApplication.didReceiveMemoryWarningNotification)
             ) { _ in
-                Log.warning("didReceiveMemoryWarningNotification")
+                Log.sync.warning("didReceiveMemoryWarningNotification")
                 UserDataService.clearMemory()
             }
             .onReceive(
@@ -67,11 +67,11 @@ struct WatchNotificationHandlerViewModifier: ViewModifier {
     #if os(iOS)
     private func handleRouteChange() {
         guard UserDefaults.standard.bool(forKey: Const.autoAirplayHD) else {
-            Log.info("autoAirplayHD off")
+            Log.sync.info("autoAirplayHD off")
             return
         }
         let currentRoute = getCurrentRoute()
-        Log.info("autoAirplayHD route: \(currentRoute.rawValue)")
+        Log.sync.info("autoAirplayHD route: \(currentRoute.rawValue)")
         player.setAirplayHD(currentRoute == .airplay)
     }
 
@@ -85,39 +85,39 @@ struct WatchNotificationHandlerViewModifier: ViewModifier {
     #endif
 
     func handlePasteAndPlay() {
-        Log.info("handlePasteAndPlay")
+        Log.sync.info("handlePasteAndPlay")
         guard let string = ClipboardService.get(), let url = URL(string: string) else {
-            Log.warning("handlePasteAndPlay: no valid url pasted")
+            Log.sync.warning("handlePasteAndPlay: no valid url pasted")
             return
         }
         addAndPlay(url, source: "paste")
     }
 
     func handleSearchYoutube() {
-        Log.info("handleSearchYoutube")
+        Log.sync.info("handleSearchYoutube")
         navManager.presentedSearch.removeAll()
         navManager.navigateTo(.search)
         navManager.pendingSearchFocus = true
     }
 
     func handlePasteAndQueue() {
-        Log.info("handlePasteAndQueue")
+        Log.sync.info("handlePasteAndQueue")
         guard let string = ClipboardService.get(), let url = URL(string: string) else {
-            Log.warning("handlePasteAndQueue: no valid url pasted")
+            Log.sync.warning("handlePasteAndQueue: no valid url pasted")
             return
         }
         addAndQueue(url)
     }
 
     func handleWatchInUnwatched(_ notification: NotificationCenter.Publisher.Output) {
-        Log.info("handleWatchInUnwatched")
+        Log.sync.info("handleWatchInUnwatched")
         if let userInfo = notification.userInfo, let youtubeUrl = userInfo["youtubeUrl"] as? URL {
             addAndPlay(youtubeUrl, source: "shortcut")
         }
     }
 
     func handleQueueInUnwatched(_ notification: NotificationCenter.Publisher.Output) {
-        Log.info("handleQueueInUnwatched")
+        Log.sync.info("handleQueueInUnwatched")
         if let userInfo = notification.userInfo,
            let youtubeUrl = userInfo["youtubeUrl"] as? URL {
             let isNext = userInfo["next"] as? Bool ?? false
@@ -130,7 +130,7 @@ struct WatchNotificationHandlerViewModifier: ViewModifier {
     }
 
     func handleInboxInUnwatched(_ notification: NotificationCenter.Publisher.Output) {
-        Log.info("handleInboxInUnwatched")
+        Log.sync.info("handleInboxInUnwatched")
         if let userInfo = notification.userInfo, let youtubeUrl = userInfo["youtubeUrl"] as? URL {
             _ = VideoService.addForeignUrls([youtubeUrl], in: .inbox)
         }

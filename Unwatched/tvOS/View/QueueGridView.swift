@@ -48,7 +48,7 @@ struct QueueGridView: View {
             Button("cancel", role: .cancel) { }
             Button {
                 guard let url = URL(string: "https://apps.apple.com/app/id544007664") else {
-                    print("YouTube App Store URL not working")
+                    Log.warning("YouTube App Store URL not working")
                     return
                 }
                 UIApplication.shared.open(
@@ -64,7 +64,7 @@ struct QueueGridView: View {
 
     func openYouTube(_ id: String?) async -> Bool {
         guard let id, let appURL = URL(string: "youtube://watch/\(id)") else {
-            print("Invalid YouTube URL: \(id ?? "NIL")")
+            Log.warning("Invalid YouTube URL: \(id ?? "NIL")")
             return false
         }
 

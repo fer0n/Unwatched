@@ -174,7 +174,7 @@ final class ScrubberThumbnailProvider {
         guard videoId != loadedVideoId else { return }
         reset()
         loadedVideoId = videoId
-        Log.info("[Storyboard] loading for \(videoId)")
+        Log.player.info("[Storyboard] loading for \(videoId)")
         loadTask = Task { [weak self] in
             guard let self else { return }
             do {
@@ -182,15 +182,15 @@ final class ScrubberThumbnailProvider {
                 guard !Task.isCancelled, self.loadedVideoId == videoId else { return }
                 self.spec = spec
                 if let level = spec?.preferredLevel {
-                    Log.info("[Storyboard] ready for \(videoId): \(spec?.levels.count ?? 0) level(s); "
+                    Log.player.info("[Storyboard] ready for \(videoId): \(spec?.levels.count ?? 0) level(s); "
                                 + "using \(level.thumbWidth)x\(level.thumbHeight), \(level.totalFrames) frames, "
                                 + "grid \(level.cols)x\(level.rows)")
                 } else {
-                    Log.warning("[Storyboard] no usable spec for \(videoId)")
+                    Log.player.warning("[Storyboard] no usable spec for \(videoId)")
                 }
             } catch {
                 guard !Task.isCancelled else { return }
-                Log.error("[Storyboard] fetch failed for \(videoId): \(error.localizedDescription)")
+                Log.player.error("[Storyboard] fetch failed for \(videoId): \(error.localizedDescription)")
             }
         }
     }
@@ -215,18 +215,18 @@ final class ScrubberThumbnailProvider {
             sheet = cached
         } else {
             guard let downloaded = await Self.downloadImage(tile.sheetURL) else {
-                Log.error("[Storyboard] sheet download/decode failed: \(tile.sheetURL.absoluteString)")
+                Log.player.error("[Storyboard] sheet download/decode failed: \(tile.sheetURL.absoluteString)")
                 return nil
             }
             if Task.isCancelled { return nil }
             sheetCache.setObject(downloaded, forKey: key, cost: downloaded.width * downloaded.height * 4)
-            Log.info("[Storyboard] downloaded sheet \(downloaded.width)x\(downloaded.height): \(tile.sheetURL.lastPathComponent)")
+            Log.player.info("[Storyboard] downloaded sheet \(downloaded.width)x\(downloaded.height): \(tile.sheetURL.lastPathComponent)")
             sheet = downloaded
         }
         // The final sheet of a level is often partially filled — guard the crop rect.
         let bounds = CGRect(x: 0, y: 0, width: sheet.width, height: sheet.height)
         guard bounds.contains(tile.cropRect) else {
-            Log.warning("[Storyboard] crop \(tile.cropRect.debugDescription) out of bounds for "
+            Log.player.warning("[Storyboard] crop \(tile.cropRect.debugDescription) out of bounds for "
                             + "sheet \(sheet.width)x\(sheet.height) (frame \(tile.frameIndex))")
             return nil
         }

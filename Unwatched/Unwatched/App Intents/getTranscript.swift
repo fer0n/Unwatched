@@ -121,7 +121,7 @@ struct GetTranscript: AppIntent {
             }
             try await Task.sleep(for: .milliseconds(200))
         }
-        Log.info("transcript generation still running, telling the shortcut to come back for it")
+        Log.chapters.info("transcript generation still running, telling the shortcut to come back for it")
         return .pending(retryAfterSeconds: Self.estimateRetryDelay(progress: coordinator.progress))
     }
 

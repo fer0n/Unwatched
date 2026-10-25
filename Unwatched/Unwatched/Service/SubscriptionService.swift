@@ -45,7 +45,7 @@ struct SubscriptionService {
 
     static func addSubscription(subscriptionInfo: SubscriptionInfo? = nil,
                                 subscriptionId: PersistentIdentifier? = nil) async throws {
-        Log.info("addSubscription")
+        Log.refresh.info("addSubscription")
         guard subscriptionInfo != nil || subscriptionId != nil else {
             throw SubscriptionError.noInfoFoundToSubscribeTo
         }
@@ -101,7 +101,7 @@ struct SubscriptionService {
             $0.isArchived == false
         })
         guard let subs = try? modelContext.fetch(fetch) else {
-            Log.info("softUnsubscribeAll: no subscriptions found")
+            Log.refresh.info("softUnsubscribeAll: no subscriptions found")
             return
         }
         for sub in subs {
@@ -114,7 +114,7 @@ struct SubscriptionService {
     /// `ChapterSkippingSettings.stopSkipping`.
     static func stopSkippingSegments(_ modelContext: ModelContext) {
         guard let subs = try? modelContext.fetch(FetchDescriptor<Subscription>()) else {
-            Log.info("stopSkippingSegments: no subscriptions found")
+            Log.refresh.info("stopSkippingSegments: no subscriptions found")
             return
         }
         for sub in subs {
@@ -134,7 +134,7 @@ struct SubscriptionService {
             do {
                 try await repo.cleanupArchivedSubscriptions()
             } catch {
-                Log.error("cleanupArchivedSubscriptions: \(error)")
+                Log.refresh.error("cleanupArchivedSubscriptions: \(error)")
             }
         }
     }

@@ -1,7 +1,4 @@
 import Foundation
-import OSLog
-
-private let tubeLog = Logger(subsystem: appSubsystem, category: "InnerTube")
 
 // MARK: - Text extraction helpers
 
@@ -70,35 +67,35 @@ extension InnerTubeAPI {
         switch title.lowercased() {
         case "today":
             let d = startOfToday
-            tubeLog.notice("parseSectionDate '\(title, privacy: .public)' → today (\(fmt(d), privacy: .public))")
+            Log.innerTube.notice("parseSectionDate '\(title)' → today (\(fmt(d)))")
             return d
         case "yesterday":
             let d = cal.date(byAdding: .day, value: -1, to: startOfToday)
-            tubeLog.notice("parseSectionDate '\(title, privacy: .public)' → -1d (\(fmt(d), privacy: .public))")
+            Log.innerTube.notice("parseSectionDate '\(title)' → -1d (\(fmt(d)))")
             return d
         case "this week":
             let d = cal.date(byAdding: .day, value: -4, to: startOfToday)
-            tubeLog.notice("parseSectionDate '\(title, privacy: .public)' → -4d (\(fmt(d), privacy: .public))")
+            Log.innerTube.notice("parseSectionDate '\(title)' → -4d (\(fmt(d)))")
             return d
         case "last week":
             let d = cal.date(byAdding: .day, value: -10, to: startOfToday)
-            tubeLog.notice("parseSectionDate '\(title, privacy: .public)' → -10d (\(fmt(d), privacy: .public))")
+            Log.innerTube.notice("parseSectionDate '\(title)' → -10d (\(fmt(d)))")
             return d
         case "earlier this month":
             let d = cal.date(byAdding: .day, value: -15, to: startOfToday)
-            tubeLog.notice("parseSectionDate '\(title, privacy: .public)' → -15d (\(fmt(d), privacy: .public))")
+            Log.innerTube.notice("parseSectionDate '\(title)' → -15d (\(fmt(d)))")
             return d
         case "this month":
             let d = cal.date(byAdding: .day, value: -7, to: startOfToday)
-            tubeLog.notice("parseSectionDate '\(title, privacy: .public)' → -7d (\(fmt(d), privacy: .public))")
+            Log.innerTube.notice("parseSectionDate '\(title)' → -7d (\(fmt(d)))")
             return d
         case "last month":
             let d = cal.date(byAdding: .month, value: -1, to: startOfToday)
-            tubeLog.notice("parseSectionDate '\(title, privacy: .public)' → -1mo (\(fmt(d), privacy: .public))")
+            Log.innerTube.notice("parseSectionDate '\(title)' → -1mo (\(fmt(d)))")
             return d
         default:
             let d = parseRelativeDate(title)
-            tubeLog.notice("parseSectionDate '\(title, privacy: .public)' → relativeDate fallback → \(fmt(d), privacy: .public)")
+            Log.innerTube.notice("parseSectionDate '\(title)' → relativeDate fallback → \(fmt(d))")
             return d
         }
     }
@@ -113,10 +110,10 @@ extension InnerTubeAPI {
         formatter.locale = Locale(identifier: "en_US_POSIX")
         formatter.dateFormat = "M/d/yy, h:mm a"
         if let date = formatter.date(from: stripped) {
-            tubeLog.notice("parseScheduledDate '\(text, privacy: .public)' → \(ISO8601DateFormatter().string(from: date), privacy: .public)")
+            Log.innerTube.notice("parseScheduledDate '\(text)' → \(ISO8601DateFormatter().string(from: date))")
             return date
         }
-        tubeLog.notice("parseScheduledDate '\(text, privacy: .public)' → no match")
+        Log.innerTube.notice("parseScheduledDate '\(text)' → no match")
         return nil
     }
 
@@ -131,7 +128,7 @@ extension InnerTubeAPI {
               let unitRange = Range(match.range(at: 2), in: stripped),
               let value = Int(stripped[valueRange])
         else {
-            tubeLog.notice("parseRelativeDate '\(text, privacy: .public)' → no regex match")
+            Log.innerTube.notice("parseRelativeDate '\(text)' → no regex match")
             return nil
         }
         let unit = String(stripped[unitRange])
@@ -147,7 +144,7 @@ extension InnerTubeAPI {
         default:       return nil
         }
         let result = Date(timeIntervalSinceNow: -seconds)
-        tubeLog.notice("parseRelativeDate '\(text, privacy: .public)' → \(value, privacy: .public) \(unit, privacy: .public)(s) ago → \(ISO8601DateFormatter().string(from: result), privacy: .public)")
+        Log.innerTube.notice("parseRelativeDate '\(text)' → \(value) \(unit)(s) ago → \(ISO8601DateFormatter().string(from: result))")
         return result
     }
 

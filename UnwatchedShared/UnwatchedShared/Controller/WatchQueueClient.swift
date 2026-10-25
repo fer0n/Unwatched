@@ -77,7 +77,7 @@ public final class WatchQueueClient: NSObject, WCSessionDelegate {
         error: (any Error)?
     ) {
         if let error {
-            Log.error("watch queue: session activation failed: \(error.localizedDescription)")
+            Log.sync.error("watch queue: session activation failed: \(error.localizedDescription)")
         }
         // The latest context is waiting whether or not this app was running when it was sent.
         apply(context: session.receivedApplicationContext)
@@ -205,7 +205,7 @@ public final class WatchQueueClient: NSObject, WCSessionDelegate {
                     continuation.resume()
                 }
             } errorHandler: { error in
-                Log.error("watch remote: \(error.localizedDescription)")
+                Log.sync.error("watch remote: \(error.localizedDescription)")
                 continuation.resume()
             }
         }
@@ -246,9 +246,9 @@ public final class WatchQueueClient: NSObject, WCSessionDelegate {
             try WatchQueueStore.replace(with: snapshot)
             lastUpdate = snapshot.createdDate
             UserDefaults.standard.set(snapshot.createdDate, forKey: Const.watchQueueUpdatedDate)
-            Log.info("watch queue: imported \(snapshot.items.count) items")
+            Log.sync.info("watch queue: imported \(snapshot.items.count) items")
         } catch {
-            Log.error("watch queue: request failed: \(error)")
+            Log.sync.error("watch queue: request failed: \(error)")
             if userInitiated {
                 lastError = error.localizedDescription
             }
@@ -274,7 +274,7 @@ public final class WatchQueueClient: NSObject, WCSessionDelegate {
         do {
             try WatchQueueStore.clear()
         } catch {
-            Log.error("watch queue: could not clear the snapshot store: \(error)")
+            Log.sync.error("watch queue: could not clear the snapshot store: \(error)")
         }
         lastUpdate = nil
     }
@@ -289,9 +289,9 @@ public final class WatchQueueClient: NSObject, WCSessionDelegate {
             )
             self.totals = totals
             UserDefaults.standard.set(try totals.encoded(), forKey: Const.watchSyncTotals)
-            Log.info("watch queue: iPhone holds \(totals.total) rows")
+            Log.sync.info("watch queue: iPhone holds \(totals.total) rows")
         } catch {
-            Log.error("watch queue: totals request failed: \(error)")
+            Log.sync.error("watch queue: totals request failed: \(error)")
         }
     }
 

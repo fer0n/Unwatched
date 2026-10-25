@@ -80,7 +80,7 @@ struct NotificationManager {
         let center = UNUserNotificationCenter.current()
         let pending = await center.pendingNotificationRequests()
 
-        print("pending", pending)
+        Log.debug("cancelNotificationForVideo pending: \(pending)")
 
         let matchingRequests = pending.filter { request in
             request.content.userInfo[Const.notificationVideoId] as? String == youtubeId

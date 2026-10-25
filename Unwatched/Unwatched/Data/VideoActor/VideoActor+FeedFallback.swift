@@ -40,7 +40,7 @@ extension VideoActor {
             return channelIds.insert(channelId).inserted
         }
         guard !subs.isEmpty else { return [] }
-        Log.info("fetchFallbackVideos: \(subs.count) channels via InnerTube")
+        Log.refresh.info("fetchFallbackVideos: \(subs.count) channels via InnerTube")
 
         let api = InnerTubeAPI()
         var results = [FetchResult]()
@@ -55,7 +55,7 @@ extension VideoActor {
             results += batchResults
             if batchResults.isEmpty || Task.isCancelled { break }
         }
-        Log.info("fetchFallbackVideos: \(results.count)/\(subs.count) channels, \(results.flatMap(\.videos).count) videos")
+        Log.refresh.info("fetchFallbackVideos: \(results.count)/\(subs.count) channels, \(results.flatMap(\.videos).count) videos")
         return results
     }
 
@@ -76,7 +76,7 @@ extension VideoActor {
             FeedFallbackState.record(channelId: channelId, cutoff: cutoff, delivered: videos.map(\.youtubeId))
             return FetchResult(sub: sub, videos: videos, errorMessage: nil, isFallback: true)
         } catch {
-            Log.warning("loadFallbackVideos failed for \(sub.title): \(error)")
+            Log.refresh.warning("loadFallbackVideos failed for \(sub.title): \(error)")
             return nil
         }
     }

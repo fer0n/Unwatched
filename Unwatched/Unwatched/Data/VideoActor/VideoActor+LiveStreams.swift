@@ -28,7 +28,7 @@ extension VideoActor {
                 rememberLiveStreams(found)
                 liveIds.formUnion(found)
             } catch {
-                Log.warning("filterLiveStreams failed for \(channelId): \(error)")
+                Log.refresh.warning("filterLiveStreams failed for \(channelId): \(error)")
             }
         }
         return videos.filter { !liveIds.contains($0.youtubeId) }

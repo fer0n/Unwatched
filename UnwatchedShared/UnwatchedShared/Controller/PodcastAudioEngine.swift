@@ -102,7 +102,7 @@ public final class PodcastAudioEngine: @unchecked Sendable {
             file.framePosition = frame
             remover = SilenceRemover(format: format, startingAt: frame)
             move(to: frame, playingFrom: nil)
-            Log.info("podcast engine: \(Int(self.duration))s at \(Int(format.sampleRate))Hz, from \(Int(startAt))s")
+            Log.player.info("podcast engine: \(Int(self.duration))s at \(Int(format.sampleRate))Hz, from \(Int(startAt))s")
         }
     }
 
@@ -233,7 +233,7 @@ public final class PodcastAudioEngine: @unchecked Sendable {
                 do {
                     try file.read(into: readBuffer, frameCount: readBuffer.frameCapacity)
                 } catch {
-                    Log.error("podcast engine: read failed — \(error.localizedDescription)")
+                    Log.player.error("podcast engine: read failed — \(error.localizedDescription)")
                     readBuffer.frameLength = 0
                 }
             } else {
@@ -257,7 +257,7 @@ public final class PodcastAudioEngine: @unchecked Sendable {
             interleaved, at: CMTime(value: start, timescale: CMTimeScale(rate.rounded())),
             formatDescription: formatDescription
         ) else {
-            Log.error("podcast engine: a chunk could not be wrapped for the renderer")
+            Log.player.error("podcast engine: a chunk could not be wrapped for the renderer")
             return
         }
         lock.withLock {
@@ -275,7 +275,7 @@ public final class PodcastAudioEngine: @unchecked Sendable {
         do {
             try interleaver.convert(to: buffer, from: source)
         } catch {
-            Log.error("podcast engine: interleaving failed — \(error.localizedDescription)")
+            Log.player.error("podcast engine: interleaving failed — \(error.localizedDescription)")
             return nil
         }
         return buffer
@@ -345,7 +345,7 @@ public final class PodcastAudioEngine: @unchecked Sendable {
         let (rate, lead) = lock.withLock { (sampleRate, AVAudioFramePosition(sampleRate * Self.flushLead)) }
         let output = playedFrames + lead
         let episode = fileFrame(atOutput: output)
-        Log.info("podcast engine: renderer flushed, resuming at \(Int(Double(episode) / max(rate, 1)))s")
+        Log.player.info("podcast engine: renderer flushed, resuming at \(Int(Double(episode) / max(rate, 1)))s")
         file.framePosition = min(episode, lock.withLock { length })
         remover.reset(startingAt: episode)
         move(to: episode, playingFrom: output)

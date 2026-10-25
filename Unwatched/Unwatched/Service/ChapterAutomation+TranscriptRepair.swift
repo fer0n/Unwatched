@@ -30,7 +30,7 @@ extension ChapterAutomation {
             return .unavailable
         }
         guard drifted else { return .inSync }
-        Log.info("ChapterAutomation: aligning \(video.youtubeId)")
+        Log.chapters.info("ChapterAutomation: aligning \(video.youtubeId)")
         let aligned = try await TranscriptService.alignTranscript(for: video) { _ in }.value
         if let alignment = aligned.alignment {
             await GapChapterService.insertGapChapters(for: video, alignment: alignment, transcript: aligned.entries)
@@ -42,7 +42,7 @@ extension ChapterAutomation {
         let payload = await TranscriptService.podcastTranscriptPayload(for: video).value
         guard repair else { return payload.entries }
         if payload.entries.isEmpty && TranscriptService.canGenerateTranscript {
-            Log.info("ChapterAutomation: generating the missing transcript for \(video.youtubeId)")
+            Log.chapters.info("ChapterAutomation: generating the missing transcript for \(video.youtubeId)")
             return try await TranscriptService.GenerationCoordinator.shared.generate(for: video).value
         }
         if needsAlignmentCheck(payload) {

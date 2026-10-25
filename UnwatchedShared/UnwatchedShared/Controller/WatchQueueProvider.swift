@@ -97,7 +97,7 @@ public final class WatchQueueProvider: NSObject, WCSessionDelegate {
                     [WatchRemoteState.payloadKey: try state.encoded()]
                 )
             } catch {
-                Log.error("watch remote: could not push state: \(error)")
+                Log.sync.error("watch remote: could not push state: \(error)")
             }
         }
     }
@@ -127,9 +127,9 @@ public final class WatchQueueProvider: NSObject, WCSessionDelegate {
         error: (any Error)?
     ) {
         if let error {
-            Log.error("watch queue: session activation failed: \(error.localizedDescription)")
+            Log.sync.error("watch queue: session activation failed: \(error.localizedDescription)")
         }
-        Log.info(
+        Log.sync.info(
             "watch queue: session \(activationState.rawValue)"
                 + " paired=\(session.isPaired) watchApp=\(session.isWatchAppInstalled)"
         )
@@ -226,7 +226,7 @@ public final class WatchQueueProvider: NSObject, WCSessionDelegate {
             }
             lastVolumeSend = .now
             session.sendMessage(WatchRemoteVolume.message(value), replyHandler: nil) { error in
-                Log.error("watch remote: could not send the volume: \(error.localizedDescription)")
+                Log.sync.error("watch remote: could not send the volume: \(error.localizedDescription)")
             }
         }
     }
@@ -239,7 +239,7 @@ public final class WatchQueueProvider: NSObject, WCSessionDelegate {
             do {
                 replyHandler(try await build().message())
             } catch {
-                Log.error("watch queue: could not answer request: \(error)")
+                Log.sync.error("watch queue: could not answer request: \(error)")
                 replyHandler([:])
             }
         }

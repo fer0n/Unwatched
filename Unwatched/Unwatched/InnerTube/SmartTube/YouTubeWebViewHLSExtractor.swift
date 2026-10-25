@@ -4,8 +4,6 @@ import JavaScriptCore
 import os
 import UnwatchedShared
 
-private let extractLog = Logger(subsystem: appSubsystem, category: "WebViewHLS")
-
 /// Extracts a YouTube HLS manifest URL by loading the YouTube watch page in a hidden
 /// WKWebView and intercepting the YouTube JavaScript player's internal `youtubei/v1/player`
 /// network call.
@@ -86,7 +84,7 @@ final class YouTubeWebViewHLSExtractor: NSObject {
         extractionGeneration &+= 1
         currentExtractionVideoId = videoId
 
-        extractLog.notice("⚠️ [webView] starting HLS extraction for \(videoId as NSString)")
+        Log.hls.notice("⚠️ [webView] starting HLS extraction for \(videoId as NSString)")
 
         return await withCheckedContinuation { (cont: CheckedContinuation<URL?, Never>) in
             self.continuation = cont
@@ -146,7 +144,7 @@ final class YouTubeWebViewHLSExtractor: NSObject {
                 ]
                 if let socsCookie = HTTPCookie(properties: socsCookieProps) {
                     config.websiteDataStore.httpCookieStore.setCookie(socsCookie)
-                    extractLog.notice("[webView/HLS] SOCS consent cookie pre-seeded for .youtube.com")
+                    Log.hls.notice("[webView/HLS] SOCS consent cookie pre-seeded for .youtube.com")
                 }
 
                 // Non-zero off-screen frame so the compositor renders the video element,
@@ -162,7 +160,7 @@ final class YouTubeWebViewHLSExtractor: NSObject {
             }
 
             guard let url = URL(string: "https://www.youtube.com/watch?v=\(videoId)") else {
-                extractLog.error("❌ [webView] invalid videoId: \(videoId as NSString)")
+                Log.hls.error("❌ [webView] invalid videoId: \(videoId as NSString)")
                 cont.resume(returning: Optional<URL>.none)
                 self.continuation = nil
                 return
@@ -181,7 +179,7 @@ final class YouTubeWebViewHLSExtractor: NSObject {
             self.timeoutTask = Task { @MainActor [weak self] in
                 try? await Task.sleep(nanoseconds: UInt64(timeoutSeconds * 1_000_000_000))
                 guard let self, self.extractionGeneration == myGeneration else { return }
-                extractLog.notice("⚠️ [webView] timed out for \(videoId as NSString)")
+                Log.hls.notice("⚠️ [webView] timed out for \(videoId as NSString)")
                 self.finish(url: Optional<URL>.none)
             }
         }
@@ -216,7 +214,7 @@ final class YouTubeWebViewHLSExtractor: NSObject {
         pendingSerialTaskVideoId = videoId
         let newTask = Task { @MainActor [weak self] in
             guard let self else { return Optional<URL>.none }
-            extractLog.notice("[webView] priorityExtract(\(videoId as NSString)): starting immediately (user tap, bypasses chain)")
+            Log.hls.notice("[webView] priorityExtract(\(videoId as NSString)): starting immediately (user tap, bypasses chain)")
             return await self.extractHLSURL(videoId: videoId)
         }
         pendingSerialTask = newTask
@@ -253,15 +251,15 @@ final class YouTubeWebViewHLSExtractor: NSObject {
             // caller's cache entry (fix10/preWarm) with the wrong stream.
             guard self.serialTaskEpoch == capturedEpoch else {
                 if self.pendingSerialTaskVideoId == videoId {
-                    extractLog.notice("[webView] serialExtract(\(videoId as NSString)): stale epoch, same video — yielding to priority task")
+                    Log.hls.notice("[webView] serialExtract(\(videoId as NSString)): stale epoch, same video — yielding to priority task")
                     return await self.pendingSerialTask?.value
                 } else {
                     let priorityId = self.pendingSerialTaskVideoId ?? "nil"
-                    extractLog.notice("[webView] serialExtract(\(videoId as NSString)): stale epoch, priority is for different video (\(priorityId as NSString)) — returning nil to prevent cache poisoning")
+                    Log.hls.notice("[webView] serialExtract(\(videoId as NSString)): stale epoch, priority is for different video (\(priorityId as NSString)) — returning nil to prevent cache poisoning")
                     return nil
                 }
             }
-            extractLog.notice("[webView] serialExtract(\(videoId as NSString)): starting (previous task done)")
+            Log.hls.notice("[webView] serialExtract(\(videoId as NSString)): starting (previous task done)")
             return await self.extractHLSURL(videoId: videoId)
         }
         pendingSerialTask = newTask
@@ -282,7 +280,7 @@ final class YouTubeWebViewHLSExtractor: NSObject {
               let coreURL = Bundle.main.url(forResource: "yt.solver.core.min", withExtension: "js"),
               let libCode  = try? String(contentsOf: libURL,  encoding: .utf8),
               let coreCode = try? String(contentsOf: coreURL, encoding: .utf8) else {
-            extractLog.warning("⚠️ [webView] EJS solver scripts not found in bundle")
+            Log.hls.warning("⚠️ [webView] EJS solver scripts not found in bundle")
             return nil
         }
         let bridgeCode = "var meriyah = (typeof lib !== 'undefined' && lib.meriyah) || undefined; " +
@@ -641,7 +639,7 @@ final class YouTubeWebViewHLSExtractor: NSObject {
         // path and would cause a 404 on manifest fetch. The URL is passed unchanged.
         extractedPoToken = (poToken?.isEmpty == false) ? poToken : nil
         if let pot = poToken, !pot.isEmpty {
-            extractLog.notice("[webView] pot= token extracted (\(pot.count) chars) — stored in extractedPoToken")
+            Log.hls.notice("[webView] pot= token extracted (\(pot.count) chars) — stored in extractedPoToken")
         }
         finish(url: url)
     }
@@ -655,7 +653,7 @@ final class YouTubeWebViewHLSExtractor: NSObject {
               let coreURL = Bundle.main.url(forResource: "yt.solver.core.min", withExtension: "js"),
               let libCode  = try? String(contentsOf: libURL,  encoding: .utf8),
               let coreCode = try? String(contentsOf: coreURL, encoding: .utf8) else {
-            extractLog.warning("⚠️ [solver] EJS scripts not found in bundle")
+            Log.hls.warning("⚠️ [solver] EJS scripts not found in bundle")
             return nil
         }
 
@@ -671,17 +669,17 @@ final class YouTubeWebViewHLSExtractor: NSObject {
             guard let playerURL = URL(string:
                 "https://www.youtube.com/s/player/\(playerID)/player_es6.vflset/en_US/base.js"
             ) else { return nil }
-            extractLog.notice("⚠️ [solver] downloading player JS for \(playerID as NSString)")
+            Log.hls.notice("⚠️ [solver] downloading player JS for \(playerID as NSString)")
             guard let (data, _) = try? await URLSession.app.data(from: playerURL),
                   !data.isEmpty,
                   let js = String(data: data, encoding: .utf8) else {
-                extractLog.warning("⚠️ [solver] player JS download failed")
+                Log.hls.warning("⚠️ [solver] player JS download failed")
                 return nil
             }
             try? js.write(toFile: tmpPlayerPath, atomically: true, encoding: .utf8)
             playerJS = js
         }
-        extractLog.notice("⚠️ [solver] running JSC EJS solver, n=\(unsolvedN as NSString)")
+        Log.hls.notice("⚠️ [solver] running JSC EJS solver, n=\(unsolvedN as NSString)")
 
         // Run the JSContext solver on a detached background task — JSContext is not
         // Sendable and must be created and consumed on the same thread.
@@ -712,7 +710,7 @@ final class YouTubeWebViewHLSExtractor: NSObject {
             """)
 
             if let err = jsError {
-                extractLog.error("❌ [solver/JSC] exception: \(err as NSString)")
+                Log.hls.error("❌ [solver/JSC] exception: \(err as NSString)")
             }
             let solved = result?.toString()
             guard let s = solved, !s.isEmpty, s != "null", s != "undefined", s != unsolvedN else {
@@ -746,7 +744,7 @@ final class YouTubeWebViewHLSExtractor: NSObject {
             return
         }
 
-        extractLog.notice("✅ [webView] hlsManifestUrl extracted url=\(String(url.absoluteString.prefix(200)) as NSString)")
+        Log.hls.notice("✅ [webView] hlsManifestUrl extracted url=\(String(url.absoluteString.prefix(200)) as NSString)")
 
         // Sync the CDN-relevant cookies into the app's own jar NOW (page-load cookies are
         // already set by the time the player makes its /player call), so the proxy loader can
@@ -765,7 +763,7 @@ final class YouTubeWebViewHLSExtractor: NSObject {
                     let sharable = YoutubeCookieFilter.sharable(cookies)
                     let gvCount = sharable.filter(\.isYoutubeCdnDomain).count
                     let names = sharable.map { "\($0.name)@\($0.domain)" }.joined(separator: " ")
-                    extractLog.notice("[webView] syncing \(sharable.count)/\(cookies.count) cookies (\(gvCount) googlevideo): \(names as NSString)")
+                    Log.hls.notice("[webView] syncing \(sharable.count)/\(cookies.count) cookies (\(gvCount) googlevideo): \(names as NSString)")
                     for cookie in sharable {
                         HTTPCookieStorage.shared.setCookie(cookie)
                     }
@@ -778,7 +776,7 @@ final class YouTubeWebViewHLSExtractor: NSObject {
             // Only restore if a newer extraction hasn't already set a different solver.
             if self.extractedNSolver == nil, let capturedNSolver {
                 self.extractedNSolver = capturedNSolver
-                extractLog.notice("[webView/fixNSolver] nSolver snapshot restored before resume: \(capturedNSolver.unsolved as NSString) → \(capturedNSolver.solved as NSString)")
+                Log.hls.notice("[webView/fixNSolver] nSolver snapshot restored before resume: \(capturedNSolver.unsolved as NSString) → \(capturedNSolver.solved as NSString)")
             }
             // fix17: Keep WKWebView alive — don't nil it out on success.
             // The persistent WKWebView is immediately ready for the next extraction.
@@ -809,7 +807,7 @@ extension YouTubeWebViewHLSExtractor: WKScriptMessageHandler {
                let json = try? JSONSerialization.jsonObject(with: data) as? [String: Any] {
                 // Consent-wall detection message: SOCS cookie pre-seeding did not work.
                 if let consentWall = json["consentWallDetected"] as? Bool, consentWall {
-                    extractLog.warning("⚠️ [webView/HLS] consent wall detected — SOCS cookie bypass did not prevent EU GDPR dialog; hlsManifestUrl will not arrive")
+                    Log.hls.warning("⚠️ [webView/HLS] consent wall detected — SOCS cookie bypass did not prevent EU GDPR dialog; hlsManifestUrl will not arrive")
                     return
                 }
                 hlsURLString = json["hlsManifestUrl"] as? String
@@ -826,7 +824,7 @@ extension YouTubeWebViewHLSExtractor: WKScriptMessageHandler {
                 if let msgVid = json["videoId"] as? String,
                    let curVid = currentExtractionVideoId,
                    msgVid != curVid {
-                    extractLog.warning("⚠️ [webView/fix29] stale JS callback: videoId=\(msgVid as NSString) != current=\(curVid as NSString) — ignoring")
+                    Log.hls.warning("⚠️ [webView/fix29] stale JS callback: videoId=\(msgVid as NSString) != current=\(curVid as NSString) — ignoring")
                     return
                 }
             } else {
@@ -841,19 +839,19 @@ extension YouTubeWebViewHLSExtractor: WKScriptMessageHandler {
             return
         }
 
-        extractLog.notice("⚠️ [webView] URL captured source=\(urlSource as NSString)")
+        Log.hls.notice("⚠️ [webView] URL captured source=\(urlSource as NSString)")
 
         // If the JS interceptor already solved the n-challenge, use it directly.
         if let u = unsolvedNValue, let s = solvedNValue, u != s {
             extractedNSolver = (unsolved: u, solved: s)
-            extractLog.notice("✅ [webView] n-challenge solved in JS: \(u as NSString) → \(s as NSString)")
+            Log.hls.notice("✅ [webView] n-challenge solved in JS: \(u as NSString) → \(s as NSString)")
             finishWithURL(url, poToken: poToken)
             return
         }
 
         // JS solver was not available — try solving on the Swift side via Node.js.
         if let playerID = playerIDValue, let unsolvedN = unsolvedNValue, !unsolvedN.isEmpty {
-                extractLog.notice("⚠️ [webView] JS solver unavailable; launching JSC solver for playerID=\(playerID as NSString) n=\(unsolvedN as NSString)")
+                Log.hls.notice("⚠️ [webView] JS solver unavailable; launching JSC solver for playerID=\(playerID as NSString) n=\(unsolvedN as NSString)")
             let capturedURL    = url
             let capturedPoToken = poToken
             // fix239: capture generation so we can detect if a new extraction started
@@ -867,15 +865,15 @@ extension YouTubeWebViewHLSExtractor: WKScriptMessageHandler {
                 }.value
                 // fix239: reject if a new extraction started while we were solving
                 guard self.extractionGeneration == myGeneration else {
-                    extractLog.warning("⚠️ [webView/fix239] stale JSC solver result discarded — generation was \(myGeneration) now \(self.extractionGeneration) n=\(unsolvedN as NSString)")
+                    Log.hls.warning("⚠️ [webView/fix239] stale JSC solver result discarded — generation was \(myGeneration) now \(self.extractionGeneration) n=\(unsolvedN as NSString)")
                     return
                 }
                 if let s = solved, !s.isEmpty, s != unsolvedN {
                     self.extractedNSolver = (unsolved: unsolvedN, solved: s)
-                    extractLog.notice("✅ [webView] n solved via JSC: \(unsolvedN as NSString) → \(s as NSString)")
+                    Log.hls.notice("✅ [webView] n solved via JSC: \(unsolvedN as NSString) → \(s as NSString)")
                 } else {
                     self.extractedNSolver = nil
-                    extractLog.notice("⚠️ [webView] JSC solver returned nil/same for n=\(unsolvedN as NSString)")
+                    Log.hls.notice("⚠️ [webView] JSC solver returned nil/same for n=\(unsolvedN as NSString)")
                 }
                 self.finishWithURL(capturedURL, poToken: capturedPoToken)
             }
@@ -885,10 +883,10 @@ extension YouTubeWebViewHLSExtractor: WKScriptMessageHandler {
         // No n-challenge found or no player ID available.
         if let u = unsolvedNValue {
             extractedNSolver = nil
-            extractLog.notice("⚠️ [webView] n NOT solved (no playerID available): unsolvedN=\(u as NSString)")
+            Log.hls.notice("⚠️ [webView] n NOT solved (no playerID available): unsolvedN=\(u as NSString)")
         } else {
             extractedNSolver = nil
-            extractLog.notice("⚠️ [webView] no n-challenge found in HLS manifest")
+            Log.hls.notice("⚠️ [webView] no n-challenge found in HLS manifest")
         }
         finishWithURL(url, poToken: poToken)
     }
@@ -905,7 +903,7 @@ extension YouTubeWebViewHLSExtractor: WKNavigationDelegate {
         // between sequential extractions on the reused WKWebView.
         let nsError = error as NSError
         guard nsError.code != NSURLErrorCancelled else { return }
-        extractLog.error("❌ [webView] navigation failed: \(error.localizedDescription as NSString)")
+        Log.hls.error("❌ [webView] navigation failed: \(error.localizedDescription as NSString)")
         finish(url: Optional<URL>.none)
     }
 
@@ -916,7 +914,7 @@ extension YouTubeWebViewHLSExtractor: WKNavigationDelegate {
         // between sequential extractions on the reused WKWebView.
         let nsError = error as NSError
         guard nsError.code != NSURLErrorCancelled else { return }
-        extractLog.error("❌ [webView] provisional navigation failed: \(error.localizedDescription as NSString)")
+        Log.hls.error("❌ [webView] provisional navigation failed: \(error.localizedDescription as NSString)")
         finish(url: Optional<URL>.none)
     }
 }

@@ -134,7 +134,7 @@ struct AddToLibraryView: View {
     func addUrlsFromText(_ text: String,
                          playListAsVideos: Bool = false,
                          target: VideoPlacementArea = .queue) {
-        Log.info("addUrlsFromText: \(text)")
+        Log.info("addUrlsFromText: \(text)", sensitive: true)
         var (videoUrlsLocal, rest) = UrlService.extractVideoUrls(text)
 
         if playListAsVideos {

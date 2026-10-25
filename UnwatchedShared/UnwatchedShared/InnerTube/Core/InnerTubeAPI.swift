@@ -5,8 +5,6 @@ import Network
 import FoundationNetworking
 #endif
 
-private let tubeLog = Logger(subsystem: appSubsystem, category: "InnerTube")
-
 // MARK: - InnerTubeAPI
 //
 // Implements a subset of the unofficial YouTube InnerTube API used by
@@ -89,7 +87,7 @@ public actor InnerTubeAPI {
         if let pot = try? await provider.token(for: videoId) {
             poToken = pot
             poTokenVideoId = videoId
-            tubeLog.notice("[InnerTube] prefetchPoToken ✅ (len=\(pot.count)) for \(videoId, privacy: .public)")
+            Log.innerTube.notice("[InnerTube] prefetchPoToken ✅ (len=\(pot.count)) for \(videoId)")
         }
     }
 
@@ -311,14 +309,14 @@ public actor InnerTubeAPI {
         lastPathStatus = path.status
         guard path.status == .satisfied, prev == .satisfied else { return }
         visitorData = nil
-        tubeLog.notice("visitorData cleared — network path changed (VPN/WiFi transition)")
+        Log.innerTube.notice("visitorData cleared — network path changed (VPN/WiFi transition)")
     }
 
     // MARK: - Auth
 
     public func setAuthToken(_ token: String?) {
         let msg = token != nil ? "token(\(token!.prefix(8))…)" : "nil"
-        tubeLog.notice("setAuthToken: \(msg, privacy: .public)")
+        Log.innerTube.notice("setAuthToken: \(msg)")
         self.authToken = token
     }
 
@@ -326,7 +324,7 @@ public actor InnerTubeAPI {
     /// flow. Used by postWebCreator to compute the SAPISIDHASH Authorization header.
     public func setSAPISID(_ value: String?) {
         let msg = value != nil ? "present" : "nil"
-        tubeLog.notice("setSAPISID: \(msg, privacy: .public)")
+        Log.innerTube.notice("setSAPISID: \(msg)")
         self.sapisid = value
     }
 
@@ -341,6 +339,6 @@ public actor InnerTubeAPI {
     /// the next home-feed request uses YouTube's default shared recommendation algorithm.
     public func resetVisitorData() {
         visitorData = nil
-        tubeLog.notice("visitorData cleared (per-device recommendations disabled)")
+        Log.innerTube.notice("visitorData cleared (per-device recommendations disabled)")
     }
 }

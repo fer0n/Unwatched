@@ -128,7 +128,7 @@ import UnwatchedShared
         do {
             try await VideoCrawler.backfillPodcastEpisodes(feedUrl: feedUrl)
         } catch {
-            Log.error("backfillPodcastEpisodes: \(error)")
+            Log.podcasts.error("backfillPodcastEpisodes: \(error)")
         }
     }
 }

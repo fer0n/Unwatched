@@ -52,7 +52,7 @@ actor SubscriptionActor: SharedContextActor {
         // check if it already exists, if it does, subscribe
         if let id = subsciptionId, let sub = self[id, as: Subscription.self] {
             unarchive(sub)
-            Log.info("successfully subscribed via subId")
+            Log.refresh.info("successfully subscribed via subId")
             try modelContext.save()
             return
         }
@@ -112,7 +112,7 @@ actor SubscriptionActor: SharedContextActor {
         sendableSubs: [SendableSubscription] = []
     ) async throws -> [SubscriptionState] {
         var results = [(state: SubscriptionState, inserted: Subscription?)]()
-        Log.info("addSubscriptions")
+        Log.refresh.info("addSubscriptions")
         let hadNoPodcasts = hasNoPodcasts()
         try await withThrowingTaskGroup(of: (SubscriptionState, SendableSubscription?).self) { group in
             if !subscriptionInfo.isEmpty {
@@ -130,7 +130,7 @@ actor SubscriptionActor: SharedContextActor {
                             return (subState, sendableSub)
                         }
                     } else {
-                        Log.warning("channel info has no url")
+                        Log.refresh.warning("channel info has no url")
                         throw SubscriptionError.noInfoFoundToSubscribeTo
                     }
                 }
@@ -198,7 +198,7 @@ actor SubscriptionActor: SharedContextActor {
                                                                         channelId: channelId,
                                                                         userName: userName,
                                                                         playlistId: playlistId)
-        Log.info("getSubscription, feed: \(feedUrl.absoluteString)")
+        Log.refresh.info("getSubscription, feed: \(feedUrl.absoluteString)")
         var sendableSub = try await VideoCrawler.loadSubscriptionFromRSS(feedUrl: feedUrl)
         sendableSub.youtubeUserName = sendableSub.youtubeUserName ?? userName
         return sendableSub
@@ -210,7 +210,7 @@ actor SubscriptionActor: SharedContextActor {
         userName: String?,
         playlistId: String?
     ) async throws -> URL {
-        Log.info("getChannelFeedFromUrl: \(url.absoluteString)")
+        Log.refresh.info("getChannelFeedFromUrl: \(url.absoluteString)")
         if UrlService.isYoutubeFeedUrl(url: url) {
             return url
         }
@@ -329,7 +329,7 @@ actor SubscriptionActor: SharedContextActor {
             $0.isArchived == true
         })
         guard let subs = try? modelContext.fetch(fetch) else {
-            Log.info("cleanupArchivedSubscriptions: no subscriptions found")
+            Log.refresh.info("cleanupArchivedSubscriptions: no subscriptions found")
             return
         }
         try deleteSubscriptions(subs)

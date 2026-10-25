@@ -16,7 +16,7 @@ extension AVPlayerViewModel {
     func handleScheduledVideo(_ error: Error, videoId: String) -> Bool {
         guard case APIError.scheduled(let date) = error else { return false }
         guard player.video?.youtubeId == videoId else { return true }
-        Log.info("[AVPlayerView] scheduled video \(videoId): starts \(date?.formatted() ?? "unknown")")
+        Log.player.info("[AVPlayerView] scheduled video \(videoId): starts \(date?.formatted() ?? "unknown")")
         player.isLoading = nil
         player.pause()
         clearPendingReposition()
@@ -34,7 +34,7 @@ extension AVPlayerViewModel {
     func handleAgeRestrictedVideo(_ error: Error, videoId: String) -> Bool {
         guard case APIError.ageRestricted = error else { return false }
         guard player.video?.youtubeId == videoId else { return true }
-        Log.info("[AVPlayerView] age-restricted, no client can serve it: \(videoId)")
+        Log.player.info("[AVPlayerView] age-restricted, no client can serve it: \(videoId)")
         if !failPlayback(error) {
             player.pause()
         }
@@ -57,7 +57,7 @@ extension AVPlayerViewModel {
         #if os(iOS)
         // the page can't load without a screen
         guard player.nativeFallbackActive, !BackgroundMonitor.inBackground else { return false }
-        Log.info("[AVPlayerView] native fallback failed: handing off to the YouTube page")
+        Log.player.info("[AVPlayerView] native fallback failed: handing off to the YouTube page")
         player.nativeFallbackActive = false
         player.swapToWebsitePlayer(forceResume: true)
         player.restorePickedPlayer()

@@ -190,9 +190,9 @@ struct BrowserView: View, KeyboardReadable {
     }
 
     func handleSubscriptionInfoChanged(_ subscriptionInfo: SubscriptionInfo?) {
-        Log.info("handleSubscriptionInfoChanged")
+        Log.browser.info("handleSubscriptionInfoChanged")
         guard let info = subscriptionInfo else {
-            Log.info("no subscriptionInfo after change")
+            Log.browser.info("no subscriptionInfo after change")
             return
         }
         let task = SubscriptionService.isSubscribed(channelId: info.channelId,
@@ -211,7 +211,7 @@ struct BrowserView: View, KeyboardReadable {
             } else if let userName = info.userName {
                 sub = SubscriptionService.getRegularChannel(userName: userName)
             } else {
-                Log.info("Neither channelId nor userName to update values")
+                Log.browser.info("Neither channelId nor userName to update values")
             }
 
             if let url = sub?.thumbnailUrl?.absoluteString {
@@ -229,10 +229,10 @@ struct BrowserView: View, KeyboardReadable {
     }
 
     func handleSubscriptionChange(_ info: SubscriptionInfo?) async {
-        Log.info("handleSubscriptionChange")
+        Log.browser.info("handleSubscriptionChange")
         guard let isSubscribed = subscribeManager.isSubscribedSuccess,
               let subscriptionInfo = info else {
-            Log.info("handleAddSubButton without info/isSubscribed")
+            Log.browser.info("handleAddSubButton without info/isSubscribed")
             return
         }
         if isSubscribed {

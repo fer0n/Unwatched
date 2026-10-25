@@ -57,7 +57,7 @@ enum WatchStreamResolver {
                 let info = try await attempt.fetch()
                 if let url = info.preferredStreamURL { muxed.append(url) }
                 if let url = info.bestAdaptiveAudioURL { audioOnly.append(url) }
-                Log.info(
+                Log.player.info(
                     "\(attempt.client) client: \(info.preferredStreamURL == nil ? 0 : 1) muxed, "
                         + "\(info.bestAdaptiveAudioURL == nil ? 0 : 1) audio-only for \(youtubeId)"
                 )
@@ -65,7 +65,7 @@ enum WatchStreamResolver {
                 // rather than paying for the remaining clients' round trips.
                 if !muxed.isEmpty { break }
             } catch {
-                Log.info("\(attempt.client) client failed for \(youtubeId): \(error.localizedDescription)")
+                Log.player.info("\(attempt.client) client failed for \(youtubeId): \(error.localizedDescription)")
                 // The iOS client's error is the one worth surfacing: it's the only one that
                 // reports on the video itself rather than on its own restrictions.
                 firstError = firstError ?? error

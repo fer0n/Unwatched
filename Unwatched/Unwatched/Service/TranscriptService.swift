@@ -10,7 +10,7 @@ import SwiftData
 
 struct TranscriptService {
     static func getTranscript(from url: String?, youtubeId: String) async throws -> [TranscriptEntry] {
-        Log.info("getTranscript from \(url ?? "–") for \(youtubeId)")
+        Log.chapters.info("getTranscript from \(url ?? "–") for \(youtubeId)")
         let imageContainer = DataProvider.shared.localCacheContainer
         let task: Task<[TranscriptEntry], Error> = Task.detached {
             let repo = TranscriptActor(modelContainer: imageContainer)
@@ -19,7 +19,7 @@ struct TranscriptService {
             }
 
             if url == "" {
-                Log.info("Transcript is unavailable for \(youtubeId)")
+                Log.chapters.info("Transcript is unavailable for \(youtubeId)")
                 await repo.cacheTranscript([], for: youtubeId)
                 return []
             }
@@ -34,7 +34,7 @@ struct TranscriptService {
     }
 
     private static func loadTranscript(from url: URL) async throws -> [TranscriptEntry] {
-        Log.info("loadTranscript: \(url)")
+        Log.chapters.info("loadTranscript: \(url)")
         let (data, _) = try await URLSession.app.data(from: url)
         let parser = TranscriptParser()
         let transcripts = try parser.parse(data: data)
@@ -171,7 +171,7 @@ struct TranscriptService {
                 feed = await PodcastService.fetchTranscript(feedUrl: feedUrl, episodeId: youtubeId)
             }
             if !force, case .found(let published) = feed?.lookup {
-                Log.info("using the feed's own transcript for \(youtubeId)")
+                Log.chapters.info("using the feed's own transcript for \(youtubeId)")
                 return await cachePublished(published, for: youtubeId, in: repo)
             }
 
@@ -214,7 +214,7 @@ struct TranscriptService {
         guard let mediaUrl else {
             throw TranscriptError.noAudio
         }
-        Log.info("downloading \(youtubeId) to transcribe it")
+        Log.chapters.info("downloading \(youtubeId) to transcribe it")
         let (temporary, response) = try await URLSession.app.download(from: mediaUrl)
         guard response.isSuccessfulHttp else {
             try? FileManager.default.removeItem(at: temporary)
@@ -261,29 +261,29 @@ struct TranscriptService {
                 videoTitle,
                 transript
             ) else {
-                Log.info("generateAiChapters: no chapters generated")
+                Log.chapters.info("generateAiChapters: no chapters generated")
                 return nil
             }
 
-            print("generatedChapters", generatedChapters)
+            Log.chapters.debug("generatedChapters: \(generatedChapters)")
             let cleaned = ChapterService.updateDurationAndEndTime(in: generatedChapters, videoDuration: duration)
-            print("cleaned", cleaned)
+            Log.chapters.debug("cleaned: \(cleaned)")
             return cleaned
         }
 
         return Task { @MainActor in
             defer { progress(1) }
             guard let chapters = try await task.value else {
-                Log.info("generateAiChapters: no chapters")
+                Log.chapters.info("generateAiChapters: no chapters")
                 return
             }
             progress(0.95)
-            print("chapters", chapters)
+            Log.chapters.debug("chapters: \(chapters)")
             let modelContext = DataProvider.mainContext
             let video: Video? = modelContext.existingModel(for: videoId)
 
             guard let video else {
-                Log.info("generateAiChapters: video not found")
+                Log.chapters.info("generateAiChapters: video not found")
                 return
             }
             ChapterService.insertChapters(chapters, for: video)

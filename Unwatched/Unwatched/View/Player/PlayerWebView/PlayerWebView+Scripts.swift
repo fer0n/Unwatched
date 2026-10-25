@@ -13,7 +13,7 @@ extension PlayerWebView {
     @MainActor
     func loadPlayer(webView: WKWebView, startAt: Double, type: PlayerType) -> Bool {
         guard let youtubeId = player.video?.youtubeId else {
-            Log.warning("loadPlayer: no youtubeId")
+            Log.player.warning("loadPlayer: no youtubeId")
             return false
         }
         return PlayerWebView.loadPlayer(webView: webView, youtubeId: youtubeId, startAt: startAt, type: type)
@@ -27,10 +27,10 @@ extension PlayerWebView {
             : UrlService.getEmbeddedYoutubeUrl(youtubeId, startAt)
 
         guard let url = URL(string: urlString) else {
-            Log.warning("loadPlayer: no url")
+            Log.player.warning("loadPlayer: no url")
             return false
         }
-        Log.info("loadPlayer: \(urlString)")
+        Log.player.info("loadPlayer: \(urlString)")
 
         var request = URLRequest(url: url)
         let referer = "https://app.local.com"
@@ -74,7 +74,7 @@ extension PlayerWebView {
 
     static func playScript(unstarted: Bool) -> String {
         if unstarted {
-            Log.info("PLAY: unstarted")
+            Log.player.info("PLAY: unstarted")
             return unstartedPlayScript
         }
         return "play();"
@@ -194,13 +194,13 @@ extension PlayerWebView {
 
     static func repairVideo(onRepair: @escaping () -> Void) {
         guard let webView = WebPlayerBackend.shared.webView else {
-            Log.error("repairVideo: no webView")
+            Log.player.error("repairVideo: no webView")
             return
         }
         let script = PlayerWebView.videoRequiresReloadScript()
         webView.evaluateJavaScript(script) { result, _ in
             let requiresReload = result as? String == "true"
-            Log.info("repairVideo: onRepair, requiresReload=\(requiresReload)")
+            Log.player.info("repairVideo: onRepair, requiresReload=\(requiresReload)")
             if requiresReload {
                 onRepair()
             }

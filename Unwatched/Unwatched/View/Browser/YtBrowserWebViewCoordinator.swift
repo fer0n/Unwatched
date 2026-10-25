@@ -42,7 +42,7 @@ extension YtBrowserWebView {
         // MARK: - WKNavigationDelegate
 
         @MainActor func webView(_ webView: WKWebView, didFinish navigation: WKNavigation!) {
-            Log.info("--- new page loaded")
+            Log.browser.info("--- new page loaded")
             #if os(macOS)
             setupMacOSContextMenu(webView)
             #endif
@@ -51,13 +51,13 @@ extension YtBrowserWebView {
                 parent.browserManager.firstPageLoaded = true
             }
             guard let url = webView.url else {
-                Log.warning("no url found")
+                Log.browser.warning("no url found")
                 return
             }
 
             applySettingsToWebView(webView)
 
-            Log.info("about to extract info")
+            Log.browser.info("about to extract info")
             let info = getInfoFromUrl(url)
             if info.userName != nil || info.channelId != nil || info.playlistId != nil {
                 extractSubscriptionInfo(webView, info)
@@ -79,18 +79,18 @@ extension YtBrowserWebView {
         }
 
         private func handleVideoLinkMessage(_ message: WKScriptMessage) {
-            Log.info("Intercepted video click: \(message.body)")
+            Log.browser.info("Intercepted video click: \(message.body)")
             Signal.log("Browser.VideoLinkIntercepted", throttle: .hourly)
 
             guard let bodyString = message.body as? String,
                   let data = bodyString.data(using: .utf8),
                   let clickData = try? JSONDecoder().decode(VideoClickData.self, from: data) else {
-                Log.warning("Failed to decode message body")
+                Log.browser.warning("Failed to decode message body")
                 return
             }
 
             guard let url = URL(string: clickData.url) else {
-                Log.warning("no url found")
+                Log.browser.warning("no url found")
                 return
             }
             let task = VideoService.addForeignUrls(
@@ -240,9 +240,9 @@ extension YtBrowserWebView {
             """
             webView.evaluateJavaScript(script) { (_, error) in
                 if let error {
-                    Log.error("Failed to inject CSS: \(error)")
+                    Log.browser.error("Failed to inject CSS: \(error)")
                 } else {
-                    Log.info("Successfully injected CSS to hide Shorts")
+                    Log.browser.info("Successfully injected CSS to hide Shorts")
                 }
             }
         }
@@ -252,10 +252,10 @@ extension YtBrowserWebView {
         @MainActor
         func handleUrlChange(_ webView: WKWebView) {
             guard let url = webView.url else {
-                Log.warning("no url found")
+                Log.browser.warning("no url found")
                 return
             }
-            Log.info("URL changed: \(url)")
+            Log.browser.info("URL changed: \(url)")
             handleIsMobilePage(url)
             handleCurrentUrl(url)
 
@@ -275,7 +275,7 @@ extension YtBrowserWebView {
                 return
             }
 
-            Log.info("--- forceReloadUrl")
+            Log.browser.info("--- forceReloadUrl")
             let request = URLRequest(url: url)
             webView.load(request)
         }
@@ -291,27 +291,27 @@ extension YtBrowserWebView {
 
         func getNewPlaylistId(_ url: URL) -> String? {
             guard let playlistId = UrlService.getPlaylistIdFromUrl(url) else {
-                Log.info("no channel id")
+                Log.browser.info("no channel id")
                 return nil
             }
             if parent.browserManager.info?.playlistId == playlistId {
-                Log.info("same playlistId as before")
+                Log.browser.info("same playlistId as before")
                 return nil
             }
-            Log.info("has new playlistId: \(playlistId)")
+            Log.browser.info("has new playlistId: \(playlistId)")
             return playlistId
         }
 
         func handleHasNewChannelId(_ url: URL) -> Bool {
             guard let channelId = UrlService.getChannelIdFromUrl(url) else {
-                Log.info("no channel id")
+                Log.browser.info("no channel id")
                 return false
             }
             if parent.browserManager.info?.channelId == channelId {
-                Log.info("same channelId as before")
+                Log.browser.info("same channelId as before")
                 return false
             }
-            Log.info("has new channelId: \(channelId)")
+            Log.browser.info("has new channelId: \(channelId)")
             parent.browserManager.setFoundInfo(SubscriptionInfo(channelId: channelId))
             return true
         }
@@ -323,12 +323,12 @@ extension YtBrowserWebView {
             )
             guard let userName else {
                 parent.browserManager.clearInfo()
-                Log.info("no user name found")
+                Log.browser.info("no user name found")
                 return false
             }
             if [parent.browserManager.info?.userName?.lowercased(), parent.browserManager.desktopUserName?.lowercased()]
                 .contains(userName.lowercased()) {
-                Log.info("same username as before")
+                Log.browser.info("same username as before")
                 return false
             }
             parent.browserManager.desktopUserName = userName
@@ -357,11 +357,11 @@ extension YtBrowserWebView {
         }
 
         @MainActor func extractSubscriptionInfo(_ webView: WKWebView, _ info: SubscriptionInfo) {
-            Log.info("extractSubscriptionInfo")
+            Log.browser.info("extractSubscriptionInfo")
             let url = webView.url
             webView.evaluateJavaScript(getSubscriptionInfoScript) { (result, error) in
                 if let error = error {
-                    Log.error("JavaScript evaluation error: \(error)")
+                    Log.browser.error("JavaScript evaluation error: \(error)")
                 } else if let array = result as? [String] {
                     let pageChannelId = array[0]
                     let description = array[1]
@@ -369,16 +369,16 @@ extension YtBrowserWebView {
                     let title = array[3]
                     let imageUrl = array[4]
                     let id = info.channelId ?? pageChannelId
-                    Log.info("Channel ID: \(id)")
-                    Log.info("Description: \(description)")
-                    Log.info("RSS Feed: \(rssFeed)")
-                    Log.info("Title: \(title)")
-                    Log.info("Image: \(imageUrl)")
+                    Log.browser.info("Channel ID: \(id)")
+                    Log.browser.info("Description: \(description)")
+                    Log.browser.info("RSS Feed: \(rssFeed)")
+                    Log.browser.info("Title: \(title)")
+                    Log.browser.info("Image: \(imageUrl)")
                     self.parent.browserManager.setFoundInfo(SubscriptionInfo(
                         url, id, description, rssFeed, title, info.userName, info.playlistId, imageUrl
                     ))
                 } else {
-                    Log.warning("no result received: \(result.debugDescription)")
+                    Log.browser.warning("no result received: \(result.debugDescription)")
                 }
                 self.parent.browserManager.hasCheckedInfo = true
             }
@@ -399,7 +399,7 @@ extension YtBrowserWebView {
                     await MainActor.run {
                         self.parent.appNotificationVM.show(.error(error))
                     }
-                    Log.error("Failed to add subscription: \(error)")
+                    Log.browser.error("Failed to add subscription: \(error)")
                 }
             }
             Signal.log("Browser.ContextMenu.Subscribe")

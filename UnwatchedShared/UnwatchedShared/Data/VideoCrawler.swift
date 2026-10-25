@@ -88,7 +88,7 @@ public struct VideoCrawler {
     }
 
     public static func loadSubscriptionFromRSS(feedUrl: URL) async throws -> SendableSubscription {
-        Log.info("loadSubscriptionFromRSS \(feedUrl)")
+        Log.refresh.info("loadSubscriptionFromRSS \(feedUrl)")
         let data = try await fetchFeedData(feedUrl)
         if PodcastFeedParser.isPodcastFeed(data) {
             return try PodcastService.parseFeed(data, feedUrl: feedUrl, limitEpisodes: 1).subscription
@@ -107,7 +107,7 @@ public struct VideoCrawler {
             }
             return subscriptionInfo
         }
-        Log.info("rssParserDelegate.subscriptionInfo \(rssParserDelegate.subscriptionInfo.debugDescription)")
+        Log.refresh.info("rssParserDelegate.subscriptionInfo \(rssParserDelegate.subscriptionInfo.debugDescription)")
         throw VideoCrawlerError.subscriptionInfoNotFound
     }
 

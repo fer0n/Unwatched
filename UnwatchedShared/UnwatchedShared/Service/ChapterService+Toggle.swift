@@ -19,7 +19,7 @@ extension ChapterService {
         // the generated intro/outro chapters aren't among the video's own, and their start times would otherwise
         // match whichever row sits at that end of the video
         guard !chapter.isIntro, !chapter.isOutro else {
-            Log.warning("materialize: intro/outro chapters have no row, see Video.keepIntro")
+            Log.chapters.warning("materialize: intro/outro chapters have no row, see Video.keepIntro")
             return nil
         }
         if let id = chapter.persistentId,
@@ -54,7 +54,7 @@ extension ChapterService {
             return
         }
         guard let row = materialize(chapter, of: video) else {
-            Log.warning("setChapterActive: no row for \(chapter)")
+            Log.chapters.warning("setChapterActive: no row for \(chapter)")
             return
         }
         row.isActive = isActive

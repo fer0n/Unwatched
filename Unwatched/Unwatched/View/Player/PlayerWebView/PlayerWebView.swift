@@ -221,7 +221,7 @@ struct PlayerWebView: PlatformViewRepresentable {
 
     static func handleJsError(result: Any?, _ error: (any Error)?) {
         guard let error else { return }
-        Log.error("Error evaluating JavaScript: \(error)")
+        Log.player.error("Error evaluating JavaScript: \(error)")
     }
 
     @MainActor

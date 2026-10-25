@@ -74,7 +74,7 @@ extension PlayerManager {
         guard defaults.bool(forKey: Const.nativeFallbackActive) else { return }
         defaults.set(false, forKey: Const.nativeFallbackActive)
         guard PlayerTypeSetting.stored == .native else { return }
-        Log.info("nativeFallback: reverting on launch")
+        Log.player.info("nativeFallback: reverting on launch")
         defaults.set(PlayerTypeSetting.storedPrevious.rawValue, forKey: Const.playerType)
     }
 
@@ -90,7 +90,7 @@ extension PlayerManager {
               video?.isPodcast != true else {
             return
         }
-        Log.info("nativeFallback: background video change, switching to the native player")
+        Log.player.info("nativeFallback: background video change, switching to the native player")
         UserDefaults.standard.set(PlayerTypeSetting.stored.rawValue, forKey: Const.previousPlayerType)
         UserDefaults.standard.set(PlayerTypeSetting.native.rawValue, forKey: Const.playerType)
         nativeFallbackActive = true

@@ -15,7 +15,7 @@ extension PlayerManager {
               abs(seconds - (currentTime ?? video.elapsedSeconds ?? 0)) > Const.updateTimeMinimum else {
             return
         }
-        Log.info("applyRemotePosition: \(seconds)")
+        Log.player.info("applyRemotePosition: \(seconds)")
         updateElapsedTime(seconds, videoId: video.youtubeId)
         if seek {
             backend.seek(to: seconds)

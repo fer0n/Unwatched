@@ -72,7 +72,7 @@ extension TranscriptAlignmentService {
                     return probe
                 }
             }
-            Log.warning("probe \(Int(time))s: unreadable")
+            Log.chapters.warning("probe \(Int(time))s: unreadable")
             return AlignmentProbe(audioTime: time, outcome: .failed)
         }
 
@@ -80,15 +80,15 @@ extension TranscriptAlignmentService {
             guard let text = try await transcribeSlice(at: clamped, window: window) else { return nil }
 
             guard !text.isEmpty else {
-                Log.info("probe \(Int(clamped))s: no speech")
+                Log.chapters.info("probe \(Int(clamped))s: no speech")
                 return AlignmentProbe(audioTime: clamped, outcome: .silent)
             }
             let located = matcher.locate(text)
             guard let match = located, match.votes >= TranscriptMatcher.minimumVotes else {
-                Log.info("probe \(Int(clamped))s: absent (\(located?.votes ?? 0) votes)")
+                Log.chapters.info("probe \(Int(clamped))s: absent (\(located?.votes ?? 0) votes)")
                 return AlignmentProbe(audioTime: clamped, outcome: .absent)
             }
-            Log.info("""
+            Log.chapters.info("""
                 probe \(Int(clamped))s: transcript \(Int(match.time))s \
                 offset \(String(format: "%+.1f", clamped - match.time)) votes \(match.votes)
                 """)
@@ -102,7 +102,7 @@ extension TranscriptAlignmentService {
                 do {
                     sliceUrl = try await reader.slice(at: time, length: window)
                 } catch {
-                    Log.warning("probe \(Int(time))s: slicing failed, \(error.localizedDescription)")
+                    Log.chapters.warning("probe \(Int(time))s: slicing failed, \(error.localizedDescription)")
                     continue
                 }
                 defer { try? FileManager.default.removeItem(at: sliceUrl) }
@@ -111,7 +111,7 @@ extension TranscriptAlignmentService {
                 } catch is CancellationError {
                     throw CancellationError()
                 } catch {
-                    Log.warning("probe \(Int(time))s: attempt \(attempt) failed, \(error.localizedDescription)")
+                    Log.chapters.warning("probe \(Int(time))s: attempt \(attempt) failed, \(error.localizedDescription)")
                 }
             }
             return nil

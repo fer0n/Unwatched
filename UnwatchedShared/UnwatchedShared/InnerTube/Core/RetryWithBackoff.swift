@@ -6,8 +6,6 @@ import OSLog
 //   • Logger: ViewModelLogger → OSLog.Logger on `appSubsystem` (Unwatched is not a Swift package).
 // Keep otherwise vanilla so future syncs are a straight diff-and-apply.
 
-private let retryLog = Logger(subsystem: appSubsystem, category: "RetryWithBackoff")
-
 /// Retries `operation` up to `maxAttempts` times on transient URLErrors,
 /// using exponential backoff. Permanent errors (e.g. `APIError`, decoding
 /// failures) and Task cancellation are propagated immediately without retrying.
@@ -35,7 +33,7 @@ public func retryWithBackoff<T>(
         } catch let urlError as URLError
                 where transientCodes.contains(urlError.code) && attempt < maxAttempts {
             let tag = label.isEmpty ? "" : "[\(label)] "
-            retryLog.notice("\(tag)attempt \(attempt)/\(maxAttempts) failed (\(urlError.code.rawValue)), retrying in \(Int(delay))s")
+            Log.innerTube.notice("\(tag)attempt \(attempt)/\(maxAttempts) failed (\(urlError.code.rawValue)), retrying in \(Int(delay))s")
             lastError = urlError
             try await Task.sleep(nanoseconds: UInt64(delay * 1_000_000_000))
             delay = min(delay * 2, maxDelay)

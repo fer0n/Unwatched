@@ -96,7 +96,7 @@ extension ChapterAutomation {
 
     private static func beginSpeechWork(_ youtubeId: String) -> Bool {
         guard isOnExternalPower || !ProcessInfo.processInfo.isLowPowerModeEnabled else {
-            Log.info("ChapterAutomation: Low Power Mode, holding \(youtubeId)")
+            Log.chapters.info("ChapterAutomation: Low Power Mode, holding \(youtubeId)")
             hasPendingWork = true
             return false
         }
@@ -109,7 +109,7 @@ extension ChapterAutomation {
     private static func transcribe(_ video: Video) async {
         let youtubeId = video.youtubeId
         guard beginSpeechWork(youtubeId) else { return }
-        Log.info("ChapterAutomation: transcribing \(youtubeId)")
+        Log.chapters.info("ChapterAutomation: transcribing \(youtubeId)")
         do {
             let entries = try await TranscriptService.GenerationCoordinator.shared.generate(for: video).value
             if entries.isEmpty {
@@ -124,7 +124,7 @@ extension ChapterAutomation {
         } catch {
             skippedIds.insert(youtubeId)
             ChapterAutomationStatus.shared.transcriptionError = error.localizedDescription
-            Log.warning("ChapterAutomation: transcript failed for \(youtubeId): \(error.localizedDescription)")
+            Log.chapters.warning("ChapterAutomation: transcript failed for \(youtubeId): \(error.localizedDescription)")
         }
     }
 
@@ -138,7 +138,7 @@ extension ChapterAutomation {
         } catch {
             skippedIds.insert(youtubeId)
             ChapterAutomationStatus.shared.transcriptionError = error.localizedDescription
-            Log.warning("ChapterAutomation: alignment failed for \(youtubeId): \(error.localizedDescription)")
+            Log.chapters.warning("ChapterAutomation: alignment failed for \(youtubeId): \(error.localizedDescription)")
         }
     }
 

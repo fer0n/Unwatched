@@ -41,7 +41,7 @@ public final class DataProvider: Sendable {
 
     public let container: ModelContainer = {
         LaunchTrace.mark(LaunchTrace.Phase.containerBegin)
-        Log.info("getModelContainer")
+        Log.data.info("getModelContainer")
         var enableIcloudSync = UserDefaults.standard.bool(forKey: Const.enableIcloudSync)
         #if os(tvOS)
         // No settings screen to turn sync on, and the store is only ever a mirror of what the
@@ -67,7 +67,7 @@ public final class DataProvider: Sendable {
             cloudKitDatabase: enableIcloudSync ? .private("iCloud.com.pentlandFirth.Unwatched") : .none
         )
 
-        Log.info("getModelContainer: config set")
+        Log.data.info("getModelContainer: config set")
 
         do {
             let container: ModelContainer
@@ -78,10 +78,10 @@ public final class DataProvider: Sendable {
                     configurations: [config]
                 )
             } catch {
-                Log.error("getModelContainer error: \(error)")
+                Log.data.error("getModelContainer error: \(error)")
 
                 // workaround for migration (disable sync for initial launch)
-                Log.info("getModelContainer: fallback")
+                Log.data.info("getModelContainer: fallback")
                 let config = ModelConfiguration(
                     schema: DataProvider.schema,
                     groupContainer: DataProvider.groupContainer,
@@ -126,7 +126,7 @@ public final class DataProvider: Sendable {
         do {
             return try ModelContainer(for: DataProvider.schema, configurations: [config])
         } catch {
-            Log.error("Could not open the quick queue store, discarding it: \(error)")
+            Log.data.error("Could not open the quick queue store, discarding it: \(error)")
             DataProvider.removeStore(at: storeURL)
             do {
                 return try ModelContainer(for: DataProvider.schema, configurations: [config])
@@ -176,7 +176,7 @@ public final class DataProvider: Sendable {
             // Purely derived data, so a store that won't open is worth discarding rather than
             // crashing on: a store written by a newer schema can't migrate back, and on tvOS the
             // system may leave a partially purged store behind in Library/Caches.
-            Log.error("Could not open CachedImage store, discarding it: \(error)")
+            Log.data.error("Could not open CachedImage store, discarding it: \(error)")
             DataProvider.removeStore(at: storeURL)
 
             do {
@@ -200,7 +200,7 @@ public final class DataProvider: Sendable {
             } catch CocoaError.fileNoSuchFile {
                 continue
             } catch {
-                Log.error("Could not remove \(file.lastPathComponent): \(error)")
+                Log.data.error("Could not remove \(file.lastPathComponent): \(error)")
             }
         }
     }

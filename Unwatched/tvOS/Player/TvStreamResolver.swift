@@ -29,13 +29,13 @@ enum TvStreamResolver {
         do {
             guard let master = try await api.fetchPlayerInfoVisionOS(videoId: youtubeId).hlsURL,
                   let asset = TvHLSMasterLoader.asset(for: master) else {
-                Log.info("VisionOS client returned no HLS for \(youtubeId)")
+                Log.player.info("VisionOS client returned no HLS for \(youtubeId)")
                 return nil
             }
-            Log.info("VisionOS client resolved an HD stream for \(youtubeId)")
+            Log.player.info("VisionOS client resolved an HD stream for \(youtubeId)")
             return AVPlayerItem(asset: asset)
         } catch {
-            Log.info("VisionOS client failed for \(youtubeId): \(error.localizedDescription)")
+            Log.player.info("VisionOS client failed for \(youtubeId): \(error.localizedDescription)")
             return nil
         }
     }
@@ -55,12 +55,12 @@ enum TvStreamResolver {
             do {
                 let info = try await attempt.fetch()
                 if let url = info.preferredStreamURL {
-                    Log.info("\(attempt.client) client resolved a stream for \(youtubeId)")
+                    Log.player.info("\(attempt.client) client resolved a stream for \(youtubeId)")
                     return url
                 }
-                Log.info("\(attempt.client) client returned no playable format for \(youtubeId)")
+                Log.player.info("\(attempt.client) client returned no playable format for \(youtubeId)")
             } catch {
-                Log.info("\(attempt.client) client failed for \(youtubeId): \(error.localizedDescription)")
+                Log.player.info("\(attempt.client) client failed for \(youtubeId): \(error.localizedDescription)")
                 // The iOS client's error is the one worth surfacing: it's the only one that
                 // reports on the video itself rather than on its own restrictions.
                 firstError = firstError ?? error

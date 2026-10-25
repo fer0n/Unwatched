@@ -6,7 +6,6 @@
 #if canImport(WebKit)
 import Foundation
 import WebKit
-import OSLog
 
 /// Recommendations fetched inside a hidden youtube.com page, so the session cookies never leave WebKit.
 @MainActor
@@ -30,7 +29,6 @@ public final class HomeFeedService: NSObject, WKNavigationDelegate {
     private static let requestTimeout: Duration = .seconds(15)
 
     private let api = InnerTubeAPI()
-    private let log = Logger(subsystem: appSubsystem, category: "HomeFeed")
     private var webView: WKWebView?
     private var pageLoadedAt: Date?
     private var pageLoad: Task<Void, Error>?
@@ -44,11 +42,11 @@ public final class HomeFeedService: NSObject, WKNavigationDelegate {
             let page = try await request("browse", ["browseId": "FEwhat_to_watch"])
             let videos = page.videos.filter(Self.isRecommendable)
             if !videos.isEmpty {
-                log.info("home feed: \(videos.count) videos")
+                Log.innerTube.info("home feed: \(videos.count) videos")
                 return Page(videos: videos, nextPageToken: page.nextPageToken)
             }
             // history turned off
-            log.info("home feed empty while signed in, using related videos")
+            Log.innerTube.info("home feed empty while signed in, using related videos")
         }
         return try await related(to: seedIds)
     }
@@ -58,7 +56,7 @@ public final class HomeFeedService: NSObject, WKNavigationDelegate {
         try await ensurePage()
         let page = try await request("browse", ["continuation": token])
         let videos = page.videos.filter(Self.isRecommendable)
-        log.info("home feed next page: \(videos.count) videos")
+        Log.innerTube.info("home feed next page: \(videos.count) videos")
         return Page(videos: videos, nextPageToken: page.nextPageToken)
     }
 
@@ -69,7 +67,7 @@ public final class HomeFeedService: NSObject, WKNavigationDelegate {
             do {
                 lists.append(try await request("next", ["videoId": id]).videos)
             } catch {
-                log.error("related videos for \(id, privacy: .public) failed: \(error)")
+                Log.innerTube.error("related videos for \(id) failed: \(error)")
             }
         }
         let excluded = Set(seedIds)
@@ -83,7 +81,7 @@ public final class HomeFeedService: NSObject, WKNavigationDelegate {
                 merged.append(video)
             }
         }
-        log.info("related videos: \(merged.count) from \(lists.count) seeds")
+        Log.innerTube.info("related videos: \(merged.count) from \(lists.count) seeds")
         return Page(videos: merged, nextPageToken: nil)
     }
 
@@ -121,7 +119,7 @@ public final class HomeFeedService: NSObject, WKNavigationDelegate {
         var request = URLRequest(url: URL(string: "https://www.youtube.com/")!)
         request.setValue("en-US,en;q=0.9", forHTTPHeaderField: "Accept-Language")
         webView.load(request)
-        log.info("loading home page")
+        Log.innerTube.info("loading home page")
 
         // polled: `didFinish` can take tens of seconds, long after ytcfg is usable
         let clock = ContinuousClock()
@@ -130,14 +128,14 @@ public final class HomeFeedService: NSObject, WKNavigationDelegate {
             if let navigationError { throw navigationError }
             let ready = await evaluateBool(HomeFeedScript.isReady, in: webView)
             if ready {
-                log.info("home page ready")
+                Log.innerTube.info("home page ready")
                 pageLoadedAt = Date()
                 return
             }
             try await Task.sleep(for: .milliseconds(250))
         }
         // e.g. a consent page, or a network error page
-        log.error("home page unavailable at \(webView.url?.absoluteString ?? "-", privacy: .public)")
+        Log.innerTube.error("home page unavailable at \(webView.url?.absoluteString ?? "-")")
         discardPage()
         throw HomeFeedError.pageUnavailable
     }
@@ -173,7 +171,7 @@ public final class HomeFeedService: NSObject, WKNavigationDelegate {
         do {
             return try await store?.compileContentRuleList(forIdentifier: identifier, encodedContentRuleList: HomeFeedScript.pageOnlyRules)
         } catch {
-            Logger(subsystem: appSubsystem, category: "HomeFeed").error("content rules failed: \(error)")
+            Log.innerTube.error("content rules failed: \(error)")
             return nil
         }
     }

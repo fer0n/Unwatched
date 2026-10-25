@@ -14,14 +14,14 @@ extension UserDataService {
             if let value = UserDefaults.standard.object(forKey: key) {
                 result[key] = AnyCodable(value)
             } else {
-                Log.warning("Encoding settings key not set/found: \(key)")
+                Log.data.warning("Encoding settings key not set/found: \(key)")
             }
         }
         for (key, _) in Const.syncedSettingsDefaults {
             if let value = CloudKeyValueStore.shared.object(forKey: key) {
                 result[key] = AnyCodable(value)
             } else {
-                Log.warning("Encoding sync settings key not set/found: \(key)")
+                Log.data.warning("Encoding sync settings key not set/found: \(key)")
             }
         }
         return result

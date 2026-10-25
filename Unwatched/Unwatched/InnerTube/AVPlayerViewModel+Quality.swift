@@ -140,7 +140,7 @@ extension AVPlayerViewModel {
         }
 
         guard let videoURL, let audioURL = info.bestAdaptiveAudioURL else {
-            Log.error("[AVPlayerView] rebuildCompositionForQuality: no URL for height=\(height)")
+            Log.player.error("[AVPlayerView] rebuildCompositionForQuality: no URL for height=\(height)")
             return
         }
 
@@ -155,7 +155,7 @@ extension AVPlayerViewModel {
             let (vTracks, aTracks) = try await (videoTracks, audioTracks)
 
             guard let sourceVideo = vTracks.first, let sourceAudio = aTracks.first else {
-                Log.error("[AVPlayerView] rebuildCompositionForQuality: missing tracks: \(videoId)")
+                Log.player.error("[AVPlayerView] rebuildCompositionForQuality: missing tracks: \(videoId)")
                 await MainActor.run { player.isLoading = nil }
                 return
             }
@@ -175,7 +175,7 @@ extension AVPlayerViewModel {
 
             if Task.isCancelled { return }
 
-            Log.info("[AVPlayerView] rebuildCompositionForQuality built: \(videoId) height=\(height)")
+            Log.player.info("[AVPlayerView] rebuildCompositionForQuality built: \(videoId) height=\(height)")
             let item = AVPlayerItem(asset: composition)
             await MainActor.run {
                 pendingSeekToTime = savedTime
@@ -184,7 +184,7 @@ extension AVPlayerViewModel {
             }
         } catch {
             if Task.isCancelled { return }
-            Log.error("[AVPlayerView] rebuildCompositionForQuality failed: \(videoId) height=\(height) — \(error.localizedDescription)")
+            Log.player.error("[AVPlayerView] rebuildCompositionForQuality failed: \(videoId) height=\(height) — \(error.localizedDescription)")
             await MainActor.run { player.isLoading = nil }
         }
     }
@@ -212,7 +212,7 @@ extension AVPlayerViewModel {
         // Initial load: prefer the video's detected original language.
         if let lang = detectedLang,
            let byLang = group.options.first(where: { $0.locale?.language.languageCode?.identifier == lang || $0.locale?.identifier == lang }) {
-            Log.info("[AVPlayerView] selecting audio by lang '\(lang)': \(byLang.displayName)")
+            Log.player.info("[AVPlayerView] selecting audio by lang '\(lang)': \(byLang.displayName)")
             await MainActor.run {
                 item.select(byLang, in: group)
                 player.reportAudioLanguage(byLang.locale?.language.languageCode?.identifier ?? "")
@@ -224,7 +224,7 @@ extension AVPlayerViewModel {
         // the original (non-dubbed) track, mirroring SmartTubeIOS's approach.
         let option = originalAudioOption(in: group)
         if let option {
-            Log.info("[AVPlayerView] selecting audio via characteristic detection: \(option.displayName) locale=\(option.locale?.identifier ?? "nil")")
+            Log.player.info("[AVPlayerView] selecting audio via characteristic detection: \(option.displayName) locale=\(option.locale?.identifier ?? "nil")")
             await MainActor.run {
                 item.select(option, in: group)
                 player.reportAudioLanguage(option.locale?.language.languageCode?.identifier ?? "")

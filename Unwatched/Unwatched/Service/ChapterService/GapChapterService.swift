@@ -61,7 +61,7 @@ struct GapChapterService {
                 )
             )
         }
-        Log.info("insertGapChapters: \(segments)")
+        Log.chapters.info("insertGapChapters: \(segments)")
         return withAnimation {
             ChapterService.mergeSegments(segments, into: video)
         }
@@ -116,7 +116,7 @@ struct GapChapterService {
                                                      generating: GapLabel.self)
             return resolve(response.content)
         } catch {
-            Log.info("gap label failed: \(error.localizedDescription)")
+            Log.chapters.info("gap label failed: \(error.localizedDescription)")
             return unlabelled
         }
     }

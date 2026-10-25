@@ -171,19 +171,21 @@ struct Signal {
     /// to keep cardinality low (we don't need 26.5.0 vs 26.5.1).
     static var osVersion: String {
         let version = ProcessInfo.processInfo.operatingSystemVersion
-        let name: String
+        return "\(platformName) \(version.majorVersion).\(version.minorVersion)"
+    }
+
+    static var platformName: String {
         #if os(visionOS)
-        name = "visionOS"
+        "visionOS"
         #elseif os(macOS)
-        name = "macOS"
+        "macOS"
         #elseif os(tvOS)
-        name = "tvOS"
+        "tvOS"
         #elseif canImport(UIKit)
-        name = UIDevice.current.userInterfaceIdiom == .pad ? "iPadOS" : "iOS"
+        UIDevice.current.userInterfaceIdiom == .pad ? "iPadOS" : "iOS"
         #else
-        name = "OS"
+        "OS"
         #endif
-        return "\(name) \(version.majorVersion).\(version.minorVersion)"
     }
 }
 

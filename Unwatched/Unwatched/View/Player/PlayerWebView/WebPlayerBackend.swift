@@ -69,7 +69,7 @@ import UnwatchedShared
     private func commandTarget(_ label: String) -> WKWebView? {
         guard let webView else { return nil }
         guard player.isLoading == nil else {
-            Log.info("\(label): dropped, page still loading")
+            Log.player.info("\(label): dropped, page still loading")
             return nil
         }
         return webView
@@ -124,7 +124,7 @@ import UnwatchedShared
         Task { [weak self] in
             guard await PlayerWebView.evaluateIsNotPlaying(webView) else { return }
             guard let self, webView === self.webView, player.isPlaying, runningStart == nil else { return }
-            Log.info("PLAY: the page never got the switch's play")
+            Log.player.info("PLAY: the page never got the switch's play")
             play()
         }
     }
@@ -149,10 +149,10 @@ import UnwatchedShared
             if startTook {
                 guard waits < Self.playWaits else { break }
                 waits += 1
-                Log.info("PLAY: the click took, waiting for the page")
+                Log.player.info("PLAY: the click took, waiting for the page")
             } else {
                 guard clicks <= Self.playAttempts else { break }
-                Log.info(clicks == 0 ? "PLAY" : "PLAY: didn't take, attempt \(clicks + 1)")
+                Log.player.info(clicks == 0 ? "PLAY" : "PLAY: didn't take, attempt \(clicks + 1)")
                 PlayerWebView.evaluateJavaScript(
                     webView,
                     clicks == 0
@@ -165,7 +165,7 @@ import UnwatchedShared
             guard !Task.isCancelled, stillWants(true, on: webView) else { return }
             guard await PlayerWebView.evaluateIsNotPlaying(webView) else { return }
         }
-        Log.warning("PLAY: page never started")
+        Log.player.warning("PLAY: page never started")
         player.reportPaused()
     }
 
@@ -182,7 +182,7 @@ import UnwatchedShared
         cancelStart()
         pauseTask?.cancel()
         guard let webView = commandTarget("PAUSE") else { return }
-        Log.info("PAUSE")
+        Log.player.info("PAUSE")
         PlayerWebView.evaluateJavaScript(webView, PlayerWebView.pauseScript())
         pauseTask = Task { [weak self] in
             await self?.confirmPause(on: webView)
@@ -196,7 +196,7 @@ import UnwatchedShared
             guard !Task.isCancelled, stillWants(false, on: webView) else { return }
             guard await !PlayerWebView.evaluateIsNotPlaying(webView) else { return }
             guard stillWants(false, on: webView) else { return }
-            Log.info("PAUSE: didn't take, attempt \(attempt + 1)")
+            Log.player.info("PAUSE: didn't take, attempt \(attempt + 1)")
             PlayerWebView.evaluateJavaScript(webView, PlayerWebView.pauseScript())
         }
     }
@@ -207,7 +207,7 @@ import UnwatchedShared
         cancelStart()
         pauseTask?.cancel()
         guard let webView else { return }
-        Log.info("STOP")
+        Log.player.info("STOP")
         webView.pauseAllMediaPlayback()
     }
 
@@ -220,14 +220,14 @@ import UnwatchedShared
     @MainActor
     func seek(to time: Double) {
         guard let webView = commandTarget("SEEK") else { return }
-        Log.info("SEEK \(time)")
+        Log.player.info("SEEK \(time)")
         PlayerWebView.evaluateJavaScript(webView, PlayerWebView.seekToScript(time))
     }
 
     @MainActor
     func setRate(_ rate: Double) {
         guard let webView = commandTarget("SPEED") else { return }
-        Log.info("SPEED \(rate)")
+        Log.player.info("SPEED \(rate)")
         PlayerWebView.evaluateJavaScript(webView, PlayerWebView.setPlaybackRateScript(rate))
     }
 
@@ -236,7 +236,7 @@ import UnwatchedShared
         guard let webView = commandTarget("PIP") else { return }
         // the page reports whether it found something it can put in a picture
         guard enabled ? player.canPlayPip : true else { return }
-        Log.info("PIP \(enabled)")
+        Log.player.info("PIP \(enabled)")
         PlayerWebView.evaluateJavaScript(
             webView,
             enabled ? PlayerWebView.enterPipScript() : PlayerWebView.exitPipScript()
@@ -255,7 +255,7 @@ import UnwatchedShared
     @MainActor
     func takeOver(_ view: WKWebView) {
         guard webView !== view else { return }
-        Log.info("web player: page taking over")
+        Log.player.info("web player: page taking over")
         // aimed at the view being replaced, and that page is not the one to start
         cancelStart()
         pauseTask?.cancel()
@@ -271,7 +271,7 @@ import UnwatchedShared
     @MainActor
     func reclaim(_ view: WKWebView) {
         guard webView == nil else { return }
-        Log.info("web player: re-registering the page on screen")
+        Log.player.info("web player: re-registering the page on screen")
         takeOver(view)
         ensurePlaying()
     }
@@ -281,7 +281,7 @@ import UnwatchedShared
     func cueVideo() {
         guard let webView, let youtubeId = player.video?.youtubeId else { return }
         guard loadedVideoId != youtubeId else { return }
-        Log.info("CUE VIDEO: \(player.video?.title ?? "-")")
+        Log.player.info("CUE VIDEO: \(player.video?.title ?? "-")")
         let type = PlayerSwitchManager.shared.activeType
             .webPlayerType(embeddingDisabled: player.embeddingDisabled)
         let loaded = PlayerWebView.loadPlayer(
@@ -301,7 +301,7 @@ import UnwatchedShared
     func applyUIMode(_ mode: PlayerWebView.UIMode) {
         guard appliedUIMode != mode else { return }
         guard let webView = commandTarget("UI MODE") else { return }
-        Log.info("UI MODE: \(mode)")
+        Log.player.info("UI MODE: \(mode)")
         appliedUIMode = mode
         PlayerWebView.evaluateJavaScript(webView, PlayerWebView.applyUIModeScript(mode))
     }
@@ -320,7 +320,7 @@ import UnwatchedShared
         )
         guard appliedChaptersHash != hash else { return }
         appliedChaptersHash = hash
-        Log.info("CHAPTERMARKERS")
+        Log.player.info("CHAPTERMARKERS")
         let script = PlayerWebView.setChapterMarkersScript(
             chapters: video.sortedChapterData,
             playbackOrder: video.orderedChapterData,

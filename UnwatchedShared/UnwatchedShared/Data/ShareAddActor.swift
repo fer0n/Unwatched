@@ -31,7 +31,7 @@ public actor ShareAddActor {
                 playlistIds.append(playlistId)
             } else {
                 containsError = true
-                Log.warning("ShareAddActor: url doesn't seem to be for a playlist or video: \(url.absoluteString)")
+                Log.data.warning("ShareAddActor: url doesn't seem to be for a playlist or video: \(url.absoluteString)")
             }
         }
 
@@ -64,7 +64,7 @@ public actor ShareAddActor {
                 }
             }
             guard let video else {
-                Log.warning("ShareAddActor: video couldn't be created for youtubeId: \(youtubeId)")
+                Log.data.warning("ShareAddActor: video couldn't be created for youtubeId: \(youtubeId)")
                 continue
             }
             if let startAt {
@@ -92,7 +92,7 @@ public actor ShareAddActor {
                 try addSubscriptionsForForeignVideos(video, feedTitle: feedTitle)
                 videos.append(video)
             } else {
-                Log.warning("ShareAddActor: video couldn't be created")
+                Log.data.warning("ShareAddActor: video couldn't be created")
             }
         }
         for video in videos where !video.isNew {

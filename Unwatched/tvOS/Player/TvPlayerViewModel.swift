@@ -63,7 +63,7 @@ final class TvPlayerViewModel {
             guard !Task.isCancelled, !stopped else { return }
             play(AVPlayerItem(url: url))
         } catch {
-            Log.error("Playback failed for \(video.youtubeId): \(error.localizedDescription)")
+            Log.player.error("Playback failed for \(video.youtubeId): \(error.localizedDescription)")
             state = .failed(error.localizedDescription)
         }
     }
@@ -147,10 +147,10 @@ final class TvPlayerViewModel {
                 state = .playing
             }
         case .failed where playingHD && state == .loading:
-            Log.error("HD stream failed for \(video.youtubeId), falling back: \(message ?? "unknown reason")")
+            Log.player.error("HD stream failed for \(video.youtubeId), falling back: \(message ?? "unknown reason")")
             Task { await playFallback() }
         case .failed:
-            Log.error("Playback failed for \(video.youtubeId): \(message ?? "unknown reason")")
+            Log.player.error("Playback failed for \(video.youtubeId): \(message ?? "unknown reason")")
             state = .failed(message ?? String(localized: "videoNoStream"))
         default:
             break

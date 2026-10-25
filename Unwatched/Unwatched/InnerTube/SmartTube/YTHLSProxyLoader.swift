@@ -11,7 +11,6 @@ import Foundation
 import os.log
 
 private let proxyScheme = "ytwebhls"
-private let proxyLog = Logger(subsystem: appSubsystem, category: "HLSProxy")
 
 // MARK: - URL scheme helpers
 
@@ -80,7 +79,7 @@ final class YTHLSProxyLoader: NSObject, AVAssetResourceLoaderDelegate, @unchecke
     ) -> Bool {
         guard let proxyURL = loadingRequest.request.url,
               let realURL   = proxyURL.realURL else {
-            proxyLog.error("[HLSProxy] unexpected scheme: \(loadingRequest.request.url?.scheme ?? "nil")")
+            Log.hls.error("[HLSProxy] unexpected scheme: \(loadingRequest.request.url?.scheme ?? "nil")")
             return false
         }
 
@@ -103,10 +102,10 @@ final class YTHLSProxyLoader: NSObject, AVAssetResourceLoaderDelegate, @unchecke
                 let cookieHeader = cookies.map { "\($0.name)=\($0.value)" }.joined(separator: "; ")
                 request.setValue(cookieHeader, forHTTPHeaderField: "Cookie")
                 let gvCount = cookies.filter(\.isYoutubeCdnDomain).count
-                proxyLog.notice("[HLSProxy] attaching \(cookies.count)/\(source.count) cookies (\(gvCount) googlevideo) to segment request")
+                Log.hls.notice("[HLSProxy] attaching \(cookies.count)/\(source.count) cookies (\(gvCount) googlevideo) to segment request")
             }
         }
-        proxyLog.notice("[HLSProxy] GET \(realURL.absoluteString.prefix(200))")
+        Log.hls.notice("[HLSProxy] GET \(realURL.absoluteString.prefix(200))")
 
         let key = ObjectIdentifier(loadingRequest)
         let task = URLSession.app.dataTask(with: request) { [weak self] data, response, error in
@@ -118,7 +117,7 @@ final class YTHLSProxyLoader: NSObject, AVAssetResourceLoaderDelegate, @unchecke
             }
 
             if let error {
-                proxyLog.error("[HLSProxy] URLSession error: \(error.localizedDescription)")
+                Log.hls.error("[HLSProxy] URLSession error: \(error.localizedDescription)")
                 loadingRequest.finishLoading(with: error)
                 return
             }
@@ -128,11 +127,11 @@ final class YTHLSProxyLoader: NSObject, AVAssetResourceLoaderDelegate, @unchecke
                 return
             }
 
-            proxyLog.notice("[HLSProxy] \(realURL.lastPathComponent) HTTP=\(httpResp.statusCode) bytes=\(data.count)")
+            Log.hls.notice("[HLSProxy] \(realURL.lastPathComponent) HTTP=\(httpResp.statusCode) bytes=\(data.count)")
             // Log response body for 4xx/5xx to diagnose CDN rejections (n-challenge, auth, etc.)
             if httpResp.statusCode >= 400 {
                 let errBody = String(data: data.prefix(300), encoding: .utf8) ?? "<binary>"
-                proxyLog.error("[HLSProxy] ERROR body: \(errBody as NSString)")
+                Log.hls.error("[HLSProxy] ERROR body: \(errBody as NSString)")
             }
 
             // Determine whether this resource is an HLS playlist.
@@ -145,7 +144,7 @@ final class YTHLSProxyLoader: NSObject, AVAssetResourceLoaderDelegate, @unchecke
             let isPlaylist = mimeTypeLower.contains("mpegurl")
                           || realURL.pathExtension.lowercased() == "m3u8"
                           || realURL.lastPathComponent.lowercased() == "index.m3u8"
-            proxyLog.notice("[HLSProxy] Content-Type=\(httpResp.value(forHTTPHeaderField: "Content-Type") ?? "nil") isPlaylist=\(isPlaylist)")
+            Log.hls.notice("[HLSProxy] Content-Type=\(httpResp.value(forHTTPHeaderField: "Content-Type") ?? "nil") isPlaylist=\(isPlaylist)")
 
             // For HLS playlists, rewrite segment/sub-playlist URIs to our proxy scheme.
             var responseData = data
@@ -174,7 +173,7 @@ final class YTHLSProxyLoader: NSObject, AVAssetResourceLoaderDelegate, @unchecke
                 infoReq.contentType = uti
                 infoReq.contentLength = Int64(responseData.count)
                 infoReq.isByteRangeAccessSupported = false
-                proxyLog.notice("[HLSProxy] contentInfo: UTI=\(uti) length=\(responseData.count)")
+                Log.hls.notice("[HLSProxy] contentInfo: UTI=\(uti) length=\(responseData.count)")
             }
 
             loadingRequest.dataRequest?.respond(with: responseData)
@@ -215,9 +214,9 @@ final class YTHLSProxyLoader: NSObject, AVAssetResourceLoaderDelegate, @unchecke
             let before = text
             text = text.replacingOccurrences(of: oldN, with: newN)
             if text != before {
-                proxyLog.notice("[HLSProxy] n-challenge rewritten: \(unsolved as NSString) -> \(solved as NSString)")
+                Log.hls.notice("[HLSProxy] n-challenge rewritten: \(unsolved as NSString) -> \(solved as NSString)")
             } else {
-                proxyLog.notice("[HLSProxy] n-challenge NOT found in playlist (unsolved=\(unsolved as NSString))")
+                Log.hls.notice("[HLSProxy] n-challenge NOT found in playlist (unsolved=\(unsolved as NSString))")
             }
         }
 
@@ -279,7 +278,7 @@ final class YTHLSProxyLoader: NSObject, AVAssetResourceLoaderDelegate, @unchecke
                 .map { $0 == "__TARGETDURATION_PLACEHOLDER__" ? targetDurationTag : $0 }
                 .joined(separator: "\n")
             text = result
-            proxyLog.notice("[HLSProxy] synthesized #EXTINF for \(segmentCount) segments; targetDuration=\(Int(ceil(maxDurationSecs)))s")
+            Log.hls.notice("[HLSProxy] synthesized #EXTINF for \(segmentCount) segments; targetDuration=\(Int(ceil(maxDurationSecs)))s")
         }
 
         // Step 2: For master manifests, rewrite #EXT-X-MEDIA URI attributes so that audio
@@ -306,7 +305,7 @@ final class YTHLSProxyLoader: NSObject, AVAssetResourceLoaderDelegate, @unchecke
             let lines = text.components(separatedBy: "\n")
             // Diagnostic: log first #EXT-X-MEDIA:TYPE=AUDIO line to verify URI quote format.
             if let sample = lines.first(where: { $0.hasPrefix("#EXT-X-MEDIA:") && $0.contains("TYPE=AUDIO") }) {
-                proxyLog.notice("[HLSProxy] first AUDIO EXT-X-MEDIA sample: \(sample.prefix(300))")
+                Log.hls.notice("[HLSProxy] first AUDIO EXT-X-MEDIA sample: \(sample.prefix(300))")
             }
             var audioGroupCount = 0
             var variantCount = 0
@@ -336,11 +335,11 @@ final class YTHLSProxyLoader: NSObject, AVAssetResourceLoaderDelegate, @unchecke
                 return line
             }
             if audioGroupCount > 0 || variantCount > 0 {
-                proxyLog.notice("[HLSProxy] rewrote \(audioGroupCount) #EXT-X-MEDIA + \(variantCount) variant URIs to \(proxyScheme)://")
+                Log.hls.notice("[HLSProxy] rewrote \(audioGroupCount) #EXT-X-MEDIA + \(variantCount) variant URIs to \(proxyScheme)://")
                 text = rewrittenLines.joined(separator: "\n")
             } else {
                 let extMediaCount = lines.filter { $0.hasPrefix("#EXT-X-MEDIA:") }.count
-                proxyLog.notice("[HLSProxy] 0 #EXT-X-MEDIA URIs rewritten; total EXT-X-MEDIA lines=\(extMediaCount); checking YT-EXT-AUDIO-CONTENT-ID variants")
+                Log.hls.notice("[HLSProxy] 0 #EXT-X-MEDIA URIs rewritten; total EXT-X-MEDIA lines=\(extMediaCount); checking YT-EXT-AUDIO-CONTENT-ID variants")
             }
 
             // Step 3: Filter #EXT-X-STREAM-INF variants by selected dubbed-audio language.
@@ -382,11 +381,11 @@ final class YTHLSProxyLoader: NSObject, AVAssetResourceLoaderDelegate, @unchecke
 
                 let langDisplay = selectedLang ?? "original"
                 if keptVariantCount > 0 {
-                    proxyLog.notice("[HLSProxy] language filter: lang=\(langDisplay) kept \(keptVariantCount) variant(s)")
+                    Log.hls.notice("[HLSProxy] language filter: lang=\(langDisplay) kept \(keptVariantCount) variant(s)")
                     text = filteredLines.joined(separator: "\n")
                 } else {
                     // No variants matched — serve unfiltered manifest so AVPlayer can always load.
-                    proxyLog.notice("[HLSProxy] language filter: lang=\(langDisplay) matched 0 variants — serving unfiltered manifest")
+                    Log.hls.notice("[HLSProxy] language filter: lang=\(langDisplay) matched 0 variants — serving unfiltered manifest")
                 }
             }
         }
@@ -414,7 +413,7 @@ final class YTHLSProxyLoader: NSObject, AVAssetResourceLoaderDelegate, @unchecke
                 return trimmed + "\(sep)pot=\(pot)"
             }
             if injectedCount > 0 {
-                proxyLog.notice("[HLSProxy] pot= injected into \(injectedCount) segment URL(s) in variant playlist (https:// native)")
+                Log.hls.notice("[HLSProxy] pot= injected into \(injectedCount) segment URL(s) in variant playlist (https:// native)")
                 text = patchedLines.joined(separator: "\n")
             }
         }
