@@ -28,17 +28,39 @@ private struct PriorityKeyCommands: View {
         KeyCommandInstaller(isActive: player.video != nil && !navManager.showBrowser && !isEditingText)
             .frame(width: 0, height: 0)
             .accessibilityHidden(true)
-            .onReceive(Self.editingChanges) { isEditingText = $0 }
+            .onReceive(Self.editingChanges) { _ in
+                // When focus moves between two fields, the old one's end can arrive after the new
+                // one's begin, so ask what's focused once the handover is done instead.
+                DispatchQueue.main.async {
+                    isEditingText = UIResponder.isEditingText
+                }
+            }
     }
 
     private static let editingChanges = Publishers.MergeMany([
-        (UITextField.textDidBeginEditingNotification, true),
-        (UITextView.textDidBeginEditingNotification, true),
-        (UITextField.textDidEndEditingNotification, false),
-        (UITextView.textDidEndEditingNotification, false)
-    ].map { name, isEditing in
-        NotificationCenter.default.publisher(for: name).map { _ in isEditing }
-    })
+        UITextField.textDidBeginEditingNotification,
+        UITextView.textDidBeginEditingNotification,
+        UITextField.textDidEndEditingNotification,
+        UITextView.textDidEndEditingNotification
+    ].map { NotificationCenter.default.publisher(for: $0) })
+}
+
+private extension UIResponder {
+    private static weak var firstResponder: UIResponder?
+
+    static var isEditingText: Bool {
+        firstResponder = nil
+        UIApplication.shared.sendAction(#selector(reportFirstResponder), to: nil, from: nil, for: nil)
+        switch firstResponder {
+        case let field as UITextField: return field.isEnabled
+        case let view as UITextView: return view.isEditable
+        default: return false
+        }
+    }
+
+    @objc private func reportFirstResponder() {
+        UIResponder.firstResponder = self
+    }
 }
 
 private struct KeyCommandInstaller: UIViewRepresentable {
