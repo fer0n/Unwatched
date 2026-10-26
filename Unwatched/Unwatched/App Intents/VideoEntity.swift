@@ -64,8 +64,31 @@ enum MediaType: String, AppEnum {
     }
 }
 
-struct VideoEntityQuery: EntityQuery {
+/// Shortcuts resolves an entity again by its id whenever one action's result feeds another's parameter.
+struct VideoEntityQuery: EntityStringQuery {
+    @MainActor
     func entities(for identifiers: [VideoEntity.ID]) async throws -> [VideoEntity] {
-        []
+        let fetch = FetchDescriptor<Video>(predicate: #Predicate { identifiers.contains($0.youtubeId) })
+        return try DataProvider.mainContext.fetch(fetch).map(VideoEntity.init)
+    }
+
+    /// A pasted YouTube or episode link, otherwise a title search over the Queue.
+    @MainActor
+    func entities(matching string: String) async throws -> [VideoEntity] {
+        if let url = URL(string: string), url.scheme != nil,
+           let video = try? VideoService.getVideoOrCurrent(url) {
+            return [VideoEntity(video)]
+        }
+        return queue().filter { $0.title.localizedStandardContains(string) }.map(VideoEntity.init)
+    }
+
+    @MainActor
+    func suggestedEntities() async throws -> [VideoEntity] {
+        queue().map(VideoEntity.init)
+    }
+
+    @MainActor
+    private func queue() -> [Video] {
+        QueueFilter.all.videos(DataProvider.mainContext, limit: 50)
     }
 }

@@ -766,7 +766,9 @@
 		88BFA0EA2C871E8A0095EFBA /* AutoHideVM.swift in Sources */ = {isa = PBXBuildFile; fileRef = 88BFA0E92C871E8A0095EFBA /* AutoHideVM.swift */; };
 		88BFA0EB2C871E8A0095EFBA /* AutoHideVM.swift in Sources */ = {isa = PBXBuildFile; fileRef = 88BFA0E92C871E8A0095EFBA /* AutoHideVM.swift */; };
 		88C0FFEE2F40000000000A02 /* GetMediaList.swift in Sources */ = {isa = PBXBuildFile; fileRef = 88C0FFEE2F40000000000A01 /* GetMediaList.swift */; };
+		88C0FFEE2F40000000000B02 /* UpdateMedia.swift in Sources */ = {isa = PBXBuildFile; fileRef = 88C0FFEE2F40000000000B01 /* UpdateMedia.swift */; };
 		88C0FFEE2F40000000000A03 /* GetMediaList.swift in Sources */ = {isa = PBXBuildFile; fileRef = 88C0FFEE2F40000000000A01 /* GetMediaList.swift */; };
+		88C0FFEE2F40000000000B03 /* UpdateMedia.swift in Sources */ = {isa = PBXBuildFile; fileRef = 88C0FFEE2F40000000000B01 /* UpdateMedia.swift */; };
 		88C10D772D088543005EDB4B /* ShortsSetting.swift in Sources */ = {isa = PBXBuildFile; fileRef = 88C10D762D08853E005EDB4B /* ShortsSetting.swift */; };
 		88C10D782D088543005EDB4B /* ShortsSetting.swift in Sources */ = {isa = PBXBuildFile; fileRef = 88C10D762D08853E005EDB4B /* ShortsSetting.swift */; };
 		88C194742BBFC8440073E2E1 /* SubscriptionActor+Info.swift in Sources */ = {isa = PBXBuildFile; fileRef = 88C194732BBFC8440073E2E1 /* SubscriptionActor+Info.swift */; };
@@ -1650,6 +1652,7 @@
 		88BF35982BC96C37005FA53E /* TextFieldClearButton.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TextFieldClearButton.swift; sourceTree = "<group>"; };
 		88BFA0E92C871E8A0095EFBA /* AutoHideVM.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AutoHideVM.swift; sourceTree = "<group>"; };
 		88C0FFEE2F40000000000A01 /* GetMediaList.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = GetMediaList.swift; sourceTree = "<group>"; };
+		88C0FFEE2F40000000000B01 /* UpdateMedia.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = UpdateMedia.swift; sourceTree = "<group>"; };
 		88C10D762D08853E005EDB4B /* ShortsSetting.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ShortsSetting.swift; sourceTree = "<group>"; };
 		88C194732BBFC8440073E2E1 /* SubscriptionActor+Info.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "SubscriptionActor+Info.swift"; sourceTree = "<group>"; };
 		88C194762BBFCE9A0073E2E1 /* WatchedButton.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = WatchedButton.swift; sourceTree = "<group>"; };
@@ -2475,6 +2478,7 @@
 				881EEE542D02F0D40028EAF8 /* AddSubscription.swift */,
 				887E82AB2CD8FC8B00B196EA /* GetCurrentVideo.swift */,
 				88C0FFEE2F40000000000A01 /* GetMediaList.swift */,
+				88C0FFEE2F40000000000B01 /* UpdateMedia.swift */,
 				12DD3D7D2C5077368D185474 /* TranscriptError.swift */,
 				1AA236FA6C1832F0339BC5A6 /* TranscriptResult.swift */,
 				88CD909D2E2BA56300CD756D /* getTranscript.swift */,
@@ -3397,6 +3401,7 @@
 				88AA40082F2000000000D008 /* AddSubscription.swift in Sources */,
 				88AA40092F2000000000D009 /* GetCurrentVideo.swift in Sources */,
 				88C0FFEE2F40000000000A03 /* GetMediaList.swift in Sources */,
+				88C0FFEE2F40000000000B03 /* UpdateMedia.swift in Sources */,
 				FE8A33BC936977DFEC5CE9B6 /* TranscriptError.swift in Sources */,
 				07896B6B2697D19AC3F00AEB /* TranscriptResult.swift in Sources */,
 				88AA40102F2000000000D010 /* setChapters.swift in Sources */,
@@ -4304,6 +4309,7 @@
 				88373C0F2C8AF60600ACBB3B /* NextChapterButton.swift in Sources */,
 				887E82AC2CD8FC8B00B196EA /* GetCurrentVideo.swift in Sources */,
 				88C0FFEE2F40000000000A02 /* GetMediaList.swift in Sources */,
+				88C0FFEE2F40000000000B02 /* UpdateMedia.swift in Sources */,
 				8C6068DF254F0F53C84845B9 /* TranscriptError.swift in Sources */,
 				465F2A4BAB2911DE30EE8B61 /* TranscriptResult.swift in Sources */,
 				88EE64BF2E64A1B700A3DD36 /* ContextMenuAction.swift in Sources */,
