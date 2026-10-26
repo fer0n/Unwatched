@@ -107,10 +107,10 @@ extension NavigationManager {
         openSettings()
     }
     #else
-    func openChapterSettings() {
+    func openSettings(_ page: LibraryDestination) {
         clearNavigationStack(.library)
         presentedLibrary.append(LibraryDestination.settings)
-        presentedLibrary.append(LibraryDestination.settingsChapters)
+        presentedLibrary.append(page)
         navigateTo(.library)
     }
     #endif
@@ -134,7 +134,7 @@ struct OpenChapterSettingsAction: DynamicProperty {
         #if os(macOS)
         navManager.openChapterSettings(openSettings)
         #else
-        navManager.openChapterSettings()
+        navManager.openSettings(.settingsChapters)
         #endif
     }
 }

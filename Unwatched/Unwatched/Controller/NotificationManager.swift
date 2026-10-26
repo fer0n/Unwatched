@@ -146,17 +146,22 @@ struct NotificationManager {
         return result.isEmpty ? nil : result
     }
 
+    static let authorizationOptions: UNAuthorizationOptions = [.alert, .badge, .sound, .providesAppNotificationSettings]
+
     static func askNotificationPermission() async throws {
-        try await withCheckedThrowingContinuation { (continuation: CheckedContinuation<Void, Error>) in
-            UNUserNotificationCenter.current().requestAuthorization(options: [.alert, .badge, .sound]) { _, error in
-                if let error = error {
-                    Log.error("Error when asking for notification permission: \(error)")
-                    continuation.resume(throwing: error)
-                } else {
-                    continuation.resume()
-                }
-            }
+        do {
+            _ = try await UNUserNotificationCenter.current().requestAuthorization(options: authorizationOptions)
+        } catch {
+            Log.error("Error when asking for notification permission: \(error)")
+            throw error
         }
+    }
+
+    /// Re-asking never prompts once allowed, but would for provisional.
+    static func refreshAuthorizationOptions() async {
+        guard await UNUserNotificationCenter.current().notificationSettings().authorizationStatus == .authorized
+        else { return }
+        try? await askNotificationPermission()
     }
 
     static func areNotificationsDisabled() async -> Bool {

@@ -7,6 +7,8 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		3C744253D9CDC09571E4C36C /* WatchRemoteBridge.swift in Sources */ = {isa = PBXBuildFile; fileRef = 638975864C32E936DDD65C51 /* WatchRemoteBridge.swift */; };
+		8B0BD6D1BC93593D616DC8EA /* WatchRemoteBridge.swift in Sources */ = {isa = PBXBuildFile; fileRef = 638975864C32E936DDD65C51 /* WatchRemoteBridge.swift */; };
 		00C549039F6D4EED1B59E47B /* ChapterAutomation+Notification.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6B07B12CB9A84ECC29F6B7C4 /* ChapterAutomation+Notification.swift */; };
 		01401A71CF0AD84D69B8084E /* SubscriptionChapterGenerationSetting.swift in Sources */ = {isa = PBXBuildFile; fileRef = 45461A77E446885F6ED6EB29 /* SubscriptionChapterGenerationSetting.swift */; };
 		022DD0987D143E03FFAB8840 /* InboxCardTransform.swift in Sources */ = {isa = PBXBuildFile; fileRef = C43B892740109ED8000D54F2 /* InboxCardTransform.swift */; };
@@ -1254,6 +1256,7 @@
 /* End PBXCopyFilesBuildPhase section */
 
 /* Begin PBXFileReference section */
+		638975864C32E936DDD65C51 /* WatchRemoteBridge.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = WatchRemoteBridge.swift; sourceTree = "<group>"; };
 		000BD68B55430E9A0CA01D60 /* ChapterAutomationProgress.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ChapterAutomationProgress.swift; sourceTree = "<group>"; };
 		041149DD7EB262E63C101CA7 /* ChapterAutomationStatus.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ChapterAutomationStatus.swift; sourceTree = "<group>"; };
 		0EACF91AE60C2997A88E1E50 /* InboxCardScrollSwipe.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = InboxCardScrollSwipe.swift; sourceTree = "<group>"; };
@@ -2352,6 +2355,7 @@
 				88F901F72EA8C3FB001E0579 /* BackgroundMonitor.swift */,
 				8804A3F52B8B96EA00D3F4F1 /* PlayerManager */,
 				8880D6CA2B95BEE900E76E20 /* UIApplicationDelegate.swift */,
+				638975864C32E936DDD65C51 /* WatchRemoteBridge.swift */,
 				887255F72D94209D008F1DE1 /* NSApplicationDelegate.swift */,
 				881DBDEB2B4D22770082BEFB /* NavigationManager.swift */,
 				8801CBC23067AF93007E4C90 /* NavigationManager+Routes.swift */,
@@ -3814,6 +3818,7 @@
 				88F2876D2DEAF3E600309C36 /* ClearAllInboxEntriesButton.swift in Sources */,
 				8827557E301E4BFA0033352A /* InboxCardActionBar.swift in Sources */,
 				889AF8FA2C50ECCA001CEDE6 /* UIApplicationDelegate.swift in Sources */,
+				8B0BD6D1BC93593D616DC8EA /* WatchRemoteBridge.swift in Sources */,
 				889AF8E72C50ECA9001CEDE6 /* ConfirmableMenuButton.swift in Sources */,
 				889AF8E82C50ECA9001CEDE6 /* KeyboardReadable.swift in Sources */,
 				887EB2DE2CFE167700F9D517 /* MenuSheetDetents.swift in Sources */,
@@ -4019,6 +4024,7 @@
 				883D44F33018078100950B89 /* SearchSource.swift in Sources */,
 				88FEBFC62C19DF37007FC1A5 /* AddVideoButton.swift in Sources */,
 				8880D6CB2B95BEE900E76E20 /* UIApplicationDelegate.swift in Sources */,
+				3C744253D9CDC09571E4C36C /* WatchRemoteBridge.swift in Sources */,
 				889A84E72E6C198E006F210A /* DeleteEverythingExceptSubsButton.swift in Sources */,
 				88D858552B55AC280047E0E6 /* YtChannelInfo.swift in Sources */,
 				887E82B02CD8FD8800B196EA /* Notification.swift in Sources */,

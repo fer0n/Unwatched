@@ -41,7 +41,11 @@ extension ChapterAutomation {
     }
 
     static func requestNotificationPermission() async {
+        #if os(macOS)
         _ = try? await UNUserNotificationCenter.current().requestAuthorization(options: [.alert, .badge, .sound])
+        #else
+        try? await NotificationManager.askNotificationPermission()
+        #endif
     }
 
     static func sendNotification(for video: Video) async {
