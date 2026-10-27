@@ -42,6 +42,7 @@ struct TvSettingsView: View {
                                 SyncStatusLabel()
                             }
                             SyncCountsView()
+                                .syncProblem()
                         }
                     } footer: {
                         Text("syncCountsFooter")

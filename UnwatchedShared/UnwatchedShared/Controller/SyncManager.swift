@@ -11,6 +11,7 @@ import CoreData
 
 @Observable public class SyncManager {
     public var isSyncing = false
+    public private(set) var lastError: String?
 
     @ObservationIgnored var cancellables: Set<AnyCancellable> = []
 
@@ -18,6 +19,7 @@ import CoreData
     /// setup, import and export overlap, and an ending export would otherwise clear the indicator
     /// while an import is still running.
     @ObservationIgnored private var runningEvents = Set<UUID>()
+    @ObservationIgnored private var errorsByType: [String: String] = [:]
 
     public init() {
         setupCloudKitListener()
@@ -55,6 +57,11 @@ import CoreData
                 Log.sync.error("iCloud sync: \(type) failed: \(error)")
             } else {
                 Log.sync.info("iCloud sync: \(type) done")
+            }
+            errorsByType[type] = error
+            let current = errorsByType.values.sorted().first
+            if lastError != current {
+                lastError = current
             }
         } else {
             runningEvents.insert(identifier)

@@ -9,7 +9,6 @@ import UnwatchedShared
 
 struct ContentView: View {
     @State var imageManager = ImageCacheManager()
-    @State var syncer = SyncManager()
     @State var progress = SyncProgress()
     @Environment(\.modelContext) private var modelContext
     @Environment(\.scenePhase) private var scenePhase
@@ -26,7 +25,6 @@ struct ContentView: View {
                 }
         }
         .environment(imageManager)
-        .environment(syncer)
         .environment(progress)
         .task(id: scenePhase) {
             guard scenePhase == .active else { return }
@@ -39,5 +37,6 @@ struct ContentView: View {
 #Preview {
     ContentView()
         .environment(ImageCacheManager())
+        .environment(SyncManager())
         .modelContainer(DataProvider.previewContainerFilled)
 }

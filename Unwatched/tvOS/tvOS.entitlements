@@ -14,6 +14,10 @@
 	</array>
 	<key>com.apple.developer.ubiquity-kvstore-identifier</key>
 	<string>$(TeamIdentifierPrefix)com.pentlandFirth.Unwatched</string>
+	<key>com.apple.developer.user-management</key>
+	<array>
+		<string>runs-as-current-user</string>
+	</array>
 	<key>com.apple.security.app-sandbox</key>
 	<true/>
 	<key>com.apple.security.files.user-selected.read-only</key>

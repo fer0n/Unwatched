@@ -1499,6 +1499,210 @@
           }
         }
       }
+    },
+    "syncProblemLocalOnly" : {
+      "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Die iCloud-Synchronisierung konnte nicht starten, daher zeigt dieses Apple TV nur lokal gespeicherte Inhalte. Starte die App neu, um es erneut zu versuchen."
+          }
+        },
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "iCloud sync couldn't start, so this Apple TV only shows what's stored locally. Restart the app to try again."
+          }
+        },
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "La sincronización con iCloud no pudo iniciarse, así que este Apple TV solo muestra lo guardado localmente. Reinicia la app para volver a intentarlo."
+          }
+        },
+        "fr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "La synchronisation iCloud n'a pas pu démarrer : cet Apple TV n'affiche que le contenu local. Redémarrez l'app pour réessayer."
+          }
+        },
+        "pl" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Synchronizacja iCloud nie mogła się uruchomić, więc to Apple TV pokazuje tylko dane zapisane lokalnie. Uruchom aplikację ponownie, aby spróbować jeszcze raz."
+          }
+        }
+      }
+    },
+    "syncProblemNoAccount" : {
+      "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Dieses Apple-TV-Profil ist nicht bei iCloud angemeldet. Melde dich unter Einstellungen › Benutzer und Accounts an, um deine Bibliothek zu synchronisieren."
+          }
+        },
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "This Apple TV profile isn't signed in to iCloud. Sign in under Settings › Users and Accounts to sync your library."
+          }
+        },
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Este perfil del Apple TV no tiene sesión iniciada en iCloud. Inicia sesión en Ajustes › Usuarios y cuentas para sincronizar tu biblioteca."
+          }
+        },
+        "fr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Ce profil Apple TV n'est pas connecté à iCloud. Connectez-vous dans Réglages › Utilisateurs et comptes pour synchroniser votre bibliothèque."
+          }
+        },
+        "pl" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Ten profil Apple TV nie jest zalogowany do iCloud. Zaloguj się w Ustawienia › Użytkownicy i konta, aby synchronizować bibliotekę."
+          }
+        }
+      }
+    },
+    "syncProblemRestricted" : {
+      "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "iCloud ist auf diesem Apple-TV-Profil eingeschränkt, daher kann deine Bibliothek nicht synchronisiert werden."
+          }
+        },
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "iCloud is restricted on this Apple TV profile, so your library can't sync."
+          }
+        },
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "iCloud está restringido en este perfil del Apple TV, así que tu biblioteca no puede sincronizarse."
+          }
+        },
+        "fr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "iCloud est restreint sur ce profil Apple TV : votre bibliothèque ne peut pas se synchroniser."
+          }
+        },
+        "pl" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "iCloud jest ograniczony na tym profilu Apple TV, więc biblioteka nie może się synchronizować."
+          }
+        }
+      }
+    },
+    "syncProblemTemporarilyUnavailable" : {
+      "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "iCloud ist auf diesem Apple-TV-Profil vorübergehend nicht verfügbar. Prüfe Einstellungen › Benutzer und Accounts."
+          }
+        },
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "iCloud is temporarily unavailable on this Apple TV profile. Check Settings › Users and Accounts."
+          }
+        },
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "iCloud no está disponible temporalmente en este perfil del Apple TV. Revisa Ajustes › Usuarios y cuentas."
+          }
+        },
+        "fr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "iCloud est temporairement indisponible sur ce profil Apple TV. Vérifiez Réglages › Utilisateurs et comptes."
+          }
+        },
+        "pl" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "iCloud jest tymczasowo niedostępny na tym profilu Apple TV. Sprawdź Ustawienia › Użytkownicy i konta."
+          }
+        }
+      }
+    },
+    "syncProblemUnknown" : {
+      "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Der iCloud-Account dieses Apple-TV-Profils konnte nicht geprüft werden."
+          }
+        },
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Couldn't check the iCloud account on this Apple TV profile."
+          }
+        },
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "No se pudo comprobar la cuenta de iCloud de este perfil del Apple TV."
+          }
+        },
+        "fr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Impossible de vérifier le compte iCloud de ce profil Apple TV."
+          }
+        },
+        "pl" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Nie udało się sprawdzić konta iCloud na tym profilu Apple TV."
+          }
+        }
+      }
+    },
+    "syncProblemError %@" : {
+      "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Letzte Synchronisierung fehlgeschlagen: %@"
+          }
+        },
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Last sync failed: %@"
+          }
+        },
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "La última sincronización falló: %@"
+          }
+        },
+        "fr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "La dernière synchronisation a échoué : %@"
+          }
+        },
+        "pl" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Ostatnia synchronizacja nie powiodła się: %@"
+          }
+        }
+      }
     }
   },
   "version" : "1.0"
