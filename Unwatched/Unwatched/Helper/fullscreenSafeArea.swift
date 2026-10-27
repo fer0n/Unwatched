@@ -57,9 +57,13 @@ struct FullscreenSafeArea: ViewModifier {
             return 13.1
         case _ where device.contains("iPhone 16"): // & 16 Plus
             return 10.8
+        case _ where device.contains("iPhone 17e"):
+            return 13.1
         case _ where device.contains("iPhone 17"): // & 17 & 17 Pro Max
             return 11.1
         case _ where device.contains("iPhone Air"):
+            return 11.1
+        case _ where device.contains("iPhone 18 Pro"): // 18 Pro Max
             return 11.1
         default:
             return 0
@@ -79,6 +83,7 @@ extension View {
             .ignoresSafeArea(.all)
         Color.red
             .fullscreenSafeArea(enable: true)
+        Text(Device.modelName)
     }
     .ignoresSafeArea(edges: .vertical)
 }
