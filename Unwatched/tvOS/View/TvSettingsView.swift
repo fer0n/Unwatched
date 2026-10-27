@@ -14,40 +14,46 @@ struct TvSettingsView: View {
     private let speeds = SpeedHelper.selectable
 
     var body: some View {
-        VStack(spacing: 40) {
-            Section(footer: Text(playbackMode == .inApp ? "playbackSettingHelperInApp" : "playbackSettingHelper")) {
-                Picker("playbackSetting", selection: $playbackMode) {
-                    ForEach(TvPlaybackMode.allCases) { mode in
-                        Text(mode.label)
-                            .tag(mode)
+        ScrollView {
+            VStack(spacing: 40) {
+                Section(footer: Text(playbackMode == .inApp ? "playbackSettingHelperInApp" : "playbackSettingHelper")) {
+                    Picker("playbackSetting", selection: $playbackMode) {
+                        ForEach(TvPlaybackMode.allCases) { mode in
+                            Text(mode.label)
+                                .tag(mode)
+                        }
+                    }
+                    .pickerStyle(.segmented)
+                }
+                if playbackMode == .inApp {
+                    Section(footer: Text("playbackSpeedSettingHelper")) {
+                        speedSetting
                     }
                 }
-                .pickerStyle(.segmented)
-            }
-            if playbackMode == .inApp {
-                Section(footer: Text("playbackSpeedSettingHelper")) {
-                    speedSetting
+                Section(footer: Text("markWatchedSettingHelper")) {
+                    Toggle("markWatchedSetting", isOn: $markAsWatched)
                 }
-            }
-            Section(footer: Text("markWatchedSettingHelper")) {
-                Toggle("markWatchedSetting", isOn: $markAsWatched)
-            }
-            Section {
-                VStack(spacing: 20) {
-                    HStack {
-                        Text("icloudSync")
-                        Spacer()
-                        SyncStatusLabel()
+                VStack(spacing: 40) {
+                    Section {
+                        VStack(spacing: 20) {
+                            HStack {
+                                Text("icloudSync")
+                                Spacer()
+                                SyncStatusLabel()
+                            }
+                            SyncCountsView()
+                        }
+                    } footer: {
+                        Text("syncCountsFooter")
+                            .multilineTextAlignment(.center)
                     }
-                    SyncCountsView()
                 }
-            } footer: {
-                Text("syncCountsFooter")
-                    .multilineTextAlignment(.center)
+                // Lets focus, and with it scrolling, reach this section
+                .focusable()
             }
-            Spacer()
+            .frame(maxWidth: 800)
+            .frame(maxWidth: .infinity)
         }
-        .frame(maxWidth: 800)
         .onReceive(CloudKeyValueStore.defaultPlaybackSpeedChanges) { playbackSpeed = $0 }
     }
 
