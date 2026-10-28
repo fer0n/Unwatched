@@ -11,6 +11,7 @@ import UnwatchedShared
 /// YouTube plus anything already stored in the app. Any change re-runs the active
 /// search via `SearchVM`.
 struct SearchFilterMenu: View {
+    @AppStorage(Const.themeColor) var theme = ThemeColor()
     @Bindable var vm: SearchVM
 
     var body: some View {
@@ -38,9 +39,8 @@ struct SearchFilterMenu: View {
                 }
             }
         } label: {
-            Image(systemName: isFiltering
-                    ? "line.3.horizontal.decrease.circle.fill"
-                    : "line.3.horizontal.decrease")
+            Image(systemName: "line.3.horizontal.decrease")
+                .foregroundStyle(isFiltering ? theme.color : Color.primary)
         }
         .menuOrder(.fixed)
         .accessibilityLabel("searchSortUploadDate")
