@@ -19,6 +19,7 @@ struct FetchResult: Sendable {
 }
 
 typealias FetchedVideoIds = (loadedVideos: [PersistentIdentifier], addedVideos: [PersistentIdentifier])
+typealias PendingShortCheck = (id: PersistentIdentifier, thumbnailUrl: URL?)
 
 /// What a refresh run has to say about one feed, see `VideoActor.recordFetchOutcomes`.
 struct FetchOutcome: Sendable {
@@ -272,34 +273,41 @@ actor VideoActor: SharedContextActor {
             Log.refresh.info("missing info when trying to load videos")
             return ([], [])
         }
-        let mostRecentDate = getMostRecentDate(videos)
-        var videos = updateYtChannelId(in: videos, subModel)
-        videos = await getNewVideosAndUpdateExisting(sub: subModel, videos: videos)
-        videos = await self.addShortsDetectionAndImageData(to: videos)
+        // network below: hold values and ids, not models
+        let subId = subModel.persistentModelID
+        let channelId = subModel.youtubeChannelId
+        let hideShorts = subModel.shortsSetting.shouldHide(defaultPlacement.hideShorts)
+        let subHidesShorts = subModel.shortsSetting.shouldHide()
+        let hideLiveStreams = !subModel.isPodcast
+            && subModel.liveStreamSetting.shouldHide(defaultPlacement.hideLiveStreams)
 
-        if subModel.shortsSetting.shouldHide(defaultPlacement.hideShorts) {
+        let mostRecentDate = getMostRecentDate(videos)
+        var videos = updateYtChannelId(in: videos, channelId)
+        let (unseenVideos, unknownShorts) = getNewVideosAndUpdateExisting(sub: subModel, videos: videos)
+
+        await detectShortsAndAdjustEntries(unknownShorts, clearShorts: subHidesShorts)
+        videos = await self.addShortsDetectionAndImageData(to: unseenVideos)
+        if hideShorts {
             videos = videos.filter { $0.isYtShort != true }
         }
-        videos = await filterLiveStreams(videos, subModel, hideByDefault: defaultPlacement.hideLiveStreams)
+        if hideLiveStreams {
+            videos = await filterLiveStreams(videos, channelId: channelId)
+        }
 
-        cacheImages(for: videos, subModel)
+        guard let subscription: Subscription = modelContext.resolvedModel(withID: subId) else {
+            Log.refresh.info("subscription got deleted while loading videos: \(sub.title)")
+            return ([], [])
+        }
+        cacheImages(for: videos, discardShorts: subHidesShorts)
 
-        let toInsert = subModel.isPodcast ? triageCandidates(videos, sub: subModel) : videos
-        let videoModels = insertVideoModels(from: toInsert, to: subModel)
-        let addedVideos = triageSubscriptionVideos(subModel,
+        let toInsert = subscription.isPodcast ? triageCandidates(videos, sub: subscription) : videos
+        let videoModels = insertVideoModels(from: toInsert, to: subscription)
+        let addedVideos = triageSubscriptionVideos(subscription,
                                                    videos: videoModels,
                                                    defaultPlacement: defaultPlacement,
                                                    catchUp: catchUp)
-        updateRecentVideoDate(subModel, mostRecentDate)
+        updateRecentVideoDate(subscription, mostRecentDate)
         return (videoModels, addedVideos)
-    }
-
-    private func updateYtChannelId(in videos: [SendableVideo], _ sub: Subscription) -> [SendableVideo] {
-        videos.map {
-            var video = $0
-            video.youtubeChannelId = sub.youtubeChannelId
-            return video
-        }
     }
 
     private func insertVideoModels(from videos: [SendableVideo], to sub: Subscription) -> [Video] {
@@ -316,20 +324,6 @@ actor VideoActor: SharedContextActor {
             }
         }
         return videoModels
-    }
-
-    private func cacheImages(for videos: [SendableVideo], _ subscription: Subscription) {
-        let imagesToBeSaved = videos.compactMap { vid in
-            let discardImage = vid.isYtShort == true && subscription.shortsSetting.shouldHide()
-            if !discardImage,
-               let url = vid.thumbnailUrl,
-               let data = vid.thumbnailData {
-                return (url: url, data: data)
-            }
-            return nil
-        }
-        ImageService.storeImages(imagesToBeSaved)
-
     }
 
     func addShortsDetectionAndImageData(to videos: [SendableVideo]) async -> [SendableVideo] {
@@ -480,5 +474,27 @@ extension VideoActor {
             allowOnMatch: allowOnMatch
         )
         return info
+    }
+
+    private func updateYtChannelId(in videos: [SendableVideo], _ channelId: String?) -> [SendableVideo] {
+        videos.map {
+            var video = $0
+            video.youtubeChannelId = channelId
+            return video
+        }
+    }
+
+    private func cacheImages(for videos: [SendableVideo], discardShorts: Bool) {
+        let imagesToBeSaved = videos.compactMap { vid in
+            let discardImage = vid.isYtShort == true && discardShorts
+            if !discardImage,
+               let url = vid.thumbnailUrl,
+               let data = vid.thumbnailData {
+                return (url: url, data: data)
+            }
+            return nil
+        }
+        ImageService.storeImages(imagesToBeSaved)
+
     }
 }

@@ -92,11 +92,13 @@ extension VideoActor {
         return try? modelContext.fetch(fetch)
     }
 
-    func getNewVideosAndUpdateExisting(sub: Subscription,
-                                       videos: [SendableVideo]) async -> [SendableVideo] {
+    func getNewVideosAndUpdateExisting(
+        sub: Subscription,
+        videos: [SendableVideo]
+    ) -> (newVideos: [SendableVideo], unknownShorts: [PendingShortCheck]) {
         let oldestDate = videos.compactMap { $0.publishedDate }.min() ?? .distantPast
         guard let subVideos = getVideosFromSub(sub, oldestDate: oldestDate) else {
-            return videos
+            return (videos, [])
         }
         var subVideosDict = [String: Video]()
         for video in subVideos {
@@ -104,6 +106,7 @@ extension VideoActor {
         }
 
         var newVideos = [SendableVideo]()
+        var unknownShorts = [PendingShortCheck]()
         var imagesToBeDeleted = [URL]()
         for video in videos {
             if let oldVideo = subVideosDict[video.youtubeId] {
@@ -116,7 +119,7 @@ extension VideoActor {
                     }
                 }
                 if oldVideo.isYtShort == nil {
-                    await detectShortAndAdjustEntries(oldVideo)
+                    unknownShorts.append((oldVideo.persistentModelID, oldVideo.thumbnailUrl))
                 }
             } else {
                 newVideos.append(video)
@@ -124,18 +127,23 @@ extension VideoActor {
         }
 
         ImageService.deleteImages(imagesToBeDeleted)
-        return newVideos
+        return (newVideos, unknownShorts)
     }
 
-    func detectShortAndAdjustEntries(_ video: Video) async {
-        Log.refresh.info("detectShortAndAdjustEntries: \(video.title)")
-        let (isYtShort, _) = await VideoActor.isYtShort(video.thumbnailUrl)
-        video.isYtShort = isYtShort
-        if isYtShort == true && (video.subscription?.shortsSetting.shouldHide() ?? false) {
-            VideoService.clearEntries(
-                from: video,
-                modelContext: modelContext
-            )
+    func detectShortsAndAdjustEntries(_ videos: [PendingShortCheck], clearShorts: Bool) async {
+        for (videoId, thumbnailUrl) in videos {
+            let (isYtShort, _) = await VideoActor.isYtShort(thumbnailUrl)
+            guard let video: Video = modelContext.resolvedModel(withID: videoId) else {
+                continue
+            }
+            Log.refresh.info("detectShortsAndAdjustEntries: \(video.title)")
+            video.isYtShort = isYtShort
+            if isYtShort == true && clearShorts {
+                VideoService.clearEntries(
+                    from: video,
+                    modelContext: modelContext
+                )
+            }
         }
     }
 

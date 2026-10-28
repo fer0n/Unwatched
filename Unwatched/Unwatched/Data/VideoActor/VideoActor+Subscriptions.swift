@@ -14,7 +14,7 @@ extension VideoActor {
 
     /// Fetch the existing Subscription via SendableSubscription's persistentId
     func getSubscription(via sub: SendableSubscription) -> Subscription? {
-        if let subId = sub.persistentId, let modelSub = self[subId, as: Subscription.self] {
+        if let subId = sub.persistentId, let modelSub: Subscription = modelContext.resolvedModel(withID: subId) {
             return modelSub
         }
         Log.refresh.info("subscription does not exist: \(sub.title)")
@@ -43,7 +43,7 @@ extension VideoActor {
         var subs = [Subscription]()
         if let ids = subscriptionIds {
             for id in ids {
-                if let loadedSub = self[id, as: Subscription.self] {
+                if let loadedSub: Subscription = modelContext.resolvedModel(withID: id) {
                     subs.append(loadedSub)
                 } else {
                     Log.refresh.warning("Subscription not found for id: \(id.hashValue)")
@@ -150,7 +150,7 @@ extension VideoActor {
         }
 
         for outcome in outcomes where outcome.isPodcast || !youtubeOutage {
-            guard let sub = self[outcome.subscriptionId, as: Subscription.self] else { continue }
+            guard let sub: Subscription = modelContext.resolvedModel(withID: outcome.subscriptionId) else { continue }
             if let errorMessage = outcome.errorMessage {
                 sub.failedFetchCount += 1
                 sub.lastFetchFailedDate = .now

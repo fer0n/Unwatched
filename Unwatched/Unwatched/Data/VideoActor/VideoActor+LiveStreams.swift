@@ -8,15 +8,8 @@ import SwiftData
 import UnwatchedShared
 
 extension VideoActor {
-    func filterLiveStreams(
-        _ videos: [SendableVideo],
-        _ sub: Subscription,
-        hideByDefault: Bool
-    ) async -> [SendableVideo] {
-        guard !sub.isPodcast,
-              let channelId = sub.youtubeChannelId,
-              sub.liveStreamSetting.shouldHide(hideByDefault),
-              CloudKeyValueStore.hasPremium else {
+    func filterLiveStreams(_ videos: [SendableVideo], channelId: String?) async -> [SendableVideo] {
+        guard let channelId, CloudKeyValueStore.hasPremium else {
             return videos
         }
         var liveIds = Set(UserDefaults.standard.stringArray(forKey: Const.hiddenLiveStreamIds) ?? [])
