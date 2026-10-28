@@ -709,10 +709,11 @@ extension AVPlayerViewModel {
     @MainActor
     func setupSecondaryObservers(item: AVPlayerItem, videoId: String) {
         presentationSizeObserver?.invalidate()
-        presentationSizeObserver = item.observe(\.presentationSize, options: [.new]) { [weak self] _, change in
+        presentationSizeObserver = item.observe(\.presentationSize, options: [.initial, .new]) { [weak self] _, change in
             guard let size = change.newValue, size.width > 0, size.height > 0 else { return }
             Task { @MainActor [weak self] in
-                self?.player.handleAspectRatio(size.width / size.height)
+                guard let self, player.video?.youtubeId == videoId else { return }
+                player.handleAspectRatio(size.width / size.height)
             }
         }
         endObserverTask?.cancel()
@@ -734,10 +735,6 @@ extension AVPlayerViewModel {
     func handleReadyToPlay(item: AVPlayerItem, videoId: String) async {
         Log.player.info("[AVPlayerView] AVPlayerItem readyToPlay: \(videoId)")
         await selectOriginalAudioTrack(for: item)
-        let size = avPlayer.currentItem?.presentationSize ?? .zero
-        if size.width > 0 && size.height > 0 {
-            player.handleAspectRatio(size.width / size.height)
-        }
         // not ready until the playhead is back where the video was left off: everything below
         // hands the video over. Loops because a seek arriving meanwhile retargets the reposition.
         while let target = pendingSeekToTime {

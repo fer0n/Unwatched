@@ -469,6 +469,8 @@ final class AVPlayerViewModel: PlayerBackend {
         prefetchManager.cancelAll()
         statusObserverTask?.cancel()
         endObserverTask?.cancel()
+        presentationSizeObserver?.invalidate()
+        presentationSizeObserver = nil
         interruptionObserverTask?.cancel()
         rateObserverTask?.cancel()
         cancelStallHandling()
