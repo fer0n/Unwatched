@@ -85,6 +85,11 @@ struct SearchSuggestionsView: View {
             }
         }
         .scrollContentBackground(.hidden)
+        #if os(iOS)
+        // The first section's top padding is 0 under the idle search field but 35pt once search
+        // is active, so the rows jumped down on focus (iOS 27). An explicit margin keeps it fixed.
+        .contentMargins(.top, 0, for: .scrollContent)
+        #endif
         .overlay {
             if vm.query.isEmpty && vm.recentSearches.isEmpty && !showsRecommendationsTip {
                 ContentUnavailableView(
