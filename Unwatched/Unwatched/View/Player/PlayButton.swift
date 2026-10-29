@@ -59,10 +59,11 @@ struct CorePlayButton<Content>: View where Content: View {
             groups: enableHelperPopup ? menuGroups : [],
             onTap: handlePress
         )
+        .help(player.playPauseLabel, shortcut: .playPause)
         .background {
             // the tap is a gesture on the hosted view now, so the space bar needs its own button
             Button(action: handlePress) { }
-                .keyboardShortcut(.space, modifiers: [])
+                .keyboardShortcut(PlayerShortcut.playPause.primary)
                 .opacity(0)
         }
         .sensoryFeedback(Const.sensoryFeedback, trigger: hapticToggle)

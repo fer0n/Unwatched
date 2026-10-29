@@ -48,7 +48,7 @@ struct CoreNextButton<Content>: View where Content: View {
             groups: menuGroups,
             onTap: handlePress
         )
-        .help(label)
+        .help(label, shortcut: .nextVideo)
         .sensoryFeedback(Const.sensoryFeedback, trigger: hapticToggle)
     }
 

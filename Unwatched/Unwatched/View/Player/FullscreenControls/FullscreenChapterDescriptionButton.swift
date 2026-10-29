@@ -35,6 +35,7 @@ struct FullscreenChapterDescriptionButton: View {
         }
         .fontWeight(.bold)
         .accessibilityLabel("videoDescription")
+        .help("videoDescription")
         .padding(.horizontal, showPadding ? 15 : 0) // workaround: safearea pushing content in pop over
         .modifier(MyMatchedTransitionSource(id: transitionId, namespace: namespace))
         .onChange(of: openTrigger) {

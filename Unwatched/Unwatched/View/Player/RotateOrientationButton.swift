@@ -100,18 +100,22 @@ struct HideControlsButton: View {
                     .playerToggleModifier(isOn: hideControlsFullscreen, isSmall: isSmall)
             }
         }
-        .help("toggleFullscreen")
+        .help(String(localized: "toggleFullscreen"), shortcut: enableEscapeButton ? shortcut : nil)
         .background {
             // workaround: enable esc press to exit video
             if enableEscapeButton {
                 Button {
                     handlePress()
                 } label: { }
-                .keyboardShortcut(hideControlsFullscreen ? .escape : "v", modifiers: [])
+                .keyboardShortcut(shortcut)
             }
         }
         .buttonStyle(.plain)
         .geometryGroup()
+    }
+
+    private var shortcut: KeyboardShortcut {
+        KeyboardShortcut(hideControlsFullscreen ? .escape : "v", modifiers: [])
     }
 
     func handlePress() {

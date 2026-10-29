@@ -19,6 +19,8 @@ struct PreviousChapterButton<Content>: View where Content: View {
     }
 
     var body: some View {
+        let label = String(localized: "previousChapter")
+
         Button {
             if player.goToPreviousChapter() {
                 actionToggle.toggle()
@@ -29,8 +31,8 @@ struct PreviousChapterButton<Content>: View where Content: View {
             )
             .symbolEffect(.bounce.down, value: actionToggle)
         }
-        .help("previousChapter")
+        .help(label, shortcut: .previousChapter)
         .sensoryFeedback(Const.sensoryFeedback, trigger: actionToggle)
-        .accessibilityLabel(String(localized: "previousChapter"))
+        .accessibilityLabel(label)
     }
 }

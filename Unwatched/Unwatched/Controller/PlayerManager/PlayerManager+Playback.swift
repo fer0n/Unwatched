@@ -442,6 +442,15 @@ extension PlayerManager {
     }
 
     @MainActor
+    var temporarySpeedToggleShortcut: PlayerShortcut {
+        if let temporaryPlaybackSpeed {
+            temporaryPlaybackSpeed == tempSpeedUpValue ? .temporarySpeedUp : .temporarySlowDown
+        } else {
+            temporarySlowDownThreshold ? .temporarySlowDown : .temporarySpeedUp
+        }
+    }
+
+    @MainActor
     func toggleTemporaryPlaybackSpeed() {
         if temporaryPlaybackSpeed == nil {
             setTemporaryPlaybackSpeed()

@@ -12,6 +12,8 @@ struct DescriptionButton: View {
     @Environment(\.colorScheme) var colorScheme
     @Binding var show: Bool
 
+    private let shortcut = KeyboardShortcut("i", modifiers: [])
+
     var body: some View {
         Button {
             show.toggle()
@@ -36,7 +38,8 @@ struct DescriptionButton: View {
                 .frame(idealWidth: 500, maxWidth: 500, maxHeight: 600)
             }
         }
-        .keyboardShortcut("i", modifiers: [])
+        .keyboardShortcut(shortcut)
+        .help(String(localized: "videoDescription"), shortcut: shortcut)
         .sensoryFeedback(Const.sensoryFeedback, trigger: show)
     }
 }

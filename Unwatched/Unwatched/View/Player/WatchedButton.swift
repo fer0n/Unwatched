@@ -17,6 +17,8 @@ struct WatchedButton: View {
     var backgroundColor: Color?
 
     var body: some View {
+        let label = String(localized: "markWatched")
+
         Image(systemName: "checkmark")
             .fontWeight(.bold)
             .playerToggleModifier(
@@ -26,11 +28,11 @@ struct WatchedButton: View {
             )
             .symbolEffect(.bounce.down, value: hapticToggle)
             .buttonWithMenu(
-                accessibilityLabel: String(localized: "markWatched"),
+                accessibilityLabel: label,
                 groups: menuGroups,
                 onTap: handlePress
             )
-            .help("markWatched")
+            .help(label, shortcut: .markWatched)
             .fontWeight(.bold)
             .sensoryFeedback(Const.sensoryFeedback, trigger: hapticToggle)
             .geometryGroup()

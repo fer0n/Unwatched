@@ -30,6 +30,7 @@ struct PlayerTypeButton<Content: View>: View {
                 groups: menuGroups,
                 onTap: toggle
             )
+            .help("playerType")
             .sensoryFeedback(Const.sensoryFeedback, trigger: hapticToggle)
             // repeated discrete effect rather than an indefinite one (`.breathe`): ending the
             // switch drops out of those mid-movement. The delay lets `.replace` play out first.

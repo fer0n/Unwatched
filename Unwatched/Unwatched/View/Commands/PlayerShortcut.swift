@@ -64,33 +64,35 @@ enum PlayerShortcut: String, CaseIterable {
         }
     }
 
-    var keyboardShortcuts: [(key: KeyEquivalent, modifier: EventModifiers)] {
+    var keyboardShortcuts: [KeyboardShortcut] {
         switch self {
-        case .playPause: return [(.space, []), ("k", [])]
-        case .seekForwardArrow: return [(.rightArrow, [])]
-        case .seekBackwardArrow: return [(.leftArrow, [])]
-        case .seekForwardCustom: return [("l", [])]
-        case .seekBackwardCustom: return [("j", [])]
-        case .nextChapter: return [(.rightArrow, .command), ("l", .command)]
-        case .previousChapter: return [(.leftArrow, .command), ("j", .command)]
-        case .hideControls: return [("t", [])]
-        case .temporarySpeedUp: return [("d", [])]
-        case .temporarySlowDown: return [("s", [])]
-        case .markWatched: return [("w", .shift)]
-        case .clearVideo: return [("c", .shift)]
-        case .nextVideo: return [("n", .shift)]
-        case .speedUp: return [(.upArrow, []), (">", [])]
-        case .slowDown: return [(.downArrow, []), ("<", [])]
-        case .reloadPlayer: return [("r", [.command, .shift])]
-        case .toggleFullscreen: return [("f", [])]
-        case .refresh: return [("r", [.command])]
-        case .goToQueue: return [("1", [.command])]
-        case .goToInbox: return [("2", [.command])]
-        case .goToLibrary: return [("3", [.command])]
-        case .goToSearch: return [("4", [.command])]
-        case .goToBrowser: return [("5", [.command])]
-        case .openInAppBrowser: return [("o", [])]
-        case .openInExternalBrowser: return [("o", [.shift])]
+        case .playPause: return [KeyboardShortcut(.space, modifiers: []), KeyboardShortcut("k", modifiers: [])]
+        case .seekForwardArrow: return [KeyboardShortcut(.rightArrow, modifiers: [])]
+        case .seekBackwardArrow: return [KeyboardShortcut(.leftArrow, modifiers: [])]
+        case .seekForwardCustom: return [KeyboardShortcut("l", modifiers: [])]
+        case .seekBackwardCustom: return [KeyboardShortcut("j", modifiers: [])]
+        case .nextChapter:
+            return [KeyboardShortcut(.rightArrow, modifiers: .command), KeyboardShortcut("l", modifiers: .command)]
+        case .previousChapter:
+            return [KeyboardShortcut(.leftArrow, modifiers: .command), KeyboardShortcut("j", modifiers: .command)]
+        case .hideControls: return [KeyboardShortcut("t", modifiers: [])]
+        case .temporarySpeedUp: return [KeyboardShortcut("d", modifiers: [])]
+        case .temporarySlowDown: return [KeyboardShortcut("s", modifiers: [])]
+        case .markWatched: return [KeyboardShortcut("w", modifiers: .shift)]
+        case .clearVideo: return [KeyboardShortcut("c", modifiers: .shift)]
+        case .nextVideo: return [KeyboardShortcut("n", modifiers: .shift)]
+        case .speedUp: return [KeyboardShortcut(.upArrow, modifiers: []), KeyboardShortcut(">", modifiers: [])]
+        case .slowDown: return [KeyboardShortcut(.downArrow, modifiers: []), KeyboardShortcut("<", modifiers: [])]
+        case .reloadPlayer: return [KeyboardShortcut("r", modifiers: [.command, .shift])]
+        case .toggleFullscreen: return [KeyboardShortcut("f", modifiers: [])]
+        case .refresh: return [KeyboardShortcut("r", modifiers: [.command])]
+        case .goToQueue: return [KeyboardShortcut("1", modifiers: [.command])]
+        case .goToInbox: return [KeyboardShortcut("2", modifiers: [.command])]
+        case .goToLibrary: return [KeyboardShortcut("3", modifiers: [.command])]
+        case .goToSearch: return [KeyboardShortcut("4", modifiers: [.command])]
+        case .goToBrowser: return [KeyboardShortcut("5", modifiers: [.command])]
+        case .openInAppBrowser: return [KeyboardShortcut("o", modifiers: [])]
+        case .openInExternalBrowser: return [KeyboardShortcut("o", modifiers: [.shift])]
         }
     }
 
@@ -98,9 +100,9 @@ enum PlayerShortcut: String, CaseIterable {
         let allShortcuts = PlayerShortcut.allCases.flatMap { shortcut in
             shortcut.keyboardShortcuts.map { combo in
                 let jsKey = combo.key.asJavaScriptKey.lowercased()
-                let modifiers = combo.modifier.isEmpty ? "[]" :
-                    combo.modifier.contains(.command) ? "['Meta']" :
-                    combo.modifier.contains(.shift) ? "['Shift']" :
+                let modifiers = combo.modifiers.isEmpty ? "[]" :
+                    combo.modifiers.contains(.command) ? "['Meta']" :
+                    combo.modifiers.contains(.shift) ? "['Shift']" :
                     "[]"
                 return "{ key: '\(jsKey)', modifiers: \(modifiers) }"
             }
@@ -110,7 +112,7 @@ enum PlayerShortcut: String, CaseIterable {
 
     static func fromKeyCombo(key: KeyEquivalent, modifiers: EventModifiers) -> PlayerShortcut? {
         for shortcut in PlayerShortcut.allCases where shortcut.keyboardShortcuts.contains(where: {
-            $0.0 == key && $0.1 == modifiers
+            $0.key == key && $0.modifiers == modifiers
         }) {
             return shortcut
         }
@@ -266,12 +268,24 @@ enum PlayerShortcut: String, CaseIterable {
 
     @ViewBuilder
     func render(isAlt: Bool = false) -> some View {
-        if let shortcut = isAlt ? self.keyboardShortcuts.last : self.keyboardShortcuts.first {
-            Button(self.title) {
-                self.trigger()
+        if let shortcut = isAlt ? keyboardShortcuts.last : primary {
+            Button(title) {
+                trigger()
             }
-            .keyboardShortcut(shortcut.key, modifiers: shortcut.modifier)
+            .keyboardShortcut(shortcut)
         }
+    }
+}
+
+extension PlayerShortcut {
+    var primary: KeyboardShortcut? {
+        keyboardShortcuts.first
+    }
+}
+
+extension View {
+    func help(_ title: String, shortcut: PlayerShortcut) -> some View {
+        help(title, shortcut: shortcut.primary)
     }
 }
 

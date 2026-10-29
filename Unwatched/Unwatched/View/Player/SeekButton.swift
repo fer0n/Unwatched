@@ -34,6 +34,7 @@ struct CoreSeekButton<Content>: View where Content: View {
         }
         .buttonStyle(.plain)
         .accessibilityLabel(label)
+        .help(label, shortcut: forward ? .seekForwardCustom : .seekBackwardCustom)
         .sensoryFeedback(Const.sensoryFeedback, trigger: hapticToggle)
     }
 

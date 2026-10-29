@@ -131,6 +131,10 @@ struct InlineSpeedControl: View {
                 .padding(.trailing, iconOverlap)
 
             speedSelection
+                .help(
+                    String(localized: "playbackSpeed"),
+                    shortcuts: [PlayerShortcut.speedUp.primary, PlayerShortcut.slowDown.primary]
+                )
                 // no `disabled` while a temporary speed is set: toggling it rebuilds the label, which
                 // resets the speed's scroll position. Taps are caught by the overlay in the player variant.
                 .frame(maxHeight: .infinity)
@@ -149,7 +153,7 @@ struct InlineSpeedControl: View {
                         )
                 }
                 .buttonStyle(.plain)
-                .help("temporarySpeed")
+                .help(String(localized: "temporarySpeed"), shortcut: player.temporarySpeedToggleShortcut)
                 .accessibilityLabel("temporarySpeed")
             }
         }

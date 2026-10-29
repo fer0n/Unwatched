@@ -96,7 +96,7 @@ private final class InstallerView: UIView {
 
     private let commands: [UIKeyCommand] = PlayerShortcut.allCases.flatMap { shortcut in
         shortcut.keyboardShortcuts.compactMap { combo in
-            guard combo.modifier.isEmpty, let input = combo.key.systemClaimedInput else { return nil }
+            guard combo.modifiers.isEmpty, let input = combo.key.systemClaimedInput else { return nil }
             let command = UIKeyCommand(
                 action: #selector(UIViewController.triggerPlayerShortcut),
                 input: input,
