@@ -61,6 +61,7 @@ final class SearchVM {
     var isLoadingMoreHomeFeed = false
     @ObservationIgnored var homeFeedToken: String?
     @ObservationIgnored var homeFeedLoadedAt: Date?
+    @ObservationIgnored var homeFeedAccountVersion = 0
     @ObservationIgnored var homeFeedTask: Task<Void, Never>?
 
     let api = InnerTubeAPI()

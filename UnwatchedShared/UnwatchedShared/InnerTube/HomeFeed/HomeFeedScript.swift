@@ -54,6 +54,10 @@ enum HomeFeedScript {
     if (auth.length) {
         headers['Authorization'] = auth.join(' ');
         headers['X-Goog-AuthUser'] = String(cfg('SESSION_INDEX') ?? 0);
+        // a brand-account channel; without it YouTube answers for the Google account's main channel
+        const dataSync = String(cfg('DATASYNC_ID') ?? '').split('||');
+        const pageId = cfg('DELEGATED_SESSION_ID') || (dataSync.length > 1 && dataSync[1] ? dataSync[0] : null);
+        if (pageId) headers['X-Goog-PageId'] = pageId;
     }
     const response = await fetch(`/youtubei/v1/${endpoint}?prettyPrint=false`, {
         method: 'POST',

@@ -15,6 +15,7 @@ extension YtBrowserWebView {
         var parent: YtBrowserWebView
         var observation: NSKeyValueObservation?
         var isFirstLoad = true
+        var isSwitchingChannel = false
 
         #if os(macOS)
         private var contextMenuUrl: URL?
@@ -256,6 +257,13 @@ extension YtBrowserWebView {
                 return
             }
             Log.browser.info("URL changed: \(url)")
+            if UrlService.isChannelSwitchUrl(url) {
+                isSwitchingChannel = true
+            } else if isSwitchingChannel {
+                // the redirect after /signin, once the session has switched
+                isSwitchingChannel = false
+                HomeFeedService.shared.accountChanged()
+            }
             handleIsMobilePage(url)
             handleCurrentUrl(url)
 

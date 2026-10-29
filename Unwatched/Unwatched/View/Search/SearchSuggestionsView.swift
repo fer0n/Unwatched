@@ -61,6 +61,11 @@ struct SearchSuggestionsView: View {
                 vm.loadHomeFeedIfNeeded()
             }
         }
+        .onChange(of: HomeFeedService.shared.accountVersion) {
+            if showRecommendations {
+                vm.loadHomeFeedIfNeeded()
+            }
+        }
     }
 
     var suggestionsList: some View {

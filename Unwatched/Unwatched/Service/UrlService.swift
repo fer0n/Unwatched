@@ -200,6 +200,16 @@ struct UrlService {
         try YoutubeUrlParser.getFeedUrl(fromPlaylistId: playlistId)
     }
 
+    // https://m.youtube.com/signin?action_handle_signin=true&…
+    static func isChannelSwitchUrl(_ url: URL) -> Bool {
+        let host = url.host() ?? ""
+        guard host == "youtube.com" || host.hasSuffix(".youtube.com"), url.path() == "/signin",
+              let items = URLComponents(url: url, resolvingAgainstBaseURL: false)?.queryItems else {
+            return false
+        }
+        return items.contains { $0.name == "action_handle_signin" && $0.value == "true" }
+    }
+
     static func isMobileYoutubePage(_ url: URL) -> Bool {
         let urlString = url.absoluteString
         return urlString.contains("m.youtube.com")

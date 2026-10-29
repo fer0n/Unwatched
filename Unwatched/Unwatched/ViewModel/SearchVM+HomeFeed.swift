@@ -12,7 +12,13 @@ extension SearchVM {
     private static let homeFeedSeedCount = 3
 
     func loadHomeFeedIfNeeded(force: Bool = false) {
-        if !force {
+        let accountVersion = HomeFeedService.shared.accountVersion
+        if accountVersion != homeFeedAccountVersion {
+            homeFeed = []
+            homeFeedToken = nil
+            homeFeedLoadedAt = nil
+            homeFeedAccountVersion = accountVersion
+        } else if !force {
             guard homeFeedTask == nil else { return }
             if let loaded = homeFeedLoadedAt, Date().timeIntervalSince(loaded) < Self.homeFeedLifetime {
                 return

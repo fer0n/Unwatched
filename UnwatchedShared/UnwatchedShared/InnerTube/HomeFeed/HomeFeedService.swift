@@ -8,7 +8,7 @@ import Foundation
 import WebKit
 
 /// Recommendations fetched inside a hidden youtube.com page, so the session cookies never leave WebKit.
-@MainActor
+@MainActor @Observable
 public final class HomeFeedService: NSObject, WKNavigationDelegate {
     public static let shared = HomeFeedService()
 
@@ -28,12 +28,23 @@ public final class HomeFeedService: NSObject, WKNavigationDelegate {
     private static let pageTimeout: Duration = .seconds(15)
     private static let requestTimeout: Duration = .seconds(15)
 
-    private let api = InnerTubeAPI()
-    private var webView: WKWebView?
-    private var pageLoadedAt: Date?
-    private var pageLoad: Task<Void, Error>?
-    private var navigationError: Error?
-    private var idleTask: Task<Void, Never>?
+    @ObservationIgnored private let api = InnerTubeAPI()
+    @ObservationIgnored private var webView: WKWebView?
+    @ObservationIgnored private var pageLoadedAt: Date?
+    @ObservationIgnored private var pageLoad: Task<Void, Error>?
+    @ObservationIgnored private var navigationError: Error?
+    @ObservationIgnored private var idleTask: Task<Void, Never>?
+
+    public private(set) var accountVersion = 0
+
+    // ytcfg is per channel
+    public func accountChanged() {
+        Log.innerTube.info("home feed: account changed")
+        accountVersion += 1
+        pageLoad?.cancel()
+        pageLoad = nil
+        discardPage()
+    }
 
     public func fetch(seedIds: [String]) async throws -> Page {
         defer { scheduleRelease() }
@@ -102,7 +113,7 @@ public final class HomeFeedService: NSObject, WKNavigationDelegate {
         }
         let task = Task { try await loadPage() }
         pageLoad = task
-        defer { pageLoad = nil }
+        defer { if pageLoad == task { pageLoad = nil } }
         try await task.value
     }
 
