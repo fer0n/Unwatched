@@ -4,6 +4,7 @@ import { reportsPage } from "./page.js";
 const MAX_MESSAGE_LENGTH = 10_000;
 const MAX_CONTACT_LENGTH = 200;
 const MAX_FILE_BYTES = 25 * 1024 * 1024;
+const MAX_ATTACHMENTS = 5;
 const REPORT_TTL_SECONDS = 180 * 24 * 60 * 60;
 const REPORTS_PAGE_SIZE = 50;
 const DEVICE_FIELDS = ["appVersion", "build", "channel", "os", "device"];
@@ -29,11 +30,14 @@ export async function handleReportUpload(request, env) {
   }
 
   const log = nonEmptyFile(form.get("log"));
-  const attachment = nonEmptyFile(form.get("attachment"));
-  if ([log, attachment].some((file) => file && file.size > MAX_FILE_BYTES)) {
+  const attachments = form.getAll("attachment").map(nonEmptyFile).filter(Boolean);
+  if (attachments.length > MAX_ATTACHMENTS) {
+    return new Response(`At most ${MAX_ATTACHMENTS} attachments`, { status: 400 });
+  }
+  if ([log, ...attachments].some((file) => file && file.size > MAX_FILE_BYTES)) {
     return new Response("Attachment too large", { status: 413 });
   }
-  if (attachment && !/^(image|video)\//.test(attachment.type)) {
+  if (attachments.some((file) => !/^(image|video)\//.test(file.type))) {
     return new Response("Attachment must be an image or a video", { status: 415 });
   }
 
@@ -47,18 +51,15 @@ export async function handleReportUpload(request, env) {
     contact: field("contact", MAX_CONTACT_LENGTH),
     ...Object.fromEntries(DEVICE_FIELDS.map((name) => [name, field(name) || "unknown"])),
     log: log ? { size: log.size } : null,
-    attachment: attachment
-      ? { type: attachment.type, name: attachment.name.slice(0, 100), size: attachment.size }
-      : null,
+    attachments: attachments.map((file) => ({ type: file.type, name: file.name.slice(0, 100), size: file.size })),
   };
 
   const options = { expirationTtl: REPORT_TTL_SECONDS };
   await Promise.all([
     log && env.REPORTS.put(`log:${id}`, log.stream(), options),
-    attachment && env.REPORTS.put(`attachment:${id}`, attachment.stream(), {
-      ...options,
-      metadata: { type: attachment.type },
-    }),
+    ...attachments.map((file, index) =>
+      env.REPORTS.put(`attachment:${id}:${index}`, file.stream(), { ...options, metadata: { type: file.type } }),
+    ),
   ]);
   await env.REPORTS.put(`report:${id}`, JSON.stringify(report), options);
 
@@ -80,12 +81,14 @@ export async function handleReportsDashboard(url, env) {
     });
   }
 
-  const match = url.pathname.match(/^\/dashboard\/reports\/([\w-]+)\/(log|attachment)$/);
+  // reports from before multiple attachments keep their single one at `attachment:<id>`, without an index
+  const match = url.pathname.match(/^\/dashboard\/reports\/([\w-]+)\/(log|attachment)(?:\/(\d+))?$/);
   if (!match) {
     return new Response("Not found", { status: 404 });
   }
-  const [, id, kind] = match;
-  const { value, metadata } = await env.REPORTS.getWithMetadata(`${kind}:${id}`, { type: "stream" });
+  const [, id, kind, index] = match;
+  const key = index === undefined ? `${kind}:${id}` : `${kind}:${id}:${index}`;
+  const { value, metadata } = await env.REPORTS.getWithMetadata(key, { type: "stream" });
   if (!value) {
     return new Response("Not found", { status: 404 });
   }

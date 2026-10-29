@@ -12,7 +12,7 @@ struct ReportIssueView: View {
     @State private var message = ""
     @State private var contact = ""
     @State private var includeLogs = true
-    @State private var attachment: IssueReportAttachment?
+    @State private var attachments: [IssueReportAttachment] = []
     @State private var isLoadingAttachment = false
     @State private var isSending = false
     @State private var errorMessage: String?
@@ -48,7 +48,7 @@ struct ReportIssueView: View {
 
                     MySection {
                         ReportAttachmentRow(
-                            attachment: $attachment,
+                            attachments: $attachments,
                             isLoading: $isLoadingAttachment,
                             errorMessage: $errorMessage
                         )
@@ -115,7 +115,7 @@ struct ReportIssueView: View {
                     message: trimmed(message),
                     contact: trimmed(contact),
                     includeLogs: includeLogs,
-                    attachment: attachment
+                    attachments: attachments
                 )
                 showSent = true
             } catch {

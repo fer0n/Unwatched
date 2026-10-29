@@ -54,14 +54,22 @@ function reportItem(report) {
       </header>
       <p class="message">${escapeHtml(report.message)}</p>
       <footer>${contact} · ${log}</footer>
-      ${attachmentPreview(report, base)}
+      ${attachmentPreviews(report, base)}
     </article>`;
 }
 
-function attachmentPreview(report, base) {
-  if (!report.attachment) return "";
-  if (report.attachment.type.startsWith("video/")) {
-    return `<video controls preload="metadata" src="${base}/attachment"></video>`;
+function attachmentPreviews(report, base) {
+  const files = report.attachments
+    ? report.attachments.map((file, index) => ({ type: file.type, src: `${base}/attachment/${index}` }))
+    : report.attachment
+      ? [{ type: report.attachment.type, src: `${base}/attachment` }]
+      : [];
+  return files.map(attachmentPreview).join("");
+}
+
+function attachmentPreview({ type, src }) {
+  if (type.startsWith("video/")) {
+    return `<video controls preload="metadata" src="${src}"></video>`;
   }
-  return `<a href="${base}/attachment" target="_blank"><img src="${base}/attachment" alt="Attachment"></a>`;
+  return `<a href="${src}" target="_blank"><img src="${src}" alt="Attachment"></a>`;
 }

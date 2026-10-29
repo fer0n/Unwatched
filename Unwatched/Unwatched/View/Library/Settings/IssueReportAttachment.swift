@@ -10,7 +10,7 @@ import PhotosUI
 import SwiftUI
 import UniformTypeIdentifiers
 
-struct IssueReportAttachment {
+struct IssueReportAttachment: Identifiable {
     private static let workerKVValueLimit = 24 * 1024 * 1024
     private static let videoPresets = [
         AVAssetExportPresetHEVC1920x1080,
@@ -18,6 +18,7 @@ struct IssueReportAttachment {
         AVAssetExportPreset960x540
     ]
 
+    let id = UUID()
     let data: Data
     let mimeType: String
     let fileName: String

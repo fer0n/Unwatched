@@ -7,43 +7,61 @@ import PhotosUI
 import SwiftUI
 import UnwatchedShared
 
+/// The picked attachments as rows, the ones still loading below them, and the add button last.
 struct ReportAttachmentRow: View {
-    @Binding var attachment: IssueReportAttachment?
+    static let maxCount = 5
+
+    @Binding var attachments: [IssueReportAttachment]
     @Binding var isLoading: Bool
     @Binding var errorMessage: String?
 
-    @State private var pickerItem: PhotosPickerItem?
+    @State private var pickerItems: [PhotosPickerItem] = []
+    @State private var pendingCount = 0
 
     var body: some View {
-        Group {
-            if isLoading {
-                HStack {
-                    Text("preparingAttachment")
-                    Spacer()
-                    ProgressView()
-                }
-            } else if let attachment {
-                HStack(spacing: 12) {
-                    preview(attachment)
-                        .frame(width: 44, height: 44)
-                        .clipShape(.rect(cornerRadius: 6))
-                    Text(attachment.data.count.formatted(.byteCount(style: .file)))
-                        .foregroundStyle(.secondary)
-                    Spacer()
-                    Button("remove", role: .destructive) {
-                        pickerItem = nil
+        ForEach(attachments) { attachment in
+            HStack(spacing: 12) {
+                preview(attachment)
+                    .frame(width: 44, height: 44)
+                    .clipShape(.rect(cornerRadius: 6))
+                Text(attachment.data.count.formatted(.byteCount(style: .file)))
+                    .foregroundStyle(.secondary)
+                Spacer()
+                Button("remove", role: .destructive) {
+                    withAnimation {
+                        attachments.removeAll { $0.id == attachment.id }
                     }
                 }
-            } else {
-                PhotosPicker(selection: $pickerItem, matching: .any(of: [.images, .videos])) {
-                    Label("addScreenshotOrRecording", systemImage: "photo.badge.plus")
-                }
-                .settingsListRow()
+                .buttonStyle(.borderless)
             }
         }
-        .onChange(of: pickerItem) {
-            load()
+
+        ForEach(0..<pendingCount, id: \.self) { _ in
+            HStack {
+                Text("preparingAttachment")
+                Spacer()
+                ProgressView()
+            }
         }
+
+        if remainingCount > 0 {
+            PhotosPicker(
+                selection: $pickerItems,
+                maxSelectionCount: remainingCount,
+                selectionBehavior: .ordered,
+                matching: .any(of: [.images, .videos])
+            ) {
+                Label("addScreenshotOrRecording", systemImage: "photo.badge.plus")
+            }
+            .settingsListRow()
+            .onChange(of: pickerItems) {
+                load()
+            }
+        }
+    }
+
+    private var remainingCount: Int {
+        Self.maxCount - attachments.count - pendingCount
     }
 
     @ViewBuilder
@@ -58,21 +76,30 @@ struct ReportAttachmentRow: View {
         }
     }
 
+    /// Hands the picked items off and clears the selection, so the picker opens empty for the next batch.
     private func load() {
-        attachment = nil
-        isLoading = pickerItem != nil
-        guard let pickerItem else { return }
+        let items = pickerItems
+        guard !items.isEmpty else { return }
+        withAnimation {
+            pickerItems = []
+            pendingCount += items.count
+            isLoading = true
+        }
         Task {
-            let result = await Result { try await IssueReportAttachment.load(pickerItem) }
-            guard pickerItem == self.pickerItem else { return }
-            isLoading = false
-            switch result {
-            case .success(let loaded):
-                attachment = loaded
-            case .failure(let error):
-                Log.error("loading report attachment: \(error)")
-                self.pickerItem = nil
-                errorMessage = error.localizedDescription
+            for item in items {
+                let result = await Result { try await IssueReportAttachment.load(item) }
+                // one animated update for all of it, or the List drops the insert animation
+                withAnimation {
+                    pendingCount -= 1
+                    isLoading = pendingCount > 0
+                    if case .success(let loaded) = result {
+                        attachments.append(loaded)
+                    }
+                }
+                if case .failure(let error) = result {
+                    Log.error("loading report attachment: \(error)")
+                    errorMessage = error.localizedDescription
+                }
             }
         }
     }

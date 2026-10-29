@@ -14,7 +14,7 @@ export async function sendReportEmail(env, report) {
     `Device: ${report.device}, ${report.os}`,
     `Reply to: ${report.contact || "not given"}`,
     `Log: ${report.log ? formatBytes(report.log.size) : "not included"}`,
-    `Attachment: ${report.attachment ? `${report.attachment.type}, ${formatBytes(report.attachment.size)}` : "none"}`,
+    `Attachments: ${report.attachments.map((file) => `${file.type}, ${formatBytes(file.size)}`).join("; ") || "none"}`,
     "",
     `${DASHBOARD_URL}#${report.id}`,
   ].join("\n");

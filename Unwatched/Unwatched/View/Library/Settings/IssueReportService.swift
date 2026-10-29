@@ -12,7 +12,7 @@ enum IssueReportService {
         message: String,
         contact: String,
         includeLogs: Bool,
-        attachment: IssueReportAttachment?
+        attachments: [IssueReportAttachment]
     ) async throws {
         guard let url = URL(string: "\(Credentials.analyticsEndpoint)/report") else {
             throw IssueReportError.server(0)
@@ -29,7 +29,7 @@ enum IssueReportService {
         if includeLogs, let logs = await collectLogs() {
             form.addFile("log", fileName: "Unwatched.log", mimeType: "text/plain", data: logs)
         }
-        if let attachment {
+        for attachment in attachments {
             form.addFile(
                 "attachment",
                 fileName: attachment.fileName,
