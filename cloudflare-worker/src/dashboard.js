@@ -634,8 +634,9 @@ export const DASHBOARD_HTML = `<!DOCTYPE html>
   .table-scroll { overflow-x: auto; -webkit-overflow-scrolling: touch; margin: 0 -1rem; padding: 0 1rem; }
   table { border-collapse: collapse; width: 100%; min-width: 320px; }
   th, td { text-align: left; padding: 0.5rem 0.6rem; border-bottom: 1px solid #333; font-size: 0.85rem; }
-  td { word-break: break-word; }
-  td:nth-child(2) { max-width: 45vw; }
+  td { overflow-wrap: break-word; }
+  /* Params: long JSON, so it may break anywhere rather than widen the table. */
+  td:nth-child(2) { max-width: 45vw; word-break: break-word; }
   th { color: #888; font-weight: 500; white-space: nowrap; }
   #error { color: #f66; font-size: 0.85rem; }
   #partial { color: #fbbf24; font-size: 0.78rem; margin: 0 0 0.5rem; }
@@ -664,10 +665,11 @@ export const DASHBOARD_HTML = `<!DOCTYPE html>
     color: #ccc; font-size: 0.78rem; cursor: pointer;
   }
   .toggle-btn:hover { background: #242424; }
+  .toggle-btn[hidden] { display: none; }
 
   .pie-chart { display: flex; align-items: center; gap: 1.25rem; flex-wrap: wrap; background: #1b1b1b; border: 1px solid #2a2a2a; border-radius: 10px; padding: 1rem; }
   .pie-chart svg { flex: none; }
-  .pie-legend { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 0.25rem 1rem; font-size: 0.75rem; flex: 1 1 160px; min-width: 0; }
+  .pie-legend { display: grid; grid-template-columns: repeat(auto-fill, minmax(8rem, 1fr)); gap: 0.25rem 1rem; font-size: 0.75rem; flex: 1 1 160px; min-width: 0; }
   .pie-legend div { display: flex; align-items: center; gap: 0.4rem; min-width: 0; }
   .pie-legend div span:last-child, .pie-legend div { overflow: hidden; text-overflow: ellipsis; }
   .pie-legend .muted { color: #777; }
@@ -676,7 +678,7 @@ export const DASHBOARD_HTML = `<!DOCTYPE html>
     background: none; border: 1px solid transparent; border-radius: 6px;
     color: inherit; font: inherit; padding: 0.15rem 0.35rem; margin: -0.15rem -0.35rem; cursor: pointer;
   }
-  .pie-pick span:last-child { overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+  .pie-pick span:last-child { overflow-wrap: break-word; min-width: 0; }
   .pie-pick:hover { background: #242424; }
   .pie-pick.selected { background: #242424; border-color: #3a3a3a; }
   .pie-detail { margin-top: 0.5rem; }
@@ -696,12 +698,14 @@ export const DASHBOARD_HTML = `<!DOCTYPE html>
   .rate-bar span { position: absolute; left: 0; top: 0; bottom: 0; background: rgba(59,130,246,0.25); border-radius: 3px; }
   .rate-bar b { position: relative; font-weight: 600; }
 
-  .cmp-chart { display: flex; flex-direction: column; gap: 0.5rem; }
-  .cmp-row { display: grid; grid-template-columns: 9rem 1fr 3.5rem; align-items: center; gap: 0.5rem; font-size: 0.78rem; }
+  /* One grid across rows so the columns line up. */
+  .cmp-chart { display: grid; grid-template-columns: minmax(0, 9rem) minmax(0, 1fr) auto; align-items: center; gap: 0.5rem; font-size: 0.78rem; }
+  .cmp-chart > .hint { grid-column: 1 / -1; margin: 0; }
+  .cmp-row { display: contents; }
   .cmp-label { color: #ccc; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
   .cmp-track { background: #222; border-radius: 4px; overflow: hidden; height: 12px; }
   .cmp-fill { display: block; height: 100%; border-radius: 4px; }
-  .cmp-count { text-align: right; color: #999; font-variant-numeric: tabular-nums; }
+  .cmp-count { text-align: right; color: #999; font-variant-numeric: tabular-nums; white-space: nowrap; }
 
   .funnel { display: flex; flex-direction: column; gap: 0.1rem; }
   .funnel-row { position: relative; display: flex; align-items: center; height: 32px; border: 1px solid #2a2a2a; border-radius: 6px; overflow: hidden; }
@@ -733,13 +737,13 @@ export const DASHBOARD_HTML = `<!DOCTYPE html>
 <h2>Active users (anonymous, on-device id only)</h2>
 <div class="stat-cards" id="activeUsers"></div>
 
-<h2>Active users per day (30d)</h2>
+<h2>Active users per day <span id="dauWindow"></span></h2>
 <div class="card" id="dauTrend"></div>
 
-<h2>Event volume per day (30d)</h2>
+<h2>Event volume per day <span id="eventWindow"></span></h2>
 <div class="card" id="eventTrend"></div>
 
-<h2>Free-plan capacity (30d)</h2>
+<h2>Free-plan capacity <span id="writesWindow"></span></h2>
 <p class="hint" id="writesHint"></p>
 <div class="card" id="writesTrend"></div>
 
@@ -813,12 +817,12 @@ export const DASHBOARD_HTML = `<!DOCTYPE html>
   <div>
     <h2>Queue size</h2>
     <div class="hint" id="queueHint"></div>
-    <div class="pie-chart" id="queuePie"></div>
+    <div class="card" id="queueBars"></div>
   </div>
   <div>
     <h2>Inbox size</h2>
     <div class="hint" id="inboxHint"></div>
-    <div class="pie-chart" id="inboxPie"></div>
+    <div class="card" id="inboxBars"></div>
   </div>
 </div>
 
@@ -826,12 +830,12 @@ export const DASHBOARD_HTML = `<!DOCTYPE html>
   <div>
     <h2>Subscription count</h2>
     <div class="hint" id="subsHint"></div>
-    <div class="pie-chart" id="subsPie"></div>
+    <div class="card" id="subsBars"></div>
   </div>
   <div>
     <h2>Podcast subscriptions</h2>
     <div class="hint" id="podcastSubsHint"></div>
-    <div class="pie-chart" id="podcastSubsPie"></div>
+    <div class="card" id="podcastSubsBars"></div>
   </div>
 </div>
 
@@ -949,6 +953,10 @@ function pieSVG(segments, size) {
     offset += dash;
   }
   return '<svg width="' + size + '" height="' + size + '" viewBox="0 0 ' + size + ' ' + size + '">' + circles + '</svg>';
+}
+
+function breakAtDots(name) {
+  return String(name).split('.').join('.<wbr>');
 }
 
 function timeAgo(ts) {
@@ -1095,7 +1103,7 @@ function renderGroupedPie(el, detailEl, groups, order, detailOrder) {
       const pct = total ? Math.round(totals[i] / total * 100) : 0;
       return '<button type="button" class="pie-pick' + (g === selected ? ' selected' : '') + '" data-group="' + i + '">' +
         '<span class="swatch" style="background:' + groupColor(hues[i]) + '"></span>' +
-        '<span>' + g + ': ' + totals[i] + ' (' + pct + '%)</span></button>';
+        '<span>' + g + ': ' + totals[i] + '&nbsp;(' + pct + '%)</span></button>';
     }).join('');
     el.innerHTML = pieSVG(segments) + '<div class="pie-legend">' + (legend || '<div class="muted">No data yet.</div>') + '</div>';
     el.querySelectorAll('.pie-pick').forEach(function (btn) {
@@ -1238,8 +1246,8 @@ function dayLabel(day) {
 }
 
 // Line + area chart from a series of {day, [valueKey]}.
-function lineChartSVG(series, valueKey, color, limit) {
-  const W = 640, H = 180, padL = 34, padR = 12, padT = 12, padB = 22;
+function lineChartSVG(series, valueKey, color, limit, pxWidth) {
+  const W = pxWidth || 640, H = Math.max(140, Math.round(W * 0.28)), padL = 34, padR = 12, padT = 12, padB = 22;
   const pts = series.map(function (row) { return { label: row.day, value: Number(row[valueKey]) || 0 }; });
   if (pts.length === 0) return '<div class="hint">No data yet.</div>';
   const values = pts.map(function (p) { return p.value; });
@@ -1257,13 +1265,13 @@ function lineChartSVG(series, valueKey, color, limit) {
   [0, max / 2, max].forEach(function (v) {
     const gy = y(v);
     grid += '<line x1="' + padL + '" y1="' + gy.toFixed(1) + '" x2="' + (W - padR) + '" y2="' + gy.toFixed(1) + '" stroke="#2a2a2a"/>' +
-      '<text x="' + (padL - 4) + '" y="' + (gy + 3).toFixed(1) + '" text-anchor="end" font-size="9" fill="#777">' + fmtNum(v) + '</text>';
+      '<text x="' + (padL - 4) + '" y="' + (gy + 3).toFixed(1) + '" text-anchor="end" font-size="10" fill="#777">' + fmtNum(v) + '</text>';
   });
   let xlabels = '';
   const idxs = pts.length === 1 ? [0] : [0, Math.floor((pts.length - 1) / 2), pts.length - 1];
   idxs.forEach(function (i, k) {
     const anchor = k === 0 ? 'start' : (k === idxs.length - 1 ? 'end' : 'middle');
-    xlabels += '<text x="' + x(i).toFixed(1) + '" y="' + (H - 6) + '" text-anchor="' + anchor + '" font-size="9" fill="#777">' + dayLabel(pts[i].label) + '</text>';
+    xlabels += '<text x="' + x(i).toFixed(1) + '" y="' + (H - 6) + '" text-anchor="' + anchor + '" font-size="10" fill="#777">' + dayLabel(pts[i].label) + '</text>';
   });
   const lastI = pts.length - 1;
   const dot = '<circle cx="' + x(lastI).toFixed(1) + '" cy="' + y(pts[lastI].value).toFixed(1) + '" r="3" fill="' + color + '"/>';
@@ -1272,7 +1280,7 @@ function lineChartSVG(series, valueKey, color, limit) {
     const ly = y(limit);
     limitLine = '<line x1="' + padL + '" y1="' + ly.toFixed(1) + '" x2="' + (W - padR) + '" y2="' + ly.toFixed(1) +
       '" stroke="#f87171" stroke-width="1" stroke-dasharray="4 3"/>' +
-      '<text x="' + (W - padR) + '" y="' + (ly - 4).toFixed(1) + '" text-anchor="end" font-size="9" fill="#f87171">free limit ' + fmtNum(limit) + '/day</text>';
+      '<text x="' + (W - padR) + '" y="' + (ly - 4).toFixed(1) + '" text-anchor="end" font-size="10" fill="#f87171">free limit ' + fmtNum(limit) + '/day</text>';
   }
   return '<svg viewBox="0 0 ' + W + ' ' + H + '" xmlns="http://www.w3.org/2000/svg">' +
     grid +
@@ -1292,7 +1300,7 @@ function renderLineChart(el, series, valueKey, color, limit) {
     ? 'peak <b>' + fmtNum(peak) + '</b> · <b>' + Math.round(peak / limit * 100) + '%</b> of limit'
     : 'peak <b>' + fmtNum(peak) + '</b>';
   el.innerHTML = '<div class="chart-meta"><span>avg <b>' + fmtNum(avg) + '</b>/day</span><span>' + right + '</span></div>' +
-    lineChartSVG(series, valueKey, color, limit);
+    lineChartSVG(series, valueKey, color, limit, el.clientWidth ? Math.max(280, el.clientWidth - 32) : 0);
 }
 
 const FUNNELS = [
@@ -1301,11 +1309,13 @@ const FUNNELS = [
     ['Premium.LearnMore', 'Tapped learn more'],
     ['Premium.Subscribe', 'Subscribed'],
   ]},
-  { title: 'Activation (existing users)', steps: [
-    ['Onboarding.BrowseYoutube', 'Browsed YouTube from empty queue'],
-    ['Browser.AddSubscription', 'Added a subscription'],
-    ['Player.WatchedVideo', 'Watched a video'],
-  ]},
+];
+
+// Not a funnel: most users skip the first step.
+const ACTIVATION_EVENTS = [
+  ['Onboarding.BrowseYoutube', 'Empty-queue browse'],
+  ['Browser.AddSubscription', 'Added a subscription'],
+  ['Player.WatchedVideo', 'Watched a video'],
 ];
 
 // The first-launch flow, in the order Signal.onboardingStep emits it.
@@ -1385,6 +1395,10 @@ function renderFunnels(el, usersByEvent) {
     card.innerHTML = '<div class="chart-meta"><span><b>' + f.title + '</b></span></div><div class="funnel">' + rows + '</div>';
     el.appendChild(card);
   });
+  const rows = ACTIVATION_EVENTS.map(function (e, i) {
+    return { label: e[1], count: usersByEvent[e[0]] || 0, color: BUCKET_COLORS[(2 + i) % BUCKET_COLORS.length] };
+  });
+  el.appendChild(barChartCard('Activation (existing users)', 'users, not a sequence', rows));
 }
 
 const COMPARE_GROUPS = [
@@ -1434,7 +1448,7 @@ function sortedEntries(totals) {
 }
 
 // rows: [{ label, count, color, countText? }]
-function barChartCard(title, meta, rows) {
+function barRowsHTML(rows) {
   const max = Math.max(1, Math.max.apply(null, rows.map(function (r) { return r.count; })));
   let html = '';
   rows.forEach(function (r) {
@@ -1443,11 +1457,28 @@ function barChartCard(title, meta, rows) {
       '<span class="cmp-count">' + (r.countText || r.count) + '</span></div>';
   });
   if (!rows.length) html = '<div class="hint">No data yet.</div>';
+  return '<div class="cmp-chart">' + html + '</div>';
+}
+
+function barChartCard(title, meta, rows) {
   const card = document.createElement('div');
   card.className = 'card';
   card.innerHTML = '<div class="chart-meta"><span><b>' + title + '</b></span>' +
-    (meta ? '<span>' + meta + '</span>' : '') + '</div><div class="cmp-chart">' + html + '</div>';
+    (meta ? '<span>' + meta + '</span>' : '') + '</div>' + barRowsHTML(rows);
   return card;
+}
+
+function renderBucketBars(el, buckets) {
+  const entries = Object.entries(buckets);
+  const total = entries.reduce(function (sum, e) { return sum + e[1]; }, 0);
+  el.innerHTML = barRowsHTML(total ? entries.map(function (e) {
+    return {
+      label: e[0],
+      count: e[1],
+      countText: e[1] + ' · ' + Math.round(e[1] / total * 100) + '%',
+      color: BUCKET_COLORS[2],
+    };
+  }) : []);
 }
 
 function renderBreakdowns(el, paramEvents) {
@@ -1479,7 +1510,7 @@ function renderEngagement(tbody, counts, weeklyActive) {
     const perUser = rate >= 10 ? Math.round(rate) : rate.toFixed(1);
     const adoption = Math.min(100, Math.round(users / wau * 100));
     const tr = document.createElement('tr');
-    tr.innerHTML = '<td>' + r.name + '</td>' +
+    tr.innerHTML = '<td>' + breakAtDots(r.name) + '</td>' +
       '<td class="num">' + count + '</td>' +
       '<td class="num">' + users + '</td>' +
       '<td class="num">' + perUser + '</td>' +
@@ -1498,7 +1529,7 @@ function renderErrors(chartEl, table, errors) {
   }
   errors.top.forEach(function (r) {
     const tr = document.createElement('tr');
-    tr.innerHTML = '<td>' + r.id + '</td><td class="num">' + r.count + '</td>';
+    tr.innerHTML = '<td>' + breakAtDots(r.id) + '</td><td class="num">' + r.count + '</td>';
     body.appendChild(tr);
   });
 }
@@ -1517,7 +1548,7 @@ function renderRecent(recent) {
     // Stripped to bare letters because this goes in via innerHTML and the value
     // comes off the wire.
     const channel = String(row.channel || 'unknown').replace(/[^a-z]/g, '');
-    tr.innerHTML = \`<td>\${row.name}</td><td>\${row.params}</td><td>\${channel}</td><td title="\${tr.title}">\${when}</td>\`;
+    tr.innerHTML = \`<td>\${breakAtDots(row.name)}</td><td>\${row.params}</td><td>\${channel}</td><td title="\${tr.title}">\${when}</td>\`;
     recentBody.appendChild(tr);
     recentRows.push(tr);
   });
@@ -1592,6 +1623,9 @@ fetch('/dashboard/data' + channelQuery).then(r => r.json()).then(data => {
     activeEl.appendChild(card);
   }
 
+  const win = '(last ' + data.trendWindowDays + ' days)';
+  document.getElementById('dauWindow').textContent = win;
+  document.getElementById('eventWindow').textContent = win;
   renderLineChart(document.getElementById('dauTrend'), data.activeUsersTrend, 'users', '#4ade80');
 
   document.getElementById('platformHint').textContent =
@@ -1606,7 +1640,7 @@ fetch('/dashboard/data' + channelQuery).then(r => r.json()).then(data => {
 
   const versionTotals = {};
   (data.versions || []).forEach(function (r) { versionTotals[r.version] = r.users; });
-  document.getElementById('versionWindow').textContent = '(last ' + data.trendWindowDays + ' days)';
+  document.getElementById('versionWindow').textContent = win;
   document.getElementById('versionHint').textContent =
     'Distinct users per build. Versions people are still on, not versions they last reported a snapshot from.';
   renderPie(document.getElementById('versionPie'), versionTotals);
@@ -1617,19 +1651,19 @@ fetch('/dashboard/data' + channelQuery).then(r => r.json()).then(data => {
     usersByEvent[r.name] = Number(r.users) || 0;
   });
 
-  const win = '(last ' + data.trendWindowDays + ' days)';
   document.getElementById('engagementWindow').textContent = win;
   renderEngagement(document.querySelector('#engagement tbody'), data.counts || [], data.activeUsers.weekly);
 
   renderLineChart(document.getElementById('eventTrend'), data.eventTrend, 'events', '#3b82f6');
 
   var writes = data.writes || {};
+  document.getElementById('writesWindow').textContent = '(last ' + writes.windowDays + ' days)';
   document.getElementById('writesHint').textContent =
     'Data points written/day (one per event) vs. the ' + fmtNum(writes.freeDailyLimit || 0) +
     '/day free-plan cap. Requests are batched (up to 25 events each), so this line — the write count — is the upper bound on both caps. Always counts every channel, including debug: all writes bill the same.';
   renderLineChart(document.getElementById('writesTrend'), writes.trend, 'writes', '#fbbf24', writes.freeDailyLimit || 0);
 
-  document.getElementById('funnelHint').textContent = 'Distinct users reaching each step ' + win;
+  document.getElementById('funnelHint').textContent = 'Distinct users at each step ' + win;
   renderFunnels(document.getElementById('funnels'), usersByEvent);
   renderOnboardingFunnel(document.getElementById('funnels'), data.paramEvents);
 
@@ -1638,7 +1672,7 @@ fetch('/dashboard/data' + channelQuery).then(r => r.json()).then(data => {
   renderCompare(document.getElementById('compare'), countsByEvent);
 
   document.getElementById('breakdownHint').textContent = 'Consolidated events broken out by their parameters ' + win;
-  document.getElementById('playbackStartWindow').textContent = '(last ' + data.trendWindowDays + ' days)';
+  document.getElementById('playbackStartWindow').textContent = win;
   renderPie(document.getElementById('playbackStartPie'), aggregateParam(data.paramEvents || [], 'Player.Start', 'source'));
 
   renderBreakdowns(document.getElementById('breakdowns'), data.paramEvents);
@@ -1660,20 +1694,20 @@ fetch('/dashboard/data' + channelQuery).then(r => r.json()).then(data => {
 
   document.getElementById('queueHint').textContent =
     'Based on ' + data.queueInbox.queue.sampleSize + ' users active in the last ' + data.queueInbox.windowDays + ' days';
-  renderPie(document.getElementById('queuePie'), data.queueInbox.queue.buckets);
+  renderBucketBars(document.getElementById('queueBars'), data.queueInbox.queue.buckets);
 
   document.getElementById('inboxHint').textContent =
     'Based on ' + data.queueInbox.inbox.sampleSize + ' users active in the last ' + data.queueInbox.windowDays + ' days';
-  renderPie(document.getElementById('inboxPie'), data.queueInbox.inbox.buckets);
+  renderBucketBars(document.getElementById('inboxBars'), data.queueInbox.inbox.buckets);
 
   document.getElementById('subsHint').textContent =
     'Based on ' + data.subscriptions.sampleSize + ' users active in the last ' + data.subscriptions.windowDays + ' days';
-  renderPie(document.getElementById('subsPie'), data.subscriptions.buckets);
+  renderBucketBars(document.getElementById('subsBars'), data.subscriptions.buckets);
 
   document.getElementById('podcastSubsHint').textContent =
     'Based on ' + (data.subscriptions.podcastSampleSize ?? 0) + ' users reporting a podcast count in the last ' +
     data.subscriptions.windowDays + ' days';
-  renderPie(document.getElementById('podcastSubsPie'), data.subscriptions.podcastBuckets || {});
+  renderBucketBars(document.getElementById('podcastSubsBars'), data.subscriptions.podcastBuckets || {});
 
   document.getElementById('errorWindow').textContent = '(last ' + data.errors.windowDays + ' days)';
   renderErrors(document.getElementById('errorTrend'), document.getElementById('errors'), data.errors);
