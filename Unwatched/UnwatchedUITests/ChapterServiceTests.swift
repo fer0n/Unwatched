@@ -1262,6 +1262,20 @@ final class ChapterServiceTests: XCTestCase {
                     SendableChapter(title: "Long video chapter two", startTime: 2 * 3600 + 34 * 60 + 56, endTime: nil)
                 ]
             ),
+
+            // emoticon title: the separator must not eat the ":" of ":)"
+            (
+                """
+                0:00 Welcome
+                16:07 How are brain implants huge if true?
+                17:40 :)
+                """,
+                [
+                    SendableChapter(title: "Welcome", startTime: 0, endTime: 16 * 60 + 7),
+                    SendableChapter(title: "How are brain implants huge if true?", startTime: 16 * 60 + 7, endTime: 17 * 60 + 40),
+                    SendableChapter(title: ":)", startTime: 17 * 60 + 40, endTime: nil)
+                ]
+            ),
         ]
 
         for (description, expected) in testValues {
