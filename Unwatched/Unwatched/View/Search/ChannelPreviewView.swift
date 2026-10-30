@@ -286,15 +286,22 @@ struct ChannelPreviewView: View {
             loadFailed = true
         }
     }
+}
 
-    private func toggleSubscribe() async {
+extension ChannelPreviewView {
+    fileprivate func toggleSubscribe() async {
         guard sub.youtubeChannelId != nil || sub.youtubePlaylistId != nil else { return }
         if subManager.isSubscribedSuccess == true {
             await subManager.unsubscribe(subscriptionInfo)
-        } else if !isLoading && !loadFailed && subscriptionInfo.title != nil {
-            await subManager.addWithoutRSS(subscriptionInfo)
         } else {
-            await subManager.addSubscription(subscriptionInfo)
+            if !isLoading && !loadFailed && subscriptionInfo.title != nil {
+                await subManager.addWithoutRSS(subscriptionInfo)
+            } else {
+                await subManager.addSubscription(subscriptionInfo)
+            }
+            if subManager.isSubscribedSuccess == true {
+                Signal.log("Subscription.Added", parameters: ["source": "channelPreview"])
+            }
         }
     }
 }

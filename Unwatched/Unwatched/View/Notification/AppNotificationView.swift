@@ -7,6 +7,8 @@ import SwiftUI
 import UnwatchedShared
 
 struct AppNotificationView: View {
+    @AppStorage(Const.themeColor) var theme = ThemeColor()
+
     let notification: AppNotificationData?
     let onDismiss: () -> Void
 
@@ -24,6 +26,24 @@ struct AppNotificationView: View {
                     .foregroundStyle(.primary)
                     .fontWeight(.semibold)
                     .multilineTextAlignment(.leading)
+
+                if let action = notification?.action {
+                    Button {
+                        action.perform()
+                        withAnimation {
+                            onDismiss()
+                        }
+                    } label: {
+                        Text(action.label)
+                            .fontWeight(.semibold)
+                            .foregroundStyle(theme.contrastColor)
+                    }
+                    .buttonStyle(.borderedProminent)
+                    .tint(theme.color)
+                    .buttonBorderShape(.capsule)
+                    .controlSize(.small)
+                    .padding(.leading, 5)
+                }
             }
 
             if let error = notification?.error {

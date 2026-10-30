@@ -22,6 +22,7 @@ struct PlayerView: View {
     @Environment(SheetPositionReader.self) var sheetPos
     @Environment(NavigationManager.self) var navManager
     @Environment(\.requestReview) var requestReview
+    @Environment(AppNotificationVM.self) var appNotificationVM
 
     @Binding var autoHideVM: AutoHideVM
 
@@ -258,7 +259,7 @@ struct PlayerView: View {
 
         let continuousPlay = UserDefaults.standard.bool(forKey: Const.continuousPlay)
         Log.player.info(">handleVideoEnded, continuousPlay: \(continuousPlay)")
-        handleRequestReview()
+        onVideoEnded()
 
         if continuousPlay {
             if let video = player.video {
@@ -298,6 +299,14 @@ struct PlayerView: View {
 
     static let miniPlayerHorizontalPadding: CGFloat = 15
     static let miniPlayerHeight: CGFloat = 60
+}
+
+extension PlayerView {
+    func onVideoEnded() {
+        handleRequestReview()
+        Signal.interaction("Player.Finished")
+        SubscribeSuggestion.handleVideoEnded(player.video, appNotificationVM)
+    }
 }
 
 #Preview {

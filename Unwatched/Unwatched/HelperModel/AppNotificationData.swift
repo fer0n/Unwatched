@@ -13,6 +13,12 @@ struct AppNotificationData {
     var icon: String?
     var isLoading: Bool = false
     var timeout: TimeInterval = 3.0
+    var action: AppNotificationAction?
+}
+
+struct AppNotificationAction {
+    let label: LocalizedStringKey
+    let perform: @MainActor () -> Void
 }
 
 enum DefaultNotification {

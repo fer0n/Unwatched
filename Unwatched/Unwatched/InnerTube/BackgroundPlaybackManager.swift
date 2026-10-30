@@ -121,6 +121,7 @@ final class BackgroundPlaybackManager {
         }
         let continuousPlay = UserDefaults.standard.bool(forKey: Const.continuousPlay)
         Log.player.info("backgroundPlayback: videoEnded, continuousPlay: \(continuousPlay)")
+        Signal.interaction("Player.Finished")
         guard continuousPlay else {
             if Const.markWatchedOnEnded.bool ?? true {
                 player.markVideoWatched(showMenu: false)

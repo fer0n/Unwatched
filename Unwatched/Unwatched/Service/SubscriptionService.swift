@@ -139,6 +139,21 @@ struct SubscriptionService {
         }
     }
 
+    @MainActor
+    static func subscribe(_ sub: Subscription, source: String) async {
+        let subscriptionId = sub.persistentModelID
+        let info = SubscriptionInfo(channelId: sub.youtubeChannelId, playlistId: sub.youtubePlaylistId)
+        do {
+            try await addSubscription(subscriptionInfo: info, subscriptionId: subscriptionId)
+        } catch {
+            Log.refresh.error("subscribe from \(source) failed: \(error)")
+            Signal.error("subscribeFailed")
+            return
+        }
+        Signal.log("Subscription.Added", parameters: ["source": source])
+        await RefreshManager.shared.refreshSubscription(subscriptionId: subscriptionId)
+    }
+
     static func isSubscribed(_ video: Video?) -> Bool {
         return video?.subscription?.isArchived == false
     }
