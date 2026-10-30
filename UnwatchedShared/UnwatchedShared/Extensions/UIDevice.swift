@@ -42,6 +42,11 @@ public struct Device {
     public static let isIphone: Bool = {
         UIDevice.modelName.contains("iPhone")
     }()
+
+    @MainActor
+    public static let isIphoneDuo: Bool = {
+        UIDevice.modelName.contains("iPhone Duo")
+    }()
     
     @MainActor
     public static let isIpad: Bool = {
@@ -76,6 +81,7 @@ public struct Device {
     #elseif os(macOS)
     public static let systemVersion = "macOS \(ProcessInfo.processInfo.operatingSystemVersionString)"
     public static let isIphone: Bool = false
+    public static let isIphoneDuo: Bool = false
     public static let supportsFullscreenControls: Bool = true
     public static let requiresFullscreenWebWorkaround: Bool = false
     public static let isMac: Bool = true
@@ -88,15 +94,18 @@ public struct Device {
     
     #elseif os(tvOS)
     public static let isIphone: Bool = false
+    public static let isIphoneDuo: Bool = false
     public static let systemVersion = "tvOS \(ProcessInfo.processInfo.operatingSystemVersionString)"
     public static let isVision: Bool = false
     #elseif os(watchOS)
     public static let isIphone: Bool = false
+    public static let isIphoneDuo: Bool = false
     public static let systemVersion = "watchOS \(WKInterfaceDevice.current().systemVersion)"
     public static let isVision: Bool = false
     #elseif os(visionOS)
     public static let systemVersion = "visionOS \(ProcessInfo.processInfo.operatingSystemVersionString)"
     public static let isIphone: Bool = false
+    public static let isIphoneDuo: Bool = false
     public static let supportsFullscreenControls: Bool = true
     public static let requiresFullscreenWebWorkaround: Bool = false
     public static let isMac: Bool = false

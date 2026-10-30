@@ -55,15 +55,16 @@ struct ContentView: View {
             .onChange(of: layout, initial: true) {
                 applyLayout(layout)
             }
-            .onChange(of: proxy.safeAreaInsets.top, initial: true) {
-                if !layout.landscapeFullscreen {
-                    sheetPos.setTopSafeArea(proxy.safeAreaInsets.top)
+            // folding the Duo passes through landscape
+            .onChange(of: layout.landscapeFullscreen ? nil : proxy.safeAreaInsets.top, initial: true) { _, top in
+                if let top {
+                    sheetPos.setTopSafeArea(top)
                 }
             }
             .menuViewSheet(
-                allowPlayerControlHeight: !player.limitHeight,
+                allowPlayerControlHeight: !player.limitHeight && !layout.isDuoOuterScreen,
                 landscapeFullscreen: layout.landscapeFullscreen,
-                floatingSheet: layout.regularSize,
+                floatingSheet: layout.floatingSheet,
                 disableSheet: layout.bigScreen,
                 proxy: proxy
             )
@@ -77,7 +78,9 @@ struct ContentView: View {
         .horizontalBars()
         #endif
         .onSizeChange { newSize in
-            sheetPos.sheetHeight = newSize.height
+            sheetPos.keepingMiniPlayer {
+                sheetPos.sheetHeight = newSize.height
+            }
         }
         .ignoresSafeArea(.keyboard)
     }
@@ -85,10 +88,12 @@ struct ContentView: View {
     func applyLayout(_ layout: ContentLayout) {
         let previous = sheetPos.layout
         sheetPos.layout = layout
-        if sheetPos.sheetCoversMiniPlayer != layout.shortOnHeight {
-            sheetPos.sheetCoversMiniPlayer = layout.shortOnHeight
+        sheetPos.keepingMiniPlayer {
+            if sheetPos.sheetCoversMiniPlayer != layout.sheetCoversMiniPlayer {
+                sheetPos.sheetCoversMiniPlayer = layout.sheetCoversMiniPlayer
+            }
+            sheetPos.setFixedSheetHeight(layout.fixedSheetHeight)
         }
-        sheetPos.setFixedSheetHeight(layout.fixedSheetHeight)
         #if os(iOS)
         if previous?.regularSize != layout.regularSize {
             OrientationManager.updatePodcastOrientationLock()
@@ -132,6 +137,18 @@ struct ContentLayout: Equatable {
     let fitsSideBySide: Bool
     let fixedSheetHeight: CGFloat?
     let controlBand: ControlBand?
+
+    var isDuoOuterScreen: Bool {
+        Device.isIphoneDuo && !regularSize
+    }
+
+    var floatingSheet: Bool {
+        regularSize || isDuoOuterScreen && !landscapeFullscreen
+    }
+
+    var sheetCoversMiniPlayer: Bool {
+        shortOnHeight && !isDuoOuterScreen
+    }
 
     init(proxy: GeometryProxy, regularSize: Bool) {
         let size = proxy.size

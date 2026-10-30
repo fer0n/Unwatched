@@ -63,7 +63,7 @@ struct PlayerContentView: View {
                 .ignoresSafeArea(edges: .bottom)
                 .opacity(navManager.showMenu ? 1 : 0)
 
-            if !hidePlayerPageIndicator && !sideBySide {
+            if !hidesPageIndicator && !sideBySide {
                 PlayerPageControl()
                     .padding(
                         .bottom,
@@ -277,8 +277,13 @@ struct PlayerContentView: View {
     }
     #endif
 
+    /// On the iPhone Duo the floating minimum sheet leaves no room for it
+    private var hidesPageIndicator: Bool {
+        hidePlayerPageIndicator || Device.isIphoneDuo
+    }
+
     var shadowHeight: CGFloat {
-        hidePlayerPageIndicator
+        hidesPageIndicator
             ? Const.minSheetDetent
             : Const.minSheetDetent + fadeOutHeight
     }

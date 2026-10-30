@@ -97,6 +97,15 @@ import UnwatchedShared
         fixedSheetHeight ?? (sheetCoversMiniPlayer ? sheetHeight : sheetHeight - playerAboveSheetHeight)
     }
 
+    /// The mini player detent follows the sheet size
+    func keepingMiniPlayer(_ change: () -> Void) {
+        let wasMiniPlayer = isMiniPlayer
+        change()
+        if wasMiniPlayer && !isMiniPlayer {
+            setDetentMiniPlayer()
+        }
+    }
+
     func setFixedSheetHeight(_ height: CGFloat?) {
         guard height != fixedSheetHeight else { return }
         fixedSheetHeight = height
@@ -111,6 +120,11 @@ import UnwatchedShared
 
     var isVideoPlayer: Bool {
         selectedDetent == .height(playerControlHeight)
+    }
+
+    /// The Duo's outer screen uses the mini player in place of the controls detent
+    var isPlayerDetent: Bool {
+        isVideoPlayer || layout?.isDuoOuterScreen == true && isMiniPlayer
     }
 
     var isMinimumSheet: Bool {
@@ -145,7 +159,7 @@ import UnwatchedShared
     }
 
     func setDetentVideoPlayer() {
-        guard !PlayerManager.shared.limitHeight else {
+        guard !PlayerManager.shared.limitHeight && layout?.isDuoOuterScreen != true else {
             setDetentMiniPlayer()
             return
         }

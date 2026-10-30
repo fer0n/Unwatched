@@ -213,7 +213,7 @@ struct VideoPlayer: View {
             case .landscape:
                 // only auto-hide when the menu sits at the player/minimum detent
                 if navManager.showMenu
-                    && (sheetPos.isVideoPlayer && player.isPlaying || sheetPos.isMinimumSheet) {
+                    && (sheetPos.isPlayerDetent && player.isPlaying || sheetPos.isMinimumSheet) {
                     navManager.showMenu = false
                 }
             case .portrait:

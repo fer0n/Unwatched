@@ -30,8 +30,10 @@ struct AppearanceSettingsView: View {
                     Toggle(isOn: $showTabBarLabels) {
                         Text("showTabBarLabels")
                     }
-                    Toggle(isOn: $hidePlayerPageIndicator) {
-                        Text("hidePlayerPageIndicator")
+                    if !Device.isIphoneDuo {
+                        Toggle(isOn: $hidePlayerPageIndicator) {
+                            Text("hidePlayerPageIndicator")
+                        }
                     }
                     #endif
                 }
