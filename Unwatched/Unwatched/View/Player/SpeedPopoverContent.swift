@@ -7,7 +7,7 @@ import SwiftUI
 import UnwatchedShared
 
 /// Speed selection shown in a popover: a stepper for fine adjustments,
-/// the most common speeds and the toggles to lock the speed to the current channel or tag and
+/// 1× and the most recently used speeds, and the toggles to lock the speed to the current channel or tag and
 /// to trim silence. Unlike `SpeedMenuContent` this stays open while stepping through speeds.
 struct SpeedPopoverContent: View {
     @Binding var selectedSpeed: Double
@@ -17,6 +17,7 @@ struct SpeedPopoverContent: View {
     var customSettingLabel: LocalizedStringResource = "customSpeedSetting"
     var tagLock: TagSpeedLockOption?
     var trimSilence: TrimSilenceOption?
+    @CloudStorage(Const.recentPlaybackSpeeds) var recentSpeeds = ""
 
     let itemHeight: CGFloat = 36
     let spacing: CGFloat = 6
@@ -86,7 +87,7 @@ struct SpeedPopoverContent: View {
 
     var quickSpeedRow: some View {
         HStack(spacing: spacing) {
-            ForEach(SpeedMenuContent.menuSpeeds, id: \.self) { speed in
+            ForEach(RecentSpeeds.menuSpeeds(recentSpeeds), id: \.self) { speed in
                 Button {
                     selectedSpeed = speed
                 } label: {

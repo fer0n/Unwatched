@@ -28,6 +28,7 @@ extension Const {
 
         // Playback
         Const.playbackSpeed: 1.0,
+        Const.recentPlaybackSpeeds: "",
 
         // Keep Media
         Const.autoDeleteWatchedVideos: 180,

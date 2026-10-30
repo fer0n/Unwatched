@@ -24,6 +24,7 @@ struct SpeedMenuButton<Label: View>: UIViewControllerRepresentable {
     var tagLock: TagSpeedLockOption?
     var trimSilence: TrimSilenceOption?
     var accessibilityLabel: String?
+    @CloudStorage(Const.recentPlaybackSpeeds) var recentSpeeds = ""
     @ViewBuilder var label: () -> Label
 
     func makeUIViewController(context: Context) -> Controller {
@@ -38,7 +39,7 @@ struct SpeedMenuButton<Label: View>: UIViewControllerRepresentable {
         uiViewController.hostedSize(in: proposal)
     }
 
-    /// Mirrors `SpeedMenuContent`: a stepper, the most common speeds, the channel and tag locks and trim silence.
+    /// Mirrors `SpeedMenuContent`: a stepper, 1× and the recent speeds, the channel and tag locks and trim silence.
     /// Every action keeps the menu open, the way `menuActionDismissBehavior(.disabled)` does there.
     private var menu: UIMenu {
         var children: [UIMenuElement] = [stepperSection, quickSpeedSection, customSettingAction]
@@ -103,7 +104,7 @@ struct SpeedMenuButton<Label: View>: UIViewControllerRepresentable {
     }
 
     private var quickSpeedSection: UIMenu {
-        let children = SpeedMenuContent.menuSpeeds.map { speed in
+        let children = RecentSpeeds.menuSpeeds(recentSpeeds).map { speed in
             let action = UIAction(
                 title: SpeedHelper.label(speed),
                 attributes: speed == selectedSpeed ? [.disabled, .keepsMenuPresented] : .keepsMenuPresented

@@ -7,7 +7,7 @@ import SwiftUI
 import UnwatchedShared
 
 /// Menu entries to select the playback speed: a stepper for fine adjustments,
-/// the most common speeds and the toggles to lock the speed to the current channel or tag
+/// 1× and the most recently used speeds, and the toggles to lock the speed to the current channel or tag
 /// and to trim silence.
 struct SpeedMenuContent: View {
     @Binding var selectedSpeed: Double
@@ -18,7 +18,11 @@ struct SpeedMenuContent: View {
     var tagLock: TagSpeedLockOption?
     var trimSilence: TrimSilenceOption?
 
-    static let menuSpeeds: [Double] = [1, 1.3, 1.5, 2]
+    @CloudStorage(Const.recentPlaybackSpeeds) var recentSpeeds = ""
+
+    var menuSpeeds: [Double] {
+        RecentSpeeds.menuSpeeds(recentSpeeds)
+    }
 
     var body: some View {
         // the menu shows neutral system colors instead of inheriting the app's theme tint
@@ -26,7 +30,7 @@ struct SpeedMenuContent: View {
             speedStepper
 
             ControlGroup {
-                ForEach(Self.menuSpeeds, id: \.self) { speed in
+                ForEach(menuSpeeds, id: \.self) { speed in
                     Button {
                         selectedSpeed = speed
                     } label: {

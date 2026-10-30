@@ -147,6 +147,7 @@ final class AVPlayerViewModel: PlayerBackend {
         if player.isPlaying {
             accumulateSecondsSaved()
             player.monitorChapters(time: seconds)
+            player.trackSpeedUsage()
             statsTickCount += 1
             if statsTickCount >= Const.updateDbTimeSeconds {
                 statsTickCount = 0

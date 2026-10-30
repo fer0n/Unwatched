@@ -392,6 +392,7 @@ public struct Const {
     public static let defaultVideoPlacement = "defaultVideoPlacement"
     public static let autoClearNew = "autoClearNew"
     public static let playbackSpeed = "playbackSpeed"
+    public static let recentPlaybackSpeeds = "recentPlaybackSpeeds"
     public static let continuousPlay = "continuousPlay"
     public static let markWatchedOnEnded = "markWatchedOnEnded"
     public static let suggestVideos = "suggestVideos"
