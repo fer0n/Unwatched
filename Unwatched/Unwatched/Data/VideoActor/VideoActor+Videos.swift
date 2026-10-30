@@ -12,8 +12,9 @@ struct FetchResult: Sendable {
     var feedUnavailable = false
     var isFallback = false
 
+    /// Watch Later depends on this device's YouTube login, so it stays off the synced row and the outage count
     var outcome: [FetchOutcome] {
-        guard let subscriptionId = sub.persistentId else { return [] }
+        guard !sub.isWatchLater, let subscriptionId = sub.persistentId else { return [] }
         return [FetchOutcome(subscriptionId: subscriptionId, isPodcast: sub.isPodcast, errorMessage: errorMessage)]
     }
 }
@@ -40,6 +41,9 @@ actor VideoActor: SharedContextActor {
 
     /// Skips the local response cache for the current `loadVideos` run
     var ignoreCache = false
+
+    /// Watch Later needs a web page, too slow for a background refresh
+    var skipWatchLater = false
 
     @discardableResult
     func addForeignUrls(_ urls: [URL],
@@ -89,7 +93,10 @@ actor VideoActor: SharedContextActor {
                                     at index: Int) async throws -> [Video] {
         Log.refresh.info("addForeignPlaylist")
         var videos = [Video]()
-        let playlistVideos = try await YoutubeDataAPI.getYtVideoInfoFromPlaylist(playlistId)
+        let isWatchLater = playlistId == YoutubeUrlParser.watchLaterPlaylistId
+        let playlistVideos = isWatchLater
+            ? try await Self.loadWatchLater().map(SearchVM.sendable)
+            : try await YoutubeDataAPI.getYtVideoInfoFromPlaylist(playlistId)
         for sendableVideo in playlistVideos {
             if let video = videoAlreadyExists(sendableVideo.youtubeId) {
                 videos.append(video)
@@ -104,6 +111,10 @@ actor VideoActor: SharedContextActor {
         }
         setVideosNew(videos)
         addVideosTo(videos, placement: videoplacement, index: index)
+        if isWatchLater {
+            try modelContext.save()
+            VideoService.fetchMissingInfoInBg(youtubeIds: videos.map(\.youtubeId))
+        }
         return videos
     }
 
@@ -195,14 +206,17 @@ actor VideoActor: SharedContextActor {
     func loadVideos(
         _ subscriptionIds: [PersistentIdentifier]?,
         fetchDurations: Bool,
-        ignoreCache: Bool = false
+        ignoreCache: Bool = false,
+        skipWatchLater: Bool = false
     ) async throws -> NewVideosNotificationInfo {
         Log.refresh.info("loadVideos")
         newVideos = NewVideosNotificationInfo()
         self.ignoreCache = ignoreCache
+        self.skipWatchLater = skipWatchLater
         defer {
             self.firstTimeSubCount = 0
             self.ignoreCache = false
+            self.skipWatchLater = false
         }
 
         let sendableSubs = try getSubscriptions(subscriptionIds)
@@ -310,7 +324,7 @@ actor VideoActor: SharedContextActor {
         return (videoModels, addedVideos)
     }
 
-    private func insertVideoModels(from videos: [SendableVideo], to sub: Subscription) -> [Video] {
+    func insertVideoModels(from videos: [SendableVideo], to sub: Subscription) -> [Video] {
         var videoModels = [Video]()
         for vid in videos {
             let video = vid.createVideo()
@@ -425,6 +439,9 @@ extension VideoActor {
         _ fetched: FetchResult,
         _ placementInfo: DefaultVideoPlacement
     ) async throws -> FetchedVideoIds {
+        if fetched.sub.isWatchLater {
+            return try await handleWatchLater(fetched.videos, sub: fetched.sub, placementInfo)
+        }
         let result = await handleNewVideos(
             fetched.sub,
             fetched.videos,
@@ -484,7 +501,7 @@ extension VideoActor {
         }
     }
 
-    private func cacheImages(for videos: [SendableVideo], discardShorts: Bool) {
+    func cacheImages(for videos: [SendableVideo], discardShorts: Bool) {
         let imagesToBeSaved = videos.compactMap { vid in
             let discardImage = vid.isYtShort == true && discardShorts
             if !discardImage,

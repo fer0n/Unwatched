@@ -7,10 +7,17 @@ extension VideoService {
     /// Fetches the description and channel a video was added without — search results carry
     /// no description, and a Short's row carries no channel either.
     static func fetchMissingInfoInBg(youtubeId: String) {
+        fetchMissingInfoInBg(youtubeIds: [youtubeId])
+    }
+
+    static func fetchMissingInfoInBg(youtubeIds: [String]) {
+        guard !youtubeIds.isEmpty else { return }
         Task.detached {
             let repo = VideoActor()
-            guard let info = await repo.fetchMissingInfo(youtubeId: youtubeId) else { return }
-            await applyToMainContext(info, youtubeId: youtubeId)
+            for youtubeId in youtubeIds {
+                guard let info = await repo.fetchMissingInfo(youtubeId: youtubeId) else { continue }
+                await applyToMainContext(info, youtubeId: youtubeId)
+            }
         }
     }
 
@@ -40,7 +47,8 @@ extension VideoService {
     static func loadNewVideosInBg(
         subscriptionIds: [PersistentIdentifier]? = nil,
         fetchDurations: Bool,
-        ignoreCache: Bool = false
+        ignoreCache: Bool = false,
+        skipWatchLater: Bool = false
     ) -> Task<NewVideosNotificationInfo, Error> {
         return Task.detached {
             Log.info("loadNewVideosInBg")
@@ -50,7 +58,8 @@ extension VideoService {
                 return try await repo.loadVideos(
                     subscriptionIds,
                     fetchDurations: hasPremium && fetchDurations,
-                    ignoreCache: ignoreCache
+                    ignoreCache: ignoreCache,
+                    skipWatchLater: skipWatchLater
                 )
             } catch {
                 Log.error("\(error)")

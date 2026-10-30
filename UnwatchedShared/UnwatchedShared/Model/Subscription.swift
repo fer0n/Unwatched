@@ -31,6 +31,10 @@ public extension SubscriptionData {
     var subscriptionKey: String? {
         youtubeChannelId ?? youtubePlaylistId ?? link?.absoluteString
     }
+
+    var isWatchLater: Bool {
+        youtubePlaylistId == YoutubeUrlParser.watchLaterPlaylistId
+    }
 }
 
 @Model

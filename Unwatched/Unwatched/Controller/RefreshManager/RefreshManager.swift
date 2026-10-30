@@ -255,7 +255,7 @@ extension RefreshManager {
         do {
             NotificationManager.notifyRun(.start)
 
-            let task = VideoService.loadNewVideosInBg(fetchDurations: false)
+            let task = VideoService.loadNewVideosInBg(fetchDurations: false, skipWatchLater: true)
             // batch fetch durations only when necessary, e.g. when opening the app
             UserDefaults.standard.set(true, forKey: Const.requiresDurationFetch)
 

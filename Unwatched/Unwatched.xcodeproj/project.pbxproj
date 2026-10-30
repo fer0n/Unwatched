@@ -1089,7 +1089,9 @@
 		F09FC4B9A2CE20D70AF8837C /* SoftSafeAreaBar.swift in Sources */ = {isa = PBXBuildFile; fileRef = 52E18A913E22C7E3181E2950 /* SoftSafeAreaBar.swift */; };
 		F33DFA11BACC0000000000A1 /* FeedFallbackTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = F33DFA11BACC0000000000A2 /* FeedFallbackTests.swift */; };
 		F33DFA11BACC0000000000B1 /* VideoActor+FeedFallback.swift in Sources */ = {isa = PBXBuildFile; fileRef = F33DFA11BACC0000000000B3 /* VideoActor+FeedFallback.swift */; };
+		F33DFA11BACC0000000000C1 /* VideoActor+WatchLater.swift in Sources */ = {isa = PBXBuildFile; fileRef = F33DFA11BACC0000000000C3 /* VideoActor+WatchLater.swift */; };
 		F33DFA11BACC0000000000B2 /* VideoActor+FeedFallback.swift in Sources */ = {isa = PBXBuildFile; fileRef = F33DFA11BACC0000000000B3 /* VideoActor+FeedFallback.swift */; };
+		F33DFA11BACC0000000000C2 /* VideoActor+WatchLater.swift in Sources */ = {isa = PBXBuildFile; fileRef = F33DFA11BACC0000000000C3 /* VideoActor+WatchLater.swift */; };
 		F44F29F47E0F805EB8AFFDF9 /* SoftSafeAreaBar.swift in Sources */ = {isa = PBXBuildFile; fileRef = 52E18A913E22C7E3181E2950 /* SoftSafeAreaBar.swift */; };
 		F4D15769393CBD1A49A96E2A /* LiveStreamSetting.swift in Sources */ = {isa = PBXBuildFile; fileRef = E4989576097A7A55509DB7E5 /* LiveStreamSetting.swift */; };
 		F7401C1BC1811AE84826B642 /* SubscribeErrorPopover.swift in Sources */ = {isa = PBXBuildFile; fileRef = A0C99D870F964FB8714AE40E /* SubscribeErrorPopover.swift */; };
@@ -1851,6 +1853,7 @@
 		EFCCDA9D5303A1477280830C /* WebPlayerBackend.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = WebPlayerBackend.swift; sourceTree = "<group>"; };
 		F33DFA11BACC0000000000A2 /* FeedFallbackTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FeedFallbackTests.swift; sourceTree = "<group>"; };
 		F33DFA11BACC0000000000B3 /* VideoActor+FeedFallback.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "VideoActor+FeedFallback.swift"; sourceTree = "<group>"; };
+		F33DFA11BACC0000000000C3 /* VideoActor+WatchLater.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "VideoActor+WatchLater.swift"; sourceTree = "<group>"; };
 		F6E752B17B521261C873B3BA /* BackgroundPlaybackManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BackgroundPlaybackManager.swift; sourceTree = "<group>"; };
 		FADE86879D704827B7266EA7 /* PodcastTriageTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PodcastTriageTests.swift; sourceTree = "<group>"; };
 		FC26B48EF88832652EFF106A /* ChapterAutomationSettings.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ChapterAutomationSettings.swift; sourceTree = "<group>"; };
@@ -2943,6 +2946,7 @@
 				2B7D24515F013C14E96AC7C4 /* VideoActor+LiveStreams.swift */,
 				88EF34BE2B7C0B5F007D33D4 /* VideoActor+Subscriptions.swift */,
 				F33DFA11BACC0000000000B3 /* VideoActor+FeedFallback.swift */,
+				F33DFA11BACC0000000000C3 /* VideoActor+WatchLater.swift */,
 				88EF34BC2B7C09CE007D33D4 /* VideoActor+Entries.swift */,
 			);
 			path = VideoActor;
@@ -3555,6 +3559,7 @@
 				88FB236A2DD4BAD10066DB07 /* MultiPayload.swift in Sources */,
 				889AF9622C50ED05001CEDE6 /* VideoActor+Subscriptions.swift in Sources */,
 				F33DFA11BACC0000000000B1 /* VideoActor+FeedFallback.swift in Sources */,
+				F33DFA11BACC0000000000C1 /* VideoActor+WatchLater.swift in Sources */,
 				889AF9382C50ECF5001CEDE6 /* SubscriptionSpeedSetting.swift in Sources */,
 				88913A38E9920BF251498E5C /* SubscriptionSkipSetting.swift in Sources */,
 				889AF9392C50ECF5001CEDE6 /* ImportSubscriptionsView.swift in Sources */,
@@ -4075,6 +4080,7 @@
 				889017A02D790C61008BC329 /* BrowserWindow.swift in Sources */,
 				88EF34BF2B7C0B5F007D33D4 /* VideoActor+Subscriptions.swift in Sources */,
 				F33DFA11BACC0000000000B2 /* VideoActor+FeedFallback.swift in Sources */,
+				F33DFA11BACC0000000000C2 /* VideoActor+WatchLater.swift in Sources */,
 				8851D8542EC0AE6F006D3310 /* PlayerControlsOrnament.swift in Sources */,
 				8891F0B22B4E9F4E0098A3FB /* SubscriptionService.swift in Sources */,
 				8891F0B82B4F3E080098A3FB /* Collection.swift in Sources */,

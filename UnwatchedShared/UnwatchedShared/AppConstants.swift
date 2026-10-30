@@ -157,6 +157,9 @@ public struct Const {
         }
     }
 
+    /// Watch Later pages (100 videos each) read per refresh; the whole list is reloaded every time.
+    public static let watchLaterRefreshPages = 3
+
     /// Episodes triaged from a new podcast subscription, independent of how many subscriptions load
     /// with it: unlike a channel's feed, the rest of the catalogue stays in `PodcastEpisodeCache`.
     public static let podcastTriageNewSubs = 1
@@ -435,6 +438,7 @@ public struct Const {
     public static let hiddenLiveStreamIds = "hiddenLiveStreamIds"
     public static let hiddenLiveStreamIdsLimit = 500
     public static let feedFallbackChannels = "feedFallbackChannels"
+    public static let watchLaterSeenIds = "watchLaterSeenIds"
     public static let feedFallbackConcurrency = 4
 
     public static let navigationManager = "NavigationManager"

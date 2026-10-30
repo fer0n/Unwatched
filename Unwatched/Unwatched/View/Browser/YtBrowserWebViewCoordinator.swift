@@ -263,6 +263,10 @@ extension YtBrowserWebView {
                 // the redirect after /signin, once the session has switched
                 isSwitchingChannel = false
                 HomeFeedService.shared.accountChanged()
+                WatchLaterState.reset()
+                SubscriptionVideoCache.shared.remove(
+                    SubscriptionVideoListVM.Source.playlist(YoutubeUrlParser.watchLaterPlaylistId).cacheKey
+                )
             }
             handleIsMobilePage(url)
             handleCurrentUrl(url)
@@ -367,6 +371,13 @@ extension YtBrowserWebView {
         @MainActor func extractSubscriptionInfo(_ webView: WKWebView, _ info: SubscriptionInfo) {
             Log.browser.info("extractSubscriptionInfo")
             let url = webView.url
+            if info.playlistId == YoutubeUrlParser.watchLaterPlaylistId {
+                parent.browserManager.setFoundInfo(SubscriptionInfo(
+                    url, nil, nil, nil, String(localized: "watchLater"), nil, info.playlistId
+                ))
+                parent.browserManager.hasCheckedInfo = true
+                return
+            }
             webView.evaluateJavaScript(getSubscriptionInfoScript) { (result, error) in
                 if let error = error {
                     Log.browser.error("JavaScript evaluation error: \(error)")

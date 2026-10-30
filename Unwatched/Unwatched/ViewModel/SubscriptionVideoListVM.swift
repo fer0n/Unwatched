@@ -11,6 +11,7 @@ import UnwatchedShared
     private(set) var nextPageToken: String?
     private(set) var isLoading = false
     private(set) var loadFailed = false
+    private(set) var signedOut = false
     private var referenceDate: Date?
 
     @ObservationIgnored private var mappedRemoteVideos: [SendableVideo]?
@@ -61,6 +62,11 @@ import UnwatchedShared
         return mapped
     }
 
+    /// Relative dates are too coarse to sort Watch Later by
+    var keepsListOrder: Bool {
+        source == .playlist(YoutubeUrlParser.watchLaterPlaylistId)
+    }
+
     var canLoadMore: Bool {
         referenceDate == nil || nextPageToken != nil || loadFailed
     }
@@ -70,8 +76,10 @@ import UnwatchedShared
         isLoading = true
         loadFailed = false
 
-        var known = storedIds.union(fetched.map(\.id))
+        // stored videos stay in the list so they keep their position
+        var known = keepsListOrder ? Set(fetched.map(\.id)) : storedIds.union(fetched.map(\.id))
         var added: [ITVideo] = []
+        var newCount = 0
         var token = nextPageToken
         var anchor = referenceDate
         var failed = false
@@ -94,17 +102,17 @@ import UnwatchedShared
                 for video in page.videos where known.insert(video.id).inserted {
                     let index = fetched.count + added.count
                     added.append(anchored(video, fetchedAt: fetchedAt, anchor: pageAnchor, index: index))
+                    if !storedIds.contains(video.id) { newCount += 1 }
                 }
-                if added.count >= Self.minNewVideosPerLoad || token == nil { break }
+                if newCount >= Self.minNewVideosPerLoad || token == nil { break }
             }
         } catch {
             Log.error("SubscriptionVideoList loadMore failed: \(error)")
             failed = true
+            signedOut = error as? HomeFeedService.HomeFeedError == .signedOut
         }
         let changed = !added.isEmpty || token != nextPageToken || anchor != referenceDate
-        let merged = (fetched + added).sorted {
-            ($0.publishedAt ?? .distantPast) > ($1.publishedAt ?? .distantPast)
-        }
+        let merged = ordered(fetched + added)
         // one animated update, or the List inserts the rows without animation
         mappedRemoteVideos = merged.map(sendable)
         withAnimation {
@@ -116,6 +124,12 @@ import UnwatchedShared
         }
         if changed {
             cacheState()
+        }
+    }
+
+    private func ordered(_ videos: [ITVideo]) -> [ITVideo] {
+        keepsListOrder ? videos : videos.sorted {
+            ($0.publishedAt ?? .distantPast) > ($1.publishedAt ?? .distantPast)
         }
     }
 
@@ -148,6 +162,8 @@ import UnwatchedShared
             return detectStale && page.videos.isEmpty ? nil : page
         } catch APIError.httpError(400) where detectStale {
             return nil
+        } catch HomeFeedService.HomeFeedError.requestFailed(400) where detectStale {
+            return nil
         }
     }
 
@@ -156,6 +172,8 @@ import UnwatchedShared
         return switch source {
         case .channel(let channelId):
             try await api.fetchChannelVideos(channelId: channelId, continuationToken: token)
+        case .playlist(let playlistId) where playlistId == YoutubeUrlParser.watchLaterPlaylistId:
+            try await HomeFeedService.shared.fetchPlaylist(playlistId, continuationToken: token)
         case .playlist(let playlistId):
             try await api.fetchPlaylistVideos(playlistId: playlistId, continuationToken: token)
         }

@@ -23,11 +23,27 @@ extension InnerTubeAPI {
 
     public func fetchPlaylistVideos(playlistId: String, continuationToken: String? = nil) async throws -> SearchPage {
         let data = try await browse(browseId: "VL\(playlistId)", continuationToken: continuationToken)
+        return playlistPage(from: data, playlistId: playlistId)
+    }
+
+    /// A `browse VL<playlistId>` response fetched elsewhere, e.g. Watch Later from the signed-in page.
+    public func parsePlaylistPage(json text: String, playlistId: String) -> SearchPage {
+        guard let json = try? JSONSerialization.jsonObject(with: Data(text.utf8)) as? [String: Any] else {
+            return SearchPage(videos: [], nextPageToken: nil)
+        }
+        return playlistPage(from: json, playlistId: playlistId)
+    }
+
+    private func playlistPage(from data: [String: Any], playlistId: String) -> SearchPage {
         // a short playlist's suggestions continue in a section of their own
         let items = tabContents(in: data, renderer: "sectionListRenderer")?.lazy.compactMap {
             ($0["itemSectionRenderer"] as? [String: Any])?["contents"] as? [[String: Any]]
         }.first
-        return lockupPage(items ?? continuationItems(in: data), channelId: nil, logName: "playlist \(playlistId)")
+        // an editable list (the owner's view) may still come as the older renderer, wrapped once
+        let flattened = (items ?? continuationItems(in: data)).flatMap {
+            (($0["playlistVideoListRenderer"] as? [String: Any])?["contents"] as? [[String: Any]]) ?? [$0]
+        }
+        return lockupPage(flattened, channelId: nil, logName: "playlist \(playlistId)")
     }
 
     private func browse(browseId: String, params: String? = nil, continuationToken: String?) async throws -> [String: Any] {
@@ -61,6 +77,9 @@ extension InnerTubeAPI {
         for item in items {
             if let lockup = item["lockupViewModel"] as? [String: Any],
                let video = parseListLockup(lockup, channelId: channelId) {
+                videos.append(video)
+            } else if let renderer = item["playlistVideoRenderer"] as? [String: Any],
+                      let video = parsePlaylistVideoRenderer(renderer) {
                 videos.append(video)
             } else if let token = continuationToken(of: item) {
                 nextPageToken = token
@@ -110,6 +129,29 @@ extension InnerTubeAPI {
             publishedAt: published?.date,
             publishedTimeText: published?.text,
             badges: labels
+        )
+    }
+
+    private func parsePlaylistVideoRenderer(_ renderer: [String: Any]) -> ITVideo? {
+        // deleted and private videos stay in the list, unplayable
+        guard let videoId = renderer["videoId"] as? String, renderer["isPlayable"] as? Bool != false else { return nil }
+        let runs = { (key: String) in (renderer[key] as? [String: Any])?["runs"] as? [[String: Any]] ?? [] }
+        let title = runs("title").compactMap { $0["text"] as? String }.joined()
+        let byline = runs("shortBylineText").first
+        let endpoint = byline?["navigationEndpoint"] as? [String: Any]
+        let channelId = (endpoint?["browseEndpoint"] as? [String: Any])?["browseId"] as? String
+        let published = runs("videoInfo").lazy
+            .compactMap { $0["text"] as? String }
+            .compactMap { text in self.parseRelativeDate(text).map { (text: text, date: $0) } }
+            .first
+        return ITVideo(
+            id: videoId,
+            title: title,
+            channelTitle: byline?["text"] as? String ?? "",
+            channelId: channelId,
+            duration: (renderer["lengthSeconds"] as? String).flatMap(TimeInterval.init),
+            publishedAt: published?.date,
+            publishedTimeText: published?.text
         )
     }
 

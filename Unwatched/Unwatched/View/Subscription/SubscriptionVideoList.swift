@@ -48,7 +48,8 @@ struct SubscriptionVideoList: View, Equatable {
                 if viewModel.isLoading {
                     ProgressView()
                 } else {
-                    Text(viewModel.loadFailed ? "channelLoadFailed" : "showMoreResults")
+                    Text(!viewModel.loadFailed ? "showMoreResults"
+                            : viewModel.signedOut ? "watchLaterSignedOut" : "channelLoadFailed")
                     Image(systemName: viewModel.loadFailed ? "arrow.clockwise" : "chevron.down")
                 }
             }
@@ -60,6 +61,9 @@ struct SubscriptionVideoList: View, Equatable {
     }
 
     var rows: [Row] {
+        if viewModel.keepsListOrder {
+            return listOrderedRows
+        }
         let storedIds = Set(videos.map(\.youtubeId))
         let remote = viewModel.remoteVideos.filter { !storedIds.contains($0.youtubeId) }
         guard !remote.isEmpty else { return videos.map(Row.stored) }
@@ -83,6 +87,14 @@ struct SubscriptionVideoList: View, Equatable {
             }
         }
         return result
+    }
+
+    private var listOrderedRows: [Row] {
+        let remote = viewModel.remoteVideos
+        let stored = Dictionary(videos.map { ($0.youtubeId, $0) }, uniquingKeysWith: { first, _ in first })
+        let listed = Set(remote.map(\.youtubeId))
+        return remote.map { stored[$0.youtubeId].map(Row.stored) ?? .remote($0) }
+            + videos.filter { !listed.contains($0.youtubeId) }.map(Row.stored)
     }
 
     enum Row: Identifiable {

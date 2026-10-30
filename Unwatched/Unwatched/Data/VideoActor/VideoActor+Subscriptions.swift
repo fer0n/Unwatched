@@ -104,6 +104,9 @@ extension VideoActor {
 
     /// Fetches all videos for the specified subscription.
     func fetchVideos(_ sub: SendableSubscription) async throws -> FetchResult {
+        if sub.isWatchLater {
+            return await fetchWatchLater(sub)
+        }
         guard let url = sub.link else {
             Log.refresh.info("sub has no url: \(sub.title)")
             return FetchResult(sub: sub, videos: [], errorMessage: nil)

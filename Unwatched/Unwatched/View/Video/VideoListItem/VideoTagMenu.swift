@@ -16,14 +16,14 @@ struct VideoTagMenu: View {
     let videoData: VideoData
 
     var body: some View {
-        if !tags.isEmpty,
-           let video = VideoService.getVideoModel(from: videoData, modelContext: modelContext) {
+        if !tags.isEmpty {
+            let video = storedVideo
             Menu {
                 ForEach(tags) { tag in
-                    let viaChannel = tag.covers(video.subscription)
+                    let viaChannel = tag.covers(video?.subscription)
                     Button {
                         withAnimation {
-                            toggle(tag, video)
+                            toggle(tag)
                         }
                     } label: {
                         Label(
@@ -41,7 +41,12 @@ struct VideoTagMenu: View {
         }
     }
 
-    private func toggle(_ tag: Tag, _ video: Video) {
+    private var storedVideo: Video? {
+        videoData as? Video ?? VideoService.getVideo(for: videoData.youtubeId, modelContext: modelContext)
+    }
+
+    private func toggle(_ tag: Tag) {
+        guard let video = VideoService.getVideoModel(from: videoData, modelContext: modelContext) else { return }
         tag.setCovers(video: video, !tag.covers(video: video))
         try? modelContext.save()
     }

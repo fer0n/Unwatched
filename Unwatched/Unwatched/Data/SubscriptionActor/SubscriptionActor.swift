@@ -66,6 +66,12 @@ actor SubscriptionActor: SharedContextActor {
             return
         }
 
+        if info.playlistId == YoutubeUrlParser.watchLaterPlaylistId {
+            info.title = String(localized: "watchLater")
+            try await addSubscriptionWithoutRSS(info)
+            return
+        }
+
         // if it doesn't exist get url and run the regular subscription flow
         info.rssFeedUrl = await info.getRssFeedUrl()
         if info.rssFeedUrl == nil {

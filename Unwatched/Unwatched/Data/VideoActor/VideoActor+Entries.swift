@@ -274,6 +274,9 @@ extension VideoActor {
     /// what it has already seen otherwise. Podcasts run this before inserting anything, so a show's
     /// back catalogue never becomes `Video` rows — it stays in `PodcastEpisodeCache`.
     func triageCandidates<T: VideoData>(_ videos: [T], sub: Subscription) -> [T] {
+        if sub.isWatchLater {
+            return videos
+        }
         guard let cutOffDate = sub.mostRecentVideoDate else {
             let newSubLimit = sub.isPodcast
                 ? Const.podcastTriageNewSubs

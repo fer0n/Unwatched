@@ -51,6 +51,18 @@ public final class SubscriptionVideoCache {
         }
     }
 
+    public func remove(_ key: String) {
+        entries[key] = nil
+        loadedKeys.insert(key)
+        Task.detached(priority: .utility) {
+            let context = Self.newContext
+            for row in (try? context.fetch(Self.fetch(key))) ?? [] {
+                context.delete(row)
+            }
+            try? context.save()
+        }
+    }
+
     public func deleteAll() {
         entries = [:]
         loadedKeys = []

@@ -17,9 +17,10 @@ public final class HomeFeedService: NSObject, WKNavigationDelegate {
         public var nextPageToken: String?
     }
 
-    public enum HomeFeedError: Error {
+    public enum HomeFeedError: Error, Equatable {
         case pageUnavailable
         case requestFailed(Int)
+        case signedOut
     }
 
     private static let pageLifetime: TimeInterval = 30 * 60
@@ -49,7 +50,7 @@ public final class HomeFeedService: NSObject, WKNavigationDelegate {
     public func fetch(seedIds: [String]) async throws -> Page {
         defer { scheduleRelease() }
         try await ensurePage()
-        if try await isLoggedIn() {
+        if (try? await isLoggedIn()) == true {
             let page = try await request("browse", ["browseId": "FEwhat_to_watch"])
             let videos = page.videos.filter(Self.isRecommendable)
             if !videos.isEmpty {
@@ -69,6 +70,25 @@ public final class HomeFeedService: NSObject, WKNavigationDelegate {
         let videos = page.videos.filter(Self.isRecommendable)
         Log.innerTube.info("home feed next page: \(videos.count) videos")
         return Page(videos: videos, nextPageToken: page.nextPageToken)
+    }
+
+    /// A playlist as the signed-in account sees it, e.g. Watch Later.
+    public func fetchPlaylist(
+        _ playlistId: String,
+        continuationToken: String? = nil
+    ) async throws -> InnerTubeAPI.SearchPage {
+        defer { scheduleRelease() }
+        try await ensurePage()
+        let payload: [String: Any]
+        if let continuationToken {
+            payload = ["continuation": continuationToken]
+        } else {
+            guard try await isLoggedIn() else { throw HomeFeedError.signedOut }
+            payload = ["browseId": "VL\(playlistId)"]
+        }
+        return try await request("browse", payload) { api, body in
+            await api.parsePlaylistPage(json: body, playlistId: playlistId)
+        }
     }
 
     // round-robin, so the first rows aren't all about one seed
@@ -217,10 +237,20 @@ public final class HomeFeedService: NSObject, WKNavigationDelegate {
 
     private func isLoggedIn() async throws -> Bool {
         guard let webView else { throw HomeFeedError.pageUnavailable }
-        return await evaluateBool(HomeFeedScript.isLoggedIn, in: webView)
+        let loggedIn: Bool? = await withDeadline(.seconds(3), fallback: nil) { finish in
+            webView.evaluateJavaScript(HomeFeedScript.isLoggedIn) { result, _ in
+                finish(result as? Bool)
+            }
+        }
+        guard let loggedIn else { throw HomeFeedError.pageUnavailable }
+        return loggedIn
     }
 
-    private func request(_ endpoint: String, _ payload: [String: Any]) async throws -> InnerTubeAPI.SearchPage {
+    private func request(
+        _ endpoint: String,
+        _ payload: [String: Any],
+        parse: @Sendable (InnerTubeAPI, String) async -> InnerTubeAPI.SearchPage = { await $0.parseVideoPage(json: $1) }
+    ) async throws -> InnerTubeAPI.SearchPage {
         guard let webView else { throw HomeFeedError.pageUnavailable }
         let (status, body) = await withDeadline(Self.requestTimeout, fallback: (0, nil)) { finish in
             webView.callAsyncJavaScript(
@@ -238,7 +268,7 @@ public final class HomeFeedService: NSObject, WKNavigationDelegate {
             if status == 0 { discardPage() }
             throw HomeFeedError.requestFailed(status)
         }
-        return await api.parseVideoPage(json: body)
+        return await parse(api, body)
     }
 
     private func evaluateBool(_ script: String, in webView: WKWebView) async -> Bool {

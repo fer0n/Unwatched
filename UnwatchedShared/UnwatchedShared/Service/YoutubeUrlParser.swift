@@ -10,6 +10,9 @@ import Foundation
 
 public enum YoutubeUrlParser {
 
+    /// Private to the signed-in account: no RSS feed, only reachable through the user's YouTube session.
+    public static let watchLaterPlaylistId = "WL"
+
     /// Extracts the video id from a watch / shorts / youtu.be / embed / live URL
     /// (and from Google redirect URLs that wrap one).
     public static func getYoutubeId(from url: URL) -> String? {
