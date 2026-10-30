@@ -26,7 +26,7 @@ struct ChapterSkippingSettings: View {
         MySection("skippingChapters", footer: "autoSkipRecurringChaptersFooter", showPremiumIndicator: true) {
             Toggle("autoSkipRecurringChapters", isOn: $autoSkipRecurringChapters)
         }
-        .requiresPremium()
+        .requiresPremium(feature: "skipRecurringChapters")
 
         MySection(footer: "chapterFilterFooter", showPremiumIndicator: true) {
             TextField("keywords", text: $skipChapterText)
@@ -36,7 +36,7 @@ struct ChapterSkippingSettings: View {
                 .submitLabel(.done)
             #endif
         }
-        .requiresPremium(skipChapterText.isEmpty)
+        .requiresPremium(skipChapterText.isEmpty, feature: "skipChapterText")
 
         MySection(footer: "considerGettingYoutubePremium") {
             HStack {

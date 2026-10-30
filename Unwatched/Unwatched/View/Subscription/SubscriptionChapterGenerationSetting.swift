@@ -19,7 +19,7 @@ struct SubscriptionChapterGenerationSetting: View {
                 label: { (text(for: $0), $0 == false ? "circle.slash" : "sparkles") },
                 menuLabel: "generateChapters"
             )
-            .requiresPremium(subscription.chapterGeneration == nil)
+            .requiresPremium(subscription.chapterGeneration == nil, feature: "chapterGeneration")
             .onChange(of: subscription.chapterGeneration) {
                 ChapterAutomation.scheduleRun()
             }

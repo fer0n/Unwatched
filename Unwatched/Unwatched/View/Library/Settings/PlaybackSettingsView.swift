@@ -131,7 +131,7 @@ struct PlaybackSettingsView: View {
                         Text("playBrowserVideosInApp")
                     }
                 }
-                .requiresPremium(!playBrowserVideosInApp)
+                .requiresPremium(!playBrowserVideosInApp, feature: "browserVideosInApp")
 
                 #if os(iOS)
                 MySection(footer: "autoAirplayHDHelper") {

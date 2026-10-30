@@ -25,7 +25,7 @@ struct SubscriptionLiveStreamSetting: View {
             },
             menuLabel: "liveStreamSetting"
         )
-        .requiresPremium(subscription.liveStreamSetting == .defaultSetting)
+        .requiresPremium(subscription.liveStreamSetting == .defaultSetting, feature: "liveStreamFilter")
         .onChange(of: subscription.liveStreamSetting) {
             if !subscription.liveStreamSetting.shouldHide() {
                 Task {

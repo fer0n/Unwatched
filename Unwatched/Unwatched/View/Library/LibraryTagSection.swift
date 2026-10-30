@@ -49,7 +49,7 @@ struct LibraryTagSection: View {
             } label: {
                 LibraryNavListItem("newTag", systemName: "plus")
             }
-            .requiresPremium()
+            .requiresPremium(feature: "tags")
         }
     }
 

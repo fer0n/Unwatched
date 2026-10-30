@@ -4,6 +4,13 @@ import { handleReportUpload, handleReportsDashboard, isReportsPath } from "./rep
 
 const MAX_EVENTS_PER_REQUEST = 25;
 
+// Swift dictionaries encode in random key order
+function sortedParamsJSON(params) {
+  const isObject = params !== null && typeof params === "object" && !Array.isArray(params);
+  const entries = Object.entries(isObject ? params : {}).sort(([a], [b]) => (a < b ? -1 : a > b ? 1 : 0));
+  return JSON.stringify(Object.fromEntries(entries));
+}
+
 export default {
   async fetch(request, env) {
     const url = new URL(request.url);
@@ -98,7 +105,7 @@ export default {
         // didn't come from the app, and "unknown" keeps it out of the live numbers.
         blobs: [
           event.name ?? "unknown",
-          JSON.stringify(event.params ?? {}),
+          sortedParamsJSON(event.params),
           event.userId ?? "unknown",
           event.channel ?? "unknown",
           event.appVersion ?? "unknown",

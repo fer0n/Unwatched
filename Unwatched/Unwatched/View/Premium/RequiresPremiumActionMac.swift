@@ -11,11 +11,13 @@ struct RequiresPremiumActionMac: ViewModifier {
     @CloudStorage(Const.unwatchedPremiumAcknowledged) var premium: Bool = false
     @State var showAlert = false
     var isLocked: Bool
+    let feature: String
 
     func body(content: Content) -> some View {
         content
             .onTapGesture {
                 if isLocked {
+                    Signal.log("Premium.ShowPopup", parameters: ["feature": feature])
                     showAlert = true
                 }
             }

@@ -197,7 +197,7 @@ private struct SplashSettingsPage: View {
                 title: "autoSkipRecurringChapters",
                 subtitle: "autoSkipRecurringChaptersFooter",
                 isOn: $autoSkipRecurringChapters,
-                premium: true
+                premiumFeature: "skipRecurringChapters"
             )
 
             SplashCard(
@@ -213,7 +213,7 @@ private struct SplashSettingsPage: View {
                 }
                 .pickerStyle(.menu)
                 .labelsHidden()
-                .requiresPremium(defaultLiveStreamSetting == .show)
+                .requiresPremium(defaultLiveStreamSetting == .show, feature: "liveStreamFilter")
             }
 
             SplashCard(
@@ -253,12 +253,18 @@ private struct SplashSettingsPage: View {
         title: LocalizedStringKey,
         subtitle: LocalizedStringKey,
         isOn: Binding<Bool>,
-        premium: Bool = false
+        premiumFeature: String? = nil
     ) -> some View {
-        SplashCard(systemName: systemName, title: title, subtitle: subtitle, premium: premium) {
+        SplashCard(systemName: systemName, title: title, subtitle: subtitle, premium: premiumFeature != nil) {
             Toggle(title, isOn: isOn)
                 .labelsHidden()
-                .requiresPremium(premium)
+                .apply {
+                    if let premiumFeature {
+                        $0.requiresPremium(feature: premiumFeature)
+                    } else {
+                        $0
+                    }
+                }
         }
     }
 }

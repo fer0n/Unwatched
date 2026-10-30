@@ -114,7 +114,7 @@ struct ChapterSettingsMenu: View {
                     }
                 } else {
                     Button {
-                        guard guardPremium(onInteraction: { dismiss() }) else { return }
+                        guard guardPremium("transcript", onInteraction: { dismiss() }) else { return }
                         Signal.log("Transcript.Generate", parameters: ["source": "menu"])
                         transcriptVM.generateTranscript(for: video, force: true)
                     } label: {

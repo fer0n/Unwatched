@@ -20,6 +20,10 @@ extension UserDefaults {
         return Date().timeIntervalSince(lastSent) >= interval.timeInterval
     }
 
+    func hasPerformed(_ identifier: String) -> Bool {
+        object(forKey: lastSentKey(identifier)) != nil
+    }
+
     func markPerformed(_ identifier: String) {
         set(Date(), forKey: lastSentKey(identifier))
     }

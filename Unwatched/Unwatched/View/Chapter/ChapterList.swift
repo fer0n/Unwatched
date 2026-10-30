@@ -181,7 +181,7 @@ struct ChapterList: View {
               current.indices.contains(to),
               canReorder(current[from]),
               canReorder(current[to]),
-              guardPremium() else {
+              guardPremium("chapterReorder") else {
             return false
         }
         var reordered = current
@@ -196,7 +196,7 @@ struct ChapterList: View {
 
     /// Toggling, like reordering, is an action that needs a row — see `ChapterService.materialize`.
     func toggleChapter(_ chapter: SendableChapter) {
-        guard !chapter.isActive || guardPremium() else {
+        guard !chapter.isActive || guardPremium("chapterToggle") else {
             return
         }
         if chapter.isIntro || chapter.isOutro {

@@ -11,6 +11,7 @@ struct RequiresPremiumModifier: ViewModifier {
     @AppStorage(Const.hidePremium) var hidePremium: Bool = false
 
     let enabled: Bool
+    let feature: String
     var onInteraction: (() -> Void)?
 
     func body(content: Content) -> some View {
@@ -24,14 +25,7 @@ struct RequiresPremiumModifier: ViewModifier {
                 .apply {
                     if isLocked {
                         $0.onTapGesture {
-                            Signal.log("Premium.ShowPopup")
-                            onInteraction?()
-                            let presenter = PopupPresenter()
-                            presenter.show { dismiss in
-                                PremiumPopupMessage(dismiss: {
-                                    dismiss()
-                                })
-                            }
+                            _ = guardPremium(feature, onInteraction: onInteraction)
                         }
                     } else {
                         $0
@@ -39,7 +33,7 @@ struct RequiresPremiumModifier: ViewModifier {
                 }
 
             #else
-            .modifier(RequiresPremiumActionMac(isLocked: isLocked))
+            .modifier(RequiresPremiumActionMac(isLocked: isLocked, feature: feature))
             #endif
         }
     }
@@ -56,10 +50,10 @@ var hidesPremiumEntries: Bool {
 }
 
 @MainActor
-func guardPremium(onInteraction: (() -> Void)? = nil) -> Bool {
+func guardPremium(_ feature: String, onInteraction: (() -> Void)? = nil) -> Bool {
     let premium = CloudKeyValueStore.hasPremium
     if !premium {
-        Signal.log("Premium.ShowPopup")
+        Signal.log("Premium.ShowPopup", parameters: ["feature": feature])
         onInteraction?()
 
         #if os(iOS)
@@ -106,10 +100,12 @@ struct ContainsPremium: ViewModifier {
 extension View {
     func requiresPremium(
         _ enabled: Bool = true,
+        feature: String,
         onInteraction: (() -> Void)? = nil
     ) -> some View {
         self.modifier(RequiresPremiumModifier(
             enabled: enabled,
+            feature: feature,
             onInteraction: onInteraction
         ))
     }

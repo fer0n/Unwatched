@@ -52,7 +52,7 @@ struct TitleFilterContent: View {
         #endif
         .myListRowBackground()
         .listRowSeparator(.hidden)
-        .requiresPremium(filterText.isEmpty)
+        .requiresPremium(filterText.isEmpty, feature: "titleFilter")
         .task {
             updateFilterStrings()
             let sorting = [SortDescriptor<Video>(\.publishedDate, order: .reverse)]

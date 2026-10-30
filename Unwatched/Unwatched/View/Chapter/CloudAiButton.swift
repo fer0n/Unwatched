@@ -19,7 +19,7 @@ struct CloudAiButton<Label: View>: View {
 
     var body: some View {
         Button {
-            guard guardPremium(onInteraction: dismissOnPaywall ? { dismiss() } : nil) else { return }
+            guard guardPremium("aiChapters", onInteraction: dismissOnPaywall ? { dismiss() } : nil) else { return }
             Task {
                 guard let video, await ChapterAutomation.isSetUp() else {
                     if ChapterAutomation.isAutomationEnabled && ChapterAutomation.isShortcutOutdated {

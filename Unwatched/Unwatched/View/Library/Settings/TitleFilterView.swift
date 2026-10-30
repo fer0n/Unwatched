@@ -17,7 +17,7 @@ struct TitleFilterView: View {
                 .textInputAutocapitalization(.never)
                 .submitLabel(.done)
                 #endif
-                .requiresPremium(filterVideoTitleText.isEmpty)
+                .requiresPremium(filterVideoTitleText.isEmpty, feature: "titleFilter")
         }
     }
 }

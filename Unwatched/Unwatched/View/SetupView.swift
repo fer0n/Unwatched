@@ -259,8 +259,7 @@ struct SetupView: View {
 
     static func sendSettings() {
         let signalType = "SettingsSnapshot"
-        let shouldSend = UserDefaults.standard.shouldPerform(signalType, interval: .fortNightly)
-        if shouldSend {
+        if isSnapshotDue(signalType) {
             var params = UserDataService.getNonDefaultSettings(prefixValue: "Unwatched.Setting.")
             params["device"] = Signal.deviceCategory
             params["deviceModel"] = Signal.deviceModel
@@ -313,6 +312,16 @@ extension SetupView {
             Signal.error("podcastDownloadFailed")
         }
         Task { await VideoService.fillPodcastDurationsFromDownloads() }
+    }
+
+    static func isSnapshotDue(_ signalType: String) -> Bool {
+        let defaults = UserDefaults.standard
+        let followUpKey = "\(signalType).followUpPending"
+        let isFirst = !defaults.hasPerformed(signalType)
+        let interval: SignalInterval = defaults.bool(forKey: followUpKey) ? .custom(60 * 60 * 24 * 3) : .fortNightly
+        guard defaults.shouldPerform(signalType, interval: interval) else { return false }
+        defaults.set(isFirst, forKey: followUpKey)
+        return true
     }
 }
 

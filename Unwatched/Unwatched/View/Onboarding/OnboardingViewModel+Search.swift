@@ -71,7 +71,9 @@ extension OnboardingViewModel {
             return try await YoutubeChannelSearch.search(query)
         } catch {
             Log.error("channelSearch failed: \(error)")
-            Signal.error("onboardingChannelSearchFailed")
+            if !Task.isCancelled {
+                Signal.error("onboardingChannelSearchFailed")
+            }
             return nil
         }
     }

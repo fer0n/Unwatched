@@ -20,7 +20,7 @@ struct TrimSilenceOption {
             isOn: Binding(
                 get: { isOn },
                 set: { value in
-                    guard !value || guardPremium() else { return }
+                    guard !value || guardPremium("trimSilence") else { return }
                     player.setTrimSilence(value)
                 }
             ),

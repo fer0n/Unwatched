@@ -27,7 +27,7 @@ struct DeepLinkHandler: ViewModifier {
             else { return }
 
             if queryItems.first(where: { $0.name == "source" })?.value == "safari_extension" {
-                guard guardPremium() else { return }
+                guard guardPremium("safariExtension") else { return }
             }
 
             guard

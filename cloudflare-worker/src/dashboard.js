@@ -376,7 +376,7 @@ export async function handleDashboardData(env, channel) {
       // table (per-active-user rates, adoption %), funnels, and comparisons.
       queryAnalytics(
         env,
-        `SELECT blob1 AS name, count() AS count, count(DISTINCT blob3) AS users FROM unwatched_analytics_v3 WHERE ${ch} AND timestamp > NOW() - INTERVAL '${TREND_WINDOW_DAYS}' DAY AND blob3 != 'unknown' GROUP BY name ORDER BY count DESC LIMIT 200`
+        `SELECT blob1 AS name, sum(_sample_interval) AS count, count(DISTINCT blob3) AS users FROM unwatched_analytics_v3 WHERE ${ch} AND timestamp > NOW() - INTERVAL '${TREND_WINDOW_DAYS}' DAY AND blob3 != 'unknown' GROUP BY name ORDER BY count DESC LIMIT 200`
       ),
       queryAnalytics(env, recentEventsSql(channel)),
       queryAnalytics(
@@ -399,17 +399,18 @@ export async function handleDashboardData(env, channel) {
       // Total event volume per day over the trend window.
       queryAnalytics(
         env,
-        `SELECT toStartOfDay(timestamp) AS day, count() AS events FROM unwatched_analytics_v3 WHERE ${ch} AND timestamp > NOW() - INTERVAL '${TREND_WINDOW_DAYS}' DAY GROUP BY day ORDER BY day`
+        `SELECT toStartOfDay(timestamp) AS day, sum(_sample_interval) AS events FROM unwatched_analytics_v3 WHERE ${ch} AND timestamp > NOW() - INTERVAL '${TREND_WINDOW_DAYS}' DAY GROUP BY day ORDER BY day`
       ),
-      // Data points written per day over a longer window — one row = one writeDataPoint
-      // call = one event, which is exactly the Analytics Engine "data points written"
-      // billing metric. Since a request batches up to 25 events, writes/day is an upper
-      // bound on requests/day, so one line answers both free-plan caps (see FREE_DAILY_LIMIT).
+      // Data points written per day over a longer window. Billing counts every writeDataPoint
+      // call, before Analytics Engine samples rows away, so sum(_sample_interval) estimates the
+      // "data points written" metric where count() would undercount it. Since a request batches
+      // up to 25 events, writes/day is an upper bound on requests/day, so one line answers both
+      // free-plan caps (see FREE_DAILY_LIMIT).
       // Deliberately NOT channel-filtered: debug and TestFlight writes bill the same as
-      // release ones, so the capacity chart has to show every row actually written.
+      // release ones, so the capacity chart has to show every data point written.
       queryAnalytics(
         env,
-        `SELECT toStartOfDay(timestamp) AS day, count() AS writes FROM unwatched_analytics_v3 WHERE timestamp > NOW() - INTERVAL '${CAPACITY_WINDOW_DAYS}' DAY GROUP BY day ORDER BY day`
+        `SELECT toStartOfDay(timestamp) AS day, sum(_sample_interval) AS writes FROM unwatched_analytics_v3 WHERE timestamp > NOW() - INTERVAL '${CAPACITY_WINDOW_DAYS}' DAY GROUP BY day ORDER BY day`
       ),
       // ORDER BY only resolves selected columns, hence the alias
       queryAnalytics(
@@ -426,17 +427,17 @@ export async function handleDashboardData(env, channel) {
       ),
       queryAnalytics(
         env,
-        `SELECT blob2 AS params, count() AS count FROM unwatched_analytics_v3 WHERE ${ch} AND blob1 = 'Error' AND timestamp > NOW() - INTERVAL '${SNAPSHOT_WINDOW_DAYS}' DAY GROUP BY params ORDER BY count DESC LIMIT 50`
+        `SELECT blob2 AS params, sum(_sample_interval) AS count FROM unwatched_analytics_v3 WHERE ${ch} AND blob1 = 'Error' AND timestamp > NOW() - INTERVAL '${SNAPSHOT_WINDOW_DAYS}' DAY GROUP BY params ORDER BY count DESC LIMIT 50`
       ),
       queryAnalytics(
         env,
-        `SELECT toStartOfDay(timestamp) AS day, count() AS count FROM unwatched_analytics_v3 WHERE ${ch} AND blob1 = 'Error' AND timestamp > NOW() - INTERVAL '${SNAPSHOT_WINDOW_DAYS}' DAY GROUP BY day ORDER BY day`
+        `SELECT toStartOfDay(timestamp) AS day, sum(_sample_interval) AS count FROM unwatched_analytics_v3 WHERE ${ch} AND blob1 = 'Error' AND timestamp > NOW() - INTERVAL '${SNAPSHOT_WINDOW_DAYS}' DAY GROUP BY day ORDER BY day`
       ),
       // Consolidated param-carrying events, grouped by their raw params JSON so the
       // client can break them out by dimension (Video.Action by action/context, etc).
       queryAnalytics(
         env,
-        `SELECT blob1 AS name, blob2 AS params, count() AS count FROM unwatched_analytics_v3 WHERE ${ch} AND blob1 IN ('Video.Action', 'Player.MoreMenu', 'Search.Submitted', 'Player.Start', 'Player.Media', 'Onboarding.Step', 'Generation.Result') AND timestamp > NOW() - INTERVAL '${TREND_WINDOW_DAYS}' DAY GROUP BY name, params ORDER BY count DESC LIMIT 500`
+        `SELECT blob1 AS name, blob2 AS params, sum(_sample_interval) AS count FROM unwatched_analytics_v3 WHERE ${ch} AND blob1 IN ('Video.Action', 'Player.MoreMenu', 'Search.Submitted', 'Player.Start', 'Player.Media', 'Onboarding.Step', 'Generation.Result', 'Subscription.Added', 'Premium.ShowPopup') AND timestamp > NOW() - INTERVAL '${TREND_WINDOW_DAYS}' DAY GROUP BY name, params ORDER BY count DESC LIMIT 1000`
       ),
       // Distinct users per app version (blob5).
       queryAnalytics(
@@ -1495,6 +1496,8 @@ function renderBreakdowns(el, paramEvents) {
   const channelStep = paramEvents.filter(function (r) { return r.params.step === 'channels'; });
   el.appendChild(barCard('Onboarding — channels picked', aggregateParam(channelStep, 'Onboarding.Step', 'selected'), 5));
   el.appendChild(barCard('Onboarding — used channel search', aggregateParam(channelStep, 'Onboarding.Step', 'usedSearch'), 6));
+  el.appendChild(barCard('Subscribed — by source', aggregateParam(paramEvents, 'Subscription.Added', 'source'), 3));
+  el.appendChild(barCard('Premium popup — by feature', aggregateParam(paramEvents, 'Premium.ShowPopup', 'feature'), 4));
 }
 
 // State/snapshot events are shown elsewhere; the engagement table is behavioral only.

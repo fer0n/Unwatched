@@ -59,7 +59,7 @@ struct ChapterSettingsView: View {
             Toggle("enableChapterShortcutAutomation", isOn: $isAutomationEnabled)
                 .disabled(!isShortcutSetUp)
         }
-        .requiresPremium()
+        .requiresPremium(feature: "chapterAutomation")
 
         if isAutomationEnabled {
             MySection(footer: "chapterAutomationScopeFooter") {
@@ -71,7 +71,7 @@ struct ChapterSettingsView: View {
                 }
             }
             .disabled(!isShortcutSetUp)
-            .requiresPremium()
+            .requiresPremium(feature: "chapterAutomation")
         }
     }
 
@@ -82,7 +82,7 @@ struct ChapterSettingsView: View {
                 Text($0.label)
             }
         }
-        .requiresPremium()
+        .requiresPremium(feature: "chapterGeneration")
 
         #if os(iOS)
         if TranscriptService.canGenerateTranscript && mode != .off {
@@ -95,7 +95,7 @@ struct ChapterSettingsView: View {
                     Text(verbatim: "\($0)")
                 }
             }
-            .requiresPremium()
+            .requiresPremium(feature: "chapterGeneration")
         }
         #endif
     }

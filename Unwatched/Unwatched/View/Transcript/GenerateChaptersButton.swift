@@ -86,7 +86,7 @@ struct GenerateChaptersButton: View {
 
     var generateChaptersButton: some View {
         Button {
-            let canAccess = guardPremium {
+            let canAccess = guardPremium("aiChapters") {
                 dismiss()
             }
             if canAccess {

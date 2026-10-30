@@ -49,7 +49,7 @@ struct FilterSettingsView: View {
                     }
                     .pickerStyle(.menu)
                 }
-                .requiresPremium(defaultLiveStreamSetting == .show)
+                .requiresPremium(defaultLiveStreamSetting == .show, feature: "liveStreamFilter")
 
                 #if os(iOS)
                 MySection {

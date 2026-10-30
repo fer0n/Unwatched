@@ -159,7 +159,7 @@ struct TranscriptView: View {
 
     var generateTranscriptButton: some View {
         Button {
-            guard guardPremium() else { return }
+            guard guardPremium("transcript") else { return }
             Signal.log("Transcript.Generate", parameters: ["source": "emptyTranscript"])
             viewModel.generateTranscript(for: video)
         } label: {

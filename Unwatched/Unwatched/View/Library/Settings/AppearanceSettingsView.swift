@@ -97,7 +97,7 @@ struct AppearanceSettingsView: View {
                         }
                     }
                 }
-                .requiresPremium(themeColor == .defaultTheme)
+                .requiresPremium(themeColor == .defaultTheme, feature: "themeColor")
 
                 #if os(iOS)
                 lightAppIconToggle

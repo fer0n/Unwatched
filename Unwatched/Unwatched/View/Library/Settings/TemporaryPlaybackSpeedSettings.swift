@@ -32,7 +32,7 @@ struct TemporaryPlaybackSpeedSettings: View {
             }
             .pickerStyle(.menu)
         }
-        .requiresPremium()
+        .requiresPremium(feature: "temporarySpeed")
     }
 
     var speeds: [Double] {

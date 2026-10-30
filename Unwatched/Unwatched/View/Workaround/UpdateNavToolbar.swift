@@ -10,6 +10,6 @@ struct ShowStatsItem: View {
         NavigationLink(value: LibraryDestination.stats) {
             Image(systemName: "chart.bar.fill")
         }
-        .requiresPremium()
+        .requiresPremium(feature: "stats")
     }
 }
