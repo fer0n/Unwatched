@@ -32,9 +32,16 @@ public enum FeedFallbackService {
         await withTaskGroup(of: SendableVideo?.self) { group in
             for candidate in candidates {
                 group.addTask {
-                    guard let info = try? await api.fetchPublishInfo(videoId: candidate.id),
-                          info.publishedDate > cutoff else { return nil }
-                    return makeVideo(candidate, info, channelId: channelId, feedTitle: feedTitle)
+                    guard let info = try? await api.fetchVideoInfo(videoId: candidate.id),
+                          let publishedDate = info.publishedDate,
+                          publishedDate > cutoff else { return nil }
+                    return makeVideo(
+                        candidate,
+                        publishedDate: publishedDate,
+                        description: info.videoDescription,
+                        channelId: channelId,
+                        feedTitle: feedTitle
+                    )
                 }
             }
             return await group
@@ -47,11 +54,12 @@ public enum FeedFallbackService {
     /// No `updatedDate`, so the first RSS refresh replaces the fields with the feed's.
     private static func makeVideo(
         _ candidate: ITVideo,
-        _ info: InnerTubeAPI.PublishInfo,
+        publishedDate: Date,
+        description: String?,
         channelId: String,
         feedTitle: String
     ) -> SendableVideo {
-        let description = info.description?.trimmingCharacters(in: .whitespacesAndNewlines)
+        let description = description?.trimmingCharacters(in: .whitespacesAndNewlines)
         return SendableVideo(
             youtubeId: candidate.id,
             title: candidate.title,
@@ -61,7 +69,7 @@ public enum FeedFallbackService {
             feedTitle: feedTitle,
             duration: candidate.duration,
             chapters: ChapterService.extractChapters(from: description ?? "", videoDuration: nil),
-            publishedDate: info.publishedDate,
+            publishedDate: publishedDate,
             isYtShort: false,
             videoDescription: description
         )

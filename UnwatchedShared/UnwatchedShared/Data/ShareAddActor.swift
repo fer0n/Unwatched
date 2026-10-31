@@ -112,7 +112,7 @@ public actor ShareAddActor {
         var videoData = sendableVideo
         if videoData == nil, let youtubeId {
             do {
-                videoData = try await YoutubeDataAPI.getYtVideoInfo(youtubeId)
+                videoData = try await VideoInfoService.getVideoInfo(youtubeId)
             } catch VideoError.faultyYoutubeVideoId(let videoId) {
                 throw VideoError.faultyYoutubeVideoId(videoId)
             } catch {

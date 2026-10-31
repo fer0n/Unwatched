@@ -86,7 +86,7 @@ class ShareViewController: UIViewController {
     @MainActor
     private func loadPreview(youtubeId: String) async {
         do {
-            guard let info = try await YoutubeDataAPI.getYtVideoInfo(youtubeId) else { return }
+            guard let info = try await VideoInfoService.getVideoInfo(youtubeId) else { return }
             model.videoPreview = info
         } catch {
             logger.error("failed to load share preview: \(error.localizedDescription)")
