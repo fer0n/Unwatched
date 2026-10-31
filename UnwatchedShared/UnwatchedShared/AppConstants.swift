@@ -483,6 +483,7 @@ public struct Const {
     public static let showSearchRecommendations = "showSearchRecommendations"
     public static let showSearchYoutubeButton = "showSearchYoutubeButton"
     public static let autoFocusSearch = "autoFocusSearch"
+    public static let showRecentSearches = "showRecentSearches"
     public static let searchSources = "searchSources"
 
     public static let selectedDetent = "selectedDetent"

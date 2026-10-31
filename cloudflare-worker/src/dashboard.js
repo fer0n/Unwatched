@@ -56,6 +56,7 @@ const BOOL_SETTINGS = [
   ["showClearQueueButton", true, "Show Clear-Queue Button"],
   ["showSearchYoutubeButton", true, "Search: YouTube Button"],
   ["autoFocusSearch", true, "Search: Auto-Focus"],
+  ["showRecentSearches", true, "Search: Recent Searches"],
   ["enableQueueContextMenu", false, "Queue Context Menu"],
   ["autoRefreshIgnoresSync", false, "Auto-refresh Ignores Sync"],
   ["useNoCookieUrl", false, "Use No-Cookie URL"],

@@ -10,6 +10,7 @@ struct SearchSettingsView: View {
     @AppStorage(Const.showSearchRecommendations) var showSearchRecommendations: Bool = false
     @AppStorage(Const.showSearchYoutubeButton) var showSearchYoutubeButton: Bool = true
     @AppStorage(Const.autoFocusSearch) var autoFocusSearch: Bool = true
+    @AppStorage(Const.showRecentSearches) var showRecentSearches: Bool = true
     @AppStorage(Const.playBrowserVideosInApp) var playBrowserVideosInApp: Bool = true
 
     var body: some View {
@@ -25,6 +26,15 @@ struct SearchSettingsView: View {
                         Toggle(isOn: $autoFocusSearch) {
                             Text("autoFocusSearch")
                         }
+                        .transition(.opacity)
+                    }
+                    Toggle(isOn: $showRecentSearches) {
+                        Text("showRecentSearches")
+                    }
+                    .onChange(of: showRecentSearches) { _, show in
+                        if !show {
+                            SearchVM.shared.clearRecentSearches()
+                        }
                     }
                     #if os(iOS)
                     Toggle(isOn: $showSearchYoutubeButton) {
@@ -39,6 +49,7 @@ struct SearchSettingsView: View {
                     }
                 }
             }
+            .animation(.default, value: showSearchRecommendations)
             .myNavigationTitle("search")
         }
     }

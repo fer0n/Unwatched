@@ -30,6 +30,7 @@ private extension View {
 /// suggestions overlay can't be recoloured.
 struct SearchSuggestionsView: View {
     @AppStorage(Const.showSearchRecommendations) var showRecommendations: Bool = false
+    @AppStorage(Const.showRecentSearches) var showRecentSearches: Bool = true
     @State private var recommendationsTipShown = false
     @State private var hasTyped = false
 
@@ -84,7 +85,7 @@ struct SearchSuggestionsView: View {
                 if showsRecommendationsTip {
                     SearchRecommendationsTipView { searchFocused = false }
                 }
-                if !vm.recentSearches.isEmpty {
+                if showsRecentSearches {
                     recentSearchesSection
                 }
             }
@@ -96,7 +97,7 @@ struct SearchSuggestionsView: View {
         .contentMargins(.top, 0, for: .scrollContent)
         #endif
         .overlay {
-            if vm.query.isEmpty && vm.recentSearches.isEmpty && !showsRecommendationsTip {
+            if vm.query.isEmpty && !showsRecentSearches && !showsRecommendationsTip {
                 ContentUnavailableView(
                     "searchPromptTitle",
                     systemImage: "magnifyingglass",
@@ -111,13 +112,17 @@ struct SearchSuggestionsView: View {
             && (!vm.homeFeed.isEmpty || vm.isLoadingHomeFeed)
     }
 
+    var showsRecentSearches: Bool {
+        showRecentSearches && !vm.recentSearches.isEmpty
+    }
+
     var showsRecommendationsTip: Bool {
         recommendationsTipShown && !showRecommendations && !hasTyped
     }
 
     var recentSearchesSection: some View {
         Section {
-            ForEach(vm.recentSearches.prefix(10), id: \.self) { recent in
+            ForEach(vm.recentSearches, id: \.self) { recent in
                 suggestionRow(recent, systemImage: "clock.arrow.circlepath") {
                     searchFocused = false
                     onSelect(recent)

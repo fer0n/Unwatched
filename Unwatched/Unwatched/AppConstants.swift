@@ -58,6 +58,7 @@ extension Const {
         Const.showSearchRecommendations: false,
         Const.showSearchYoutubeButton: true,
         Const.autoFocusSearch: true,
+        Const.showRecentSearches: true,
 
         // Playback
         Const.fullscreenControlsSetting: FullscreenControls.autoHide.rawValue,

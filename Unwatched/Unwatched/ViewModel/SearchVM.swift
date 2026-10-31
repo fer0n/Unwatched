@@ -77,7 +77,7 @@ final class SearchVM {
     @ObservationIgnored private var suggestionCacheOrder: [String] = []
 
     private static let recentSearchesKey = "recentSearches"
-    private static let maxRecentSearches = 20
+    private static let maxRecentSearches = 10
     private static let maxSuggestions = 10
     private static let maxSuggestionCacheEntries = 100
 
@@ -210,41 +210,6 @@ final class SearchVM {
         }
     }
 
-    // MARK: - Recent searches (persisted, newest-first, deduped)
-
-    private func loadRecentSearches() {
-        if let data = UserDefaults.standard.data(forKey: Self.recentSearchesKey),
-           let list = try? JSONDecoder().decode([String].self, from: data) {
-            recentSearches = list
-        }
-    }
-
-    private func recordRecentSearch(_ query: String) {
-        let trimmed = query.trimmingCharacters(in: .whitespacesAndNewlines)
-        guard !trimmed.isEmpty else { return }
-        recentSearches.removeAll { $0.caseInsensitiveCompare(trimmed) == .orderedSame }
-        recentSearches.insert(trimmed, at: 0)
-        if recentSearches.count > Self.maxRecentSearches {
-            recentSearches = Array(recentSearches.prefix(Self.maxRecentSearches))
-        }
-        persistRecentSearches()
-    }
-
-    func removeRecentSearch(_ query: String) {
-        recentSearches.removeAll { $0 == query }
-        persistRecentSearches()
-    }
-
-    func clearRecentSearches() {
-        recentSearches = []
-        persistRecentSearches()
-    }
-
-    private func persistRecentSearches() {
-        let data = try? JSONEncoder().encode(recentSearches)
-        UserDefaults.standard.set(data, forKey: Self.recentSearchesKey)
-    }
-
     /// Fetches autocomplete suggestions for the current query (debounced). Skips when
     /// the query is empty or already matches the active search.
     ///
@@ -345,5 +310,45 @@ final class SearchVM {
             subscription: subscription,
             isNew: false
         )
+    }
+}
+
+extension SearchVM {
+    // MARK: - Recent searches (persisted, newest-first, deduped)
+
+    private func loadRecentSearches() {
+        if let data = UserDefaults.standard.data(forKey: Self.recentSearchesKey),
+           let list = try? JSONDecoder().decode([String].self, from: data) {
+            recentSearches = Array(list.prefix(Self.maxRecentSearches))
+            if list.count > Self.maxRecentSearches {
+                persistRecentSearches()
+            }
+        }
+    }
+
+    private func recordRecentSearch(_ query: String) {
+        let trimmed = query.trimmingCharacters(in: .whitespacesAndNewlines)
+        guard !trimmed.isEmpty, Const.showRecentSearches.bool ?? true else { return }
+        recentSearches.removeAll { $0.caseInsensitiveCompare(trimmed) == .orderedSame }
+        recentSearches.insert(trimmed, at: 0)
+        if recentSearches.count > Self.maxRecentSearches {
+            recentSearches = Array(recentSearches.prefix(Self.maxRecentSearches))
+        }
+        persistRecentSearches()
+    }
+
+    func removeRecentSearch(_ query: String) {
+        recentSearches.removeAll { $0 == query }
+        persistRecentSearches()
+    }
+
+    func clearRecentSearches() {
+        recentSearches = []
+        persistRecentSearches()
+    }
+
+    private func persistRecentSearches() {
+        let data = try? JSONEncoder().encode(recentSearches)
+        UserDefaults.standard.set(data, forKey: Self.recentSearchesKey)
     }
 }
