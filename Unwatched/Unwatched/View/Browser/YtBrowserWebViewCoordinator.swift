@@ -94,6 +94,7 @@ extension YtBrowserWebView {
                 Log.browser.warning("no url found")
                 return
             }
+            Signal.playbackStarted("browserTap")
             let task = VideoService.addForeignUrls(
                 [url],
                 in: .queue,

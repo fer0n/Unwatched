@@ -263,6 +263,7 @@ extension SearchView {
             MenuSection("hideYoutubeButtonHint") {
                 Button("hideYoutubeButton", systemImage: "eye.slash") {
                     showYoutubeButton = false
+                    Signal.log("Search.HideYoutubeButton")
                 }
             }
         }
@@ -286,13 +287,13 @@ extension SearchView {
         if vm.showsYoutube {
             vm.showsYoutube = false
         } else {
-            enterYoutubeMode(query: vm.query)
+            enterYoutubeMode(query: vm.query, via: "toggle")
         }
     }
 
-    func enterYoutubeMode(query: String) {
+    func enterYoutubeMode(query: String, via: String) {
         vm.showsYoutube = true
-        Signal.interaction("Search.YoutubeMode")
+        Signal.interaction("Search.YoutubeMode", via)
         searchFocused = false
         if let url = youtubeSearchURL(for: query.trimmingCharacters(in: .whitespacesAndNewlines)) {
             browserManager.loadUrl(url)
@@ -306,7 +307,7 @@ extension SearchView {
         }
         #else
         navManager.presentedSearch = []
-        enterYoutubeMode(query: vm.activeQuery)
+        enterYoutubeMode(query: vm.activeQuery, via: "fallback")
         #endif
     }
 

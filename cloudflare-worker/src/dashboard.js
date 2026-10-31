@@ -142,6 +142,8 @@ const SNAPSHOT_WINDOW_DAYS = 30;
 const TREND_WINDOW_DAYS = 7;
 // Window for the capacity chart — enough history to spot a trend toward the free-plan cap.
 const CAPACITY_WINDOW_DAYS = 30;
+// Long enough to see search vs YouTube use before and after a release.
+const SEARCH_WINDOW_DAYS = 30;
 // Cloudflare Workers Free plan: 100k requests/day AND 100k Analytics Engine data points
 // written/day. Requests are batched (<=25 events each), so writes/day is the larger of the
 // two and the one to watch. Kept here so the server can hand it to the client chart.
@@ -288,6 +290,46 @@ function tallyDevices(rows) {
 
 // Count distinct users per value of a free-form (but low-cardinality) param.
 
+// 'browser' Player.Start is the Play Now button, already counted as Browser.PlayNow.
+const YOUTUBE_PAGE_EVENTS = [
+  'Browser.AddVideo', 'Browser.AddSubscription', 'Browser.PlayNow', 'Browser.VideoLinkIntercepted',
+  'Browser.ContextMenu.Subscribe', 'Browser.ContextMenu.QueueNext', 'Browser.ContextMenu.AddToInbox',
+];
+const SEARCH_USAGE_KINDS = ['search', 'youtubeMode', 'youtubePage'];
+
+function searchUsageKind(name) {
+  if (name === 'Search.Submitted') return 'search';
+  if (name === 'Search.YoutubeMode') return 'youtubeMode';
+  return 'youtubePage';
+}
+
+// Rows are one per (day, user, version, event, params), so per-user sets stay in the Worker.
+function tallySearchUsage(rows, versionUsers) {
+  const daily = {}, byVersion = {}, youtubeModeVia = {};
+  for (const row of rows) {
+    const kind = searchUsageKind(row.name);
+    const day = (daily[row.day] ||= { search: new Set(), youtubeMode: new Set(), youtubePage: new Set() });
+    day[kind].add(row.userId);
+    const version = row.version || 'unknown';
+    const v = (byVersion[version] ||= { search: new Set(), youtubeMode: new Set(), youtubePage: new Set() });
+    v[kind].add(row.userId);
+    if (kind === 'youtubeMode') {
+      const via = parseParams(row.params).action ?? 'toggle';
+      youtubeModeVia[via] = (youtubeModeVia[via] || 0) + 1;
+    }
+  }
+  const sizes = (sets) => Object.fromEntries(SEARCH_USAGE_KINDS.map((k) => [k, sets[k].size]));
+  return {
+    windowDays: SEARCH_WINDOW_DAYS,
+    daily: Object.keys(daily).sort().map((day) => ({ day, ...sizes(daily[day]) })),
+    byVersion: versionUsers
+      .map((r) => ({ version: r.version || 'unknown', users: Number(r.users) || 0 }))
+      .filter((r) => byVersion[r.version])
+      .map((r) => ({ ...r, ...sizes(byVersion[r.version]) })),
+    youtubeModeVia,
+  };
+}
+
 function tallyParam(rows, paramKey) {
   const counts = {};
   for (const row of rows) {
@@ -366,6 +408,8 @@ const QUERY_LABELS = [
   "error trend",
   "param events",
   "app versions",
+  "search usage",
+  "search usage versions",
 ];
 
 export async function handleDashboardData(env, channel) {
@@ -445,6 +489,14 @@ export async function handleDashboardData(env, channel) {
         env,
         `SELECT blob5 AS version, count(DISTINCT blob3) AS users FROM unwatched_analytics_v3 WHERE ${ch} AND timestamp > NOW() - INTERVAL '${TREND_WINDOW_DAYS}' DAY AND blob3 != 'unknown' GROUP BY version ORDER BY users DESC LIMIT 40`
       ),
+      queryAnalytics(
+        env,
+        `SELECT toStartOfDay(timestamp) AS day, blob3 AS userId, blob5 AS version, blob1 AS name, blob2 AS params, sum(_sample_interval) AS count FROM unwatched_analytics_v3 WHERE ${ch} AND (blob1 IN ('Search.Submitted', 'Search.YoutubeMode', ${YOUTUBE_PAGE_EVENTS.map((e) => `'${e}'`).join(', ')}) OR (blob1 = 'Player.Start' AND blob2 = '{"source":"browserTap"}')) AND timestamp > NOW() - INTERVAL '${SEARCH_WINDOW_DAYS}' DAY AND blob3 != 'unknown' GROUP BY day, userId, version, name, params LIMIT ${RAW_ROW_LIMIT}`
+      ),
+      queryAnalytics(
+        env,
+        `SELECT blob5 AS version, count(DISTINCT blob3) AS users FROM unwatched_analytics_v3 WHERE ${ch} AND timestamp > NOW() - INTERVAL '${SEARCH_WINDOW_DAYS}' DAY AND blob3 != 'unknown' GROUP BY version ORDER BY users DESC LIMIT 8`
+      ),
     ]);
 
     const failures = [];
@@ -464,6 +516,8 @@ export async function handleDashboardData(env, channel) {
       errorTrend,
       paramEventsRaw,
       versionsRaw,
+      searchUsageRaw,
+      searchVersionsRaw,
     ] = settled.map((result, index) => {
       if (result.status === "fulfilled") return result.value;
       failures.push(`${QUERY_LABELS[index] ?? `query ${index}`}: ${result.reason}`);
@@ -539,6 +593,7 @@ export async function handleDashboardData(env, channel) {
           top: errorsRaw.data.map((r) => ({ id: parseParams(r.params).id ?? "unknown", count: Number(r.count) })),
           trend: errorTrend.data,
         },
+        searchUsage: tallySearchUsage(searchUsageRaw.data, searchVersionsRaw.data),
         // [{ name, params: {...}, count }] for the consolidated events.
         paramEvents: paramEventsRaw.data.map((r) => ({
           name: r.name,
@@ -796,6 +851,11 @@ export const DASHBOARD_HTML = `<!DOCTYPE html>
 
 <h2>How playback starts <span id="playbackStartWindow"></span></h2>
 <div class="pie-chart" id="playbackStartPie"></div>
+
+<h2>Search vs YouTube <span id="searchWindow"></span></h2>
+<div class="hint" id="searchHint"></div>
+<div class="card" id="searchTrend"></div>
+<div class="grid-2" id="searchBreakdowns" style="margin-top:0.75rem"></div>
 
 <h2>Action breakdowns</h2>
 <div class="hint" id="breakdownHint"></div>
@@ -1416,6 +1476,57 @@ const COMPARE_GROUPS = [
   ]},
 ];
 
+const SEARCH_USAGE_SERIES = [
+  ['search', 'Search', '#3b82f6'],
+  ['youtubeMode', 'YouTube mode', '#f87171'],
+  ['youtubePage', 'YouTube page', '#fbbf24'],
+];
+
+function multiLineChartSVG(series, lines, pxWidth) {
+  if (series.length === 0) return '<div class="hint">No data yet.</div>';
+  const W = pxWidth || 640, H = Math.max(140, Math.round(W * 0.28)), padL = 34, padR = 12, padT = 12, padB = 22;
+  const max = Math.max(1, Math.max.apply(null, series.flatMap(function (row) {
+    return lines.map(function (l) { return Number(row[l[0]]) || 0; });
+  })));
+  const innerW = W - padL - padR, innerH = H - padT - padB;
+  const x = function (i) { return padL + (series.length === 1 ? innerW / 2 : innerW * i / (series.length - 1)); };
+  const y = function (v) { return padT + innerH * (1 - v / max); };
+  let svg = '';
+  [0, max / 2, max].forEach(function (v) {
+    const gy = y(v);
+    svg += '<line x1="' + padL + '" y1="' + gy.toFixed(1) + '" x2="' + (W - padR) + '" y2="' + gy.toFixed(1) + '" stroke="#2a2a2a"/>' +
+      '<text x="' + (padL - 4) + '" y="' + (gy + 3).toFixed(1) + '" text-anchor="end" font-size="10" fill="#777">' + fmtNum(v) + '</text>';
+  });
+  lines.forEach(function (l) {
+    let d = '';
+    series.forEach(function (row, i) { d += (i === 0 ? 'M' : 'L') + x(i).toFixed(1) + ' ' + y(Number(row[l[0]]) || 0).toFixed(1) + ' '; });
+    svg += '<path d="' + d + '" fill="none" stroke="' + l[2] + '" stroke-width="2" stroke-linejoin="round" stroke-linecap="round"/>';
+  });
+  const idxs = series.length === 1 ? [0] : [0, Math.floor((series.length - 1) / 2), series.length - 1];
+  idxs.forEach(function (i, k) {
+    const anchor = k === 0 ? 'start' : (k === idxs.length - 1 ? 'end' : 'middle');
+    svg += '<text x="' + x(i).toFixed(1) + '" y="' + (H - 6) + '" text-anchor="' + anchor + '" font-size="10" fill="#777">' + dayLabel(series[i].day) + '</text>';
+  });
+  return '<svg viewBox="0 0 ' + W + ' ' + H + '" xmlns="http://www.w3.org/2000/svg">' + svg + '</svg>';
+}
+
+function renderSearchUsage(trendEl, breakdownEl, usage) {
+  const legend = SEARCH_USAGE_SERIES.map(function (l) { return legendRow(l[2], l[1]); }).join('');
+  trendEl.innerHTML = '<div class="chart-meta"><span><b>People per day</b></span></div>' +
+    multiLineChartSVG(usage.daily || [], SEARCH_USAGE_SERIES, trendEl.clientWidth ? Math.max(280, trendEl.clientWidth - 32) : 0) +
+    '<div class="legend">' + legend + '</div>';
+
+  breakdownEl.innerHTML = '';
+  (usage.byVersion || []).forEach(function (v) {
+    const rows = SEARCH_USAGE_SERIES.map(function (l) {
+      const share = v.users ? v[l[0]] / v.users : 0;
+      return { label: l[1], count: share, color: l[2], countText: Math.round(share * 100) + '% · ' + v[l[0]] };
+    });
+    breakdownEl.appendChild(barChartCard(v.version, v.users + ' active users', rows));
+  });
+  breakdownEl.appendChild(barCard('YouTube mode — turned on via (user-days)', usage.youtubeModeVia || {}, 1));
+}
+
 function renderCompare(el, countsByEvent) {
   el.innerHTML = '';
   COMPARE_GROUPS.forEach(function (g, gi) {
@@ -1680,6 +1791,13 @@ fetch('/dashboard/data' + channelQuery).then(r => r.json()).then(data => {
   renderPie(document.getElementById('playbackStartPie'), aggregateParam(data.paramEvents || [], 'Player.Start', 'source'));
 
   renderBreakdowns(document.getElementById('breakdowns'), data.paramEvents);
+
+  const searchUsage = data.searchUsage || {};
+  document.getElementById('searchWindow').textContent = '(last ' + searchUsage.windowDays + ' days)';
+  document.getElementById('searchHint').textContent =
+    'Distinct people per day who searched in the app, turned on YouTube mode, or did anything in a YouTube page (Search tab or browser sheet). ' +
+    'Per version: share of active users on that version who did it at least once. Hidden YouTube buttons: see Settings adoption and Search.HideYoutubeButton.';
+  renderSearchUsage(document.getElementById('searchTrend'), document.getElementById('searchBreakdowns'), searchUsage);
 
   document.getElementById('generationWindow').textContent = win;
   renderGenerationResults(document.getElementById('generation'), data.paramEvents);
