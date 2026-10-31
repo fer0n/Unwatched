@@ -41,7 +41,7 @@ struct ContextMenuAction {
             )
         ]
 
-        if UserDefaults.standard.bool(forKey: Const.playBrowserVideosInApp) {
+        if Const.playBrowserVideosInApp.bool ?? true {
             actions.insert(
                 .init(
                     type: .openLink,

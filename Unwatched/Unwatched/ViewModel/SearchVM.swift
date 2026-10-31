@@ -18,7 +18,7 @@ final class SearchVM {
     static let shared = SearchVM()
 
     var query: String = ""
-    var showBrowserFallback = false
+    var showsYoutube = false
     var results: [SendableVideo] = []
     var podcastResults: [SendableSubscription] = []
     private(set) var suggestions: [String] = []
@@ -107,7 +107,7 @@ final class SearchVM {
         searchLocal()
         searchPodcasts()
 
-        guard enabledSources.contains(.youtube), !searchesYoutubeInBrowser else {
+        guard enabledSources.contains(.youtube) else {
             withAnimation {
                 results = []
             }

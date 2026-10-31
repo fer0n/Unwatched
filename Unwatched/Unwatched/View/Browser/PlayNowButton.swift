@@ -31,7 +31,8 @@ struct PlayNowButton: View {
                     try await task.value
                     player.loadTopmostVideoFromQueue(
                         source: .userInteraction,
-                        playIfCurrent: true
+                        playIfCurrent: true,
+                        filter: .all
                     )
                     navManager.handlePlay()
                     onDismiss?()

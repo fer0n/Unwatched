@@ -12,8 +12,8 @@ import UnwatchedShared
 /// results using the same `VideoListItem` rows as the rest of the app. Tapping a
 /// result (or its queue/swipe actions) materialises it into the library on demand.
 struct SearchView: View {
-    @AppStorage(Const.searchAlwaysUseYoutube) var searchAlwaysUseYoutube: Bool = false
     @AppStorage(Const.showSearchRecommendations) var showRecommendations: Bool = false
+    @AppStorage(Const.showSearchYoutubeButton) var showYoutubeButton: Bool = true
 
     @Environment(\.modelContext) private var modelContext
     @Environment(NavigationManager.self) private var navManager
@@ -51,6 +51,14 @@ struct SearchView: View {
                         .fontWeight(.bold)
                 }
                 #endif
+                #if os(iOS)
+                if showYoutubeButton || vm.showsYoutube {
+                    ToolbarSpacer(.fixed, placement: topBarLeadingPlacement)
+                    ToolbarItem(placement: topBarLeadingPlacement) {
+                        youtubeToggle
+                    }
+                }
+                #endif
             }
             .navigationDestination(for: SearchRoute.self) { route in
                 switch route {
@@ -68,6 +76,7 @@ struct SearchView: View {
             text: $vm.query,
             focused: $searchFocused,
             prompt: "search",
+            isEnabled: !vm.showsYoutube,
             onSubmit: { search(for: vm.query) }
         )
         .onChange(of: vm.query) { _, newValue in
@@ -75,17 +84,9 @@ struct SearchView: View {
                 vm.clear()
             }
         }
-        // Toggling the YouTube source reruns the search itself (see `SearchVM.setEnabled`).
-        .onChange(of: vm.searchesYoutubeInBrowser) {
-            guard vm.hasSearched else { return }
-            showBrowserIfSearchingYoutubeThere()
-        }
-        .onChange(of: searchAlwaysUseYoutube) {
-            vm.rerunActiveSearch()
-        }
-        .onChange(of: searchFocused) { _, focused in
-            if focused {
-                vm.showBrowserFallback = false
+        .onChange(of: showYoutubeButton) { _, show in
+            if !show {
+                vm.showsYoutube = false
             }
         }
 
@@ -99,6 +100,7 @@ struct SearchView: View {
         // searchTabShouldAutoFocus), and when already pending on first appearance.
         .onChange(of: navManager.pendingSearchFocus, initial: true) { _, pending in
             guard pending else { return }
+            vm.showsYoutube = false
             // The very first appearance may still be mounting (notably on cold launch);
             // later visits are already mounted, so focus can happen immediately.
             focusSearchField(delay: hasAppearedOnce ? .zero : .milliseconds(300))
@@ -139,34 +141,13 @@ struct SearchView: View {
         let trimmed = term.trimmingCharacters(in: .whitespacesAndNewlines)
         guard !trimmed.isEmpty else { return }
         vm.search()
-        showBrowserIfSearchingYoutubeThere()
         if !showsResultsInline && navManager.presentedSearch.first != .results {
             navManager.presentedSearch = [.results]
         }
     }
 
-    func youtubeSearchURL(for query: String) -> URL? {
-        guard !query.isEmpty,
-              let encoded = query.addingPercentEncoding(withAllowedCharacters: .urlQueryAllowed)
-        else { return nil }
-        return URL(string: "https://www.youtube.com/results?search_query=\(encoded)")
-    }
-
-    func showBrowserIfSearchingYoutubeThere() {
-        if vm.searchesYoutubeInBrowser, let url = youtubeSearchURL(for: vm.activeQuery) {
-            openBrowserFallback(url)
-        } else {
-            vm.showBrowserFallback = false
-        }
-    }
-
-    func openBrowserFallback(_ url: URL) {
-        browserManager.loadUrl(url)
-        vm.showBrowserFallback = true
-    }
-
     var shouldAutoFocusSearch: Bool {
-        !showRecommendations && !vm.hasSearched && vm.query.isEmpty
+        !showRecommendations && !vm.hasSearched && vm.query.isEmpty && !vm.showsYoutube
     }
 
     /// Right after a pop back to the root the field is still morphing into the tab bar and only
@@ -180,7 +161,7 @@ struct SearchView: View {
                 try? await Task.sleep(for: delay)
             }
             for _ in 0..<attempts {
-                guard !Task.isCancelled, !searchFocused,
+                guard !Task.isCancelled, !searchFocused, !vm.showsYoutube,
                       navManager.tab == .search, navManager.presentedSearch.isEmpty else { return }
                 searchFocused = true
                 try? await Task.sleep(for: .milliseconds(100))
@@ -212,7 +193,13 @@ struct SearchView: View {
     @ViewBuilder
     var rootContent: some View {
         if showsResultsInline && vm.hasSearched && !vm.isEditingQuery {
-            resultsContent
+            resultsBody
+        } else if vm.showsYoutube {
+            if browserSheetHoldsWebView {
+                Color.clear
+            } else {
+                youtubeBrowser
+            }
         } else {
             SearchSuggestionsView(vm: vm, searchFocused: $searchFocused, onSelect: search(for:))
         }
@@ -221,7 +208,7 @@ struct SearchView: View {
     var resultsPage: some View {
         ZStack {
             MyBackgroundColor()
-            resultsContent
+            resultsBody
         }
         .myNavigationTitle(vm.hasSearched ? .verbatim(vm.activeQuery) : "search")
         .toolbar {
@@ -229,32 +216,9 @@ struct SearchView: View {
         }
     }
 
-    var resultsContent: some View {
-        VStack(spacing: 0) {
-            if showsResultsTabPicker {
-                Picker("search", selection: $vm.showBrowserFallback) {
-                    Text(verbatim: "YouTube").tag(true)
-                    Text("searchDefaultResults").tag(false)
-                }
-                .pickerStyle(.segmented)
-                .labelsHidden()
-                .padding(.horizontal)
-                .padding(.vertical, 8)
-            }
-            resultsBody
-        }
-    }
-
-    /// YouTube's results are in the web page, everything else in the list: switch between the two.
-    var showsResultsTabPicker: Bool {
-        vm.searchesYoutubeInBrowser && vm.hasSearched
-    }
-
     @ViewBuilder
     var resultsBody: some View {
-        if vm.showBrowserFallback {
-            BrowserView(showHeader: false, safeArea: false, hideYoutubeChrome: true)
-        } else if vm.isSearching && !vm.hasAnyResults {
+        if vm.isSearching && !vm.hasAnyResults {
             ProgressView()
         } else if let error = vm.errorMessage, !vm.hasAnyResults {
             ContentUnavailableView {
@@ -263,11 +227,7 @@ struct SearchView: View {
                 Text(verbatim: error)
             } actions: {
                 Button("retry") { vm.search(force: true) }
-                if let url = youtubeSearchURL(for: vm.activeQuery) {
-                    Button("searchInBrowser") {
-                        openBrowserFallback(url)
-                    }
-                }
+                Button("searchInBrowser", action: searchOnYoutube)
             }
         } else if vm.hasSearched && !vm.hasAnyResults {
             ContentUnavailableView {
@@ -275,11 +235,7 @@ struct SearchView: View {
             } description: {
                 Text("searchNoResultsDescription")
             } actions: {
-                if let url = youtubeSearchURL(for: vm.activeQuery) {
-                    Button("searchInBrowser") {
-                        openBrowserFallback(url)
-                    }
-                }
+                Button("searchInBrowser", action: searchOnYoutube)
             }
         } else {
             SearchResultsList(vm: vm)
@@ -290,4 +246,75 @@ struct SearchView: View {
 #Preview {
     SearchView()
         .previewEnvironments()
+}
+
+extension SearchView {
+    var youtubeToggle: some View {
+        Button {
+            toggleYoutube()
+        } label: {
+            Image(systemName: Const.youtubeSF)
+        }
+        .accessibilityLabel("browserShort")
+        .accessibilityAddTraits(vm.showsYoutube ? .isSelected : [])
+        .font(.footnote)
+        .fontWeight(.bold)
+        .contextMenu {
+            MenuSection("hideYoutubeButtonHint") {
+                Button("hideYoutubeButton", systemImage: "eye.slash") {
+                    showYoutubeButton = false
+                }
+            }
+        }
+        .apply {
+            if vm.showsYoutube {
+                $0.buttonStyle(.glassProminent)
+            } else {
+                $0
+            }
+        }
+    }
+
+    func youtubeSearchURL(for query: String) -> URL? {
+        guard !query.isEmpty,
+              let encoded = query.addingPercentEncoding(withAllowedCharacters: .urlQueryAllowed)
+        else { return nil }
+        return URL(string: "https://www.youtube.com/results?search_query=\(encoded)")
+    }
+
+    func toggleYoutube() {
+        if vm.showsYoutube {
+            vm.showsYoutube = false
+        } else {
+            enterYoutubeMode(query: vm.query)
+        }
+    }
+
+    func enterYoutubeMode(query: String) {
+        vm.showsYoutube = true
+        Signal.interaction("Search.YoutubeMode")
+        searchFocused = false
+        if let url = youtubeSearchURL(for: query.trimmingCharacters(in: .whitespacesAndNewlines)) {
+            browserManager.loadUrl(url)
+        }
+    }
+
+    func searchOnYoutube() {
+        #if os(macOS)
+        if let url = youtubeSearchURL(for: vm.activeQuery) {
+            navManager.openBrowser(.url(url.absoluteString))
+        }
+        #else
+        navManager.presentedSearch = []
+        enterYoutubeMode(query: vm.activeQuery)
+        #endif
+    }
+
+    var browserSheetHoldsWebView: Bool {
+        navManager.showBrowser
+    }
+
+    var youtubeBrowser: some View {
+        BrowserView(showHeader: false, safeArea: false)
+    }
 }

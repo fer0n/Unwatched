@@ -256,19 +256,21 @@ import UnwatchedShared
         UserDefaults.standard.set(nil, forKey: Const.nowPlayingVideo)
     }
 
+    /// `filter: .all` after inserting at the top of the whole queue, outside the latched tag.
     @MainActor
     func loadTopmostVideoFromQueue(
         after task: (Task<(), Error>)? = nil,
         modelContext: ModelContext? = nil,
         source: VideoSource = .nextUp,
-        playIfCurrent: Bool = false
+        playIfCurrent: Bool = false,
+        filter: QueueFilter? = nil
     ) {
         Log.player.info("loadTopmostVideoFromQueue")
         let container = DataProvider.shared.container
         let currentVideoId = video?.youtubeId
 
         func handleTopVideo(_ context: ModelContext) {
-            let topVideo = topVideoInQueue(context)
+            let topVideo = filter.map { VideoService.getTopVideoInQueue(context, $0) } ?? topVideoInQueue(context)
             if let topVideo {
                 if topVideo.youtubeId != currentVideoId || playIfCurrent {
                     self.setNextVideo(topVideo, source)

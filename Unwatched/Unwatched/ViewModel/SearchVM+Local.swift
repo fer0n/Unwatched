@@ -10,15 +10,8 @@ import UnwatchedShared
 /// against what's already stored in the app. See `LocalSearchService` for the matching
 /// itself.
 extension SearchVM {
-    /// With "always use YouTube" the web page lists YouTube's results, so InnerTube isn't asked;
-    /// the other sources are still searched and shown on their own tab.
-    var searchesYoutubeInBrowser: Bool {
-        enabledSources.contains(.youtube) && UserDefaults.standard.bool(forKey: Const.searchAlwaysUseYoutube)
-    }
-
     var uploadDateApplies: Bool {
-        let filtersYoutube = enabledSources.contains(.youtube) && !searchesYoutubeInBrowser
-        return filtersYoutube || !enabledSources.isDisjoint(with: [.bookmarks, .library])
+        !enabledSources.isDisjoint(with: [.youtube, .bookmarks, .library])
     }
 
     /// The YouTube results minus anything already listed in the local sections above,

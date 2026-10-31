@@ -11,7 +11,7 @@ import OSLog
 import UnwatchedShared
 
 struct BrowserView: View, KeyboardReadable {
-    @AppStorage(Const.playBrowserVideosInApp) var playBrowserVideosInApp: Bool = false
+    @AppStorage(Const.playBrowserVideosInApp) var playBrowserVideosInApp: Bool = true
     @Environment(ImageCacheManager.self) var cacheManager
     @Environment(\.horizontalSizeClass) var horizontalSizeClass
     @Environment(RefreshManager.self) var refresher
@@ -23,7 +23,6 @@ struct BrowserView: View, KeyboardReadable {
 
     var showHeader = true
     var safeArea = true
-    var hideYoutubeChrome = false
 
     var addButtonTip = AddButtonTip()
 
@@ -113,8 +112,7 @@ struct BrowserView: View, KeyboardReadable {
 
                 ZStack {
                     YtBrowserWebView(browserManager: $browserManager,
-                                     onDismiss: handleDismiss,
-                                     hideYoutubeChrome: hideYoutubeChrome)
+                                     onDismiss: handleDismiss)
                         .id("\(playBrowserVideosInApp ? "inApp" : "external")")
                     if !isKeyboardVisible {
                         VStack {

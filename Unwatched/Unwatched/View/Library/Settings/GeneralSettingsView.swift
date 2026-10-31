@@ -8,8 +8,8 @@ import UnwatchedShared
 
 struct GeneralSettingsView: View {
     @AppStorage(Const.browserDisplayMode) var browserDisplayMode: BrowserDisplayMode = .inApp
-    @AppStorage(Const.searchAlwaysUseYoutube) var searchAlwaysUseYoutube: Bool = false
     @AppStorage(Const.showSearchRecommendations) var showSearchRecommendations: Bool = false
+    @AppStorage(Const.showSearchYoutubeButton) var showSearchYoutubeButton: Bool = true
     @AppStorage(Const.defaultVideoPlacement) var defaultVideoPlacement: VideoPlacement = .inbox
     @AppStorage(Const.autoClearNew) var autoClearNew: Bool = false
     @AppStorage(Const.requireClearConfirmation) var requireClearConfirmation: Bool = true
@@ -39,12 +39,14 @@ struct GeneralSettingsView: View {
                         }
                     }
                     .pickerStyle(.menu)
-                    Toggle(isOn: $searchAlwaysUseYoutube) {
-                        Text("searchAlwaysUseYoutube")
-                    }
                     Toggle(isOn: $showSearchRecommendations) {
                         Text("showSearchRecommendations")
                     }
+                    #if os(iOS)
+                    Toggle(isOn: $showSearchYoutubeButton) {
+                        Text("showSearchYoutubeButton")
+                    }
+                    #endif
                     Toggle(isOn: $autoClearNew) {
                         Text("autoClearNew")
                     }

@@ -54,6 +54,7 @@ const BOOL_SETTINGS = [
   ["refreshOnStartup", true, "Refresh on Startup"],
   ["requireClearConfirmation", true, "Require Clear Confirmation"],
   ["showClearQueueButton", true, "Show Clear-Queue Button"],
+  ["showSearchYoutubeButton", true, "Search: YouTube Button"],
   ["enableQueueContextMenu", false, "Queue Context Menu"],
   ["autoRefreshIgnoresSync", false, "Auto-refresh Ignores Sync"],
   ["useNoCookieUrl", false, "Use No-Cookie URL"],
@@ -77,7 +78,7 @@ const BOOL_SETTINGS = [
   ["autoAirplayHD", false, "Auto AirPlay HD"],
   ["suggestVideos", false, "Suggest Videos"],
   ["nativePlayerFallback", true, "Native Player Fallback"],
-  ["playBrowserVideosInApp", false, "Play Browser Videos In-App"],
+  ["playBrowserVideosInApp", true, "Play Browser Videos In-App"],
   ["surroundingEffect", true, "Surrounding Effect"],
   // Appearance
   ["showTabBarLabels", true, "Show Tab Bar Labels"],

@@ -389,25 +389,25 @@
         "en" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Tapping on a video inside the in-App Browser will close the browser and play it inside Unwatched’s player instead."
+            "value" : "Tapping a video in the in-app browser plays it in Unwatched’s player instead."
           }
         },
         "es" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Al tocar un vídeo dentro del navegador integrado, este se cerrará y se reproducirá en el reproductor de Unwatched."
+            "value" : "Al tocar un vídeo en el navegador integrado, se reproduce en el reproductor de Unwatched."
           }
         },
         "fr" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "En appuyant sur une vidéo dans le navigateur intégré, celui-ci se fermera et la lira à la place dans le lecteur d’Unwatched."
+            "value" : "Appuyer sur une vidéo dans le navigateur intégré la lit dans le lecteur d’Unwatched."
           }
         },
         "pl" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Stuknięcie wideo w przeglądarce w aplikacji zamknie ją i odtworzy film w odtwarzaczu Unwatched."
+            "value" : "Stuknięcie wideo w przeglądarce w aplikacji odtwarza je w odtwarzaczu Unwatched."
           }
         }
       }
@@ -10639,6 +10639,74 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "Jeśli chcesz, możesz ukryć wszystkie #shorts od teraz.  Możesz to zmienić w dowolnym momencie w \"Biblioteka → Ustawienia → Filtr\""
+          }
+        }
+      }
+    },
+    "hideYoutubeButton" : {
+      "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Button ausblenden"
+          }
+        },
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Hide Button"
+          }
+        },
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Ocultar botón"
+          }
+        },
+        "fr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Masquer le bouton"
+          }
+        },
+        "pl" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Ukryj przycisk"
+          }
+        }
+      }
+    },
+    "hideYoutubeButtonHint" : {
+      "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Kann in den Einstellungen wieder eingeblendet werden"
+          }
+        },
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Can be shown again in Settings"
+          }
+        },
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Se puede volver a mostrar en Configuración"
+          }
+        },
+        "fr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Peut être réaffiché dans les Paramètres"
+          }
+        },
+        "pl" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Można go ponownie włączyć w Ustawieniach"
           }
         }
       }
@@ -21326,40 +21394,6 @@
         }
       }
     },
-    "searchAlwaysUseYoutube" : {
-      "localizations" : {
-        "de" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "YouTube für die Suche öffnen"
-          }
-        },
-        "en" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Open YouTube for Search"
-          }
-        },
-        "es" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Abrir YouTube para buscar"
-          }
-        },
-        "fr" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Ouvrir YouTube pour la recherche"
-          }
-        },
-        "pl" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Otwórz YouTube do wyszukiwania"
-          }
-        }
-      }
-    },
     "searchDateAnytime" : {
       "extractionState" : "manual",
       "localizations" : {
@@ -21566,40 +21600,6 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "Dziś"
-          }
-        }
-      }
-    },
-    "searchDefaultResults" : {
-      "localizations" : {
-        "de" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Standard"
-          }
-        },
-        "en" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Default"
-          }
-        },
-        "es" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Predeterminado"
-          }
-        },
-        "fr" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Par défaut"
-          }
-        },
-        "pl" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Domyślne"
           }
         }
       }
@@ -25166,6 +25166,40 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "Pokazuj polecane w wyszukiwaniu"
+          }
+        }
+      }
+    },
+    "showSearchYoutubeButton" : {
+      "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "YouTube-Button in der Suche anzeigen"
+          }
+        },
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Show YouTube Button in Search"
+          }
+        },
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Mostrar botón de YouTube en la búsqueda"
+          }
+        },
+        "fr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Afficher le bouton YouTube dans la recherche"
+          }
+        },
+        "pl" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Pokaż przycisk YouTube w wyszukiwaniu"
           }
         }
       }

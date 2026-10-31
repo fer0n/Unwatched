@@ -56,6 +56,7 @@ extension Const {
         Const.autoRefreshIgnoresSync: false,
         Const.useNoCookieUrl: false,
         Const.showSearchRecommendations: false,
+        Const.showSearchYoutubeButton: true,
 
         // Playback
         Const.fullscreenControlsSetting: FullscreenControls.autoHide.rawValue,
@@ -82,7 +83,7 @@ extension Const {
         Const.autoAirplayHD: false,
         Const.suggestVideos: false,
         Const.nativePlayerFallback: true,
-        Const.playBrowserVideosInApp: false,
+        Const.playBrowserVideosInApp: true,
         Const.surroundingEffect: true,
 
         // Appearance

@@ -103,7 +103,8 @@ extension YtBrowserWebView {
                 try? await task.value
                 parent.player.loadTopmostVideoFromQueue(
                     source: .userInteraction,
-                    playIfCurrent: true
+                    playIfCurrent: true,
+                    filter: .all
                 )
                 if let videoDuration = parent.player.video?.duration {
                     // Try to find a video with a matching duration, best way I could find
@@ -153,10 +154,6 @@ extension YtBrowserWebView {
             if parent.playBrowserVideosInApp {
                 injectVideoInterceptionScript(webView)
             }
-
-            if parent.hideYoutubeChrome {
-                injectHideChromeCSS(webView)
-            }
         }
 
         func injectStyling(_ webView: WKWebView) {
@@ -202,25 +199,6 @@ extension YtBrowserWebView {
                     }, true);
                 })();
                 """
-            webView.evaluateJavaScript(script + " undefined;")
-        }
-
-        func injectHideChromeCSS(_ webView: WKWebView) {
-            let script = """
-            (function() {
-                var style = document.createElement('style');
-                style.textContent = `
-                    ytm-mobile-topbar-renderer,
-                    ytm-pivot-bar-renderer {
-                        display: none !important;
-                    }
-                    ytm-app {
-                        padding-top: 0 !important;
-                    }
-                `;
-                document.head.appendChild(style);
-            })();
-            """
             webView.evaluateJavaScript(script + " undefined;")
         }
 

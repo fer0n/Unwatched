@@ -28,19 +28,25 @@ extension View {
     }
 
     /// The system search field on the navigation stack. No-op on macOS — see `paneSearchField`.
+    @ViewBuilder
     func nativeSearchable(
         text: Binding<String>,
         focused: FocusState<Bool>.Binding,
         prompt: LocalizedStringKey,
+        isEnabled: Bool = true,
         onSubmit: @escaping () -> Void
     ) -> some View {
         #if os(macOS)
         self
         #else
-        searchable(text: text, prompt: Text(prompt))
-            .searchPresentationToolbarBehavior(.avoidHidingContent)
-            .searchFocused(focused)
-            .onSubmit(of: .search, onSubmit)
+        if isEnabled {
+            searchable(text: text, prompt: Text(prompt))
+                .searchPresentationToolbarBehavior(.avoidHidingContent)
+                .searchFocused(focused)
+                .onSubmit(of: .search, onSubmit)
+        } else {
+            self
+        }
         #endif
     }
 }

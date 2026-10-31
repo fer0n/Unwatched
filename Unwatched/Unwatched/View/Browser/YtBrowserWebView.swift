@@ -9,7 +9,7 @@ import OSLog
 import UnwatchedShared
 
 struct YtBrowserWebView: PlatformViewRepresentable {
-    @AppStorage(Const.playBrowserVideosInApp) var playBrowserVideosInApp: Bool = false
+    @AppStorage(Const.playBrowserVideosInApp) var playBrowserVideosInApp: Bool = true
     @CloudStorage(Const.defaultShortsSetting) var defaultShortsSetting: ShortsSetting = .show
 
     @Environment(PlayerManager.self) var player
@@ -18,16 +18,13 @@ struct YtBrowserWebView: PlatformViewRepresentable {
 
     var onDismiss: (() -> Void)?
     @Bindable var browserManager: BrowserManager
-    var hideYoutubeChrome = false
 
     init(
         browserManager: Bindable<BrowserManager>,
-        onDismiss: (() -> Void)? = nil,
-        hideYoutubeChrome: Bool = false
+        onDismiss: (() -> Void)? = nil
     ) {
         self._browserManager = browserManager
         self.onDismiss = onDismiss
-        self.hideYoutubeChrome = hideYoutubeChrome
     }
 
     func makeView(_ coordinator: Coordinator) -> WKWebView {
