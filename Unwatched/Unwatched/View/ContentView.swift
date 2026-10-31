@@ -128,6 +128,14 @@ struct ContentView: View {
 struct ContentLayout: Equatable {
     static let minHeightBelowVideo: CGFloat = 400
 
+    /// iPadOS 26 centres regular-width sheets, floating the minimized menu over the controls
+    private static var usesSheetWhenUpright: Bool {
+        if #available(iOS 27, *) {
+            return Device.isIphone || Device.isIpad
+        }
+        return Device.isIphone
+    }
+
     let regularSize: Bool
     let isLandscape: Bool
     let fold: CGRect?
@@ -154,7 +162,7 @@ struct ContentLayout: Equatable {
         let size = proxy.size
         let isLandscape = size.width > size.height
         let fold = regularSize ? proxy.fold(isLandscape: isLandscape) : nil
-        let bigScreen = regularSize && (isLandscape || !(Device.isIphone || Device.isIpad))
+        let bigScreen = regularSize && (isLandscape || !Self.usesSheetWhenUpright)
         let landscapeFullscreen = !bigScreen && isLandscape
 
         self.regularSize = regularSize
