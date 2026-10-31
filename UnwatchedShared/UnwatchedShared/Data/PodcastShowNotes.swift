@@ -14,11 +14,21 @@ enum PodcastShowNotes {
         var result = ""
         var listDepth = 0
         var linkHref: String?
+        var awaitingItemText = false
         var index = html.startIndex
 
         while index < html.endIndex {
             let character = html[index]
             guard character == "<", let close = html[index...].firstIndex(of: ">") else {
+                if character.isWhitespace, listDepth > 0 {
+                    // a list's line breaks are markup, as in HTML
+                    if let last = result.last, !last.isWhitespace {
+                        result.append(" ")
+                    }
+                    index = html.index(after: index)
+                    continue
+                }
+                awaitingItemText = false
                 // inside a link the brackets are markdown syntax, so they can't stay as they are
                 if linkHref != nil, character == "[" || character == "]" {
                     result.append("\\")
@@ -38,11 +48,13 @@ enum PodcastShowNotes {
                 .lowercased()
 
             switch name {
-            case "br":
-                result.append("\n")
-            case "p", "div", "h1", "h2", "h3", "h4", "h5", "h6":
-                result.append("\n")
+            case "br", "p", "div", "h1", "h2", "h3", "h4", "h5", "h6":
+                // the next <li> starts its own line
+                if !awaitingItemText, !(isClosing && listDepth > 0) {
+                    result.append("\n")
+                }
             case "ul", "ol":
+                awaitingItemText = false
                 listDepth = isClosing ? max(0, listDepth - 1) : listDepth + 1
                 result.append("\n")
             case "li":
@@ -51,6 +63,7 @@ enum PodcastShowNotes {
                     result.append("\n" + String(repeating: "\u{00A0}\u{00A0}", count: max(0, listDepth - 1)))
                     result.append("\u{2022} ")
                 }
+                awaitingItemText = !isClosing
             case "a" where keepLinks:
                 if isClosing {
                     if let href = linkHref {

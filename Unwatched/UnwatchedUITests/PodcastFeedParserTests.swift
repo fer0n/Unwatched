@@ -194,6 +194,25 @@ class PodcastFeedParserTests: XCTestCase {
         XCTAssertTrue(nested.hasPrefix("\u{00A0}"), nested)
     }
 
+    /// Lage der Nation breaks the line between `<li>` and its link, which put the bullet on a line of its own.
+    func testListItemTextStaysOnTheBulletLine() throws {
+        let notes = """
+        <ul>
+            <li>
+        <a href="https://example.com/a">First</a>
+        </li>
+            <li><p>Second</p></li>
+            <li>Third</li>
+        </ul>
+        """
+        let xml = Self.showNotesXml.replacing(
+            #/<description><!\[CDATA\[<ul>.*?</ul>\]\]></description>/#.dotMatchesNewlines(),
+            with: "<description><![CDATA[\(notes)]]></description>"
+        )
+        let description = try XCTUnwrap(parseNotesFeed(xml).episodes.first?.videoDescription)
+        XCTAssertEqual(description, "\u{2022} [First](https://example.com/a)\n\u{2022} Second\n\u{2022} Third")
+    }
+
     /// Show notes are full of numeric entities; left encoded they read as `it&#8217;s`.
     func testDecodesNumericEntities() throws {
         let description = try XCTUnwrap(notesFeed.episodes.first?.videoDescription)
