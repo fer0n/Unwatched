@@ -14,6 +14,7 @@ import UnwatchedShared
 struct SearchView: View {
     @AppStorage(Const.showSearchRecommendations) var showRecommendations: Bool = false
     @AppStorage(Const.showSearchYoutubeButton) var showYoutubeButton: Bool = true
+    @AppStorage(Const.autoFocusSearch) var autoFocusSearch: Bool = true
 
     @Environment(\.modelContext) private var modelContext
     @Environment(NavigationManager.self) private var navManager
@@ -147,7 +148,7 @@ struct SearchView: View {
     }
 
     var shouldAutoFocusSearch: Bool {
-        !showRecommendations && !vm.hasSearched && vm.query.isEmpty && !vm.showsYoutube
+        autoFocusSearch && !showRecommendations && !vm.hasSearched && vm.query.isEmpty && !vm.showsYoutube
     }
 
     /// Right after a pop back to the root the field is still morphing into the tab bar and only

@@ -25136,6 +25136,40 @@
         }
       }
     },
+    "showRecommendations" : {
+      "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Empfehlungen anzeigen"
+          }
+        },
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Show Recommendations"
+          }
+        },
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Mostrar recomendaciones"
+          }
+        },
+        "fr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Afficher des recommandations"
+          }
+        },
+        "pl" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Pokazuj polecane"
+          }
+        }
+      }
+    },
     "showSearchRecommendations" : {
       "localizations" : {
         "de" : {
@@ -25175,31 +25209,65 @@
         "de" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "YouTube-Button in der Suche anzeigen"
+            "value" : "YouTube-Button anzeigen"
           }
         },
         "en" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Show YouTube Button in Search"
+            "value" : "Show YouTube Button"
           }
         },
         "es" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Mostrar botón de YouTube en la búsqueda"
+            "value" : "Mostrar botón de YouTube"
           }
         },
         "fr" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Afficher le bouton YouTube dans la recherche"
+            "value" : "Afficher le bouton YouTube"
           }
         },
         "pl" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Pokaż przycisk YouTube w wyszukiwaniu"
+            "value" : "Pokaż przycisk YouTube"
+          }
+        }
+      }
+    },
+    "autoFocusSearch" : {
+      "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Suchfeld automatisch fokussieren"
+          }
+        },
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Auto-Focus Search Field"
+          }
+        },
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Enfocar el campo de búsqueda automáticamente"
+          }
+        },
+        "fr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Activer automatiquement le champ de recherche"
+          }
+        },
+        "pl" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Automatycznie aktywuj pole wyszukiwania"
           }
         }
       }

@@ -454,6 +454,8 @@
 		888E1E002B7000DA00608F99 /* BookmarkedVideosView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 888E1DFF2B7000DA00608F99 /* BookmarkedVideosView.swift */; };
 		888E1E042B70E84A00608F99 /* AnimationCompletionCallback.swift in Sources */ = {isa = PBXBuildFile; fileRef = 888E1E032B70E84A00608F99 /* AnimationCompletionCallback.swift */; };
 		888F74A72BA1FAC000B94822 /* NotificationSettingsView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 888F74A62BA1FAC000B94822 /* NotificationSettingsView.swift */; };
+		A1B2C3D4E5F6071829304A02 /* SearchSettingsView.swift in Sources */ = {isa = PBXBuildFile; fileRef = A1B2C3D4E5F6071829304A01 /* SearchSettingsView.swift */; };
+		A1B2C3D4E5F6071829304A03 /* SearchSettingsView.swift in Sources */ = {isa = PBXBuildFile; fileRef = A1B2C3D4E5F6071829304A01 /* SearchSettingsView.swift */; };
 		888F74A92BA1FD8400B94822 /* GeneralSettingsView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 888F74A82BA1FD8400B94822 /* GeneralSettingsView.swift */; };
 		888F74AB2BA1FEC600B94822 /* PlaybackSettingsView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 888F74AA2BA1FEC600B94822 /* PlaybackSettingsView.swift */; };
 		888F74AD2BA2009C00B94822 /* AppearanceSettingsView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 888F74AC2BA2009C00B94822 /* AppearanceSettingsView.swift */; };
@@ -1548,6 +1550,7 @@
 		888E1DFF2B7000DA00608F99 /* BookmarkedVideosView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BookmarkedVideosView.swift; sourceTree = "<group>"; };
 		888E1E032B70E84A00608F99 /* AnimationCompletionCallback.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AnimationCompletionCallback.swift; sourceTree = "<group>"; };
 		888F74A62BA1FAC000B94822 /* NotificationSettingsView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NotificationSettingsView.swift; sourceTree = "<group>"; };
+		A1B2C3D4E5F6071829304A01 /* SearchSettingsView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SearchSettingsView.swift; sourceTree = "<group>"; };
 		888F74A82BA1FD8400B94822 /* GeneralSettingsView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = GeneralSettingsView.swift; sourceTree = "<group>"; };
 		888F74AA2BA1FEC600B94822 /* PlaybackSettingsView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PlaybackSettingsView.swift; sourceTree = "<group>"; };
 		888F74AC2BA2009C00B94822 /* AppearanceSettingsView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppearanceSettingsView.swift; sourceTree = "<group>"; };
@@ -2576,6 +2579,7 @@
 				6D19C80D1EA44B1998FACE7B /* IssueReportService.swift */,
 				883C38362EBC817500741119 /* CleanupDuplicatesView.swift */,
 				888F74A82BA1FD8400B94822 /* GeneralSettingsView.swift */,
+				A1B2C3D4E5F6071829304A01 /* SearchSettingsView.swift */,
 				8852B02A2D346B8B0047C498 /* FilterSettingsView.swift */,
 				27693FCF8A1DE498E1EB353F /* ChapterSettingsView.swift */,
 				88899D922E035E54002C05BC /* TitleFilterView.swift */,
@@ -3953,6 +3957,7 @@
 				88373C1A2C8B381F00ACBB3B /* AppAppearanceSelection.swift in Sources */,
 				88E779162D120364003EBDEF /* WatchNotificationHandlerViewModifier.swift in Sources */,
 				889AF91F2C50ECE7001CEDE6 /* GeneralSettingsView.swift in Sources */,
+				A1B2C3D4E5F6071829304A03 /* SearchSettingsView.swift in Sources */,
 				889AF9202C50ECE7001CEDE6 /* AllVideosView.swift in Sources */,
 				88C382422E6DD69400F1FDC2 /* PlayNowButton.swift in Sources */,
 				88F149E42F03E89600516422 /* StatsVM.swift in Sources */,
@@ -4360,6 +4365,7 @@
 				8FEE66D6B58FE2808570CCFA /* NextVideo.swift in Sources */,
 				888E1E042B70E84A00608F99 /* AnimationCompletionCallback.swift in Sources */,
 				888F74A92BA1FD8400B94822 /* GeneralSettingsView.swift in Sources */,
+				A1B2C3D4E5F6071829304A02 /* SearchSettingsView.swift in Sources */,
 				88C965EB2D0AB4F800D1AE3E /* PlayerBackgroundGestureRecognizer.swift in Sources */,
 				88C965F32D0AB4F800D1AE3E /* TemporarySpeedPress.swift in Sources */,
 				8898B6792B481F2100348D01 /* SubscriptionActor.swift in Sources */,

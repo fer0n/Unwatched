@@ -7,7 +7,7 @@ import SwiftUI
 import UnwatchedShared
 
 enum SettingsWindowTab {
-    case general, appearance, playback, mediaFilter, chapters, userData, debug, privacy
+    case general, search, appearance, playback, mediaFilter, chapters, userData, debug, privacy
 }
 
 struct SettingsWindowView: View {
@@ -19,6 +19,9 @@ struct SettingsWindowView: View {
         TabView(selection: $navManager.settingsWindowTab) {
             settingsTab(.general, "generalSettings", systemImage: Const.settingsViewSF) {
                 GeneralSettingsView()
+            }
+            settingsTab(.search, "search", systemImage: "magnifyingglass") {
+                SearchSettingsView()
             }
             settingsTab(.appearance, "appearance", systemImage: Const.appearanceSettingsSF) {
                 AppearanceSettingsView()

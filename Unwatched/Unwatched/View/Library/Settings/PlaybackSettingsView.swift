@@ -16,7 +16,6 @@ struct PlaybackSettingsView: View {
     @AppStorage(Const.rotateOnPlay) var rotateOnPlay: Bool = false
     @AppStorage(Const.autoAirplayHD) var autoAirplayHD: Bool = false
     @AppStorage(Const.originalAudio) var originalAudio: Bool = true
-    @AppStorage(Const.playBrowserVideosInApp) var playBrowserVideosInApp: Bool = true
     @AppStorage(Const.playerType) var playerType: PlayerTypeSetting = .youtubeEmbedded
     @AppStorage(Const.preferPlayerType) var preferPlayerType: Bool = false
     @AppStorage(Const.suggestVideos) var suggestVideos: Bool = false
@@ -121,12 +120,6 @@ struct PlaybackSettingsView: View {
                 SwipeGestureSettings()
 
                 TemporaryPlaybackSpeedSettings()
-
-                MySection("browserPlayback", footer: "$browserPlaybackFooter") {
-                    Toggle(isOn: $playBrowserVideosInApp) {
-                        Text("playBrowserVideosInApp")
-                    }
-                }
 
                 #if os(iOS)
                 MySection(footer: "autoAirplayHDHelper") {

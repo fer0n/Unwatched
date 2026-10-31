@@ -57,6 +57,7 @@ extension Const {
         Const.useNoCookieUrl: false,
         Const.showSearchRecommendations: false,
         Const.showSearchYoutubeButton: true,
+        Const.autoFocusSearch: true,
 
         // Playback
         Const.fullscreenControlsSetting: FullscreenControls.autoHide.rawValue,

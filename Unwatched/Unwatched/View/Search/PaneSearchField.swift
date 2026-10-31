@@ -40,13 +40,21 @@ extension View {
         self
         #else
         if isEnabled {
-            searchable(text: text, prompt: Text(prompt))
+            searchable(text: text, placement: searchFieldPlacement, prompt: Text(prompt))
                 .searchPresentationToolbarBehavior(.avoidHidingContent)
                 .searchFocused(focused)
                 .onSubmit(of: .search, onSubmit)
         } else {
             self
         }
+        #endif
+    }
+
+    private var searchFieldPlacement: SearchFieldPlacement {
+        #if os(iOS)
+        .navigationBarDrawer(displayMode: .always)
+        #else
+        .automatic
         #endif
     }
 }

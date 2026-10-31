@@ -43,7 +43,8 @@ import UnwatchedShared
     // Search tab focus its search field. SearchView observes and consumes it.
     var pendingSearchFocus = false
     // seeded for the first switch to the tab, before SearchView exists to update it
-    var searchTabShouldAutoFocus = !UserDefaults.standard.bool(forKey: Const.showSearchRecommendations)
+    var searchTabShouldAutoFocus = (Const.autoFocusSearch.bool ?? true)
+        && !UserDefaults.standard.bool(forKey: Const.showSearchRecommendations)
     var presentedLibrary = NavigationPath()
 
     @ObservationIgnored var topListItemId: String?

@@ -26,6 +26,10 @@ struct SettingsView: View {
                         Label("generalSettings", systemImage: Const.settingsViewSF)
                     }
 
+                    NavigationLink(value: LibraryDestination.settingsSearch) {
+                        Label("search", systemImage: "magnifyingglass")
+                    }
+
                     NavigationLink(value: LibraryDestination.settingsPlayback) {
                         Label("playback", systemImage: Const.playbackSettingsSF)
                     }

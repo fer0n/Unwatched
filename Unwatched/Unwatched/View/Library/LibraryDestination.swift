@@ -40,6 +40,8 @@ extension View {
                         NotificationSettingsView()
                     case .settingsNewVideos:
                         GeneralSettingsView()
+                    case .settingsSearch:
+                        SearchSettingsView()
                     case .settingsAppearance:
                         AppearanceSettingsView()
                     case .settingsPlayback:
@@ -81,6 +83,7 @@ enum LibraryDestination: Codable, Hashable {
          settings,
          settingsNotifications,
          settingsNewVideos,
+         settingsSearch,
          settingsAppearance,
          settingsPlayback,
          importSubscriptions,

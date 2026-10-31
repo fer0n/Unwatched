@@ -55,6 +55,7 @@ const BOOL_SETTINGS = [
   ["requireClearConfirmation", true, "Require Clear Confirmation"],
   ["showClearQueueButton", true, "Show Clear-Queue Button"],
   ["showSearchYoutubeButton", true, "Search: YouTube Button"],
+  ["autoFocusSearch", true, "Search: Auto-Focus"],
   ["enableQueueContextMenu", false, "Queue Context Menu"],
   ["autoRefreshIgnoresSync", false, "Auto-refresh Ignores Sync"],
   ["useNoCookieUrl", false, "Use No-Cookie URL"],
