@@ -39,11 +39,12 @@ extension MenuTabBarController {
         }
 
         func updateEnvironment(_ values: EnvironmentValues) {
-            let current = environment.values
-            // forwarding every change would redraw all tabs
-            guard values.colorScheme != current.colorScheme
-                    || values.dynamicTypeSize != current.dynamicTypeSize else { return }
-            environment.values = values
+            if environment.colorScheme != values.colorScheme {
+                environment.colorScheme = values.colorScheme
+            }
+            if environment.dynamicTypeSize != values.dynamicTypeSize {
+                environment.dynamicTypeSize = values.dynamicTypeSize
+            }
         }
 
         func select(_ selection: NavigationTab, in controller: UITabBarController) {

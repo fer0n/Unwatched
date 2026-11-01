@@ -31,7 +31,7 @@ struct MenuTabBarController: UIViewControllerRepresentable {
 
     func makeUIViewController(context: Context) -> UITabBarController {
         let coordinator = context.coordinator
-        coordinator.environment.values = context.environment
+        coordinator.updateEnvironment(context.environment)
 
         let controller = UITabBarController()
         controller.delegate = coordinator
@@ -66,7 +66,8 @@ struct MenuTabBarController: UIViewControllerRepresentable {
 }
 
 @Observable final class MenuTabEnvironment {
-    var values = EnvironmentValues()
+    var colorScheme = ColorScheme.light
+    var dynamicTypeSize = DynamicTypeSize.large
 }
 
 struct MenuTabRoot<Content: View>: View {
@@ -84,8 +85,9 @@ struct MenuTabRoot<Content: View>: View {
         }
         .scrollEdgeEffectHidden(for: .bottom)
         .scrollEdgeEffectStyle(.soft, for: .top)
-        // hosting controllers don't inherit the menu's environment
-        .environment(\.self, coordinator.environment.values)
+        // not .environment(\.self, …): that hides the pages from VoiceOver
+        .environment(\.colorScheme, coordinator.environment.colorScheme)
+        .environment(\.dynamicTypeSize, coordinator.environment.dynamicTypeSize)
     }
 }
 #endif
