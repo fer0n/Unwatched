@@ -80,6 +80,9 @@ struct ChapterList: View {
                     .foregroundStyle(foregroundColor)
                     .tint(foregroundColor)
                     .contextMenu {
+                        Button("setPositionHere", systemImage: "arrow.forward.to.line") {
+                            setPosition(to: chapter)
+                        }
                         Button("copyUrl", systemImage: Const.copySF) {
                             if let text = UrlService.getShareUrl(video, timestamp: chapter.startTime) {
                                 ClipboardService.set(text)
@@ -233,6 +236,16 @@ struct ChapterList: View {
             VideoService.insertQueueEntries(videos: [video], modelContext: modelContext)
         }
         player.setChapter(chapter)
+    }
+
+    func setPosition(to chapter: SendableChapter) {
+        Signal.interaction("Chapter.SetPosition")
+        if video == player.video {
+            player.setChapter(chapter)
+            player.updateElapsedTime(chapter.startTime, videoId: video.youtubeId, immediate: true)
+        } else {
+            VideoService.forceUpdateVideoNow(video.persistentModelID, elapsedSeconds: chapter.startTime)
+        }
     }
 }
 
