@@ -31,6 +31,7 @@ struct UnwatchedApp: App {
                     UserDataService.migrateBackupContentSettingsIfNeeded()
                     UserDataService.migrateKeepMediaSettingsIfNeeded()
                     UserDataService.resetTrimSilenceStatsIfNeeded()
+                    UserDataService.resetHiddenLiveStreamIdsIfNeeded()
                     try? Tips.configure([
                         .displayFrequency(.immediate),
                         .datastoreLocation(.applicationDefault)

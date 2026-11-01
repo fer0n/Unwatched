@@ -6,7 +6,7 @@
 import Foundation
 
 extension InnerTubeAPI {
-    /// Upcoming, running and past live streams, but not premieres.
+    /// Upcoming, running and past live streams — and past premieres, which YouTube files here too.
     public func fetchChannelLiveStreamIds(channelId: String) async throws -> Set<String> {
         var body = makeBody(client: webClientContext)
         body["browseId"] = channelId

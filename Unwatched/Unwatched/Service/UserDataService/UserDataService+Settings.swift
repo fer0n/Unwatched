@@ -101,6 +101,12 @@ extension UserDataService {
         defaults.removeObject(forKey: Const.trimSilenceSecondsPlayed)
     }
 
+    /// The old list held premieres as well as streams. Dropping it lets those still in a feed be
+    /// checked again and show up; the streams among them are simply re-confirmed.
+    static func resetHiddenLiveStreamIdsIfNeeded(defaults: UserDefaults = .standard) {
+        defaults.removeObject(forKey: Const.legacyHiddenLiveStreamIds)
+    }
+
     static private func migrateInvertedBool(legacyKey: String, newKey: String, defaults: UserDefaults) {
         guard defaults.object(forKey: newKey) == nil,
               let legacyValue = defaults.object(forKey: legacyKey) as? Bool else {

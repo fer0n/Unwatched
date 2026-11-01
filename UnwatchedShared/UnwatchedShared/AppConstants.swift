@@ -435,7 +435,9 @@ public struct Const {
     public static let hideShorts = "hideShortsEverywhere"
     public static let defaultShortsSetting = "defaultShortsSetting"
     public static let defaultLiveStreamSetting = "defaultLiveStreamSetting"
-    public static let hiddenLiveStreamIds = "hiddenLiveStreamIds"
+    /// Held premieres too, until those were told apart (see `resetHiddenLiveStreamIdsIfNeeded`)
+    public static let legacyHiddenLiveStreamIds = "hiddenLiveStreamIds"
+    public static let hiddenLiveStreamIds = "hiddenLiveStreamIdsV2"
     public static let hiddenLiveStreamIdsLimit = 500
     public static let feedFallbackChannels = "feedFallbackChannels"
     public static let watchLaterSeenIds = "watchLaterSeenIds"

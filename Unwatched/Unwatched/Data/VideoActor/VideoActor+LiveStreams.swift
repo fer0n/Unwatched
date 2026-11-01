@@ -17,7 +17,8 @@ extension VideoActor {
         if !unchecked.isEmpty {
             do {
                 let channelLiveIds = try await InnerTubeAPI().fetchChannelLiveStreamIds(channelId: channelId)
-                let found = unchecked.map(\.youtubeId).filter(channelLiveIds.contains)
+                let onLiveTab = unchecked.map(\.youtubeId).filter(channelLiveIds.contains)
+                let found = await confirmedLiveStreams(onLiveTab)
                 rememberLiveStreams(found)
                 liveIds.formUnion(found)
             } catch {
@@ -25,6 +26,32 @@ extension VideoActor {
             }
         }
         return videos.filter { !liveIds.contains($0.youtubeId) }
+    }
+
+    /// The Live tab also lists premieres; unconfirmed ids stay visible, since hidden videos are lost for good.
+    private func confirmedLiveStreams(_ ids: [String]) async -> [String] {
+        await withTaskGroup(of: String?.self) { group in
+            for id in ids {
+                group.addTask {
+                    do {
+                        let info = try await InnerTubeAPI().fetchVideoMetadata(videoId: id)
+                        guard info.isLiveContent == true else {
+                            Log.refresh.info("filterLiveStreams: \(id) is on the Live tab but not a stream")
+                            return nil
+                        }
+                        return id
+                    } catch {
+                        Log.refresh.warning("filterLiveStreams: couldn't confirm \(id): \(error)")
+                        return nil
+                    }
+                }
+            }
+            var confirmed = [String]()
+            for await id in group {
+                if let id { confirmed.append(id) }
+            }
+            return confirmed
+        }
     }
 
     /// Hidden streams aren't stored, so they come back as new on every refresh.

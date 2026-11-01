@@ -15,11 +15,13 @@ extension InnerTubeAPI {
         var description: String?
         var channelId: String?
         var channelTitle: String?
+        /// True for live streams, upcoming or past; false for regular videos, premieres included.
+        var isLiveContent: Bool?
     }
 
-    /// Fetches a video's description and channel from the InnerTube player endpoint. Unlike
-    /// `fetchPlayerInfo`, this only reads `videoDetails`, so it succeeds even for videos whose
-    /// playable streams can't be resolved (e.g. without a PO token).
+    /// Fetches a video's description, channel and whether it's a stream from the InnerTube
+    /// player endpoint. Unlike `fetchPlayerInfo`, this only reads `videoDetails`, so it succeeds
+    /// even for videos whose playable streams can't be resolved (e.g. without a PO token).
     func fetchVideoMetadata(videoId: String) async throws -> VideoMetadata {
         var body = makeBody(client: iosClientContext)
         body["videoId"] = videoId
@@ -30,7 +32,8 @@ extension InnerTubeAPI {
         return VideoMetadata(
             description: videoDetails?["shortDescription"] as? String,
             channelId: videoDetails?["channelId"] as? String,
-            channelTitle: videoDetails?["author"] as? String
+            channelTitle: videoDetails?["author"] as? String,
+            isLiveContent: videoDetails?["isLiveContent"] as? Bool
         )
     }
 }

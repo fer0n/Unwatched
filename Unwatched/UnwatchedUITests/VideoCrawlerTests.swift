@@ -428,4 +428,19 @@ class LiveStreamFilterTests: XCTestCase {
         XCTAssertFalse(regularIds.isEmpty)
         XCTAssertTrue(liveIds.isDisjoint(with: regularIds))
     }
+
+    /// Past premieres sit on the Live tab next to streams (#239); only the player tells them apart.
+    func testPremiereOnLiveTabIsNotLiveContent() async throws {
+        let technologyConnections = "UCy0tKL1T7wFoYcxCe0xjN6Q"
+        let premiere = "I1rlK3BKmyA"
+        let liveIds = try await InnerTubeAPI().fetchChannelLiveStreamIds(channelId: technologyConnections)
+        try XCTSkipUnless(liveIds.contains(premiere), "premiere dropped off the Live tab")
+
+        let premiereInfo = try await InnerTubeAPI().fetchVideoMetadata(videoId: premiere)
+        XCTAssertEqual(premiereInfo.isLiveContent, false)
+
+        let lofiGirlStream = "jfKfPfyJRdk"
+        let streamInfo = try await InnerTubeAPI().fetchVideoMetadata(videoId: lofiGirlStream)
+        XCTAssertEqual(streamInfo.isLiveContent, true)
+    }
 }
