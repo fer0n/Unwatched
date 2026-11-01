@@ -249,6 +249,66 @@ class PodcastDownloadKeepTests: XCTestCase {
     }
 }
 
+@MainActor
+class PodcastDownloadAwaitTests: XCTestCase {
+    private var context: ModelContext!
+    private var previousLimit: Any?
+    private var previousPlaying: String?
+
+    override func setUpWithError() throws {
+        try XCTSkipIf(PodcastDownloadStore.directory == nil)
+        let config = ModelConfiguration(schema: DataProvider.schema, isStoredInMemoryOnly: true)
+        context = ModelContext(try ModelContainer(for: DataProvider.schema, configurations: [config]))
+        previousLimit = UserDefaults.standard.object(forKey: Const.podcastDownloadLimitHours)
+        previousPlaying = PodcastDownloadManager.shared.playingYoutubeId
+        PodcastDownloadManager.shared.playingYoutubeId = nil
+    }
+
+    override func tearDown() {
+        UserDefaults.standard.set(previousLimit, forKey: Const.podcastDownloadLimitHours)
+        PodcastDownloadManager.shared.playingYoutubeId = previousPlaying
+        context = nil
+        super.tearDown()
+    }
+
+    private func episode(queued: Bool) -> String {
+        let id = "pod-await-\(UUID().uuidString.prefix(8))"
+        let episode = Video(
+            title: "episode",
+            url: nil,
+            youtubeId: id,
+            duration: 3600,
+            mediaUrl: URL(string: "https://example.com/\(id).mp3")
+        )
+        context.insert(episode)
+        if queued {
+            context.insert(QueueEntry(video: episode, order: 0))
+        }
+        return id
+    }
+
+    private func isAwaiting(_ youtubeId: String, limitHours: Int) -> Bool {
+        UserDefaults.standard.set(limitHours, forKey: Const.podcastDownloadLimitHours)
+        return PodcastDownloadManager.shared.isAwaitingDownload(youtubeId, in: context)
+    }
+
+    func testQueuedEpisodeAwaitsItsDownload() {
+        XCTAssertTrue(isAwaiting(episode(queued: true), limitHours: 5))
+    }
+
+    func testEpisodeOutsideTheDownloadsIsNotAwaited() {
+        XCTAssertFalse(isAwaiting(episode(queued: false), limitHours: 5))
+        XCTAssertFalse(isAwaiting(episode(queued: true), limitHours: 0))
+    }
+
+    func testPlayingEpisodeIsNotAwaitedWithDownloadsOff() {
+        let playing = episode(queued: false)
+        PodcastDownloadManager.shared.playingYoutubeId = playing
+        XCTAssertFalse(isAwaiting(playing, limitHours: 0))
+        XCTAssertTrue(isAwaiting(playing, limitHours: 5))
+    }
+}
+
 /// A first refresh fills the inbox with the tier times the number of subscriptions loading for the
 /// first time, so the boundaries are the part worth pinning down.
 class NewSubscriptionTriageTests: XCTestCase {

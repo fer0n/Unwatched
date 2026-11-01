@@ -36,6 +36,18 @@ extension ChapterAutomation {
         return await cachedPayload(video.youtubeId).map(needsSpeechWork) ?? true
     }
 
+    /// Alignment needs the file; the finished download schedules another run.
+    static func isAwaitingDownload(_ video: Video) -> Bool {
+        guard wantsSpeechWork(video),
+              PodcastDownloadManager.shared.isAwaitingDownload(video.youtubeId, in: DataProvider.mainContext) else {
+            return false
+        }
+        if awaitingDownloadIds.insert(video.youtubeId).inserted {
+            Log.chapters.info("ChapterAutomation: waiting for the download of \(video.youtubeId)")
+        }
+        return true
+    }
+
     private static func transcriptionCandidates(upTo limit: Int, after skipped: Int = 0) -> [PersistentIdentifier] {
         upcomingVideos()
             .filter { $0.isPodcast && $0.watchedDate == nil }
@@ -46,11 +58,14 @@ extension ChapterAutomation {
     }
 
     private static func isTranscribable(_ video: Video) -> Bool {
+        wantsSpeechWork(video) && PodcastDownloadStore.downloadedFile(for: video.youtubeId) != nil
+    }
+
+    private static func wantsSpeechWork(_ video: Video) -> Bool {
         canTranscribe
             && video.watchedDate == nil
             && !skippedIds.contains(video.youtubeId)
             && needsChapters(video)
-            && PodcastDownloadStore.downloadedFile(for: video.youtubeId) != nil
     }
 
     private static func containsPendingWork(_ videoIds: [PersistentIdentifier]) async -> Bool {

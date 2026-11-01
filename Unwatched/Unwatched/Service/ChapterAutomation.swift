@@ -12,6 +12,7 @@ enum ChapterAutomation {
     static var hasPendingWork = false
     static var isOnExternalPower = false
     static var skippedIds = Set<String>()
+    static var awaitingDownloadIds = Set<String>()
     private static var currentRun: Task<Void, Never>?
     private static var isRunRequested = false
     private static var isChargingRunRequested = false
@@ -183,7 +184,7 @@ enum ChapterAutomation {
               video.chapterGenerationDate == nil else {
             return
         }
-        if video.isPodcast, await isAwaitingTranscript(video) {
+        if video.isPodcast, await isAwaitingTranscript(video) || isAwaitingDownload(video) {
             return
         }
         guard (try? await loadTranscript(video)) != nil else { return }

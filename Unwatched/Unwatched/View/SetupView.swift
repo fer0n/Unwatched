@@ -310,6 +310,7 @@ extension SetupView {
         }
         PodcastDownloadManager.shared.onEpisodeDownloadFailed = {
             Signal.error("podcastDownloadFailed")
+            ChapterAutomation.scheduleRun()
         }
         Task { await VideoService.fillPodcastDurationsFromDownloads() }
     }

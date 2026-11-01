@@ -15,6 +15,7 @@ public final class PodcastDownloadManager {
 
     /// Episodes with a download in flight, to keep `sync()` from restarting one.
     @ObservationIgnored private var downloadingIds = Set<String>()
+    @ObservationIgnored private var failedIds = Set<String>()
 
     /// Read off the disk rather than a synced `Video` field, which other devices would overwrite.
     public private(set) var downloadedIds = PodcastDownloadStore.downloadedIds()
@@ -65,12 +66,38 @@ public final class PodcastDownloadManager {
         }
     }
 
+    public func isAwaitingDownload(_ youtubeId: String, in context: ModelContext) -> Bool {
+        guard PodcastDownloadStore.directory != nil,
+              PodcastDownloadStore.downloadedFile(for: youtubeId) == nil,
+              !failedIds.contains(youtubeId) else {
+            return false
+        }
+        if downloadingIds.contains(youtubeId) {
+            return true
+        }
+        guard limitHours != 0 else { return false }
+        let plan = PodcastDownloadPlanner.plan(
+            in: context,
+            limitHours: limitHours,
+            keepDays: keepDays,
+            playing: playingYoutubeId
+        )
+        return plan.download.contains { $0.youtubeId == youtubeId }
+    }
+
+    private var limitHours: Int {
+        UserDefaults.standard.object(forKey: Const.podcastDownloadLimitHours) as? Int
+            ?? Const.podcastDownloadDefaultHours
+    }
+
+    private var keepDays: Int {
+        UserDefaults.standard.object(forKey: Const.podcastDownloadKeepDays) as? Int
+            ?? Const.podcastDownloadDefaultKeepDays
+    }
+
     public func sync() async {
         guard PodcastDownloadStore.directory != nil, !isSyncing else { return }
 
-        let defaults = UserDefaults.standard
-        let limitHours = defaults.object(forKey: Const.podcastDownloadLimitHours) as? Int
-            ?? Const.podcastDownloadDefaultHours
         // Switched off with nothing left behind: going further would spin up the background session for no reason.
         guard limitHours != 0 || !downloadedIds.isEmpty || !downloadingIds.isEmpty else { return }
 
@@ -78,8 +105,6 @@ public final class PodcastDownloadManager {
         defer { isSyncing = false }
 
         let playing = playingYoutubeId
-        let keepDays = defaults.object(forKey: Const.podcastDownloadKeepDays) as? Int
-            ?? Const.podcastDownloadDefaultKeepDays
         let plan: PodcastDownloadPlan
         if let planContext {
             plan = PodcastDownloadPlanner.plan(
@@ -118,7 +143,7 @@ public final class PodcastDownloadManager {
         // downloads that never start.
         let onCellular = true
         #else
-        let onCellular = defaults.bool(forKey: Const.podcastDownloadOnCellular)
+        let onCellular = UserDefaults.standard.bool(forKey: Const.podcastDownloadOnCellular)
         #endif
         for pending in plan.download where !inFlight.contains(pending.youtubeId) {
             start(pending, anyNetwork: onCellular || pending.youtubeId == playing)
@@ -159,18 +184,21 @@ public final class PodcastDownloadManager {
     }
 
     fileprivate func didDownload(_ youtubeId: String) {
+        failedIds.remove(youtubeId)
         setDownloadedIds(downloadedIds.union([youtubeId]))
         onEpisodeDownloaded?(youtubeId)
     }
 
     /// A finished download holds a full bar for a moment before it's dropped, so the bar completes on screen instead
     /// of vanishing at whatever step it last reported.
-    fileprivate func didFinish(_ youtubeId: String, succeeded: Bool) {
+    fileprivate func didFinish(_ youtubeId: String, succeeded: Bool, wasCancelled: Bool) {
         downloadingIds.remove(youtubeId)
-        if !succeeded {
+        let isStored = succeeded && PodcastDownloadStore.downloadedFile(for: youtubeId) != nil
+        if !isStored && !wasCancelled {
+            failedIds.insert(youtubeId)
             onEpisodeDownloadFailed?()
         }
-        guard succeeded, downloadProgress[youtubeId] != nil else {
+        guard isStored, downloadProgress[youtubeId] != nil else {
             downloadProgress[youtubeId] = nil
             return
         }
@@ -244,8 +272,9 @@ private final class PodcastDownloadDelegate: NSObject, URLSessionDownloadDelegat
             Log.podcasts.info("podcast download ended: \(error.localizedDescription)")
         }
         let succeeded = error == nil
+        let wasCancelled = (error as? URLError)?.code == .cancelled
         Task { @MainActor in
-            PodcastDownloadManager.shared.didFinish(youtubeId, succeeded: succeeded)
+            PodcastDownloadManager.shared.didFinish(youtubeId, succeeded: succeeded, wasCancelled: wasCancelled)
         }
     }
 
