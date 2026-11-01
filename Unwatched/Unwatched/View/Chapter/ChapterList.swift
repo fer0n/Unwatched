@@ -25,11 +25,13 @@ struct ChapterList: View {
     }
 
     var body: some View {
+        let sortedChapters = video.sortedChapterData
         // read here rather than inside the `ForEach` below: a row's content closure runs outside this
         // body's observation scope, so a read in there never marks the list as depending on the current
         // chapter and the highlight stays at whatever it was when the rows were first built
-        let currentChapterId = player.currentChapter?.chapterId
-        let sortedChapters = video.sortedChapterData
+        let currentChapterId = video == player.video
+            ? player.currentChapter?.chapterId
+            : video.elapsedSeconds.flatMap { time in sortedChapters.last { $0.startTime <= time }?.chapterId }
         let chapters = ChapterService.inPlaybackOrder(sortedChapters)
         let originalNumbers = Self.originalNumbers(sorted: sortedChapters, ordered: chapters)
         if !chapters.isEmpty {
