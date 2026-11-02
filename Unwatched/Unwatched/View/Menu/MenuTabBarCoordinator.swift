@@ -60,6 +60,8 @@ extension MenuTabBarController {
             func update(_ tab: UITab?, image: UIImage?, title: String, badge: Bool = false) {
                 tab?.image = image
                 tab?.title = MenuTabLabel.title(title, showBadge: badge, showLabels: labels.showLabels)
+                // VoiceOver reads hidden titles as the symbol name and the badge as "●"
+                tab?.viewController?.tabBarItem.accessibilityLabel = title
             }
             func update(_ tab: NavigationTab, symbol: String, badge: Bool = false) {
                 let image = Self.symbol(symbol)
