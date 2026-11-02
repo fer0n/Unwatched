@@ -26,7 +26,8 @@ enum IssueReportService {
         form.addField("channel", BuildInfo.channel)
         form.addField("os", system)
         form.addField("device", device)
-        if includeLogs, let logs = await collectLogs() {
+        if includeLogs {
+            let logs = await collectLogs(state: await currentState())
             form.addFile("log", fileName: "Unwatched.log", mimeType: "text/plain", data: logs)
         }
         for attachment in attachments {
@@ -71,9 +72,45 @@ enum IssueReportService {
         return "\(Signal.platformName) \(version)"
     }
 
+    @MainActor
+    private static func currentState() async -> String {
+        let player = PlayerManager.shared
+        let activeType = PlayerSwitchManager.shared.activeType
+        var lines = [
+            "playerType: \(PlayerTypeSetting.stored.rawValue), active: \(activeType.rawValue)",
+            "nativeFallback: \(player.nativeFallbackActive), embeddingDisabled: \(player.embeddingDisabled)",
+            "video: \(player.video?.youtubeId ?? "none"), playing: \(player.isPlaying), speed: \(player.playbackSpeed)",
+            "aspectRatio: \(player.videoAspectRatio)"
+        ]
+        if activeType == .native {
+            lines.append("quality: \(player.selectedVideoQuality == 0 ? "auto" : "\(player.selectedVideoQuality)p")")
+        } else if let webView = WebPlayerBackend.shared.webView {
+            let resolution = try? await webView.evaluateJavaScript(videoResolutionScript) as? String
+            lines.append("view: \(Int(webView.bounds.width))x\(Int(webView.bounds.height)), video: \(resolution ?? "?")")
+        }
+        let settings = UserDataService.getNonDefaultSettings(prefixValue: nil)
+            .sorted { $0.key < $1.key }
+            .map { "\($0.key): \($0.value)" }
+        return """
+            === Player ===
+            \(lines.joined(separator: "\n"))
+
+            === Changed settings ===
+            \(settings.joined(separator: "\n"))
+
+            """
+    }
+
+    private static let videoResolutionScript = """
+        (() => {
+            const video = document.querySelector('video');
+            return video ? `${video.videoWidth}x${video.videoHeight}` : null;
+        })()
+        """
+
     @concurrent
-    private static func collectLogs() async -> Data? {
-        var text = ""
+    private static func collectLogs(state: String) async -> Data {
+        var text = state
         if Log.isFileLoggingEnabled,
            let logFile = Log.logFile,
            let file = try? String(contentsOf: logFile, encoding: .utf8) {
@@ -83,9 +120,7 @@ enum IssueReportService {
         do {
             let store = try OSLogStore(scope: .currentProcessIdentifier)
             let entries = try store.getEntries(matching: NSPredicate(format: "subsystem == %@", appSubsystem))
-            let lines = entries
-                .compactMap { $0 as? OSLogEntryLog }
-                .suffix(5000)
+            let lines = withoutInnerTubeFlood(entries.compactMap { $0 as? OSLogEntryLog })
                 .map { entry in
                     let time = entry.date.formatted(date: .omitted, time: .standard)
                     return "\(time) [\(entry.level.name)] [\(entry.category)] \(entry.composedMessage)"
@@ -94,7 +129,19 @@ enum IssueReportService {
         } catch {
             Log.error("collectLogs: \(error)")
         }
-        return text.isEmpty ? nil : Data(text.utf8)
+        return Data(text.utf8)
+    }
+
+    private static func withoutInnerTubeFlood(_ entries: [OSLogEntryLog]) -> [OSLogEntryLog] {
+        var innerTubeLeft = 1000
+        return entries.reversed()
+            .filter { entry in
+                guard entry.category == Log.innerTube.category, entry.level == .notice else { return true }
+                innerTubeLeft -= 1
+                return innerTubeLeft >= 0
+            }
+            .prefix(5000)
+            .reversed()
     }
 }
 

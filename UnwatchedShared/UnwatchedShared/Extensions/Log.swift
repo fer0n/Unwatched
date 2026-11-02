@@ -26,7 +26,7 @@ public struct Log: Sendable {
     private static let fileLogging = Mutex(Const.enableLogging.bool ?? false)
     private static let fileWriter = logFile.map(LogFileWriter.init)
 
-    private let category: String
+    public let category: String
     private let logger: Logger
     private let osLog: OSLog
 
