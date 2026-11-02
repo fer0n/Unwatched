@@ -382,6 +382,25 @@ extension TagEditView {
     }
 }
 
+struct TagEditSheet: ViewModifier {
+    @Environment(NavigationManager.self) var navManager
+
+    func body(content: Content) -> some View {
+        @Bindable var navManager = navManager
+
+        content
+            .sheet(item: $navManager.editedTag) { edit in
+                TagEditView(tag: edit.tag, isNew: edit.isNew, covering: edit.covering)
+            }
+    }
+}
+
+extension View {
+    func tagEditSheet() -> some View {
+        modifier(TagEditSheet())
+    }
+}
+
 #Preview {
     TagEditView(tag: Tag(name: "Tech"), isNew: true)
         .modelContainer(DataProvider.previewContainer)

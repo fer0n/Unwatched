@@ -9,14 +9,13 @@ import UnwatchedShared
 
 struct SubscriptionTagsSetting: View {
     @Environment(\.modelContext) var modelContext
+    @Environment(NavigationManager.self) var navManager
 
     /// Only the `include` tags: adding a channel to one of the others would take it *out* of what
     /// that tag shows, which no menu of tags to assign can say. They are edited from the tag sheet.
     @Query(filter: Tag.includeMode, sort: \Tag.order) private var tags: [Tag]
 
     @Bindable var subscription: Subscription
-
-    @State private var newTag: TagEdit?
 
     var body: some View {
         if subscription.subscriptionKey != nil {
@@ -43,7 +42,7 @@ struct SubscriptionTagsSetting: View {
             Divider()
 
             Button {
-                newTag = .new(covering: subscription)
+                navManager.editedTag = .new(covering: subscription)
             } label: {
                 Label("newTag", systemImage: "plus")
             }
@@ -55,9 +54,6 @@ struct SubscriptionTagsSetting: View {
         }
         .buttonStyle(CapsuleButtonStyle(primary: false))
         .requiresPremium(feature: "tags")
-        .sheet(item: $newTag) { edit in
-            TagEditView(tag: edit.tag, isNew: edit.isNew)
-        }
     }
 
     private var assignedTags: [Tag] {

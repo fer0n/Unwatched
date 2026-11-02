@@ -19,6 +19,7 @@ struct MenuView: View {
             .environment(\.horizontalSizeClass, .compact)
             .browserViewSheet(navManager: $navManager)
             .premiumOfferSheet()
+            .tagEditSheet()
             .background {
                 (Const.macOS26 || Device.isVision
                     ? Color.clear

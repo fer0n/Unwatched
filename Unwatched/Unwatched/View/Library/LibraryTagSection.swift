@@ -9,12 +9,11 @@ import UnwatchedShared
 
 struct LibraryTagSection: View {
     @Environment(\.modelContext) var modelContext
+    @Environment(NavigationManager.self) var navManager
 
     @CloudStorage(Const.quickSwitchAllVideos) private var quickSwitchAllVideos: Bool = true
 
     @Query(sort: \Tag.order, animation: .default) private var tags: [Tag]
-
-    @Binding var editedTag: TagEdit?
 
     var body: some View {
         MySection("tags", showPremiumIndicator: true, hasPadding: false) {
@@ -31,7 +30,7 @@ struct LibraryTagSection: View {
                 }
                 .contextMenu {
                     Button {
-                        editedTag = .existing(tag)
+                        navManager.editedTag = .existing(tag)
                     } label: {
                         Label("editTag", systemImage: Const.settingsViewSF)
                     }
@@ -45,7 +44,7 @@ struct LibraryTagSection: View {
             .onMove(perform: move)
 
             Button {
-                editedTag = .new()
+                navManager.editedTag = .new()
             } label: {
                 LibraryNavListItem("newTag", systemName: "plus")
             }
@@ -87,9 +86,9 @@ struct QuickSwitchToggle: View {
 }
 
 #Preview {
-    @Previewable @State var editedTag: TagEdit?
     List {
-        LibraryTagSection(editedTag: $editedTag)
+        LibraryTagSection()
     }
     .modelContainer(DataProvider.previewContainer)
+    .environment(NavigationManager())
 }

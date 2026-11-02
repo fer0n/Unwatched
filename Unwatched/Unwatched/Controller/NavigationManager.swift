@@ -21,6 +21,7 @@ import UnwatchedShared
     var columnVisibility: NavigationSplitViewVisibility = .automatic
     var showDeferDateSelector = false
     var showPremiumOffer = false
+    var editedTag: TagEdit?
     var showOnboarding = false
     var showSettingsSplash = false
 
