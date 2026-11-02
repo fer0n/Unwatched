@@ -1,11 +1,13 @@
 import { sendReportEmail } from "./email.js";
 import { reportsPage } from "./page.js";
+import { blobKey, reportAttachments } from "./report.js";
 
 const MAX_MESSAGE_LENGTH = 10_000;
 const MAX_CONTACT_LENGTH = 200;
 const MAX_FILE_BYTES = 25 * 1024 * 1024;
 const MAX_ATTACHMENTS = 5;
 const REPORT_TTL_SECONDS = 180 * 24 * 60 * 60;
+const ARCHIVE_TTL_SECONDS = 60 * 24 * 60 * 60;
 const REPORTS_PAGE_SIZE = 50;
 const DEVICE_FIELDS = ["appVersion", "build", "channel", "os", "device"];
 
@@ -72,28 +74,72 @@ export async function handleReportUpload(request, env) {
   return Response.json({ id }, { status: 201 });
 }
 
-export async function handleReportsDashboard(url, env) {
-  if (url.pathname === "/dashboard/reports") {
-    const listed = await env.REPORTS.list({ prefix: "report:", limit: REPORTS_PAGE_SIZE });
-    const reports = await Promise.all(listed.keys.map((key) => env.REPORTS.get(key.name, { type: "json" })));
-    return new Response(reportsPage(reports.filter(Boolean)), {
+export async function handleReportsDashboard(request, url, env) {
+  if (url.pathname === "/dashboard/reports" || url.pathname === "/dashboard/reports/archived") {
+    const archived = url.pathname.endsWith("/archived");
+    const listed = await env.REPORTS.list({ prefix: archived ? "archived:" : "report:", limit: REPORTS_PAGE_SIZE });
+    const reports = await Promise.all(listed.keys.map(async (key) => {
+      const report = await env.REPORTS.get(key.name, { type: "json" });
+      return report && { ...report, expiration: key.expiration };
+    }));
+    return new Response(reportsPage(reports.filter(Boolean), archived), {
       headers: { "Content-Type": "text/html; charset=utf-8" },
     });
   }
 
-  // reports from before multiple attachments keep their single one at `attachment:<id>`, without an index
+  const action = url.pathname.match(/^\/dashboard\/reports\/([\w-]+)\/(archive|restore)$/);
+  if (action) {
+    if (request.method !== "POST") {
+      return new Response("Method not allowed", { status: 405 });
+    }
+    if (request.headers.get("Origin") !== url.origin) {
+      return new Response("Forbidden", { status: 403 });
+    }
+    const [, id, verb] = action;
+    const moved = verb === "archive"
+      ? await moveReport(env, id, "report", "archived", ARCHIVE_TTL_SECONDS)
+      : await moveReport(env, id, "archived", "report", REPORT_TTL_SECONDS);
+    if (!moved) {
+      return new Response("Not found", { status: 404 });
+    }
+    return new Response(null, {
+      status: 303,
+      headers: { Location: verb === "archive" ? "/dashboard/reports" : "/dashboard/reports/archived" },
+    });
+  }
+
   const match = url.pathname.match(/^\/dashboard\/reports\/([\w-]+)\/(log|attachment)(?:\/(\d+))?$/);
   if (!match) {
     return new Response("Not found", { status: 404 });
   }
   const [, id, kind, index] = match;
-  const key = index === undefined ? `${kind}:${id}` : `${kind}:${id}:${index}`;
-  const { value, metadata } = await env.REPORTS.getWithMetadata(key, { type: "stream" });
+  const { value, metadata } = await env.REPORTS.getWithMetadata(blobKey(kind, id, index), { type: "stream" });
   if (!value) {
     return new Response("Not found", { status: 404 });
   }
   const contentType = kind === "log" ? "text/plain; charset=utf-8" : (metadata?.type ?? "application/octet-stream");
   return new Response(value, { headers: { "Content-Type": contentType } });
+}
+
+async function moveReport(env, id, fromPrefix, toPrefix, ttl) {
+  const report = await env.REPORTS.get(`${fromPrefix}:${id}`, { type: "json" });
+  if (!report) {
+    return false;
+  }
+  const expiration = Math.floor(Date.now() / 1000) + ttl;
+  await env.REPORTS.put(`${toPrefix}:${id}`, JSON.stringify(report), { expiration });
+  const keys = [
+    ...(report.log ? [blobKey("log", id)] : []),
+    ...reportAttachments(report).map(({ index }) => blobKey("attachment", id, index)),
+  ];
+  await Promise.all(keys.map(async (key) => {
+    const { value, metadata } = await env.REPORTS.getWithMetadata(key, { type: "stream" });
+    if (value) {
+      await env.REPORTS.put(key, value, { expiration, ...(metadata && { metadata }) });
+    }
+  }));
+  await env.REPORTS.delete(`${fromPrefix}:${id}`);
+  return true;
 }
 
 function nonEmptyFile(value) {

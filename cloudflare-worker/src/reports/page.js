@@ -1,7 +1,9 @@
 import { escapeHtml, formatBytes } from "./format.js";
+import { reportAttachments } from "./report.js";
 
-export function reportsPage(reports) {
-  const items = reports.map(reportItem).join("");
+export function reportsPage(reports, archived) {
+  const items = reports.map((report) => reportItem(report, archived)).join("");
+  const empty = archived ? "No archived reports." : "No reports in the last 180 days.";
   return `<!doctype html>
 <html lang="en">
 <head>
@@ -16,7 +18,10 @@ export function reportsPage(reports) {
   body { margin: 0; padding: 24px 16px; background: var(--bg); color: var(--text); font: 15px/1.5 -apple-system, system-ui, sans-serif; }
   main { max-width: 760px; margin: 0 auto; display: grid; gap: 16px; }
   h1 { font-size: 22px; margin: 0; }
+  nav { display: flex; justify-content: space-between; }
   nav a, footer a { color: var(--accent); }
+  form { display: inline; }
+  button { font: inherit; color: var(--accent); background: none; border: none; padding: 0; cursor: pointer; }
   article { background: var(--card); border: 1px solid var(--border); border-radius: 12px; padding: 16px; }
   article:target { outline: 2px solid var(--accent); }
   article header { display: flex; flex-wrap: wrap; gap: 4px 16px; color: var(--muted); font-size: 13px; }
@@ -28,15 +33,18 @@ export function reportsPage(reports) {
 </head>
 <body>
 <main>
-  <nav><a href="/dashboard">← Analytics</a></nav>
-  <h1>Reports</h1>
-  ${items || '<p class="empty">No reports in the last 180 days.</p>'}
+  <nav>
+    <a href="/dashboard">← Analytics</a>
+    ${archived ? '<a href="/dashboard/reports">Reports</a>' : '<a href="/dashboard/reports/archived">Archived</a>'}
+  </nav>
+  <h1>${archived ? "Archived Reports" : "Reports"}</h1>
+  ${items || `<p class="empty">${empty}</p>`}
 </main>
 </body>
 </html>`;
 }
 
-function reportItem(report) {
+function reportItem(report, archived) {
   const base = `/dashboard/reports/${encodeURIComponent(report.id)}`;
   const createdAt = new Date(report.createdAt).toLocaleString("en-GB", { timeZone: "Europe/Berlin" });
   const contact = report.contact
@@ -53,18 +61,23 @@ function reportItem(report) {
         <span>${escapeHtml(report.device)} · ${escapeHtml(report.os)}</span>
       </header>
       <p class="message">${escapeHtml(report.message)}</p>
-      <footer>${contact} · ${log}</footer>
+      <footer>${contact} · ${log} · ${archiveButton(report, base, archived)}</footer>
       ${attachmentPreviews(report, base)}
     </article>`;
 }
 
+function archiveButton(report, base, archived) {
+  if (!archived) {
+    return `<form method="post" action="${base}/archive"><button>Archive</button></form>`;
+  }
+  const deletedOn = new Date(report.expiration * 1000).toLocaleDateString("en-GB", { timeZone: "Europe/Berlin" });
+  return `deleted on ${escapeHtml(deletedOn)} · <form method="post" action="${base}/restore"><button>Restore</button></form>`;
+}
+
 function attachmentPreviews(report, base) {
-  const files = report.attachments
-    ? report.attachments.map((file, index) => ({ type: file.type, src: `${base}/attachment/${index}` }))
-    : report.attachment
-      ? [{ type: report.attachment.type, src: `${base}/attachment` }]
-      : [];
-  return files.map(attachmentPreview).join("");
+  return reportAttachments(report)
+    .map(({ type, index }) => attachmentPreview({ type, src: `${base}/attachment${index === undefined ? "" : `/${index}`}` }))
+    .join("");
 }
 
 function attachmentPreview({ type, src }) {

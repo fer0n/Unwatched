@@ -32,7 +32,7 @@ export default {
       // active user keeps a rolling 30-day window instead of being logged out.
       const setCookie = await dashboardCookieHeader(env);
       if (isReports) {
-        const res = await handleReportsDashboard(url, env);
+        const res = await handleReportsDashboard(request, url, env);
         res.headers.append("Set-Cookie", setCookie);
         return res;
       }
