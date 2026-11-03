@@ -270,7 +270,11 @@ extension SearchView {
         }
         .apply {
             if vm.showsYoutube {
+                #if os(visionOS)
+                $0.buttonStyle(.borderedProminent)
+                #else
                 $0.buttonStyle(.glassProminent)
+                #endif
             } else {
                 $0
             }
