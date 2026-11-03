@@ -37,9 +37,13 @@ extension PlayerManager {
     /// below the playing video, undo restores around it and the unfiltered list shows it first.
     @MainActor
     func moveToTopOfQueue(_ video: Video?) {
-        guard let video,
-              let entry = video.queueEntry,
-              let context = video.modelContext,
+        guard let video, let context = video.modelContext else { return }
+        // fetched, not video.queueEntry: that traps once another context deletes the entry, which
+        // the fade's delay before the swap gives time for
+        let videoId = video.persistentModelID
+        var descriptor = FetchDescriptor<QueueEntry>(predicate: #Predicate { $0.video?.persistentModelID == videoId })
+        descriptor.fetchLimit = 1
+        guard let entry = try? context.fetch(descriptor).first,
               !QueueFilter.all.isTopOfQueue(order: entry.order, context) else {
             return
         }
