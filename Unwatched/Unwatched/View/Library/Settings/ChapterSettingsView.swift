@@ -38,7 +38,12 @@ struct ChapterSettingsView: View {
         }
         .onChange(of: isAutomationEnabled) {
             if isAutomationEnabled {
-                Task { await ChapterAutomation.requestNotificationPermission() }
+                Task {
+                    await ChapterAutomation.requestNotificationPermission()
+                    if !isShortcutSetUp {
+                        openURL(ChapterAutomation.installShortcut())
+                    }
+                }
                 if mode == .off {
                     mode = .withoutChapters
                 }
@@ -57,7 +62,6 @@ struct ChapterSettingsView: View {
             installShortcutButton
 
             Toggle("enableChapterShortcutAutomation", isOn: $isAutomationEnabled)
-                .disabled(!isShortcutSetUp)
         }
         .requiresPremium(feature: "chapterAutomation")
 
