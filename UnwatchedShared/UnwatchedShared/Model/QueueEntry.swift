@@ -27,6 +27,13 @@ public final class QueueEntry: QueueEntryData, CustomStringConvertible, Exportab
         self.order = order
     }
 
+    /// Use instead of `video.queueEntry`, which traps once another context deletes the entry.
+    public static func descriptor(for videoId: PersistentIdentifier) -> FetchDescriptor<QueueEntry> {
+        var descriptor = FetchDescriptor<QueueEntry>(predicate: #Predicate { $0.video?.persistentModelID == videoId })
+        descriptor.fetchLimit = 1
+        return descriptor
+    }
+
     public var description: String {
         return "\(video?.title ?? "not found") at (\(order))"
     }

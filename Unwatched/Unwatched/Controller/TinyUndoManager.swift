@@ -106,10 +106,7 @@ class TinyUndoManager {
             for id in ids {
                 if let video: Video = context.existingModel(for: id) {
                     if !hasNowPlayingVideo {
-                        hasNowPlayingVideo = PlayerManager.shared.isTopOfQueue(
-                            order: video.queueEntry?.order,
-                            context
-                        )
+                        hasNowPlayingVideo = PlayerManager.shared.isTopOfQueue(videoId: id, context)
                     }
                     withAnimation {
                         VideoService.moveVideoToInbox(video, modelContext: context)

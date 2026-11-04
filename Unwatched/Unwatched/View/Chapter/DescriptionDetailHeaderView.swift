@@ -110,17 +110,13 @@ private struct VideoDetailProgress: View {
 struct VideoDetailStatusIcons: View {
     @Environment(PlayerManager.self) private var player
 
-    // video.queueEntry traps once another context deletes the entry
     @Query private var queueEntries: [QueueEntry]
 
     let video: Video
 
     init(video: Video) {
         self.video = video
-        let videoId = video.persistentModelID
-        var descriptor = FetchDescriptor<QueueEntry>(predicate: #Predicate { $0.video?.persistentModelID == videoId })
-        descriptor.fetchLimit = 1
-        _queueEntries = Query(descriptor)
+        _queueEntries = Query(QueueEntry.descriptor(for: video.persistentModelID))
     }
 
     var body: some View {
