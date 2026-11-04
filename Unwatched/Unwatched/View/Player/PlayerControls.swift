@@ -120,20 +120,11 @@ struct PlayerControls: View {
         .animation(.default.speed(3), value: showControls)
         .animation(.default, value: player.isTallAspectRatio)
         .contentShape(Rectangle())
-        .simultaneousGesture(
-            compactSize ? DragGesture(minimumDistance: 0)
-                .onChanged { _ in
-                    autoHideVM.setKeepVisible(true, "playerDrag")
-                    if !showControls {
-                        autoHideVM.setShowControls()
-                    }
-                }
-                .onEnded { _ in
-                    autoHideVM.setShowControls()
-                    autoHideVM.setKeepVisible(false, "playerDrag")
-                }
-                : nil
-        )
+        .modifier(KeepControlsVisibleWhileDragging(
+            isEnabled: compactSize,
+            showControls: showControls,
+            autoHideVM: autoHideVM
+        ))
     }
 
     var controlsBlock: some View {
@@ -305,6 +296,41 @@ extension PlayerControls {
         .padding(8)
         .buttonStyle(.plain)
         .opacity(navManager.showMenu ? 0 : 1)
+    }
+}
+
+/// Own view so a drag starting or ending only redraws this modifier, not the controls.
+private struct KeepControlsVisibleWhileDragging: ViewModifier {
+    let isEnabled: Bool
+    let showControls: Bool
+    let autoHideVM: AutoHideVM
+
+    /// Resets on cancel too, unlike `onEnded`
+    @GestureState private var isDragging = false
+
+    func body(content: Content) -> some View {
+        content
+            .simultaneousGesture(
+                isEnabled ? DragGesture(minimumDistance: 0)
+                    .updating($isDragging) { _, isDragging, _ in
+                        isDragging = true
+                    }
+                    .onChanged { _ in
+                        if !showControls {
+                            autoHideVM.setShowControls()
+                        }
+                    }
+                    : nil
+            )
+            .onChange(of: isDragging) {
+                if !isDragging {
+                    autoHideVM.setShowControls()
+                }
+                autoHideVM.setKeepVisible(isDragging, "playerDrag")
+            }
+            .onDisappear {
+                autoHideVM.setKeepVisible(false, "playerDrag")
+            }
     }
 }
 
