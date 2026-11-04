@@ -116,7 +116,8 @@ final class BackgroundPlaybackManager {
     /// `PlayerView.handleVideoEnded`, minus the review prompt.
     private func handleVideoEnded() {
         if player.isRepeating {
-            player.seek(to: 0)
+            Log.player.info("backgroundPlayback: videoEnded, loop")
+            player.restartVideo()
             return
         }
         let continuousPlay = UserDefaults.standard.bool(forKey: Const.continuousPlay)

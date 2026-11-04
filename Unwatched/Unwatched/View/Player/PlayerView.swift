@@ -253,7 +253,8 @@ struct PlayerView: View {
     @MainActor
     func handleVideoEnded() {
         if player.isRepeating {
-            player.seek(to: 0)
+            Log.player.info(">handleVideoEnded: loop")
+            player.restartVideo()
             return
         }
 
