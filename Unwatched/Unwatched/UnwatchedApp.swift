@@ -30,6 +30,7 @@ struct UnwatchedApp: App {
                     SponsorBlockSegmentSetting.migrateSkipSponsorSegmentsIfNeeded()
                     UserDataService.migrateBackupContentSettingsIfNeeded()
                     UserDataService.migrateKeepMediaSettingsIfNeeded()
+                    UserDataService.migratePodcastCellularSettingIfNeeded()
                     UserDataService.resetTrimSilenceStatsIfNeeded()
                     UserDataService.resetHiddenLiveStreamIdsIfNeeded()
                     try? Tips.configure([

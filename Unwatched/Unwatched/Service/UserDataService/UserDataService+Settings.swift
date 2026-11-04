@@ -43,6 +43,7 @@ extension UserDataService {
         SponsorBlockSegmentSetting.migrateSkipSponsorSegmentsIfNeeded()
         // ...or the legacy exclude-toggle backup content settings
         migrateBackupContentSettingsIfNeeded()
+        migratePodcastCellularSettingIfNeeded()
         #if os(iOS)
         NotificationManager.ensurePermissionsAreGivenForSettings()
         #endif
@@ -77,6 +78,14 @@ extension UserDataService {
             }
             defaults.removeObject(forKey: key)
         }
+    }
+
+    static func migratePodcastCellularSettingIfNeeded(defaults: UserDefaults = .standard) {
+        guard let legacyValue = defaults.object(forKey: Const.legacyPodcastDownloadOnCellular) as? Bool else {
+            return
+        }
+        defaults.set(legacyValue ? -1 : 0, forKey: Const.podcastDownloadCellularHours)
+        defaults.removeObject(forKey: Const.legacyPodcastDownloadOnCellular)
     }
 
     static func enableRecommendationsForBrowserTabUsersIfNeeded(defaults: UserDefaults = .standard) -> Bool {

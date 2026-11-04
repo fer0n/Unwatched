@@ -111,7 +111,7 @@ extension Const {
         // Podcast downloads
         Const.podcastDownloadLimitHours: Const.podcastDownloadDefaultHours,
         Const.podcastDownloadKeepDays: Const.podcastDownloadDefaultKeepDays,
-        Const.podcastDownloadOnCellular: false,
+        Const.podcastDownloadCellularHours: Const.podcastDownloadDefaultCellularHours,
 
         // Chapters
         Const.chapterShortcutAutomation: false,

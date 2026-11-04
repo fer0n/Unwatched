@@ -184,7 +184,7 @@ public struct Const {
     public static let podcastStatelessRowGraceDays = 30
 
     /// Hours of queue that can be kept downloaded; 0 is off, -1 unlimited
-    public static let podcastDownloadHourOptions = [0, 5, 10, 50, 100, -1]
+    public static let podcastDownloadHourOptions = [0, 1, 2, 3, 5, 10, 50, 100, -1]
     public static let podcastDownloadKeepDayOptions = [0, 1, 7]
     /// Off on the watch: its downloads go over the phone's connection, cellular included.
     #if os(watchOS)
@@ -193,6 +193,7 @@ public struct Const {
     public static let podcastDownloadDefaultHours = 5
     #endif
     public static let podcastDownloadDefaultKeepDays = 1
+    public static let podcastDownloadDefaultCellularHours = 0
 
     /// Shorter than the phone's, and without "unlimited": the watch holds the next walk, not a library.
     public static let watchPodcastDownloadHourOptions = [0, 1, 3, 5, 10]
@@ -528,7 +529,9 @@ public struct Const {
     public static let podcastDownloadLimitHours = "podcastDownloadLimitHours"
     /// Days a downloaded episode is kept after it's been watched; 0 deletes it right away
     public static let podcastDownloadKeepDays = "podcastDownloadKeepDays"
-    public static let podcastDownloadOnCellular = "podcastDownloadOnCellular"
+    /// Hours of the download-ahead window that may use cellular data, same scale as `podcastDownloadLimitHours`.
+    public static let podcastDownloadCellularHours = "podcastDownloadCellularHours"
+    public static let legacyPodcastDownloadOnCellular = "podcastDownloadOnCellular"
 
     public static let chapterShortcutAutomation = "chapterShortcutAutomation"
     public static let chapterAutomationPodcasts = "chapterAutomationPodcasts"

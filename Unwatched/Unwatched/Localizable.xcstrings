@@ -7424,31 +7424,31 @@
         "de" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Ist dies aus, warten Downloads auf WLAN."
+            "value" : "Wie viel der Queue über mobile Daten geladen werden darf. Der Rest wartet auf WLAN."
           }
         },
         "en" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Off, downloads wait for Wi-Fi."
+            "value" : "How much of the Queue may download over cellular data. The rest waits for Wi-Fi."
           }
         },
         "es" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Si está desactivado, las descargas esperan a la wifi."
+            "value" : "Cuánto de la cola se puede descargar con datos móviles. El resto espera a la wifi."
           }
         },
         "fr" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Désactivé, les téléchargements attendent le Wi-Fi."
+            "value" : "Quelle part de la file d’attente peut être téléchargée via les données cellulaires. Le reste attend le Wi-Fi."
           }
         },
         "pl" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Gdy wyłączone, pobieranie czeka na Wi-Fi."
+            "value" : "Ile kolejki można pobrać przez dane komórkowe. Reszta czeka na Wi-Fi."
           }
         }
       }

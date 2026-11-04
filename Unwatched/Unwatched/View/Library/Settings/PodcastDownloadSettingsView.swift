@@ -9,7 +9,7 @@ import UnwatchedShared
 struct PodcastDownloadSettingsView: View {
     @AppStorage(Const.podcastDownloadLimitHours) var limitHours = Const.podcastDownloadDefaultHours
     @AppStorage(Const.podcastDownloadKeepDays) var keepDays = Const.podcastDownloadDefaultKeepDays
-    @AppStorage(Const.podcastDownloadOnCellular) var onCellular: Bool = false
+    @AppStorage(Const.podcastDownloadCellularHours) var cellularHours = Const.podcastDownloadDefaultCellularHours
 
     @State private var storedBytes: Int64 = 0
     @State private var isDeleting = false
@@ -20,12 +20,7 @@ struct PodcastDownloadSettingsView: View {
 
             MyForm {
                 MySection(footer: "podcastDownloadsHelper") {
-                    Picker("downloadAhead", selection: $limitHours) {
-                        ForEach(Const.podcastDownloadHourOptions, id: \.self) { hours in
-                            hourLabel(hours).tag(hours)
-                        }
-                    }
-                    .pickerStyle(.menu)
+                    hoursPicker("downloadAhead", selection: $limitHours)
                 }
 
                 MySection(footer: "deleteDownloadsHelper") {
@@ -38,9 +33,8 @@ struct PodcastDownloadSettingsView: View {
                 }
 
                 MySection(footer: "downloadOnCellularHelper") {
-                    Toggle(isOn: $onCellular) {
-                        Text("downloadOnCellular")
-                    }
+                    hoursPicker("downloadOnCellular", selection: $cellularHours)
+                        .disabled(limitHours == 0)
                 }
 
                 if storedBytes > 0 {
@@ -65,8 +59,17 @@ struct PodcastDownloadSettingsView: View {
         }
         .onChange(of: limitHours) { sync() }
         .onChange(of: keepDays) { sync() }
-        .onChange(of: onCellular) { sync() }
+        .onChange(of: cellularHours) { sync() }
         .task { await refreshSize() }
+    }
+
+    private func hoursPicker(_ title: LocalizedStringKey, selection: Binding<Int>) -> some View {
+        Picker(title, selection: selection) {
+            ForEach(Const.podcastDownloadHourOptions, id: \.self) { hours in
+                hourLabel(hours).tag(hours)
+            }
+        }
+        .pickerStyle(.menu)
     }
 
     @ViewBuilder

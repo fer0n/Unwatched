@@ -9,6 +9,7 @@ import SwiftData
 struct PendingPodcastDownload: Sendable {
     let youtubeId: String
     let url: URL
+    let allowsCellular: Bool
 }
 
 struct PodcastDownloadPlan: Sendable {
@@ -18,8 +19,14 @@ struct PodcastDownloadPlan: Sendable {
 }
 
 actor PodcastDownloadActor: SharedContextActor {
-    func plan(limitHours: Int, keepDays: Int, playing: String?) -> PodcastDownloadPlan {
-        PodcastDownloadPlanner.plan(in: modelContext, limitHours: limitHours, keepDays: keepDays, playing: playing)
+    func plan(limitHours: Int, cellularHours: Int, keepDays: Int, playing: String?) -> PodcastDownloadPlan {
+        PodcastDownloadPlanner.plan(
+            in: modelContext,
+            limitHours: limitHours,
+            cellularHours: cellularHours,
+            keepDays: keepDays,
+            playing: playing
+        )
     }
 }
 
@@ -28,9 +35,11 @@ actor PodcastDownloadActor: SharedContextActor {
 enum PodcastDownloadPlanner {
     /// Takes the playing episode, then walks the queue in play order until `limitHours` of unplayed time is covered,
     /// and decides what a watched episode's file has left. The episode that crosses the limit is still taken whole.
+    /// The first `cellularHours` of that walk may download on cellular data, measured the same way.
     static func plan(
         in context: ModelContext,
         limitHours: Int,
+        cellularHours: Int,
         keepDays: Int,
         playing: String?
     ) -> PodcastDownloadPlan {
@@ -42,12 +51,13 @@ enum PodcastDownloadPlanner {
         if let playing {
             let fetch = FetchDescriptor<Video>(predicate: #Predicate { $0.youtubeId == playing })
             if let video = (try? context.fetch(fetch))?.first {
-                add(video, to: &plan)
+                add(video, allowsCellular: true, to: &plan)
             }
         }
 
         if enabled {
-            var budget = limitHours < 0 ? Double.infinity : Double(limitHours) * 3600
+            var budget = seconds(limitHours)
+            var cellularBudget = seconds(cellularHours)
             let fetch = FetchDescriptor<QueueEntry>(sortBy: [SortDescriptor(\.order)])
             for entry in (try? context.fetch(fetch)) ?? [] {
                 guard budget > 0 else { break }
@@ -56,8 +66,10 @@ enum PodcastDownloadPlanner {
                       video.watchedDate == nil else {
                     continue
                 }
-                budget -= video.remainingTime ?? video.duration ?? 0
-                add(video, to: &plan)
+                let duration = video.remainingTime ?? video.duration ?? 0
+                add(video, allowsCellular: cellularBudget > 0, to: &plan)
+                budget -= duration
+                cellularBudget -= duration
             }
         }
 
@@ -74,10 +86,18 @@ enum PodcastDownloadPlanner {
         return plan
     }
 
-    private static func add(_ video: Video, to plan: inout PodcastDownloadPlan) {
+    private static func seconds(_ hours: Int) -> Double {
+        hours < 0 ? .infinity : Double(hours) * 3600
+    }
+
+    private static func add(_ video: Video, allowsCellular: Bool, to plan: inout PodcastDownloadPlan) {
         guard let mediaUrl = video.mediaUrl, !plan.keep.contains(video.youtubeId) else { return }
         plan.keep.insert(video.youtubeId)
         guard PodcastDownloadStore.playbackUrl(for: video) == nil else { return }
-        plan.download.append(PendingPodcastDownload(youtubeId: video.youtubeId, url: mediaUrl))
+        plan.download.append(PendingPodcastDownload(
+            youtubeId: video.youtubeId,
+            url: mediaUrl,
+            allowsCellular: allowsCellular
+        ))
     }
 }

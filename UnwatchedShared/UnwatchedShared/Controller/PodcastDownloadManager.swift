@@ -79,6 +79,7 @@ public final class PodcastDownloadManager {
         let plan = PodcastDownloadPlanner.plan(
             in: context,
             limitHours: limitHours,
+            cellularHours: cellularHours,
             keepDays: keepDays,
             playing: playingYoutubeId
         )
@@ -88,6 +89,17 @@ public final class PodcastDownloadManager {
     private var limitHours: Int {
         UserDefaults.standard.object(forKey: Const.podcastDownloadLimitHours) as? Int
             ?? Const.podcastDownloadDefaultHours
+    }
+
+    /// The watch has no such setting: its tether to the phone reads as expensive, so withholding would leave
+    /// downloads that never start.
+    private var cellularHours: Int {
+        #if os(watchOS)
+        -1
+        #else
+        UserDefaults.standard.object(forKey: Const.podcastDownloadCellularHours) as? Int
+            ?? Const.podcastDownloadDefaultCellularHours
+        #endif
     }
 
     private var keepDays: Int {
@@ -110,23 +122,27 @@ public final class PodcastDownloadManager {
             plan = PodcastDownloadPlanner.plan(
                 in: planContext,
                 limitHours: limitHours,
+                cellularHours: cellularHours,
                 keepDays: keepDays,
                 playing: playing
             )
         } else {
             plan = await PodcastDownloadActor().plan(
                 limitHours: limitHours,
+                cellularHours: cellularHours,
                 keepDays: keepDays,
                 playing: playing
             )
         }
 
+        let cellularIds = Set(plan.download.filter(\.allowsCellular).map(\.youtubeId))
         var inFlight = Set<String>()
         for task in await session.allTasks {
             guard let youtubeId = task.taskDescription else { continue }
-            // an episode that started downloading on wifi terms has to be restarted once it's the one playing,
-            // otherwise it sits idle on mobile data
-            let isRestricted = youtubeId == playing && task.originalRequest?.allowsCellularAccess == false
+            // a Wi-Fi-only task now allowed cellular has to restart to use it; one that's progressing is left alone
+            let isRestricted = cellularIds.contains(youtubeId)
+                && task.originalRequest?.allowsCellularAccess == false
+                && (youtubeId == playing || task.countOfBytesReceived == 0)
             if plan.keep.contains(youtubeId), !isRestricted {
                 inFlight.insert(youtubeId)
             } else {
@@ -138,15 +154,8 @@ public final class PodcastDownloadManager {
         PodcastDownloadStore.removeAll(except: plan.keep)
         setDownloadedIds(PodcastDownloadStore.downloadedIds())
 
-        #if os(watchOS)
-        // The watch has no such setting: its tether to the phone reads as expensive, so withholding would leave
-        // downloads that never start.
-        let onCellular = true
-        #else
-        let onCellular = UserDefaults.standard.bool(forKey: Const.podcastDownloadOnCellular)
-        #endif
         for pending in plan.download where !inFlight.contains(pending.youtubeId) {
-            start(pending, anyNetwork: onCellular || pending.youtubeId == playing)
+            start(pending)
         }
     }
 
@@ -172,11 +181,11 @@ public final class PodcastDownloadManager {
         downloadedIds = ids
     }
 
-    private func start(_ pending: PendingPodcastDownload, anyNetwork: Bool) {
+    private func start(_ pending: PendingPodcastDownload) {
         var request = URLRequest(url: pending.url)
-        request.allowsCellularAccess = anyNetwork
-        request.allowsExpensiveNetworkAccess = anyNetwork
-        request.allowsConstrainedNetworkAccess = anyNetwork
+        request.allowsCellularAccess = pending.allowsCellular
+        request.allowsExpensiveNetworkAccess = pending.allowsCellular
+        request.allowsConstrainedNetworkAccess = pending.allowsCellular
         let task = session.downloadTask(with: request)
         task.taskDescription = pending.youtubeId
         task.resume()
