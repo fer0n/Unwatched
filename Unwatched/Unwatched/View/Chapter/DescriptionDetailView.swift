@@ -18,20 +18,34 @@ struct DescriptionDetailView: View {
 
     var body: some View {
         if let description {
-            VStack(alignment: .leading, spacing: 0) {
-                ForEach(Array(Self.chunks(of: description).enumerated()), id: \.offset) { _, chunk in
-                    Self.text(for: chunk, actionColor: theme.darkContrastColor)
-                        .textRenderer(ActionCapsuleRenderer(color: theme.darkColor))
-                }
-            }
-            .textSelection(.enabled)
-            .myTint()
-            .environment(\.openURL, OpenURLAction(handler: handleYoutubeAction))
-            .sensoryFeedback(Const.sensoryFeedback, trigger: hapticToggle)
+            descriptionText(description)
+                .myTint()
+                .environment(\.openURL, OpenURLAction(handler: handleYoutubeAction))
+                .sensoryFeedback(Const.sensoryFeedback, trigger: hapticToggle)
         }
     }
 
-    // iOS draws nothing for a very tall Text with a custom renderer
+    @ViewBuilder
+    private func descriptionText(_ description: String) -> some View {
+        #if os(iOS)
+        DescriptionTextView(
+            description: description,
+            linkColor: theme.color,
+            actionColor: theme.darkContrastColor,
+            capsuleColor: theme.darkColor
+        )
+        #else
+        VStack(alignment: .leading, spacing: 0) {
+            ForEach(Array(Self.chunks(of: description).enumerated()), id: \.offset) { _, chunk in
+                Self.text(for: chunk, actionColor: theme.darkContrastColor)
+                    .textRenderer(ActionCapsuleRenderer(color: theme.darkColor))
+            }
+        }
+        .textSelection(.enabled)
+        #endif
+    }
+
+    // a very tall Text with a custom renderer draws nothing
     private static func chunks(of description: String) -> [String] {
         var chunks: [String] = []
         var current: [Substring] = []
@@ -55,22 +69,26 @@ struct DescriptionDetailView: View {
 
     private static let chunkLength = 1500
 
+    nonisolated static let actionCapsulePadding: CGFloat = 2.5
+
     // Actions are separate so the renderer finds them
     private static func text(for description: String, actionColor: Color) -> Text {
         var interpolation = LocalizedStringKey.StringInterpolation(literalCapacity: 0, interpolationCount: 0)
-        for segment in segments(description, actionColor: actionColor) {
+        for segment in segments(description) {
             switch segment {
             case .plain(let text):
                 interpolation.appendInterpolation(Text(text))
             case .action(let text):
-                interpolation.appendInterpolation(Text(text).customAttribute(ActionCapsule()))
+                interpolation.appendInterpolation(
+                    Text(text).font(.footnote).foregroundColor(actionColor).customAttribute(ActionCapsule())
+                )
             }
         }
         return Text(LocalizedStringKey(stringInterpolation: interpolation))
     }
 
     // Markdown is parsed per line so emphasis can't run across line breaks
-    private static func segments(_ description: String, actionColor: Color) -> [DescriptionSegment] {
+    static func segments(_ description: String) -> [DescriptionSegment] {
         let options = AttributedString.MarkdownParsingOptions(
             interpretedSyntax: .inlineOnlyPreservingWhitespace
         )
@@ -93,7 +111,7 @@ struct DescriptionDetailView: View {
                     plain.append(AttributedString(" "))
                     segments.append(.plain(plain))
                     plain = AttributedString()
-                    segments.append(.action(actionLink(action, for: link, color: actionColor)))
+                    segments.append(.action(actionLink(action, for: link)))
                 }
             }
             plain.append(parsed[copied...])
@@ -103,15 +121,13 @@ struct DescriptionDetailView: View {
     }
 
     // Menus and alerts presented from behind the menu sheet dismiss it, so the actions are inline links
-    private static func actionLink(_ action: YoutubeAction, for url: URL, color: Color) -> AttributedString {
+    private static func actionLink(_ action: YoutubeAction, for url: URL) -> AttributedString {
         var components = URLComponents()
         components.scheme = YoutubeAction.scheme
         components.host = action.rawValue
         components.queryItems = [URLQueryItem(name: "url", value: url.absoluteString)]
         var link = AttributedString("\u{00A0}\(String(localized: action.title))\u{00A0}")
         link.link = components.url
-        link.font = .footnote
-        link.foregroundColor = color
         return link
     }
 
@@ -156,7 +172,7 @@ struct DescriptionDetailView: View {
     }
 }
 
-private enum DescriptionSegment {
+enum DescriptionSegment {
     case plain(AttributedString)
     case action(AttributedString)
 }
@@ -169,7 +185,7 @@ private struct ActionCapsuleRenderer: TextRenderer {
     func draw(layout: Text.Layout, in context: inout GraphicsContext) {
         for line in layout {
             for run in line where run[ActionCapsule.self] != nil {
-                let bounds = run.typographicBounds.rect.insetBy(dx: 0, dy: -2.5)
+                let bounds = run.typographicBounds.rect.insetBy(dx: 0, dy: -DescriptionDetailView.actionCapsulePadding)
                 context.fill(Capsule().path(in: bounds), with: .color(color))
             }
             context.draw(line)
@@ -177,7 +193,7 @@ private struct ActionCapsuleRenderer: TextRenderer {
     }
 }
 
-private enum YoutubeAction: String, CaseIterable {
+enum YoutubeAction: String, CaseIterable {
     case play, queue, inbox
 
     static let scheme = "unwatched-description"

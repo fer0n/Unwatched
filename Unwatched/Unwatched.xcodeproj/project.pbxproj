@@ -330,7 +330,9 @@
 		8849F38F2DF068550040DD9A /* ImageAccentBackground.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8849F38E2DF068550040DD9A /* ImageAccentBackground.swift */; };
 		8849F3902DF068550040DD9A /* ImageAccentBackground.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8849F38E2DF068550040DD9A /* ImageAccentBackground.swift */; };
 		884C430C2ED8B7FE00FA8DC4 /* DescriptionDetailView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 884C430B2ED8B7FE00FA8DC4 /* DescriptionDetailView.swift */; };
+		88D5C1A22F0A00AA00DE5C01 /* DescriptionTextView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 88D5C1A12F0A00AA00DE5C01 /* DescriptionTextView.swift */; };
 		884C430D2ED8B7FE00FA8DC4 /* DescriptionDetailView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 884C430B2ED8B7FE00FA8DC4 /* DescriptionDetailView.swift */; };
+		88D5C1A32F0A00AA00DE5C01 /* DescriptionTextView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 88D5C1A12F0A00AA00DE5C01 /* DescriptionTextView.swift */; };
 		884CC88C2DC3890F00FC59DF /* QueueTabItemView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 884CC88B2DC3890F00FC59DF /* QueueTabItemView.swift */; };
 		884CC88D2DC3890F00FC59DF /* QueueTabItemView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 884CC88B2DC3890F00FC59DF /* QueueTabItemView.swift */; };
 		884D8D5A2ED867A100CBB62B /* VideoDetailThumbnail.swift in Sources */ = {isa = PBXBuildFile; fileRef = 884D8D592ED867A100CBB62B /* VideoDetailThumbnail.swift */; };
@@ -1473,6 +1475,7 @@
 		8847D6C62C99865400BFA12F /* ChapterCategory.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ChapterCategory.swift; sourceTree = "<group>"; };
 		8849F38E2DF068550040DD9A /* ImageAccentBackground.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ImageAccentBackground.swift; sourceTree = "<group>"; };
 		884C430B2ED8B7FE00FA8DC4 /* DescriptionDetailView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DescriptionDetailView.swift; sourceTree = "<group>"; };
+		88D5C1A12F0A00AA00DE5C01 /* DescriptionTextView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DescriptionTextView.swift; sourceTree = "<group>"; };
 		884CC88B2DC3890F00FC59DF /* QueueTabItemView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = QueueTabItemView.swift; sourceTree = "<group>"; };
 		884D8D592ED867A100CBB62B /* VideoDetailThumbnail.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = VideoDetailThumbnail.swift; sourceTree = "<group>"; };
 		8851D8532EC0AE6F006D3310 /* PlayerControlsOrnament.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PlayerControlsOrnament.swift; sourceTree = "<group>"; };
@@ -2736,6 +2739,7 @@
 				88F2876E2DEAF4EB00309CA0 /* VideoDetailPage.swift */,
 				8804A3EC2B8B6B5B00D3F4F1 /* DescriptionDetailHeaderView.swift */,
 				884C430B2ED8B7FE00FA8DC4 /* DescriptionDetailView.swift */,
+				88D5C1A12F0A00AA00DE5C01 /* DescriptionTextView.swift */,
 				883CA8182B5BB2FB00028D52 /* ChapterMiniControlView.swift */,
 				88D446AC2D05D54E001F9F55 /* PlayerScrubber.swift */,
 				8841E1F82EC7110200C64B58 /* CurrentChapterPopup.swift */,
@@ -3728,6 +3732,7 @@
 				886555322E7340CB00F4A2DA /* ChapterSettingsMenu.swift in Sources */,
 				1389BFA29CACDB705DB44F76 /* CloudAiButton.swift in Sources */,
 				884C430D2ED8B7FE00FA8DC4 /* DescriptionDetailView.swift in Sources */,
+				88D5C1A32F0A00AA00DE5C01 /* DescriptionTextView.swift in Sources */,
 				889AF8D82C50ECA9001CEDE6 /* PlayerToggleStyle.swift in Sources */,
 				88F85F482E1004EF00FB15A1 /* AppStateObserver.swift in Sources */,
 				886818232D77586700E06A0D /* ImportSubscriptionsWindow.swift in Sources */,
@@ -4422,6 +4427,7 @@
 				883CA81E2B5BD3ED00028D52 /* SubscribeManager.swift in Sources */,
 				889924842C485989001185A6 /* LibraryDestination.swift in Sources */,
 				884C430C2ED8B7FE00FA8DC4 /* DescriptionDetailView.swift in Sources */,
+				88D5C1A22F0A00AA00DE5C01 /* DescriptionTextView.swift in Sources */,
 				88CD38782E20797C00E7B21C /* PlayerWebViewCoordinator+messages.swift in Sources */,
 				FE1000FF000000000000E032 /* PlayerWebViewCoordinator+position.swift in Sources */,
 				887785EF2EEAB37A00795394 /* SignalInterval.swift in Sources */,
