@@ -94,12 +94,12 @@ struct PremiumOfferView: View {
                             Text("hidePremiumOffer")
                         }
                         .signalToggle("Premium.Hide", isOn: hidePremium)
-                        .tint(theme.darkColor.mix(with: .black, by: 0.8))
+                        .tint(toggleTint)
                     }
                     .tint(theme.color)
                     .padding(.horizontal, 20)
                     .padding(.vertical, 15)
-                    .background(theme.darkColor.mix(with: .black, by: 0.45))
+                    .background(cardColor)
                     .clipShape(RoundedRectangle(cornerRadius: 30, style: .continuous))
                 }
                 .padding(.horizontal)
@@ -128,7 +128,7 @@ struct PremiumOfferView: View {
             #endif
             .sensoryFeedback(Const.sensoryFeedback, trigger: premium)
             .tint(theme.darkContrastColor)
-            .foregroundStyle(theme.contrastColor)
+            .foregroundStyle(theme.darkContrastColor)
             #if os(iOS)
             .background(backgroundColor.gradient)
             #else
@@ -146,12 +146,24 @@ struct PremiumOfferView: View {
 
             ZStack {}
                 .myNavigationTitle("unwatchedPremium")
-                .foregroundStyle(theme.contrastColor)
+                .foregroundStyle(theme.darkContrastColor)
         }
     }
 
+    // black/white's darkColor is white in light mode: keep it near white instead of a muddy gray
     var backgroundColor: Color {
-        theme.darkColor.mix(with: .black, by: 0.4)
+        theme.darkColor.mix(with: .black, by: theme == .blackWhite ? 0.03 : 0.4)
+    }
+
+    var cardColor: Color {
+        theme.darkColor.mix(with: .black, by: theme == .blackWhite ? 0.08 : 0.45)
+    }
+
+    var toggleTint: Color {
+        // black/white's darkColor is black in dark mode, so darkening it vanishes into the card
+        theme == .blackWhite
+            ? theme.darkContrastColor.opacity(0.5)
+            : theme.darkColor.mix(with: .black, by: 0.8)
     }
 }
 
