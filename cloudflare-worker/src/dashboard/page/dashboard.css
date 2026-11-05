@@ -1,0 +1,179 @@
+  * { box-sizing: border-box; }
+  /* Beats display set by .grid-2 and friends. */
+  [hidden] { display: none !important; }
+  body {
+    font-family: -apple-system, sans-serif;
+    margin: 0;
+    padding: 1rem;
+    background: #111;
+    color: #eee;
+    -webkit-text-size-adjust: 100%;
+  }
+  /* While loading, shimmer the real content containers in place so the skeleton
+     matches the true page layout: headings stay put and each section shows a
+     placeholder block where its content will render. */
+  @keyframes sk-shimmer { 0% { background-position: 200% 0; } 100% { background-position: -200% 0; } }
+  body.loading .stat-cards,
+  body.loading .card,
+  body.loading .pie-chart,
+  body.loading .table-scroll,
+  body.loading .settings-grid,
+  body.loading #funnels,
+  body.loading #compare,
+  body.loading #generation,
+  body.loading #settingValues,
+  body.loading #breakdowns {
+    background: linear-gradient(90deg, #1b1b1b 25%, #262626 37%, #1b1b1b 63%);
+    background-size: 200% 100%;
+    animation: sk-shimmer 1.4s ease-in-out infinite;
+    border-color: transparent;
+    border-radius: 10px;
+  }
+  body.loading .stat-cards { min-height: 4.5rem; }
+  body.loading .card { min-height: 8rem; }
+  body.loading .pie-chart { min-height: 9rem; }
+  body.loading .table-scroll { min-height: 8rem; }
+  body.loading .settings-grid { min-height: 10rem; }
+  body.loading #funnels,
+  body.loading #compare,
+  body.loading #generation,
+  body.loading #settingValues,
+  body.loading #breakdowns { min-height: 8rem; }
+  /* Hide the real (empty) table markup so only the shimmer shows. */
+  body.loading .table-scroll table { visibility: hidden; }
+  @media (prefers-reduced-motion: reduce) {
+    body.loading .stat-cards, body.loading .card, body.loading .pie-chart,
+    body.loading .table-scroll, body.loading .settings-grid,
+    body.loading #funnels, body.loading #compare, body.loading #breakdowns,
+    body.loading #generation, body.loading #settingValues { animation: none; }
+  }
+  h1 { font-size: 1.2rem; margin: 0; }
+  .page-head { display: flex; align-items: center; gap: 0.75rem; flex-wrap: wrap; margin: 0 0 0.5rem; }
+  .channel-select {
+    background: #1b1b1b; border: 1px solid #2a2a2a; border-radius: 8px;
+    color: #ccc; font-size: 0.78rem; padding: 0.3rem 0.5rem; cursor: pointer;
+  }
+  /* Anything other than the default view is loud on purpose: debug/TestFlight-only
+     numbers look exactly like real ones, so the picker has to be hard to overlook. */
+  .channel-select.alt { border-color: #fbbf24; color: #fbbf24; }
+  .channel-note { font-size: 0.75rem; color: #fbbf24; margin: 0 0 0.5rem; }
+  h2 { font-size: 0.95rem; color: #aaa; margin: 1.5rem 0 0.5rem; }
+  h2.section-head { display: flex; align-items: center; gap: 0.5rem; }
+  .refresh-btn {
+    background: #1b1b1b; border: 1px solid #2a2a2a; border-radius: 6px;
+    color: #ccc; cursor: pointer; font-size: 0.9rem; line-height: 1; padding: 0.2rem 0.45rem;
+  }
+  .refresh-btn:hover { background: #242424; }
+  .refresh-btn:disabled { opacity: 0.5; cursor: default; }
+  .refresh-icon { display: inline-block; }
+  @keyframes spin { to { transform: rotate(360deg); } }
+  .refresh-btn.spinning .refresh-icon { animation: spin 0.7s linear infinite; }
+  @media (prefers-reduced-motion: reduce) { .refresh-btn.spinning .refresh-icon { animation: none; } }
+  .hint { font-size: 0.75rem; color: #777; margin: -0.25rem 0 0.75rem; }
+  .table-scroll { overflow-x: auto; -webkit-overflow-scrolling: touch; margin: 0 -1rem; padding: 0 1rem; }
+  table { border-collapse: collapse; width: 100%; min-width: 320px; }
+  th, td { text-align: left; padding: 0.5rem 0.6rem; border-bottom: 1px solid #333; font-size: 0.85rem; }
+  td { overflow-wrap: break-word; }
+  /* Params: long JSON, so it may break anywhere rather than widen the table. */
+  td:nth-child(2) { max-width: 45vw; word-break: break-word; }
+  th { color: #888; font-weight: 500; white-space: nowrap; }
+  #error { color: #f66; font-size: 0.85rem; }
+  #partial { color: #fbbf24; font-size: 0.78rem; margin: 0 0 0.5rem; }
+  #partial ul { margin: 0.25rem 0 0; padding-left: 1.1rem; }
+
+  .stat-cards { display: grid; grid-template-columns: repeat(3, 1fr); gap: 0.6rem; }
+  .stat-card { background: #1b1b1b; border: 1px solid #2a2a2a; border-radius: 10px; padding: 0.75rem; text-align: center; }
+  .stat-card .value { font-size: 1.4rem; font-weight: 600; }
+  .stat-card .label { font-size: 0.7rem; color: #888; margin-top: 0.15rem; }
+
+  .settings-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(140px, 1fr)); gap: 0.75rem; }
+  .setting-card { background: #1b1b1b; border: 1px solid #2a2a2a; border-radius: 10px; padding: 0.6rem; text-align: center; }
+  .setting-card .setting-label { font-size: 0.72rem; color: #ccc; margin-bottom: 0.4rem; min-height: 2.2em; }
+  .setting-meta { font-size: 0.66rem; color: #888; margin-top: 0.3rem; }
+  .setting-meta b { color: #ccc; font-weight: 600; }
+  .legend { font-size: 0.68rem; margin-top: 0.4rem; text-align: left; }
+  .legend div { display: flex; align-items: center; gap: 0.35rem; white-space: nowrap; }
+  .swatch { width: 8px; height: 8px; border-radius: 2px; flex: none; }
+
+  .settings-grid .setting-card.hidden { display: none; }
+  #settingValuesTrend .card.hidden { display: none; }
+  .setting-card .sparkline { display: block; width: 100%; height: 44px; margin: 0.3rem 0 0.2rem; }
+  .setting-now { font-size: 1.05rem; font-weight: 600; }
+  .setting-meta b.up { color: #4ade80; }
+  .setting-meta b.down { color: #fb923c; }
+  #settingValues .card.hidden { display: none; }
+  #recent tr.hidden { display: none; }
+  .toggle-btn {
+    display: block; margin: 0.75rem auto 0; padding: 0.45rem 1rem;
+    background: #1b1b1b; border: 1px solid #2a2a2a; border-radius: 8px;
+    color: #ccc; font-size: 0.78rem; cursor: pointer;
+  }
+  .toggle-btn:hover { background: #242424; }
+
+  .pie-chart { display: flex; align-items: center; gap: 1.25rem; flex-wrap: wrap; background: #1b1b1b; border: 1px solid #2a2a2a; border-radius: 10px; padding: 1rem; }
+  .pie-chart svg { flex: none; }
+  .pie-legend { display: grid; grid-template-columns: repeat(auto-fill, minmax(8rem, 1fr)); gap: 0.25rem 1rem; font-size: 0.75rem; flex: 1 1 160px; min-width: 0; }
+  .pie-legend div { display: flex; align-items: center; gap: 0.4rem; min-width: 0; }
+  .pie-legend div span:last-child, .pie-legend div { overflow: hidden; text-overflow: ellipsis; }
+  .pie-legend .muted { color: #777; }
+  .pie-pick {
+    display: flex; align-items: center; gap: 0.4rem; min-width: 0; text-align: left;
+    background: none; border: 1px solid transparent; border-radius: 6px;
+    color: inherit; font: inherit; padding: 0.15rem 0.35rem; margin: -0.15rem -0.35rem; cursor: pointer;
+  }
+  .pie-pick span:last-child { overflow-wrap: break-word; min-width: 0; }
+  .pie-pick:hover { background: #242424; }
+  .pie-pick.selected { background: #242424; border-color: #3a3a3a; }
+  .pie-detail { margin-top: 0.5rem; }
+  .pie-pick.off { opacity: 0.4; }
+  .trend-legend { margin-top: 0.6rem; }
+
+  .view-switch { display: inline-flex; border: 1px solid #2a2a2a; border-radius: 7px; overflow: hidden; font-weight: 400; }
+  .view-switch button {
+    background: #1b1b1b; border: none; color: #999; cursor: pointer;
+    font-size: 0.72rem; padding: 0.22rem 0.55rem;
+  }
+  .view-switch button + button { border-left: 1px solid #2a2a2a; }
+  .view-switch button:hover { background: #242424; }
+  .view-switch button.selected { background: #2b2b2b; color: #eee; }
+
+  .card { background: #1b1b1b; border: 1px solid #2a2a2a; border-radius: 10px; padding: 1rem; }
+  .card svg { display: block; width: 100%; height: auto; }
+  .chart-meta { display: flex; justify-content: space-between; font-size: 0.72rem; color: #888; margin-bottom: 0.5rem; }
+  .chart-meta b { color: #eee; font-weight: 600; }
+
+  .grid-2 { display: grid; grid-template-columns: minmax(0, 1fr); gap: 0.75rem; }
+  .grid-2 > * { min-width: 0; }
+  @media (min-width: 720px) { .grid-2 { grid-template-columns: repeat(2, minmax(0, 1fr)); } }
+
+  td.num { text-align: right; font-variant-numeric: tabular-nums; white-space: nowrap; }
+  th.num { text-align: right; }
+  .rate-bar { position: relative; }
+  .rate-bar span { position: absolute; left: 0; top: 0; bottom: 0; background: rgba(59,130,246,0.25); border-radius: 3px; }
+  .rate-bar b { position: relative; font-weight: 600; }
+
+  /* One grid across rows so the columns line up. */
+  .cmp-chart { display: grid; grid-template-columns: minmax(0, 9rem) minmax(0, 1fr) auto; align-items: center; gap: 0.5rem; font-size: 0.78rem; }
+  .cmp-chart > .hint { grid-column: 1 / -1; margin: 0; }
+  .cmp-row { display: contents; }
+  .cmp-label { color: #ccc; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+  .cmp-track { background: #222; border-radius: 4px; overflow: hidden; height: 12px; }
+  .cmp-fill { display: block; height: 100%; border-radius: 4px; }
+  .cmp-count { text-align: right; color: #999; font-variant-numeric: tabular-nums; white-space: nowrap; }
+
+  .funnel { display: flex; flex-direction: column; gap: 0.1rem; }
+  .funnel-row { position: relative; display: flex; align-items: center; height: 32px; border: 1px solid #2a2a2a; border-radius: 6px; overflow: hidden; }
+  .funnel-row .fill { position: absolute; left: 0; top: 0; bottom: 0; background: linear-gradient(90deg, #1e3a8a, #3b82f6); }
+  .funnel-row .txt { position: relative; padding: 0 0.55rem; font-size: 0.75rem; color: #fff; white-space: nowrap; }
+  .funnel-conv { font-size: 0.68rem; color: #888; margin: 0.15rem 0 0.45rem 0.2rem; }
+
+  @media (min-width: 640px) {
+    body { padding: 2rem; }
+    h1 { font-size: 1.4rem; }
+    h2 { font-size: 1rem; }
+    .table-scroll { margin: 0; padding: 0; }
+  }
+  @media (max-width: 420px) {
+    .stat-cards { grid-template-columns: repeat(3, 1fr); gap: 0.4rem; }
+    .stat-card .value { font-size: 1.1rem; }
+  }

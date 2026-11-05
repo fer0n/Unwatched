@@ -1,0 +1,165 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1" />
+<title>Unwatched Analytics</title>
+<style>
+/* dashboard.css */
+</style>
+</head>
+<body class="loading">
+<div class="page-head">
+  <h1>Unwatched Analytics</h1>
+  <select id="channel" class="channel-select" aria-label="Build channel"></select>
+</div>
+<div class="channel-note" id="channelNote" hidden></div>
+<div id="error"></div>
+<div id="partial" hidden></div>
+
+<h2>Active users (anonymous, on-device id only)</h2>
+<div class="stat-cards" id="activeUsers"></div>
+
+<h2 class="section-head">Active users <span id="dauWindow"></span> <span class="view-switch" id="dauSwitch"></span></h2>
+<div class="hint" id="dauHint"></div>
+<div class="card" id="dauTrend"></div>
+
+<h2>Event volume per day <span id="eventWindow"></span></h2>
+<div class="card" id="eventTrend"></div>
+
+<h2>Free-plan capacity <span id="writesWindow"></span></h2>
+<p class="hint" id="writesHint"></p>
+<div class="card" id="writesTrend"></div>
+
+<h2 class="section-head">Recent events <button id="recentRefresh" class="refresh-btn" title="Refresh recent events" aria-label="Refresh recent events"><span class="refresh-icon">↻</span></button></h2>
+<div class="table-scroll">
+<table id="recent"><thead><tr><th>Event</th><th>Params</th><th>Channel</th><th>When</th></tr></thead><tbody></tbody></table>
+</div>
+<button id="recentToggle" class="toggle-btn" hidden></button>
+
+<h2 class="section-head">Devices &amp; OS <span class="view-switch" id="platformSwitch"></span></h2>
+<div class="hint" id="platformHint"></div>
+<div id="platformNow">
+<div class="hint">Pick a type to see its individual devices or versions.</div>
+<div class="grid-2">
+  <div>
+    <div class="chart-meta"><span><b>Device</b></span></div>
+    <div class="pie-chart" id="devicePie"></div>
+    <div class="pie-detail" id="deviceDetail" hidden></div>
+  </div>
+  <div>
+    <div class="chart-meta"><span><b>OS version</b></span></div>
+    <div class="pie-chart" id="osPie"></div>
+    <div class="pie-detail" id="osDetail" hidden></div>
+  </div>
+</div>
+</div>
+<div class="grid-2" id="platformTrend" hidden>
+  <div class="card" id="deviceTrend"></div>
+  <div class="card" id="osTrend"></div>
+</div>
+<h2>Apple Watch</h2>
+<div class="hint" id="watchFullSyncHint"></div>
+<div class="setting-card" id="watchFullSyncCard"></div>
+
+<h2 class="section-head">App version <span id="versionWindow"></span> <span class="view-switch" id="versionSwitch"></span></h2>
+<div class="hint" id="versionHint"></div>
+<div class="pie-chart" id="versionPie"></div>
+<div class="card" id="versionTrend" hidden></div>
+
+<h2>Engagement <span id="engagementWindow"></span></h2>
+<div class="hint">Per-user = events ÷ weekly active users. Adoption = share of weekly active users who did it at least once.</div>
+<div class="table-scroll">
+<table id="engagement"><thead><tr>
+  <th>Event</th><th class="num">Count</th><th class="num">Users</th><th class="num">Per user</th><th class="num">Adoption</th>
+</tr></thead><tbody></tbody></table>
+</div>
+
+<h2>Funnels</h2>
+<div class="hint" id="funnelHint"></div>
+<div class="grid-2" id="funnels"></div>
+
+<h2>Feature comparison</h2>
+<div class="hint" id="compareHint"></div>
+<div class="grid-2" id="compare"></div>
+
+<h2>How playback starts <span id="playbackStartWindow"></span></h2>
+<div class="pie-chart" id="playbackStartPie"></div>
+
+<h2>Search vs YouTube <span id="searchWindow"></span></h2>
+<div class="hint" id="searchHint"></div>
+<div class="card" id="searchTrend"></div>
+<div class="grid-2" id="searchBreakdowns" style="margin-top:0.75rem"></div>
+
+<h2>Action breakdowns</h2>
+<div class="hint" id="breakdownHint"></div>
+<div class="grid-2" id="breakdowns"></div>
+
+<h2>Generation success <span id="generationWindow"></span></h2>
+<div class="hint">Attempts by outcome, for the on-device transcript, alignment and AI-chapter runs.</div>
+<div class="grid-2" id="generation"></div>
+
+<h2 class="section-head">Settings adoption <span class="view-switch" id="settingsSwitch"></span></h2>
+<div class="hint" id="settingsHint"></div>
+<div id="settingsNow">
+<div class="settings-grid" id="settingsGrid"></div>
+<button id="settingsToggle" class="toggle-btn" hidden></button>
+</div>
+<div id="settingsTrendView" hidden>
+<div class="settings-grid" id="settingsTrendGrid"></div>
+<button id="settingsTrendToggle" class="toggle-btn" hidden></button>
+</div>
+
+<h2 class="section-head">Setting values <span class="view-switch" id="settingValuesSwitch"></span></h2>
+<div class="hint" id="settingValuesHint"></div>
+<div id="settingValuesNow">
+<div class="grid-2" id="settingValues"></div>
+<button id="settingValuesToggle" class="toggle-btn" hidden></button>
+</div>
+<div id="settingValuesTrendView" hidden>
+<div class="grid-2" id="settingValuesTrend"></div>
+<button id="settingValuesTrendToggle" class="toggle-btn" hidden></button>
+</div>
+
+<h2 class="section-head">Queue, inbox &amp; subscriptions <span class="view-switch" id="librarySwitch"></span></h2>
+<div class="hint" id="libraryTrendHint" hidden></div>
+<div class="grid-2" id="libraryNow">
+  <div>
+    <div class="chart-meta"><span><b>Queue size</b></span></div>
+    <div class="hint" id="queueHint"></div>
+    <div class="card" id="queueBars"></div>
+  </div>
+  <div>
+    <div class="chart-meta"><span><b>Inbox size</b></span></div>
+    <div class="hint" id="inboxHint"></div>
+    <div class="card" id="inboxBars"></div>
+  </div>
+  <div>
+    <div class="chart-meta"><span><b>Subscription count</b></span></div>
+    <div class="hint" id="subsHint"></div>
+    <div class="card" id="subsBars"></div>
+  </div>
+  <div>
+    <div class="chart-meta"><span><b>Podcast subscriptions</b></span></div>
+    <div class="hint" id="podcastSubsHint"></div>
+    <div class="card" id="podcastSubsBars"></div>
+  </div>
+</div>
+<div class="grid-2" id="libraryTrend" hidden>
+  <div class="card" id="queueTrend"></div>
+  <div class="card" id="inboxTrend"></div>
+  <div class="card" id="subsTrend"></div>
+  <div class="card" id="podcastSubsTrend"></div>
+</div>
+
+<h2>Errors <span id="errorWindow"></span></h2>
+<div class="card" id="errorTrend"></div>
+<div class="table-scroll" style="margin-top:0.75rem">
+<table id="errors"><thead><tr><th>Error id</th><th class="num">Count</th></tr></thead><tbody></tbody></table>
+</div>
+
+<script>
+/* dashboard.client.js */
+</script>
+</body>
+</html>

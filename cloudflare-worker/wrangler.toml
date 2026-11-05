@@ -2,6 +2,12 @@ name = "unwatched-analytics"
 main = "src/index.js"
 compatibility_date = "2024-09-23"
 
+# Dashboard page sources, inlined into one response by src/dashboard/page.js.
+[[rules]]
+type = "Text"
+globs = ["**/page/*.css", "**/page/*.client.js"]
+fallthrough = true
+
 [vars]
 CF_ACCOUNT_ID = "2206bad495d854f040f37fc989b8305e"
 REPORT_MAIL_FROM = "reports@octabits.net"

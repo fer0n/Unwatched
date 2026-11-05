@@ -1,4 +1,6 @@
-import { isDashboardAuthorized, dashboardCookieHeader, handleDashboardData, handleRecentData, DASHBOARD_HTML } from "./dashboard.js";
+import { isDashboardAuthorized, dashboardCookieHeader } from "./dashboard/auth.js";
+import { handleDashboardData, handleRecentData } from "./dashboard/data.js";
+import { DASHBOARD_HTML } from "./dashboard/page.js";
 import { LINKS_HOST, handleLink } from "./links.js";
 import { handleReportUpload, handleReportsDashboard, isReportsPath } from "./reports/index.js";
 

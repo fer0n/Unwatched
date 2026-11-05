@@ -7,7 +7,7 @@ Privacy-first, self-hosted product analytics. Two halves:
 
 Analytics Engine is **append-only** — no `UPDATE`, `DELETE` or `TRUNCATE`, and rows expire on their
 own after three months. A dataset therefore can't be cleaned or backfilled: the only reset is to
-bump the dataset name in `wrangler.toml` (and every query in `dashboard.js`) and let the old one age
+bump the dataset name in `wrangler.toml` (and every query in `src/dashboard/data.js`) and let the old one age
 out. That's what `_v3` is — the cutover when build channels landed, discarding a dataset that only
 ever held local test events. Weigh it accordingly once real data is flowing.
 
@@ -50,7 +50,7 @@ in development instead of only being proven after release.
 - **Dashboard default is `live`** = `blob4 IN ('release', 'testflight')`. The picker in the header
   switches channel via `?channel=`; anything other than the default is highlighted and captioned so
   debug numbers can't be misread as real ones. Valid values are the keys of `CHANNEL_FILTERS` in
-  `dashboard.js` — the query value is looked up there, never interpolated. `live` is an allowlist
+  `src/dashboard/data.js` — the query value is looked up there, never interpolated. `live` is an allowlist
   rather than "not debug" so a channel added to the app, or an `unknown` from a payload that didn't
   come from a real build, can't land in the live numbers before it's deliberately let in.
 - **The capacity/writes chart is deliberately unfiltered** — debug writes bill against the free-plan
@@ -84,13 +84,17 @@ in development instead of only being proven after release.
 
 - `src/index.js` — ingestion (`POST /`, bearer `API_SECRET`) + dashboard auth.
 - `src/links.js` — 302 redirects on `unwatched.octabits.net` for links the app ships with (`/beta` → TestFlight), so a target can change without an app update. That host serves nothing else.
-- `src/dashboard.js` — `handleDashboardData(env, channel)` (SQL queries) + `DASHBOARD_HTML` (inline UI).
+- `src/dashboard/` — the dashboard, server side:
+  - `data.js` — `handleDashboardData(env, channel)` (the SQL queries and payload) and `handleRecentData`.
+  - `aggregate.js` — turns raw rows into tallies and trends (latest snapshot per user, buckets, per-period trends).
+  - `settings.js` — `BOOL_SETTINGS` / `VALUE_SETTINGS`; `constants.js` — windows and limits; `auth.js` — login cookie.
+  - `page/` — the page itself: `dashboard.html`, `dashboard.css`, `dashboard.client.js`. `page.js` inlines the CSS and script into the HTML's marker comments, so it still ships as one response. They're imported as text (the `[[rules]]` in `wrangler.toml`), so they're ordinary files: no escaping, backticks are fine.
 - `src/reports/` — issue reports from the app's "Report an Issue" sheet (`POST /report`, multipart, same bearer + its own `REPORT_LIMITER`). Deliberately *not* analytics: the user writes the text, opts into the log and up to five image or video attachments, and may leave a reply address. Stored in the `REPORTS` KV namespace for 180 days (25 MiB per value, hence the app's recording compression), listed at `/dashboard/reports`, and announced by email via the `REPORT_MAIL` send binding — free only because it goes to a verified Email Routing destination on octabits.net.
 - Auth: HTTP Basic, upgraded to a 30-day rolling `HttpOnly; Secure` cookie (`dashboard_auth`, SHA-256 of the password).
 - Analytics Engine SQL is a ClickHouse subset. Confirmed available: `count(DISTINCT …)`, `toStartOfDay`, `toStartOfInterval`, `now()`. No `uniq()`.
 - **Count with `sum(_sample_interval)`, never `count()`.** Analytics Engine samples busy indexes at write time (seen from 2.0's launch: one stored `Player.Start` row standing for 2–3), so `count()` undercounts exactly the events that matter most. `count(DISTINCT blob3)` can't be corrected the same way — user counts are lower bounds.
 - Ingest stores `params` with sorted keys: Swift dictionaries encode in random order, and every `GROUP BY params` would otherwise split one combination into several rows.
-- `BOOL_SETTINGS` and `VALUE_SETTINGS` in `dashboard.js` mirror the app's settings **manually** — keep both in sync when a setting is added, renamed or removed, *including its default*. A snapshot only carries settings moved off their default, so the dashboard folds every absent user onto the default side: a wrong default there flips the majority of a chart rather than losing a row. `VALUE_SETTINGS` raw values are Swift `rawValue`s, so reordering an enum without explicit raw values silently rewrites the meaning of historical rows.
+- `BOOL_SETTINGS` and `VALUE_SETTINGS` in `src/dashboard/settings.js` mirror the app's settings **manually** — keep both in sync when a setting is added, renamed or removed, *including its default*. A snapshot only carries settings moved off their default, so the dashboard folds every absent user onto the default side: a wrong default there flips the majority of a chart rather than losing a row. `VALUE_SETTINGS` raw values are Swift `rawValue`s, so reordering an enum without explicit raw values silently rewrites the meaning of historical rows.
 - Settings cards report two separate things on purpose: the **distribution** (default-folded, "where people are") and **changed by N** ("how many went and moved it"). A setting that's 95% on because it ships on and one that's 95% on because people turn it on are the same donut and opposite decisions.
 - The **Device** and **OS** pies show only the type — device category (`device`: iPhone, iPad, Vision Pro, …) and OS major version (iOS 26 and iPadOS 26 are the same release, so both are "OS 26"). Picking a type in the legend shows its individual entries as bars (`renderGroupedPie`): hardware models, or exact platform + version. `DEVICE_MODEL_NAMES` maps the raw `deviceModel` identifier to a marketing name in the dashboard, so a new device needs a worker deploy, not an app update; an unmapped identifier still charts under its raw id, and a snapshot from before `deviceModel` shipped lands under "Unknown model".
 - `VALUE_SETTING_COLORS` gives a value setting's bars the colour the value stands for (`themeColor` → the app's `ThemeColor`, as iOS draws it in dark mode). Keep it in sync with `ThemeColor.swift`.
@@ -105,19 +109,7 @@ npm run dev                    # local (note: Secure cookie won't persist over h
 npx wrangler deploy --dry-run  # bundle without shipping — the only real syntax check
 ```
 
-`node --check src/dashboard.js` is **not** enough: the whole UI lives inside the `DASHBOARD_HTML`
-template literal, so a stray backtick in a comment there closes the string early and the remainder
-can still parse as valid JS. Only esbuild (what `wrangler deploy` runs) rejects it. Never use
-backticks inside `DASHBOARD_HTML` — quote identifiers with `'` in comments there.
-
-A second, sneakier gotcha: **a single backslash inside `DASHBOARD_HTML` gets silently eaten.**
-`\s`, `\d`, `\.` aren't recognized string/template-literal escapes, so when the outer
-`DASHBOARD_HTML` literal is evaluated, `\s` becomes a literal `s`, `\d` becomes `d`, etc. — no
-error, no warning, and `wrangler deploy --dry-run` doesn't catch it since esbuild only checks that
-the outer literal is syntactically valid, not what it evaluates to. This silently breaks any regex
-written directly in the client-side script (e.g. `/^(.*?)\s*(\d+)/` becomes `/^(.*?)s*(d+)/` at
-runtime — matching literal "s"/"d" characters instead of whitespace/digits). Always double the
-backslash for a regex meta-character inside `DASHBOARD_HTML` — write `\\s`, `\\d`, `\\.` — so a
-single backslash survives into the actual browser-side regex. To verify a client-side regex
-actually does what you think, don't trust a read-through: `node -e "import('./src/dashboard.js").then(m => console.log(m.DASHBOARD_HTML))"` prints the real evaluated string, or extract it to a file
-and grep for the regex to see what backslashes actually survived.
+`dashboard.client.js` runs in the browser, not the Worker, so the dry run only checks it as a
+text file. Check it parses with `node -e "new Function(require('fs').readFileSync('src/dashboard/page/dashboard.client.js', 'utf8'))"`,
+and open the page before deploying. `node` can't import `page.js` (no text-module loader); the
+other dashboard modules import fine for a quick local run.
