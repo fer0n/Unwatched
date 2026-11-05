@@ -11,6 +11,7 @@ extension OnboardingViewModel {
     private static let searchDebounce: Duration = .milliseconds(400)
     /// Podcasts are a supplement to channel search, not its focus, so their share of the list is capped
     private static let podcastResultLimit = 8
+    private static let innerTube = InnerTubeAPI()
 
     /// Debounced so typing doesn't fire a request per keystroke. `isSearching` flips right away,
     /// hiding the previous query's results for the whole debounce + fetch.
@@ -68,7 +69,7 @@ extension OnboardingViewModel {
     /// failure on both sides reads as `.failed`
     private static func searchChannels(_ query: String) async -> [YoutubeChannelSearchResult]? {
         do {
-            return try await YoutubeChannelSearch.search(query)
+            return try await innerTube.searchChannels(query: query)
         } catch {
             Log.error("channelSearch failed: \(error)")
             if !Task.isCancelled {
