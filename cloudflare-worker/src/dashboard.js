@@ -140,6 +140,10 @@ const SETTINGS_VALUE_PREFIX = "Unwatched.Setting.";
 const COUNT_BUCKET_ORDER = ["0", "1-4", "5-9", "10-24", "25-49", "50-99", "100-499", "500-999", "1000+"];
 const RAW_ROW_LIMIT = 20000;
 const SNAPSHOT_WINDOW_DAYS = 30;
+const HISTORY_WINDOW_DAYS = 90;
+const WEEKLY_PERIOD_DAYS = 7;
+const FORTNIGHTLY_PERIOD_DAYS = 14;
+const DAY_MS = 24 * 60 * 60 * 1000;
 // Window for per-event engagement metrics (counts, per-user rates, funnels).
 const TREND_WINDOW_DAYS = 7;
 // Window for the capacity chart — enough history to spot a trend toward the free-plan cap.
@@ -290,7 +294,66 @@ function tallyDevices(rows) {
   return counts;
 }
 
-// Count distinct users per value of a free-form (but low-cardinality) param.
+function serverTime(at) {
+  return Date.parse(String(at).replace(" ", "T") + "Z");
+}
+
+// Binned by server time, like the SQL-side trends; 'ts' only picks the latest row.
+function latestPerUserPerPeriod(rows, periodDays) {
+  const periodMs = periodDays * DAY_MS;
+  const periods = new Map();
+  for (const row of rows) {
+    if (!row.userId || row.userId === "unknown") continue;
+    const at = serverTime(row.at);
+    if (!Number.isFinite(at)) continue;
+    const start = Math.floor(at / periodMs) * periodMs;
+    const users = periods.get(start) ?? new Map();
+    periods.set(start, users);
+    const existing = users.get(row.userId);
+    if (!existing || Number(row.ts) > Number(existing.ts)) users.set(row.userId, row);
+  }
+  return [...periods.keys()].sort((a, b) => a - b).map((start) => ({
+    day: new Date(start).toISOString().slice(0, 10),
+    rows: [...periods.get(start).values()],
+  }));
+}
+
+function platformTrend(periods) {
+  return periods.map(({ day, rows }) => ({
+    day,
+    devices: Object.fromEntries(
+      Object.entries(tallyDevices(rows)).map(([type, models]) => [type, Object.values(models).reduce((a, b) => a + b, 0)])
+    ),
+    os: tallyParam(rows, "os"),
+  }));
+}
+
+// bool[key][i] is the 'on' count in period i.
+function settingsTrend(periods) {
+  const bool = {}, values = {};
+  for (const [key] of BOOL_SETTINGS) bool[key] = [];
+  for (const [key] of VALUE_SETTINGS) values[key] = [];
+  const totals = [];
+  for (const { rows } of periods) {
+    const b = tallySettings(rows), v = tallyValueSettings(rows);
+    totals.push(rows.length);
+    for (const key in bool) bool[key].push(b[key].on);
+    for (const key in values) values[key].push(v[key].values);
+  }
+  return { days: periods.map((p) => p.day), totals, bool, values };
+}
+
+function bucketTrend(rows, paramKey, name) {
+  const periods = {};
+  for (const row of rows) {
+    if (name && row.name !== name) continue;
+    const bucket = bucketCount(parseParams(row.params)[paramKey]);
+    if (!bucket) continue;
+    const counts = (periods[row.period] ||= {});
+    counts[bucket] = (counts[bucket] || 0) + (Number(row.users) || 0);
+  }
+  return Object.keys(periods).sort().map((day) => ({ day, counts: periods[day] }));
+}
 
 // 'browser' Player.Start is the Play Now button, already counted as Browser.PlayNow.
 const YOUTUBE_PAGE_EVENTS = [
@@ -332,6 +395,7 @@ function tallySearchUsage(rows, versionUsers) {
   };
 }
 
+// Count distinct users per value of a free-form (but low-cardinality) param.
 function tallyParam(rows, paramKey) {
   const counts = {};
   for (const row of rows) {
@@ -412,6 +476,11 @@ const QUERY_LABELS = [
   "app versions",
   "search usage",
   "search usage versions",
+  "weekly active users trend",
+  "monthly active users trend",
+  "app versions trend",
+  "queue/inbox trend",
+  "subscription trend",
 ];
 
 export async function handleDashboardData(env, channel) {
@@ -438,10 +507,9 @@ export async function handleDashboardData(env, channel) {
         env,
         `SELECT count(DISTINCT blob3) AS uniqueUsers FROM unwatched_analytics_v3 WHERE ${ch} AND timestamp > NOW() - INTERVAL '30' DAY AND blob3 != 'unknown'`
       ),
-      // Daily active users over the trend window (one point per day).
       queryAnalytics(
         env,
-        `SELECT toStartOfDay(timestamp) AS day, count(DISTINCT blob3) AS users FROM unwatched_analytics_v3 WHERE ${ch} AND timestamp > NOW() - INTERVAL '${TREND_WINDOW_DAYS}' DAY AND blob3 != 'unknown' GROUP BY day ORDER BY day`
+        `SELECT toStartOfDay(timestamp) AS day, count(DISTINCT blob3) AS users FROM unwatched_analytics_v3 WHERE ${ch} AND timestamp > NOW() - INTERVAL '${HISTORY_WINDOW_DAYS}' DAY AND blob3 != 'unknown' GROUP BY day ORDER BY day`
       ),
       // Total event volume per day over the trend window.
       queryAnalytics(
@@ -462,7 +530,7 @@ export async function handleDashboardData(env, channel) {
       // ORDER BY only resolves selected columns, hence the alias
       queryAnalytics(
         env,
-        `SELECT blob2 AS params, blob3 AS userId, double1 AS ts FROM unwatched_analytics_v3 WHERE ${ch} AND blob1 = 'SettingsSnapshot' AND timestamp > NOW() - INTERVAL '${SNAPSHOT_WINDOW_DAYS}' DAY ORDER BY ts DESC LIMIT ${RAW_ROW_LIMIT}`
+        `SELECT blob2 AS params, blob3 AS userId, double1 AS ts, timestamp AS at FROM unwatched_analytics_v3 WHERE ${ch} AND blob1 = 'SettingsSnapshot' AND timestamp > NOW() - INTERVAL '${HISTORY_WINDOW_DAYS}' DAY ORDER BY ts DESC LIMIT ${RAW_ROW_LIMIT}`
       ),
       queryAnalytics(
         env,
@@ -499,6 +567,26 @@ export async function handleDashboardData(env, channel) {
         env,
         `SELECT blob5 AS version, count(DISTINCT blob3) AS users FROM unwatched_analytics_v3 WHERE ${ch} AND timestamp > NOW() - INTERVAL '${SEARCH_WINDOW_DAYS}' DAY AND blob3 != 'unknown' GROUP BY version ORDER BY users DESC LIMIT 8`
       ),
+      queryAnalytics(
+        env,
+        `SELECT toStartOfInterval(timestamp, INTERVAL '${WEEKLY_PERIOD_DAYS}' DAY) AS day, count(DISTINCT blob3) AS users FROM unwatched_analytics_v3 WHERE ${ch} AND timestamp > NOW() - INTERVAL '${HISTORY_WINDOW_DAYS}' DAY AND blob3 != 'unknown' GROUP BY day ORDER BY day`
+      ),
+      queryAnalytics(
+        env,
+        `SELECT toStartOfMonth(timestamp) AS day, count(DISTINCT blob3) AS users FROM unwatched_analytics_v3 WHERE ${ch} AND timestamp > NOW() - INTERVAL '${HISTORY_WINDOW_DAYS}' DAY AND blob3 != 'unknown' GROUP BY day ORDER BY day`
+      ),
+      queryAnalytics(
+        env,
+        `SELECT toStartOfDay(timestamp) AS day, blob5 AS version, count(DISTINCT blob3) AS users FROM unwatched_analytics_v3 WHERE ${ch} AND timestamp > NOW() - INTERVAL '${HISTORY_WINDOW_DAYS}' DAY AND blob3 != 'unknown' GROUP BY day, version ORDER BY day DESC LIMIT ${RAW_ROW_LIMIT}`
+      ),
+      queryAnalytics(
+        env,
+        `SELECT toStartOfInterval(timestamp, INTERVAL '${WEEKLY_PERIOD_DAYS}' DAY) AS period, blob1 AS name, blob2 AS params, count(DISTINCT blob3) AS users FROM unwatched_analytics_v3 WHERE ${ch} AND blob1 IN ('Queue.Count', 'Inbox.Count') AND timestamp > NOW() - INTERVAL '${HISTORY_WINDOW_DAYS}' DAY AND blob3 != 'unknown' GROUP BY period, name, params ORDER BY period DESC LIMIT ${RAW_ROW_LIMIT}`
+      ),
+      queryAnalytics(
+        env,
+        `SELECT toStartOfInterval(timestamp, INTERVAL '${FORTNIGHTLY_PERIOD_DAYS}' DAY) AS period, blob2 AS params, count(DISTINCT blob3) AS users FROM unwatched_analytics_v3 WHERE ${ch} AND blob1 = 'SubscriptionCount' AND timestamp > NOW() - INTERVAL '${HISTORY_WINDOW_DAYS}' DAY AND blob3 != 'unknown' GROUP BY period, params ORDER BY period DESC LIMIT ${RAW_ROW_LIMIT}`
+      ),
     ]);
 
     const failures = [];
@@ -520,6 +608,11 @@ export async function handleDashboardData(env, channel) {
       versionsRaw,
       searchUsageRaw,
       searchVersionsRaw,
+      wauTrend,
+      mauTrend,
+      versionsTrendRaw,
+      queueInboxTrendRaw,
+      subscriptionTrendRaw,
     ] = settled.map((result, index) => {
       if (result.status === "fulfilled") return result.value;
       failures.push(`${QUERY_LABELS[index] ?? `query ${index}`}: ${result.reason}`);
@@ -528,7 +621,10 @@ export async function handleDashboardData(env, channel) {
 
     // Every row here has one userId per app instance, never anything identifying
     // (see AnalyticsEvent.anonymousUserId) — de-duped down to one snapshot per user.
-    const latestSettings = latestPerUser(settingsRaw.data);
+    const snapshotCutoff = Date.now() - SNAPSHOT_WINDOW_DAYS * DAY_MS;
+    const latestSettings = latestPerUser(settingsRaw.data.filter((r) => serverTime(r.at) > snapshotCutoff));
+    const settingsTruncated = settingsRaw.data.length >= RAW_ROW_LIMIT;
+    const settingsPeriods = latestPerUserPerPeriod(settingsRaw.data, FORTNIGHTLY_PERIOD_DAYS);
     const queueInboxRows = queueInboxRaw.data;
     const latestQueue = latestPerUser(queueInboxRows.filter((r) => r.name === "Queue.Count"));
     const latestInbox = latestPerUser(queueInboxRows.filter((r) => r.name === "Inbox.Count"));
@@ -552,7 +648,12 @@ export async function handleDashboardData(env, channel) {
         trendWindowDays: TREND_WINDOW_DAYS,
         recent: recent.data,
         activeUsers,
-        activeUsersTrend: dauTrend.data,
+        activeUsersTrend: {
+          windowDays: HISTORY_WINDOW_DAYS,
+          daily: dauTrend.data,
+          weekly: wauTrend.data,
+          monthly: mauTrend.data,
+        },
         eventTrend: eventTrend.data,
         writes: {
           windowDays: CAPACITY_WINDOW_DAYS,
@@ -564,11 +665,23 @@ export async function handleDashboardData(env, channel) {
           windowDays: SNAPSHOT_WINDOW_DAYS,
           totals: tallySettings(latestSettings),
           values: tallyValueSettings(latestSettings),
+          trendWindowDays: HISTORY_WINDOW_DAYS,
+          trendPeriodDays: FORTNIGHTLY_PERIOD_DAYS,
+          trend: settingsTrend(settingsPeriods),
+          trendTruncated: settingsTruncated,
         },
         versions: versionsRaw.data.map((r) => ({
           version: r.version || "unknown",
           users: Number(r.users) || 0,
         })),
+        versionsTrend: {
+          windowDays: HISTORY_WINDOW_DAYS,
+          rows: versionsTrendRaw.data.map((r) => ({
+            day: r.day,
+            version: r.version || "unknown",
+            users: Number(r.users) || 0,
+          })),
+        },
         // Device family + OS version per user, carried on the settings snapshot.
         platform: {
           windowDays: SNAPSHOT_WINDOW_DAYS,
@@ -577,11 +690,19 @@ export async function handleDashboardData(env, channel) {
           os: tallyParam(latestSettings, "os"),
           // Only present for users whose watch has reported in — see WatchRemoteCommand.reportSyncMode.
           watchFullSync: tallyParam(latestSettings, "watchFullSync"),
+          trendWindowDays: HISTORY_WINDOW_DAYS,
+          trendPeriodDays: FORTNIGHTLY_PERIOD_DAYS,
+          trend: platformTrend(settingsPeriods),
+          trendTruncated: settingsTruncated,
         },
         queueInbox: {
           windowDays: SNAPSHOT_WINDOW_DAYS,
           queue: { sampleSize: latestQueue.length, buckets: tallyBuckets(latestQueue, "Queue.Count.Value") },
           inbox: { sampleSize: latestInbox.length, buckets: tallyBuckets(latestInbox, "Inbox.Count.Value") },
+          trendWindowDays: HISTORY_WINDOW_DAYS,
+          trendPeriodDays: WEEKLY_PERIOD_DAYS,
+          queueTrend: bucketTrend(queueInboxTrendRaw.data, "Queue.Count.Value", "Queue.Count"),
+          inboxTrend: bucketTrend(queueInboxTrendRaw.data, "Inbox.Count.Value", "Inbox.Count"),
         },
         subscriptions: {
           windowDays: SNAPSHOT_WINDOW_DAYS,
@@ -589,6 +710,10 @@ export async function handleDashboardData(env, channel) {
           buckets: tallyRawBuckets(latestSubs, "SubscriptionCount.Value"),
           podcastSampleSize: latestSubs.filter((r) => parseParams(r.params)["PodcastCount.Value"] != null).length,
           podcastBuckets: tallyRawBuckets(latestSubs, "PodcastCount.Value"),
+          trendWindowDays: HISTORY_WINDOW_DAYS,
+          trendPeriodDays: FORTNIGHTLY_PERIOD_DAYS,
+          trend: bucketTrend(subscriptionTrendRaw.data, "SubscriptionCount.Value"),
+          podcastTrend: bucketTrend(subscriptionTrendRaw.data, "PodcastCount.Value"),
         },
         errors: {
           windowDays: SNAPSHOT_WINDOW_DAYS,
@@ -621,6 +746,8 @@ export const DASHBOARD_HTML = `<!DOCTYPE html>
 <title>Unwatched Analytics</title>
 <style>
   * { box-sizing: border-box; }
+  /* Beats display set by .grid-2 and friends. */
+  [hidden] { display: none !important; }
   body {
     font-family: -apple-system, sans-serif;
     margin: 0;
@@ -716,6 +843,11 @@ export const DASHBOARD_HTML = `<!DOCTYPE html>
   .swatch { width: 8px; height: 8px; border-radius: 2px; flex: none; }
 
   .settings-grid .setting-card.hidden { display: none; }
+  #settingValuesTrend .card.hidden { display: none; }
+  .setting-card .sparkline { display: block; width: 100%; height: 44px; margin: 0.3rem 0 0.2rem; }
+  .setting-now { font-size: 1.05rem; font-weight: 600; }
+  .setting-meta b.up { color: #4ade80; }
+  .setting-meta b.down { color: #fb923c; }
   #settingValues .card.hidden { display: none; }
   #recent tr.hidden { display: none; }
   .toggle-btn {
@@ -724,7 +856,6 @@ export const DASHBOARD_HTML = `<!DOCTYPE html>
     color: #ccc; font-size: 0.78rem; cursor: pointer;
   }
   .toggle-btn:hover { background: #242424; }
-  .toggle-btn[hidden] { display: none; }
 
   .pie-chart { display: flex; align-items: center; gap: 1.25rem; flex-wrap: wrap; background: #1b1b1b; border: 1px solid #2a2a2a; border-radius: 10px; padding: 1rem; }
   .pie-chart svg { flex: none; }
@@ -741,6 +872,17 @@ export const DASHBOARD_HTML = `<!DOCTYPE html>
   .pie-pick:hover { background: #242424; }
   .pie-pick.selected { background: #242424; border-color: #3a3a3a; }
   .pie-detail { margin-top: 0.5rem; }
+  .pie-pick.off { opacity: 0.4; }
+  .trend-legend { margin-top: 0.6rem; }
+
+  .view-switch { display: inline-flex; border: 1px solid #2a2a2a; border-radius: 7px; overflow: hidden; font-weight: 400; }
+  .view-switch button {
+    background: #1b1b1b; border: none; color: #999; cursor: pointer;
+    font-size: 0.72rem; padding: 0.22rem 0.55rem;
+  }
+  .view-switch button + button { border-left: 1px solid #2a2a2a; }
+  .view-switch button:hover { background: #242424; }
+  .view-switch button.selected { background: #2b2b2b; color: #eee; }
 
   .card { background: #1b1b1b; border: 1px solid #2a2a2a; border-radius: 10px; padding: 1rem; }
   .card svg { display: block; width: 100%; height: auto; }
@@ -796,7 +938,8 @@ export const DASHBOARD_HTML = `<!DOCTYPE html>
 <h2>Active users (anonymous, on-device id only)</h2>
 <div class="stat-cards" id="activeUsers"></div>
 
-<h2>Active users per day <span id="dauWindow"></span></h2>
+<h2 class="section-head">Active users <span id="dauWindow"></span> <span class="view-switch" id="dauSwitch"></span></h2>
+<div class="hint" id="dauHint"></div>
 <div class="card" id="dauTrend"></div>
 
 <h2>Event volume per day <span id="eventWindow"></span></h2>
@@ -812,8 +955,9 @@ export const DASHBOARD_HTML = `<!DOCTYPE html>
 </div>
 <button id="recentToggle" class="toggle-btn" hidden></button>
 
-<h2>Devices &amp; OS</h2>
+<h2 class="section-head">Devices &amp; OS <span class="view-switch" id="platformSwitch"></span></h2>
 <div class="hint" id="platformHint"></div>
+<div id="platformNow">
 <div class="hint">Pick a type to see its individual devices or versions.</div>
 <div class="grid-2">
   <div>
@@ -827,13 +971,19 @@ export const DASHBOARD_HTML = `<!DOCTYPE html>
     <div class="pie-detail" id="osDetail" hidden></div>
   </div>
 </div>
+</div>
+<div class="grid-2" id="platformTrend" hidden>
+  <div class="card" id="deviceTrend"></div>
+  <div class="card" id="osTrend"></div>
+</div>
 <h2>Apple Watch</h2>
 <div class="hint" id="watchFullSyncHint"></div>
 <div class="setting-card" id="watchFullSyncCard"></div>
 
-<h2>App version <span id="versionWindow"></span></h2>
+<h2 class="section-head">App version <span id="versionWindow"></span> <span class="view-switch" id="versionSwitch"></span></h2>
 <div class="hint" id="versionHint"></div>
 <div class="pie-chart" id="versionPie"></div>
+<div class="card" id="versionTrend" hidden></div>
 
 <h2>Engagement <span id="engagementWindow"></span></h2>
 <div class="hint">Per-user = events ÷ weekly active users. Adoption = share of weekly active users who did it at least once.</div>
@@ -867,40 +1017,57 @@ export const DASHBOARD_HTML = `<!DOCTYPE html>
 <div class="hint">Attempts by outcome, for the on-device transcript, alignment and AI-chapter runs.</div>
 <div class="grid-2" id="generation"></div>
 
-<h2>Settings adoption</h2>
+<h2 class="section-head">Settings adoption <span class="view-switch" id="settingsSwitch"></span></h2>
 <div class="hint" id="settingsHint"></div>
+<div id="settingsNow">
 <div class="settings-grid" id="settingsGrid"></div>
 <button id="settingsToggle" class="toggle-btn" hidden></button>
+</div>
+<div id="settingsTrendView" hidden>
+<div class="settings-grid" id="settingsTrendGrid"></div>
+<button id="settingsTrendToggle" class="toggle-btn" hidden></button>
+</div>
 
-<h2>Setting values</h2>
+<h2 class="section-head">Setting values <span class="view-switch" id="settingValuesSwitch"></span></h2>
 <div class="hint" id="settingValuesHint"></div>
+<div id="settingValuesNow">
 <div class="grid-2" id="settingValues"></div>
 <button id="settingValuesToggle" class="toggle-btn" hidden></button>
+</div>
+<div id="settingValuesTrendView" hidden>
+<div class="grid-2" id="settingValuesTrend"></div>
+<button id="settingValuesTrendToggle" class="toggle-btn" hidden></button>
+</div>
 
-<div class="grid-2">
+<h2 class="section-head">Queue, inbox &amp; subscriptions <span class="view-switch" id="librarySwitch"></span></h2>
+<div class="hint" id="libraryTrendHint" hidden></div>
+<div class="grid-2" id="libraryNow">
   <div>
-    <h2>Queue size</h2>
+    <div class="chart-meta"><span><b>Queue size</b></span></div>
     <div class="hint" id="queueHint"></div>
     <div class="card" id="queueBars"></div>
   </div>
   <div>
-    <h2>Inbox size</h2>
+    <div class="chart-meta"><span><b>Inbox size</b></span></div>
     <div class="hint" id="inboxHint"></div>
     <div class="card" id="inboxBars"></div>
   </div>
-</div>
-
-<div class="grid-2">
   <div>
-    <h2>Subscription count</h2>
+    <div class="chart-meta"><span><b>Subscription count</b></span></div>
     <div class="hint" id="subsHint"></div>
     <div class="card" id="subsBars"></div>
   </div>
   <div>
-    <h2>Podcast subscriptions</h2>
+    <div class="chart-meta"><span><b>Podcast subscriptions</b></span></div>
     <div class="hint" id="podcastSubsHint"></div>
     <div class="card" id="podcastSubsBars"></div>
   </div>
+</div>
+<div class="grid-2" id="libraryTrend" hidden>
+  <div class="card" id="queueTrend"></div>
+  <div class="card" id="inboxTrend"></div>
+  <div class="card" id="subsTrend"></div>
+  <div class="card" id="podcastSubsTrend"></div>
 </div>
 
 <h2>Errors <span id="errorWindow"></span></h2>
@@ -1222,18 +1389,24 @@ function parseOs(label) {
 // Grouped by major version alone, not platform + major: iOS 26 and iPadOS 26 are the
 // same OS release, and what we want to eyeball here is "who is on 26 yet", not "who
 // is on an iPad" — that's the device pie's job.
+function osGroup(label) {
+  const p = parseOs(label);
+  return p.major ? 'OS ' + p.major : String(label);
+}
+
+function byOsMajorDesc(a, b) {
+  const major = function (g) { return parseInt(String(g).replace('OS ', ''), 10) || 0; };
+  return major(b) - major(a) || String(a).localeCompare(String(b));
+}
+
 function renderOsPie(el, detailEl, osCounts) {
   const groups = {};
   Object.entries(osCounts).forEach(function (e) {
-    const p = parseOs(e[0]);
-    const g = p.major ? 'OS ' + p.major : String(e[0]);
+    const g = osGroup(e[0]);
     groups[g] = groups[g] || {};
     groups[g][e[0]] = e[1];
   });
-  const majorOf = function (g) { return parseInt(String(g).replace('OS ', ''), 10) || 0; };
-  renderGroupedPie(el, detailEl, groups, function (a, b) {
-    return majorOf(b) - majorOf(a) || a.localeCompare(b);
-  }, function (a, b) {
+  renderGroupedPie(el, detailEl, groups, byOsMajorDesc, function (a, b) {
     const pa = parseOs(a[0]), pb = parseOs(b[0]);
     return pa.platform.localeCompare(pb.platform) || pb.minor - pa.minor;
   });
@@ -1353,7 +1526,8 @@ function lineChartSVG(series, valueKey, color, limit, pxWidth) {
     limitLine + dot + xlabels + '</svg>';
 }
 
-function renderLineChart(el, series, valueKey, color, limit) {
+function renderLineChart(el, series, valueKey, color, limit, per) {
+  per = per || 'day';
   series = series || [];
   const values = series.map(function (r) { return Number(r[valueKey]) || 0; });
   const total = values.reduce(function (a, b) { return a + b; }, 0);
@@ -1363,8 +1537,8 @@ function renderLineChart(el, series, valueKey, color, limit) {
   const right = limit
     ? 'peak <b>' + fmtNum(peak) + '</b> · <b>' + Math.round(peak / limit * 100) + '%</b> of limit'
     : 'peak <b>' + fmtNum(peak) + '</b>';
-  el.innerHTML = '<div class="chart-meta"><span>avg <b>' + fmtNum(avg) + '</b>/day</span><span>' + right + '</span></div>' +
-    lineChartSVG(series, valueKey, color, limit, el.clientWidth ? Math.max(280, el.clientWidth - 32) : 0);
+  el.innerHTML = '<div class="chart-meta"><span>avg <b>' + fmtNum(avg) + '</b>/' + per + '</span><span>' + right + '</span></div>' +
+    lineChartSVG(series, valueKey, color, limit, chartWidth(el));
 }
 
 const FUNNELS = [
@@ -1484,7 +1658,11 @@ const SEARCH_USAGE_SERIES = [
   ['youtubePage', 'YouTube page', '#fbbf24'],
 ];
 
-function multiLineChartSVG(series, lines, pxWidth) {
+const DENSE_SERIES_POINTS = 24;
+
+function multiLineChartSVG(series, lines, pxWidth, opts) {
+  opts = opts || {};
+  const fmt = opts.formatY || fmtNum;
   if (series.length === 0) return '<div class="hint">No data yet.</div>';
   const W = pxWidth || 640, H = Math.max(140, Math.round(W * 0.28)), padL = 34, padR = 12, padT = 12, padB = 22;
   const max = Math.max(1, Math.max.apply(null, series.flatMap(function (row) {
@@ -1497,12 +1675,19 @@ function multiLineChartSVG(series, lines, pxWidth) {
   [0, max / 2, max].forEach(function (v) {
     const gy = y(v);
     svg += '<line x1="' + padL + '" y1="' + gy.toFixed(1) + '" x2="' + (W - padR) + '" y2="' + gy.toFixed(1) + '" stroke="#2a2a2a"/>' +
-      '<text x="' + (padL - 4) + '" y="' + (gy + 3).toFixed(1) + '" text-anchor="end" font-size="10" fill="#777">' + fmtNum(v) + '</text>';
+      '<text x="' + (padL - 4) + '" y="' + (gy + 3).toFixed(1) + '" text-anchor="end" font-size="10" fill="#777">' + fmt(v) + '</text>';
   });
   lines.forEach(function (l) {
     let d = '';
     series.forEach(function (row, i) { d += (i === 0 ? 'M' : 'L') + x(i).toFixed(1) + ' ' + y(Number(row[l[0]]) || 0).toFixed(1) + ' '; });
     svg += '<path d="' + d + '" fill="none" stroke="' + l[2] + '" stroke-width="2" stroke-linejoin="round" stroke-linecap="round"/>';
+    if (opts.pointTitle) {
+      const dot = series.length <= DENSE_SERIES_POINTS ? 'r="2.5"' : 'r="4" fill-opacity="0"';
+      series.forEach(function (row, i) {
+        svg += '<circle cx="' + x(i).toFixed(1) + '" cy="' + y(Number(row[l[0]]) || 0).toFixed(1) + '" ' + dot + ' fill="' + l[2] + '">' +
+          '<title>' + opts.pointTitle(row, l) + '</title></circle>';
+      });
+    }
   });
   const idxs = series.length === 1 ? [0] : [0, Math.floor((series.length - 1) / 2), series.length - 1];
   idxs.forEach(function (i, k) {
@@ -1512,10 +1697,259 @@ function multiLineChartSVG(series, lines, pxWidth) {
   return '<svg viewBox="0 0 ' + W + ' ' + H + '" xmlns="http://www.w3.org/2000/svg">' + svg + '</svg>';
 }
 
+const TREND_COLORS = ['#3b82f6', '#4ade80', '#fbbf24', '#f87171', '#a78bfa', '#22d3ee', '#fb923c', '#f472b6'];
+const OTHER_COLOR = '#666';
+const TREND_MAX_SERIES = 7;
+const MIN_RANKING_SAMPLE = 5;
+
+function esc(value) {
+  return String(value).replace(/[&<>"']/g, function (c) {
+    return { '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;' }[c];
+  });
+}
+
+function truncatedNote(truncated) {
+  return truncated ? ' Hit the row limit: the oldest periods are missing users.' : '';
+}
+
+function chartWidth(el) {
+  return el.clientWidth ? Math.max(280, el.clientWidth - 32) : 0;
+}
+
+function readViewPref(key) {
+  try { return localStorage.getItem('dashboardView.' + key); } catch (e) { return null; }
+}
+function writeViewPref(key, value) {
+  try { localStorage.setItem('dashboardView.' + key, value); } catch (e) {}
+}
+
+// renderOnce waits until its view is visible, so charts measure their real width.
+function setupViewSwitch(key, switchEl, views, defaultView) {
+  let current = readViewPref(key);
+  if (!views.some(function (v) { return v.id === current; })) current = defaultView || views[0].id;
+  const rendered = {};
+  const apply = function () {
+    switchEl.innerHTML = views.map(function (v) {
+      return '<button type="button" data-view="' + v.id + '"' + (v.id === current ? ' class="selected"' : '') + '>' + v.label + '</button>';
+    }).join('');
+    switchEl.querySelectorAll('button').forEach(function (btn) {
+      btn.onclick = function () {
+        current = btn.dataset.view;
+        writeViewPref(key, current);
+        apply();
+      };
+    });
+    const view = views.find(function (v) { return v.id === current; });
+    views.forEach(function (v) { v.elements.forEach(function (el) { el.hidden = true; }); });
+    view.elements.forEach(function (el) { el.hidden = false; });
+    if (view.onShow) view.onShow();
+    if (view.renderOnce && !rendered[view.id]) {
+      rendered[view.id] = true;
+      view.renderOnce();
+    }
+  };
+  apply();
+}
+
+function pointTotal(point) {
+  return Object.values(point.counts).reduce(function (a, b) { return a + b; }, 0);
+}
+
+// Ranked by peak share so a build just rolling out still gets a line.
+function foldTrend(points, maxSeries, order) {
+  const ranked = points.filter(function (p) { return pointTotal(p) >= MIN_RANKING_SAMPLE; });
+  const peak = {};
+  (ranked.length ? ranked : points).forEach(function (p) {
+    const total = pointTotal(p) || 1;
+    Object.keys(p.counts).forEach(function (k) { peak[k] = Math.max(peak[k] || 0, p.counts[k] / total); });
+  });
+  points.forEach(function (p) { Object.keys(p.counts).forEach(function (k) { peak[k] = peak[k] || 0; }); });
+  const byPeak = Object.keys(peak).sort(function (a, b) { return peak[b] - peak[a]; });
+  const keep = byPeak.slice(0, maxSeries).sort(order || function (a, b) { return peak[b] - peak[a]; });
+  const kept = {};
+  keep.forEach(function (k) { kept[k] = true; });
+  const folded = points.map(function (p) {
+    const counts = {};
+    Object.keys(p.counts).forEach(function (k) {
+      const target = kept[k] ? k : 'Other';
+      counts[target] = (counts[target] || 0) + p.counts[k];
+    });
+    return { day: p.day, counts: counts };
+  });
+  const series = keep.map(function (k, i) { return { key: k, label: k, color: TREND_COLORS[i % TREND_COLORS.length] }; });
+  if (byPeak.length > keep.length) series.push({ key: 'Other', label: 'Other', color: OTHER_COLOR });
+  return { points: folded, series: series };
+}
+
+// Shares, not counts, so a partial latest period doesn't read as a drop.
+function renderTrend(el, title, points, series, width) {
+  const off = {};
+  const lineKey = function (s) { return 's:' + s.key; };
+  const rows = points.map(function (p) {
+    const total = pointTotal(p);
+    const row = { day: p.day, total: total, n: {} };
+    series.forEach(function (s) {
+      const n = p.counts[s.key] || 0;
+      row.n[s.key] = n;
+      row[lineKey(s)] = total ? n / total * 100 : 0;
+    });
+    return row;
+  });
+  const pct = function (v) { return Math.round(v) + '%'; };
+  const draw = function () {
+    const last = rows[rows.length - 1];
+    const lines = series.filter(function (s) { return !off[s.key]; }).map(function (s) { return [lineKey(s), s, s.color]; });
+    const legend = series.map(function (s, i) {
+      return '<button type="button" class="pie-pick' + (off[s.key] ? ' off' : '') + '" data-i="' + i + '">' +
+        '<span class="swatch" style="background:' + s.color + '"></span>' +
+        '<span>' + esc(s.label) + (last ? ' · ' + pct(last[lineKey(s)]) : '') + '</span></button>';
+    }).join('');
+    el.innerHTML = '<div class="chart-meta"><span><b>' + esc(title) + '</b></span>' +
+      (last ? '<span>latest <b>' + last.total + '</b> users</span>' : '') + '</div>' +
+      multiLineChartSVG(rows, lines, width || chartWidth(el), {
+        formatY: pct,
+        pointTitle: function (row, line) {
+          const s = line[1];
+          return esc(s.label + ' · ' + dayLabel(row.day) + ': ' + pct(row[line[0]]) + ' (' + row.n[s.key] + ' of ' + row.total + ')');
+        },
+      }) +
+      (series.length ? '<div class="pie-legend trend-legend">' + legend + '</div>' : '');
+    el.querySelectorAll('.pie-pick').forEach(function (btn) {
+      btn.onclick = function () {
+        const key = series[Number(btn.dataset.i)].key;
+        off[key] = !off[key];
+        draw();
+      };
+    });
+  };
+  draw();
+}
+
+function compareVersionsDesc(a, b) {
+  const pa = String(a).split(/[^0-9]+/).filter(Boolean).map(Number);
+  const pb = String(b).split(/[^0-9]+/).filter(Boolean).map(Number);
+  for (let i = 0; i < Math.max(pa.length, pb.length); i++) {
+    const d = (pb[i] || 0) - (pa[i] || 0);
+    if (d) return d;
+  }
+  return String(a).localeCompare(String(b));
+}
+
+function renderVersionTrend(el, trend) {
+  const byDay = {};
+  (trend.rows || []).forEach(function (r) {
+    const counts = (byDay[r.day] = byDay[r.day] || {});
+    counts[r.version] = (counts[r.version] || 0) + r.users;
+  });
+  const points = Object.keys(byDay).sort().map(function (day) { return { day: day, counts: byDay[day] }; });
+  const folded = foldTrend(points, TREND_MAX_SERIES, compareVersionsDesc);
+  renderTrend(el, 'Share of daily active users', folded.points, folded.series);
+}
+
+function renderDeviceTrend(el, trend) {
+  const points = (trend || []).map(function (p) { return { day: p.day, counts: p.devices || {} }; });
+  const folded = foldTrend(points, TREND_MAX_SERIES);
+  renderTrend(el, 'Device', folded.points, folded.series);
+}
+
+function renderOsTrend(el, trend) {
+  const points = (trend || []).map(function (p) {
+    const counts = {};
+    Object.entries(p.os || {}).forEach(function (e) {
+      const g = osGroup(e[0]);
+      counts[g] = (counts[g] || 0) + e[1];
+    });
+    return { day: p.day, counts: counts };
+  });
+  const folded = foldTrend(points, TREND_MAX_SERIES, byOsMajorDesc);
+  renderTrend(el, 'OS version', folded.points, folded.series);
+}
+
+function renderBucketTrend(el, title, trend, bucketOrder) {
+  const seen = {};
+  (trend || []).forEach(function (p) { Object.keys(p.counts).forEach(function (k) { if (p.counts[k]) seen[k] = true; }); });
+  const series = bucketOrder.map(function (b, i) { return { key: b, label: b, color: BUCKET_COLORS[i % BUCKET_COLORS.length] }; })
+    .filter(function (s) { return seen[s.key]; });
+  renderTrend(el, title, trend || [], series);
+}
+
+// Fixed 0-100% axis so cards side by side compare.
+function sparklineSVG(values, color) {
+  const W = 160, H = 44, pad = 3;
+  const pts = [];
+  values.forEach(function (v, i) { if (v != null) pts.push([i, v]); });
+  if (!pts.length) return '<div class="hint">No data yet.</div>';
+  const x = function (i) { return pad + (values.length === 1 ? (W - 2 * pad) / 2 : (W - 2 * pad) * i / (values.length - 1)); };
+  const y = function (v) { return pad + (H - 2 * pad) * (1 - v / 100); };
+  let d = '';
+  pts.forEach(function (p, k) { d += (k === 0 ? 'M' : 'L') + x(p[0]).toFixed(1) + ' ' + y(p[1]).toFixed(1) + ' '; });
+  const last = pts[pts.length - 1];
+  return '<svg class="sparkline" viewBox="0 0 ' + W + ' ' + H + '" preserveAspectRatio="none" xmlns="http://www.w3.org/2000/svg">' +
+    '<line x1="0" y1="' + y(50).toFixed(1) + '" x2="' + W + '" y2="' + y(50).toFixed(1) + '" stroke="#2a2a2a" stroke-dasharray="2 3"/>' +
+    '<path d="' + d + '" fill="none" stroke="' + color + '" stroke-width="2" stroke-linejoin="round" stroke-linecap="round" vector-effect="non-scaling-stroke"/>' +
+    '<circle cx="' + x(last[0]).toFixed(1) + '" cy="' + y(last[1]).toFixed(1) + '" r="2.5" fill="' + color + '"/></svg>';
+}
+
+function renderSettingsTrendGrid(el, toggleBtn, settings) {
+  const trend = settings.trend || { days: [], totals: [], bool: {} };
+  el.innerHTML = '';
+  const cards = Object.keys(trend.bool).map(function (key) {
+    const s = settings.totals[key] || { label: key, default: false };
+    const shares = trend.bool[key].map(function (on, i) { return trend.totals[i] ? on / trend.totals[i] * 100 : null; });
+    const known = shares.filter(function (v) { return v != null; });
+    const first = known.length ? known[0] : 0, last = known.length ? known[known.length - 1] : 0;
+    const delta = Math.round(last - first);
+    const card = document.createElement('div');
+    card.className = 'setting-card hidden';
+    card.title = trend.days.map(function (day, i) {
+      return dayLabel(day) + ': ' + (shares[i] == null ? '—' : Math.round(shares[i]) + '% on (' + trend.bool[key][i] + ' of ' + trend.totals[i] + ')');
+    }).join('\\n');
+    card.innerHTML =
+      '<div class="setting-label">' + s.label + '</div>' +
+      '<div class="setting-now">' + Math.round(last) + '% on</div>' +
+      sparklineSVG(shares, COLORS.on) +
+      '<div class="setting-meta">' + Math.round(first) + '% → ' + Math.round(last) + '% ' +
+        '<b class="' + (delta > 0 ? 'up' : delta < 0 ? 'down' : '') + '">' + (delta > 0 ? '+' : '') + delta + '</b></div>' +
+      '<div class="setting-meta">default <b>' + (s.default ? 'On' : 'Off') + '</b></div>';
+    return { card: card, move: Math.abs(last - first) };
+  });
+  cards.sort(function (a, b) { return b.move - a.move; });
+  collapsibleCards(el, toggleBtn, cards.map(function (c) { return c.card; }), 'settings');
+}
+
+function renderValueSettingsTrend(el, toggleBtn, settings) {
+  const trend = settings.trend || { days: [], values: {} };
+  el.innerHTML = '';
+  const keys = Object.keys(trend.values);
+  const cards = keys.map(function () {
+    const card = document.createElement('div');
+    card.className = 'card hidden';
+    return card;
+  });
+  collapsibleCards(el, toggleBtn, cards, 'settings');
+  // Hidden cards measure 0.
+  const width = cards.length ? chartWidth(cards[0]) : 0;
+  keys.forEach(function (key, k) {
+    const s = settings.values[key] || { label: key, defaultLabel: '', unit: '' };
+    const points = trend.days.map(function (day, i) { return { day: day, counts: trend.values[key][i] || {} }; });
+    const folded = foldTrend(points, TREND_MAX_SERIES);
+    const valueColors = VALUE_SETTING_COLORS[key];
+    const series = folded.series.map(function (sr) {
+      const isDefault = sr.key === s.defaultLabel;
+      return {
+        key: sr.key,
+        label: sr.key + (s.unit && sr.key !== 'Other' ? ' ' + s.unit : '') + (isDefault ? ' (default)' : ''),
+        color: valueColors && valueColors[sr.key] ? valueColors[sr.key] : isDefault ? COLORS.notTouched : sr.color,
+      };
+    });
+    renderTrend(cards[k], s.label, folded.points, series, width);
+  });
+}
+
 function renderSearchUsage(trendEl, breakdownEl, usage) {
   const legend = SEARCH_USAGE_SERIES.map(function (l) { return legendRow(l[2], l[1]); }).join('');
   trendEl.innerHTML = '<div class="chart-meta"><span><b>People per day</b></span></div>' +
-    multiLineChartSVG(usage.daily || [], SEARCH_USAGE_SERIES, trendEl.clientWidth ? Math.max(280, trendEl.clientWidth - 32) : 0) +
+    multiLineChartSVG(usage.daily || [], SEARCH_USAGE_SERIES, chartWidth(trendEl)) +
     '<div class="legend">' + legend + '</div>';
 
   breakdownEl.innerHTML = '';
@@ -1741,14 +2175,38 @@ fetch('/dashboard/data' + channelQuery).then(r => r.json()).then(data => {
   }
 
   const win = '(last ' + data.trendWindowDays + ' days)';
-  document.getElementById('dauWindow').textContent = win;
   document.getElementById('eventWindow').textContent = win;
-  renderLineChart(document.getElementById('dauTrend'), data.activeUsersTrend, 'users', '#4ade80');
+  const auTrend = data.activeUsersTrend || {};
+  document.getElementById('dauWindow').textContent = '(last ' + auTrend.windowDays + ' days)';
+  const dauEl = document.getElementById('dauTrend');
+  const dauHint = document.getElementById('dauHint');
+  const auView = function (id, label, hint) {
+    return { id: id, label: label, elements: [dauEl], onShow: function () {
+      dauHint.textContent = hint;
+      renderLineChart(dauEl, auTrend[id], 'users', '#4ade80', 0, label.toLowerCase());
+    } };
+  };
+  setupViewSwitch('activeUsers', document.getElementById('dauSwitch'), [
+    auView('daily', 'Day', 'Distinct people active each day.'),
+    auView('weekly', 'Week', 'Distinct people active in each 7-day period. The first and latest period are partial.'),
+    auView('monthly', 'Month', 'Distinct people active in each calendar month. The first and latest month are partial.'),
+  ]);
 
   document.getElementById('platformHint').textContent =
-    'Based on ' + data.platform.sampleSize + ' users active in the last ' + data.platform.windowDays + ' days';
+    'Now: based on ' + data.platform.sampleSize + ' users active in the last ' + data.platform.windowDays + ' days. ' +
+    'Over time: each point is the users who sent a settings snapshot in that ' + data.platform.trendPeriodDays +
+    '-day period (one per user), over the last ' + data.platform.trendWindowDays + ' days; the latest period is still filling in.' +
+    truncatedNote(data.platform.trendTruncated);
   renderDevicePie(document.getElementById('devicePie'), document.getElementById('deviceDetail'), data.platform.devices);
   renderOsPie(document.getElementById('osPie'), document.getElementById('osDetail'), data.platform.os);
+  const platform = data.platform;
+  setupViewSwitch('platform', document.getElementById('platformSwitch'), [
+    { id: 'now', label: 'Now', elements: [document.getElementById('platformNow')] },
+    { id: 'trend', label: 'Over time', elements: [document.getElementById('platformTrend')], renderOnce: function () {
+      renderDeviceTrend(document.getElementById('deviceTrend'), platform.trend);
+      renderOsTrend(document.getElementById('osTrend'), platform.trend);
+    } },
+  ]);
   renderWatchFullSync(
     document.getElementById('watchFullSyncCard'),
     document.getElementById('watchFullSyncHint'),
@@ -1757,9 +2215,21 @@ fetch('/dashboard/data' + channelQuery).then(r => r.json()).then(data => {
 
   const versionTotals = {};
   (data.versions || []).forEach(function (r) { versionTotals[r.version] = r.users; });
-  document.getElementById('versionWindow').textContent = win;
-  document.getElementById('versionHint').textContent =
-    'Distinct users per build. Versions people are still on, not versions they last reported a snapshot from.';
+  const versionTrend = data.versionsTrend || {};
+  const versionHint = document.getElementById('versionHint');
+  setupViewSwitch('version', document.getElementById('versionSwitch'), [
+    { id: 'now', label: 'Now', elements: [document.getElementById('versionPie')], onShow: function () {
+      document.getElementById('versionWindow').textContent = win;
+      versionHint.textContent = 'Distinct users per build. Versions people are still on, not versions they last reported a snapshot from.';
+    } },
+    { id: 'trend', label: 'Over time', elements: [document.getElementById('versionTrend')], renderOnce: function () {
+      renderVersionTrend(document.getElementById('versionTrend'), versionTrend);
+    }, onShow: function () {
+      document.getElementById('versionWindow').textContent = '(last ' + versionTrend.windowDays + ' days)';
+      versionHint.textContent = 'Each build’s share of the people active that day — how fast a release rolls out and an old one drains. ' +
+        'Smaller builds are folded into Other; click a legend entry to hide its line.';
+    } },
+  ], 'trend');
   renderPie(document.getElementById('versionPie'), versionTotals);
 
   const countsByEvent = {}, usersByEvent = {};
@@ -1806,15 +2276,34 @@ fetch('/dashboard/data' + channelQuery).then(r => r.json()).then(data => {
 
   const settingsBase = 'Based on ' + data.settings.sampleSize + ' users active in the last ' +
     data.settings.windowDays + ' days. Users who never touched a setting are counted on its default.';
-  document.getElementById('settingsHint').textContent = settingsBase;
   renderSettingsGrid(document.getElementById('settingsGrid'), document.getElementById('settingsToggle'), data.settings);
-
-  document.getElementById('settingValuesHint').textContent = settingsBase;
   renderValueSettings(
     document.getElementById('settingValues'),
     document.getElementById('settingValuesToggle'),
     data.settings.values || {}
   );
+
+  const settingsTrendBase = 'Each point is the users who sent a settings snapshot in that ' + data.settings.trendPeriodDays +
+    '-day period, over the last ' + data.settings.trendWindowDays + ' days; users who never touched a setting count on its default, ' +
+    'as above. The latest period is still filling in.' + truncatedNote(data.settings.trendTruncated);
+  const settingsHint = document.getElementById('settingsHint');
+  setupViewSwitch('settings', document.getElementById('settingsSwitch'), [
+    { id: 'now', label: 'Now', elements: [document.getElementById('settingsNow')], onShow: function () { settingsHint.textContent = settingsBase; } },
+    { id: 'trend', label: 'Over time', elements: [document.getElementById('settingsTrendView')], renderOnce: function () {
+      renderSettingsTrendGrid(document.getElementById('settingsTrendGrid'), document.getElementById('settingsTrendToggle'), data.settings);
+    }, onShow: function () {
+      settingsHint.textContent = 'Share with each setting on. Sorted by how much that share moved. ' + settingsTrendBase;
+    } },
+  ]);
+  const settingValuesHint = document.getElementById('settingValuesHint');
+  setupViewSwitch('settingValues', document.getElementById('settingValuesSwitch'), [
+    { id: 'now', label: 'Now', elements: [document.getElementById('settingValuesNow')], onShow: function () { settingValuesHint.textContent = settingsBase; } },
+    { id: 'trend', label: 'Over time', elements: [document.getElementById('settingValuesTrendView')], renderOnce: function () {
+      renderValueSettingsTrend(document.getElementById('settingValuesTrend'), document.getElementById('settingValuesTrendToggle'), data.settings);
+    }, onShow: function () {
+      settingValuesHint.textContent = 'Share of users on each value. ' + settingsTrendBase;
+    } },
+  ]);
 
   document.getElementById('queueHint').textContent =
     'Based on ' + data.queueInbox.queue.sampleSize + ' users active in the last ' + data.queueInbox.windowDays + ' days';
@@ -1832,6 +2321,22 @@ fetch('/dashboard/data' + channelQuery).then(r => r.json()).then(data => {
     'Based on ' + (data.subscriptions.podcastSampleSize ?? 0) + ' users reporting a podcast count in the last ' +
     data.subscriptions.windowDays + ' days';
   renderBucketBars(document.getElementById('podcastSubsBars'), data.subscriptions.podcastBuckets || {});
+
+  const qi = data.queueInbox, subs = data.subscriptions;
+  const libraryTrendHint = document.getElementById('libraryTrendHint');
+  libraryTrendHint.textContent = 'Share of reporting users in each size range per period, over the last ' + qi.trendWindowDays + ' days. ' +
+    'Queue and inbox report weekly, so each point is one ' + qi.trendPeriodDays + '-day period; subscriptions report fortnightly (' +
+    subs.trendPeriodDays + '-day periods). The latest point is still filling in. ' +
+    'Someone whose size changed range within a period counts once in each range.';
+  setupViewSwitch('library', document.getElementById('librarySwitch'), [
+    { id: 'now', label: 'Now', elements: [document.getElementById('libraryNow')] },
+    { id: 'trend', label: 'Over time', elements: [document.getElementById('libraryTrend'), libraryTrendHint], renderOnce: function () {
+      renderBucketTrend(document.getElementById('queueTrend'), 'Queue size', qi.queueTrend, Object.keys(qi.queue.buckets));
+      renderBucketTrend(document.getElementById('inboxTrend'), 'Inbox size', qi.inboxTrend, Object.keys(qi.inbox.buckets));
+      renderBucketTrend(document.getElementById('subsTrend'), 'Subscription count', subs.trend, Object.keys(subs.buckets));
+      renderBucketTrend(document.getElementById('podcastSubsTrend'), 'Podcast subscriptions', subs.podcastTrend, Object.keys(subs.podcastBuckets || subs.buckets));
+    } },
+  ]);
 
   document.getElementById('errorWindow').textContent = '(last ' + data.errors.windowDays + ' days)';
   renderErrors(document.getElementById('errorTrend'), document.getElementById('errors'), data.errors);
