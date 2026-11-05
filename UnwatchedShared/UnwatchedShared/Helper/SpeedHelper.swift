@@ -7,6 +7,7 @@ import Foundation
 
 public enum SpeedHelper {
     public static let selectable = Const.speeds.filter { $0 >= Const.speedMin && $0 <= Const.speedMax }
+    public static let remoteSelectable = Const.speeds.filter { $0 >= 0.5 }
 
     public static func selectable(including speed: Double) -> [Double] {
         selectable.contains(where: { isSame($0, speed) })

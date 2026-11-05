@@ -424,6 +424,7 @@ final class AVPlayerViewModel: PlayerBackend {
         } else if avPlayer.rate != 0 {
             startAtCurrentSpeed()
         }
+        updateNowPlayingInfo()
     }
 
     func handleScenePhaseChange(_ phase: ScenePhase) {

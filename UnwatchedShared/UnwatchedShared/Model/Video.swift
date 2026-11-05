@@ -118,6 +118,10 @@ public final class Video: VideoData, CustomStringConvertible, Exportable {
         ChapterService.inPlaybackOrder(sortedChapterData)
     }
 
+    public var channelName: String? {
+        subscription?.author ?? subscription?.displayTitle
+    }
+
     /// Whether the user has dragged this video's chapters into an order of their own.
     public var hasCustomChapterOrder: Bool {
         Video.getSortedChapters(mergedChapters, chapters).contains { $0.order != nil }

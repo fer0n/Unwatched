@@ -77,6 +77,10 @@ final class BackgroundPlaybackManager {
         }
     }
 
+    func canStart(_ video: Video) -> Bool {
+        video.isPodcast || PlayerTypeSetting.stored == .native || PlayerManager.nativeFallbackEnabled
+    }
+
     /// The top of the latched slice. Not `loadTopmostVideoFromQueue`: its fade defers the swap past the
     /// `player.video` read in `start`.
     private func stageTopOfQueue() throws {
@@ -99,11 +103,10 @@ final class BackgroundPlaybackManager {
     }
 
     private func enableNativePlayer() throws {
-        // a podcast episode plays natively whatever the setting says
-        guard PlayerTypeSetting.stored != .native, player.video?.isPodcast != true else {
+        guard let video = player.video, PlayerTypeSetting.stored != .native, !video.isPodcast else {
             return
         }
-        guard PlayerManager.nativeFallbackEnabled else {
+        guard canStart(video) else {
             throw BackgroundPlaybackError.nativePlayerRequired
         }
         Log.player.info("backgroundPlayback: switching to the native player")

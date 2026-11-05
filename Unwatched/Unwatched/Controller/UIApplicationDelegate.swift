@@ -54,6 +54,13 @@ class AppDelegate: NSObject, UIApplicationDelegate, UNUserNotificationCenterDele
         configurationForConnecting connectingSceneSession: UISceneSession,
         options: UIScene.ConnectionOptions
     ) -> UISceneConfiguration {
+        #if os(iOS)
+        if connectingSceneSession.role == .carTemplateApplication {
+            let carConfiguration = UISceneConfiguration(name: "CarPlay", sessionRole: connectingSceneSession.role)
+            carConfiguration.delegateClass = CarPlaySceneDelegate.self
+            return carConfiguration
+        }
+        #endif
         let sceneConfiguration = UISceneConfiguration(
             name: "Custom Configuration",
             sessionRole: connectingSceneSession.role

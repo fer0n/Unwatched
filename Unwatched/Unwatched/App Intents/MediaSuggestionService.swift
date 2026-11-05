@@ -150,7 +150,7 @@ enum MediaSuggestionService {
             title: video.title,
             type: itemType,
             artwork: episodeArtwork,
-            artist: video.subscription?.author ?? video.subscription?.displayTitle
+            artist: video.channelName
         )
         // Audio suggestions are only generated from intents with a container — the opt-in is the intent definition's
         // "mediaContainer" combination — so an episode without one is never offered. The show titles the row.

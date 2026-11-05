@@ -106,6 +106,18 @@ extension AVPlayerViewModel {
             return .success
         }
 
+        // CarPlay's speed button shows 0× without it
+        let rateCommand = center.changePlaybackRateCommand
+        rateCommand.isEnabled = true
+        rateCommand.supportedPlaybackRates = SpeedHelper.remoteSelectable.map { NSNumber(value: $0) }
+        rateCommand.addTarget { event in
+            guard let rate = (event as? MPChangePlaybackRateCommandEvent)?.playbackRate else {
+                return .commandFailed
+            }
+            Task { @MainActor in thePlayer.playbackSpeed = SpeedHelper.nearestSpeed(to: Double(rate)) ?? Double(rate) }
+            return .success
+        }
+
         center.changePlaybackPositionCommand.isEnabled = true
         center.changePlaybackPositionCommand.addTarget { event in
             guard let e = event as? MPChangePlaybackPositionCommandEvent else { return .commandFailed }
@@ -143,6 +155,7 @@ extension AVPlayerViewModel {
         center.nextTrackCommand.removeTarget(nil)
         center.previousTrackCommand.removeTarget(nil)
         center.changePlaybackPositionCommand.removeTarget(nil)
+        center.changePlaybackRateCommand.removeTarget(nil)
         commandsSetUp = false
         MPNowPlayingInfoCenter.default().nowPlayingInfo = nil
     }
@@ -161,6 +174,8 @@ extension AVPlayerViewModel {
         var info: [String: Any] = [
             MPMediaItemPropertyTitle: video.title,
             MPNowPlayingInfoPropertyPlaybackRate: player.isPlaying ? player.playbackSpeed : 0.0,
+            // CarPlay's speed button, also while paused
+            MPNowPlayingInfoPropertyDefaultPlaybackRate: player.playbackSpeed,
             MPNowPlayingInfoPropertyElapsedPlaybackTime: elapsed,
             MPNowPlayingInfoPropertyMediaType: MPNowPlayingInfoMediaType.video.rawValue
         ]
@@ -168,8 +183,11 @@ extension AVPlayerViewModel {
         if let duration = video.duration, duration > 0 {
             info[MPMediaItemPropertyPlaybackDuration] = duration
         }
-        if let author = video.subscription?.author {
-            info[MPMediaItemPropertyArtist] = author
+        if let chapter = Self.chapterSubtitle(player) {
+            info[MPMediaItemPropertyArtist] = chapter
+            info[MPMediaItemPropertyAlbumTitle] = video.channelName
+        } else {
+            info[MPMediaItemPropertyArtist] = video.channelName
         }
         if let artwork = artworkImage {
             info[MPMediaItemPropertyArtwork] = MPMediaItemArtwork(boundsSize: artwork.size) { _ in artwork }
@@ -179,7 +197,19 @@ extension AVPlayerViewModel {
     }
 
     @MainActor
+    private static func chapterSubtitle(_ player: PlayerManager) -> String? {
+        guard let current = player.currentChapter else {
+            return nil
+        }
+        let active = player.video?.orderedChapterData.filter(\.isActive) ?? []
+        let position = active.firstIndex { $0.startTime == current.startTime }
+            .map { "\($0 + 1)/\(active.count)" }
+        return [position, current.titleText].compactMap { $0 }.joined(separator: " · ")
+    }
+
+    @MainActor
     func handleChapterChanged() {
+        updateNowPlayingInfo()
         fetchArtwork()
     }
 
