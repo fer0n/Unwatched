@@ -188,6 +188,18 @@ final class ActionCapsuleTextView: UITextView {
             setNeedsLayout()
         }
     }
+    // Deselecting moves the closing edit menu to the empty selection at the top of the text before it fades out
+    override var selectedTextRange: UITextRange? {
+        get { super.selectedTextRange }
+        set {
+            if newValue?.isEmpty ?? true {
+                for case let menu as UIEditMenuInteraction in interactions {
+                    menu.dismissMenu()
+                }
+            }
+            super.selectedTextRange = newValue
+        }
+    }
     private let capsuleLayer = CAShapeLayer()
     private var capsuleSize: CGSize?
 
