@@ -152,7 +152,8 @@ extension VideoActor {
                                 + "YouTube feeds failed, treating as an outage")
         }
 
-        for outcome in outcomes where outcome.isPodcast || !youtubeOutage {
+        let skipped = youtubeOutage ? Set(outcomes.map(\.subscriptionId)) : recovered
+        for outcome in outcomes where outcome.isPodcast || !skipped.contains(outcome.subscriptionId) {
             guard let sub: Subscription = modelContext.resolvedModel(withID: outcome.subscriptionId) else { continue }
             if let errorMessage = outcome.errorMessage {
                 sub.failedFetchCount += 1

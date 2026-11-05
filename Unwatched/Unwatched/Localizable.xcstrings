@@ -21258,40 +21258,6 @@
         }
       }
     },
-    "rssFeedUnavailableMessage" : {
-      "localizations" : {
-        "de" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Konnte nicht verifiziert werden – YouTube RSS-Feeds sind möglicherweise nicht erreichbar"
-          }
-        },
-        "en" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Could not verify – YouTube RSS feeds might be down"
-          }
-        },
-        "es" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "No se pudo verificar – los feeds RSS de YouTube podrían estar caídos"
-          }
-        },
-        "fr" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Impossible de vérifier – les flux RSS YouTube sont peut-être indisponibles"
-          }
-        },
-        "pl" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Nie można zweryfikować – kanały RSS YouTube mogą być niedostępne"
-          }
-        }
-      }
-    },
     "scope" : {
       "localizations" : {
         "de" : {
@@ -26526,40 +26492,6 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "Subskrybuj"
-          }
-        }
-      }
-    },
-    "subscribeAnyway" : {
-      "localizations" : {
-        "de" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Trotzdem abonnieren"
-          }
-        },
-        "en" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Subscribe Anyway"
-          }
-        },
-        "es" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Suscribirse de todos modos"
-          }
-        },
-        "fr" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "S'abonner quand même"
-          }
-        },
-        "pl" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Subskrybuj mimo to"
           }
         }
       }

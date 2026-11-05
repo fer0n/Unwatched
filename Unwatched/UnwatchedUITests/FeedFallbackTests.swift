@@ -41,13 +41,14 @@ class FeedFallbackTests: XCTestCase {
         try context.save()
     }
 
-    private func makeSubscription() throws -> SendableSubscription {
+    private func makeSubscription(neverLoaded: Bool = false, subscribed: Date? = nil) throws -> SendableSubscription {
         let sub = Subscription(
             link: URL(string: "https://www.youtube.com/feeds/videos.xml?channel_id=\(channelId)"),
             title: "Fallback Channel",
             youtubeChannelId: channelId
         )
-        sub.mostRecentVideoDate = preOutage
+        sub.mostRecentVideoDate = neverLoaded ? nil : preOutage
+        sub.subscribedDate = subscribed ?? preOutage
         context.insert(sub)
         try context.save()
         return try XCTUnwrap(sub.toExport)
@@ -81,7 +82,7 @@ class FeedFallbackTests: XCTestCase {
     }
 
     private func deliverFallback(_ sub: SendableSubscription, _ videos: [SendableVideo]) async throws {
-        FeedFallbackState.record(channelId: channelId, cutoff: preOutage, delivered: videos.map(\.youtubeId))
+        VideoActor.recordFallback(sub, channelId: channelId, delivered: videos)
         let fetched = FetchResult(sub: sub, videos: videos, errorMessage: nil, isFallback: true)
         _ = try await VideoActor().handleFetched(fetched, placement)
     }
@@ -134,6 +135,62 @@ class FeedFallbackTests: XCTestCase {
 
         try await deliverFeed(sub, [video("fbC", hoursAfterCutoff: 1)])
         XCTAssertFalse(try isInInbox("fbC"))
+    }
+
+    func testNeverLoadedSubscriptionTriagesLikeAFirstLoad() async throws {
+        let sub = try makeSubscription(neverLoaded: true)
+        let backCatalogue = (1...6).map { video("fbNew\($0)", hoursAfterCutoff: Double(-$0), updated: false) }
+        try await deliverFallback(sub, backCatalogue)
+
+        let inboxed = try backCatalogue.filter { try isInInbox($0.youtubeId) }.map(\.youtubeId)
+        XCTAssertEqual(inboxed, ["fbNew1", "fbNew2", "fbNew3", "fbNew4"], "the newest, as many as a first load triages")
+        let stored = try XCTUnwrap(sub.persistentId.flatMap { context.model(for: $0) as? Subscription })
+        XCTAssertEqual(stored.mostRecentVideoDate, backCatalogue.first?.publishedDate)
+    }
+
+    func testNeverLoadedSubscriptionCatchesUpFromItsSubscribeDate() async throws {
+        let sub = try makeSubscription(neverLoaded: true)
+        try await deliverFallback(sub, [video("fbE", hoursAfterCutoff: -10, updated: false)])
+
+        let oldShort = video("fbOldShort", hoursAfterCutoff: -5)
+        let newStream = video("fbNewStream", hoursAfterCutoff: 1)
+        try await deliverFeed(sub, [newStream, oldShort, video("fbE", hoursAfterCutoff: -10)])
+
+        XCTAssertTrue(try isInInbox("fbNewStream"))
+        XCTAssertFalse(try isInInbox("fbOldShort"))
+        XCTAssertEqual(try rows("fbE").count, 1)
+    }
+
+    func testNeverLoadedSubscriptionWithNothingDeliveredGetsARegularFirstLoad() async throws {
+        let sub = try makeSubscription(neverLoaded: true)
+        try await deliverFallback(sub, [])
+        XCTAssertNil(FeedFallbackState.finish(channelId: channelId))
+
+        let feed = (1...6).map { video("fbFirst\($0)", hoursAfterCutoff: Double(-$0)) }
+        try await deliverFeed(sub, feed)
+        XCTAssertEqual(try feed.filter { try isInInbox($0.youtubeId) }.count, 4)
+    }
+
+    func testRestoredSubscriptionCatchesUpFromItsNewestDeliveredVideo() async throws {
+        let sub = try makeSubscription(neverLoaded: true, subscribed: preOutage.addingTimeInterval(-30 * 24 * 3600))
+        try await deliverFallback(sub, [video("fbF", hoursAfterCutoff: 0, updated: false)])
+
+        try await deliverFeed(sub, [video("fbOlderShort", hoursAfterCutoff: -24), video("fbF", hoursAfterCutoff: 0)])
+        XCTAssertFalse(try isInInbox("fbOlderShort"))
+    }
+
+    func testOnlyNewNeverLoadedChannelsSkipTheOutageCheck() throws {
+        let fresh = try makeSubscription(neverLoaded: true, subscribed: .now)
+        let stale = SendableSubscription(title: "Stale", subscribedDate: .distantPast, youtubeChannelId: "UCstale")
+        let loaded = SendableSubscription(title: "Loaded", mostRecentVideoDate: .now, youtubeChannelId: "UCloaded")
+        let playlist = SendableSubscription(title: "List", youtubeChannelId: "UClist", youtubePlaylistId: "PL1")
+        let all = [fresh, stale, loaded, playlist]
+
+        XCTAssertEqual(VideoActor.fallbackSubs(all, isOutage: false).map(\.youtubeChannelId), [channelId])
+        XCTAssertEqual(
+            VideoActor.fallbackSubs(all, isOutage: true).map(\.youtubeChannelId),
+            [channelId, "UCstale", "UCloaded"]
+        )
     }
 
     func testRepeatedFallbackKeepsThePreOutageCutoff() async throws {

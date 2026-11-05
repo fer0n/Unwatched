@@ -79,10 +79,13 @@ actor SubscriptionActor: SharedContextActor {
         }
 
         let subStates = try await addSubscriptions(subscriptionInfo: [info])
-        if let first = subStates.first {
-            if !(first.success || first.alreadyAdded) {
+        if let first = subStates.first, !(first.success || first.alreadyAdded) {
+            guard info.title != nil, info.channelId != nil || info.playlistId != nil else {
                 throw SubscriptionError.couldNotSubscribe(first.error ?? "unknown")
             }
+            Log.refresh.info("subscribeTo: feed failed (\(first.error ?? "unknown")), subscribing without it")
+            try await addSubscriptionWithoutRSS(info)
+            return
         }
         try modelContext.save()
     }
@@ -346,6 +349,9 @@ actor SubscriptionActor: SharedContextActor {
         for subscription in subscriptions {
             if subscription.isPodcast, let feedUrl = subscription.link {
                 PodcastEpisodeCache.delete(feedUrl: feedUrl)
+            }
+            if subscription.youtubePlaylistId == nil, let channelId = subscription.youtubeChannelId {
+                _ = FeedFallbackState.finish(channelId: channelId)
             }
             var hasVideosLeft = false
             for video in subscription.videos ?? [] {

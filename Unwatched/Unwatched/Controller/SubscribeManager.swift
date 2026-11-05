@@ -15,7 +15,6 @@ import UnwatchedShared
     var isLoading: Bool
 
     var errorMessage: String?
-    var failedSubscriptionInfo: SubscriptionInfo?
     var newSubs: [SubscriptionState]?
     var showDropResults = false
 
@@ -122,20 +121,12 @@ import UnwatchedShared
         } catch {
             Log.refresh.error("addNewSubscription error: \(error)")
             isSubscribedSuccess = false
-            if let info = subscriptionInfo, info.title != nil,
-               info.channelId != nil || info.playlistId != nil {
-                failedSubscriptionInfo = info
-                errorMessage = String(localized: "rssFeedUnavailableMessage")
-            } else {
-                errorMessage = error.localizedDescription
-            }
+            errorMessage = error.localizedDescription
         }
         isLoading = false
     }
 
-    func addWithoutRSS(_ info: SubscriptionInfo? = nil) async {
-        guard let info = info ?? failedSubscriptionInfo else { return }
-        failedSubscriptionInfo = nil
+    func addWithoutRSS(_ info: SubscriptionInfo) async {
         errorMessage = nil
         isLoading = true
         do {

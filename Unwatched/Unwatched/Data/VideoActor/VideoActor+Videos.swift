@@ -247,7 +247,7 @@ actor VideoActor: SharedContextActor {
                 }
                 newVideoInfo.append(try await handleFetched(fetched, placementInfo))
             }
-            let fallback = try await handleFallbackIfOutage(outcomes, unavailableSubs, placementInfo)
+            let fallback = try await handleFeedFallback(outcomes, unavailableSubs, placementInfo)
             newVideoInfo += fallback.videoInfo
             recordFetchOutcomes(outcomes, recovered: fallback.recovered)
             if fetchDurations {

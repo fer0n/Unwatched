@@ -16,7 +16,6 @@ struct SubscribeErrorPopover: ViewModifier {
                 set: {
                     if !$0 {
                         subManager.errorMessage = nil
-                        subManager.failedSubscriptionInfo = nil
                     }
                 }
             )) {
@@ -27,12 +26,6 @@ struct SubscribeErrorPopover: ViewModifier {
                         Text(verbatim: error)
                             .foregroundStyle(.secondary)
                             .font(.body)
-                        if subManager.failedSubscriptionInfo != nil {
-                            Button("subscribeAnyway") {
-                                Task { await subManager.addWithoutRSS() }
-                            }
-                            .padding(.top, 4)
-                        }
                     }
                     .frame(idealWidth: 300, maxWidth: 300)
                     .padding(10)
