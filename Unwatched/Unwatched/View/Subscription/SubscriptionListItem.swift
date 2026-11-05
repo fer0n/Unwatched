@@ -11,6 +11,8 @@ struct SubscriptionListItem: View {
     var subscription: SendableSubscription
     var onDelete: ((Task<(), Error>) -> Void)?
 
+    @ScaledMetric var imageSize = 40
+
     func deleteSubscription() {
         guard let id = subscription.persistentId else {
             Log.info("No id to delete subscription")
@@ -23,20 +25,18 @@ struct SubscriptionListItem: View {
     }
 
     var body: some View {
-        HStack {
+        HStack(spacing: 10) {
+            SubscriptionAvatar(subscription: subscription, size: imageSize)
+                .accessibilityHidden(true)
+
+            Text(subscription.displayTitle)
+                .lineLimit(1)
             if subscription.hasFeedIssue {
                 Image(systemName: Const.errorSF)
                     .foregroundStyle(.secondary)
                     .accessibilityLabel("feedIssue")
             }
-            Text(subscription.displayTitle)
-                .lineLimit(1)
-            Spacer()
-            if let date = subscription.mostRecentVideoDate {
-                Text(date.formatted)
-                    .font(.body)
-                    .opacity(0.5)
-            }
+            Spacer(minLength: 0)
         }
         .swipeActions(edge: .trailing, allowsFullSwipe: true) {
             Button(action: deleteSubscription) {

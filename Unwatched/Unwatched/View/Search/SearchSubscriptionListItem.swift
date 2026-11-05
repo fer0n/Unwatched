@@ -16,17 +16,7 @@ struct SearchSubscriptionListItem: View {
 
     var body: some View {
         HStack(spacing: 10) {
-            CachedImageView(imageUrl: subscription.thumbnailUrl) { image in
-                image
-                    .resizable()
-                    .aspectRatio(contentMode: .fill)
-            } placeholder: {
-                Image(systemName: "person.crop.circle.fill")
-                    .resizable()
-                    .foregroundStyle(.secondary)
-            }
-            .frame(width: imageSize, height: imageSize)
-            .channelImageClip(isPodcast: subscription.isPodcast)
+            SubscriptionAvatar(subscription: subscription, size: imageSize)
 
             VStack(alignment: .leading, spacing: 2) {
                 Text(subscription.displayTitle)

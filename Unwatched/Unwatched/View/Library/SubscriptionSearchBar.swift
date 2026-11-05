@@ -10,18 +10,40 @@ struct SubscriptionSearchBar: View {
     @Binding var text: DebouncedText
     @Binding var subscriptionSorting: SubscriptionSorting
 
+    @State private var isSearchActive = false
+    @FocusState private var isFocused: Bool
+
     var body: some View {
         HStack(spacing: 0) {
             Image(systemName: "magnifyingglass")
                 .padding(.trailing, 5)
                 .foregroundStyle(.secondary)
-            TextField("searchLibrary", text: $text.val)
-                .autocorrectionDisabled(true)
-                #if os(iOS)
-                .keyboardType(.webSearch)
-                .textInputAutocapitalization(.never)
-                #endif
-                .submitLabel(.done)
+            if isSearchActive || !text.val.isEmpty {
+                TextField("searchLibrary", text: $text.val)
+                    .autocorrectionDisabled(true)
+                    #if os(iOS)
+                    .keyboardType(.webSearch)
+                    .textInputAutocapitalization(.never)
+                    #endif
+                    .submitLabel(.done)
+                    .focused($isFocused)
+                    .onAppear { isFocused = isSearchActive }
+                    .onChange(of: isFocused) {
+                        if !isFocused {
+                            isSearchActive = false
+                        }
+                    }
+            } else {
+                Button {
+                    isSearchActive = true
+                } label: {
+                    Text("searchLibrary")
+                        .foregroundStyle(.tertiary)
+                        .frame(maxWidth: .infinity, alignment: .leading)
+                        .contentShape(.rect)
+                }
+                .buttonStyle(.plain)
+            }
 
             TextFieldClearButton(text: $text.val)
                 .padding(.trailing, 10)
