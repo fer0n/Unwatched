@@ -92,7 +92,7 @@ struct AppCommands: Commands {
 
             Section {
                 Button("importSubscriptions") {
-                    openWindow(id: Const.windowImportSubs)
+                    navManager.presentOnboarding()
                 }
             }
 

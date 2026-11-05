@@ -333,18 +333,6 @@ actor SubscriptionActor: SharedContextActor {
         try modelContext.save()
     }
 
-    func cleanupArchivedSubscriptions() throws {
-        let fetch = FetchDescriptor<Subscription>(predicate: #Predicate {
-            $0.isArchived == true
-        })
-        guard let subs = try? modelContext.fetch(fetch) else {
-            Log.refresh.info("cleanupArchivedSubscriptions: no subscriptions found")
-            return
-        }
-        try deleteSubscriptions(subs)
-        try modelContext.save()
-    }
-
     private func deleteSubscriptions(_ subscriptions: [Subscription]) throws {
         for subscription in subscriptions {
             if subscription.isPodcast, let feedUrl = subscription.link {

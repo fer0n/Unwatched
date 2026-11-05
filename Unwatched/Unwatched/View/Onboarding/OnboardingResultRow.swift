@@ -9,7 +9,10 @@ import UnwatchedShared
 struct OnboardingResultRow: View {
     @Environment(\.displayScale) private var displayScale
 
-    let result: OnboardingSearchResult
+    let title: String
+    var subtitle: String?
+    var thumbnailUrl: URL?
+    var isPodcast = false
     let isSelected: Bool
     var showsDivider = false
     let toggle: () -> Void
@@ -23,7 +26,7 @@ struct OnboardingResultRow: View {
                 avatar
 
                 VStack(alignment: .leading, spacing: 1) {
-                    Text(result.title)
+                    Text(title)
                         .font(.headline)
                         .lineLimit(1)
 
@@ -33,7 +36,7 @@ struct OnboardingResultRow: View {
                             .fontWeight(.black)
                             .foregroundStyle(.secondary)
 
-                        if let subtitle = result.subtitle {
+                        if let subtitle {
                             Text(subtitle)
                                 .font(.subheadline)
                                 .foregroundStyle(.secondary)
@@ -63,25 +66,40 @@ struct OnboardingResultRow: View {
     }
 
     var typeIcon: String {
-        result.isPodcast ? "antenna.radiowaves.left.and.right" : "play.rectangle.fill"
+        isPodcast ? "antenna.radiowaves.left.and.right" : "play.rectangle.fill"
     }
 
     var avatar: some View {
-        CachedImageView(imageUrl: result.thumbnailUrl, maxPixelSize: ceil(Self.avatarSize * displayScale)) { image in
+        CachedImageView(imageUrl: thumbnailUrl, maxPixelSize: ceil(Self.avatarSize * displayScale)) { image in
             image
                 .resizable()
                 .scaledToFill()
         } placeholder: {
             ZStack {
                 Color.insetBackgroundColor
-                Text(result.title.prefix(1))
+                Text(title.prefix(1))
                     .font(.title3)
                     .fontWeight(.bold)
                     .foregroundStyle(.secondary)
+                    .accessibilityHidden(true)
             }
         }
         .frame(width: Self.avatarSize, height: Self.avatarSize)
-        .channelImageClip(isPodcast: result.isPodcast)
+        .channelImageClip(isPodcast: isPodcast)
+    }
+}
+
+extension OnboardingResultRow {
+    init(result: OnboardingSearchResult, isSelected: Bool, showsDivider: Bool = false, toggle: @escaping () -> Void) {
+        self.init(
+            title: result.title,
+            subtitle: result.subtitle,
+            thumbnailUrl: result.thumbnailUrl,
+            isPodcast: result.isPodcast,
+            isSelected: isSelected,
+            showsDivider: showsDivider,
+            toggle: toggle
+        )
     }
 }
 

@@ -89,8 +89,8 @@ import UnwatchedShared
         askForReviewCount = try container.decodeIfPresent(Int.self, forKey: .askForReviewCount) ?? 0
         playerTab = (try? container.decodeIfPresent(ControlNavigationTab.self, forKey: .playerTab)) ?? .controls
 
-        let decoded = try container.decode(NavigationPath.CodableRepresentation.self, forKey: .presentedLibrary)
-        presentedLibrary = NavigationPath(decoded)
+        presentedLibrary = (try? container.decode(NavigationPath.CodableRepresentation.self, forKey: .presentedLibrary))
+            .map(NavigationPath.init) ?? NavigationPath()
 
         let legacyInbox = try? container.decodeIfPresent(
             [SendableSubscription].self,
@@ -122,9 +122,11 @@ import UnwatchedShared
         try container.encode(queueTag, forKey: .queueTag)
     }
 
-    /// The menu is a sheet on iPhone, and only one sheet shows at a time
+    @MainActor
     func presentOnboarding() {
-        showMenu = false
+        if !SheetPositionReader.shared.bigScreen {
+            showMenu = true
+        }
         showOnboarding = true
     }
 

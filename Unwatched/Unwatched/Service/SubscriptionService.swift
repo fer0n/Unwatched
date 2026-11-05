@@ -96,20 +96,6 @@ struct SubscriptionService {
         }
     }
 
-    static func softUnsubscribeAll(_ modelContext: ModelContext) {
-        let fetch = FetchDescriptor<Subscription>(predicate: #Predicate {
-            $0.isArchived == false
-        })
-        guard let subs = try? modelContext.fetch(fetch) else {
-            Log.refresh.info("softUnsubscribeAll: no subscriptions found")
-            return
-        }
-        for sub in subs {
-            sub.isArchived = true
-        }
-        try? modelContext.save()
-    }
-
     /// Downgrades every channel that skips SponsorBlock segments to only showing them, see
     /// `ChapterSkippingSettings.stopSkipping`.
     static func stopSkippingSegments(_ modelContext: ModelContext) {
@@ -126,17 +112,6 @@ struct SubscriptionService {
             }
         }
         try? modelContext.save()
-    }
-
-    static func cleanupArchivedSubscriptions() {
-        Task.detached {
-            let repo = SubscriptionActor()
-            do {
-                try await repo.cleanupArchivedSubscriptions()
-            } catch {
-                Log.refresh.error("cleanupArchivedSubscriptions: \(error)")
-            }
-        }
     }
 
     @MainActor

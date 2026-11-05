@@ -16,6 +16,8 @@ struct MenuViewSheet: ViewModifier {
     var disableSheet: Bool
     var proxy: GeometryProxy
 
+    @State private var onboardingViewModel = OnboardingViewModel()
+
     func body(content: Content) -> some View {
         @Bindable var navManager = navManager
 
@@ -41,7 +43,32 @@ struct MenuViewSheet: ViewModifier {
                 .presentationBackground(Color.backgroundColor)
                 .presentationDragIndicator(.hidden)
                 .environment(\.colorScheme, colorScheme)
+                .onboardingSheet(isPresented: onboardingBinding(host: .menuSheet), viewModel: onboardingViewModel)
             }
+            .onboardingSheet(isPresented: onboardingBinding(host: .root), viewModel: onboardingViewModel)
+            .onChange(of: navManager.showOnboarding) { _, isShown in
+                if isShown {
+                    onboardingViewModel = OnboardingViewModel()
+                }
+            }
+            .onChange(of: navManager.showMenu) { _, isShown in
+                if !isShown && !disableSheet {
+                    navManager.showOnboarding = false
+                }
+            }
+    }
+
+    enum OnboardingHost {
+        case menuSheet, root
+    }
+
+    func onboardingBinding(host: OnboardingHost) -> Binding<Bool> {
+        let menuIsSheet = !disableSheet
+        let presentsHere = (host == .menuSheet) == menuIsSheet
+        return Binding(
+            get: { navManager.showOnboarding && presentsHere },
+            set: { if presentsHere { navManager.showOnboarding = $0 } }
+        )
     }
 }
 

@@ -123,7 +123,7 @@ public final class HomeFeedService: NSObject, WKNavigationDelegate {
 
     // MARK: - Page
 
-    private func ensurePage() async throws {
+    func ensurePage() async throws {
         idleTask?.cancel()
         if webView != nil, let loaded = pageLoadedAt, Date().timeIntervalSince(loaded) < Self.pageLifetime {
             return
@@ -207,7 +207,7 @@ public final class HomeFeedService: NSObject, WKNavigationDelegate {
         }
     }
 
-    private func scheduleRelease() {
+    func scheduleRelease() {
         idleTask?.cancel()
         idleTask = Task { [weak self] in
             try? await Task.sleep(for: Self.idleRelease)
@@ -235,7 +235,7 @@ public final class HomeFeedService: NSObject, WKNavigationDelegate {
 
     // MARK: - Requests
 
-    private func isLoggedIn() async throws -> Bool {
+    func isLoggedIn() async throws -> Bool {
         guard let webView else { throw HomeFeedError.pageUnavailable }
         let loggedIn: Bool? = await withDeadline(.seconds(3), fallback: nil) { finish in
             webView.evaluateJavaScript(HomeFeedScript.isLoggedIn) { result, _ in
@@ -251,11 +251,21 @@ public final class HomeFeedService: NSObject, WKNavigationDelegate {
         _ payload: [String: Any],
         parse: @Sendable (InnerTubeAPI, String) async -> InnerTubeAPI.SearchPage = { await $0.parseVideoPage(json: $1) }
     ) async throws -> InnerTubeAPI.SearchPage {
+        let body = try await rawRequest(endpoint, payload)
+        return await parse(api, body)
+    }
+
+    /// `pruneLockups` drops non-video lockups for the video parsers
+    func rawRequest(
+        _ endpoint: String,
+        _ payload: [String: Any],
+        pruneLockups: Bool = true
+    ) async throws -> String {
         guard let webView else { throw HomeFeedError.pageUnavailable }
         let (status, body) = await withDeadline(Self.requestTimeout, fallback: (0, nil)) { finish in
             webView.callAsyncJavaScript(
                 HomeFeedScript.request,
-                arguments: ["endpoint": endpoint, "payload": payload],
+                arguments: ["endpoint": endpoint, "payload": payload, "pruneLockups": pruneLockups],
                 in: nil,
                 in: .page
             ) { result in
@@ -268,7 +278,7 @@ public final class HomeFeedService: NSObject, WKNavigationDelegate {
             if status == 0 { discardPage() }
             throw HomeFeedError.requestFailed(status)
         }
-        return await parse(api, body)
+        return body
     }
 
     private func evaluateBool(_ script: String, in webView: WKWebView) async -> Bool {

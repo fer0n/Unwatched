@@ -10,7 +10,6 @@ import UnwatchedShared
 struct SettingsView: View {
     @Environment(NavigationManager.self) var navManager
     @AppStorage(Const.themeColor) var theme = ThemeColor()
-    @State private var showOpmlImporter = false
 
     var body: some View {
         ZStack {
@@ -58,22 +57,11 @@ struct SettingsView: View {
                 MySection("userData") {
                     YoutubeLoginButton()
 
-                    Menu {
-                        Button("importFromYoutube") {
-                            navManager.presentedLibrary.append(LibraryDestination.importSubscriptions)
-                        }
-                        Button {
-                            showOpmlImporter = true
-                        } label: {
-                            Text(verbatim: "OPML")
-                        }
+                    Button {
+                        navManager.presentOnboarding()
                     } label: {
-                        // a menu label only takes taps on its content, unlike a button row
                         LibraryNavListItem("importSubscriptions", systemName: "square.and.arrow.down.fill")
-                            .frame(maxWidth: .infinity, alignment: .leading)
-                            .contentShape(.rect)
                     }
-                    .settingsListRow()
                     ExportSubscriptionsShareLink {
                         LibraryNavListItem("exportSubscriptions", systemName: "square.and.arrow.up.fill")
                     }
@@ -154,28 +142,12 @@ struct SettingsView: View {
             }
             .myNavigationTitle("settings")
             .myTint()
-            .fileImporter(
-                isPresented: $showOpmlImporter,
-                allowedContentTypes: [.opml, .xml],
-                onCompletion: handleOpmlImport
-            )
-        }
-    }
-}
-
-extension SettingsView {
-    func handleOpmlImport(_ result: Result<URL, any Error>) {
-        switch result {
-        case .success(let url):
-            navManager.presentedLibrary.append(LibraryDestination.importOpml(url))
-        case .failure(let error):
-            Log.info("\(error.localizedDescription)")
         }
     }
 }
 
 extension View {
-    /// visionOS gives a `Link` or `Menu` in a list its own button chrome, which indents the row past
+    /// visionOS gives a `Link` in a list its own button chrome, which indents the row past
     /// the plain rows next to it, and its own hover effect instead of the row-wide highlight.
     func settingsListRow() -> some View {
         self

@@ -26,13 +26,15 @@ extension View {
         }
     }
 
-    func onboardingSheetStyle() -> some View {
-        modifier(OnboardingSheetStyle())
+    func onboardingSheetStyle(dismissable: Bool = false) -> some View {
+        modifier(OnboardingSheetStyle(dismissable: dismissable))
     }
 }
 
 private struct OnboardingSheetStyle: ViewModifier {
     @AppStorage(Const.themeColor) var theme = ThemeColor()
+
+    let dismissable: Bool
 
     func body(content: Content) -> some View {
         content
@@ -41,7 +43,7 @@ private struct OnboardingSheetStyle: ViewModifier {
             // visionOS puts the sheet on glass, an opaque plate on top of it would hide that
             .background { MyBackgroundColor(macOS: false) }
             .tint(theme.color)
-            .interactiveDismissDisabled()
+            .interactiveDismissDisabled(!dismissable)
     }
 }
 
@@ -91,6 +93,41 @@ struct OnboardingContinueButton: View {
         .tint(theme.color)
         .foregroundStyle(theme.contrastColor)
         .controlSize(.large)
+        .padding(.horizontal, OnboardingLayout.horizontalPadding)
+        .padding(.top, 8)
+    }
+}
+
+struct OnboardingSearchBar: View {
+    @Binding var text: String
+    var prompt: LocalizedStringKey = "onboardingSearchChannels"
+    var isSearching = false
+
+    var body: some View {
+        HStack(spacing: 8) {
+            Image(systemName: "magnifyingglass")
+                .foregroundStyle(.secondary)
+                .symbolEffect(.pulse, isActive: isSearching)
+
+            TextField(prompt, text: $text)
+                .autocorrectionDisabled(true)
+                #if os(iOS)
+                .keyboardType(.webSearch)
+                .textInputAutocapitalization(.never)
+                #endif
+                .submitLabel(.search)
+                .textFieldStyle(.plain)
+
+            TextFieldClearButton(text: $text)
+        }
+        .padding(.horizontal, 14)
+        .frame(height: OnboardingLayout.controlHeight)
+        // the bar behind it is already a material on visionOS; an opaque fill reads as a dark blob
+        #if os(visionOS)
+        .background(.quaternary, in: Capsule())
+        #else
+        .background(Color.insetBackgroundColor, in: Capsule())
+        #endif
         .padding(.horizontal, OnboardingLayout.horizontalPadding)
         .padding(.top, 8)
     }

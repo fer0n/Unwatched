@@ -82,12 +82,6 @@ struct UnwatchedApp: App {
         }
         .windowResizability(.contentSize)
 
-        Window("importSubscriptions", id: Const.windowImportSubs) {
-            ImportSubscriptionsWindow()
-                .environment(refresher)
-        }
-        .windowResizability(.contentSize)
-
         Window("browser", id: Const.windowBrowser) {
             BrowserWindow()
                 .environment(refresher)

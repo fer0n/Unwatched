@@ -14,6 +14,17 @@ class OPMLParser: NSObject, XMLParserDelegate {
         self.data = data
     }
 
+    nonisolated static func subscriptions(in file: URL) throws -> [SendableSubscription] {
+        let isSecureAccess = file.startAccessingSecurityScopedResource()
+        defer {
+            if isSecureAccess {
+                file.stopAccessingSecurityScopedResource()
+            }
+        }
+        let data = try Data(contentsOf: file)
+        return OPMLParser(data: data).parse().sorted { $0.title < $1.title }
+    }
+
     func parse() -> [SendableSubscription] {
         let parser = XMLParser(data: data)
         parser.delegate = self

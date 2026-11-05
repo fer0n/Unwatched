@@ -8,6 +8,8 @@ import UnwatchedShared
 
 struct OnboardingChannelsPage: View {
     @Bindable var viewModel: OnboardingViewModel
+    var onImportFromYoutube: () -> Void
+    var onImportPodcasts: () -> Void
 
     var body: some View {
         let results = viewModel.listedResults
@@ -15,10 +17,14 @@ struct OnboardingChannelsPage: View {
 
         ScrollView {
             LazyVStack(spacing: 0) {
-                OnboardingHeader(
-                    title: "onboardingChannelsTitle",
-                    description: viewModel.searchText.isEmpty ? "onboardingChannelsDescription" : nil
-                )
+                if viewModel.searchText.isEmpty {
+                    OnboardingImportCards(
+                        onImportFromYoutube: onImportFromYoutube,
+                        onImportPodcasts: onImportPodcasts
+                    )
+                    .padding(.horizontal, OnboardingLayout.horizontalPadding)
+                    .padding(.top, 8)
+                }
 
                 ForEach(results) { result in
                     OnboardingResultRow(
@@ -36,6 +42,7 @@ struct OnboardingChannelsPage: View {
         }
         #if !os(visionOS)
         .scrollDismissesKeyboard(.interactively)
+        .scrollEdgeEffectStyle(.soft, for: .top)
         #endif
         .background {
             ZStack {
@@ -85,41 +92,8 @@ struct OnboardingChannelsPage: View {
     }
 }
 
-struct OnboardingChannelsSearchBar: View {
-    @Bindable var viewModel: OnboardingViewModel
-
-    var body: some View {
-        HStack(spacing: 8) {
-            Image(systemName: "magnifyingglass")
-                .foregroundStyle(.secondary)
-                .symbolEffect(.pulse, isActive: viewModel.isSearching)
-
-            TextField("onboardingSearchChannels", text: $viewModel.searchText)
-                .autocorrectionDisabled(true)
-                #if os(iOS)
-                .keyboardType(.webSearch)
-                .textInputAutocapitalization(.never)
-                #endif
-                .submitLabel(.search)
-                .textFieldStyle(.plain)
-
-            TextFieldClearButton(text: $viewModel.searchText)
-        }
-        .padding(.horizontal, 14)
-        .frame(height: OnboardingLayout.controlHeight)
-        // the bar behind it is already a material on visionOS; an opaque fill reads as a dark blob
-        #if os(visionOS)
-        .background(.quaternary, in: Capsule())
-        #else
-        .background(Color.insetBackgroundColor, in: Capsule())
-        #endif
-        .padding(.horizontal, OnboardingLayout.horizontalPadding)
-        .padding(.top, 8)
-    }
-}
-
 #Preview {
-    OnboardingChannelsPage(viewModel: OnboardingViewModel())
+    OnboardingChannelsPage(viewModel: OnboardingViewModel(), onImportFromYoutube: { }, onImportPodcasts: { })
         .environment(ImageCacheManager())
         .modelContainer(DataProvider.previewContainer)
 }

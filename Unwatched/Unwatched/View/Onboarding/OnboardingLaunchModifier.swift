@@ -1,12 +1,12 @@
 //
-//  OnboardingSheetModifier.swift
+//  OnboardingLaunchModifier.swift
 //  Unwatched
 //
 
 import SwiftUI
 import UnwatchedShared
 
-struct OnboardingSheetModifier: ViewModifier {
+struct OnboardingLaunchModifier: ViewModifier {
     @AppStorage(Const.onboardingCompleted) var onboardingCompleted = false
     @AppStorage(Const.onboardingStarted) var onboardingStarted = false
     @AppStorage(Const.settingsSplashShown) var settingsSplashShown = false
@@ -17,13 +17,17 @@ struct OnboardingSheetModifier: ViewModifier {
         @Bindable var navManager = navManager
 
         content
-            .sheet(isPresented: $navManager.showOnboarding) {
-                OnboardingView()
-                    .onboardingSheetFrame()
-            }
             .sheet(isPresented: $navManager.showSettingsSplash) {
                 SettingsSplashView()
                     .onboardingSheetFrame()
+            }
+            .onChange(of: navManager.showOnboarding) { wasShown, isShown in
+                guard wasShown, !isShown, !onboardingCompleted else { return }
+                Task {
+                    if let count = await SubscriptionService.getActiveSubscriptionCount().value, count > 0 {
+                        onboardingCompleted = true
+                    }
+                }
             }
             .task {
                 guard !onboardingCompleted else {
@@ -59,15 +63,7 @@ struct OnboardingSheetModifier: ViewModifier {
 }
 
 extension View {
-    func onboardingSheet() -> some View {
-        self.modifier(OnboardingSheetModifier())
-    }
-
-    fileprivate func onboardingSheetFrame() -> some View {
-        #if os(macOS) || os(visionOS)
-        self.frame(height: 650).frame(minWidth: 450)
-        #else
-        self
-        #endif
+    func onboardingOnLaunch() -> some View {
+        self.modifier(OnboardingLaunchModifier())
     }
 }

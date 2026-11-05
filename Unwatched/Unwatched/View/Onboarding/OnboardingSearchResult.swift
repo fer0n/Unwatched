@@ -11,6 +11,21 @@ enum OnboardingSearchResult: Identifiable, Hashable {
     case channel(YoutubeChannelSearchResult)
     case podcast(SendableSubscription)
 
+    init?(subscription: SendableSubscription) {
+        if let channelId = subscription.youtubeChannelId {
+            self = .channel(YoutubeChannelSearchResult(
+                channelId: channelId,
+                title: subscription.title,
+                userName: subscription.youtubeUserName,
+                thumbnailUrl: subscription.thumbnailUrl
+            ))
+        } else if subscription.isPodcast {
+            self = .podcast(subscription)
+        } else {
+            return nil
+        }
+    }
+
     var channel: YoutubeChannelSearchResult? {
         if case .channel(let channel) = self { return channel }
         return nil

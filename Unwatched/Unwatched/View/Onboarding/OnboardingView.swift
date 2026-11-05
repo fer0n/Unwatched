@@ -14,8 +14,6 @@ enum OnboardingLayout {
     static let controlHeight: CGFloat = 50
 }
 
-/// First-launch flow that gets a new user from an empty app to a filled inbox: pick channels,
-/// land in the inbox.
 struct OnboardingView: View {
     @AppStorage(Const.onboardingCompleted) var onboardingCompleted = false
     @AppStorage(Const.onboardingStarted) var onboardingStarted = false
@@ -25,21 +23,58 @@ struct OnboardingView: View {
     @Environment(NavigationManager.self) var navManager
     @Environment(\.dismiss) var dismiss
 
-    @State private var viewModel = OnboardingViewModel()
+    @Bindable var viewModel: OnboardingViewModel
+    @State private var importSource: OnboardingImportPage.Source?
+    @State private var showOpmlPicker = false
+    @State private var usedImport: String?
+    @State private var hasSubscriptions = false
 
     var body: some View {
-        OnboardingChannelsPage(viewModel: viewModel)
+        NavigationStack {
+            OnboardingChannelsPage(viewModel: viewModel) {
+                openImport(.youtube)
+            } onImportPodcasts: {
+                showOpmlPicker = true
+            }
             .onboardingBottomBar(continueTitle, onContinue: handleContinue) {
-                OnboardingChannelsSearchBar(viewModel: viewModel)
+                OnboardingSearchBar(text: $viewModel.searchText, isSearching: viewModel.isSearching)
             }
-            .onboardingSheetStyle()
-            .onAppear {
-                if !onboardingStarted {
-                    Signal.onboardingStep("started")
+            .navigationTitle("onboardingChannelsTitle")
+            #if os(iOS)
+            .navigationBarTitleDisplayMode(.inline)
+            #endif
+            .toolbar {
+                if hasSubscriptions {
+                    ToolbarItem(placement: .cancellationAction) {
+                        Button("cancel", role: .cancel) { dismiss() }
+                    }
                 }
-                // from here on the flow returns on every launch until `finish()` runs
-                onboardingStarted = true
             }
+            .navigationDestination(item: $importSource) { source in
+                OnboardingImportPage(
+                    viewModel: viewModel,
+                    source: source,
+                    continueTitle: continueTitle,
+                    onContinue: handleContinue
+                )
+            }
+        }
+        .onboardingSheetStyle(dismissable: hasSubscriptions)
+        .task {
+            hasSubscriptions = (await SubscriptionService.getActiveSubscriptionCount().value ?? 0) > 0
+        }
+        .fileImporter(isPresented: $showOpmlPicker, allowedContentTypes: [.opml, .xml]) { result in
+            if let url = try? result.get() {
+                openImport(.opml(url))
+            }
+        }
+        .onAppear {
+            guard viewModel.isFirstRun else { return }
+            if !onboardingStarted {
+                Signal.onboardingStep("started")
+            }
+            onboardingStarted = true
+        }
     }
 
     var continueTitle: LocalizedStringKey {
@@ -47,28 +82,51 @@ struct OnboardingView: View {
     }
 
     func handleContinue() {
-        Signal.onboardingStep("channels", parameters: [
-            "selected": Signal.bucket(viewModel.selected.count),
-            "usedSearch": Signal.onOff(viewModel.didSearch)
-        ])
+        if viewModel.isFirstRun {
+            Signal.onboardingStep("channels", parameters: [
+                "selected": Signal.bucket(viewModel.selected.count),
+                "usedSearch": Signal.onOff(viewModel.didSearch)
+            ])
+            Signal.onboardingStep("finished", parameters: ["via": usedImport ?? "channels"])
+            settingsSplashShown = true
+            OnboardingInboxTip.onboardingFinished = true
+        }
         viewModel.subscribeAndRefresh(refresher)
-        finish()
-    }
-
-    func finish() {
-        Signal.onboardingStep("finished")
         onboardingCompleted = true
-        settingsSplashShown = true
-        OnboardingInboxTip.onboardingFinished = true
         navManager.navigateTo(.inbox)
         dismiss()
+    }
+
+    func openImport(_ source: OnboardingImportPage.Source) {
+        usedImport = source == .youtube ? "youtubeImport" : "podcastImport"
+        if viewModel.isFirstRun {
+            Signal.onboardingStep(source == .youtube ? "youtubeImportOpened" : "podcastImportOpened")
+        }
+        importSource = source
+    }
+}
+
+extension View {
+    func onboardingSheet(isPresented: Binding<Bool>, viewModel: OnboardingViewModel) -> some View {
+        sheet(isPresented: isPresented) {
+            OnboardingView(viewModel: viewModel)
+                .onboardingSheetFrame()
+        }
+    }
+
+    func onboardingSheetFrame() -> some View {
+        #if os(macOS) || os(visionOS)
+        self.frame(height: 650).frame(minWidth: 450)
+        #else
+        self
+        #endif
     }
 }
 
 #Preview {
     Color.black
         .sheet(isPresented: .constant(true)) {
-            OnboardingView()
+            OnboardingView(viewModel: OnboardingViewModel(isFirstRun: true))
         }
         .modelContainer(DataProvider.previewContainer)
         .environment(RefreshManager())

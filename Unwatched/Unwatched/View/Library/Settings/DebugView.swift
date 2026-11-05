@@ -12,7 +12,6 @@ struct DebugView: View {
     @AppStorage(Const.showTutorial) var showTutorial: Bool = true
     @AppStorage(Const.backgroundPlayback) var backgroundPlayback: Bool = true
     @AppStorage(Const.inboxTipHiddenPermanently) var inboxTipHiddenPermanently = false
-    @AppStorage(Const.onboardingCompleted) var onboardingCompleted = false
 
     @Environment(\.modelContext) var modelContext
     @Environment(PlayerManager.self) var player
@@ -35,13 +34,6 @@ struct DebugView: View {
                         Text("showTutorial")
                     }
                     .disabled(showTutorial == true && player.video == nil)
-
-                    Button {
-                        onboardingCompleted = false
-                        navManager.presentOnboarding()
-                    } label: {
-                        Text("showOnboarding")
-                    }
 
                     Button {
                         navManager.presentSettingsSplash()

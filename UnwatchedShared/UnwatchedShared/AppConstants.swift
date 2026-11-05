@@ -375,7 +375,6 @@ public struct Const {
 
     // Windows
     public static let windowHelp = "windowHelp"
-    public static let windowImportSubs = "windowImportSubs"
     public static let windowBrowser = "windowBrowser"
     public static let mainWindowFrame = "mainWindowFrame"
     public static let preFakePipWindowFrame = "preFakePipWindowFrame"

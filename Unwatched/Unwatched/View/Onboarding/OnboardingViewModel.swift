@@ -9,6 +9,7 @@ import UnwatchedShared
 
 @MainActor
 @Observable final class OnboardingViewModel {
+    let isFirstRun: Bool
     var selected = [OnboardingSearchResult]()
     var searchText = ""
     var searchResults = [OnboardingSearchResult]()
@@ -29,6 +30,10 @@ import UnwatchedShared
     var loadedQuery: String?
 
     private static let refreshTimeout: Duration = .seconds(30)
+
+    init(isFirstRun: Bool = !UserDefaults.standard.bool(forKey: Const.onboardingCompleted)) {
+        self.isFirstRun = isFirstRun
+    }
 
     var isSelectionEmpty: Bool {
         selected.isEmpty

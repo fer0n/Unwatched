@@ -28,7 +28,7 @@ struct SetupView: View {
     var body: some View {
         ContentView()
             // not at the end of the chain: navManager is only readable inside the .environment below
-            .onboardingSheet()
+            .onboardingOnLaunch()
             #if os(visionOS)
             .modifier(UpdateWindowSizeModifier())
             #endif

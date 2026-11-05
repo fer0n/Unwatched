@@ -72,6 +72,7 @@ enum HomeFeedScript {
         if (o && typeof o === 'object') { for (const k in o) o[k] = prune(o[k]); }
         return o;
     };
-    return { status: response.status, body: JSON.stringify(prune(await response.json())) };
+    const json = await response.json();
+    return { status: response.status, body: JSON.stringify(pruneLockups ? prune(json) : json) };
     """#
 }
