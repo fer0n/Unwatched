@@ -69,8 +69,9 @@ struct PlayerControls: View {
                 ViewThatFits(in: .horizontal) {
                     HStack(spacing: 10) {
                         controlsBlock
+                        // fixed ideal width, or a long chapter title flips ViewThatFits to two rows
                         scrubber
-                            .frame(minWidth: 280)
+                            .frame(minWidth: 280, idealWidth: 280)
                     }
                     VStack(spacing: 0) {
                         scrubber
