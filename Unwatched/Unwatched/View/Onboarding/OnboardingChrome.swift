@@ -10,13 +10,14 @@ extension View {
     /// Apply to the page's `ScrollView` itself, or the soft edge effect falls back to a default height
     func onboardingBottomBar<Accessory: View>(
         _ continueTitle: LocalizedStringKey,
+        prominent: Bool = true,
         onContinue: @escaping () -> Void,
         @ViewBuilder accessory: @escaping () -> Accessory = { EmptyView() }
     ) -> some View {
         softSafeAreaBar(edge: .bottom) {
             VStack(spacing: 0) {
                 accessory()
-                OnboardingContinueButton(continueTitle, action: onContinue)
+                OnboardingContinueButton(continueTitle, prominent: prominent, action: onContinue)
             }
             .padding(.bottom, 8)
             #if os(visionOS)
@@ -76,25 +77,41 @@ struct OnboardingContinueButton: View {
     @AppStorage(Const.themeColor) var theme = ThemeColor()
 
     let title: LocalizedStringKey
+    /// Off for a neutral, gray button, e.g. closing without a selection
+    let prominent: Bool
     let action: () -> Void
 
-    init(_ title: LocalizedStringKey, action: @escaping () -> Void) {
+    init(_ title: LocalizedStringKey, prominent: Bool = true, action: @escaping () -> Void) {
         self.title = title
+        self.prominent = prominent
         self.action = action
     }
 
     var body: some View {
+        Group {
+            if prominent {
+                button
+                    .buttonStyle(.borderedProminent)
+                    .tint(theme.color)
+                    .foregroundStyle(theme.contrastColor)
+            } else {
+                button
+                    .buttonStyle(.bordered)
+                    .tint(.gray)
+                    .foregroundStyle(.primary)
+            }
+        }
+        .controlSize(.large)
+        .padding(.horizontal, OnboardingLayout.horizontalPadding)
+        .padding(.top, 8)
+    }
+
+    var button: some View {
         Button(action: action) {
             Text(title)
                 .fontWeight(.semibold)
                 .frame(maxWidth: .infinity)
         }
-        .buttonStyle(.borderedProminent)
-        .tint(theme.color)
-        .foregroundStyle(theme.contrastColor)
-        .controlSize(.large)
-        .padding(.horizontal, OnboardingLayout.horizontalPadding)
-        .padding(.top, 8)
     }
 }
 

@@ -36,7 +36,11 @@ struct OnboardingView: View {
             } onImportPodcasts: {
                 showOpmlPicker = true
             }
-            .onboardingBottomBar(continueTitle, onContinue: handleContinue) {
+            .onboardingBottomBar(
+                viewModel.continueTitle,
+                prominent: !viewModel.isSelectionEmpty,
+                onContinue: handleContinue
+            ) {
                 OnboardingSearchBar(text: $viewModel.searchText, isSearching: viewModel.isSearching)
             }
             .navigationTitle("onboardingChannelsTitle")
@@ -46,7 +50,7 @@ struct OnboardingView: View {
             .toolbar {
                 if hasSubscriptions {
                     ToolbarItem(placement: .cancellationAction) {
-                        Button("cancel", role: .cancel) { dismiss() }
+                        DismissSheetButton()
                     }
                 }
             }
@@ -54,7 +58,6 @@ struct OnboardingView: View {
                 OnboardingImportPage(
                     viewModel: viewModel,
                     source: source,
-                    continueTitle: continueTitle,
                     onContinue: handleContinue
                 )
             }
@@ -75,10 +78,6 @@ struct OnboardingView: View {
             }
             onboardingStarted = true
         }
-    }
-
-    var continueTitle: LocalizedStringKey {
-        viewModel.isSelectionEmpty ? "onboardingSkip" : "onboardingShowInbox"
     }
 
     func handleContinue() {
@@ -103,6 +102,12 @@ struct OnboardingView: View {
             Signal.onboardingStep(source == .youtube ? "youtubeImportOpened" : "podcastImportOpened")
         }
         importSource = source
+    }
+}
+
+extension OnboardingViewModel {
+    var continueTitle: LocalizedStringKey {
+        isSelectionEmpty ? "close" : "onboardingAdd\(selected.count)"
     }
 }
 

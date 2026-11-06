@@ -14,7 +14,6 @@ struct OnboardingImportPage: View {
 
     @Bindable var viewModel: OnboardingViewModel
     let source: Source
-    let continueTitle: LocalizedStringKey
     let onContinue: () -> Void
 
     @State private var step = Step.loading
@@ -85,7 +84,11 @@ struct OnboardingImportPage: View {
             stateView
                 .frame(maxWidth: .infinity, maxHeight: .infinity)
         }
-        .onboardingBottomBar(continueTitle, onContinue: onContinue) {
+        .onboardingBottomBar(
+            viewModel.continueTitle,
+            prominent: !viewModel.isSelectionEmpty,
+            onContinue: onContinue
+        ) {
             OnboardingSearchBar(text: $searchText, prompt: "onboardingSearchImported")
         }
         .background { MyBackgroundColor(macOS: false) }
@@ -164,7 +167,7 @@ struct OnboardingImportPage: View {
             .navigationTitle("youtubeLogin")
             .toolbar {
                 ToolbarItem(placement: .cancellationAction) {
-                    Button("cancel", role: .cancel) { showLogin = false }
+                    DismissSheetButton { showLogin = false }
                 }
             }
         }
