@@ -23,6 +23,11 @@ struct PodcastDownloadSettingsView: View {
                     hoursPicker("downloadAhead", selection: $limitHours)
                 }
 
+                MySection(footer: "downloadOnCellularHelper") {
+                    hoursPicker("downloadOnCellular", selection: $cellularHours)
+                        .disabled(limitHours == 0)
+                }
+
                 MySection(footer: "deleteDownloadsHelper") {
                     Picker("deleteAfterWatching", selection: $keepDays) {
                         ForEach(Const.podcastDownloadKeepDayOptions, id: \.self) { days in
@@ -30,11 +35,6 @@ struct PodcastDownloadSettingsView: View {
                         }
                     }
                     .pickerStyle(.menu)
-                }
-
-                MySection(footer: "downloadOnCellularHelper") {
-                    hoursPicker("downloadOnCellular", selection: $cellularHours)
-                        .disabled(limitHours == 0)
                 }
 
                 if storedBytes > 0 {

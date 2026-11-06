@@ -7390,31 +7390,31 @@
         "de" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Mobile Daten verwenden"
+            "value" : "Im Voraus laden (Mobil)"
           }
         },
         "en" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Use Cellular Data"
+            "value" : "Download Ahead (Cellular)"
           }
         },
         "es" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Usar datos móviles"
+            "value" : "Descargar por adelantado (datos móviles)"
           }
         },
         "fr" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Utiliser les données cellulaires"
+            "value" : "Télécharger à l’avance (cellulaire)"
           }
         },
         "pl" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Używaj danych komórkowych"
+            "value" : "Pobieraj z wyprzedzeniem (dane komórkowe)"
           }
         }
       }
