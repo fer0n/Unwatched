@@ -8,7 +8,7 @@ const media = (shared) =>
     ? `<iframe class="video" src="${escapeHtml(shared.embed)}" title="YouTube video player" allow="encrypted-media; picture-in-picture; fullscreen" allowfullscreen></iframe>`
     : "";
 
-export function fallbackPage(url, shared, { title, subtitle, image }) {
+export function fallbackPage(url, shared, { title, subtitle, image, imageWidth, imageHeight }) {
   const pageTitle = title ?? "Shared with Unwatched";
   const externalLabel = EXTERNAL_LABELS[shared.kind] ?? "Open link";
   const artwork = shared.kind === "podcast" && image ? `<img class="artwork" src="${escapeHtml(image)}" alt="">` : "";
@@ -21,6 +21,8 @@ export function fallbackPage(url, shared, { title, subtitle, image }) {
 <meta property="og:title" content="${escapeHtml(pageTitle)}">
 ${subtitle ? `<meta property="og:description" content="${escapeHtml(subtitle)}">` : ""}
 ${image ? `<meta property="og:image" content="${escapeHtml(image)}">` : ""}
+${imageWidth ? `<meta property="og:image:width" content="${imageWidth}">` : ""}
+${imageHeight ? `<meta property="og:image:height" content="${imageHeight}">` : ""}
 <meta property="og:url" content="${escapeHtml(url.href)}">
 <meta name="apple-itunes-app" content="app-id=6477287463, app-argument=${escapeHtml(url.href)}">
 <style>

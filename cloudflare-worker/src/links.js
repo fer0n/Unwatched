@@ -1,4 +1,5 @@
-import { sharedItem, preview } from "./links/shared.js";
+import { sharedItem } from "./links/shared.js";
+import { preview } from "./links/preview.js";
 import { fallbackPage } from "./links/page.js";
 
 export const LINKS_HOSTS = new Set(["unwatched.octabits.net", "u.octabits.net"]);

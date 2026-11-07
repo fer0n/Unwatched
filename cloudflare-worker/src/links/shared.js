@@ -1,4 +1,3 @@
-const CACHED = { cf: { cacheTtl: 86400, cacheEverything: true } };
 const YOUTUBE_VIDEO = /^https?:\/\/(?:[\w-]+\.)?(?:youtube\.com\/(?:watch\?(?:[^#]*&)?v=|shorts\/|live\/)|youtu\.be\/)([\w-]{11})/;
 const APPLE_EPISODE = /^https:\/\/podcasts\.apple\.com\/(?:([a-z]{2})\/)?podcast\/(?:[^/]+\/)?id(\d+)\?i=(\d+)/;
 
@@ -32,7 +31,7 @@ function youtube(id, start, inApp) {
   const seconds = start && /^\d+$/.test(start) ? start : null;
   const target = `https://www.youtube.com/watch?v=${id}${seconds ? `&t=${seconds}s` : ""}`;
   const embed = `https://www.youtube-nocookie.com/embed/${id}${seconds ? `?start=${seconds}` : ""}`;
-  return { kind: "youtube", target, embed, inApp: inApp ?? `unwatched://open?url=${encodeURIComponent(target)}` };
+  return { kind: "youtube", id, target, embed, inApp: inApp ?? `unwatched://open?url=${encodeURIComponent(target)}` };
 }
 
 function podcast(showId, episodeId, country) {
@@ -40,32 +39,4 @@ function podcast(showId, episodeId, country) {
   const store = country && /^[a-z]{2}$/i.test(country) ? country.toLowerCase() : null;
   const target = `https://podcasts.apple.com/${store ? `${store}/` : ""}podcast/id${showId}?i=${episodeId}`;
   return { kind: "podcast", showId, episodeId, store, target, inApp: `unwatched://open?url=${encodeURIComponent(target)}` };
-}
-
-export async function preview(shared) {
-  try {
-    if (shared.kind === "youtube") {
-      const res = await fetch(`https://www.youtube.com/oembed?format=json&url=${encodeURIComponent(shared.target)}`, CACHED);
-      if (!res.ok) return {};
-      const data = await res.json();
-      return { title: data.title, subtitle: data.author_name, image: data.thumbnail_url };
-    }
-    if (shared.kind === "podcast") {
-      const params = new URLSearchParams({ id: shared.showId, entity: "podcastEpisode", limit: "200" });
-      if (shared.store) params.set("country", shared.store);
-      const res = await fetch(`https://itunes.apple.com/lookup?${params}`, CACHED);
-      if (!res.ok) return {};
-      const { results = [] } = await res.json();
-      const episode = results.find((r) => String(r.trackId) === shared.episodeId);
-      const show = results.find((r) => r.wrapperType === "track");
-      return {
-        title: episode?.trackName,
-        subtitle: show?.collectionName ?? episode?.collectionName,
-        image: episode?.artworkUrl600 ?? show?.artworkUrl600,
-      };
-    }
-  } catch {
-    return {};
-  }
-  return {};
 }
