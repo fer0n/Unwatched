@@ -16,24 +16,18 @@ struct InboxSwipeTipView: View {
         TipView(swipeTip)
             .listRowTip()
             .swipeActions(edge: .leading, allowsFullSwipe: true) {
-                Button(action: invalidateTip) {
-                    Image(systemName: "text.insert")
-                        .accessibilityLabel("queueNext")
+                Group {
+                    Button("queueNext", systemImage: Const.queueNextSF, action: invalidateTip)
+                        .tint(theme.color.mix(with: Color.black, by: 0.1))
+                    Button("queueLast", systemImage: Const.queueLastSF, action: invalidateTip)
+                        .tint(theme.color.mix(with: Color.black, by: 0.3))
                 }
-                .tint(theme.color.mix(with: Color.black, by: 0.1))
-
-                Button(action: invalidateTip) {
-                    Image(systemName: Const.queueLastSF)
-                }
-                .accessibilityLabel("queueLast")
-                .tint(theme.color.mix(with: Color.black, by: 0.3))
+                .labelStyle(.iconOnly)
             }
             .swipeActions(edge: .trailing, allowsFullSwipe: true) {
-                Button(action: invalidateTip) {
-                    Image(systemName: Const.clearSF)
-                }
-                .accessibilityLabel("clear")
-                .tint(theme.color.mix(with: Color.black, by: 0.9))
+                Button("clear", systemImage: Const.clearSF, action: invalidateTip)
+                    .labelStyle(.iconOnly)
+                    .tint(theme.color.mix(with: Color.black, by: 0.9))
             }
     }
 

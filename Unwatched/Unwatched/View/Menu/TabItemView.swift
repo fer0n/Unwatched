@@ -17,6 +17,7 @@ struct MenuTabLabel: View {
     var showBadge: Bool = false
     /// Shown instead of the tab's own name, e.g. the queue's current tag
     var title: String?
+    var accessibilityValue: String = ""
 
     var body: some View {
         Label {
@@ -31,6 +32,7 @@ struct MenuTabLabel: View {
                 .fontWeight(.black)
         }
         .accessibilityLabel(title ?? tag.description)
+        .accessibilityValue(accessibilityValue)
     }
 
     static func title(_ title: String, showBadge: Bool = false, showLabels: Bool) -> String {

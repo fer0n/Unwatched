@@ -53,13 +53,18 @@ struct InboxTabLabel: View {
     var body: some View {
         MenuTabLabel(
             image: getInboxSymbol,
-            tag: .inbox
+            tag: .inbox,
+            accessibilityValue: Self.accessibilityValue(isEmpty: anyInboxEntry.isEmpty)
         )
     }
 
     var getInboxSymbol: Image {
         let name = Self.symbol(isLoading: refresher.isLoading, isEmpty: anyInboxEntry.isEmpty)
         return refresher.isLoading ? Image(name) : Image(systemName: name)
+    }
+
+    static func accessibilityValue(isEmpty: Bool) -> String {
+        isEmpty ? "" : String(localized: "inboxHasVideos")
     }
 
     static func symbol(isLoading: Bool, isEmpty: Bool) -> String {

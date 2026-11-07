@@ -57,19 +57,20 @@ extension MenuTabBarController {
             guard labels != appliedLabels else { return }
             appliedLabels = labels
 
-            func update(_ tab: UITab?, image: UIImage?, title: String, badge: Bool = false) {
+            func update(_ tab: UITab?, image: UIImage?, title: String, badge: Bool = false, value: String = "") {
                 tab?.image = image
                 tab?.title = MenuTabLabel.title(title, showBadge: badge, showLabels: labels.showLabels)
                 // VoiceOver reads hidden titles as the symbol name and the badge as "●"
                 tab?.viewController?.tabBarItem.accessibilityLabel = title
+                tab?.viewController?.tabBarItem.accessibilityValue = value
             }
-            func update(_ tab: NavigationTab, symbol: String, badge: Bool = false) {
+            func update(_ tab: NavigationTab, symbol: String, badge: Bool = false, value: String = "") {
                 let image = Self.symbol(symbol)
-                update(uiTab(for: tab, in: controller), image: image, title: tab.description, badge: badge)
+                update(uiTab(for: tab, in: controller), image: image, title: tab.description, badge: badge, value: value)
             }
 
-            update(.queue, symbol: labels.queueSymbol, badge: labels.queueBadge)
-            update(.inbox, symbol: labels.inboxSymbol)
+            update(.queue, symbol: labels.queueSymbol, badge: labels.queueBadge, value: labels.queueValue)
+            update(.inbox, symbol: labels.inboxSymbol, value: labels.inboxValue)
             update(.library, symbol: "books.vertical")
             update(
                 controller.tab(forIdentifier: Self.playPauseIdentifier),

@@ -383,29 +383,18 @@ struct LeadingSwipeActionsView: View {
     var toggleIsNew: () -> Void
 
     var body: some View {
+        // swipe actions ignore .accessibilityLabel; VoiceOver reads the title
         Group {
-            Button(role: config.queueRole,
-                   action: addVideoToTopQueue,
-                   label: {
-                    Image(systemName: Const.queueNextSF)
-                   })
+            Button("queueNext", systemImage: Const.queueNextSF, role: config.queueRole, action: addVideoToTopQueue)
                 .tint(theme.color.mix(with: Color.black, by: 0.1))
-                .accessibilityLabel("queueNext")
-            Button(role: config.queueRole,
-                   action: addVideoToBottomQueue,
-                   label: {
-                    Image(systemName: Const.queueLastSF)
-                   })
+            Button("queueLast", systemImage: Const.queueLastSF, role: config.queueRole, action: addVideoToBottomQueue)
                 .tint(theme.color.mix(with: Color.black, by: 0.3))
-                .accessibilityLabel("queueLast")
             if config.isNew == true {
-                Button(action: toggleIsNew) {
-                    Image(systemName: Const.removeNewSF)
-                }
-                .tint(theme.color.mix(with: Color.black, by: 0.5))
-                .accessibilityLabel("removeIsNew")
+                Button("removeIsNew", systemImage: Const.removeNewSF, action: toggleIsNew)
+                    .tint(theme.color.mix(with: Color.black, by: 0.5))
             }
         }
+        .labelStyle(.iconOnly)
     }
 }
 
@@ -467,10 +456,10 @@ struct TrailingSwipeActionsView: View {
                 navManager.pushVideoDetail(video)
                 video.isNew = false
             } label: {
-                Image(Const.videoDescriptionSF)
+                Label("videoDescription", image: Const.videoDescriptionSF)
             }
+            .labelStyle(.iconOnly)
             .tint(theme.color.mix(with: Color.black, by: 0.3))
-            .accessibilityLabel("videoDescription")
         }
     }
 }

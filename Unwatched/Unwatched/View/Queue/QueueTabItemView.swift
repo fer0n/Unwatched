@@ -47,12 +47,18 @@ struct QueueTabLabel: View {
     @Query(sort: \Tag.order) private var tags: [Tag]
 
     var body: some View {
+        let showBadge = showTabBarBadge && !queue.isEmpty
         MenuTabLabel(
             image: Image(systemName: Self.symbol(for: navManager.queueTag, in: tags)),
             tag: .queue,
-            showBadge: showTabBarBadge && !queue.isEmpty,
-            title: title
+            showBadge: showBadge,
+            title: title,
+            accessibilityValue: Self.accessibilityValue(showBadge: showBadge)
         )
+    }
+
+    static func accessibilityValue(showBadge: Bool) -> String {
+        showBadge ? String(localized: "newVideos") : ""
     }
 
     /// The tag's name stands in for "Queue" where there's room for it

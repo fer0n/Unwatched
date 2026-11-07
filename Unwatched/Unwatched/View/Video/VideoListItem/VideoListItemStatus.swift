@@ -6,6 +6,18 @@
 import SwiftUI
 import UnwatchedShared
 
+private struct StatusInfo {
+    let systemName: String
+    let color: Color
+    let label: LocalizedStringKey
+
+    init(_ systemName: String, _ color: Color, _ label: LocalizedStringKey) {
+        self.systemName = systemName
+        self.color = color
+        self.label = label
+    }
+}
+
 struct VideoListItemStatus: View {
     @Environment(PlayerManager.self) private var player
 
@@ -21,41 +33,41 @@ struct VideoListItemStatus: View {
     @ScaledMetric var size = 23
 
     var body: some View {
-        if let statusInfo = videoStatusSystemName,
-           let status = statusInfo.status {
-            Image(systemName: status)
+        if let statusInfo {
+            Image(systemName: statusInfo.systemName)
                 .resizable()
                 .foregroundStyle(.white, statusInfo.color.mix(with: .black, by: 0.1))
                 .frame(width: size, height: size)
                 .accessibilityLabel("videoStatus")
+                .accessibilityValue(statusInfo.label)
                 #if os(macOS)
                 .padding(2)
             #endif
         }
     }
 
-    var videoStatusSystemName: (status: String?, color: Color)? {
+    private var statusInfo: StatusInfo? {
         let defaultColor = Color.green
         if showAllStatus {
             if youtubeId == player.video?.youtubeId {
-                return ("play.circle.fill", defaultColor)
+                return StatusInfo("play.circle.fill", defaultColor, "nowPlaying")
             }
             if hasInboxEntry == true {
-                return ("tray.circle.fill", .teal)
+                return StatusInfo("tray.circle.fill", .teal, "inbox")
             }
             if hasQueueEntry == true {
-                return ("arrow.uturn.right.circle.fill", defaultColor)
+                return StatusInfo("arrow.uturn.right.circle.fill", defaultColor, "queue")
             }
         }
         if isNew == true {
-            return ("circle.circle.fill", .mint)
+            return StatusInfo("circle.circle.fill", .mint, "statusNew")
         }
         if showAllStatus {
             if deferred == true {
-                return ("clock.circle.fill", .orange)
+                return StatusInfo("clock.circle.fill", .orange, "statusDeferred")
             }
             if watched == true {
-                return (Const.watchedSF, defaultColor.mix(with: .black, by: 0.3))
+                return StatusInfo(Const.watchedSF, defaultColor.mix(with: .black, by: 0.3), "watched")
             }
         }
         return nil

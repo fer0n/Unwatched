@@ -43,7 +43,8 @@ struct TrailingSwipeMoreMenu: View {
                 deleteVideo: deleteVideo
             )
         } label: {
-            Image(systemName: "ellipsis")
+            Label("moreOptions", systemImage: "ellipsis")
+                .labelStyle(.iconOnly)
         }
         .tint(theme.color.mix(with: Color.black, by: 0.5))
     }
