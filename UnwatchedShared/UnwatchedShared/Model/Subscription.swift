@@ -110,6 +110,8 @@ public final class Subscription: SubscriptionData, CustomStringConvertible, Expo
 
     public var chapterGeneration: Bool?
 
+    public var episodeLimit: Int?
+
     public var customSpeedSetting: Double?
     public var customAspectRatio: Double?
     public var skipIntroSeconds: Double?
@@ -214,6 +216,7 @@ public final class Subscription: SubscriptionData, CustomStringConvertible, Expo
             sponsorSegmentSetting: sponsorSegmentSetting,
             selfPromoSegmentSetting: selfPromoSegmentSetting,
             chapterGeneration: chapterGeneration,
+            episodeLimit: episodeLimit,
             customSpeedSetting: customSpeedSetting,
             customAspectRatio: customAspectRatio,
             skipIntroSeconds: skipIntroSeconds,

@@ -323,6 +323,10 @@ actor VideoActor: SharedContextActor {
                                                    videos: videoModels,
                                                    defaultPlacement: defaultPlacement,
                                                    catchUp: catchUp)
+        if subscription.episodeLimit != nil, !addedVideos.isEmpty {
+            let playingId = await MainActor.run { PlayerManager.shared.video?.youtubeId }
+            EpisodeLimitService.apply(to: subscription, exempt: playingId, in: modelContext)
+        }
         updateRecentVideoDate(subscription, mostRecentDate)
         return (videoModels, addedVideos)
     }

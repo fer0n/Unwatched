@@ -112,6 +112,10 @@ struct SubscriptionInfoDetails: View {
 
                         SubscriptionVideoPlacementSetting(subscription: subscription)
 
+                        if !subscription.isWatchLater {
+                            SubscriptionEpisodeLimitSetting(subscription: subscription)
+                        }
+
                         if !subscription.isPodcast {
                             SubscriptionShortsSetting(subscription: subscription)
                         }

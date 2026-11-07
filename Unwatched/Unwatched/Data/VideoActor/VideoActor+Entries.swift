@@ -307,6 +307,7 @@ extension VideoActor {
                                   catchUp: FeedFallbackState.CatchUp? = nil) -> [Video] {
         var videosToAdd = catchUp?.triageCandidates(videos) ?? triageCandidates(videos, sub: sub)
         videosToAdd = getFilteredByVideoTitleText(videosToAdd, sub, defaultPlacement)
+        videosToAdd = EpisodeLimitService.newest(videosToAdd, within: sub.episodeLimit)
 
         var placement = sub.videoPlacement
         if sub.videoPlacement == .defaultPlacement {

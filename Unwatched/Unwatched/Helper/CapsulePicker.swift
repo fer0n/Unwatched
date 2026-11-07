@@ -13,8 +13,9 @@ struct CapsulePicker<T: Hashable>: View {
 
     @Binding var selection: T
     var options: [T]
-    var label: (T) -> (text: String, image: String)
+    var label: (T) -> (text: String, image: String?)
     var menuLabel: LocalizedStringKey
+    var fallbackSystemImage = "questionmark"
 
     var body: some View {
         Menu {
@@ -26,13 +27,17 @@ struct CapsulePicker<T: Hashable>: View {
                     try? modelContext.save()
                 } label: {
                     let (text, image) = label(option)
-                    Label(text, systemImage: image)
+                    if let image {
+                        Label(text, systemImage: image)
+                    } else {
+                        Text(text)
+                    }
                 }
                 .disabled(selection == option)
             }
         } label: {
             let (text, image) = label(selection)
-            CapsuleMenuLabel(systemImage: image,
+            CapsuleMenuLabel(systemImage: image ?? fallbackSystemImage,
                              menuLabel: menuLabel,
                              text: text)
         }

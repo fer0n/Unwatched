@@ -229,6 +229,7 @@ public struct Const {
 
     /// Consecutive failed refreshes before a feed is flagged to the user, see `SubscriptionData.hasFeedIssue`.
     public static let subscriptionFailureThreshold = 3
+    public static let episodeLimits = 1...5
 
     public static let earliestBackgroundBeginSeconds: Double = 30 * 60
     public static let backgroundAppRefreshId = "com.pentlandFirth.Unwatched.refreshVideos"
