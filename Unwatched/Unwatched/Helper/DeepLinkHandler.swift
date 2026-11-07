@@ -17,76 +17,48 @@ struct DeepLinkHandler: ViewModifier {
     }
 
     func handleDeepLink(url: URL) {
-        guard let host = url.host else { return }
+        guard let host = url.host, ["play", "queue", "inbox"].contains(host),
+              let components = URLComponents(url: url, resolvingAgainstBaseURL: false) else { return }
+        let value = { (name: String) in components.queryItems?.first { $0.name == name }?.value }
+
+        if host == "play", value("source") == "safari_extension", !guardPremium("safariExtension") {
+            return
+        }
+        guard let link = linkedUrl(from: components, value: value) else {
+            Log.error("No link found in deep link: \(url)")
+            return
+        }
         switch host {
         case "play":
-            // unwatched://play?url=https://www.youtube.com/watch?v=O_0Wn73AnC8
-            // unwatched://play?v=O_0Wn73AnC8
-            guard
-                let components = URLComponents(url: url, resolvingAgainstBaseURL: false),
-                let queryItems = components.queryItems
-            else { return }
-
-            if queryItems.first(where: { $0.name == "source" })?.value == "safari_extension" {
-                guard guardPremium("safariExtension") else { return }
-            }
-
-            guard let youtubeUrl = youtubeUrl(from: queryItems) else {
-                Log.error("No youtube URL found in deep link: \(url)")
-                return
-            }
-            let userInfo: [AnyHashable: Any] = ["youtubeUrl": youtubeUrl]
-            NotificationCenter.default.post(name: .watchInUnwatched, object: nil, userInfo: userInfo)
+            post(.watchInUnwatched, ["youtubeUrl": link])
         case "queue":
-            // unwatched://queue?url=https://www.youtube.com/watch?v=O_0Wn73AnC8
-            // unwatched://queue?url=https://www.youtube.com/watch?v=O_0Wn73AnC8&next=true
-            // unwatched://queue?url=https://www.youtube.com/watch?v=O_0Wn73AnC8&x-success=myapp://
-            guard
-                let components = URLComponents(url: url, resolvingAgainstBaseURL: false),
-                let queryItems = components.queryItems
-            else { return }
-
-            guard let youtubeUrl = youtubeUrl(from: queryItems) else {
-                Log.error("No youtube URL found in deep link: \(url)")
-                return
-            }
-            let isNext = queryItems.first(where: { $0.name == "next" })?.value == "true"
-            let queueUserInfo: [AnyHashable: Any] = ["youtubeUrl": youtubeUrl, "next": isNext]
-            NotificationCenter.default.post(name: .queueInUnwatched, object: nil, userInfo: queueUserInfo)
-            if let xSuccess = queryItems.first(where: { $0.name == "x-success" })?.value,
-               let xSuccessURL = URL(string: xSuccess) {
+            post(.queueInUnwatched, ["youtubeUrl": link, "next": value("next") == "true"])
+            if let xSuccessURL = value("x-success").flatMap(URL.init(string:)) {
                 UrlService.open(xSuccessURL)
             }
-        case "inbox":
-            // unwatched://inbox?url=https://www.youtube.com/watch?v=O_0Wn73AnC8
-            guard
-                let components = URLComponents(url: url, resolvingAgainstBaseURL: false),
-                let queryItems = components.queryItems
-            else { return }
-
-            guard let youtubeUrl = youtubeUrl(from: queryItems) else {
-                Log.error("No youtube URL found in deep link: \(url)")
-                return
-            }
-            let inboxUserInfo: [AnyHashable: Any] = ["youtubeUrl": youtubeUrl]
-            NotificationCenter.default.post(name: .inboxInUnwatched, object: nil, userInfo: inboxUserInfo)
         default:
-            break
+            post(.inboxInUnwatched, ["youtubeUrl": link])
         }
     }
 
-    /// Accepts either a full link (`url=https://www.youtube.com/watch?v=…`) or a bare video id (`v=…`).
-    private func youtubeUrl(from queryItems: [URLQueryItem]) -> URL? {
-        if let urlString = queryItems.first(where: { $0.name == "url" })?.value,
-           let url = URL(string: urlString) {
-            return url
+    private func post(_ name: Notification.Name, _ userInfo: [AnyHashable: Any]) {
+        NotificationCenter.default.post(name: name, object: nil, userInfo: userInfo)
+    }
+
+    private func linkedUrl(from components: URLComponents, value: (String) -> String?) -> URL? {
+        if let link = value("url").flatMap(URL.init(string:)) {
+            return reattaching(components.fragment, to: link)
         }
-        guard let videoId = queryItems.first(where: { $0.name == "v" })?.value,
-              !videoId.isEmpty
-        else { return nil }
-        var components = URLComponents(string: "https://www.youtube.com/watch")
-        components?.queryItems = [URLQueryItem(name: "v", value: videoId)]
-        return components?.url
+        guard let videoId = value("v"), !videoId.isEmpty else { return nil }
+        return URL(string: UrlService.getNonEmbeddedYoutubeUrl(videoId))
+    }
+
+    // an unencoded `#u=` lands on the deep link, not on its `url=`
+    private func reattaching(_ fragment: String?, to link: URL) -> URL {
+        guard link.fragment == nil, let fragment,
+              var components = URLComponents(url: link, resolvingAgainstBaseURL: false) else { return link }
+        components.fragment = fragment
+        return components.url ?? link
     }
 }
 

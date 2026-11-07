@@ -54,8 +54,8 @@ actor VideoActor: SharedContextActor {
         var videos = [Video]()
         var videoIds = [(videoId: String, startAt: Double?)]()
         var playlistIds = [String]()
+        var otherUrls = [URL]()
 
-        var containsError = false
         for url in urls {
             if let youtubeId = UrlService.getYoutubeIdFromUrl(url: url) {
                 let startTime = UrlService.getStartTimeFromUrl(url)
@@ -63,8 +63,7 @@ actor VideoActor: SharedContextActor {
             } else if let playlistId = UrlService.getPlaylistIdFromUrl(url) {
                 playlistIds.append(playlistId)
             } else {
-                containsError = true
-                Log.refresh.warning("Url doesn't seem to be for a playlist or video: \(url.absoluteString)")
+                otherUrls.append(url)
             }
         }
 
@@ -81,9 +80,12 @@ actor VideoActor: SharedContextActor {
             videos += try await addForeignPlaylist(playlistId: playlistId, in: videoplacement, at: index)
         }
 
+        let podcasts = await addForeignPodcastEpisodes(otherUrls, in: videoplacement, at: index, markAsNew: markAsNew)
+        videos += podcasts.episodes
+
         try modelContext.save()
-        if containsError {
-            throw VideoError.noYoutubeId
+        if podcasts.episodes.count < otherUrls.count {
+            throw podcasts.error ?? VideoError.noYoutubeId
         }
         return videos.map(\.persistentModelID)
     }
@@ -160,7 +162,7 @@ actor VideoActor: SharedContextActor {
         }
     }
 
-    private func videoAlreadyExists(_ youtubeId: String) -> Video? {
+    func videoAlreadyExists(_ youtubeId: String) -> Video? {
         var fetch = FetchDescriptor<Video>(predicate: #Predicate {
             $0.youtubeId == youtubeId
         })
@@ -331,11 +333,7 @@ actor VideoActor: SharedContextActor {
             videoModels.append(video)
             modelContext.insert(video)
             video.subscription = sub
-            // podcast feeds can carry their chapters inline; nothing else does, and everything else derives them from
-            // the description instead.
-            if !vid.chapters.isEmpty, video.isPodcast {
-                ChapterService.cachePodcastChapters(vid.chapters, youtubeId: video.youtubeId)
-            }
+            cacheInlinePodcastChapters(of: vid, for: video)
         }
         return videoModels
     }

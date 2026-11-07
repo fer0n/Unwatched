@@ -47,6 +47,67 @@ public enum PodcastSearchService {
         return !id.isEmpty && id.allSatisfy(\.isNumber) ? String(id) : nil
     }
 
+    public static func episodeTrackId(from url: URL) -> String? {
+        guard collectionId(from: url) != nil,
+              let id = URLComponents(url: url, resolvingAgainstBaseURL: false)?
+                .queryItems?.first(where: { $0.name == "i" })?.value,
+              !id.isEmpty, id.allSatisfy(\.isNumber) else {
+            return nil
+        }
+        return id
+    }
+
+    public struct DirectoryEpisode: Sendable {
+        public let feedUrl: URL
+        public let guid: String?
+        public let mediaUrl: URL?
+    }
+
+    public static func storefront(from url: URL) -> String? {
+        let first = url.pathComponents.dropFirst().first ?? ""
+        return first.count == 2 && first.allSatisfy(\.isLetter) ? first.lowercased() : nil
+    }
+
+    /// Only a show's latest 200 episodes can be looked up.
+    public static func lookupEpisode(
+        collectionId: String,
+        trackId: String,
+        storefront: String?
+    ) async throws -> DirectoryEpisode? {
+        var components = URLComponents(string: lookupUrl)
+        components?.queryItems = [
+            URLQueryItem(name: "id", value: collectionId),
+            URLQueryItem(name: "entity", value: "podcastEpisode"),
+            URLQueryItem(name: "limit", value: "200")
+        ] + (storefront.map { [URLQueryItem(name: "country", value: $0)] } ?? [])
+        guard let url = components?.url else { return nil }
+        let (data, response) = try await URLSession.app.data(from: url)
+        guard response.isSuccessfulHttp else {
+            throw URLError(.badServerResponse)
+        }
+        let decoded = try JSONDecoder().decode(EpisodeLookupResponse.self, from: data)
+        guard let match = decoded.results.first(where: { $0.trackId.map(String.init) == trackId }),
+              let feedUrl = PodcastService.secureUrl(string: match.feedUrl) else {
+            return nil
+        }
+        return DirectoryEpisode(
+            feedUrl: feedUrl,
+            guid: match.episodeGuid,
+            mediaUrl: PodcastService.secureUrl(string: match.episodeUrl)
+        )
+    }
+
+    private struct EpisodeLookupResponse: Decodable {
+        let results: [Result]
+
+        struct Result: Decodable {
+            let trackId: Int?
+            let feedUrl: String?
+            let episodeGuid: String?
+            let episodeUrl: String?
+        }
+    }
+
     /// The directory answers loosely — a one-word query comes back with shows that merely
     /// mention it. Keeps the ones whose title or author actually reflects the query.
     public static func isGoodMatch(_ sub: SendableSubscription, query: String) -> Bool {

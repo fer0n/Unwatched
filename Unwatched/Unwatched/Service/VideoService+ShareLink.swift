@@ -34,19 +34,27 @@ extension VideoService {
 
     @MainActor
     private static func getPodcastEpisode(sharedAs sharedUrl: URL) -> Video? {
-        let context = DataProvider.mainContext
+        let match = podcastEpisodes(sharedAs: sharedUrl, context: DataProvider.mainContext)
+        let url = UrlService.removingEpisodeId(from: sharedUrl)
+        return match.named ?? pickVideo(matching: match.candidates, url: url)
+    }
+
+    static func podcastEpisodes(
+        sharedAs sharedUrl: URL,
+        context: ModelContext
+    ) -> (named: Video?, candidates: [Video]) {
         let url = UrlService.removingEpisodeId(from: sharedUrl)
         let fetch = FetchDescriptor<Video>(predicate: #Predicate { $0.url == url || $0.mediaUrl == url })
         let videos = (try? context.fetch(fetch)) ?? []
+        let byMedia = videos.first { $0.mediaUrl == url }
         guard let episodeId = UrlService.getEpisodeIdPrefix(from: sharedUrl) else {
-            return pickVideo(matching: videos, url: url)
+            return (byMedia, videos)
         }
-        return videos.first { $0.youtubeId.hasPrefix(episodeId) }
+        let named = videos.first { $0.youtubeId.hasPrefix(episodeId) }
             ?? getVideo(startingWith: episodeId, context: context)
-            ?? pickVideo(matching: videos, url: url)
+        return (named ?? byMedia, videos)
     }
 
-    @MainActor
     private static func getVideo(startingWith episodeId: String, context: ModelContext) -> Video? {
         var fetch = FetchDescriptor<Video>(predicate: #Predicate { $0.youtubeId.starts(with: episodeId) })
         fetch.fetchLimit = 1
