@@ -121,7 +121,9 @@ public final class Video: VideoData, CustomStringConvertible, Exportable {
     }
 
     public var channelName: String? {
-        isFromPlaylist ? channelDisplayTitle : subscription?.author ?? subscription?.displayTitle
+        isFromPlaylist
+            ? uploaderTitle ?? subscription?.title
+            : subscription?.author ?? subscription?.displayTitle
     }
 
     private var isFromPlaylist: Bool {

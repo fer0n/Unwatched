@@ -23,7 +23,16 @@ extension ShareCardView {
         }
     }
 
+    @ViewBuilder
     func channelThumbnail(for sub: SendableSubscription) -> some View {
+        if sub.isWatchLater {
+            WatchLaterAvatar(size: 90)
+        } else {
+            channelImage(for: sub)
+        }
+    }
+
+    func channelImage(for sub: SendableSubscription) -> some View {
         CachedImageView(urls: [sub.thumbnailUrl]) { image in
             image
                 .resizable()

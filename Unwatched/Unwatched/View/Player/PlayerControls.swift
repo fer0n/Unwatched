@@ -247,14 +247,7 @@ extension PlayerControls {
             Group {
                 if let video = player.video {
                     let source = VideoOrigin(video)
-                    HStack(spacing: 10) {
-                        VideoSourceTitle(video: video, source: source, showImage: true)
-                            .layoutPriority(1)
-                        if let playlist = source.playlist {
-                            VideoPlaylistTitle(playlist: playlist)
-                                .font(.subheadline)
-                        }
-                    }
+                    VideoSourceTitle(video: video, source: source)
                 } else {
                     Spacer()
                 }

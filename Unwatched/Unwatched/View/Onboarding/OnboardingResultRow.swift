@@ -13,6 +13,7 @@ struct OnboardingResultRow: View {
     var subtitle: String?
     var thumbnailUrl: URL?
     var isPodcast = false
+    var isWatchLater = false
     let isSelected: Bool
     var showsDivider = false
     let toggle: () -> Void
@@ -69,7 +70,15 @@ struct OnboardingResultRow: View {
         isPodcast ? "antenna.radiowaves.left.and.right" : "play.rectangle.fill"
     }
 
-    var avatar: some View {
+    @ViewBuilder var avatar: some View {
+        if isWatchLater {
+            WatchLaterAvatar(size: Self.avatarSize)
+        } else {
+            imageAvatar
+        }
+    }
+
+    var imageAvatar: some View {
         CachedImageView(imageUrl: thumbnailUrl, maxPixelSize: ceil(Self.avatarSize * displayScale)) { image in
             image
                 .resizable()
@@ -96,6 +105,7 @@ extension OnboardingResultRow {
             subtitle: result.subtitle,
             thumbnailUrl: result.thumbnailUrl,
             isPodcast: result.isPodcast,
+            isWatchLater: result.isWatchLater,
             isSelected: isSelected,
             showsDivider: showsDivider,
             toggle: toggle

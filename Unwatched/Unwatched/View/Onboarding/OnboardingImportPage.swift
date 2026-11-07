@@ -186,7 +186,10 @@ struct OnboardingImportPage: View {
         withAnimation { step = .loading }
         do {
             let subscriptions = try await fetch()
-            let results = subscriptions.compactMap(OnboardingSearchResult.init(subscription:))
+            var results = subscriptions.compactMap(OnboardingSearchResult.init(subscription:))
+            if source == .youtube && !results.isEmpty {
+                results.insert(.watchLater, at: 0)
+            }
             subscribed = ActiveSubscriptions(modelContext)
             withAnimation {
                 step = results.isEmpty ? .empty : .loaded(results)

@@ -41,7 +41,7 @@ struct SubscriptionDetailView: View {
                 #if os(visionOS)
                 .listRowInsets(EdgeInsets())
                 #else
-                .imageAccentBackground(url: imageUrl)
+                .imageAccentBackground(url: imageUrl, useThemeColor: subscription.isWatchLater)
                 #endif
                 .myListRowBackground()
 
@@ -74,6 +74,7 @@ struct SubscriptionDetailView: View {
                         source: source,
                         title: subscription.title
                     )
+                    .environment(\.videoListShowsUploader, subscription.youtubePlaylistId != nil)
                 } else {
                     VideoListView(subscriptionId: subscription.persistentModelID)
                 }

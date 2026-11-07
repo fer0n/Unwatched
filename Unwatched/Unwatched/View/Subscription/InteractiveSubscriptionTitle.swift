@@ -9,36 +9,37 @@ import UnwatchedShared
 struct InteractiveSubscriptionTitle: View, Equatable {
     private let openFromPlayer = OpenFromPlayerAction()
 
-    let subscription: Subscription?
+    let subscription: Subscription
     var showImage = false
     var imageSize: CGFloat = 30
     var subtitle: String?
+    var allowsAdd = true
 
     var body: some View {
-        if let sub = subscription {
-            SubscriptionTitleButton(
-                title: sub.displayTitle,
-                thumbnailUrl: showImage ? sub.thumbnailUrl : nil,
-                isPodcast: sub.isPodcast,
-                showsAdd: sub.isArchived,
-                imageSize: imageSize,
-                subtitle: subtitle
-            ) {
-                openFromPlayer.open(sub)
-            }
-        } else {
-            Spacer()
+        SubscriptionTitleButton(
+            title: subscription.videoSourceTitle(channelTitle: nil),
+            thumbnailUrl: showImage ? subscription.thumbnailUrl : nil,
+            isPodcast: subscription.isPodcast,
+            isWatchLater: showImage && subscription.isWatchLater,
+            showsAdd: allowsAdd && subscription.isArchived,
+            imageSize: imageSize,
+            subtitle: subtitle
+        ) {
+            openFromPlayer.open(subscription)
         }
     }
 
     static func == (lhs: InteractiveSubscriptionTitle, rhs: InteractiveSubscriptionTitle) -> Bool {
-        lhs.subscription?.isArchived == rhs.subscription?.isArchived
-            && lhs.subscription?.title == rhs.subscription?.title
-            && lhs.subscription?.thumbnailUrl == rhs.subscription?.thumbnailUrl
-            && lhs.subscription?.isPodcast == rhs.subscription?.isPodcast
+        lhs.subscription.isArchived == rhs.subscription.isArchived
+            && lhs.subscription.videoSourceTitle(channelTitle: nil)
+            == rhs.subscription.videoSourceTitle(channelTitle: nil)
+            && lhs.subscription.thumbnailUrl == rhs.subscription.thumbnailUrl
+            && lhs.subscription.isPodcast == rhs.subscription.isPodcast
+            && lhs.subscription.isWatchLater == rhs.subscription.isWatchLater
             && lhs.showImage == rhs.showImage
             && lhs.imageSize == rhs.imageSize
             && lhs.subtitle == rhs.subtitle
+            && lhs.allowsAdd == rhs.allowsAdd
     }
 }
 
@@ -46,6 +47,7 @@ struct SubscriptionTitleButton: View {
     let title: String
     let thumbnailUrl: URL?
     var isPodcast = false
+    var isWatchLater = false
     var showsAdd = false
     var imageSize: CGFloat = 30
     /// A second line next to the image, part of the same tap target
@@ -55,16 +57,13 @@ struct SubscriptionTitleButton: View {
     var body: some View {
         Button(action: action) {
             HStack(spacing: subtitle == nil ? 5 : 10) {
-                if let thumbnailUrl {
-                    CachedImageView(imageUrl: thumbnailUrl) { image in
-                        image
-                            .resizable()
-                            .aspectRatio(contentMode: .fill)
-                    } placeholder: {
-                        Color.clear
-                    }
-                    .frame(width: imageSize, height: imageSize)
-                    .channelImageClip(isPodcast: isPodcast)
+                if isWatchLater || thumbnailUrl != nil {
+                    SubscriptionImage(
+                        thumbnailUrl: thumbnailUrl,
+                        isPodcast: isPodcast,
+                        isWatchLater: isWatchLater,
+                        size: imageSize
+                    )
                 }
                 VStack(alignment: .leading, spacing: 1) {
                     HStack(spacing: 5) {
@@ -84,6 +83,30 @@ struct SubscriptionTitleButton: View {
         .buttonStyle(.plain)
         .accessibilityLabel(title)
         .accessibilityValue(subtitle ?? "")
+    }
+}
+
+/// A subscription's round image, or the Watch Later avatar
+struct SubscriptionImage: View {
+    let thumbnailUrl: URL?
+    var isPodcast = false
+    var isWatchLater = false
+    let size: CGFloat
+
+    var body: some View {
+        if isWatchLater {
+            WatchLaterAvatar(size: size)
+        } else {
+            CachedImageView(imageUrl: thumbnailUrl) { image in
+                image
+                    .resizable()
+                    .aspectRatio(contentMode: .fill)
+            } placeholder: {
+                Color.clear
+            }
+            .frame(width: size, height: size)
+            .channelImageClip(isPodcast: isPodcast)
+        }
     }
 }
 

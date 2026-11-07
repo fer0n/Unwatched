@@ -14,6 +14,9 @@ extension EnvironmentValues {
 
     @Entry var isInMenuStack: Bool = false
 
+    /// A playlist's own video list: rows name the uploader instead of the playlist.
+    @Entry var videoListShowsUploader: Bool = false
+
     @Entry var bigScreenLayout: Bool = false
     @Entry var playerControlsShortOnHeight: Bool = false
     @Entry var playerFitsSideBySide: Bool = false

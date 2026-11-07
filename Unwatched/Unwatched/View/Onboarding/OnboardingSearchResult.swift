@@ -10,6 +10,7 @@ import UnwatchedShared
 enum OnboardingSearchResult: Identifiable, Hashable {
     case channel(YoutubeChannelSearchResult)
     case podcast(SendableSubscription)
+    case watchLater
 
     init?(subscription: SendableSubscription) {
         if let channelId = subscription.youtubeChannelId {
@@ -36,6 +37,10 @@ enum OnboardingSearchResult: Identifiable, Hashable {
         return nil
     }
 
+    var isWatchLater: Bool {
+        if case .watchLater = self { true } else { false }
+    }
+
     var isPodcast: Bool {
         podcast != nil
     }
@@ -44,6 +49,7 @@ enum OnboardingSearchResult: Identifiable, Hashable {
         switch self {
         case .channel(let channel): "channel-\(channel.channelId)"
         case .podcast(let podcast): "podcast-\(podcast.link?.absoluteString ?? podcast.title)"
+        case .watchLater: "watchLater"
         }
     }
 
@@ -51,6 +57,7 @@ enum OnboardingSearchResult: Identifiable, Hashable {
         switch self {
         case .channel(let channel): channel.title
         case .podcast(let podcast): podcast.title
+        case .watchLater: String(localized: "watchLater")
         }
     }
 
@@ -58,6 +65,7 @@ enum OnboardingSearchResult: Identifiable, Hashable {
         switch self {
         case .channel(let channel): channel.thumbnailUrl
         case .podcast(let podcast): podcast.thumbnailUrl
+        case .watchLater: nil
         }
     }
 
@@ -70,6 +78,8 @@ enum OnboardingSearchResult: Identifiable, Hashable {
                 .first
         case .podcast(let podcast):
             podcast.author
+        case .watchLater:
+            nil
         }
     }
 }

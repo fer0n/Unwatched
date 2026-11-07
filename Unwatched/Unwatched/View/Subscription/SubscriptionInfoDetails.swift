@@ -29,6 +29,7 @@ struct SubscriptionInfoDetails: View {
                 title: subscription.title,
                 imageUrl: subscription.thumbnailUrl,
                 isPodcast: subscription.isPodcast,
+                isWatchLater: subscription.isWatchLater,
                 userName: subscription.youtubeUserName,
                 author: subscription.author,
                 videoCount: subscription.videos?.count,

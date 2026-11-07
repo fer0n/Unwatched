@@ -144,16 +144,7 @@ struct InboxCard: View, Equatable {
 
     private var info: some View {
         HStack(spacing: 5) {
-            if let subscriptionTitle = content.subscriptionTitle {
-                Button(action: openChannel) {
-                    Text(verbatim: subscriptionTitle)
-                        .lineLimit(1)
-                        .textCase(.uppercase)
-                        .contentShape(Rectangle())
-                }
-                .buttonStyle(.plain)
-                .accessibilityLabel(subscriptionTitle)
-            }
+            source
 
             ForEach(content.details, id: \.self) { detail in
                 Text(verbatim: Const.dotString)
@@ -164,6 +155,30 @@ struct InboxCard: View, Equatable {
         }
         .font(.system(size: infoSize))
         .foregroundStyle(.secondary)
+    }
+
+    @ViewBuilder
+    private var source: some View {
+        if let playlistTitle = content.playlistTitle, let subscriptionTitle = content.subscriptionTitle {
+            PlaylistAndChannel {
+                sourceButton(playlistTitle, action: openPlaylist)
+            } channel: {
+                sourceButton(subscriptionTitle, action: openChannel)
+            }
+        } else if let subscriptionTitle = content.subscriptionTitle {
+            sourceButton(subscriptionTitle, action: openChannel)
+        }
+    }
+
+    private func sourceButton(_ title: String, action: @escaping () -> Void) -> some View {
+        Button(action: action) {
+            Text(verbatim: title)
+                .lineLimit(1)
+                .textCase(.uppercase)
+                .contentShape(Rectangle())
+        }
+        .buttonStyle(.plain)
+        .accessibilityLabel(title)
     }
 
     @ViewBuilder
@@ -197,12 +212,17 @@ struct InboxCard: View, Equatable {
         navManager.pushChannel(of: video)
     }
 
+    private func openPlaylist() {
+        navManager.pushSubscription(subscription: video.playlistSubscription)
+    }
+
     /// Everything the card shows, read from the video once per update instead of during layout
     private struct Content: Equatable {
         /// more than can fit onto a card
         static let descriptionLimit = 600
 
         let title: String
+        let playlistTitle: String?
         let subscriptionTitle: String?
         let description: String?
         let details: [String]
@@ -212,7 +232,14 @@ struct InboxCard: View, Equatable {
 
         init(video: Video) {
             title = video.title.isEmpty ? video.youtubeId : video.title
-            subscriptionTitle = video.channelDisplayTitle
+            if let playlistTitle = video.playlistTitle, video.uploaderChannelId != nil,
+               let uploader = video.uploaderTitle {
+                self.playlistTitle = playlistTitle
+                subscriptionTitle = uploader
+            } else {
+                playlistTitle = nil
+                subscriptionTitle = video.channelDisplayTitle
+            }
 
             if let text = video.videoDescription, !text.isEmpty {
                 description = String(text.prefix(Self.descriptionLimit))

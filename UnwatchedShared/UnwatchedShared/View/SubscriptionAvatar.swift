@@ -17,6 +17,14 @@ public struct SubscriptionAvatar: View {
     }
 
     public var body: some View {
+        if subscription.isWatchLater {
+            WatchLaterAvatar(size: size)
+        } else {
+            image
+        }
+    }
+
+    private var image: some View {
         CachedImageView(imageUrl: subscription.thumbnailUrl, maxPixelSize: ceil(size * displayScale)) { image in
             image
                 .resizable()

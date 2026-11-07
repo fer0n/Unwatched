@@ -37,11 +37,20 @@ public extension VideoData {
         mediaUrl != nil
     }
 
+    /// "Playlist (Channel)" for a playlist's video, otherwise the subscription's title
     var channelDisplayTitle: String? {
-        if subscriptionData?.youtubePlaylistId != nil, let channelTitle {
-            return channelTitle
-        }
-        return subscriptionData?.displayTitle
+        subscriptionData?.videoSourceTitle(channelTitle: channelTitle)
+    }
+
+    /// The playlist's title for a video that came in through one
+    var playlistTitle: String? {
+        subscriptionData?.youtubePlaylistId != nil ? subscriptionData?.title : nil
+    }
+
+    var uploaderTitle: String? {
+        guard let subscriptionData else { return channelTitle }
+        guard subscriptionData.youtubePlaylistId != nil else { return subscriptionData.displayTitle }
+        return subscriptionData.playlistUploader(channelTitle: channelTitle)
     }
 
     /// The image to show for this video.

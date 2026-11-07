@@ -10,6 +10,7 @@ import UnwatchedShared
 struct ActiveSubscriptions {
     private var channelIds = Set<String>()
     private var feedKeys = Set<String>()
+    private var hasWatchLater = false
 
     init() { }
 
@@ -18,6 +19,7 @@ struct ActiveSubscriptions {
         let subscriptions = (try? modelContext.fetch(fetch)) ?? []
         channelIds = Set(subscriptions.filter { $0.youtubePlaylistId == nil }.compactMap(\.youtubeChannelId))
         feedKeys = Set(subscriptions.filter(\.isPodcast).compactMap(\.link).map(Self.feedKey))
+        hasWatchLater = subscriptions.contains(where: \.isWatchLater)
     }
 
     func contains(_ result: OnboardingSearchResult) -> Bool {
@@ -26,6 +28,8 @@ struct ActiveSubscriptions {
             channelIds.contains(channel.channelId)
         case .podcast(let podcast):
             podcast.link.map { feedKeys.contains(Self.feedKey($0)) } ?? false
+        case .watchLater:
+            hasWatchLater
         }
     }
 

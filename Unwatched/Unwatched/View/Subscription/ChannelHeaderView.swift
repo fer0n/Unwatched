@@ -11,6 +11,7 @@ struct ChannelHeaderView: View {
     let title: String
     let imageUrl: URL?
     var isPodcast: Bool = false
+    var isWatchLater: Bool = false
     var userName: String?
     var author: String?
     var videoCount: Int?
@@ -18,6 +19,8 @@ struct ChannelHeaderView: View {
     /// Reserve the circular image slot even before `imageUrl` is known, so the layout
     /// doesn't jump when an avatar is loaded asynchronously (used by the Search preview).
     var reserveImage: Bool = false
+
+    private static let avatarSize: CGFloat = 80
 
     #if os(visionOS)
     let padding: CGFloat = 0
@@ -41,12 +44,12 @@ struct ChannelHeaderView: View {
     }
 
     @ViewBuilder var headerDetails: some View {
-        let hasImage = imageUrl != nil || reserveImage
+        let hasImage = imageUrl != nil || reserveImage || isWatchLater
 
         HStack {
             if hasImage {
                 avatar
-                    .frame(width: 80, height: 80)
+                    .frame(width: Self.avatarSize, height: Self.avatarSize)
                     .channelImageClip(isPodcast: isPodcast)
             }
 
@@ -82,7 +85,9 @@ struct ChannelHeaderView: View {
     }
 
     @ViewBuilder var avatar: some View {
-        if let imageUrl {
+        if isWatchLater {
+            WatchLaterAvatar(size: Self.avatarSize)
+        } else if let imageUrl {
             CachedImageView(imageUrl: imageUrl) { image in
                 image
                     .resizable()

@@ -94,6 +94,15 @@ import UnwatchedShared
         if !podcasts.isEmpty {
             _ = try await SubscriptionService.addSubscriptions(from: podcasts)
         }
+        if results.contains(where: \.isWatchLater) {
+            do {
+                try await SubscriptionService.addSubscription(
+                    subscriptionInfo: SubscriptionInfo(playlistId: YoutubeUrlParser.watchLaterPlaylistId)
+                )
+            } catch {
+                Log.error("onboarding: subscribing to Watch Later failed: \(error)")
+            }
+        }
     }
 
     private static func waitForRefresh(_ refresher: RefreshManager) async {

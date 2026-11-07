@@ -48,8 +48,8 @@ struct DescriptionDetailHeaderView: View {
                 VideoSourceTitle(
                     video: video,
                     source: source,
-                    showImage: true,
-                    imageSize: 36,
+                    style: .stacked,
+                    imageSize: source.playlist == nil ? 36 : 48,
                     subtitle: publishedText
                 )
                 .lineLimit(1)
@@ -62,17 +62,7 @@ struct DescriptionDetailHeaderView: View {
         .font(.subheadline)
         .fontWeight(.medium)
         .foregroundStyle(.secondary)
-        .padding(.bottom, source.playlist == nil ? chapterGap : 0)
-
-        if let playlist = source.playlist {
-            VideoPlaylistTitle(playlist: playlist)
-                .font(.subheadline)
-                .fontWeight(.medium)
-                .foregroundStyle(.secondary)
-                .lineLimit(1)
-                .padding(.top, 2)
-                .padding(.bottom, chapterGap)
-        }
+        .padding(.bottom, chapterGap)
     }
 
     /// e.g. "25 Sep · 14h ago"; the year only once it's not the current one

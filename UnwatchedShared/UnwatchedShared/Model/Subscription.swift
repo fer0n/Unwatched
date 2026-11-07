@@ -8,6 +8,8 @@ import SwiftData
 
 public protocol SubscriptionData: Hashable {
     var displayTitle: String { get }
+    var title: String { get }
+    var author: String? { get }
     var youtubeChannelId: String? { get }
     var youtubePlaylistId: String? { get }
     var link: URL? { get }
@@ -34,6 +36,19 @@ public extension SubscriptionData {
 
     var isWatchLater: Bool {
         youtubePlaylistId == YoutubeUrlParser.watchLaterPlaylistId
+    }
+
+    /// "Playlist (Channel)" for a playlist, otherwise `displayTitle`
+    func videoSourceTitle(channelTitle: String?) -> String {
+        guard youtubePlaylistId != nil else { return displayTitle }
+        guard let channel = playlistUploader(channelTitle: channelTitle) else { return title }
+        return "\(title) (\(channel))"
+    }
+
+    /// Older rows only know the playlist's owner
+    func playlistUploader(channelTitle: String?) -> String? {
+        guard let channel = channelTitle ?? author, !channel.isEmpty, channel != title else { return nil }
+        return channel
     }
 }
 

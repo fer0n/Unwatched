@@ -30,6 +30,11 @@ struct VideoListItemMoreMenuView: View {
         videoData.subscriptionData?.youtubePlaylistId != nil ? viewPlaylist : nil
     }
 
+    /// Older playlist rows don't know their uploader
+    private var hasOwnChannel: Bool {
+        playlistAction == nil || videoData.channelTitle != nil
+    }
+
     @ViewBuilder
     private var viewPlaylistButton: some View {
         if let playlistAction {
@@ -66,13 +71,15 @@ struct VideoListItemMoreMenuView: View {
             )
             Divider()
             if let subscription = videoData.subscriptionData {
-                Button {
-                    viewChannel?()
-                } label: {
-                    if subscription.isPodcast {
-                        Label("viewPodcast", systemImage: Const.podcastSF)
-                    } else {
-                        Label("viewChannel", systemImage: Const.channelSF)
+                if hasOwnChannel {
+                    Button {
+                        viewChannel?()
+                    } label: {
+                        if subscription.isPodcast {
+                            Label("viewPodcast", systemImage: Const.podcastSF)
+                        } else {
+                            Label("viewChannel", systemImage: Const.channelSF)
+                        }
                     }
                 }
                 viewPlaylistButton
