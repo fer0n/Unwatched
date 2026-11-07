@@ -1,27 +1,25 @@
-// content.js
+const APP_LINK = "https://u.octabits.net/play";
+const isMac = navigator.maxTouchPoints === 0;
 
-function openInUnwatched(url) {
-  console.log("Opening in Unwatched: " + url);
-  window.location.href = getUnwatchedDeepLink(url);
+function isPlainClick(event) {
+  return event.button === 0 && !event.metaKey && !event.ctrlKey && !event.shiftKey && !event.altKey;
 }
 
-// Intercept clicks on links before navigation
 function handleClick(event) {
-  let target = event.target;
+  const anchor = event.target.closest?.("a[href]");
+  if (!(anchor instanceof HTMLAnchorElement) || !isPlainClick(event)) return;
+  const isRewritten = anchor.href.startsWith(APP_LINK);
+  if (!isRewritten && !isYouTubeVideoUrl(anchor.href)) return;
 
-  // Walk up the DOM tree to find an anchor tag
-  while (target && target.tagName !== "A") {
-    target = target.parentElement;
-    if (!target) return;
-  }
-
-  const href = target.href;
-  if (href && isYouTubeVideoUrl(href)) {
-    console.log("Intercepted click on YouTube video link:", href);
+  event.stopImmediatePropagation();
+  if (isMac) {
     event.preventDefault();
-    event.stopPropagation();
-    openInUnwatched(href);
+    window.location.href = getUnwatchedPlayLink("unwatched://play", anchor.href);
+    return;
   }
+  // Universal links only open the app from a real link tap.
+  anchor.removeAttribute("target");
+  if (!isRewritten) anchor.href = getUnwatchedPlayLink(APP_LINK, anchor.href);
 }
 
 document.addEventListener("click", handleClick, true);

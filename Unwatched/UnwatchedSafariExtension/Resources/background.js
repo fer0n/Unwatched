@@ -1,4 +1,3 @@
-// background.js
 importScripts("shared.js");
 
 browser.webNavigation.onBeforeNavigate.addListener(
@@ -7,7 +6,7 @@ browser.webNavigation.onBeforeNavigate.addListener(
 
     if (isYouTubeVideoUrl(details.url)) {
       console.log("Intercepted YouTube URL navigation:", details.url);
-      const deepLink = getUnwatchedDeepLink(details.url);
+      const deepLink = getUnwatchedPlayLink("unwatched://play", details.url);
 
       browser.tabs.update(details.tabId, { url: deepLink });
     }

@@ -1,5 +1,3 @@
-// shared.js
-
 function isYouTubeVideoUrl(url) {
   try {
     const urlObj = new URL(url);
@@ -33,10 +31,6 @@ function isYouTubeVideoUrl(url) {
   }
 }
 
-function getUnwatchedDeepLink(url) {
-  return (
-    "unwatched://play?url=" +
-    encodeURIComponent(url) +
-    "&source=safari_extension"
-  );
+function getUnwatchedPlayLink(base, url) {
+  return base + "?url=" + encodeURIComponent(url) + "&source=safari_extension";
 }
