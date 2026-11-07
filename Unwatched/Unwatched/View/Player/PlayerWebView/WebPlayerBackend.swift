@@ -10,9 +10,19 @@ import UnwatchedShared
 
 /// Drives the embedded YouTube page.
 @Observable class WebPlayerBackend: PlayerBackend {
-    @MainActor static let shared = WebPlayerBackend()
+    @MainActor static let shared: WebPlayerBackend = {
+        let backend = WebPlayerBackend()
+        #if os(macOS)
+        backend.blockResumeOnWake()
+        #endif
+        return backend
+    }()
 
     @ObservationIgnored var webView: WKWebView?
+
+    #if os(macOS)
+    @ObservationIgnored private var unblockTask: Task<Void, Never>?
+    #endif
 
     /// Video the page has been pointed at, so a video that is already up isn't loaded again.
     @ObservationIgnored var loadedVideoId: String?
@@ -330,3 +340,37 @@ import UnwatchedShared
         PlayerWebView.evaluateJavaScript(webView, script)
     }
 }
+
+#if os(macOS)
+extension WebPlayerBackend {
+    // Workaround: WebKit resumes YouTube's stale "playing" media session on wake
+    @MainActor
+    fileprivate func blockResumeOnWake() {
+        let center = NSWorkspace.shared.notificationCenter
+        center.addObserver(forName: NSWorkspace.willSleepNotification, object: nil, queue: .main) { _ in
+            MainActor.assumeIsolated {
+                let backend = WebPlayerBackend.shared
+                backend.unblockTask?.cancel()
+                backend.setMediaSessionPlayBlocked(true)
+            }
+        }
+        center.addObserver(forName: NSWorkspace.didWakeNotification, object: nil, queue: .main) { _ in
+            MainActor.assumeIsolated {
+                let backend = WebPlayerBackend.shared
+                backend.unblockTask = Task {
+                    try? await Task.sleep(for: .seconds(3))
+                    guard !Task.isCancelled else { return }
+                    backend.setMediaSessionPlayBlocked(false)
+                }
+            }
+        }
+    }
+
+    @MainActor
+    private func setMediaSessionPlayBlocked(_ blocked: Bool) {
+        guard let webView else { return }
+        Log.player.info("setMediaSessionPlayBlocked: \(blocked)")
+        PlayerWebView.evaluateJavaScript(webView, "blockMediaSessionPlay = \(blocked);")
+    }
+}
+#endif

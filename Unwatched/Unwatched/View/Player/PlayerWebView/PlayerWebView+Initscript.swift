@@ -44,6 +44,7 @@ extension PlayerWebView {
         let autoCaptionsOnSeekBack: Bool
         let isNonEmbedding: Bool
         let hijackFullscreenButton: Bool
+        let blockResumeOnWake: Bool
         let fullscreenTitle: String
         let enableLogging: Bool
         let originalAudio: Bool
@@ -55,9 +56,10 @@ extension PlayerWebView {
     /// Registers a fresh playback id and collects everything the page needs to know at load time.
     @MainActor
     static func initScriptOptions(startAt: Double, uiMode: UIMode, player: PlayerManager) -> InitScriptOptions {
-        var hijackFullscreenButton = false
         #if os(macOS)
-        hijackFullscreenButton = true
+        let isMacOS = true
+        #else
+        let isMacOS = false
         #endif
         let playbackId = UUID().uuidString
         UserDefaults.standard.set(playbackId, forKey: Const.playbackId)
@@ -68,7 +70,8 @@ extension PlayerWebView {
             requiresFetchingVideoData: player.requiresFetchingVideoData(),
             autoCaptionsOnSeekBack: UserDefaults.standard.bool(forKey: Const.autoCaptionsOnSeekBack),
             isNonEmbedding: player.embeddingDisabled,
-            hijackFullscreenButton: hijackFullscreenButton,
+            hijackFullscreenButton: isMacOS,
+            blockResumeOnWake: isMacOS,
             fullscreenTitle: "\(String(localized: "toggleFullscreen")) (f)",
             enableLogging: UserDefaults.standard.bool(forKey: Const.enableLogging),
             originalAudio: UserDefaults.standard.bool(forKey: Const.originalAudio),
@@ -99,6 +102,7 @@ extension PlayerWebView {
         const interceptKeys = \(PlayerShortcut.interceptKeysJS);
         const isNonEmbedding = \(options.isNonEmbedding);
         const hijackFullscreenButton = \(options.hijackFullscreenButton);
+        const blockResumeOnWake = \(options.blockResumeOnWake);
         const fullscreenTitle = "\(options.fullscreenTitle)";
         const timerInterval = \(Const.elapsedTimeMonitorSeconds * 1000);
         const enableLogging = \(options.enableLogging);
@@ -458,6 +462,20 @@ extension PlayerWebView {
             video.addEventListener('seeked', onVideoSeeked);
             video.removeEventListener('ratechange', onVideoRatechange);
             video.addEventListener('ratechange', onVideoRatechange);
+        }
+        var blockMediaSessionPlay = false;
+        if (blockResumeOnWake && navigator.mediaSession) {
+            const setActionHandler = navigator.mediaSession.setActionHandler.bind(navigator.mediaSession);
+            navigator.mediaSession.setActionHandler = (action, handler) => {
+                if (action !== 'play' || !handler) {
+                    return setActionHandler(action, handler);
+                }
+                return setActionHandler(action, (details) => {
+                    if (!blockMediaSessionPlay) {
+                        handler(details);
+                    }
+                });
+            };
         }
         document.addEventListener('play', (e) => {
             if (e.target.tagName === 'VIDEO') {
