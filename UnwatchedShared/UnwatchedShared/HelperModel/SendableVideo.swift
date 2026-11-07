@@ -16,6 +16,7 @@ public struct SendableVideo: VideoData, Sendable, Codable, Hashable, Equatable {
     public var thumbnailData: Data?
     public var youtubeChannelId: String?
     public var feedTitle: String?
+    public var channelTitle: String? { feedTitle }
     public var duration: Double?
     public var noDuration: Bool?
     public var elapsedSeconds: Double?
@@ -78,6 +79,7 @@ public struct SendableVideo: VideoData, Sendable, Codable, Hashable, Equatable {
             publishedDate: publishedDate ?? self.publishedDate,
             updatedDate: self.updatedDate,
             youtubeChannelId: youtubeChannelId ?? self.youtubeChannelId,
+            channelTitle: feedTitle ?? self.feedTitle,
             duration: duration ?? self.duration,
             noDuration: self.noDuration,
             elapsedSeconds: self.elapsedSeconds,
@@ -160,6 +162,7 @@ public struct SendableVideo: VideoData, Sendable, Codable, Hashable, Equatable {
         url = try container.decode(URL.self, forKey: .url)
         thumbnailUrl = try container.decodeIfPresent(URL.self, forKey: .thumbnailUrl)
         youtubeChannelId = try container.decodeIfPresent(String.self, forKey: .youtubeChannelId)
+        feedTitle = try container.decodeIfPresent(String.self, forKey: .feedTitle)
         duration = try container.decodeIfPresent(Double.self, forKey: .duration)
         noDuration = try container.decodeIfPresent(Bool.self, forKey: .noDuration)
         elapsedSeconds = try container.decodeIfPresent(Double.self, forKey: .elapsedSeconds)
@@ -186,6 +189,7 @@ public struct SendableVideo: VideoData, Sendable, Codable, Hashable, Equatable {
         try container.encode(url, forKey: .url)
         try container.encodeIfPresent(thumbnailUrl, forKey: .thumbnailUrl)
         try container.encodeIfPresent(youtubeChannelId, forKey: .youtubeChannelId)
+        try container.encodeIfPresent(feedTitle, forKey: .feedTitle)
         try container.encodeIfPresent(duration, forKey: .duration)
         try container.encodeIfPresent(noDuration, forKey: .noDuration)
         try container.encodeIfPresent(elapsedSeconds, forKey: .elapsedSeconds)
@@ -212,6 +216,7 @@ enum SendableVideoCodingKeys: String, CodingKey {
          url,
          thumbnailUrl,
          youtubeChannelId,
+         feedTitle,
          duration,
          noDuration,
          elapsedSeconds,

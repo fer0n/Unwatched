@@ -154,13 +154,7 @@ struct SubscriptionService {
     }
 
     static func getRegularChannel(_ channelId: String) -> Subscription? {
-        var fetch = FetchDescriptor<Subscription>(predicate: #Predicate {
-            $0.youtubePlaylistId == nil && $0.youtubeChannelId == channelId
-        })
-        fetch.fetchLimit = 1
-        let modelContext = DataProvider.newContext()
-        let subs = try? modelContext.fetch(fetch)
-        return subs?.first
+        ChannelLookup.fetchRegularChannel(channelId, in: DataProvider.newContext())
     }
 
     static func getRegularChannel(userName: String) -> Subscription? {

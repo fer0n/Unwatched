@@ -26,14 +26,14 @@ struct VideoListItemDetails: View {
                 .foregroundStyle(.primary)
 
             VStack(alignment: .leading, spacing: 3) {
-                if let subTitle = video.subscriptionData?.displayTitle {
+                if let subTitle = video.channelDisplayTitle {
                     Text(subTitle)
                         .font(.system(size: subSize))
                         .lineLimit(1)
                         .textCase(.uppercase)
                         #if !os(visionOS)
                         .onTapGesture {
-                            VideoListItemDetails.handleSubscriptionTap(video.subscriptionData)
+                            VideoListItemDetails.handleChannelTap(video)
                         }
                     #endif
                 }
@@ -55,9 +55,13 @@ struct VideoListItemDetails: View {
         }
     }
 
-    private static func handleSubscriptionTap(_ sub: (any SubscriptionData)?) {
-        guard let sub else { return }
+    private static func handleChannelTap(_ video: VideoData) {
         let navManager = NavigationManager.shared
+        if let video = VideoService.existingVideoModel(from: video, modelContext: DataProvider.mainContext) {
+            navManager.pushChannel(of: video)
+            return
+        }
+        guard let sub = video.subscriptionData else { return }
         if let sendable = sub as? SendableSubscription {
             navManager.pushSubscription(sendableSubscription: sendable)
         } else if let subscription = sub as? Subscription {

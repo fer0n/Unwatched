@@ -34,7 +34,7 @@ enum WatchRemoteBridge {
             duration: video?.duration,
             position: player.currentTime ?? video?.elapsedSeconds ?? 0,
             speed: player.playbackSpeed,
-            hasCustomSpeed: video?.subscription?.customSpeedSetting != nil,
+            hasCustomSpeed: video?.settingsSubscription?.customSpeedSetting != nil,
             canSetCustomSpeed: video?.subscription != nil,
             speedLockTagName: video.flatMap(Tag.speedLockTag(for:))?.name,
             hasTagSpeed: video.flatMap(Tag.playbackSpeedTag(for:)) != nil,

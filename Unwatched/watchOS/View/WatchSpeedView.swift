@@ -98,7 +98,7 @@ struct WatchSpeedView: View {
     private var hasCustomSpeed: Bool {
         controlsPhone
             ? client.remote?.hasCustomSpeed == true
-            : player.video?.subscription?.customSpeedSetting != nil
+            : player.video?.settingsSubscription?.customSpeedSetting != nil
     }
 
     private var canSetCustomSpeed: Bool {

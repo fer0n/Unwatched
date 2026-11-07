@@ -194,9 +194,7 @@ struct InboxCard: View, Equatable {
     }
 
     private func openChannel() {
-        if let subscription = video.subscription {
-            navManager.pushSubscription(subscription: subscription)
-        }
+        navManager.pushChannel(of: video)
     }
 
     /// Everything the card shows, read from the video once per update instead of during layout
@@ -214,7 +212,7 @@ struct InboxCard: View, Equatable {
 
         init(video: Video) {
             title = video.title.isEmpty ? video.youtubeId : video.title
-            subscriptionTitle = video.subscriptionData?.displayTitle
+            subscriptionTitle = video.channelDisplayTitle
 
             if let text = video.videoDescription, !text.isEmpty {
                 description = String(text.prefix(Self.descriptionLimit))

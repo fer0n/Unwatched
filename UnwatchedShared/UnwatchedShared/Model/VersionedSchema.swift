@@ -27,6 +27,7 @@ public enum UnwatchedMigrationPlan: SchemaMigrationPlan {
             UnwatchedSchemaV1p15.self,
             UnwatchedSchemaV1p16.self,
             UnwatchedSchemaV1p17.self,
+            UnwatchedSchemaV1p18.self,
         ]
     }
     
@@ -226,6 +227,12 @@ public enum UnwatchedMigrationPlan: SchemaMigrationPlan {
         toVersion: UnwatchedSchemaV1p17.self
     )
 
+    /// Adds `Video.channelTitle` and `WatchTimeEntry.channelName`.
+    public static let migrateV1p17toV1p18 = MigrationStage.lightweight(
+        fromVersion: UnwatchedSchemaV1p17.self,
+        toVersion: UnwatchedSchemaV1p18.self
+    )
+
     public static var stages: [MigrationStage] {
         [
             migrateV1toV1p1,
@@ -244,7 +251,8 @@ public enum UnwatchedMigrationPlan: SchemaMigrationPlan {
             migrateV1p13toV1p14,
             migrateV1p14toV1p15,
             migrateV1p15toV1p16,
-            migrateV1p16toV1p17
+            migrateV1p16toV1p17,
+            migrateV1p17toV1p18
         ]
     }
 }

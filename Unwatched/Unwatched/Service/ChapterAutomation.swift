@@ -38,7 +38,7 @@ enum ChapterAutomation {
 
     static func needsChapters(_ video: Video, mode: ChapterGenerationMode) -> Bool {
         guard mode != .off, video.chapterGenerationDate == nil else { return false }
-        if let override = video.subscription?.chapterGeneration {
+        if let override = video.settingsSubscription?.chapterGeneration {
             return override
         }
         switch mode {

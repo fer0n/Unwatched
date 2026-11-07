@@ -24,6 +24,20 @@ struct VideoListItemMoreMenuView: View {
     /// nil hides delete, e.g. on the video's own detail page
     var deleteVideo: (() -> Void)?
     var viewChannel: (() -> Void)?
+    var viewPlaylist: (() -> Void)?
+
+    private var playlistAction: (() -> Void)? {
+        videoData.subscriptionData?.youtubePlaylistId != nil ? viewPlaylist : nil
+    }
+
+    @ViewBuilder
+    private var viewPlaylistButton: some View {
+        if let playlistAction {
+            Button(action: playlistAction) {
+                Label("viewPlaylist", systemImage: "rectangle.stack")
+            }
+        }
+    }
 
     var body: some View {
         VStack {
@@ -38,6 +52,10 @@ struct VideoListItemMoreMenuView: View {
                 )
             }
             .controlGroupStyle(.compactMenu)
+            if playlistAction != nil {
+                viewPlaylistButton
+                Divider()
+            }
             #else
             VideoListItemActions(
                 setWatched: setWatched,
@@ -57,6 +75,7 @@ struct VideoListItemMoreMenuView: View {
                         Label("viewChannel", systemImage: Const.channelSF)
                     }
                 }
+                viewPlaylistButton
                 Divider()
             }
             #endif

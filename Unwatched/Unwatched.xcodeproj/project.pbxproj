@@ -479,6 +479,7 @@
 		8899246D2C480112001185A6 /* HandleVideoListItemTap.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8899246C2C480112001185A6 /* HandleVideoListItemTap.swift */; };
 		8899246F2C48150A001185A6 /* VideoListItemMoreMenu.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8899246E2C48150A001185A6 /* VideoListItemMoreMenu.swift */; };
 		889924712C4824EE001185A6 /* InteractiveSubscriptionTitle.swift in Sources */ = {isa = PBXBuildFile; fileRef = 889924702C4824EE001185A6 /* InteractiveSubscriptionTitle.swift */; };
+		C0FFEE0A1B2C3D4E5F600002 /* VideoSourceTitle.swift in Sources */ = {isa = PBXBuildFile; fileRef = C0FFEE0A1B2C3D4E5F600001 /* VideoSourceTitle.swift */; };
 		889924732C482B92001185A6 /* CombinedPlaybackSpeedSetting.swift in Sources */ = {isa = PBXBuildFile; fileRef = 889924722C482B92001185A6 /* CombinedPlaybackSpeedSetting.swift */; };
 		889924752C484752001185A6 /* FullscreenSpeedControl.swift in Sources */ = {isa = PBXBuildFile; fileRef = 889924742C484752001185A6 /* FullscreenSpeedControl.swift */; };
 		889924782C4847C0001185A6 /* PlayerControlButtonStyle.swift in Sources */ = {isa = PBXBuildFile; fileRef = 889924772C4847C0001185A6 /* PlayerControlButtonStyle.swift */; };
@@ -592,6 +593,7 @@
 		889AF93A2C50ECF5001CEDE6 /* SubStateOverview.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8823EB772B5519C60010A12F /* SubStateOverview.swift */; };
 		889AF93B2C50ECF5001CEDE6 /* SubscriptionListView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 881E51432B5A75AD006384E4 /* SubscriptionListView.swift */; };
 		889AF93C2C50ECF5001CEDE6 /* InteractiveSubscriptionTitle.swift in Sources */ = {isa = PBXBuildFile; fileRef = 889924702C4824EE001185A6 /* InteractiveSubscriptionTitle.swift */; };
+		C0FFEE0A1B2C3D4E5F600003 /* VideoSourceTitle.swift in Sources */ = {isa = PBXBuildFile; fileRef = C0FFEE0A1B2C3D4E5F600001 /* VideoSourceTitle.swift */; };
 		889AF93D2C50ECF5001CEDE6 /* BrowserView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 88F1EE522B5D3211009866A0 /* BrowserView.swift */; };
 		889AF93E2C50ECF5001CEDE6 /* DropUrlArea.swift in Sources */ = {isa = PBXBuildFile; fileRef = 88F3868D2BBE8B07009F9811 /* DropUrlArea.swift */; };
 		889AF93F2C50ECF5001CEDE6 /* VideoListView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 883CA8052B5A8FFA00028D52 /* VideoListView.swift */; };
@@ -1581,6 +1583,7 @@
 		8899246C2C480112001185A6 /* HandleVideoListItemTap.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = HandleVideoListItemTap.swift; sourceTree = "<group>"; };
 		8899246E2C48150A001185A6 /* VideoListItemMoreMenu.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = VideoListItemMoreMenu.swift; sourceTree = "<group>"; };
 		889924702C4824EE001185A6 /* InteractiveSubscriptionTitle.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = InteractiveSubscriptionTitle.swift; sourceTree = "<group>"; };
+		C0FFEE0A1B2C3D4E5F600001 /* VideoSourceTitle.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = VideoSourceTitle.swift; sourceTree = "<group>"; };
 		889924722C482B92001185A6 /* CombinedPlaybackSpeedSetting.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CombinedPlaybackSpeedSetting.swift; sourceTree = "<group>"; };
 		889924742C484752001185A6 /* FullscreenSpeedControl.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FullscreenSpeedControl.swift; sourceTree = "<group>"; };
 		889924772C4847C0001185A6 /* PlayerControlButtonStyle.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PlayerControlButtonStyle.swift; sourceTree = "<group>"; };
@@ -2372,6 +2375,7 @@
 				88E2ABCAAC0887D9028AAAD5 /* SubscriptionSkipSetting.swift */,
 				881E51432B5A75AD006384E4 /* SubscriptionListView.swift */,
 				889924702C4824EE001185A6 /* InteractiveSubscriptionTitle.swift */,
+				C0FFEE0A1B2C3D4E5F600001 /* VideoSourceTitle.swift */,
 				88373C242C8C424C00ACBB3B /* SendableSubscriptionDetailView.swift */,
 			);
 			path = Subscription;
@@ -3592,6 +3596,7 @@
 				889AF93B2C50ECF5001CEDE6 /* SubscriptionListView.swift in Sources */,
 				CDA07A392C601F590009BFEC /* DataSpeedTests.swift in Sources */,
 				889AF93C2C50ECF5001CEDE6 /* InteractiveSubscriptionTitle.swift in Sources */,
+				C0FFEE0A1B2C3D4E5F600003 /* VideoSourceTitle.swift in Sources */,
 				883D44FC30180A3D00950B89 /* SearchVM+Local.swift in Sources */,
 				889AF93D2C50ECF5001CEDE6 /* BrowserView.swift in Sources */,
 				8869875C2FE2893B0082E717 /* Animation.swift in Sources */,
@@ -4089,6 +4094,7 @@
 				889924692C47F4D4001185A6 /* VerticalSwipeGesture.swift in Sources */,
 				88C5F3F02CCCF50500DA802F /* UserTipsView.swift in Sources */,
 				889924712C4824EE001185A6 /* InteractiveSubscriptionTitle.swift in Sources */,
+				C0FFEE0A1B2C3D4E5F600002 /* VideoSourceTitle.swift in Sources */,
 				88F7E24C2DE59962001E1F3F /* DebugLoggerView.swift in Sources */,
 				7DE1B4EB3C0D439493F51E20 /* ReportAttachmentRow.swift in Sources */,
 				E9EF9F247AF34335940A6B5A /* IssueReportAttachment.swift in Sources */,

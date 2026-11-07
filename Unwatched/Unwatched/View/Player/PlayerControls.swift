@@ -244,10 +244,21 @@ struct PlayerControls: View {
 extension PlayerControls {
     var subscriptionRow: some View {
         HStack(alignment: .center, spacing: 0) {
-            InteractiveSubscriptionTitle(
-                subscription: player.video?.subscription,
-                showImage: true
-            )
+            Group {
+                if let video = player.video {
+                    let source = VideoOrigin(video)
+                    HStack(spacing: 10) {
+                        VideoSourceTitle(video: video, source: source, showImage: true)
+                            .layoutPriority(1)
+                        if let playlist = source.playlist {
+                            VideoPlaylistTitle(playlist: playlist)
+                                .font(.subheadline)
+                        }
+                    }
+                } else {
+                    Spacer()
+                }
+            }
             .font(.headline)
             .fontWeight(.medium)
             .fontWidth(.condensed)

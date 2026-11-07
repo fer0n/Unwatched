@@ -21,6 +21,19 @@ extension NavigationManager {
         }
     }
 
+    func pushChannel(of video: Video) {
+        if let channel = video.channelSubscription {
+            pushSubscription(subscription: channel)
+        } else if let channelId = video.uploaderChannelId {
+            pushSubscription(sendableSubscription: SendableSubscription(
+                title: video.channelTitle ?? "",
+                youtubeChannelId: channelId
+            ))
+        } else {
+            pushSubscription(subscription: video.subscription)
+        }
+    }
+
     func pushVideoDetail(_ video: Video) {
         let route = VideoDetailRoute(video)
         push(.video(route), inSearch: .video(route)) {
@@ -116,7 +129,8 @@ extension NavigationManager {
     #endif
 
     func pushToLibrary(_ sendableSub: SendableSubscription) {
-        if lastLibrarySubscriptionId != sendableSub.persistentId {
+        // a preview has no id, which matched the nil of an empty stack
+        if sendableSub.persistentId == nil || lastLibrarySubscriptionId != sendableSub.persistentId {
             presentedLibrary.append(sendableSub)
             lastLibrarySubscriptionId = sendableSub.persistentId
         }

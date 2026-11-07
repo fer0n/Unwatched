@@ -105,11 +105,15 @@ extension VideoActor {
             subVideosDict[video.youtubeId] = video
         }
 
+        let isPlaylist = sub.youtubePlaylistId != nil
         var newVideos = [SendableVideo]()
         var unknownShorts = [PendingShortCheck]()
         var imagesToBeDeleted = [URL]()
         for video in videos {
             if let oldVideo = subVideosDict[video.youtubeId] {
+                if isPlaylist {
+                    updateChannel(of: oldVideo, from: video)
+                }
                 // a podcast episode's `updatedDate` is its publication date and never moves, so
                 // that guard alone would mean an existing episode is never looked at again — and
                 // its media URL, chapters and artwork do change in the feed
@@ -144,6 +148,15 @@ extension VideoActor {
                     modelContext: modelContext
                 )
             }
+        }
+    }
+
+    func updateChannel(of video: Video, from updatedVideo: SendableVideo) {
+        if let channelId = updatedVideo.youtubeChannelId, video.youtubeChannelId != channelId {
+            video.youtubeChannelId = channelId
+        }
+        if let channelTitle = updatedVideo.feedTitle, video.channelTitle != channelTitle {
+            video.channelTitle = channelTitle
         }
     }
 

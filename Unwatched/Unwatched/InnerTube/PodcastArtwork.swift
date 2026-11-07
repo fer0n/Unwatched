@@ -10,23 +10,14 @@ import UnwatchedShared
 
 struct PodcastArtworkTapArea: View {
     @Environment(PlayerManager.self) private var player
-    @Environment(NavigationManager.self) private var navManager
-    @Environment(SheetPositionReader.self) private var sheetPos
-    @Environment(\.bigScreenLayout) private var bigScreenLayout
-    @Environment(\.dismiss) private var dismiss
+    private let openFromPlayer = OpenFromPlayerAction()
 
     var body: some View {
         Color.clear
             .contentShape(Rectangle())
             .onTapGesture {
                 guard let subscription = player.video?.subscription else { return }
-                OpenSubscriptionAction(
-                    navManager: navManager,
-                    player: player,
-                    sheetPos: sheetPos,
-                    bigScreen: bigScreenLayout,
-                    dismiss: dismiss
-                ).open(subscription)
+                openFromPlayer.open(subscription)
             }
     }
 }

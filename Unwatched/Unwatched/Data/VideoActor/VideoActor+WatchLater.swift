@@ -57,6 +57,12 @@ extension VideoActor {
         guard let subscription: Subscription = modelContext.resolvedModel(withID: subId) else {
             return ([], [])
         }
+        let byId = Dictionary(videos.map { ($0.youtubeId, $0) }, uniquingKeysWith: { first, _ in first })
+        for video in subscription.videos ?? [] {
+            if let fetched = byId[video.youtubeId] {
+                updateChannel(of: video, from: fetched)
+            }
+        }
         cacheImages(for: fresh, discardShorts: subscription.shortsSetting.shouldHide())
         let inserted = insertVideoModels(from: fresh, to: subscription)
         let known = libraryVideos(withIds: Array(knownIds)).filter { $0.inboxEntry == nil && $0.queueEntry == nil }

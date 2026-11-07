@@ -7,82 +7,28 @@ import SwiftUI
 import UnwatchedShared
 
 struct InteractiveSubscriptionTitle: View, Equatable {
-    @Environment(PlayerManager.self) var player
-    @Environment(NavigationManager.self) var navManager
-    @Environment(SheetPositionReader.self) var sheetPos
-    @Environment(\.bigScreenLayout) var bigScreenLayout
-    @Environment(\.dismiss) var dismiss
-    @Environment(\.isInMenuStack) var isInMenuStack
+    private let openFromPlayer = OpenFromPlayerAction()
 
     let subscription: Subscription?
     var showImage = false
     var imageSize: CGFloat = 30
-    /// A second line next to the image, part of the same tap target
     var subtitle: String?
 
     var body: some View {
         if let sub = subscription {
-            Button {
-                openSubscription(sub)
-            } label: {
-                HStack(spacing: subtitle == nil ? 5 : 10) {
-                    if showImage, let thumbnailUrl = sub.thumbnailUrl {
-                        CachedImageView(imageUrl: thumbnailUrl) { image in
-                            image
-                                .resizable()
-                                .aspectRatio(contentMode: .fill)
-                        } placeholder: {
-                            Color.clear
-                        }
-                        .frame(width: imageSize, height: imageSize)
-                        .channelImageClip(isPodcast: sub.isPodcast)
-                    }
-                    VStack(alignment: .leading, spacing: 1) {
-                        HStack(spacing: 5) {
-                            Text(sub.displayTitle)
-                            if let icon = getSubscriptionSystemName {
-                                Image(systemName: icon)
-                            }
-                        }
-                        if let subtitle {
-                            Text(verbatim: subtitle)
-                                .fontWeight(.regular)
-                        }
-                    }
-                }
-                .contentShape(Rectangle())
-            }
-            .buttonStyle(.plain)
-            .accessibilityElement()
-            .accessibilityLabel(sub.displayTitle)
-            .accessibilityValue(subtitle ?? "")
-            .accessibilityAction {
-                openSubscription(sub)
+            SubscriptionTitleButton(
+                title: sub.displayTitle,
+                thumbnailUrl: showImage ? sub.thumbnailUrl : nil,
+                isPodcast: sub.isPodcast,
+                showsAdd: sub.isArchived,
+                imageSize: imageSize,
+                subtitle: subtitle
+            ) {
+                openFromPlayer.open(sub)
             }
         } else {
             Spacer()
         }
-    }
-
-    var getSubscriptionSystemName: String? {
-        if !(subscription?.isArchived == false) {
-            return "plus.circle"
-        }
-        return nil
-    }
-
-    func openSubscription(_ sub: Subscription) {
-        if isInMenuStack {
-            navManager.pushSubscription(subscription: sub)
-            return
-        }
-        OpenSubscriptionAction(
-            navManager: navManager,
-            player: player,
-            sheetPos: sheetPos,
-            bigScreen: bigScreenLayout,
-            dismiss: dismiss
-        ).open(sub)
     }
 
     static func == (lhs: InteractiveSubscriptionTitle, rhs: InteractiveSubscriptionTitle) -> Bool {
@@ -96,25 +42,79 @@ struct InteractiveSubscriptionTitle: View, Equatable {
     }
 }
 
-/// Opening a subscription from the player: push it into the menu's navigation stack and bring the menu up over the
-/// player.
-@MainActor
-struct OpenSubscriptionAction {
-    let navManager: NavigationManager
-    let player: PlayerManager
-    let sheetPos: SheetPositionReader
-    let bigScreen: Bool
-    let dismiss: DismissAction
+struct SubscriptionTitleButton: View {
+    let title: String
+    let thumbnailUrl: URL?
+    var isPodcast = false
+    var showsAdd = false
+    var imageSize: CGFloat = 30
+    /// A second line next to the image, part of the same tap target
+    var subtitle: String?
+    let action: () -> Void
 
+    var body: some View {
+        Button(action: action) {
+            HStack(spacing: subtitle == nil ? 5 : 10) {
+                if let thumbnailUrl {
+                    CachedImageView(imageUrl: thumbnailUrl) { image in
+                        image
+                            .resizable()
+                            .aspectRatio(contentMode: .fill)
+                    } placeholder: {
+                        Color.clear
+                    }
+                    .frame(width: imageSize, height: imageSize)
+                    .channelImageClip(isPodcast: isPodcast)
+                }
+                VStack(alignment: .leading, spacing: 1) {
+                    HStack(spacing: 5) {
+                        Text(verbatim: title)
+                        if showsAdd {
+                            Image(systemName: "plus.circle")
+                        }
+                    }
+                    if let subtitle {
+                        Text(verbatim: subtitle)
+                            .fontWeight(.regular)
+                    }
+                }
+            }
+            .contentShape(Rectangle())
+        }
+        .buttonStyle(.plain)
+        .accessibilityLabel(title)
+        .accessibilityValue(subtitle ?? "")
+    }
+}
+
+/// Pushes a page into the menu's navigation stack and brings the menu up over the player.
+struct OpenFromPlayerAction: DynamicProperty {
+    @Environment(PlayerManager.self) private var player
+    @Environment(NavigationManager.self) private var navManager
+    @Environment(SheetPositionReader.self) private var sheetPos
+    @Environment(\.bigScreenLayout) private var bigScreenLayout
+    @Environment(\.dismiss) private var dismiss
+    @Environment(\.isInMenuStack) private var isInMenuStack
+
+    @MainActor
     func open(_ sub: Subscription) {
+        callAsFunction { $0.pushSubscription(subscription: sub) }
+    }
+
+    @MainActor
+    func callAsFunction(_ push: @escaping @MainActor (NavigationManager) -> Void) {
+        if isInMenuStack {
+            push(navManager)
+            return
+        }
         dismiss()
-        if sheetPos.isMinimumSheet && !bigScreen {
+        if sheetPos.isMinimumSheet && !bigScreenLayout {
             Task {
                 // workaround: view appearing while still being cut off due to sheet position
-                navManager.pushSubscription(subscription: sub)
+                push(navManager)
             }
         } else {
-            navManager.pushSubscription(subscription: sub)
+            push(navManager)
         }
         player.setShowMenu()
     }

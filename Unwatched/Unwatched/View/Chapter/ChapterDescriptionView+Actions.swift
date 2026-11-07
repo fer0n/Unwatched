@@ -62,7 +62,8 @@ extension ChapterDescriptionView {
                     toggleIsNew: toggleIsNew,
                     moveToInbox: moveToInbox,
                     openUrlInApp: { navManager.openUrlInApp(.url($0)) },
-                    viewChannel: viewChannel
+                    viewChannel: viewChannel,
+                    viewPlaylist: viewPlaylist
                 )
             } label: {
                 Image(systemName: "ellipsis")
@@ -184,6 +185,10 @@ extension ChapterDescriptionView {
     }
 
     func viewChannel() {
+        navManager.pushChannel(of: video)
+    }
+
+    func viewPlaylist() {
         navManager.pushSubscription(subscription: video.subscription)
     }
 

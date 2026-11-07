@@ -69,7 +69,8 @@ struct VideoListItemSwipeActionsModifier: ViewModifier {
                                 },
                                 clearList: clearList,
                                 deleteVideo: deleteVideo,
-                                viewChannel: viewChannel
+                                viewChannel: viewChannel,
+                                viewPlaylist: viewPlaylist
                             )
                         })
                     : nil
@@ -82,13 +83,21 @@ struct VideoListItemSwipeActionsModifier: ViewModifier {
 
     func viewChannel() {
         // workaround: drag & tap gesture require workaround that breaks title tap to view channel
-        if let subChannelId = videoData.subscriptionData?.youtubeChannelId,
-           let sub = SubscriptionService.getRegularChannel(subChannelId) {
+        if let video = VideoService.existingVideoModel(from: videoData, modelContext: modelContext) {
+            navManager.pushChannel(of: video)
+        } else if let subChannelId = videoData.subscriptionData?.youtubeChannelId,
+                  let sub = SubscriptionService.getRegularChannel(subChannelId) {
             navManager.pushSubscription(subscription: sub)
         } else if let sub = getVideo()?.subscription {
             // podcasts have no channel id
             navManager.pushSubscription(subscription: sub)
         }
+    }
+
+    func viewPlaylist() {
+        navManager.pushSubscription(
+            subscription: VideoService.existingVideoModel(from: videoData, modelContext: modelContext)?.subscription
+        )
     }
 
     func getVideo() -> Video? {

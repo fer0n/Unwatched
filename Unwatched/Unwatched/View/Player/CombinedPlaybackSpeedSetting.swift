@@ -18,7 +18,7 @@ struct CombinedPlaybackSpeedSettingPlayer: View {
     var body: some View {
         @Bindable var player = player
         let isOn = Binding(get: {
-            player.video?.subscription?.customSpeedSetting != nil
+            player.video?.settingsSubscription?.customSpeedSetting != nil
         }, set: { value in
             player.setCustomSpeedEnabled(value)
             hapticToggle.toggle()
@@ -326,7 +326,7 @@ struct PlayerSpeedMenu<Label: View>: View {
     var body: some View {
         @Bindable var player = player
         let isOn = Binding(get: {
-            player.video?.subscription?.customSpeedSetting != nil
+            player.video?.settingsSubscription?.customSpeedSetting != nil
         }, set: { value in
             player.setCustomSpeedEnabled(value)
         })
@@ -349,7 +349,7 @@ extension PlayerManager {
     /// Which lock holds the speed, for the compact controls; the channel's wins.
     @MainActor
     var speedLockSF: String {
-        if video?.subscription?.customSpeedSetting != nil {
+        if video?.settingsSubscription?.customSpeedSetting != nil {
             Const.channelSpeedLockFillSF
         } else if let tag = video.flatMap(Tag.playbackSpeedTag(for:)) {
             tag.displaySymbol
@@ -387,7 +387,7 @@ struct TagSpeedLockOption {
                     onToggle?()
                 }
             ),
-            isEnabled: video.subscription?.customSpeedSetting == nil,
+            isEnabled: video.settingsSubscription?.customSpeedSetting == nil,
             tagName: tag.name,
             onSymbol: tag.displaySymbol,
             offSymbol: offSymbol(for: tag.displaySymbol)

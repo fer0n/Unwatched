@@ -46,7 +46,7 @@ extension ChapterService {
     @MainActor
     public static func setChapterActive(_ isActive: Bool, _ chapter: SendableChapter, of video: Video) {
         if isActive || autoSkipsRecurringChapters {
-            video.subscription?.setAutoSkip(chapter.title, !isActive)
+            video.settingsSubscription?.setAutoSkip(chapter.title, !isActive)
         }
 
         // one that only the auto-skip list turned off is already back on, and has no row to write

@@ -502,7 +502,7 @@ extension PlayerManager {
 
     @MainActor
     func setCustomSpeedEnabled(_ enabled: Bool) {
-        video?.subscription?.customSpeedSetting = enabled ? unmodifiedPlaybackSpeed : nil
+        video?.settingsSubscription?.customSpeedSetting = enabled ? unmodifiedPlaybackSpeed : nil
         applyPlaybackSpeed()
     }
 
@@ -521,7 +521,7 @@ extension PlayerManager {
     /// The single lock beside the speed: locks to the channel, and unlocks whichever lock is in effect.
     @MainActor
     func setSpeedLockEnabled(_ enabled: Bool) {
-        let hasChannelLock = video?.subscription?.customSpeedSetting != nil
+        let hasChannelLock = video?.settingsSubscription?.customSpeedSetting != nil
         if enabled ? video?.subscription != nil : hasChannelLock {
             setCustomSpeedEnabled(enabled)
         } else {

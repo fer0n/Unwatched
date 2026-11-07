@@ -249,12 +249,12 @@ public final class Tag: CustomStringConvertible, Exportable {
 public extension Video {
     /// The speed that overrides the device default: the channel's own, then the tag's.
     var customPlaybackSpeed: Double? {
-        subscription?.customSpeedSetting ?? Tag.playbackSpeedTag(for: self)?.playbackSpeed
+        settingsSubscription?.customSpeedSetting ?? Tag.playbackSpeedTag(for: self)?.playbackSpeed
     }
 
     /// Writes to the override in effect; `false` when there is none.
     func updateCustomPlaybackSpeed(_ value: Double) -> Bool {
-        if let subscription, subscription.customSpeedSetting != nil {
+        if let subscription = settingsSubscription, subscription.customSpeedSetting != nil {
             subscription.customSpeedSetting = value
         } else if let tag = Tag.playbackSpeedTag(for: self) {
             tag.playbackSpeed = value

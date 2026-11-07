@@ -28,7 +28,7 @@ actor WatchQueueSnapshotActor: SharedContextActor {
                 channelThumbnailUrl: video.subscription?.thumbnailUrl,
                 mediaUrl: video.mediaUrl,
                 isAudioOnly: video.isAudioOnly,
-                customSpeedSetting: video.subscription?.customSpeedSetting
+                customSpeedSetting: video.settingsSubscription?.customSpeedSetting
             )
         }
         let channelTitles = Set(items.compactMap(\.channelTitle))

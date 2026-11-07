@@ -46,6 +46,7 @@ struct UserDataService {
             backup.channelStatistics = grouped.map { (key, value) in
                 SendableChannelStatistics(
                     channelId: key,
+                    channelName: value.lazy.map(\.channelName).first { !$0.isEmpty },
                     entries: value.map { SendableChannelStatistics.Entry(date: $0.date, time: $0.watchTime) }
                 )
             }
@@ -133,12 +134,12 @@ struct UserDataService {
         // Statistics
         for channelStat in backup.channelStatistics ?? [] {
             for entry in channelStat.entries {
-                let model = WatchTimeEntry(
+                context.insert(WatchTimeEntry(
                     date: entry.date,
                     channelId: channelStat.channelId,
-                    watchTime: entry.time
-                )
-                context.insert(model)
+                    watchTime: entry.time,
+                    channelName: channelStat.channelName
+                ))
             }
         }
 

@@ -7,10 +7,12 @@ import Foundation
 
 public struct SendableChannelStatistics: Codable, Sendable {
     public let channelId: String
+    public let channelName: String?
     public let entries: [Entry]
 
-    public init(channelId: String, entries: [Entry]) {
+    public init(channelId: String, channelName: String? = nil, entries: [Entry]) {
         self.channelId = channelId
+        self.channelName = channelName
         self.entries = entries
     }
 

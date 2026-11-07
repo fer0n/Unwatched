@@ -14,6 +14,11 @@ struct PendingWatchTime: Hashable, Sendable {
     let day: Date
 }
 
+private struct WatchedChannel {
+    let id: String
+    let name: String?
+}
+
 private struct WatchTimeBucket: Hashable {
     let channelId: String
     let day: Date
@@ -29,7 +34,17 @@ actor StatsActor: SharedContextActor {
         let subscriptions = try modelContext.fetch(subDescriptor)
 
         var channelNames: [String: String] = [:]
-        for sub in subscriptions {
+        for sub in subscriptions where sub.youtubePlaylistId != nil {
+            if let channelId = sub.youtubeChannelId {
+                channelNames[channelId] = sub.title
+            }
+        }
+        for entry in entries {
+            if let name = entry.channelName {
+                channelNames[entry.channelId] = name
+            }
+        }
+        for sub in subscriptions where sub.youtubePlaylistId == nil {
             // podcasts have no channel id and are keyed by their feed instead
             if let key = sub.isPodcast ? sub.subscriptionKey : sub.youtubeChannelId {
                 channelNames[key] = sub.title
@@ -51,19 +66,21 @@ actor StatsActor: SharedContextActor {
 
         // Resolve to channels first: several videos, and several days' worth of them, can collapse
         // onto the same (channel, day) row, which should only be fetched and bumped once.
-        var channelIds = [String: String?]()
+        var channels = [String: WatchedChannel?]()
+        var channelNames = [String: String]()
         var buckets = [WatchTimeBucket: TimeInterval]()
 
         for (key, duration) in pending {
-            let channelId: String?
-            if let cached = channelIds[key.videoId] {
-                channelId = cached
+            let channel: WatchedChannel?
+            if let cached = channels[key.videoId] {
+                channel = cached
             } else {
-                channelId = try fetchChannelId(videoId: key.videoId)
-                channelIds[key.videoId] = channelId
+                channel = try fetchChannel(videoId: key.videoId)
+                channels[key.videoId] = channel
             }
-            guard let channelId else { continue }
-            buckets[WatchTimeBucket(channelId: channelId, day: key.day), default: 0] += duration
+            guard let channel else { continue }
+            channelNames[channel.id] = channelNames[channel.id] ?? channel.name
+            buckets[WatchTimeBucket(channelId: channel.id, day: key.day), default: 0] += duration
         }
 
         guard !buckets.isEmpty else { return }
@@ -75,23 +92,38 @@ actor StatsActor: SharedContextActor {
                 predicate: #Predicate { $0.channelId == channelId && $0.date == day }
             )
             // Duplicates exist until CleanupService merges them; the largest is the accumulated one
+            let channelName = channelNames[channelId]
             if let entry = try modelContext.fetch(entryFetch).max(by: { $0.watchTime < $1.watchTime }) {
                 entry.watchTime += duration
+                if entry.channelName == nil, let channelName {
+                    entry.channelName = channelName
+                }
             } else {
-                modelContext.insert(WatchTimeEntry(date: day, channelId: channelId, watchTime: duration))
+                modelContext.insert(WatchTimeEntry(
+                    date: day,
+                    channelId: channelId,
+                    watchTime: duration,
+                    channelName: channelName
+                ))
             }
         }
         try modelContext.save()
     }
 
-    private func fetchChannelId(videoId: String) throws -> String? {
+    private func fetchChannel(videoId: String) throws -> WatchedChannel? {
         var videoFetch = FetchDescriptor<Video>(predicate: #Predicate { $0.youtubeId == videoId })
         videoFetch.fetchLimit = 1
         guard let video = try modelContext.fetch(videoFetch).first else { return nil }
-        if let subscription = video.subscription, subscription.isPodcast {
-            return subscription.subscriptionKey
+        let subscription = video.subscription
+        if let subscription, subscription.isPodcast {
+            return subscription.subscriptionKey.map { WatchedChannel(id: $0, name: subscription.title) }
         }
-        return video.subscription?.youtubeChannelId ?? video.youtubeChannelId
+        guard let channelId = video.youtubeChannelId ?? subscription?.youtubeChannelId else {
+            return nil
+        }
+        let isFromChannel = subscription?.youtubePlaylistId == nil
+            && subscription?.youtubeChannelId == channelId
+        return WatchedChannel(id: channelId, name: isFromChannel ? subscription?.title : video.channelTitle)
     }
 
     func deleteStats(from startDate: Date, to endDate: Date, channelId: String?) throws {

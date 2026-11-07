@@ -28,12 +28,20 @@ public protocol VideoData {
 
     var sortedChapterData: [SendableChapter] { get }
     var subscriptionData: (any SubscriptionData)? { get }
+    var channelTitle: String? { get }
     var hasInboxEntry: Bool? { get }
 }
 
 public extension VideoData {
     var isPodcast: Bool {
         mediaUrl != nil
+    }
+
+    var channelDisplayTitle: String? {
+        if subscriptionData?.youtubePlaylistId != nil, let channelTitle {
+            return channelTitle
+        }
+        return subscriptionData?.displayTitle
     }
 
     /// The image to show for this video.

@@ -452,16 +452,18 @@ extension VideoService {
         return (duration, nil)
     }
 
-    static func getVideoModel(from videoData: VideoData, modelContext: ModelContext) -> Video? {
+    static func existingVideoModel(from videoData: VideoData, modelContext: ModelContext) -> Video? {
         if let video = videoData as? Video {
             return video
         }
+        return videoData.persistentId.flatMap { modelContext.existingModel(for: $0) }
+    }
+
+    static func getVideoModel(from videoData: VideoData, modelContext: ModelContext) -> Video? {
+        if let model = existingVideoModel(from: videoData, modelContext: modelContext) {
+            return model
+        }
         if let video = videoData as? SendableVideo {
-            // Already persisted — resolve the model directly.
-            if let id = video.persistentId,
-               let model: Video = modelContext.existingModel(for: id) {
-                return model
-            }
             // Transient (e.g. a search result): dedupe by youtubeId, otherwise
             // materialise it into the store on demand so queue/play/swipe actions work.
             let model: Video

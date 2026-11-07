@@ -43,6 +43,7 @@ public final class Video: VideoData, CustomStringConvertible, Exportable {
     public var watchedDate: Date?
     public var subscription: Subscription?
     public var youtubeChannelId: String?
+    public var channelTitle: String?
     public var isYtShort: Bool?
     public var bookmarkedDate: Date?
 
@@ -92,20 +93,21 @@ public final class Video: VideoData, CustomStringConvertible, Exportable {
             let stored = Video.getSortedChapters(mergedChapters, chapters)
             return stored.isEmpty ? derivedChapters : stored.map(\.toExport)
         }()
+        let settings = settingsSubscription
         let withoutAutoSkipped = ChapterService.applyAutoSkip(
             to: computed,
-            titles: ChapterService.autoSkipsRecurringChapters ? subscription?.autoSkipChapterTitles : nil
+            titles: ChapterService.autoSkipsRecurringChapters ? settings?.autoSkipChapterTitles : nil
         )
         let withoutIntro = ChapterService.applySkipIntro(
             withoutAutoSkipped,
-            skipIntroSeconds: subscription?.skipIntroSeconds,
+            skipIntroSeconds: settings?.skipIntroSeconds,
             videoDuration: duration,
             videoId: youtubeId,
             keepIntro: keepIntro == true
         )
         return ChapterService.applySkipOutro(
             withoutIntro,
-            skipOutroSeconds: subscription?.skipOutroSeconds,
+            skipOutroSeconds: settings?.skipOutroSeconds,
             videoDuration: duration,
             videoId: youtubeId,
             keepOutro: keepOutro == true
@@ -119,7 +121,38 @@ public final class Video: VideoData, CustomStringConvertible, Exportable {
     }
 
     public var channelName: String? {
-        subscription?.author ?? subscription?.displayTitle
+        isFromPlaylist ? channelDisplayTitle : subscription?.author ?? subscription?.displayTitle
+    }
+
+    private var isFromPlaylist: Bool {
+        subscription?.youtubePlaylistId != nil
+    }
+
+    // pre-1.18 playlist rows carry the owner's id
+    private var hasOwnChannelId: Bool {
+        !isFromPlaylist || channelTitle != nil
+    }
+
+    public var uploaderChannelId: String? {
+        hasOwnChannelId ? youtubeChannelId : nil
+    }
+
+    public var channelSubscription: Subscription? {
+        if let subscription, !isFromPlaylist {
+            return subscription
+        }
+        guard let channelId = uploaderChannelId, let modelContext else {
+            return nil
+        }
+        return ChannelLookup.regularChannel(channelId, in: modelContext)
+    }
+
+    public var playlistSubscription: Subscription? {
+        isFromPlaylist ? subscription : nil
+    }
+
+    public var settingsSubscription: Subscription? {
+        channelSubscription ?? subscription
     }
 
     /// Whether the user has dragged this video's chapters into an order of their own.
@@ -211,6 +244,7 @@ public final class Video: VideoData, CustomStringConvertible, Exportable {
             url: url,
             thumbnailUrl: thumbnailUrl,
             youtubeChannelId: youtubeChannelId,
+            feedTitle: channelTitle,
             duration: duration,
             noDuration: noDuration,
             elapsedSeconds: elapsedSeconds,
@@ -258,6 +292,7 @@ public final class Video: VideoData, CustomStringConvertible, Exportable {
                 publishedDate: Date? = nil,
                 updatedDate: Date? = nil,
                 youtubeChannelId: String? = nil,
+                channelTitle: String? = nil,
                 duration: Double? = nil,
                 noDuration: Bool? = nil,
                 elapsedSeconds: Double? = nil,
@@ -276,6 +311,7 @@ public final class Video: VideoData, CustomStringConvertible, Exportable {
         self.url = url
         self.youtubeId = youtubeId
         self.youtubeChannelId = youtubeChannelId
+        self.channelTitle = channelTitle
         self.thumbnailUrl = thumbnailUrl
         self.publishedDate = publishedDate
         self.updatedDate = updatedDate

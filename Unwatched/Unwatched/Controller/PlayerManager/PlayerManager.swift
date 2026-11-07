@@ -358,7 +358,7 @@ import UnwatchedShared
         if let aspectRatio, aspectRatio.isUsableAspectRatio {
             return aspectRatio
         }
-        if let customAspectRatio = video?.subscription?.customAspectRatio,
+        if let customAspectRatio = video?.settingsSubscription?.customAspectRatio,
            customAspectRatio.isUsableAspectRatio {
             return customAspectRatio
         }
@@ -372,7 +372,7 @@ import UnwatchedShared
             return
         }
         guard let video,
-              let subscription = video.subscription else {
+              let subscription = video.settingsSubscription else {
             Log.player.info("No video/subscription to set aspect ratio for")
             return
         }
@@ -401,7 +401,7 @@ import UnwatchedShared
                 }
 
                 if subscription.customAspectRatio != cleanedAspectRatio {
-                    video.subscription?.customAspectRatio = cleanedAspectRatio
+                    subscription.customAspectRatio = cleanedAspectRatio
                 }
             }
 

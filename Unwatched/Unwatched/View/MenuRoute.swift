@@ -20,7 +20,7 @@ struct MenuRouteDestination: ViewModifier {
             .navigationDestination(for: MenuRoute.self) { route in
                 switch route {
                 case .subscription(let sub):
-                    SendableSubscriptionPage(sub, modelContext)
+                    SearchSubscriptionPage(sub, modelContext)
                 case .video(let route):
                     VideoDetailPage(route)
                 }

@@ -617,6 +617,9 @@ extension CleanupActor {
         if keeper.youtubeChannelId == nil, let youtubeChannelId = duplicate.youtubeChannelId {
             keeper.youtubeChannelId = youtubeChannelId
         }
+        if keeper.channelTitle == nil, let channelTitle = duplicate.channelTitle {
+            keeper.channelTitle = channelTitle
+        }
         if let duplicateWatchedDate = duplicate.watchedDate,
            duplicateWatchedDate > (keeper.watchedDate ?? .distantPast) {
             keeper.watchedDate = duplicateWatchedDate

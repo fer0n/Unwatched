@@ -298,7 +298,8 @@ actor VideoActor: SharedContextActor {
             && subModel.liveStreamSetting.shouldHide(defaultPlacement.hideLiveStreams)
 
         let mostRecentDate = getMostRecentDate(videos)
-        var videos = updateYtChannelId(in: videos, channelId)
+        let isPlaylist = subModel.youtubePlaylistId != nil
+        var videos = updateYtChannelId(in: videos, channelId, isPlaylist: isPlaylist)
         let (unseenVideos, unknownShorts) = getNewVideosAndUpdateExisting(sub: subModel, videos: videos)
 
         await detectShortsAndAdjustEntries(unknownShorts, clearShorts: subHidesShorts)
@@ -491,10 +492,14 @@ extension VideoActor {
         return info
     }
 
-    private func updateYtChannelId(in videos: [SendableVideo], _ channelId: String?) -> [SendableVideo] {
+    private func updateYtChannelId(
+        in videos: [SendableVideo],
+        _ fallbackChannelId: String?,
+        isPlaylist: Bool
+    ) -> [SendableVideo] {
         videos.map {
             var video = $0
-            video.youtubeChannelId = channelId
+            video.youtubeChannelId = isPlaylist ? (video.youtubeChannelId ?? fallbackChannelId) : fallbackChannelId
             return video
         }
     }

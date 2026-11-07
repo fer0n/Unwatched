@@ -53,7 +53,7 @@ public extension WatchRemoteState {
             position: video.elapsedSeconds ?? 0,
             positionDate: .now,
             speed: current?.speed ?? 1,
-            hasCustomSpeed: video.subscription?.customSpeedSetting != nil,
+            hasCustomSpeed: video.settingsSubscription?.customSpeedSetting != nil,
             canSetCustomSpeed: video.subscription != nil,
             speedLockTagName: Tag.speedLockTag(for: video)?.name,
             hasTagSpeed: Tag.playbackSpeedTag(for: video) != nil,

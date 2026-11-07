@@ -13,28 +13,8 @@ struct SendableSubscriptionDestination: ViewModifier {
     func body(content: Content) -> some View {
         content
             .navigationDestination(for: SendableSubscription.self) { sub in
-                SendableSubscriptionPage(sub, modelContext)
+                SearchSubscriptionPage(sub, modelContext)
             }
-    }
-}
-
-struct SendableSubscriptionPage: View {
-    let sub: SendableSubscription
-    let modelContext: ModelContext
-
-    init(_ sub: SendableSubscription, _ modelContext: ModelContext) {
-        self.sub = sub
-        self.modelContext = modelContext
-    }
-
-    var body: some View {
-        SendableSubscriptionDetailView(sub, modelContext)
-            #if !os(visionOS)
-            .foregroundStyle(Color.neutralAccentColor)
-            #endif
-            #if os(macOS)
-            .sidebarPage()
-        #endif
     }
 }
 

@@ -107,7 +107,7 @@ enum LocalSearchService {
 
         let videos = await VideoService.getSendableVideos(filter, nil, sort, 0, candidateLimit)
         return rank(videos, query, tokens) {
-            ($0.title, $0.subscription?.displayTitle ?? $0.feedTitle)
+            ($0.title, $0.channelDisplayTitle ?? $0.feedTitle)
         }
     }
 
