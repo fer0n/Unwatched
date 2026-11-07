@@ -6,6 +6,7 @@
 #if os(iOS)
 import SwiftUI
 import UIKit
+import UnwatchedShared
 
 /// A selectable SwiftUI Text turns a long press on a link into a text selection; UITextView shows the link menu
 struct DescriptionTextView: UIViewRepresentable {
@@ -154,7 +155,83 @@ extension DescriptionTextView {
                 result.append(NSAttributedString(string: String(text.characters), attributes: attributes))
             }
         }
+        layOutListItems(result, bodyFont: fonts.body)
         return result
+    }
+
+    /// Hanging indent for `PodcastShowNotes` list items.
+    private static func layOutListItems(_ text: NSMutableAttributedString, bodyFont: UIFont) {
+        let string = text.string as NSString
+        var paragraphs: [ListParagraph] = []
+        string.enumerateSubstrings(
+            in: NSRange(location: 0, length: string.length),
+            options: [.byParagraphs, .substringNotRequired]
+        ) { _, range, enclosingRange, _ in
+            paragraphs.append(ListParagraph(string.substring(with: range), enclosingRange: enclosingRange))
+        }
+
+        let indent = bodyFont.pointSize * 1.15
+        let bulletFont = UIFont.systemFont(ofSize: bodyFont.pointSize, weight: .heavy)
+        let bullet = "\u{2022}\t"
+        // backwards, so editing a paragraph leaves the ones still to come where they were
+        for (index, paragraph) in paragraphs.enumerated().reversed() {
+            guard let depth = paragraph.depth else {
+                if paragraph.isEmpty, isSublistGap(at: index, in: paragraphs) {
+                    text.deleteCharacters(in: paragraph.enclosingRange)
+                }
+                continue
+            }
+            let location = paragraph.enclosingRange.location
+            text.replaceCharacters(
+                in: NSRange(location: location, length: paragraph.markerLength),
+                with: NSAttributedString(string: bullet, attributes: [
+                    .font: bulletFont,
+                    .foregroundColor: UIColor.label
+                ])
+            )
+
+            let start = CGFloat(depth) * indent
+            let style = NSMutableParagraphStyle()
+            style.firstLineHeadIndent = start
+            style.headIndent = start + indent
+            style.tabStops = [NSTextTab(textAlignment: .natural, location: start + indent)]
+            style.paragraphSpacing = bodyFont.lineHeight * 0.25
+            let length = paragraph.enclosingRange.length - paragraph.markerLength + bullet.utf16.count
+            text.addAttribute(.paragraphStyle, value: style, range: NSRange(location: location, length: length))
+        }
+    }
+
+    /// Blank lines around sublists, written by the old parser.
+    private static func isSublistGap(at index: Int, in paragraphs: [ListParagraph]) -> Bool {
+        guard index > 0, index + 1 < paragraphs.count,
+              let before = paragraphs[index - 1].depth,
+              let after = paragraphs[index + 1].depth else { return false }
+        return before != after
+    }
+
+    private struct ListParagraph {
+        let enclosingRange: NSRange
+        let isEmpty: Bool
+        let depth: Int?
+        let markerLength: Int
+
+        init(_ line: String, enclosingRange: NSRange) {
+            self.enclosingRange = enclosingRange
+            isEmpty = line.trimmingCharacters(in: .whitespaces).isEmpty
+
+            var rest = Substring(line)
+            var level = 0
+            while rest.hasPrefix(PodcastShowNotes.listIndent) {
+                rest = rest.dropFirst(PodcastShowNotes.listIndent.count)
+                level += 1
+            }
+            let bullet = PodcastShowNotes.listBullet
+            // an item without text has lost the bullet's trailing space to trimming
+            let emptyItem = bullet.trimmingCharacters(in: .whitespaces)
+            let marker: String? = rest.hasPrefix(bullet) ? bullet : rest == emptyItem ? emptyItem : nil
+            depth = marker == nil ? nil : level
+            markerLength = level * PodcastShowNotes.listIndent.utf16.count + (marker?.utf16.count ?? 0)
+        }
     }
 
     private static func font(_ base: UIFont, for intent: InlinePresentationIntent?) -> UIFont {

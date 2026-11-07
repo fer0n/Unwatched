@@ -213,6 +213,33 @@ class PodcastFeedParserTests: XCTestCase {
         XCTAssertEqual(description, "\u{2022} [First](https://example.com/a)\n\u{2022} Second\n\u{2022} Third")
     }
 
+    /// ATP nests a list inside an item's `<li>`.
+    func testNestedListsHaveNoBlankLines() throws {
+        let notes = """
+        <p>Intro</p>
+        <ul>
+        <li>Follow-up:
+
+        <ul>
+        <li><a href="https://example.com/a">First</a></li>
+        <li>Second</li>
+        </ul></li>
+        <li>Next</li>
+        </ul>
+        <p>After</p>
+        """
+        let xml = Self.showNotesXml.replacing(
+            #/<description><!\[CDATA\[<ul>.*?</ul>\]\]></description>/#.dotMatchesNewlines(),
+            with: "<description><![CDATA[\(notes)]]></description>"
+        )
+        let indent = PodcastShowNotes.listIndent
+        XCTAssertEqual(
+            try parseNotesFeed(xml).episodes.first?.videoDescription,
+            "Intro\n\n\u{2022} Follow-up:\n\(indent)\u{2022} [First](https://example.com/a)\n"
+                + "\(indent)\u{2022} Second\n\u{2022} Next\n\nAfter"
+        )
+    }
+
     /// Show notes are full of numeric entities; left encoded they read as `it&#8217;s`.
     func testDecodesNumericEntities() throws {
         let description = try XCTUnwrap(notesFeed.episodes.first?.videoDescription)

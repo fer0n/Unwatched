@@ -6,10 +6,15 @@
 import Foundation
 
 /// Turns a show's HTML notes into the markdown-ish text the description views render.
-enum PodcastShowNotes {
+public enum PodcastShowNotes {
+    /// Non-breaking: plain spaces would read as a markdown code block.
+    public static let listIndent = "\u{00A0}\u{00A0}"
+    public static let listBullet = "\u{2022} "
+
     /// Podcast show notes are HTML, and for most shows they *are* the episode: a nested list of links.
     static func plainText(_ html: String?, keepLinks: Bool = true) -> String? {
-        guard let html, !html.isEmpty else { return nil }
+        guard let notes = html, !notes.isEmpty else { return nil }
+        let html = notes.replacing("\r\n", with: "\n").replacing("\r", with: "\n")
 
         var result = ""
         var listDepth = 0
@@ -49,19 +54,26 @@ enum PodcastShowNotes {
 
             switch name {
             case "br", "p", "div", "h1", "h2", "h3", "h4", "h5", "h6":
-                // the next <li> starts its own line
-                if !awaitingItemText, !(isClosing && listDepth > 0) {
+                if listDepth > 0 {
+                    if !awaitingItemText, !isClosing {
+                        startLine(&result)
+                    }
+                } else {
                     result.append("\n")
                 }
             case "ul", "ol":
                 awaitingItemText = false
                 listDepth = isClosing ? max(0, listDepth - 1) : listDepth + 1
-                result.append("\n")
+                startLine(&result)
+                // the outermost list is its own paragraph
+                if listDepth == (isClosing ? 0 : 1) {
+                    result.append("\n")
+                }
             case "li":
                 if !isClosing {
-                    // non-breaking: four plain spaces would make markdown read the line as code
-                    result.append("\n" + String(repeating: "\u{00A0}\u{00A0}", count: max(0, listDepth - 1)))
-                    result.append("\u{2022} ")
+                    startLine(&result)
+                    result.append(String(repeating: listIndent, count: max(0, listDepth - 1)))
+                    result.append(listBullet)
                 }
                 awaitingItemText = !isClosing
             case "a" where keepLinks:
@@ -83,6 +95,16 @@ enum PodcastShowNotes {
             result.append("]")
         }
         return tidy(result)
+    }
+
+    /// Breaks the line unless it already is broken, dropping the collapsed whitespace that ends it.
+    private static func startLine(_ result: inout String) {
+        while let last = result.last, last == " " || last == "\t" {
+            result.removeLast()
+        }
+        if !result.isEmpty, !result.hasSuffix("\n") {
+            result.append("\n")
+        }
     }
 
     /// Entities are decoded last: doing it earlier would turn an escaped `&lt;p&gt;` into a tag.
