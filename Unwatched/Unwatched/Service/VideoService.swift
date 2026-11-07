@@ -357,6 +357,12 @@ extension VideoService {
         return task
     }
 
+    @MainActor
+    static func importFirst(_ url: URL, in placement: VideoPlacementArea?, at index: Int = 1) async throws -> Video? {
+        let videoIds = try await addForeignUrlsReturningIds([url], in: placement, at: index)
+        return videoIds.first.flatMap { DataProvider.mainContext.existingModel(for: $0) }
+    }
+
     static func addForeignUrlsReturningIds(
         _ urls: [URL],
         in videoPlacement: VideoPlacementArea?,

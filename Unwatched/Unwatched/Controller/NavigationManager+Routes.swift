@@ -41,6 +41,28 @@ extension NavigationManager {
         }
     }
 
+    /// Falls back to opening the link
+    func openVideoDetail(for url: URL) {
+        Task { @MainActor in
+            do {
+                if let video = try await VideoService.importFirst(url, in: nil) {
+                    showBrowser = false
+                    // an animated push renders at the pre-rise sheet height
+                    var transaction = Transaction()
+                    transaction.disablesAnimations = !showMenu || SheetPositionReader.shared.isMinimumSheet
+                    withTransaction(transaction) {
+                        pushVideoDetail(video)
+                    }
+                    revealMenu()
+                    return
+                }
+            } catch {
+                Log.sync.error("openVideoDetail: \(error)")
+            }
+            UrlService.open(url)
+        }
+    }
+
     func replaceInboxVideoDetail(with video: Video) {
         popVideo(from: &presentedInbox)
         presentedInbox.append(.video(VideoDetailRoute(video)))

@@ -138,19 +138,7 @@ struct WatchNotificationHandlerViewModifier: ViewModifier {
     func handleOpenInUnwatched(_ notification: NotificationCenter.Publisher.Output) {
         Log.sync.info("handleOpenInUnwatched")
         guard let url = notification.userInfo?["youtubeUrl"] as? URL else { return }
-        Task {
-            do {
-                if let video = try await importFirst(url, in: nil) {
-                    navManager.showBrowser = false
-                    navManager.pushVideoDetail(video)
-                    navManager.revealMenu()
-                    return
-                }
-            } catch {
-                Log.sync.error("openInUnwatched: \(error)")
-            }
-            UrlService.open(url)
-        }
+        navManager.openVideoDetail(for: url)
     }
 
     func addAndPlay(_ url: URL, source: String) {
@@ -158,18 +146,13 @@ struct WatchNotificationHandlerViewModifier: ViewModifier {
         Signal.playbackStarted(source)
         Task {
             do {
-                if let video = try await importFirst(url, in: .queue, at: 0) {
+                if let video = try await VideoService.importFirst(url, in: .queue, at: 0) {
                     player.playVideo(video)
                 }
             } catch {
                 Log.sync.error("addAndPlay: \(error)")
             }
         }
-    }
-
-    private func importFirst(_ url: URL, in placement: VideoPlacementArea?, at index: Int = 1) async throws -> Video? {
-        let videoIds = try await VideoService.addForeignUrlsReturningIds([url], in: placement, at: index)
-        return videoIds.first.flatMap { modelContext.existingModel(for: $0) }
     }
 
     func addAndQueue(_ url: URL, at index: Int = 1) {

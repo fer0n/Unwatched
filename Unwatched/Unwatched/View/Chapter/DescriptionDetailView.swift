@@ -4,15 +4,11 @@
 //
 
 import SwiftUI
-import SwiftData
 import UnwatchedShared
 
 struct DescriptionDetailView: View {
     @AppStorage(Const.themeColor) private var theme: ThemeColor = .defaultTheme
-    @Environment(PlayerManager.self) private var player
-    @Environment(AppNotificationVM.self) private var appNotificationVM
-    @Environment(\.modelContext) private var modelContext
-    @State private var hapticToggle = false
+    @Environment(NavigationManager.self) private var navManager
 
     var description: String?
 
@@ -20,8 +16,7 @@ struct DescriptionDetailView: View {
         if let description {
             descriptionText(description)
                 .myTint()
-                .environment(\.openURL, OpenURLAction(handler: handleYoutubeAction))
-                .sensoryFeedback(Const.sensoryFeedback, trigger: hapticToggle)
+                .environment(\.openURL, OpenURLAction(handler: handleDescriptionLink))
         }
     }
 
@@ -107,12 +102,10 @@ struct DescriptionDetailView: View {
                 guard let link, UrlService.isYoutubeVideoUrl(url: link) else { continue }
                 plain.append(parsed[copied..<range.upperBound])
                 copied = range.upperBound
-                for action in YoutubeAction.allCases {
-                    plain.append(AttributedString(" "))
-                    segments.append(.plain(plain))
-                    plain = AttributedString()
-                    segments.append(.action(actionLink(action, for: link)))
-                }
+                plain.append(AttributedString(" "))
+                segments.append(.plain(plain))
+                plain = AttributedString()
+                segments.append(.action(openLink(for: link)))
             }
             plain.append(parsed[copied...])
         }
@@ -120,55 +113,25 @@ struct DescriptionDetailView: View {
         return segments
     }
 
-    // Menus and alerts presented from behind the menu sheet dismiss it, so the actions are inline links
-    private static func actionLink(_ action: YoutubeAction, for url: URL) -> AttributedString {
+    private static func openLink(for url: URL) -> AttributedString {
         var components = URLComponents()
         components.scheme = YoutubeAction.scheme
-        components.host = action.rawValue
         components.queryItems = [URLQueryItem(name: "url", value: url.absoluteString)]
-        var link = AttributedString("\u{00A0}\(String(localized: action.title))\u{00A0}")
+        var link = AttributedString("\u{00A0}\u{00A0}\u{2192}\u{00A0}\u{00A0}")
         link.link = components.url
         return link
     }
 
-    private func handleYoutubeAction(_ url: URL) -> OpenURLAction.Result {
+    private func handleDescriptionLink(_ url: URL) -> OpenURLAction.Result {
         guard url.scheme == YoutubeAction.scheme,
-              let host = url.host(),
-              let action = YoutubeAction(rawValue: host),
               let urlString = URLComponents(url: url, resolvingAgainstBaseURL: false)?
                 .queryItems?.first(where: { $0.name == "url" })?.value,
               let youtubeUrl = URL(string: urlString) else {
             return .systemAction
         }
-        hapticToggle.toggle()
-        switch action {
-        case .play:
-            NotificationCenter.default.post(name: .watchInUnwatched, object: nil, userInfo: ["youtubeUrl": youtubeUrl])
-        case .queue:
-            let task = VideoService.addForeignUrls([youtubeUrl], in: .queue, at: 1)
-            player.loadTopmostVideoFromQueue(after: task, modelContext: modelContext, source: .nextUp)
-            appNotificationVM.show(.addingVideo)
-            notify(.addedVideo, after: task)
-        case .inbox:
-            let task = VideoService.addForeignUrls([youtubeUrl], in: .inbox)
-            notify(AppNotificationData(title: "videoAddedToInbox", icon: Const.checkmarkSF, timeout: 1), after: task)
-        }
+        // revealMenu has its own haptic
+        navManager.openVideoDetail(for: youtubeUrl)
         return .handled
-    }
-
-    private func notify(_ notification: DefaultNotification, after task: Task<(), Error>) {
-        notify(notification.notification, after: task)
-    }
-
-    private func notify(_ notification: AppNotificationData, after task: Task<(), Error>) {
-        Task {
-            do {
-                try await task.value
-                appNotificationVM.show(notification)
-            } catch {
-                appNotificationVM.show(.error(error))
-            }
-        }
     }
 }
 
@@ -193,18 +156,8 @@ private struct ActionCapsuleRenderer: TextRenderer {
     }
 }
 
-enum YoutubeAction: String, CaseIterable {
-    case play, queue, inbox
-
+enum YoutubeAction {
     static let scheme = "unwatched-description"
-
-    var title: LocalizedStringResource {
-        switch self {
-        case .play: "play"
-        case .queue: "queue"
-        case .inbox: "inbox"
-        }
-    }
 }
 
 #Preview {
