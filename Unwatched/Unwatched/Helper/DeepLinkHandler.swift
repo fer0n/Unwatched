@@ -21,6 +21,7 @@ struct DeepLinkHandler: ViewModifier {
         switch host {
         case "play":
             // unwatched://play?url=https://www.youtube.com/watch?v=O_0Wn73AnC8
+            // unwatched://play?v=O_0Wn73AnC8
             guard
                 let components = URLComponents(url: url, resolvingAgainstBaseURL: false),
                 let queryItems = components.queryItems
@@ -30,10 +31,7 @@ struct DeepLinkHandler: ViewModifier {
                 guard guardPremium("safariExtension") else { return }
             }
 
-            guard
-                let youtubeUrlString = queryItems.first(where: { $0.name == "url" })?.value,
-                let youtubeUrl = URL(string: youtubeUrlString)
-            else {
+            guard let youtubeUrl = youtubeUrl(from: queryItems) else {
                 Log.error("No youtube URL found in deep link: \(url)")
                 return
             }
@@ -48,10 +46,7 @@ struct DeepLinkHandler: ViewModifier {
                 let queryItems = components.queryItems
             else { return }
 
-            guard
-                let youtubeUrlString = queryItems.first(where: { $0.name == "url" })?.value,
-                let youtubeUrl = URL(string: youtubeUrlString)
-            else {
+            guard let youtubeUrl = youtubeUrl(from: queryItems) else {
                 Log.error("No youtube URL found in deep link: \(url)")
                 return
             }
@@ -69,10 +64,7 @@ struct DeepLinkHandler: ViewModifier {
                 let queryItems = components.queryItems
             else { return }
 
-            guard
-                let youtubeUrlString = queryItems.first(where: { $0.name == "url" })?.value,
-                let youtubeUrl = URL(string: youtubeUrlString)
-            else {
+            guard let youtubeUrl = youtubeUrl(from: queryItems) else {
                 Log.error("No youtube URL found in deep link: \(url)")
                 return
             }
@@ -81,6 +73,20 @@ struct DeepLinkHandler: ViewModifier {
         default:
             break
         }
+    }
+
+    /// Accepts either a full link (`url=https://www.youtube.com/watch?v=…`) or a bare video id (`v=…`).
+    private func youtubeUrl(from queryItems: [URLQueryItem]) -> URL? {
+        if let urlString = queryItems.first(where: { $0.name == "url" })?.value,
+           let url = URL(string: urlString) {
+            return url
+        }
+        guard let videoId = queryItems.first(where: { $0.name == "v" })?.value,
+              !videoId.isEmpty
+        else { return nil }
+        var components = URLComponents(string: "https://www.youtube.com/watch")
+        components?.queryItems = [URLQueryItem(name: "v", value: videoId)]
+        return components?.url
     }
 }
 
