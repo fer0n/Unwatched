@@ -144,6 +144,10 @@ import UnwatchedShared
         if self.tab != tab {
             self.tab = tab
         }
+        revealMenu()
+    }
+
+    func revealMenu() {
         if !showMenu {
             showMenu = true
         }

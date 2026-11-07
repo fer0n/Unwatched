@@ -24,7 +24,7 @@ public actor ShareAddActor {
         var playlistIds = [String]()
         var containsError = false
 
-        for url in urls {
+        for url in urls.map(AppLink.resolving) {
             if let youtubeId = YoutubeUrlParser.getYoutubeId(from: url) {
                 videoIds.append((youtubeId, YoutubeUrlParser.getStartTime(from: url)))
             } else if let playlistId = YoutubeUrlParser.getPlaylistId(from: url) {

@@ -7,6 +7,8 @@ import SwiftUI
 import UnwatchedShared
 
 struct CopyUrlOptions: View {
+    @AppStorage(Const.copyAppUrl) var copyAppUrl: Bool = false
+
     var asSection: Bool = false
     var video: Video
     var getTimestamp: (() -> Double)?
@@ -37,6 +39,24 @@ struct CopyUrlOptions: View {
             Divider()
             copyChannelUrlButton
         }
+        Divider()
+        appUrlToggle
+    }
+
+    var appUrlToggle: some View {
+        let toggle = Button {
+            copyAppUrl.toggle()
+        } label: {
+            Text("appUrl")
+            Text("appUrlSubtitle")
+            Image(systemName: copyAppUrl ? "checkmark.square.fill" : "square")
+        }
+        .accessibilityAddTraits(copyAppUrl ? .isSelected : [])
+        #if os(macOS)
+        return toggle
+        #else
+        return toggle.menuActionDismissBehavior(.disabled)
+        #endif
     }
 
     @ViewBuilder
@@ -76,7 +96,8 @@ struct CopyUrlOptions: View {
     @ViewBuilder
     var copyUrlButton: some View {
         Button {
-            copyUrl(UrlService.getShareUrl(video) ?? "", "video")
+            guard let url = UrlService.getShareUrl(video) else { return }
+            copyUrl(url, "video")
         } label: {
             Label("video", systemImage: "play.rectangle.fill")
                 .fontWeight(.black)
@@ -87,11 +108,8 @@ struct CopyUrlOptions: View {
     var copyUrlTimestampButton: some View {
         if let getTimestamp {
             Button {
-                let text = UrlService.getShortenedUrl(
-                    video.youtubeId,
-                    timestamp: getTimestamp()
-                )
-                copyUrl(text, "timestamp")
+                guard let url = UrlService.getShareUrl(video, timestamp: getTimestamp()) else { return }
+                copyUrl(url, "timestamp")
             } label: {
                 Text("videoAtTimestamp")
             }

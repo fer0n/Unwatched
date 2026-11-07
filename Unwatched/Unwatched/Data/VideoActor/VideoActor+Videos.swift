@@ -47,7 +47,7 @@ actor VideoActor: SharedContextActor {
 
     @discardableResult
     func addForeignUrls(_ urls: [URL],
-                        in videoplacement: VideoPlacementArea,
+                        in videoplacement: VideoPlacementArea?,
                         at index: Int,
                         markAsNew: Bool
     ) async throws -> [PersistentIdentifier] {
@@ -56,7 +56,7 @@ actor VideoActor: SharedContextActor {
         var playlistIds = [String]()
         var otherUrls = [URL]()
 
-        for url in urls {
+        for url in urls.map(AppLink.resolving) {
             if let youtubeId = UrlService.getYoutubeIdFromUrl(url: url) {
                 let startTime = UrlService.getStartTimeFromUrl(url)
                 videoIds.append((youtubeId, startTime))
@@ -91,7 +91,7 @@ actor VideoActor: SharedContextActor {
     }
 
     private func addForeignPlaylist(playlistId: String,
-                                    in videoplacement: VideoPlacementArea,
+                                    in videoplacement: VideoPlacementArea?,
                                     at index: Int) async throws -> [Video] {
         Log.refresh.info("addForeignPlaylist")
         var videos = [Video]()
@@ -125,7 +125,7 @@ actor VideoActor: SharedContextActor {
     }
 
     private func addForeignVideos(videoIds: [(String, Double?)],
-                                  in videoplacement: VideoPlacementArea,
+                                  in videoplacement: VideoPlacementArea?,
                                   at index: Int,
                                   markAsNew: Bool
     ) async throws -> [Video] {

@@ -11,7 +11,7 @@ import UnwatchedShared
 extension VideoActor {
     func addForeignPodcastEpisodes(
         _ urls: [URL],
-        in placement: VideoPlacementArea,
+        in placement: VideoPlacementArea?,
         at index: Int,
         markAsNew: Bool
     ) async -> (episodes: [Video], error: Error?) {

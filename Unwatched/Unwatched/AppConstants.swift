@@ -86,6 +86,7 @@ extension Const {
         Const.suggestVideos: false,
         Const.nativePlayerFallback: true,
         Const.playBrowserVideosInApp: true,
+        Const.copyAppUrl: false,
         Const.surroundingEffect: true,
 
         // Appearance

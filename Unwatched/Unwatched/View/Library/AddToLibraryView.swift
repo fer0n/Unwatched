@@ -145,7 +145,7 @@ struct AddToLibraryView: View {
 
         // fallback attempt: extract ID directly when nothing worked so far
         if rest == text,
-           let url = URL(string: text),
+           let url = URL(string: text).map(AppLink.resolving),
            let youtubeId = UrlService.getYoutubeIdFromUrl(url: url),
            let youtubeUrl = URL(string: UrlService.getNonEmbeddedYoutubeUrl(
                                     youtubeId,

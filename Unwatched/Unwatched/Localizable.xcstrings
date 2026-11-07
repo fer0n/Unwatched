@@ -1534,6 +1534,108 @@
         }
       }
     },
+    "appUrl" : {
+      "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "App-URL"
+          }
+        },
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "App URL"
+          }
+        },
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "URL de la app"
+          }
+        },
+        "fr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "URL de l'app"
+          }
+        },
+        "pl" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "URL aplikacji"
+          }
+        }
+      }
+    },
+    "appUrlFooter" : {
+      "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Geteilte und kopierte Links öffnen sich in Unwatched. Ohne die App zeigen sie eine Webseite mit dem Video."
+          }
+        },
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Shared and copied links open in Unwatched. Without the app, they show a web page with the video."
+          }
+        },
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Los enlaces compartidos y copiados se abren en Unwatched. Sin la app, muestran una página web con el video."
+          }
+        },
+        "fr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Les liens partagés et copiés s'ouvrent dans Unwatched. Sans l'app, ils affichent une page web avec la vidéo."
+          }
+        },
+        "pl" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Udostępnione i skopiowane linki otwierają się w Unwatched. Bez aplikacji pokazują stronę internetową z wideo."
+          }
+        }
+      }
+    },
+    "appUrlSubtitle" : {
+      "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Öffnet in Unwatched"
+          }
+        },
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Opens in Unwatched"
+          }
+        },
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Se abre en Unwatched"
+          }
+        },
+        "fr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "S'ouvre dans Unwatched"
+          }
+        },
+        "pl" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Otwiera się w Unwatched"
+          }
+        }
+      }
+    },
     "attachmentTooLarge" : {
       "localizations" : {
         "de" : {

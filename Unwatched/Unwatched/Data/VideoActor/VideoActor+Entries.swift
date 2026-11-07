@@ -349,7 +349,8 @@ extension VideoActor {
         return addedVideos
     }
 
-    func addVideosTo(_ videos: [Video], placement: VideoPlacementArea, index: Int = 1) {
+    func addVideosTo(_ videos: [Video], placement: VideoPlacementArea?, index: Int = 1) {
+        guard let placement else { return }
         if placement == .inbox {
             addVideosToInbox(videos)
         } else if placement == .queue {

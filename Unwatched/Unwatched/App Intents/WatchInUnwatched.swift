@@ -22,6 +22,7 @@ struct WatchInUnwatched: AppIntent {
     @MainActor
     func perform() async throws -> some IntentResult {
         Signal.log("Shortcut.WatchInUnwatched")
+        let youtubeUrl = AppLink.resolving(youtubeUrl)
         let isVideo = UrlService.getYoutubeIdFromUrl(url: youtubeUrl) != nil
         let isPlaylist = UrlService.getPlaylistIdFromUrl(youtubeUrl) != nil
         guard isVideo || isPlaylist else {

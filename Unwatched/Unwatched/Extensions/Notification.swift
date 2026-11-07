@@ -11,6 +11,7 @@ extension Notification.Name {
     static let pasteAndQueue = Notification.Name("pasteAndQueue")
     static let queueInUnwatched = Notification.Name("queueInUnwatched")
     static let inboxInUnwatched = Notification.Name("inboxInUnwatched")
+    static let openInUnwatched = Notification.Name("openInUnwatched")
     static let searchYoutube = Notification.Name("searchYoutube")
     static let pasteAddToLibrary = Notification.Name("pasteAddToLibrary")
 }

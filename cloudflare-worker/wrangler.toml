@@ -22,6 +22,10 @@ custom_domain = true
 pattern = "unwatched.octabits.net"
 custom_domain = true
 
+[[routes]]
+pattern = "u.octabits.net"
+custom_domain = true
+
 [[analytics_engine_datasets]]
 binding = "ANALYTICS"
 dataset = "unwatched_analytics_v3"

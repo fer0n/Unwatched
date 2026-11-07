@@ -16,6 +16,7 @@ struct GeneralSettingsView: View {
     @AppStorage(Const.autoRefresh) var autoRefresh: Bool = true
     @AppStorage(Const.enableQueueContextMenu) var enableQueueContextMenu: Bool = false
     @AppStorage(Const.autoRefreshIgnoresSync) var autoRefreshIgnoresSync: Bool = false
+    @AppStorage(Const.copyAppUrl) var copyAppUrl: Bool = false
     @AppStorage(Const.shareExtensionAction, store: .appGroup)
     var shareExtensionAction: ShareExtensionActionSetting = .askEveryTime
 
@@ -77,6 +78,12 @@ struct GeneralSettingsView: View {
                         }
                     }
                     .pickerStyle(.menu)
+                }
+
+                MySection(footer: "appUrlFooter") {
+                    Toggle(isOn: $copyAppUrl) {
+                        Text("appUrl")
+                    }
                 }
             }
             .myNavigationTitle("generalSettings")

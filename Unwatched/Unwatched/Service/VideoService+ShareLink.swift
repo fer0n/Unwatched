@@ -16,7 +16,7 @@ extension VideoService {
 
     @MainActor
     static func getVideoOrCurrent(_ videoUrl: URL?) throws -> Video {
-        guard let videoUrl else {
+        guard let videoUrl = videoUrl.map(AppLink.resolving) else {
             guard let currentVideo = currentVideo() else {
                 throw VideoError.noVideoFound
             }

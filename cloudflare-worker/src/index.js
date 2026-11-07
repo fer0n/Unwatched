@@ -1,7 +1,7 @@
 import { isDashboardAuthorized, dashboardCookieHeader } from "./dashboard/auth.js";
 import { handleDashboardData, handleRecentData } from "./dashboard/data.js";
 import { DASHBOARD_HTML } from "./dashboard/page.js";
-import { LINKS_HOST, handleLink } from "./links.js";
+import { LINKS_HOSTS, handleLink } from "./links.js";
 import { handleReportUpload, handleReportsDashboard, isReportsPath } from "./reports/index.js";
 
 const MAX_EVENTS_PER_REQUEST = 25;
@@ -17,8 +17,7 @@ export default {
   async fetch(request, env) {
     const url = new URL(request.url);
 
-    // The links host serves only redirects — never the dashboard or ingest.
-    if (url.hostname === LINKS_HOST) {
+    if (LINKS_HOSTS.has(url.hostname)) {
       return handleLink(url);
     }
 

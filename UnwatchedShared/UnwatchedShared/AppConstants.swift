@@ -411,6 +411,7 @@ public struct Const {
     /// Set once the two totals above have been cleared of the episode-clock ones they used to hold.
     public static let trimSilenceStatsAreWallClock = "trimSilenceStatsAreWallClock"
     public static let playBrowserVideosInApp = "playBrowserVideosInApp"
+    public static let copyAppUrl = "copyAppUrl"
     public static let inboxFullDismissedDate = "inboxFullDismissedDate"
     public static let inboxTipHiddenPermanently = "inboxTipHiddenPermanently"
     public static let temporarySpeedUp = "temporarySpeedUp"

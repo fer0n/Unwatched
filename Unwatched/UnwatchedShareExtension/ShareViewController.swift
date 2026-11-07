@@ -54,7 +54,7 @@ class ShareViewController: UIViewController {
 
     @MainActor
     private func detectLink() async {
-        guard let url = await extractSharedURL() else {
+        guard let url = await extractSharedURL().map(AppLink.resolving) else {
             logger.error("no URL found in shared item")
             model.state = .noLink
             return

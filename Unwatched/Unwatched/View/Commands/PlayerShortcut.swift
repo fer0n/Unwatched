@@ -216,7 +216,7 @@ enum PlayerShortcut: String, CaseIterable {
             }
         case .openInExternalBrowser:
             if let video = PlayerManager.shared.video,
-               let urlText = UrlService.getShareUrl(video, timestamp: PlayerManager.shared.currentTime),
+               let urlText = UrlService.getWebUrl(video, timestamp: PlayerManager.shared.currentTime),
                let url = URL(string: urlText) {
                 UrlService.open(url)
             }

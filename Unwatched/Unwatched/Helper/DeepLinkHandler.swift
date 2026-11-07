@@ -17,48 +17,44 @@ struct DeepLinkHandler: ViewModifier {
     }
 
     func handleDeepLink(url: URL) {
-        guard let host = url.host, ["play", "queue", "inbox"].contains(host),
+        let isWebLink = AppLink.isAppLink(url)
+        let head = isWebLink ? url.pathComponents.dropFirst().first : url.host
+        guard let action = action(head, isWebLink: isWebLink),
               let components = URLComponents(url: url, resolvingAgainstBaseURL: false) else { return }
         let value = { (name: String) in components.queryItems?.first { $0.name == name }?.value }
 
-        if host == "play", value("source") == "safari_extension", !guardPremium("safariExtension") {
+        if action == "play", value("source") == "safari_extension", !guardPremium("safariExtension") {
             return
         }
-        guard let link = linkedUrl(from: components, value: value) else {
+        guard let link = AppLink.target(of: url) else {
             Log.error("No link found in deep link: \(url)")
             return
         }
-        switch host {
+        switch action {
         case "play":
             post(.watchInUnwatched, ["youtubeUrl": link])
         case "queue":
             post(.queueInUnwatched, ["youtubeUrl": link, "next": value("next") == "true"])
-            if let xSuccessURL = value("x-success").flatMap(URL.init(string:)) {
+            if !isWebLink, let xSuccessURL = value("x-success").flatMap(URL.init(string:)) {
                 UrlService.open(xSuccessURL)
             }
-        default:
+        case "inbox":
             post(.inboxInUnwatched, ["youtubeUrl": link])
+        default:
+            post(.openInUnwatched, ["youtubeUrl": link])
+        }
+    }
+
+    private func action(_ head: String?, isWebLink: Bool) -> String? {
+        switch head {
+        case "play", "queue", "inbox", "open": head
+        case "v", "p": isWebLink ? "open" : nil
+        default: nil
         }
     }
 
     private func post(_ name: Notification.Name, _ userInfo: [AnyHashable: Any]) {
         NotificationCenter.default.post(name: name, object: nil, userInfo: userInfo)
-    }
-
-    private func linkedUrl(from components: URLComponents, value: (String) -> String?) -> URL? {
-        if let link = value("url").flatMap(URL.init(string:)) {
-            return reattaching(components.fragment, to: link)
-        }
-        guard let videoId = value("v"), !videoId.isEmpty else { return nil }
-        return URL(string: UrlService.getNonEmbeddedYoutubeUrl(videoId))
-    }
-
-    // an unencoded `#u=` lands on the deep link, not on its `url=`
-    private func reattaching(_ fragment: String?, to link: URL) -> URL {
-        guard link.fragment == nil, let fragment,
-              var components = URLComponents(url: link, resolvingAgainstBaseURL: false) else { return link }
-        components.fragment = fragment
-        return components.url ?? link
     }
 }
 

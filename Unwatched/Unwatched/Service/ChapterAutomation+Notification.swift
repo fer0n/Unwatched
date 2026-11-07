@@ -87,7 +87,7 @@ extension ChapterAutomation {
     }
 
     private static func notificationLink(for video: Video) -> String? {
-        UrlService.getShareUrl(video)
+        UrlService.getWebUrl(video)
             ?? video.mediaUrl.flatMap { UrlService.addEpisodeId(video.youtubeId, to: $0)?.absoluteString }
     }
 }

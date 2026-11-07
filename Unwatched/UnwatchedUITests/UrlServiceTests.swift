@@ -51,6 +51,36 @@ final class UrlServiceTests: XCTestCase {
         }
     }
 
+    func testAppLinksResolveToTheirTarget() {
+        let cases: [(String, String?)] = [
+            ("https://u.octabits.net/v/jNQXAC9IVRw", "https://www.youtube.com/watch?v=jNQXAC9IVRw"),
+            ("https://unwatched.octabits.net/v/jNQXAC9IVRw?t=90", "https://www.youtube.com/watch?v=jNQXAC9IVRw&t=90s"),
+            ("https://u.octabits.net/p/1092957894/1000799862480?c=DE", "https://podcasts.apple.com/de/podcast/id1092957894?i=1000799862480"),
+            ("https://u.octabits.net/open?url=https%3A%2F%2Fexample.com%2Fep%23u%3Dab12cd34", "https://example.com/ep#u=ab12cd34"),
+            ("https://u.octabits.net/queue?v=jNQXAC9IVRw&next=true", "https://www.youtube.com/watch?v=jNQXAC9IVRw"),
+            ("unwatched://open?url=https://example.com/ep#u=ab12cd34", "https://example.com/ep#u=ab12cd34"),
+            ("https://u.octabits.net/v/not-an-id", nil),
+            ("https://u.octabits.net/p/abc/123", nil),
+            ("https://u.octabits.net/v/abc?url=https://evil.example", nil),
+            ("https://u.octabits.net/v/jNQXAC9IVRw?t=nan", "https://www.youtube.com/watch?v=jNQXAC9IVRw"),
+            ("https://u.octabits.net/v/jNQXAC9IVRw?t=-5", "https://www.youtube.com/watch?v=jNQXAC9IVRw"),
+            ("https://u.octabits.net/v/jNQXAC9IVRw?t=1e300", "https://www.youtube.com/watch?v=jNQXAC9IVRw"),
+            ("https://unwatched.octabits.net/beta?v=jNQXAC9IVRw", nil),
+            ("https://www.google.com/url?url=https://evil.example", nil),
+        ]
+        for (input, expected) in cases {
+            XCTAssertEqual(AppLink.target(of: URL(string: input)!)?.absoluteString, expected, input)
+        }
+    }
+
+    func testPastedAppLinkIsReadAsTheVideo() {
+        let url = URL(string: "https://u.octabits.net/v/jNQXAC9IVRw?t=90")!
+        XCTAssertEqual(YoutubeUrlParser.getYoutubeId(from: AppLink.resolving(url)), "jNQXAC9IVRw")
+        XCTAssertEqual(AppLink.resolving(url).absoluteString, "https://www.youtube.com/watch?v=jNQXAC9IVRw&t=90s")
+        let other = URL(string: "https://youtu.be/jNQXAC9IVRw")!
+        XCTAssertEqual(AppLink.resolving(other), other)
+    }
+
     func testApplePodcastsCollectionId() {
         let values: [(String, String?)] = [
             ("https://podcasts.apple.com/us/podcast/the-daily/id1200361736", "1200361736"),

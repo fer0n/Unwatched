@@ -32,8 +32,27 @@ struct UrlService {
 
     static let issuesUrl = URL(staticString: "https://github.com/fer0n/Unwatched/issues")
 
+    static func getAppUrl(youtubeId: String, timestamp: Double? = nil) -> String {
+        "https://\(AppLink.host)/v/\(youtubeId)" + timeQuery(timestamp)
+    }
+
+    static func getAppUrl(_ video: any VideoData, timestamp: Double? = nil) -> String? {
+        guard video.isPodcast else {
+            return getAppUrl(youtubeId: video.youtubeId, timestamp: timestamp)
+        }
+        let queryValue = CharacterSet.urlQueryAllowed.subtracting(CharacterSet(charactersIn: "&+=#?"))
+        guard let encoded = getWebUrl(video)?.addingPercentEncoding(withAllowedCharacters: queryValue) else {
+            return nil
+        }
+        return "https://\(AppLink.host)/open?url=\(encoded)"
+    }
+
     static func getShortenedUrl(_ youtubeId: String, timestamp: Double? = nil) -> String {
-        "https://youtu.be/\(youtubeId)" + (timestamp.map { "?t=\(Int($0))" } ?? "")
+        "https://youtu.be/\(youtubeId)" + timeQuery(timestamp)
+    }
+
+    private static func timeQuery(_ timestamp: Double?) -> String {
+        timestamp.map { "?t=\(Int($0))" } ?? ""
     }
 
     /// Names one of several episodes that share a url.
@@ -42,6 +61,13 @@ struct UrlService {
     private static let episodeIdPrefixLength = 8
 
     static func getShareUrl(_ video: any VideoData, timestamp: Double? = nil) -> String? {
+        if Const.copyAppUrl.bool ?? false {
+            return getAppUrl(video, timestamp: timestamp)
+        }
+        return getWebUrl(video, timestamp: timestamp)
+    }
+
+    static func getWebUrl(_ video: any VideoData, timestamp: Double? = nil) -> String? {
         guard video.isPodcast else {
             return getShortenedUrl(video.youtubeId, timestamp: timestamp)
         }
