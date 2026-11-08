@@ -11,13 +11,19 @@ extension View {
     func onboardingBottomBar<Accessory: View>(
         _ continueTitle: LocalizedStringKey,
         prominent: Bool = true,
+        detail: String? = nil,
         onContinue: @escaping () -> Void,
         @ViewBuilder accessory: @escaping () -> Accessory = { EmptyView() }
     ) -> some View {
         softSafeAreaBar(edge: .bottom) {
             VStack(spacing: 0) {
                 accessory()
-                OnboardingContinueButton(continueTitle, prominent: prominent, action: onContinue)
+                OnboardingContinueButton(
+                    continueTitle,
+                    prominent: prominent,
+                    detail: detail,
+                    action: onContinue
+                )
             }
             .padding(.bottom, 8)
             #if os(visionOS)
@@ -79,11 +85,13 @@ struct OnboardingContinueButton: View {
     let title: LocalizedStringKey
     /// Off for a neutral, gray button, e.g. closing without a selection
     let prominent: Bool
+    let detail: String?
     let action: () -> Void
 
-    init(_ title: LocalizedStringKey, prominent: Bool = true, action: @escaping () -> Void) {
+    init(_ title: LocalizedStringKey, prominent: Bool = true, detail: String? = nil, action: @escaping () -> Void) {
         self.title = title
         self.prominent = prominent
+        self.detail = detail
         self.action = action
     }
 
@@ -108,9 +116,17 @@ struct OnboardingContinueButton: View {
 
     var button: some View {
         Button(action: action) {
-            Text(title)
-                .fontWeight(.semibold)
-                .frame(maxWidth: .infinity)
+            VStack(spacing: 1) {
+                Text(title)
+                    .fontWeight(.semibold)
+                if let detail {
+                    Text(verbatim: detail)
+                        .font(.footnote)
+                        .opacity(0.75)
+                        .lineLimit(1)
+                }
+            }
+            .frame(maxWidth: .infinity)
         }
     }
 }

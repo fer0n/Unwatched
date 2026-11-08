@@ -1040,7 +1040,9 @@
 		CD0FBE000000000000000008 /* OnboardingChannelsPage.swift in Sources */ = {isa = PBXBuildFile; fileRef = CD0FBE000000000000000007 /* OnboardingChannelsPage.swift */; };
 		CD0FBE000000000000000009 /* OnboardingChannelsPage.swift in Sources */ = {isa = PBXBuildFile; fileRef = CD0FBE000000000000000007 /* OnboardingChannelsPage.swift */; };
 		CD0FBE00000000000000000B /* OnboardingResultRow.swift in Sources */ = {isa = PBXBuildFile; fileRef = CD0FBE00000000000000000A /* OnboardingResultRow.swift */; };
+		CD0FBE0000000000000000FB /* UploadRate+Description.swift in Sources */ = {isa = PBXBuildFile; fileRef = CD0FBE0000000000000000FA /* UploadRate+Description.swift */; };
 		CD0FBE00000000000000000C /* OnboardingResultRow.swift in Sources */ = {isa = PBXBuildFile; fileRef = CD0FBE00000000000000000A /* OnboardingResultRow.swift */; };
+		CD0FBE0000000000000000FC /* UploadRate+Description.swift in Sources */ = {isa = PBXBuildFile; fileRef = CD0FBE0000000000000000FA /* UploadRate+Description.swift */; };
 		CD0FBE000000000000000014 /* OnboardingLaunchModifier.swift in Sources */ = {isa = PBXBuildFile; fileRef = CD0FBE000000000000000013 /* OnboardingLaunchModifier.swift */; };
 		CD0FBE000000000000000015 /* OnboardingLaunchModifier.swift in Sources */ = {isa = PBXBuildFile; fileRef = CD0FBE000000000000000013 /* OnboardingLaunchModifier.swift */; };
 		CD0FBE000000000000000017 /* OnboardingInboxTip.swift in Sources */ = {isa = PBXBuildFile; fileRef = CD0FBE000000000000000016 /* OnboardingInboxTip.swift */; };
@@ -1845,6 +1847,7 @@
 		CD0FBE000000000000000004 /* OnboardingViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = OnboardingViewModel.swift; sourceTree = "<group>"; };
 		CD0FBE000000000000000007 /* OnboardingChannelsPage.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = OnboardingChannelsPage.swift; sourceTree = "<group>"; };
 		CD0FBE00000000000000000A /* OnboardingResultRow.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = OnboardingResultRow.swift; sourceTree = "<group>"; };
+		CD0FBE0000000000000000FA /* UploadRate+Description.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "UploadRate+Description.swift"; sourceTree = "<group>"; };
 		CD0FBE000000000000000013 /* OnboardingLaunchModifier.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = OnboardingLaunchModifier.swift; sourceTree = "<group>"; };
 		CD0FBE000000000000000016 /* OnboardingInboxTip.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = OnboardingInboxTip.swift; sourceTree = "<group>"; };
 		CD0FBE00000000000000001C /* OnboardingSearchResult.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = OnboardingSearchResult.swift; sourceTree = "<group>"; };
@@ -2731,6 +2734,7 @@
 				CD0FBE0000000000000000A4 /* SettingsSplashCards.swift */,
 				CD0FBE0000000000000000AA /* BrowserAlternatives.swift */,
 				CD0FBE00000000000000000A /* OnboardingResultRow.swift */,
+				CD0FBE0000000000000000FA /* UploadRate+Description.swift */,
 				CD0FBE000000000000000007 /* OnboardingChannelsPage.swift */,
 				CD0FBE7A0000000000000007 /* OnboardingImportCards.swift */,
 				CD0FBE7A0000000000000001 /* OnboardingImportPage.swift */,
@@ -3919,6 +3923,7 @@
 				CD0FBE0000000000000000A5 /* SettingsSplashCards.swift in Sources */,
 				CD0FBE0000000000000000AB /* BrowserAlternatives.swift in Sources */,
 				CD0FBE00000000000000000B /* OnboardingResultRow.swift in Sources */,
+				CD0FBE0000000000000000FB /* UploadRate+Description.swift in Sources */,
 				CD0FBE000000000000000008 /* OnboardingChannelsPage.swift in Sources */,
 				CD0FBE7A0000000000000002 /* OnboardingImportPage.swift in Sources */,
 				CD0FBE7A0000000000000008 /* OnboardingImportCards.swift in Sources */,
@@ -4212,6 +4217,7 @@
 				CD0FBE0000000000000000A6 /* SettingsSplashCards.swift in Sources */,
 				CD0FBE0000000000000000AC /* BrowserAlternatives.swift in Sources */,
 				CD0FBE00000000000000000C /* OnboardingResultRow.swift in Sources */,
+				CD0FBE0000000000000000FC /* UploadRate+Description.swift in Sources */,
 				CD0FBE000000000000000009 /* OnboardingChannelsPage.swift in Sources */,
 				CD0FBE7A0000000000000003 /* OnboardingImportPage.swift in Sources */,
 				CD0FBE7A0000000000000009 /* OnboardingImportCards.swift in Sources */,

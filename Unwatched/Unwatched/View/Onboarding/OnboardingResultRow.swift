@@ -14,6 +14,7 @@ struct OnboardingResultRow: View {
     var thumbnailUrl: URL?
     var isPodcast = false
     var isWatchLater = false
+    var uploadRateText: String?
     let isSelected: Bool
     var showsDivider = false
     let toggle: () -> Void
@@ -43,6 +44,13 @@ struct OnboardingResultRow: View {
                                 .foregroundStyle(.secondary)
                                 .lineLimit(1)
                         }
+                    }
+
+                    if let uploadRateText {
+                        Text(verbatim: uploadRateText)
+                            .font(.subheadline)
+                            .foregroundStyle(.tertiary)
+                            .lineLimit(1)
                     }
                 }
                 .frame(maxWidth: .infinity, alignment: .leading)
@@ -99,13 +107,20 @@ struct OnboardingResultRow: View {
 }
 
 extension OnboardingResultRow {
-    init(result: OnboardingSearchResult, isSelected: Bool, showsDivider: Bool = false, toggle: @escaping () -> Void) {
+    init(
+        result: OnboardingSearchResult,
+        isSelected: Bool,
+        showsDivider: Bool = false,
+        uploadRateText: String? = nil,
+        toggle: @escaping () -> Void
+    ) {
         self.init(
             title: result.title,
             subtitle: result.subtitle,
             thumbnailUrl: result.thumbnailUrl,
             isPodcast: result.isPodcast,
             isWatchLater: result.isWatchLater,
+            uploadRateText: uploadRateText,
             isSelected: isSelected,
             showsDivider: showsDivider,
             toggle: toggle
