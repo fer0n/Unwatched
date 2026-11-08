@@ -171,40 +171,6 @@ actor VideoActor: SharedContextActor {
         return videos?.first
     }
 
-    /// Fetches the description and channel a video was created without, preferring InnerTube's
-    /// player endpoint (no Data API quota) over the YouTube Data API. Returns nil when nothing
-    /// is missing, and only the fields that were.
-    func fetchMissingInfo(youtubeId: String) async -> InnerTubeAPI.VideoMetadata? {
-        guard let existing = videoAlreadyExists(youtubeId) else { return nil }
-        let needsDescription = existing.videoDescription?.isEmpty ?? true
-        let needsChannel = existing.subscription == nil
-        guard needsDescription || needsChannel else { return nil }
-        let videoId = existing.persistentModelID
-
-        var info = (try? await InnerTubeAPI().fetchVideoMetadata(videoId: youtubeId))
-            ?? InnerTubeAPI.VideoMetadata()
-        let gotDescription = !(info.description?.isEmpty ?? true)
-        if (needsDescription && !gotDescription) || (needsChannel && info.channelId == nil) {
-            let fallback = try? await YoutubeDataAPI.getYtVideoInfo(youtubeId)
-            Log.refresh.info("fetchMissingInfo: \(youtubeId) — InnerTube incomplete, Data API "
-                                + (fallback == nil ? "failed too" : "succeeded"))
-            info.description = gotDescription ? info.description : fallback?.videoDescription
-            info.channelId = info.channelId ?? fallback?.youtubeChannelId
-            info.channelTitle = info.channelTitle ?? fallback?.feedTitle
-        }
-
-        info.description = needsDescription && !(info.description?.isEmpty ?? true)
-            ? info.description
-            : nil
-        if let description = info.description,
-           let video: Video = modelContext.resolvedModel(withID: videoId) {
-            video.videoDescription = description
-            try? modelContext.save()
-        }
-        info.channelId = needsChannel ? info.channelId : nil
-        return info
-    }
-
     func loadVideos(
         _ subscriptionIds: [PersistentIdentifier]?,
         fetchDurations: Bool,

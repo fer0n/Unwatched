@@ -4,8 +4,8 @@ import OSLog
 import UnwatchedShared
 
 extension VideoService {
-    /// Fetches the description and channel a video was added without — search results carry
-    /// no description, and a Short's row carries no channel either.
+    /// Fetches the description, channel and date a video was added without — search results carry
+    /// no description, a Short's row no channel, and Watch Later or recommendations often no date.
     static func fetchMissingInfoInBg(youtubeId: String) {
         fetchMissingInfoInBg(youtubeIds: [youtubeId])
     }
@@ -26,9 +26,7 @@ extension VideoService {
         let context = DataProvider.mainContext
         guard let video = getVideo(for: youtubeId, modelContext: context) else { return }
 
-        if let description = info.description {
-            video.videoDescription = description
-        }
+        video.apply(info)
         if video.subscription == nil, let channelId = info.channelId {
             associateSubscription(
                 video,
@@ -494,7 +492,8 @@ extension VideoService {
                 }
                 try? modelContext.save()
             }
-            if !model.isPodcast, model.videoDescription?.isEmpty ?? true || model.subscription == nil {
+            if !model.isPodcast,
+               model.videoDescription?.isEmpty ?? true || model.subscription == nil || model.publishedDate == nil {
                 fetchMissingInfoInBg(youtubeId: model.youtubeId)
             }
             return model

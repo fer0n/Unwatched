@@ -69,7 +69,8 @@ references in `Unwatched.xcodeproj`.
 `/player` call that parses just `videoDetails` (description, channel id, channel title, `isLiveContent`), never
 throws on unresolvable streams. Backfills what a video was added without (e.g. from search,
 whose results carry no description, and whose Shorts carry no channel), and tells premieres
-from streams for the live-stream filter: the channel Live tab lists both. Kept out of `Core/` so
+from streams for the live-stream filter: the channel Live tab lists both. `VideoMetadata.publishedDate`
+is only filled from the WEB client (`fetchVideoInfo`), since the iOS response has no `microformat`. Kept out of `Core/` so
 `InnerTubeAPI+Player.swift` stays vanilla.
 
 `InnerTubeAPI+Search.swift`'s `fetchChannelAvatarURL(channelId:)` delegates to

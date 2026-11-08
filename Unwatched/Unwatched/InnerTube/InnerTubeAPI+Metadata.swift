@@ -17,6 +17,8 @@ extension InnerTubeAPI {
         var channelTitle: String?
         /// True for live streams, upcoming or past; false for regular videos, premieres included.
         var isLiveContent: Bool?
+        /// Not returned by `fetchVideoMetadata`
+        var publishedDate: Date?
     }
 
     /// Fetches a video's description, channel and whether it's a stream from the InnerTube
@@ -35,5 +37,30 @@ extension InnerTubeAPI {
             channelTitle: videoDetails?["author"] as? String,
             isLiveContent: videoDetails?["isLiveContent"] as? Bool
         )
+    }
+}
+
+extension InnerTubeAPI.VideoMetadata {
+    init(_ video: SendableVideo?) {
+        self.init(
+            description: video?.videoDescription,
+            channelId: video?.youtubeChannelId,
+            channelTitle: video?.feedTitle,
+            publishedDate: video?.publishedDate
+        )
+    }
+}
+
+extension Video {
+    func apply(_ info: InnerTubeAPI.VideoMetadata) {
+        if let description = info.description, videoDescription != description {
+            videoDescription = description
+        }
+        if let date = info.publishedDate, publishedDate == nil {
+            publishedDate = date
+            if let inboxEntry, inboxEntry.date == nil {
+                inboxEntry.date = date
+            }
+        }
     }
 }
