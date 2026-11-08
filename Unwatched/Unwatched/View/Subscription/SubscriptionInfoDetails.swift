@@ -107,18 +107,18 @@ struct SubscriptionInfoDetails: View {
 
                 ScrollView(.horizontal, showsIndicators: false) {
                     HStack {
-                        SubscriptionSpeedSetting(subscription: subscription)
-                            .buttonStyle(CapsuleButtonStyle(primary: false))
+                        SubscriptionVideoPlacementSetting(subscription: subscription)
                             .padding(.leading, padding + workaroundPadding)
 
-                        SubscriptionVideoPlacementSetting(subscription: subscription)
-
-                        if !subscription.isWatchLater {
-                            SubscriptionEpisodeLimitSetting(subscription: subscription)
-                        }
+                        SubscriptionSpeedSetting(subscription: subscription)
+                            .buttonStyle(CapsuleButtonStyle(primary: false))
 
                         if !subscription.isPodcast {
                             SubscriptionShortsSetting(subscription: subscription)
+                        }
+
+                        if !subscription.isWatchLater {
+                            SubscriptionEpisodeLimitSetting(subscription: subscription)
                         }
 
                         if !subscription.isPodcast && subscription.youtubeChannelId != nil {
