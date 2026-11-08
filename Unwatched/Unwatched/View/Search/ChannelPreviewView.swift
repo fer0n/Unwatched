@@ -234,9 +234,15 @@ struct ChannelPreviewView: View {
         }
         return info
     }
+}
 
+// MARK: - Loading
+
+extension ChannelPreviewView {
     private func load() async {
         guard videos.isEmpty else { return }
+        isLoading = true
+        loadFailed = false
         defer { isLoading = false }
 
         if let playlistId = sub.youtubePlaylistId {
@@ -259,11 +265,8 @@ struct ChannelPreviewView: View {
         async let channelPlaylists = api.fetchChannelPlaylists(channelId: channelId)
         await subManager.setIsSubscribed(SubscriptionInfo(channelId: channelId))
 
-        do {
-            videos = try await VideoCrawler.loadVideosFromRSS(url: url)
-        } catch {
-            Log.error("ChannelPreview load failed: \(error)")
-            loadFailed = true
+        await loadVideos(rss: url) {
+            try await api.fetchChannelVideos(channelId: channelId)
         }
 
         if let avatarUrl = try? await avatar {
@@ -281,12 +284,45 @@ struct ChannelPreviewView: View {
         }
         await subManager.setIsSubscribed(SubscriptionInfo(playlistId: playlistId))
 
+        await loadVideos(rss: url) {
+            try await api.fetchPlaylistVideos(playlistId: playlistId)
+        }
+    }
+
+    /// RSS feeds 404 for hours most days; InnerTube's dates are approximate.
+    private func loadVideos(rss url: URL, fallback: () async throws -> InnerTubeAPI.SearchPage) async {
         do {
             videos = try await VideoCrawler.loadVideosFromRSS(url: url)
+        } catch let error as URLError where error.code == .badServerResponse {
+            Log.warning("ChannelPreview RSS unavailable, using InnerTube: \(error)")
+            do {
+                videos = try await fallbackVideos(fallback)
+            } catch {
+                failLoading(error)
+            }
         } catch {
-            Log.error("ChannelPreview playlist load failed: \(error)")
-            loadFailed = true
+            failLoading(error)
         }
+    }
+
+    private func fallbackVideos(_ fetch: () async throws -> InnerTubeAPI.SearchPage) async throws -> [SendableVideo] {
+        try await fetch().videos.filter(\.isFeedUpload).map { video in
+            guard isPlaylist else {
+                var video = video
+                video.channelTitle = sub.displayTitle
+                return SearchVM.sendable(from: video)
+            }
+            var sendable = SearchVM.sendable(from: video)
+            // playlist lockups don't mark Shorts; unknown lets a later refresh detect them
+            sendable.isYtShort = nil
+            return sendable
+        }
+    }
+
+    private func failLoading(_ error: Error) {
+        guard !Task.isCancelled else { return }
+        Log.error("ChannelPreview load failed: \(error)")
+        loadFailed = true
     }
 }
 

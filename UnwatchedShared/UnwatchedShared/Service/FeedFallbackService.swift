@@ -15,8 +15,7 @@ public enum FeedFallbackService {
     public static func candidates(_ api: InnerTubeAPI, channelId: String, after cutoff: Date) async throws -> [ITVideo] {
         let page = try await api.fetchChannelVideos(channelId: channelId)
         return page.videos.prefix(feedLength).filter { video in
-            guard !video.isUpcoming, !video.isLive, !video.isMembersOnly,
-                  let approximate = video.publishedAt else { return false }
+            guard video.isFeedUpload, let approximate = video.publishedAt else { return false }
             return approximate > cutoff.addingTimeInterval(-relativeDateMargin)
         }
     }

@@ -10,6 +10,11 @@ extension ITVideo {
     public var isMembersOnly: Bool {
         badges.contains("Members only")
     }
+
+    /// What the RSS feed lists.
+    public var isFeedUpload: Bool {
+        !isUpcoming && !isLive && !isMembersOnly
+    }
 }
 
 extension InnerTubeAPI {
