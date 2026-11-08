@@ -1,0 +1,9 @@
+#!/bin/sh
+# Rejects commit titles over MAX characters.
+MAX=70
+subject=$(grep -v '^#' "$1" | head -n1)
+if [ ${#subject} -gt "$MAX" ]; then
+  echo "commit-msg: title is ${#subject} chars (max $MAX):" >&2
+  echo "  $subject" >&2
+  exit 1
+fi
