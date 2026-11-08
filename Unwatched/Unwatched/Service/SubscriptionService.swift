@@ -30,6 +30,13 @@ struct SubscriptionService {
         }
     }
 
+    static func getSubscriptionSettingCounts() -> Task<[String: Int]?, Never> {
+        Task.detached {
+            let repo = SubscriptionActor()
+            return await repo.getSubscriptionSettingCounts()
+        }
+    }
+
     static func addSubscriptions(
         subscriptionInfo: [SubscriptionInfo]) async throws -> [SubscriptionState] {
         let repo = SubscriptionActor()

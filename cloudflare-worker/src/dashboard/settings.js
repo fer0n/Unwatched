@@ -93,3 +93,19 @@ export const VALUE_SETTINGS = [
 ];
 
 export const SETTINGS_VALUE_PREFIX = "Unwatched.Setting.";
+
+// [key, label] — mirrors SubscriptionActor.getSubscriptionSettingCounts, see CLAUDE.md.
+export const SUBSCRIPTION_SETTINGS = [
+  ["speed", "Speed"],
+  ["placement", "Video placement"],
+  ["episodeLimit", "Episode limit"],
+  ["shorts", "Shorts"],
+  ["liveStreams", "Live streams"],
+  ["skipIntro", "Skip intro"],
+  ["skipOutro", "Skip outro"],
+  ["autoSkip", "Auto-skip chapters"],
+  ["sponsor", "SponsorBlock: Sponsor"],
+  ["selfPromo", "SponsorBlock: Self-promo"],
+  ["chapterGeneration", "Chapter generation"],
+  ["titleFilter", "Title filter"],
+];

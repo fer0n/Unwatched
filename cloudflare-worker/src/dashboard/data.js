@@ -1,5 +1,5 @@
 import { RAW_ROW_LIMIT, SNAPSHOT_WINDOW_DAYS, HISTORY_WINDOW_DAYS, WEEKLY_PERIOD_DAYS, FORTNIGHTLY_PERIOD_DAYS, DAY_MS, TREND_WINDOW_DAYS, CAPACITY_WINDOW_DAYS, SEARCH_WINDOW_DAYS, FREE_DAILY_LIMIT } from "./constants.js";
-import { parseParams, latestPerUser, tallySettings, tallyValueSettings, tallyBuckets, tallyRawBuckets, tallyDevices, serverTime, latestPerUserPerPeriod, platformTrend, settingsTrend, bucketTrend, YOUTUBE_PAGE_EVENTS, tallySearchUsage, tallyParam } from "./aggregate.js";
+import { parseParams, latestPerUser, tallySettings, tallyValueSettings, tallyBuckets, tallyRawBuckets, tallyDevices, serverTime, latestPerUserPerPeriod, platformTrend, settingsTrend, bucketTrend, tallySubscriptionSettings, YOUTUBE_PAGE_EVENTS, tallySearchUsage, tallyParam } from "./aggregate.js";
 
 async function queryAnalytics(env, sql) {
   const res = await fetch(
@@ -324,6 +324,8 @@ export async function handleDashboardData(env, channel) {
           trendPeriodDays: FORTNIGHTLY_PERIOD_DAYS,
           trend: bucketTrend(subscriptionTrendRaw.data, "SubscriptionCount.Value"),
           podcastTrend: bucketTrend(subscriptionTrendRaw.data, "PodcastCount.Value"),
+          trendTruncated: subscriptionTrendRaw.data.length >= RAW_ROW_LIMIT,
+          settings: tallySubscriptionSettings(latestSubs),
         },
         errors: {
           windowDays: SNAPSHOT_WINDOW_DAYS,

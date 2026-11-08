@@ -947,6 +947,23 @@ function renderBucketBars(el, buckets) {
   }) : []);
 }
 
+function renderSubscriptionSettings(el, hintEl, sub, windowDays) {
+  sub = sub || { sampleSize: 0, settings: [] };
+  const total = sub.sampleSize;
+  hintEl.textContent = 'Users who changed each setting on at least one subscription, of ' + total +
+    ' users on a build that reports them, active in the last ' + windowDays +
+    ' days. "5+" is how many of them did so on five or more subscriptions.';
+  const rows = sub.settings.slice().sort(function (a, b) { return b.users - a.users; });
+  el.innerHTML = barRowsHTML(total ? rows.map(function (s) {
+    return {
+      label: s.label,
+      count: s.users,
+      countText: s.users + ' · ' + Math.round(s.users / total * 100) + '% · 5+: ' + s.atLeastFive,
+      color: BUCKET_COLORS[2],
+    };
+  }) : []);
+}
+
 function renderBreakdowns(el, paramEvents) {
   el.innerHTML = '';
   paramEvents = paramEvents || [];
@@ -1239,12 +1256,15 @@ fetch('/dashboard/data' + channelQuery).then(r => r.json()).then(data => {
     data.subscriptions.windowDays + ' days';
   renderBucketBars(document.getElementById('podcastSubsBars'), data.subscriptions.podcastBuckets || {});
 
+  renderSubscriptionSettings(document.getElementById('subSettingsBars'),
+    document.getElementById('subSettingsHint'), data.subscriptions.settings, data.subscriptions.windowDays);
+
   const qi = data.queueInbox, subs = data.subscriptions;
   const libraryTrendHint = document.getElementById('libraryTrendHint');
   libraryTrendHint.textContent = 'Share of reporting users in each size range per period, over the last ' + qi.trendWindowDays + ' days. ' +
     'Queue and inbox report weekly, so each point is one ' + qi.trendPeriodDays + '-day period; subscriptions report fortnightly (' +
     subs.trendPeriodDays + '-day periods). The latest point is still filling in. ' +
-    'Someone whose size changed range within a period counts once in each range.';
+    'Someone whose size changed range within a period counts once in each range.' + truncatedNote(subs.trendTruncated);
   setupViewSwitch('library', document.getElementById('librarySwitch'), [
     { id: 'now', label: 'Now', elements: [document.getElementById('libraryNow')] },
     { id: 'trend', label: 'Over time', elements: [document.getElementById('libraryTrend'), libraryTrendHint], renderOnce: function () {

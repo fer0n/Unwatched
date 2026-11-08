@@ -43,6 +43,33 @@ actor SubscriptionActor: SharedContextActor {
         return try? modelContext.fetchCount(fetch)
     }
 
+    /// Keys mirror `SUBSCRIPTION_SETTINGS` in cloudflare-worker/src/dashboard/settings.js.
+    func getSubscriptionSettingCounts() -> [String: Int]? {
+        let fetch = FetchDescriptor<Subscription>(predicate: #Predicate { $0.isArchived == false })
+        guard let subs = try? modelContext.fetch(fetch) else { return nil }
+        var counts = [String: Int]()
+        for sub in subs {
+            let changed: [(String, Bool)] = [
+                ("speed", sub.customSpeedSetting != nil),
+                ("placement", sub.videoPlacement != .defaultPlacement),
+                ("episodeLimit", sub.episodeLimit != nil),
+                ("shorts", sub.shortsSetting != .defaultSetting),
+                ("liveStreams", sub.liveStreamSetting != .defaultSetting),
+                ("skipIntro", (sub.skipIntroSeconds ?? 0) > 0),
+                ("skipOutro", (sub.skipOutroSeconds ?? 0) > 0),
+                ("autoSkip", !(sub.autoSkipChapterTitles ?? []).isEmpty),
+                ("sponsor", sub.sponsorSegmentSetting != nil),
+                ("selfPromo", sub.selfPromoSegmentSetting != nil),
+                ("chapterGeneration", sub.chapterGeneration != nil),
+                ("titleFilter", !sub.filterText.isEmpty)
+            ]
+            for (key, isChanged) in changed where isChanged {
+                counts[key, default: 0] += 1
+            }
+        }
+        return counts
+    }
+
     func unarchive(_ sub: Subscription) {
         sub.isArchived = false
         sub.subscribedDate = .now

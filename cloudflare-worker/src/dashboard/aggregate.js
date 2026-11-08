@@ -1,4 +1,4 @@
-import { BOOL_SETTINGS, VALUE_SETTINGS, SETTINGS_VALUE_PREFIX } from "./settings.js";
+import { BOOL_SETTINGS, VALUE_SETTINGS, SETTINGS_VALUE_PREFIX, SUBSCRIPTION_SETTINGS } from "./settings.js";
 import { DAY_MS, SEARCH_WINDOW_DAYS } from "./constants.js";
 
 export const COUNT_BUCKET_ORDER = ["0", "1-4", "5-9", "10-24", "25-49", "50-99", "100-499", "500-999", "1000+"];
@@ -124,6 +124,23 @@ export function tallyRawBuckets(latestRows, paramKey) {
     if (bucket && bucket in counts) counts[bucket]++;
   }
   return counts;
+}
+
+// Only snapshots with the SubSettings marker count; a missing key on one means none changed.
+export function tallySubscriptionSettings(latestRows) {
+  const reporting = latestRows.map((r) => parseParams(r.params)).filter((p) => p.SubSettings != null);
+  const settings = SUBSCRIPTION_SETTINGS.map(([key, label]) => {
+    let users = 0;
+    let atLeastFive = 0;
+    for (const params of reporting) {
+      const bucket = bucketCount(params[`SubSetting.${key}.Value`]);
+      if (!bucket || bucket === "0") continue;
+      users++;
+      if (bucket !== "1-4") atLeastFive++;
+    }
+    return { key, label, users, atLeastFive };
+  });
+  return { sampleSize: reporting.length, settings };
 }
 
 // One entry per user, grouped by device type: { "iPhone": { "iPhone17,3": 4, … } }.

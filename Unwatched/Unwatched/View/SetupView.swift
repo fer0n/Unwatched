@@ -288,11 +288,19 @@ struct SetupView: View {
     static func signalSubscriptionCount() {
         let subscriptions = SubscriptionService.getActiveSubscriptionCount()
         let podcasts = SubscriptionService.getActivePodcastSubscriptionCount()
+        let settingCounts = SubscriptionService.getSubscriptionSettingCounts()
         Task {
             guard let count = await subscriptions.value else { return }
             var params = ["SubscriptionCount.Value": Signal.bucket(count)]
             if let podcastCount = await podcasts.value {
                 params["PodcastCount.Value"] = Signal.bucket(podcastCount)
+            }
+            // The marker tells "none changed" apart from builds that don't report these
+            if let settingCounts = await settingCounts.value {
+                params["SubSettings"] = "1"
+                for (key, value) in settingCounts {
+                    params["SubSetting.\(key).Value"] = Signal.bucket(value)
+                }
             }
             Signal.log("SubscriptionCount", parameters: params)
         }
