@@ -33,7 +33,7 @@ final class WebPlayerWarmup: NSObject {
     }
 
     /// The one-shot state the page reports as it starts; everything else the live player works out.
-    static let replayTopics: Set<String> = ["duration", "aspectRatio", "videoData", "transcriptUrl", "pip"]
+    static let replayTopics: Set<String> = ["duration", "aspectRatio", "videoData", "transcriptUrl", "pip", "captions"]
 
     /// How long the page gets to start playing before adoption settles for a play click instead.
     private static let startTimeout: Double = 3
@@ -338,7 +338,7 @@ extension WebPlayerWarmup: WKScriptMessageHandler {
         guard let body = message.body as? String else {
             return
         }
-        let parts = body.split(separator: ";")
+        let parts = body.split(separator: ";", maxSplits: 1)
         guard let topic = parts[safe: 0].map({ String($0) }) else {
             return
         }

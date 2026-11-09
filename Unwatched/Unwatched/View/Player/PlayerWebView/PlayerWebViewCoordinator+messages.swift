@@ -65,6 +65,8 @@ extension PlayerWebViewCoordinator {
             handleFullscreen()
         case "transcriptUrl":
             handleTranscriptUrl(payload)
+        case "captions":
+            handleCaptions(payload)
         case "resize":
             handleResize()
         default:
@@ -86,6 +88,15 @@ extension PlayerWebViewCoordinator {
         } else {
             parent.player.transcriptUrl = ""
         }
+    }
+
+    func handleCaptions(_ payload: String?) {
+        guard let data = payload?.data(using: .utf8),
+              let report = try? JSONDecoder().decode(CaptionReport.self, from: data) else {
+            Log.player.warning("handleCaptions: unreadable payload")
+            return
+        }
+        parent.player.captions = report
     }
 
     func handleFullscreen() {
@@ -357,4 +368,14 @@ extension PlayerWebViewCoordinator {
         return true
     }
     #endif
+}
+
+struct CaptionOption: Decodable, Equatable {
+    let code: String
+    let name: String
+}
+
+struct CaptionReport: Decodable, Equatable {
+    let tracks: [CaptionOption]
+    let selected: String?
 }

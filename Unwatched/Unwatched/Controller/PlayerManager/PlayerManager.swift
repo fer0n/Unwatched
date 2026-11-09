@@ -39,6 +39,7 @@ import UnwatchedShared
     var transcriptUrl: String?
 
     var availableAudioLanguages: [(code: String, name: String)] = []
+    var captions: CaptionReport?
     var selectedAudioLanguage: String = ""
     var availableVideoQualities: [(height: Int, label: String)] = []
     var selectedVideoQuality: Int = 0
@@ -141,6 +142,13 @@ import UnwatchedShared
     }
 
     @MainActor
+    private func resetCaptions() {
+        if captions != nil {
+            captions = nil
+        }
+    }
+
+    @MainActor
     private func resetVideoIndependentValues() {
         if currentEndTime != 0 {
             currentEndTime = 0
@@ -164,6 +172,7 @@ import UnwatchedShared
         if transcriptUrl != nil {
             transcriptUrl = nil
         }
+        resetCaptions()
         if aspectRatio != nil {
             aspectRatio = nil
         }

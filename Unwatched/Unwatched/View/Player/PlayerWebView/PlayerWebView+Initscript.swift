@@ -17,21 +17,33 @@ extension PlayerWebView {
         let blockOverlay: Bool
         let minimalPlayerUI: Bool
         let disableCaptions: Bool
+        /// nil outside the custom UI, which leaves YouTube's caption state alone
+        let showCaptions: Bool?
+        /// Empty: YouTube's pick
+        let captionLanguage: String
         let clickTogglesPlay: Bool
 
         @MainActor
-        static func forSetting(_ setting: PlayerTypeSetting, embeddingDisabled: Bool) -> UIMode {
+        static func forSetting(
+            _ setting: PlayerTypeSetting,
+            embeddingDisabled: Bool,
+            customUICaptions: Bool = UserDefaults.standard.bool(forKey: Const.customUICaptions),
+            captionLanguage: String = UserDefaults.standard.string(forKey: Const.customUICaptionLanguage) ?? ""
+        ) -> UIMode {
             let blockOverlay = setting.blocksOverlay(embeddingDisabled: embeddingDisabled)
             var clickTogglesPlay = false
             #if os(macOS)
             clickTogglesPlay = blockOverlay
             #endif
+            let disabledEverywhere = UserDefaults.standard.bool(forKey: Const.disableCaptions)
+            let isCustomUI = setting.webPlayerType(embeddingDisabled: embeddingDisabled) == .youtubeCustomUI
+            let showCaptions = isCustomUI ? customUICaptions && !disabledEverywhere : nil
             return UIMode(
                 blockOverlay: blockOverlay,
                 minimalPlayerUI: setting.minimalPlayerUI || blockOverlay,
-                // The custom UI has no caption controls, so captions are always disabled there.
-                disableCaptions: UserDefaults.standard.bool(forKey: Const.disableCaptions)
-                    || setting.webPlayerType(embeddingDisabled: embeddingDisabled) == .youtubeCustomUI,
+                disableCaptions: showCaptions.map { !$0 } ?? disabledEverywhere,
+                showCaptions: showCaptions,
+                captionLanguage: isCustomUI ? captionLanguage : "",
                 clickTogglesPlay: clickTogglesPlay
             )
         }
@@ -88,9 +100,16 @@ extension PlayerWebView {
             blockOverlay: \(mode.blockOverlay),
             minimalPlayerUI: \(mode.minimalPlayerUI),
             disableCaptions: \(mode.disableCaptions),
+            showCaptions: \(mode.showCaptions.map(String.init) ?? "null"),
+            captionLanguage: \(jsString(mode.captionLanguage)),
             clickTogglesPlay: \(mode.clickTogglesPlay)
         });
         """
+    }
+
+    private static func jsString(_ value: String) -> String {
+        let data = try? JSONSerialization.data(withJSONObject: value, options: .fragmentsAllowed)
+        return data.flatMap { String(data: $0, encoding: .utf8) } ?? "\"\""
     }
 
     static func initScript(_ options: InitScriptOptions) -> String {
@@ -114,6 +133,8 @@ extension PlayerWebView {
         var blockOverlay = \(options.uiMode.blockOverlay);
         var minimalPlayerUI = \(options.uiMode.minimalPlayerUI);
         var disableCaptions = \(options.uiMode.disableCaptions);
+        var showCaptions = \(options.uiMode.showCaptions == true);
+        var captionLanguage = \(jsString(options.uiMode.captionLanguage));
         var clickTogglesPlay = \(options.uiMode.clickTogglesPlay);
         var ownsPlaybackRate = blockOverlay;
 
@@ -121,6 +142,12 @@ extension PlayerWebView {
             blockOverlay = mode.blockOverlay;
             minimalPlayerUI = mode.minimalPlayerUI;
             disableCaptions = mode.disableCaptions;
+            if (showCaptions && mode.showCaptions === false) {
+                captionsOff();
+            }
+            showCaptions = mode.showCaptions === true;
+            captionLanguage = mode.captionLanguage;
+            applyCaptions();
             clickTogglesPlay = mode.clickTogglesPlay;
             ownsPlaybackRate = blockOverlay;
             styling();
@@ -194,6 +221,7 @@ extension PlayerWebView {
         function setupVideo() {
             window.pendingSeekTarget = null;
             addVideoListeners();
+            observeCaptions();
             applyPlaybackRate();
             video.muted = warmupMuted;
             handleFullscreenButton();
@@ -529,6 +557,7 @@ extension PlayerWebView {
                 sendMessage("duration", duration.toString());
                 e.target.currentTime = startAtTime;
                 handleAudioTrack();
+                applyCaptions();
                 hideOverlay();
 
                 // setting video time so early breaks the overlay reference
@@ -688,18 +717,86 @@ extension PlayerWebView {
             }
         }, { passive: true, capture: true });
 
-        // auto captions on seek back
+        // the captions module loads after playback starts; onApiChange applies them then.
+        // Its tracklist can stay empty: asr-only videos list none.
+        function hasCaptionsModule(ytPlayer) {
+            return ytPlayer?.getOptions?.()?.includes('captions') ?? false;
+        }
+        function captionTracks(ytPlayer) {
+            const tracks = ytPlayer?.getOption?.('captions', 'tracklist') || [];
+            const manualFirst = [...tracks].sort((a, b) => (a.kind === 'asr') - (b.kind === 'asr'));
+            return manualFirst.filter((t, i) => manualFirst.findIndex(o => o.languageCode === t.languageCode) === i);
+        }
+        function turnOnCaptions(ytPlayer) {
+            if (captionTracks(ytPlayer).some(t => t.languageCode === captionLanguage)) {
+                ytPlayer.setOption('captions', 'track', { languageCode: captionLanguage });
+            } else {
+                ytPlayer.toggleSubtitles();
+            }
+        }
+        function currentCaptionLanguage(ytPlayer) {
+            return ytPlayer.isSubtitlesOn() ? ytPlayer.getOption('captions', 'track')?.languageCode ?? null : null;
+        }
+        function applyCaptions() {
+            if (!showCaptions) return;
+            const ytPlayer = document.getElementById('movie_player');
+            if (!hasCaptionsModule(ytPlayer)) return;
+            const hasWanted = captionTracks(ytPlayer).some(t => t.languageCode === captionLanguage);
+            const isWrongLanguage = hasWanted && currentCaptionLanguage(ytPlayer) !== captionLanguage;
+            if (!ytPlayer.isSubtitlesOn() || isWrongLanguage) {
+                turnOnCaptions(ytPlayer);
+            }
+            reportCaptionsSoon();
+        }
+        function captionsOff() {
+            const ytPlayer = document.getElementById('movie_player');
+            if (!ytPlayer?.isSubtitlesOn?.()) return;
+            ytPlayer.setOption('captions', 'track', {});
+            reportCaptionsSoon();
+        }
+        var lastCaptionsReport = null;
+        function reportCaptions() {
+            const ytPlayer = document.getElementById('movie_player');
+            const tracks = captionTracks(ytPlayer).map(t => ({ code: t.languageCode, name: t.displayName }));
+            const report = JSON.stringify({ tracks, selected: tracks.length ? currentCaptionLanguage(ytPlayer) : null });
+            if (report === lastCaptionsReport) return;
+            lastCaptionsReport = report;
+            sendMessage("captions", report);
+        }
+        function reportCaptionsSoon() {
+            setTimeout(reportCaptions, 1000);
+        }
+        function observeCaptions() {
+            const ytPlayer = document.getElementById('movie_player');
+            if (!ytPlayer?.addEventListener || ytPlayer.unwatchedObservesCaptions) return;
+            ytPlayer.unwatchedObservesCaptions = true;
+            ytPlayer.addEventListener('onApiChange', () => {
+                applyCaptions();
+                reportCaptions();
+            });
+        }
+
+        // auto captions on seek back, shown even where the variant hides captions
         var captionRestoreTimer = null;
+        var captionsTurnedOnTemporarily = false;
         function showCaptionsTemporarily(durationSeconds) {
             if (!autoCaptionsOnSeekBack) return;
             const ytPlayer = document.getElementById('movie_player');
             if (!ytPlayer) return;
-            const wasAlreadyOn = ytPlayer.isSubtitlesOn() && captionRestoreTimer === null;
-            if (wasAlreadyOn) return;
+            const isVisible = ytPlayer.isSubtitlesOn() && !disableCaptions;
+            if (isVisible && captionRestoreTimer === null) return;
             clearTimeout(captionRestoreTimer);
-            if (!ytPlayer.isSubtitlesOn()) ytPlayer.toggleSubtitles();
+            if (!ytPlayer.isSubtitlesOn()) {
+                turnOnCaptions(ytPlayer);
+                captionsTurnedOnTemporarily = true;
+            }
+            document.documentElement.classList.add('unwatched-temporary-captions');
             captionRestoreTimer = setTimeout(() => {
-                if (ytPlayer.isSubtitlesOn()) ytPlayer.toggleSubtitles();
+                document.documentElement.classList.remove('unwatched-temporary-captions');
+                if (captionsTurnedOnTemporarily && !showCaptions && ytPlayer.isSubtitlesOn()) {
+                    ytPlayer.toggleSubtitles();
+                }
+                captionsTurnedOnTemporarily = false;
                 captionRestoreTimer = null;
             }, durationSeconds * 1000);
         }
@@ -741,7 +838,8 @@ extension PlayerWebView {
                     }
                     ` : ''}
                 ${disableCaptions ? `
-                    .ytp-caption-window-container, .ytmClosedCaptioningButtonButton {
+                    :root:not(.unwatched-temporary-captions) .ytp-caption-window-container,
+                    .ytmClosedCaptioningButtonButton {
                         display: none !important;
                     }
                     ` : ''}

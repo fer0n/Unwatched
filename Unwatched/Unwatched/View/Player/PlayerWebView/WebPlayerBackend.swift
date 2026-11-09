@@ -374,3 +374,11 @@ extension WebPlayerBackend {
     }
 }
 #endif
+
+extension WebPlayerBackend {
+    @MainActor
+    func showCaptionsTemporarily(_ seconds: Double) {
+        guard let webView = commandTarget("CAPTIONS") else { return }
+        PlayerWebView.evaluateJavaScript(webView, "showCaptionsTemporarily(\(seconds));")
+    }
+}

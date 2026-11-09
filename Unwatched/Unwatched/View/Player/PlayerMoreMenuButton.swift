@@ -77,6 +77,9 @@ struct PlayerMoreMenuContent: View {
     @AppStorage(Const.playerType) var playerType: PlayerTypeSetting = .youtubeEmbedded
     @AppStorage(Const.browserDisplayMode) var browserDisplayMode: BrowserDisplayMode = .inApp
     @AppStorage(Const.preferPlayerType) var preferPlayerType: Bool = false
+    @AppStorage(Const.disableCaptions) var disableCaptions: Bool = false
+    @AppStorage(Const.customUICaptions) var customUICaptions: Bool = false
+    @AppStorage(Const.customUICaptionLanguage) var customUICaptionLanguage: String = ""
 
     @Environment(\.modelContext) var modelContext
     @Environment(NavigationManager.self) var navManager
@@ -146,6 +149,13 @@ struct PlayerMoreMenuContent: View {
 
             bookmarkButton
             deferDateButton
+            if showsCaptionsToggle {
+                if let tracks = player.captions?.tracks, tracks.count > 1 {
+                    captionLanguageMenu(tracks)
+                } else {
+                    captionsToggle
+                }
+            }
 
             Divider()
             ExtendedPlayerActions(
@@ -210,6 +220,61 @@ struct PlayerMoreMenuContent: View {
         }
     }
     #endif
+
+    var showsCaptionsToggle: Bool {
+        guard !disableCaptions,
+              let video = player.video,
+              TranscriptDescriptionSelection.canHaveTranscript(
+                video, isCurrentVideo: true, transcriptUrl: player.transcriptUrl
+              ) else { return false }
+        return PlayerSwitchManager.shared.activeType
+            .webPlayerType(embeddingDisabled: player.embeddingDisabled) == .youtubeCustomUI
+    }
+
+    var captionsToggle: some View {
+        Toggle(isOn: Binding(
+            get: { customUICaptions },
+            set: { isOn in
+                customUICaptions = isOn
+                hapticToggle.toggle()
+                Signal.interaction("Player.MoreMenu", "captions")
+            }
+        )) {
+            Label("captions", systemImage: "captions.bubble")
+        }
+    }
+
+    private static let captionsOffTag = ""
+
+    func shownCaptionLanguage(_ tracks: [CaptionOption]) -> String {
+        guard customUICaptions else { return Self.captionsOffTag }
+        let codes = tracks.map(\.code)
+        return [player.captions?.selected, customUICaptionLanguage]
+            .compactMap { $0 }
+            .first(where: codes.contains) ?? codes.first ?? Self.captionsOffTag
+    }
+
+    func captionLanguageMenu(_ tracks: [CaptionOption]) -> some View {
+        Picker(selection: Binding(
+            get: { shownCaptionLanguage(tracks) },
+            set: { code in
+                customUICaptions = code != Self.captionsOffTag
+                if customUICaptions {
+                    customUICaptionLanguage = code
+                }
+                hapticToggle.toggle()
+                Signal.interaction("Player.MoreMenu", "captionLanguage")
+            }
+        )) {
+            Text("off").tag(Self.captionsOffTag)
+            ForEach(tracks, id: \.code) { track in
+                Text(verbatim: track.name).tag(track.code)
+            }
+        } label: {
+            Label("captions", systemImage: customUICaptions ? "captions.bubble.fill" : "captions.bubble")
+        }
+        .pickerStyle(.menu)
+    }
 
     var deferDateButton: some View {
         Button {

@@ -461,6 +461,8 @@ public struct Const {
     public static let infoSF = "info"
     public static let disableCaptions = "disableCaptions"
     public static let autoCaptionsOnSeekBack = "autoCaptionsOnSeekBack"
+    public static let customUICaptions = "customUICaptions"
+    public static let customUICaptionLanguage = "customUICaptionLanguage"
     public static let swipeGestureUp = "swipeGestureUp"
     public static let swipeGestureDown = "swipeGestureDown"
     public static let swipeGestureLeft = "swipeGestureLeft"

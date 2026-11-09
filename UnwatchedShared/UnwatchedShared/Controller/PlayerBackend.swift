@@ -37,6 +37,9 @@ public protocol PlayerBackend: AnyObject {
 
     /// Reconciles playback with the trim-silence setting.
     func applyTrimSilence()
+
+    /// Shows captions for the stretch a backward seek replays, if the user wants that.
+    func showCaptionsTemporarily(_ seconds: Double)
 }
 
 public extension PlayerBackend {
@@ -49,4 +52,6 @@ public extension PlayerBackend {
     func setAudioLanguage(_ code: String) {}
     func setVideoQuality(_ height: Int) {}
     func applyTrimSilence() {}
+
+    func showCaptionsTemporarily(_ seconds: Double) {}
 }

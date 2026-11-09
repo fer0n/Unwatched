@@ -297,6 +297,9 @@ extension PlayerManager {
             let base = currentTime ?? 0
             let target = max(0, chapterAwareSeekTarget(from: base, offset: offset))
             backend.seek(to: target)
+            if backward {
+                backend.showCaptionsTemporarily(seconds)
+            }
             currentTime = target
             clearVideoEnded()
             handleLocalSeek(target)

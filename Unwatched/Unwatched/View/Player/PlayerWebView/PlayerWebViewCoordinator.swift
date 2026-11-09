@@ -40,7 +40,7 @@ class PlayerWebViewCoordinator: NSObject, WKNavigationDelegate, WKScriptMessageH
     func userContentController(_ userContentController: WKUserContentController,
                                didReceive message: WKScriptMessage) {
         if message.name == "iosListener", let messageBody = message.body as? String {
-            let body = messageBody.split(separator: ";")
+            let body = messageBody.split(separator: ";", maxSplits: 1)
             guard let topic = body[safe: 0] else {
                 return
             }
