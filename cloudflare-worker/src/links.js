@@ -1,6 +1,7 @@
 import { sharedItem } from "./links/shared.js";
 import { preview } from "./links/preview.js";
 import { fallbackPage } from "./links/page.js";
+import { handleBeta } from "./links/beta.js";
 
 export const LINKS_HOSTS = new Set(["unwatched.octabits.net", "u.octabits.net"]);
 
@@ -8,12 +9,14 @@ const APP_ID = "HU6B6E9383.com.pentlandFirth.Unwatched";
 const APP_PATHS = ["/v/*", "/p/*", "/open*", "/play*", "/queue*", "/inbox*"];
 
 // 302, not 301: browsers cache a 301 indefinitely, which would pin people to an old target.
-const LINKS = {
-  "/beta": "https://testflight.apple.com/join/9RP0WzCR",
-};
+// /beta lives in links/beta.js: a waitlist until BETA_JOIN_URL is set again.
+const LINKS = {};
 
-export async function handleLink(url) {
+export async function handleLink(request, url, env) {
   const path = url.pathname.replace(/\/+$/, "");
+  if (path === "/beta") {
+    return handleBeta(request, env);
+  }
   if (path === "/.well-known/apple-app-site-association") {
     return Response.json({
       applinks: { details: [{ appIDs: [APP_ID], components: APP_PATHS.map((p) => ({ "/": p })) }] },

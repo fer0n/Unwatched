@@ -83,7 +83,7 @@ in development instead of only being proven after release.
 ## Dashboard (Worker)
 
 - `src/index.js` — ingestion (`POST /`, bearer `API_SECRET`) + dashboard auth.
-- `src/links.js` — `unwatched.octabits.net` and `u.octabits.net`: 302 redirects for links the app ships with (`/beta` → TestFlight) and the universal-link association file. These hosts serve nothing else. `src/links/shared.js` parses shared links (`/v/<youtube id>`, `/p/<show id>/<episode id>`, `/open|play|queue|inbox?url=|v=`) and fetches their preview; `src/links/page.js` is the fallback page shown when the app isn't installed.
+- `src/links.js` — `unwatched.octabits.net` and `u.octabits.net`: 302 redirects for links the app ships with and the universal-link association file. `/beta` (`src/links/beta.js`) redirects to `BETA_JOIN_URL` in `wrangler.toml`; while that's empty it's a waitlist that stores addresses as `beta:<email>` in `REPORTS` (1 year, own `BETA_LIMITER`), listed at `/dashboard/beta` with a `/dashboard/beta.csv` in App Store Connect's tester-import format. These hosts serve nothing else. `src/links/shared.js` parses shared links (`/v/<youtube id>`, `/p/<show id>/<episode id>`, `/open|play|queue|inbox?url=|v=`) and fetches their preview; `src/links/page.js` is the fallback page shown when the app isn't installed.
 - `src/dashboard/` — the dashboard, server side:
   - `data.js` — `handleDashboardData(env, channel)` (the SQL queries and payload) and `handleRecentData`.
   - `aggregate.js` — turns raw rows into tallies and trends (latest snapshot per user, buckets, per-period trends).

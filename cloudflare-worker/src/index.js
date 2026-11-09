@@ -2,6 +2,7 @@ import { isDashboardAuthorized, dashboardCookieHeader } from "./dashboard/auth.j
 import { handleDashboardData, handleRecentData } from "./dashboard/data.js";
 import { DASHBOARD_HTML } from "./dashboard/page.js";
 import { LINKS_HOSTS, handleLink } from "./links.js";
+import { handleBetaDashboard } from "./links/beta.js";
 import { handleReportUpload, handleReportsDashboard, isReportsPath } from "./reports/index.js";
 
 const MAX_EVENTS_PER_REQUEST = 25;
@@ -18,11 +19,12 @@ export default {
     const url = new URL(request.url);
 
     if (LINKS_HOSTS.has(url.hostname)) {
-      return handleLink(url);
+      return handleLink(request, url, env);
     }
 
     const isReports = isReportsPath(url.pathname);
-    if (url.pathname === "/dashboard" || url.pathname === "/dashboard/data" || url.pathname === "/dashboard/recent" || isReports) {
+    const isBeta = url.pathname === "/dashboard/beta" || url.pathname === "/dashboard/beta.csv";
+    if (url.pathname === "/dashboard" || isBeta || url.pathname === "/dashboard/data" || url.pathname === "/dashboard/recent" || isReports) {
       if (!(await isDashboardAuthorized(request, env))) {
         return new Response("Unauthorized", {
           status: 401,
@@ -32,8 +34,8 @@ export default {
       // Refresh the long-lived login cookie on every authorized request so an
       // active user keeps a rolling 30-day window instead of being logged out.
       const setCookie = await dashboardCookieHeader(env);
-      if (isReports) {
-        const res = await handleReportsDashboard(request, url, env);
+      if (isBeta || isReports) {
+        const res = isBeta ? await handleBetaDashboard(url, env) : await handleReportsDashboard(request, url, env);
         res.headers.append("Set-Cookie", setCookie);
         return res;
       }

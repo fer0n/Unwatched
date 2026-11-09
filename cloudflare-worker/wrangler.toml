@@ -12,6 +12,9 @@ fallthrough = true
 CF_ACCOUNT_ID = "2206bad495d854f040f37fc989b8305e"
 REPORT_MAIL_FROM = "reports@octabits.net"
 REPORT_MAIL_TO = "unwatched@icloud.com"
+# TestFlight public link /beta redirects to. Empty = show the waitlist (src/links/beta.js),
+# e.g. while the beta moves to another developer account. Was https://testflight.apple.com/join/9RP0WzCR
+BETA_JOIN_URL = ""
 
 [[routes]]
 pattern = "signal.octabits.net"
@@ -53,6 +56,15 @@ namespace_id = "1002"
 
 [ratelimits.simple]
 limit = 3
+period = 60
+
+# Waitlist signups on /beta, per IP.
+[[ratelimits]]
+name = "BETA_LIMITER"
+namespace_id = "1003"
+
+[ratelimits.simple]
+limit = 5
 period = 60
 
 [[send_email]]
