@@ -46,8 +46,9 @@ export function tallySettings(latestSnapshots) {
         if (defaultValue) entry.on++; else entry.off++;
         continue;
       }
-      entry.changed++;
       const isOn = raw === "true" ? true : raw === "false" ? false : Number(raw) !== 0;
+      // Presence flags (hasCustomApiKey, …) are sent on every snapshot, default or not.
+      if (isOn !== defaultValue) entry.changed++;
       if (isOn) entry.on++; else entry.off++;
     }
   }
