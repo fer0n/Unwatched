@@ -5,16 +5,10 @@
 
 import SwiftUI
 import UnwatchedShared
-import SwiftData
 
 struct DebugView: View {
     @AppStorage(Const.monitorBackgroundFetchesNotification) var monitorBackgroundFetches: Bool = false
-    @AppStorage(Const.showTutorial) var showTutorial: Bool = true
     @AppStorage(Const.backgroundPlayback) var backgroundPlayback: Bool = true
-    @AppStorage(Const.inboxTipHiddenPermanently) var inboxTipHiddenPermanently = false
-
-    @Environment(\.modelContext) var modelContext
-    @Environment(PlayerManager.self) var player
     @Environment(NavigationManager.self) var navManager
 
     #if os(iOS)
@@ -28,25 +22,10 @@ struct DebugView: View {
             MyForm {
                 MySection {
                     Button {
-                        showTutorial = true
-                        player.video = nil
-                    } label: {
-                        Text("showTutorial")
-                    }
-                    .disabled(showTutorial == true && player.video == nil)
-
-                    Button {
                         navManager.presentSettingsSplash()
                     } label: {
                         Text("showSettingsSplash")
                     }
-
-                    Button {
-                        inboxTipHiddenPermanently = false
-                    } label: {
-                        Text("resetInboxTip")
-                    }
-                    .disabled(!inboxTipHiddenPermanently)
                 }
 
                 MySection("notifications") {
@@ -65,12 +44,6 @@ struct DebugView: View {
 
                 YoutubeApiKeyView()
 
-                MySection {
-                    Button("createTestWatchData", action: createTestWatchData)
-                }
-
-                CleanupHiddenShortsView()
-
                 DebugLoggerView()
             }
         }
@@ -87,29 +60,10 @@ struct DebugView: View {
         #endif
         .myNavigationTitle("debug")
     }
-
-    private func createTestWatchData() {
-        let channelIds = ["channel1", "channel2", "channel3"]
-        let calendar = Calendar.current
-
-        for _ in 0..<10 {
-            let randomChannel = channelIds.randomElement()!
-            let randomTime = TimeInterval.random(in: 60...3600)
-            // Random date within last 30 days
-            let randomDays = Int.random(in: 0...10)
-            let date = calendar.date(byAdding: .day, value: -randomDays, to: Date())!
-
-            let entry = WatchTimeEntry(date: date, channelId: randomChannel, watchTime: randomTime)
-            modelContext.insert(entry)
-        }
-        try? modelContext.save()
-    }
 }
 
 #Preview {
     DebugView()
-        .modelContainer(DataProvider.previewContainer)
         .environment(Alerter())
-        .environment(PlayerManager())
         .environment(NavigationManager())
 }

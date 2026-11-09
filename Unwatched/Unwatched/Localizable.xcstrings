@@ -4767,40 +4767,6 @@
         }
       }
     },
-    "cleanupHiddenShorts" : {
-      "localizations" : {
-        "de" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Versteckte Shorts löschen"
-          }
-        },
-        "en" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Delete Hidden Shorts"
-          }
-        },
-        "es" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Eliminar Shorts ocultos"
-          }
-        },
-        "fr" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Supprimer les Shorts masqués"
-          }
-        },
-        "pl" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Usuń ukryte Shorty"
-          }
-        }
-      }
-    },
     "clear" : {
       "localizations" : {
         "de" : {
@@ -5889,40 +5855,6 @@
         }
       }
     },
-    "createTestWatchData" : {
-      "localizations" : {
-        "de" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Test-Watch-Daten erstellen"
-          }
-        },
-        "en" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Create Test Watch Data"
-          }
-        },
-        "es" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Crear datos de prueba de visualización"
-          }
-        },
-        "fr" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Créer des données de test de visionnage"
-          }
-        },
-        "pl" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Utwórz testowe dane oglądania"
-          }
-        }
-      }
-    },
     "createYoutubeApiKey" : {
       "localizations" : {
         "de" : {
@@ -6905,40 +6837,6 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "Usuń wszystko oprócz subskrypcji"
-          }
-        }
-      }
-    },
-    "deleteHiddenShorts %lld" : {
-      "localizations" : {
-        "de" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "%lld versteckte Shorts gelöscht."
-          }
-        },
-        "en" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Deleted %lld hidden shorts."
-          }
-        },
-        "es" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Se eliminaron %lld Shorts ocultos."
-          }
-        },
-        "fr" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "%lld Shorts masqués supprimés."
-          }
-        },
-        "pl" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Usunięto %lld ukrytych Shortów."
           }
         }
       }
@@ -21207,40 +21105,6 @@
         }
       }
     },
-    "resetInboxTip" : {
-      "localizations" : {
-        "de" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Inbox-Hinweis zurücksetzen"
-          }
-        },
-        "en" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Reset Inbox Tip"
-          }
-        },
-        "es" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Restablecer aviso del inbox"
-          }
-        },
-        "fr" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Réinitialiser l'info-bulle de la boîte de réception"
-          }
-        },
-        "pl" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Resetuj wskazówkę skrzynki"
-          }
-        }
-      }
-    },
     "resetSpeed" : {
       "localizations" : {
         "de" : {
@@ -25931,40 +25795,6 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "Pokaż etykiety na pasku nawigacji"
-          }
-        }
-      }
-    },
-    "showTutorial" : {
-      "localizations" : {
-        "de" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Tutorial anzeigen"
-          }
-        },
-        "en" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Show Tutorial"
-          }
-        },
-        "es" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Mostrar tutorial"
-          }
-        },
-        "fr" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Afficher le tutoriel"
-          }
-        },
-        "pl" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Pokaż samouczek"
           }
         }
       }

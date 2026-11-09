@@ -14,7 +14,6 @@ struct VideoNotAvailableView: View {
     @Environment(SheetPositionReader.self) var sheetPos
 
     @AppStorage(Const.themeColor) var theme = ThemeColor()
-    @AppStorage(Const.showTutorial) var showTutorial: Bool = true
 
     @GestureState private var dragState: CGFloat = 0
     @State private var isDropTarget: Bool = false
