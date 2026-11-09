@@ -16,6 +16,38 @@ class AppDelegate: NSObject,
                    NSWindowDelegate,
                    UNUserNotificationCenterDelegate {
     weak var mainWindow: NSWindow?
+    private var isFlushingForTermination = false
+
+    @MainActor override init() {
+        super.init()
+        // before the model container exists, so its setup event isn't missed
+        CloudKitExportTracker.shared.start()
+    }
+
+    /// Waits for CloudKit to export the final saves before quitting.
+    func applicationShouldTerminate(_ sender: NSApplication) -> NSApplication.TerminateReply {
+        Log.info("applicationShouldTerminate")
+        // the pending reply finishes the quit
+        guard !isFlushingForTermination else { return .terminateCancel }
+        isFlushingForTermination = true
+        PlayerManager.shared.pause()
+        hideUntilTerminated(sender)
+        Task { @MainActor in
+            await SetupView.handleAppClosed().value
+            await CloudKitExportTracker.shared.waitForPendingExport(timeout: .seconds(10))
+            sender.reply(toApplicationShouldTerminate: true)
+        }
+        return .terminateLater
+    }
+
+    @MainActor
+    private func hideUntilTerminated(_ app: NSApplication) {
+        // terminate() blocks until the reply, so a closing window would otherwise stay up
+        for window in app.windows {
+            window.orderOut(nil)
+        }
+        app.setActivationPolicy(.accessory)
+    }
 
     func applicationWillTerminate(_ notification: Notification) {
         Log.info("applicationWillTerminate start")
@@ -26,7 +58,6 @@ class AppDelegate: NSObject,
         } else {
             persistWindowFrame()
         }
-        SetupView.handleAppClosed()
         Log.info("applicationWillTerminate done")
     }
 

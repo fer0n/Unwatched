@@ -156,18 +156,23 @@ struct SetupView: View {
         }
     }
 
-    static func handleAppClosed() {
+    @discardableResult
+    static func handleAppClosed() -> Task<Void, Never> {
         Log.info("handleAppClosed")
         // Playback continues in the background, so this may be the last chance to write before the
         // app is suspended — and, if it never comes back, killed.
         PlayerManager.shared.updateElapsedTime(immediate: true)
         VideoService.commitPendingVideoUpdates()
-        StatsService.shared.flush()
+        let statsTask = StatsService.shared.flush()
         #if os(iOS) || os(visionOS)
         NotificationManager.handleNotifications()
         #endif
-        Task {
+        let saveTask = Task {
             await saveData()
+            if DataProvider.mainContext.hasChanges {
+                try? DataProvider.mainContext.save()
+            }
+            await statsTask?.value
         }
         RefreshManager.shared.handleBecameInactive()
 
@@ -176,6 +181,7 @@ struct SetupView: View {
         // the queue as it stands now is what the system should offer while the app is away
         MediaSuggestionService.refreshSuggestions()
         #endif
+        return saveTask
     }
 
     static func saveData() async {

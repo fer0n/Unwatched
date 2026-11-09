@@ -58,17 +58,18 @@ final class StatsService {
         scheduleFlush()
     }
 
-    func flush() {
+    @discardableResult
+    func flush() -> Task<Void, Never>? {
         flushTask?.cancel()
         flushTask = nil
-        guard !pending.isEmpty else { return }
+        guard !pending.isEmpty else { return nil }
 
         let batch = pending
         pending = [:]
         Log.info("StatsService: flushing \(batch.values.reduce(0, +))s across \(batch.count) entries")
 
         let actor = statsActor
-        Task {
+        return Task {
             do {
                 try await actor.addWatchTime(batch)
             } catch {
