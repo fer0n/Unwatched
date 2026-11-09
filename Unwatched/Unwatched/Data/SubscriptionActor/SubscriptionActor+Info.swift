@@ -43,11 +43,11 @@ extension SubscriptionActor {
                 return (subState, nil)
             }
             Log.refresh.info("url: \(url.absoluteString)")
-            let sendableSub = try await VideoCrawler.loadSubscriptionFromRSS(feedUrl: url)
+            let sendableSub = try await Self.loadFeedSubscription(url)
             subState.success = true
             return (subState, sendableSub)
         } catch {
-            subState.error = error.localizedDescription
+            subState.error = Self.message(for: error, isYoutube: true)
         }
 
         return (subState, nil)
@@ -96,7 +96,7 @@ extension SubscriptionActor {
                 return (subState, sendableSub)
             }
         } catch {
-            subState.error = error.localizedDescription
+            subState.error = Self.message(for: error, isYoutube: true)
         }
         return (subState, nil)
     }
@@ -120,7 +120,7 @@ extension SubscriptionActor {
             subState.success = true
             return (subState, feed.subscription)
         } catch {
-            subState.error = error.localizedDescription
+            subState.error = Self.message(for: error, isYoutube: false)
         }
         return (subState, nil)
     }
@@ -215,11 +215,15 @@ extension SubscriptionActor {
                               playlistId: String? = nil,
                               _ unarchiveSubIfAvailable: Bool = false) -> Subscription? {
         if channelId == nil && userName == nil && playlistId == nil { return nil }
-        var fetch = FetchDescriptor<Subscription>(predicate: #Predicate {
-            (playlistId == nil || playlistId == $0.youtubePlaylistId) &&
-                ((channelId != nil && channelId == $0.youtubeChannelId) ||
-                    (userName != nil && $0.youtubeUserName == userName))
-        })
+        var fetch: FetchDescriptor<Subscription>
+        if let playlistId {
+            fetch = FetchDescriptor(predicate: #Predicate { $0.youtubePlaylistId == playlistId })
+        } else {
+            fetch = FetchDescriptor(predicate: #Predicate {
+                (channelId != nil && channelId == $0.youtubeChannelId) ||
+                    (userName != nil && $0.youtubeUserName == userName)
+            })
+        }
         fetch.fetchLimit = 1
         let subs = try? modelContext.fetch(fetch)
         if let sub = subs?.first {
@@ -229,5 +233,33 @@ extension SubscriptionActor {
             return sub
         }
         return nil
+    }
+
+    /// A feed with an error status may not exist, or YouTube's feeds are down.
+    static func message(for error: Error, isYoutube: Bool) -> String {
+        guard (error as? URLError)?.code == .badServerResponse else { return error.localizedDescription }
+        return isYoutube ? String(localized: "youtubeFeedUnavailable") : String(localized: "feedUnavailable")
+    }
+
+    static func loadFeedSubscription(_ feedUrl: URL) async throws -> SendableSubscription {
+        do {
+            return try await VideoCrawler.loadSubscriptionFromRSS(feedUrl: feedUrl)
+        } catch let error as URLError where error.code == .badServerResponse {
+            guard let fallback = try? await playlistFromInnerTube(feedUrl: feedUrl) else { throw error }
+            Log.refresh.warning("loadFeedSubscription: playlist feed unavailable, using InnerTube")
+            return fallback
+        }
+    }
+
+    /// Keeps the feed link so later refreshes use RSS.
+    static func playlistFromInnerTube(feedUrl: URL) async throws -> SendableSubscription? {
+        guard let playlistId = YoutubeUrlParser.getPlaylistId(from: feedUrl.absoluteString),
+              let info = try await InnerTubeAPI().fetchPlaylistInfo(playlistId: playlistId) else { return nil }
+        return SendableSubscription(
+            link: feedUrl,
+            title: info.title,
+            youtubeChannelId: info.ownerChannelId,
+            youtubePlaylistId: playlistId
+        )
     }
 }

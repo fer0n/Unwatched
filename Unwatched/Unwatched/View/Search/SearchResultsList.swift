@@ -13,6 +13,11 @@ struct SearchResultsList: View {
 
     var body: some View {
         List {
+            if let link = vm.activeLink {
+                SearchLinkRow(vm: vm, link: link)
+                    .myListRowBackground()
+            }
+
             if !vm.localResults.subscriptions.isEmpty {
                 section(.subscriptions) {
                     ForEach(vm.localResults.subscriptions, id: \.persistentId) { sub in

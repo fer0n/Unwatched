@@ -15,8 +15,6 @@ import UnwatchedShared
     var isLoading: Bool
 
     var errorMessage: String?
-    var newSubs: [SubscriptionState]?
-    var showDropResults = false
 
     var hasNewSubscriptions = false
 
@@ -184,25 +182,8 @@ import UnwatchedShared
         }
     }
 
-    @discardableResult
-    func addSubscriptionFromText(_ text: String) async -> [SubscriptionState]? {
-        let urls: [URL] = text.components(separatedBy: "\n").compactMap { str in
-            if !str.isValidURL || str.isEmpty {
-                return nil
-            }
-            return URL(string: str)
-        }
-        if urls.isEmpty {
-            errorMessage = "No urls found"
-            return nil
-        }
-        let subscriptionInfo = urls.map { SubscriptionInfo(rssFeedUrl: $0) }
-        return await addSubscription(subscriptionInfo: subscriptionInfo)
-    }
-
     @MainActor
-    @discardableResult
-    func addSubscription(subscriptionInfo: [SubscriptionInfo]) async -> [SubscriptionState]? {
+    func addSubscriptions(_ subscriptionInfo: [SubscriptionInfo]) async {
         errorMessage = nil
         isLoading = true
         defer { isLoading = false }
@@ -212,21 +193,17 @@ import UnwatchedShared
             let subs = try await SubscriptionService.addSubscriptions(
                 subscriptionInfo: subscriptionInfo
             )
-            let hasError = subs.first(where: { !($0.alreadyAdded || $0.success) }) != nil
-            self.newSubs = subs
-            if hasError {
-                self.showDropResults = true
-                return nil
+            if let failed = subs.first(where: { !($0.alreadyAdded || $0.success) }) {
+                errorMessage = failed.error ?? SubscriptionError.noInfoFoundToSubscribeTo.localizedDescription
+                return
             }
-            self.isSubscribedSuccess = true
-            return subs
+            isSubscribedSuccess = true
         } catch {
             Log.refresh.error("\(error)")
-            self.errorMessage = error.localizedDescription
-            self.showDropResults = true
+            errorMessage = error.localizedDescription
         }
-        return nil
     }
+
 }
 
 // get correct icon depending on subscription state (get systemName func)

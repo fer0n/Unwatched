@@ -29,23 +29,6 @@ public extension String {
         return nil
     }
 
-    func matchingMultiple(regex: String) -> [String]? {
-        do {
-            let regex = try NSRegularExpression(pattern: regex)
-            let results = regex.matches(in: self, range: NSRange(self.startIndex..., in: self))
-            let result = results.compactMap {
-                if let range = Range($0.range, in: self) {
-                    return String(self[range])
-                }
-                return nil
-            }
-            return result
-        } catch let error {
-            Log.error("invalid regex: \(error.localizedDescription)")
-            return nil
-        }
-    }
-
     func extractURLAndRest() -> (String, URL?)? {
         let pattern = #"^(.*?)\s*(?:[–,|\(-:\s])*(https?:\/\/[^\s))]+)"#
         guard let regex = try? NSRegularExpression(pattern: pattern) else { return nil }

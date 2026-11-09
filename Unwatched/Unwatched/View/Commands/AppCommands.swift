@@ -84,7 +84,7 @@ struct AppCommands: Commands {
             #if os(macOS)
             Section {
                 Button("pasteUrl") {
-                    NotificationCenter.default.post(name: .pasteAddToLibrary, object: nil)
+                    NotificationCenter.default.post(name: .pasteUrl, object: nil)
                 }
                 .keyboardShortcut("v", modifiers: [.command, .shift])
             }

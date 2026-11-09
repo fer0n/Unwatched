@@ -47,9 +47,7 @@ struct SearchView: View {
                 #if !os(macOS)
                 // macOS uses the File menu: a toolbar item here lands outside the sidebar.
                 ToolbarItem(placement: topBarLeadingPlacement) {
-                    AddToLibraryView()
-                        .font(.footnote)
-                        .fontWeight(.bold)
+                    pasteButton
                 }
                 #endif
                 #if os(iOS)
@@ -83,6 +81,8 @@ struct SearchView: View {
         .onChange(of: vm.query) { _, newValue in
             if newValue.isEmpty {
                 vm.clear()
+            } else if let lookup = vm.linkLookup, UrlService.firstUrl(in: newValue) != lookup.link {
+                vm.cancelLinkLookup()
             }
         }
         .onChange(of: showYoutubeButton) { _, show in
@@ -111,7 +111,8 @@ struct SearchView: View {
         #if !os(macOS)
         // Leaving the results page is a request to edit the query, so focus what it reveals.
         .onChange(of: navManager.presentedSearch) { previous, current in
-            guard current.isEmpty, previous.first == .results, navManager.tab == .search else { return }
+            guard current.isEmpty, previous.first == .results, navManager.tab == .search,
+                  vm.linkLookup?.isLoading != true else { return }
             focusSearchField(delay: .milliseconds(200), attempts: 12)
         }
         #endif
@@ -141,6 +142,10 @@ struct SearchView: View {
         vm.query = term
         let trimmed = term.trimmingCharacters(in: .whitespacesAndNewlines)
         guard !trimmed.isEmpty else { return }
+        if vm.openLinkIfPresent(in: trimmed, navManager) {
+            searchFocused = false
+            return
+        }
         vm.search()
         if !showsResultsInline && navManager.presentedSearch.first != .results {
             navManager.presentedSearch = [.results]
@@ -182,7 +187,7 @@ struct SearchView: View {
 
     @ToolbarContentBuilder
     var filterToolbarItem: some ToolbarContent {
-        if vm.hasSearched {
+        if vm.hasSearched && vm.activeLink == nil {
             ToolbarItem(placement: topBarTrailingPlacement) {
                 SearchFilterMenu(vm: vm)
                     .font(.footnote)
@@ -314,6 +319,28 @@ extension SearchView {
         navManager.presentedSearch = []
         enterYoutubeMode(query: vm.activeQuery, via: "fallback")
         #endif
+    }
+
+    var pasteButton: some View {
+        Button {
+            guard let text = SearchVM.cleanPasted(ClipboardService.get()) else { return }
+            vm.showsYoutube = false
+            if UrlService.stringContainsUrl(text) {
+                navManager.presentedSearch = []
+                search(for: text)
+            } else if navManager.presentedSearch.isEmpty {
+                vm.query = text
+                focusSearchField(delay: .zero)
+            } else {
+                vm.query = text
+                navManager.presentedSearch = []
+            }
+        } label: {
+            Image(systemName: "doc.on.clipboard.fill")
+        }
+        .accessibilityLabel("pasteUrl")
+        .font(.footnote)
+        .fontWeight(.bold)
     }
 
     var browserSheetHoldsWebView: Bool {

@@ -37,12 +37,15 @@ public struct YoutubeDataAPI {
         Log.refresh.info("getYtChannelId")
         let apiUrl = "\(baseUrl)channels?key=\(apiKey)&forHandle=\(handle)&part=id"
 
-        let response = try await YoutubeDataAPI.handleYoutubeRequest(url: apiUrl, model: YtChannelId.self)
-        if let item = response.items.first {
-            return item.id
+        let response: YtChannelId
+        do {
+            response = try await YoutubeDataAPI.handleYoutubeRequest(url: apiUrl, model: YtChannelId.self)
+        } catch is DecodingError {
+            // an unknown handle gets a response without `items`
+            throw SubscriptionError.channelNotFound
         }
-
-        throw SubscriptionError.failedGettingChannelIdFromUsername("getYtChannelIdViaList")
+        guard let item = response.items.first else { throw SubscriptionError.channelNotFound }
+        return item.id
     }
 
     private static func handleYoutubeRequest<T>(url: String, model: T.Type) async throws -> T where T: Decodable {

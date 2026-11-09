@@ -187,6 +187,10 @@ struct ChannelPreviewView: View {
                 .allowsHitTesting(!subManager.isLoading)
                 .subscribeErrorPopover(subManager)
 
+                if isPlaylist, let youtubeUrl {
+                    PlaylistAddVideosMenu(playlistUrl: youtubeUrl)
+                }
+
                 if browserDisplayMode != .disabled, let youtubeUrl {
                     Button {
                         navManager.openUrlInApp(.url(youtubeUrl.absoluteString))

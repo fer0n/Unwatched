@@ -94,6 +94,31 @@ final class UrlServiceTests: XCTestCase {
             XCTAssertEqual(PodcastSearchService.collectionId(from: URL(string: url)!), expected, url)
         }
     }
+    @MainActor
+    func testLinkKind() {
+        let cases: [(String, SearchVM.LinkKind)] = [
+            ("https://youtu.be/jNQXAC9IVRw", .video),
+            ("https://www.youtube.com/watch?v=jNQXAC9IVRw", .video),
+            ("https://www.youtube.com/live/jNQXAC9IVRw", .video),
+            ("https://www.youtube.com/playlist?list=PLBsP89CPrMeO7uztAu6YxSB10cRMpjgiY", .playlist),
+            ("https://www.youtube.com/@TomScottGo", .channel),
+            ("https://www.youtube.com/channel/UCBa659QWEk1AI4Tg--mrJ2A", .channel),
+            ("https://www.youtube.com/feeds/videos.xml?channel_id=UCBa659QWEk1AI4Tg--mrJ2A", .channel),
+            ("https://feeds.simplecast.com/54nAGcIl", .podcast),
+            ("https://feeds.megaphone.fm/vergecast", .podcast),
+            ("https://anchor.fm/s/1234/podcast/rss", .podcast),
+            ("https://example.com/podcast.xml", .podcast),
+            ("https://lagedernation.org/feed/mp3/", .podcast),
+            ("https://podcasts.apple.com/us/podcast/the-daily/id1200361736", .podcast),
+            ("https://example.com", .other),
+            ("https://www.apple.com/podcasts/", .other),
+            ("https://www.youtube.com/feed/subscriptions", .other),
+        ]
+        for (link, expected) in cases {
+            XCTAssertEqual(SearchVM.LinkKind(link), expected, link)
+        }
+    }
+
 }
 
 final class PodcastShareUrlTests: XCTestCase {

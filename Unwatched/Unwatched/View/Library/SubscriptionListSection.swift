@@ -34,6 +34,7 @@ struct SubscriptionListSection: View {
                 workaroundPlaceholder
             }
         }
+        .subscribeErrorPopover(subManager)
         .task(id: droppedUrls) {
             await addDroppedUrls()
         }
@@ -92,7 +93,7 @@ struct SubscriptionListSection: View {
         }
         Log.info("handleUrlDrop library \(urls)")
         let subscriptionInfo = urls.map { SubscriptionInfo(rssFeedUrl: $0) }
-        await subManager.addSubscription(subscriptionInfo: subscriptionInfo)
+        await subManager.addSubscriptions(subscriptionInfo)
     }
 
     func handleUrlDrop(_ urls: [URL]) {

@@ -31,6 +31,35 @@ extension InnerTubeAPI {
         return playlistPage(from: data, playlistId: playlistId)
     }
 
+    public struct PlaylistInfo: Sendable {
+        public var title: String
+        public var ownerChannelId: String?
+    }
+
+    /// nil for a playlist YouTube won't show, e.g. a private one.
+    public func fetchPlaylistInfo(playlistId: String) async throws -> PlaylistInfo? {
+        let data = try await browse(browseId: "VL\(playlistId)", continuationToken: nil)
+        let metadata = (data["metadata"] as? [String: Any])?["playlistMetadataRenderer"] as? [String: Any]
+        guard let title = metadata?["title"] as? String, !title.isEmpty else { return nil }
+        let byline = ((((data["header"] as? [String: Any])?["pageHeaderRenderer"] as? [String: Any])?[
+            "content"] as? [String: Any])?["pageHeaderViewModel"] as? [String: Any])?["metadata"]
+        return PlaylistInfo(title: title, ownerChannelId: byline.flatMap(firstChannelId(in:)))
+    }
+
+    private func firstChannelId(in node: Any) -> String? {
+        if let dict = node as? [String: Any] {
+            if let browseId = (dict["browseEndpoint"] as? [String: Any])?["browseId"] as? String,
+               browseId.hasPrefix("UC") {
+                return browseId
+            }
+            return dict.keys.sorted().lazy.compactMap { dict[$0].flatMap(self.firstChannelId(in:)) }.first
+        }
+        if let array = node as? [Any] {
+            return array.lazy.compactMap(firstChannelId(in:)).first
+        }
+        return nil
+    }
+
     /// A `browse VL<playlistId>` response fetched elsewhere, e.g. Watch Later from the signed-in page.
     public func parsePlaylistPage(json text: String, playlistId: String) -> SearchPage {
         guard let json = try? JSONSerialization.jsonObject(with: Data(text.utf8)) as? [String: Any] else {

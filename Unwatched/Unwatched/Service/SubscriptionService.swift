@@ -60,6 +60,10 @@ struct SubscriptionService {
         return try await repo.subscribeTo(subscriptionInfo, subscriptionId)
     }
 
+    static func loadSubscriptionInfo(_ url: URL) async -> (SubscriptionState, SendableSubscription?) {
+        await SubscriptionActor().loadSubscriptionInfo(from: url)
+    }
+
     static func addSubscriptionWithoutRSS(_ info: SubscriptionInfo) async throws {
         let repo = SubscriptionActor()
         try await repo.addSubscriptionWithoutRSS(info)

@@ -235,7 +235,7 @@ actor SubscriptionActor: SharedContextActor {
                                                                         userName: userName,
                                                                         playlistId: playlistId)
         Log.refresh.info("getSubscription, feed: \(feedUrl.absoluteString)")
-        var sendableSub = try await VideoCrawler.loadSubscriptionFromRSS(feedUrl: feedUrl)
+        var sendableSub = try await loadFeedSubscription(feedUrl)
         sendableSub.youtubeUserName = sendableSub.youtubeUserName ?? userName
         return sendableSub
     }

@@ -158,8 +158,15 @@ struct UrlService {
     }
 
     static func stringContainsUrl(_ text: String) -> Bool {
-        let regex = #"https?:\/\/\w+\.\w+"#
-        return text.matching(regex: regex) != nil
+        firstUrl(in: text) != nil
+    }
+
+    private static let urlRegex = try? NSRegularExpression(pattern: #"https?:\/\/\w+\.\S+"#)
+
+    static func firstUrl(in text: String) -> String? {
+        guard let match = urlRegex?.firstMatch(in: text, range: NSRange(text.startIndex..., in: text)),
+              let range = Range(match.range, in: text) else { return nil }
+        return String(text[range])
     }
 
     static func getYoutubeIdFromUrl(url: URL) -> String? {
@@ -238,36 +245,6 @@ struct UrlService {
     static func isMobileYoutubePage(_ url: URL) -> Bool {
         let urlString = url.absoluteString
         return urlString.contains("m.youtube.com")
-    }
-
-    static func extractVideoUrls(_ text: String) -> (videoUrls: [URL], rest: String) {
-        // https://www.youtube.com/watch?v=epBbbysk5cU
-        // https://www.m.youtube.com/watch?v=epBbbysk5cU
-        // https://youtu.be/dtp6b76pMak
-        // https://m.youtube.com/shorts/jH_QIBtX1gY
-        // https://www.youtube.com/embed/QHpTxLM9opU
-
-        // swiftlint:disable:next line_length
-        let regex = #"((?:https\:\/\/)?(?:www\.)?(?:m\.)?(youtube.com\/(?:(?:watch\?v=)|(?:shorts\/)|(?:embed\/))[^\/\?\n\s]+|youtu.be\/[^\/\?\n]+))\??\S*"#
-        let matches = text.matchingMultiple(regex: regex)
-        if let matches {
-            let urls = matches.compactMap { URL(string: $0) }
-            let rest = text.replacingOccurrences(of: regex, with: "", options: .regularExpression)
-            return (urls, rest)
-        }
-        return ([], text)
-    }
-
-    static func extractPlaylistUrls(_ text: String) -> (playlistUrls: [URL], rest: String) {
-        // https://www.youtube.com/playlist?list=PL6BHqJ_7o92sPDB2UpgWBYdeyeSs-pc8_
-        let regex = #"((?:https\:\/\/)?(?:www\.)?(?:m\.)?(youtube.com\/playlist\?list\=[^\/\?\s]+))"#
-        let matches = text.matchingMultiple(regex: regex)
-        if let matches {
-            let urls = matches.compactMap { URL(string: $0) }
-            let rest = text.replacingOccurrences(of: regex, with: "", options: .regularExpression)
-            return (urls, rest)
-        }
-        return ([], text)
     }
 
     static func getYoutubeUrl(userName: String? = nil,

@@ -446,40 +446,6 @@
         }
       }
     },
-    "addAsPlaylist" : {
-      "localizations" : {
-        "de" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Playlist abonnieren"
-          }
-        },
-        "en" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Subscribe to Playlist"
-          }
-        },
-        "es" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Suscribirse a Lista de Reproducción"
-          }
-        },
-        "fr" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "S'abonner à la playlist"
-          }
-        },
-        "pl" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Subskrybuj playlistę"
-          }
-        }
-      }
-    },
     "addAsVideosToInbox" : {
       "localizations" : {
         "de" : {
@@ -578,6 +544,40 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "Dodaj do zakładek"
+          }
+        }
+      }
+    },
+    "addPlaylistVideos" : {
+      "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Playlist-Videos hinzufügen"
+          }
+        },
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Add Playlist Videos"
+          }
+        },
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Añadir vídeos de la lista"
+          }
+        },
+        "fr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Ajouter les vidéos de la playlist"
+          }
+        },
+        "pl" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Dodaj filmy z playlisty"
           }
         }
       }
@@ -3673,6 +3673,41 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "Sprawdź połączenie i spróbuj ponownie."
+          }
+        }
+      }
+    },
+    "channelNotFound" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Dieser Kanal wurde nicht gefunden."
+          }
+        },
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Couldn't find this channel."
+          }
+        },
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "No se encontró este canal."
+          }
+        },
+        "fr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Chaîne introuvable."
+          }
+        },
+        "pl" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Nie znaleziono tego kanału."
           }
         }
       }
@@ -8622,142 +8657,6 @@
         }
       }
     },
-    "errorImporting" : {
-      "localizations" : {
-        "de" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Manche Abos konnten nicht importiert werden"
-          }
-        },
-        "en" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Some subscriptions couldn't be imported"
-          }
-        },
-        "es" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Algunas suscripciones no se pudieron importar"
-          }
-        },
-        "fr" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Certains abonnements n'ont pas pu être importés"
-          }
-        },
-        "pl" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Niektóre subskrypcje nie mogły zostać zaimportowane"
-          }
-        }
-      }
-    },
-    "errorImportingMessageChannelUrl" : {
-      "localizations" : {
-        "de" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Falls du eine YouTube Kanal-URL eingegeben hast, versuche den YouTube RSS feed direkt einzugeben."
-          }
-        },
-        "en" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "If you entered a YouTube channel URL, try adding the YouTube RSS feed directly."
-          }
-        },
-        "es" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Si ingresaste una URL de canal de YouTube, intenta agregar directamente el feed RSS de YouTube."
-          }
-        },
-        "fr" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Si vous avez entré une URL de chaîne YouTube, essayez d'ajouter directement le flux RSS YouTube."
-          }
-        },
-        "pl" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Jeśli wprowadziłeś adres URL kanału YouTube, spróbuj dodać bezpośrednio kanał RSS YouTube."
-          }
-        }
-      }
-    },
-    "errorImportingMessageCsv" : {
-      "localizations" : {
-        "de" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Diese Kanäle existieren eventuell nicht mehr oder stellen keinen RSS Feed zur Verfügung."
-          }
-        },
-        "en" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "The channels may no longer exist or may not provide an RSS feed."
-          }
-        },
-        "es" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Es posible que los canales ya no existan o que no proporcionen un feed RSS."
-          }
-        },
-        "fr" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Les chaînes n'existent peut-être plus ou ne fournissent pas de flux RSS."
-          }
-        },
-        "pl" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Kanały mogą już nie istnieć lub nie dostarczać kanału RSS."
-          }
-        }
-      }
-    },
-    "errorImportingTryBrowser" : {
-      "localizations" : {
-        "de" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Du kannst versuchen die fehlenden Abos über den in-app Browser zu suchen (Bibliothek → Browser)"
-          }
-        },
-        "en" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "You can try to search for the missing channel via the in-app Browser (Library → Browser)"
-          }
-        },
-        "es" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Puedes intentar buscar el canal faltante mediante el Navegador dentro de la app (Biblioteca → Navegador)"
-          }
-        },
-        "fr" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Vous pouvez essayer de rechercher la chaîne manquante via le Navigateur intégré (Bibliothèque → Navigateur)"
-          }
-        },
-        "pl" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Możesz spróbować wyszukać brakujący kanał za pomocą przeglądarki w aplikacji (Biblioteka → Przeglądarka)"
-          }
-        }
-      }
-    },
     "errorOccured" : {
       "localizations" : {
         "de" : {
@@ -9132,6 +9031,76 @@
         }
       }
     },
+    "failedGettingVideoInfo" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Dieses Video wurde nicht gefunden."
+          }
+        },
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Couldn't find this video."
+          }
+        },
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "No se encontró este vídeo."
+          }
+        },
+        "fr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Vidéo introuvable."
+          }
+        },
+        "pl" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Nie znaleziono tego filmu."
+          }
+        }
+      }
+    },
+    "failedToParse" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Der Feed konnte nicht gelesen werden."
+          }
+        },
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "The feed couldn't be read."
+          }
+        },
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "No se pudo leer el feed."
+          }
+        },
+        "fr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Impossible de lire le flux."
+          }
+        },
+        "pl" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Nie udało się odczytać kanału RSS."
+          }
+        }
+      }
+    },
     "faq" : {
       "localizations" : {
         "de" : {
@@ -9264,6 +9233,40 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "Tego kanału nie udało się wczytać kilka razy z rzędu. Możliwe, że został trwale usunięty."
+          }
+        }
+      }
+    },
+    "feedUnavailable" : {
+      "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Dieser Feed konnte nicht geladen werden. Prüfe den Link."
+          }
+        },
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "This feed couldn't be loaded. Check the link."
+          }
+        },
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "No se pudo cargar este feed. Revisa el enlace."
+          }
+        },
+        "fr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Impossible de charger ce flux. Vérifiez le lien."
+          }
+        },
+        "pl" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Nie udało się wczytać tego kanału RSS. Sprawdź link."
           }
         }
       }
@@ -12185,6 +12188,41 @@
         }
       }
     },
+    "invalidUrl" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Dieser Link ist ungültig."
+          }
+        },
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "This link isn't valid."
+          }
+        },
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Este enlace no es válido."
+          }
+        },
+        "fr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Ce lien n'est pas valide."
+          }
+        },
+        "pl" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Ten link jest nieprawidłowy."
+          }
+        }
+      }
+    },
     "keepVideos" : {
       "localizations" : {
         "de" : {
@@ -12623,6 +12661,40 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "Polub wideo, zobacz komentarze"
+          }
+        }
+      }
+    },
+    "linkKindOther" : {
+      "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Link"
+          }
+        },
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Link"
+          }
+        },
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Enlace"
+          }
+        },
+        "fr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Lien"
+          }
+        },
+        "pl" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Link"
           }
         }
       }
@@ -14973,6 +15045,41 @@
         }
       }
     },
+    "noInfoFoundToSubscribeTo" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Unter diesem Link wurde kein Kanal, keine Playlist und kein Podcast gefunden."
+          }
+        },
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "No channel, playlist or podcast found at this link."
+          }
+        },
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "No se encontró ningún canal, lista ni pódcast en este enlace."
+          }
+        },
+        "fr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Aucune chaîne, playlist ou podcast trouvé à ce lien."
+          }
+        },
+        "pl" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Pod tym linkiem nie znaleziono kanału, playlisty ani podcastu."
+          }
+        }
+      }
+    },
     "none" : {
       "localizations" : {
         "de" : {
@@ -15819,6 +15926,41 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "Brak transkryptu"
+          }
+        }
+      }
+    },
+    "notSupported" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Dieser Link wird nicht unterstützt."
+          }
+        },
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "This link isn't supported."
+          }
+        },
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Este enlace no es compatible."
+          }
+        },
+        "fr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Ce lien n'est pas pris en charge."
+          }
+        },
+        "pl" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Ten link nie jest obsługiwany."
           }
         }
       }
@@ -17388,41 +17530,6 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "Pomarańczowy"
-          }
-        }
-      }
-    },
-    "pasteNoUrlFound" : {
-      "extractionState" : "manual",
-      "localizations" : {
-        "de" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Kein Link in der Zwischenablage"
-          }
-        },
-        "en" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "No link in the clipboard"
-          }
-        },
-        "es" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "No hay ningún enlace en el portapapeles"
-          }
-        },
-        "fr" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Aucun lien dans le presse-papiers"
-          }
-        },
-        "pl" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Brak linku w schowku"
           }
         }
       }
@@ -26984,6 +27091,41 @@
         }
       }
     },
+    "subscriptionInfoNotFound" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Unter diesem Link wurde kein Kanal, keine Playlist und kein Podcast gefunden."
+          }
+        },
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "No channel, playlist or podcast found at this link."
+          }
+        },
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "No se encontró ningún canal, lista ni pódcast en este enlace."
+          }
+        },
+        "fr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Aucune chaîne, playlist ou podcast trouvé à ce lien."
+          }
+        },
+        "pl" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Pod tym linkiem nie znaleziono kanału, playlisty ani podcastu."
+          }
+        }
+      }
+    },
     "subscriptions" : {
       "localizations" : {
         "de" : {
@@ -28683,74 +28825,6 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "TestFlight Beta"
-          }
-        }
-      }
-    },
-    "textContainsPlaylist" : {
-      "localizations" : {
-        "de" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Playlist-URL Entdeckt"
-          }
-        },
-        "en" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Playlist URL detected"
-          }
-        },
-        "es" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Se detectó una URL de lista de reproducción"
-          }
-        },
-        "fr" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "URL de playlist détectée"
-          }
-        },
-        "pl" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Wykryto URL playlisty"
-          }
-        }
-      }
-    },
-    "textContainsPlaylistMessage %lld" : {
-      "localizations" : {
-        "de" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Wie soll mit der Playlist umgegangen werden?\nBeim hinzufügen zur Queue/Inbox besteht ein limit von %lld Videos."
-          }
-        },
-        "en" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "How should the playlist be handled?\nAdding the playlist to the Queue/Inbox is limited to %lld videos."
-          }
-        },
-        "es" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "¿Cómo debería manejarse la lista de reproducción?\nAñadir la lista de reproducción a la cola/bandeja de entrada está limitado a %lld videos."
-          }
-        },
-        "fr" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Comment la playlist doit-elle être gérée ?\nL'ajout de la playlist à la file d'attente/Inbox est limité à %lld vidéo(s)."
-          }
-        },
-        "pl" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Jak powinna być obsługiwana playlista?\nDodanie playlisty do kolejki/skrzynki jest ograniczone do %lld filmów."
           }
         }
       }
@@ -32462,6 +32536,40 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "URL kanału YouTube"
+          }
+        }
+      }
+    },
+    "youtubeFeedUnavailable" : {
+      "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "YouTube hat diesen Feed nicht geliefert. Prüfe den Link oder versuche es später erneut."
+          }
+        },
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "YouTube didn't return this feed. Check the link, or try again later."
+          }
+        },
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "YouTube no devolvió este feed. Revisa el enlace o inténtalo más tarde."
+          }
+        },
+        "fr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "YouTube n'a pas renvoyé ce flux. Vérifiez le lien ou réessayez plus tard."
+          }
+        },
+        "pl" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "YouTube nie zwrócił tego kanału RSS. Sprawdź link lub spróbuj ponownie później."
           }
         }
       }

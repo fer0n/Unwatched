@@ -14,6 +14,7 @@ public enum SubscriptionError: Error, LocalizedError {
     case noInfoFoundToSubscribeTo
     case noInfoFoundToUnsubscribe
     case couldNotSubscribe(_ message: String)
+    case channelNotFound
 
     public var errorDescription: String? {
         switch self {
@@ -36,6 +37,8 @@ public enum SubscriptionError: Error, LocalizedError {
             return String(localized: "noInfoFoundToSubscribeTo")
         case .couldNotSubscribe(let message):
             return String(localized: "Could not subscribe: \(message)")
+        case .channelNotFound:
+            return String(localized: "channelNotFound")
         case .noInfoFoundToUnsubscribe:
             return String(localized: "noInfoFoundToUnsibscribe")
         }

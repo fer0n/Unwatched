@@ -20,8 +20,3 @@ struct IdentifiableURL: Identifiable {
     let id = UUID()
     let url: URL
 }
-
-struct IdentifiableString: Identifiable {
-    let id = UUID()
-    let str: String
-}

@@ -236,4 +236,99 @@ class FeedFallbackNetworkTests: XCTestCase {
         XCTAssertFalse(candidates.isEmpty)
         XCTAssertFalse(candidates.contains(where: \.isMembersOnly))
     }
+
+    // MARK: - Subscribing while the playlist feed is down (real network)
+
+    func testPlaylistSubscriptionFromInnerTube() async throws {
+        let feedUrl = try UrlService.getPlaylistFeedUrl("PLBCF2DAC6FFB574DE")
+        let sub = try await SubscriptionActor.playlistFromInnerTube(feedUrl: feedUrl)
+        XCTAssertEqual(sub?.title, "Google Search Stories")
+        XCTAssertEqual(sub?.youtubeChannelId, "UCvceBgMIpKb4zK1ss-Sh90w")
+        XCTAssertEqual(sub?.youtubePlaylistId, "PLBCF2DAC6FFB574DE")
+        XCTAssertEqual(sub?.link, feedUrl)
+    }
+
+    func testUnknownPlaylistYieldsNoSubscription() async throws {
+        let feedUrl = try UrlService.getPlaylistFeedUrl("PLxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx")
+        let sub = try? await SubscriptionActor.playlistFromInnerTube(feedUrl: feedUrl)
+        XCTAssertNil(sub)
+    }
+
+    func testChannelFeedHasNoPlaylistFallback() async throws {
+        let feedUrl = try UrlService.getFeedUrlFromChannelId("UCvceBgMIpKb4zK1ss-Sh90w")
+        let sub = try await SubscriptionActor.playlistFromInnerTube(feedUrl: feedUrl)
+        XCTAssertNil(sub)
+    }
+}
+
+final class ExistingSubscriptionTests: XCTestCase {
+    private let playlistId = "PLexistingSubscriptionTests"
+    private let channelId = "UCexistingSubscriptionTests"
+    private let userName = "existingSubscriptionTests"
+
+    override func tearDown() async throws {
+        let (playlistId, channelId, userName) = (playlistId, channelId, userName)
+        let context = DataProvider.newContext()
+        try context.delete(model: Subscription.self, where: #Predicate {
+            $0.youtubePlaylistId == playlistId || $0.youtubeChannelId == channelId || $0.youtubeUserName == userName
+        })
+        try context.save()
+    }
+
+    private func insert(_ sub: SendableSubscription) throws {
+        let context = DataProvider.newContext()
+        context.insert(sub.createSubscription())
+        try context.save()
+    }
+
+    private func isAlreadyAdded(_ url: String) async throws -> Bool {
+        let url = try XCTUnwrap(URL(string: url))
+        return await SubscriptionActor().loadSubscriptionInfo(from: url).0.alreadyAdded
+    }
+
+    func testPlaylistMatchesWithoutAnOwner() async throws {
+        try insert(SendableSubscription(title: "playlist", youtubePlaylistId: playlistId))
+        let found = try await isAlreadyAdded("https://www.youtube.com/playlist?list=\(playlistId)")
+        XCTAssertTrue(found)
+    }
+
+    func testChannelMatchesById() async throws {
+        try insert(SendableSubscription(title: "channel", youtubeChannelId: channelId))
+        let found = try await isAlreadyAdded("https://www.youtube.com/channel/\(channelId)")
+        XCTAssertTrue(found)
+    }
+
+    func testChannelMatchesByUserName() async throws {
+        try insert(SendableSubscription(title: "channel", youtubeUserName: userName))
+        let found = try await isAlreadyAdded("https://www.youtube.com/@\(userName)")
+        XCTAssertTrue(found)
+    }
+}
+
+/// Real network: what the link row shows for links that can't be opened.
+final class SubscribeErrorMessageTests: XCTestCase {
+    private func error(for link: String) async throws -> String? {
+        let url = try XCTUnwrap(URL(string: link))
+        return await SubscriptionActor().loadSubscriptionInfo(from: url).0.error
+    }
+
+    func testUnknownHandle() async throws {
+        let message = try await error(for: "https://www.youtube.com/@zzqqxxnochannel918273645")
+        XCTAssertEqual(message, String(localized: "channelNotFound"))
+    }
+
+    func testUnknownChannelId() async throws {
+        let message = try await error(for: "https://www.youtube.com/channel/UCzzqqxxnochannel91827364")
+        XCTAssertEqual(message, String(localized: "youtubeFeedUnavailable"))
+    }
+
+    func testPageWithoutAFeed() async throws {
+        let message = try await error(for: "https://example.com")
+        XCTAssertEqual(message, String(localized: "subscriptionInfoNotFound"))
+    }
+
+    func testMissingPodcastFeed() async throws {
+        let message = try await error(for: "https://www.apple.com/feed-that-does-not-exist.xml")
+        XCTAssertEqual(message, String(localized: "feedUnavailable"))
+    }
 }

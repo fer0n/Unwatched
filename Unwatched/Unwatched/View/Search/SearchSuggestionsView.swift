@@ -72,6 +72,10 @@ struct SearchSuggestionsView: View {
     var suggestionsList: some View {
         List {
             if !vm.query.isEmpty {
+                if let link = UrlService.firstUrl(in: vm.query) {
+                    SearchLinkRow(vm: vm, link: link) { searchFocused = false }
+                        .suggestionRowBackground()
+                }
                 Section {
                     ForEach(vm.suggestions, id: \.self) { suggestion in
                         suggestionRow(suggestion, systemImage: "magnifyingglass") {

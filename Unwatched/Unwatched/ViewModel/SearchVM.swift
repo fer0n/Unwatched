@@ -23,8 +23,8 @@ final class SearchVM {
     var podcastResults: [SendableSubscription] = []
     private(set) var suggestions: [String] = []
     private(set) var recentSearches: [String] = []
-    private(set) var isSearching = false
-    private(set) var isLoadingMore = false
+    var isSearching = false
+    var isLoadingMore = false
     private(set) var errorMessage: String?
     /// The query that produced the current `results` (used to ignore stale responses).
     private(set) var activeQuery: String = ""
@@ -41,7 +41,9 @@ final class SearchVM {
         query != activeQuery
     }
 
-    var hasAnyResults: Bool { !results.isEmpty || !localResults.isEmpty || !podcastResults.isEmpty }
+    var hasAnyResults: Bool {
+        !results.isEmpty || !localResults.isEmpty || !podcastResults.isEmpty || activeLink != nil
+    }
 
     /// Upload-date filter for the search. Changing it re-runs the active search so
     /// results update immediately (mirrors YouTube's "Upload date" search filter).
@@ -55,6 +57,8 @@ final class SearchVM {
     }
 
     var channelAvatarURLs: [String: URL] = [:]
+    var linkLookup: LinkLookup?
+    @ObservationIgnored var linkTask: Task<Void, Never>?
 
     var homeFeed: [SendableVideo] = []
     var isLoadingHomeFeed = false
@@ -66,9 +70,9 @@ final class SearchVM {
 
     let api = InnerTubeAPI()
     private var filter = SearchFilter.default
-    private var nextPageToken: String?
+    var nextPageToken: String?
     @ObservationIgnored private var searchTask: Task<Void, Never>?
-    @ObservationIgnored private var podcastTask: Task<Void, Never>?
+    @ObservationIgnored var podcastTask: Task<Void, Never>?
     @ObservationIgnored var localTask: Task<Void, Never>?
     @ObservationIgnored var avatarTask: Task<Void, Never>?
     @ObservationIgnored private var suggestionsTask: Task<Void, Never>?
@@ -93,7 +97,10 @@ final class SearchVM {
             query = trimmed
             return
         }
-        recordRecentSearch(trimmed)
+        let isUrl = UrlService.stringContainsUrl(trimmed)
+        if !isUrl {
+            recordRecentSearch(trimmed)
+        }
 
         searchTask?.cancel()
         errorMessage = nil
@@ -104,16 +111,16 @@ final class SearchVM {
         suggestionsTask?.cancel()
         suggestions = []
 
+        if isUrl {
+            showLinkOnly()
+            return
+        }
+
         searchLocal()
         searchPodcasts()
 
         guard enabledSources.contains(.youtube) else {
-            withAnimation {
-                results = []
-            }
-            nextPageToken = nil
-            isSearching = false
-            isLoadingMore = false
+            resetYoutubeResults()
             return
         }
         isSearching = true
@@ -219,7 +226,7 @@ final class SearchVM {
     func updateSuggestions() {
         suggestionsTask?.cancel()
         let trimmed = query.trimmingCharacters(in: .whitespacesAndNewlines)
-        guard !trimmed.isEmpty else {
+        guard !trimmed.isEmpty, !UrlService.stringContainsUrl(trimmed) else {
             suggestions = []
             return
         }
@@ -273,6 +280,7 @@ final class SearchVM {
         suggestionsTask?.cancel()
         localTask?.cancel()
         avatarTask?.cancel()
+        cancelLinkLookup()
         localResults = LocalSearchResults()
         query = ""
         activeQuery = ""

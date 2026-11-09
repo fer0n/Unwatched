@@ -54,9 +54,4 @@ final class UnwatchedUITestsLaunchTests: XCTestCase {
             messageList.swipeDown(velocity: .fast)
         }
     }
-
-    func test_AddToLibraryView_shouldAddSubscription() {
-        app.tabBars["Tab Bar"].buttons["Library"].tap()
-
-    }
 }
