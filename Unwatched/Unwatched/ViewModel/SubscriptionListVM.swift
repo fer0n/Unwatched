@@ -120,7 +120,7 @@ class SubscriptionListVM: TransactionVM<Subscription> {
         for persistentId in ids {
             guard let updatedSub: Subscription = modelContext.existingModel(for: persistentId) else {
                 Log.warning("updateSubscription failed: no model found")
-                return
+                continue
             }
 
             if let index = allSubscriptions.firstIndex(where: { $0.persistentId == persistentId }) {

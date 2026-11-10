@@ -149,7 +149,7 @@ import OSLog
                         removeVideo(at: index)
                     }
                 }
-                return
+                continue
             }
 
             withAnimation {
