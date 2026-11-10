@@ -29,6 +29,8 @@
 		<string>INMediaCategoryPodcasts</string>
 		<string>INMediaCategoryGeneral</string>
 	</array>
+	<key>NSPhotoLibraryAddUsageDescription</key>
+	<string>Unwatched adds images you choose to save to your photo library.</string>
 	<key>NSUbiquitousContainers</key>
 	<dict>
 		<key>iCloud.com.pentlandFirth.Unwatched</key>

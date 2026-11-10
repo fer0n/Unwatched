@@ -240,6 +240,41 @@
           }
         }
       }
+    },
+    "NSPhotoLibraryAddUsageDescription" : {
+      "comment" : "Privacy - Photo Library Additions Usage Description",
+      "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Unwatched speichert Bilder, die du sicherst, in deiner Fotomediathek."
+          }
+        },
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Unwatched adds images you choose to save to your photo library."
+          }
+        },
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Unwatched añade a tu fototeca las imágenes que decides guardar."
+          }
+        },
+        "fr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Unwatched ajoute à votre photothèque les images que vous choisissez d’enregistrer."
+          }
+        },
+        "pl" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Unwatched dodaje do biblioteki zdjęć obrazy, które zdecydujesz się zapisać."
+          }
+        }
+      }
     }
   },
   "version" : "1.0"
