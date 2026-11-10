@@ -20,6 +20,9 @@ struct PlayerScrubber: View {
     @State private var cachedChapterTimes: [Double] = []
     @State private var cachedSnapTimeThreshold: Double = 0
     @State private var snappedChapterTime: Double?
+    @State private var lastFill = FillPosition()
+
+    private static let minAnimatedStep: CGFloat = 1
 
     init(
         height: CGFloat? = nil,
@@ -67,6 +70,7 @@ struct PlayerScrubber: View {
     var body: some View {
         let boundedPosition = getWithinBounds(draggedScrubberWidth, maxValue: scrubberWidth)
         let currentScrubberPosition = boundedPosition
+        let fillStep = lastFill.step(to: currentScrubberPosition)
 
         VStack(spacing: 1) {
             if !inlineTime {
@@ -124,6 +128,7 @@ struct PlayerScrubber: View {
                             // keeps the snappier animation a web player seek brings along
                             .transaction(value: player.currentTime) { transaction in
                                 guard transaction.animation == nil, !isGestureActive else { return }
+                                guard fillStep >= Self.minAnimatedStep else { return }
                                 transaction.animation = .playbackTick
                             }
 
@@ -378,6 +383,16 @@ struct PlayerScrubber: View {
             return Double(position / width) * total
         }
         return nil
+    }
+}
+
+// a class, so updating it from `body` invalidates nothing
+private final class FillPosition {
+    private var value: CGFloat = 0
+
+    func step(to position: CGFloat) -> CGFloat {
+        defer { value = position }
+        return abs(position - value)
     }
 }
 
