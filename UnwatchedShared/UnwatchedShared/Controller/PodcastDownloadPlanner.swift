@@ -58,7 +58,8 @@ enum PodcastDownloadPlanner {
         if enabled {
             var budget = seconds(limitHours)
             var cellularBudget = seconds(cellularHours)
-            let fetch = FetchDescriptor<QueueEntry>(sortBy: [SortDescriptor(\.order)])
+            var fetch = FetchDescriptor<QueueEntry>(sortBy: [SortDescriptor(\.order)])
+            fetch.relationshipKeyPathsForPrefetching = [\.video]
             for entry in (try? context.fetch(fetch)) ?? [] {
                 guard budget > 0 else { break }
                 guard let video = entry.video,

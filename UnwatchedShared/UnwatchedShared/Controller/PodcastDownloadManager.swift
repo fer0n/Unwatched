@@ -127,12 +127,15 @@ public final class PodcastDownloadManager {
                 playing: playing
             )
         } else {
-            plan = await PodcastDownloadActor().plan(
-                limitHours: limitHours,
-                cellularHours: cellularHours,
-                keepDays: keepDays,
-                playing: playing
-            )
+            let (limitHours, cellularHours, keepDays) = (limitHours, cellularHours, keepDays)
+            plan = await Task.detached {
+                await PodcastDownloadActor().plan(
+                    limitHours: limitHours,
+                    cellularHours: cellularHours,
+                    keepDays: keepDays,
+                    playing: playing
+                )
+            }.value
         }
 
         let cellularIds = Set(plan.download.filter(\.allowsCellular).map(\.youtubeId))
