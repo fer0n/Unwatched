@@ -7,7 +7,7 @@ import SwiftUI
 import UnwatchedShared
 
 extension PlayerWebViewCoordinator {
-    /// All a page that has left the hierarchy may still do: report where its own video got to. It must not steer
+    /// All a page that is no longer the player may still do: report where its own video got to. It must not steer
     /// the player, which by now may be on a different video and a different engine.
     func handleRetiredMessage(_ topic: String, _ payload: String?) {
         guard topic == "pause" else {

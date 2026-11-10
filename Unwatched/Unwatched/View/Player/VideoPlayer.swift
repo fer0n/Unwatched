@@ -27,6 +27,7 @@ struct VideoPlayer: View {
     var fold: CGRect?
     @Environment(\.landscapeControlBand) var landscapeControlBand
     @State private var appNotificationVM = AppNotificationVM()
+    @Namespace private var surfaceNamespace
 
     var body: some View {
         let enableHideControls = compactSize && (Device.requiresFullscreenWebWorkaround || Device.isIphone)
@@ -60,6 +61,7 @@ struct VideoPlayer: View {
                             autoHideVM.setKeepVisible(isVisible, "hover")
                         }
                     )
+                    .playerSurface(in: surfaceNamespace)
                     .zIndex(1)
                     .layoutPriority(2)
                     #if os(visionOS)
@@ -97,6 +99,7 @@ struct VideoPlayer: View {
                                                      pagedInline: true)
                                         : nil,
                                       hideMiniPlayer: hideMiniPlayer,
+                                      surfaceNamespace: surfaceNamespace,
                                       autoHideVM: $autoHideVM,
                                       )
                 }
@@ -150,7 +153,8 @@ struct VideoPlayer: View {
                    enableHideControls: enableHideControls,
                    sleepTimerVM: sleepTimerVM,
                    compactSize: compactSize,
-                   pagedInline: pagedInline)
+                   pagedInline: pagedInline,
+                   audioOnlySlot: player.isAudioOnly)
     }
 
     /// An audio episode's cover art is part of the first page instead of sitting above both: swiping to the
@@ -371,4 +375,22 @@ private struct VideoPlayerSheetStatePreview: View {
 
 #Preview("Podcast / Audio Only - The Daily (swipedAbove toggle)") {
     VideoPlayerSheetStatePreview()
+}
+
+extension View {
+    func playerSurface(in namespace: Namespace.ID?) -> some View {
+        modifier(PlayerSurfaceMatch(namespace: namespace))
+    }
+}
+
+private struct PlayerSurfaceMatch: ViewModifier {
+    let namespace: Namespace.ID?
+
+    func body(content: Content) -> some View {
+        if let namespace {
+            content.matchedGeometryEffect(id: "playerSurface", in: namespace)
+        } else {
+            content
+        }
+    }
 }

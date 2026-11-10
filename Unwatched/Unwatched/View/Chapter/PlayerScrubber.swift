@@ -138,6 +138,7 @@ struct PlayerScrubber: View {
                             width: scrubberWidth,
                             duration: total
                         )
+                        .transaction(value: player.video?.youtubeId) { $0.animation = nil }
                     }
                 }
                 .compositingGroup()

@@ -11,7 +11,7 @@ import UnwatchedShared
 extension PlayerWebViewCoordinator {
     // swiftlint:disable:next cyclomatic_complexity function_body_length
     func handleJsMessages(_ topic: String, _ payload: String?) {
-        guard !retired else {
+        guard isLive else {
             handleRetiredMessage(topic, payload)
             return
         }
@@ -339,7 +339,7 @@ extension PlayerWebViewCoordinator {
         // Only the embedded player reports errors — the init script's checker is behind
         // `if (!isNonEmbedding)` — and it re-checks up to 10s after load. So once a fallback is
         // up, any further error is the replaced embed still talking.
-        guard youtube, !parent.player.embeddingDisabled, !retired else {
+        guard youtube, !parent.player.embeddingDisabled else {
             return
         }
 

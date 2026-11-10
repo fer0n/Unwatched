@@ -41,6 +41,8 @@ struct PlayerView: View {
     /// The player sits inside a page of the paging scroll view rather than above it (see
     /// `VideoPlayer.usePodcastLayout`), so paging must not be mistaken for teardown.
     var pagedInline: Bool = false
+    /// The outgoing slot of a podcast ↔ video switch must not build a second player
+    var audioOnlySlot: Bool
 
     var body: some View {
         ZStack(alignment: .top) {
@@ -67,6 +69,8 @@ struct PlayerView: View {
                         VideoNotAvailableView()
                             .aspectRatio(player.videoAspectRatio, contentMode: .fit)
                     }
+                } else if audioOnlySlot != player.isAudioOnly {
+                    Color.clear
                 } else if switchManager.activeType == .native {
                     AVPlayerView(
                         handleVideoEnded: handleVideoEnded,
@@ -333,7 +337,8 @@ extension PlayerView {
                       landscapeFullscreen: true,
                       enableHideControls: false,
                       sleepTimerVM: SleepTimerViewModel(),
-                      compactSize: false)
+                      compactSize: false,
+                      audioOnlySlot: false)
         .modelContainer(container)
         .environment(NavigationManager.getDummy())
         .environment(player)

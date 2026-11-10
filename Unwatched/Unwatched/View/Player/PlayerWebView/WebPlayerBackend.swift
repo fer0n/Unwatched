@@ -68,6 +68,10 @@ import UnwatchedShared
         cancelStart()
         pauseTask?.cancel()
         appliedChaptersHash = nil
+        // the page stays up while animating out and would play on under the episode
+        if (player.backend as AnyObject) !== self {
+            stop()
+        }
     }
 
     @MainActor

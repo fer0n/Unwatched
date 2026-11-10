@@ -59,8 +59,11 @@ struct FullscreenSpeedControlContent: View {
                 triggerChange(viewModel.currentPage)
             }
         }
+        .onScrollPhaseChange { _, phase in
+            viewModel.isUserScrolling = phase == .tracking || phase == .interacting || phase == .decelerating
+        }
         .sensoryFeedback(Const.sensoryFeedback, trigger: viewModel.currentPage) { old, _ in
-            old != nil
+            old != nil && viewModel.isUserScrolling
         }
         .scrollTargetBehavior(.viewAligned)
         .safeAreaPadding(.vertical, Values.padding)
@@ -111,6 +114,7 @@ struct FullscreenSpeedControlContent: View {
         }
 
         viewModel.handleScrolling(true)
+        viewModel.isUserScrolling = true
         isInteracting = true
         withAnimation {
             viewModel.currentPage = next
@@ -121,6 +125,7 @@ struct FullscreenSpeedControlContent: View {
             do {
                 try await Task.sleep(for: .milliseconds(700))
                 viewModel.handleScrolling(false)
+                viewModel.isUserScrolling = false
                 isInteracting = false
             } catch { }
         }
@@ -144,6 +149,7 @@ extension FullscreenSpeedControlContent {
         var isScrolling = false
         var task: Task<Void, Never>?
         var currentPage: Int?
+        @ObservationIgnored var isUserScrolling = false
 
         #if os(macOS)
         /// Ends the scrolling state after the last scroll wheel step, in place of the scroll phase

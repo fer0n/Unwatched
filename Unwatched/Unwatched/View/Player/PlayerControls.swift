@@ -180,6 +180,7 @@ struct PlayerControls: View {
             )
         .contentShape(Rectangle())
         .padding(.horizontal)
+        .geometryGroup()
     }
 
     var actionsRow: some View {
@@ -192,6 +193,8 @@ struct PlayerControls: View {
             sleepTimerVM: sleepTimerVM,
             autoHideVM: $autoHideVM
         )
+        // moves as one piece on a podcast ↔ video switch
+        .geometryGroup()
     }
 
     func playbackButtons(
@@ -210,6 +213,7 @@ struct PlayerControls: View {
         }
         .padding(.horizontal, compactSize ? 0 : 20)
         .frame(maxWidth: compactSize ? nil : Const.playerRowMaxWidth)
+        .geometryGroup()
     }
 
     /// Everything in one line: play buttons, then the actions, then the scrubber.

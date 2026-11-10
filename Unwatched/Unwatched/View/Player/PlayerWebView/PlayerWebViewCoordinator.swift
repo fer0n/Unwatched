@@ -21,6 +21,11 @@ class PlayerWebViewCoordinator: NSObject, WKNavigationDelegate, WKScriptMessageH
     }
 
     @MainActor
+    var isLive: Bool {
+        !retired && PlayerSwitchManager.shared.activeType != .native
+    }
+
+    @MainActor
     func retire() {
         retired = true
         // the page can no longer send the matching release
@@ -31,8 +36,7 @@ class PlayerWebViewCoordinator: NSObject, WKNavigationDelegate, WKScriptMessageH
     @MainActor
     func webViewWebContentProcessDidTerminate(_ webView: WKWebView) {
         Log.player.info("webViewWebContentProcessDidTerminate")
-        // reloading a page nothing shows any more would only take the player's state with it
-        guard !retired else { return }
+        guard isLive else { return }
         parent.player.isLoading = Date()
         parent.loadWebContent(webView)
     }
@@ -54,10 +58,8 @@ class PlayerWebViewCoordinator: NSObject, WKNavigationDelegate, WKScriptMessageH
     }
 
     @MainActor func webView(_ webView: WKWebView, didFinish navigation: WKNavigation) {
-        guard !retired else {
-            // its view is gone: initialising it, clearing `isLoading` or — worst — consuming the auto-start would all
-            // be done on the player's behalf by a page nobody can see
-            Log.player.info("didFinish: page already dismantled")
+        guard isLive else {
+            Log.player.info("didFinish: page is no longer the player")
             return
         }
         // everything below is for this page, so it has to be the one commands reach

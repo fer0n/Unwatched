@@ -26,6 +26,7 @@ struct PlayerContentView: View {
     /// Passed in rather than re-derived: while the menu covers the page, `inlinePlayer` is the mini-player bar and
     /// has to stay pinned to the top instead of filling what's left.
     var hideMiniPlayer: Bool = true
+    var surfaceNamespace: Namespace.ID?
 
     @State var minHeight: CGFloat?
     @Environment(\.playerFitsSideBySide) private var fitsSideBySide
@@ -80,16 +81,18 @@ struct PlayerContentView: View {
 
     @ViewBuilder
     var pages: some View {
-        if inlinePlayer != nil {
-            livePages
-        } else if sideBySide, let video = player.video {
+        if sideBySide, let video = player.video {
             HStack(spacing: 0) {
                 controlsPage
                     .frame(width: Self.sideBySideControlsWidth)
                 chapterDescriptionPage(video)
             }
         } else {
+            #if os(iOS)
+            livePages
+            #else
             tabPages
+            #endif
         }
     }
 
@@ -104,6 +107,7 @@ struct PlayerContentView: View {
         #endif
     }
 
+    #if !os(iOS)
     @ViewBuilder
     var tabPages: some View {
         @Bindable var navManager = navManager
@@ -127,13 +131,11 @@ struct PlayerContentView: View {
                     .tag(ControlNavigationTab.chapterDescription)
             }
         }
-        #if os(iOS)
-        .tabViewStyle(.page(indexDisplayMode: .never))
-        #else
         .tabViewStyle(.automatic)
-        #endif
     }
+    #endif
 
+    #if os(iOS)
     /// Paging `ScrollView` rather than a `TabView`: an unloaded tab page gets no updates.
     @ViewBuilder
     var livePages: some View {
@@ -154,9 +156,7 @@ struct PlayerContentView: View {
         .scrollTargetBehavior(.paging)
         .scrollIndicators(.hidden)
         // the pages carry their own edge effects
-        #if os(iOS)
         .scrollEdgeEffectHidden(for: .all)
-        #endif
         .scrollPosition(id: $scrolledPage)
         .onAppear { scrolledPage = navManager.playerTab }
         .onChange(of: scrolledPage) {
@@ -170,29 +170,28 @@ struct PlayerContentView: View {
             }
         }
     }
+    #endif
 
-    @ViewBuilder
     var controlsPage: some View {
-        if let inlinePlayer {
-            VStack(spacing: 0) {
+        VStack(spacing: 0) {
+            if let inlinePlayer {
                 inlinePlayer
                     // art always claims the leftover height so the controls keep their place; only its own alignment
                     // shifts — centered while it fills, pinned up as the mini bar
                     .frame(maxHeight: .infinity, alignment: hideMiniPlayer ? .center : .top)
+                    .playerSurface(in: surfaceNamespace)
+            }
 
-                playerControls
-                    // the art above takes the height that's left, not the other way around
-                    .layoutPriority(1)
-            }
-            .frame(maxHeight: .infinity, alignment: .top)
-            // the art's bounce would move the description page sharing this row
-            .transaction { transaction in
-                if navManager.playerTab != .controls {
-                    transaction.disablesAnimations = true
-                }
-            }
-        } else {
             playerControls
+                // the art above takes the height that's left, not the other way around
+                .layoutPriority(1)
+        }
+        .frame(maxHeight: inlinePlayer == nil ? nil : .infinity, alignment: .top)
+        // the art's bounce would move the description page sharing this row
+        .transaction { transaction in
+            if inlinePlayer != nil && !sideBySide && navManager.playerTab != .controls {
+                transaction.disablesAnimations = true
+            }
         }
     }
 
@@ -213,25 +212,20 @@ struct PlayerContentView: View {
             )
     }
 
-    @ViewBuilder
     func chapterDescriptionPage(_ video: Video) -> some View {
-        if inlinePlayer != nil {
-            chapterDescription(video)
-                .overlay(alignment: .top) {
-                    if !hideMiniPlayer {
-                        ZStack(alignment: .top) {
-                            miniPlayerBackdrop
+        chapterDescription(video)
+            .overlay(alignment: .top) {
+                if inlinePlayer != nil && !hideMiniPlayer {
+                    ZStack(alignment: .top) {
+                        miniPlayerBackdrop
 
-                            InlineMiniPlayer {
-                                navManager.playerTab = .controls
-                            }
-                            .frame(maxWidth: .infinity)
+                        InlineMiniPlayer {
+                            navManager.playerTab = .controls
                         }
+                        .frame(maxWidth: .infinity)
                     }
                 }
-        } else {
-            chapterDescription(video)
-        }
+            }
     }
 
     func chapterDescription(_ video: Video) -> some View {

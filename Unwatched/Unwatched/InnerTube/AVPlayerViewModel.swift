@@ -227,6 +227,7 @@ final class AVPlayerViewModel: PlayerBackend {
             Log.player.info("loadVideo: skipped, the native player is no longer current")
             // a paged player outlives the switch
             stop()
+            cancelStallHandling()
             return
         }
         guard let videoId = player.video?.youtubeId, videoId != loadedVideoId else { return }

@@ -61,7 +61,7 @@ struct ChapterMiniControlView: View {
                             .fontWidth(.condensed)
                             .lineLimit(1)
                             .frame(maxWidth: link == nil ? .infinity : nil)
-                            .animation(nil, value: UUID())
+                            .contentTransition(.identity)
                         }
                         .buttonStyle(.plain)
                         .highPriorityGesture(LongPressGesture(minimumDuration: 0.3).onEnded { _ in
