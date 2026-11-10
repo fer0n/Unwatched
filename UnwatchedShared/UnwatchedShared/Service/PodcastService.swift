@@ -12,6 +12,7 @@ public struct PodcastFeed: Sendable {
     public let subscription: SendableSubscription
     public let episodes: [SendableVideo]
     public let showDescription: String
+    public let isPrivateFeed: Bool
 }
 
 public enum PodcastService {
@@ -54,9 +55,10 @@ public enum PodcastService {
     public static func parseFeed(
         _ data: Data,
         feedUrl: URL,
-        limitEpisodes: Int? = nil
+        limitEpisodes: Int? = nil,
+        isPrivateFeed: Bool? = nil
     ) throws -> PodcastFeed {
-        let parser = PodcastFeedParser.parse(data, limitEpisodes: limitEpisodes)
+        let parser = PodcastFeedParser.parse(data, limitEpisodes: limitEpisodes, isPrivateFeed: isPrivateFeed)
         guard var subscription = parser.subscriptionInfo else {
             throw VideoCrawlerError.subscriptionInfoNotFound
         }
@@ -64,7 +66,8 @@ public enum PodcastService {
         return PodcastFeed(
             subscription: subscription,
             episodes: parser.episodes,
-            showDescription: parser.showDescription
+            showDescription: parser.showDescription,
+            isPrivateFeed: parser.isPrivateFeed
         )
     }
 

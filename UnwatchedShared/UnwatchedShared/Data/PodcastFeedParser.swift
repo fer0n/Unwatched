@@ -65,9 +65,17 @@ public final class PodcastFeedParser: NSObject, XMLParserDelegate {
         return head.contains("<rss") || head.contains("<channel")
     }
 
-    public static func parse(_ data: Data, limitEpisodes: Int? = nil) -> PodcastFeedParser {
+    /// `isPrivateFeed` has to be passed for a document that was cut off: the tag can follow the last item.
+    public static func parse(
+        _ data: Data,
+        limitEpisodes: Int? = nil,
+        isPrivateFeed: Bool? = nil
+    ) -> PodcastFeedParser {
         let parser = XMLParser(data: data)
-        let delegate = PodcastFeedParser(limitEpisodes: limitEpisodes, isPrivateFeed: isPrivateFeed(data))
+        let delegate = PodcastFeedParser(
+            limitEpisodes: limitEpisodes,
+            isPrivateFeed: isPrivateFeed ?? self.isPrivateFeed(data)
+        )
         parser.delegate = delegate
         parser.shouldProcessNamespaces = false
         delegate.parsingSucceeded = parser.parse()

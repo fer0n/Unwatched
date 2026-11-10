@@ -42,4 +42,27 @@ class PodcastPrivateFeedTests: XCTestCase {
             PodcastService.episodeId(guid: "episode-one-guid", isPrivateFeed: true)
         )
     }
+
+    func testCutOffDocumentUsesTheKnownPrivacy() throws {
+        let full = feedData(replacing: "</channel>", with: "<itunes:block>yes</itunes:block></channel>")
+        let firstItemEnd = try XCTUnwrap(full.range(of: Data("</item>".utf8)))
+        let cutOff = Data(full[..<firstItemEnd.upperBound])
+        XCTAssertFalse(PodcastFeedParser.parse(cutOff).isPrivateFeed)
+
+        let parser = PodcastFeedParser.parse(cutOff, limitEpisodes: 1, isPrivateFeed: true)
+        XCTAssertEqual(
+            parser.episodes.first?.youtubeId,
+            PodcastService.episodeId(guid: "episode-one-guid", isPrivateFeed: true)
+        )
+    }
+
+    func testEpisodeEndCounterSkipsItemsWithoutEnclosure() {
+        var counter = PodcastEpisodeEndCounter()
+        let feed = """
+        <item><title>post</title></item>
+        <item><enclosure url="a.mp3"/></item>
+        <item><enclosure url="b.mp3"/></item>
+        """
+        XCTAssertEqual(feed.utf8.map { counter.consume($0) }.last, 2)
+    }
 }

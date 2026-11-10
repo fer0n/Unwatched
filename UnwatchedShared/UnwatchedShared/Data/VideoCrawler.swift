@@ -11,17 +11,40 @@ public struct VideoCrawler {
     /// It does not guarantee fresh data: YouTube serves feeds from an edge pool whose copies are
     /// up to `max-age=900` old, so this trades a copy that is certainly unchanged for one that
     /// might not be.
-    public static func fetchFeedData(_ url: URL, ignoreCache: Bool = false) async throws -> Data {
+    ///
+    /// `stopAfterEpisodes` returns the document cut off after that many podcast episodes.
+    public static func fetchFeedData(
+        _ url: URL,
+        ignoreCache: Bool = false,
+        stopAfterEpisodes: Int? = nil
+    ) async throws -> Data {
         var request = URLRequest(url: url)
         if ignoreCache {
             request.cachePolicy = .reloadIgnoringLocalCacheData
         }
-        let (data, response) = try await URLSession.app.data(for: request)
+        guard let stopAfterEpisodes else {
+            let (data, response) = try await URLSession.app.data(for: request)
+            try requireSuccess(response)
+            return data
+        }
+        let (bytes, response) = try await URLSession.app.bytes(for: request)
+        try requireSuccess(response)
+        var data = Data()
+        var episodes = PodcastEpisodeEndCounter()
+        for try await byte in bytes {
+            data.append(byte)
+            if episodes.consume(byte) >= stopAfterEpisodes {
+                // leaving the loop cancels the transfer
+                break
+            }
+        }
+        return data
+    }
 
+    private static func requireSuccess(_ response: URLResponse) throws {
         guard response.isSuccessfulHttp else {
             throw URLError(.badServerResponse)
         }
-        return data
     }
 
     public static func parseFeedUrl(_ url: URL, limitVideos: Int?) async throws -> RSSParserDelegate {
@@ -49,15 +72,25 @@ public struct VideoCrawler {
     }
 
     public static func loadVideosFromRSS(url: URL, ignoreCache: Bool = false) async throws -> [SendableVideo] {
-        let data = try await fetchFeedData(url, ignoreCache: ignoreCache)
+        let episodeLimit = Const.podcastRefreshEpisodeLimit
+        let knownPrivacy = PodcastFeedPrivacy.isPrivate(url)
+        let data = try await fetchFeedData(
+            url,
+            ignoreCache: ignoreCache,
+            stopAfterEpisodes: knownPrivacy == nil ? nil : episodeLimit
+        )
         if PodcastFeedParser.isPodcastFeed(data) {
-            let episodes = try PodcastService.parseFeed(
+            let feed = try PodcastService.parseFeed(
                 data,
                 feedUrl: url,
-                limitEpisodes: Const.podcastRefreshEpisodeLimit
-            ).episodes
-            PodcastEpisodeCache.store(episodes, feedUrl: url)
-            return episodes
+                limitEpisodes: episodeLimit,
+                isPrivateFeed: knownPrivacy
+            )
+            if knownPrivacy == nil {
+                PodcastFeedPrivacy.remember(feed.isPrivateFeed, for: url)
+            }
+            PodcastEpisodeCache.store(feed.episodes, feedUrl: url)
+            return feed.episodes
         }
         let rssParserDelegate = parseFeedData(data: data, limitVideos: nil)
         guard hasUsableResult(rssParserDelegate) else {
@@ -78,13 +111,14 @@ public struct VideoCrawler {
     public static func backfillPodcastEpisodes(feedUrl: URL) async throws -> Int {
         let data = try await fetchFeedData(feedUrl)
         guard PodcastFeedParser.isPodcastFeed(data) else { return 0 }
-        let episodes = try PodcastService.parseFeed(
+        let feed = try PodcastService.parseFeed(
             data,
             feedUrl: feedUrl,
             limitEpisodes: Const.podcastEpisodeCacheLimit
-        ).episodes
-        PodcastEpisodeCache.store(episodes, feedUrl: feedUrl, replaceExisting: true)
-        return episodes.count
+        )
+        PodcastFeedPrivacy.remember(feed.isPrivateFeed, for: feedUrl)
+        PodcastEpisodeCache.store(feed.episodes, feedUrl: feedUrl, replaceExisting: true)
+        return feed.episodes.count
     }
 
     public static func loadSubscriptionFromRSS(feedUrl: URL) async throws -> SendableSubscription {
