@@ -69,7 +69,7 @@ final class StatsService {
         Log.info("StatsService: flushing \(batch.values.reduce(0, +))s across \(batch.count) entries")
 
         let actor = statsActor
-        return Task {
+        return Task.detached {
             do {
                 try await actor.addWatchTime(batch)
             } catch {
