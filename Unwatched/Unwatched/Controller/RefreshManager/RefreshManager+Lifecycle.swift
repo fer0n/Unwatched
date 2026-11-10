@@ -152,13 +152,9 @@ extension RefreshManager {
     }
 
     func isNetworkConnected() async -> Bool {
-        await withUnsafeContinuation { continuation in
-            let monitor = NWPathMonitor()
-            monitor.pathUpdateHandler = { path in
-                monitor.cancel()
-                continuation.resume(returning: path.status == .satisfied)
-            }
-            monitor.start(queue: DispatchQueue.global())
+        for await path in NWPathMonitor() {
+            return path.status == .satisfied
         }
+        return false
     }
 }
