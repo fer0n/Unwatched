@@ -66,4 +66,26 @@ extension AVPlayerViewModel {
         return false
         #endif
     }
+
+    // MARK: - Cut-short streams
+
+    /// A live stream that just ended is served as a few minutes of its live playlist until YouTube has processed it.
+    @MainActor
+    func isCutShort(_ item: AVPlayerItem) -> Bool {
+        let length = item.duration.seconds
+        guard let reportedLength, length.isFinite, length > 0 else { return false }
+        return reportedLength - length > max(60, reportedLength * 0.1)
+    }
+
+    @MainActor
+    func handlePlayedToEnd(item: AVPlayerItem, videoId: String) {
+        guard isCutShort(item) else {
+            onVideoEnded()
+            return
+        }
+        Log.player.warning("[AVPlayerView] cut-short stream ran out, not ending the video: \(videoId)")
+        if !failPlayback(APIError.unavailable("Unable to play this video")) {
+            player.pause()
+        }
+    }
 }

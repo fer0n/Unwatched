@@ -56,7 +56,13 @@ final class AVPlayerViewModel: PlayerBackend {
     /// What `artworkImage` was loaded for, so a chapter change only refetches on a real change.
     @ObservationIgnored var fetchedArtworkUrls: [URL] = []
     @ObservationIgnored var seekAnchor = SeekAnchor()
-    @ObservationIgnored var currentPlayerInfo: PlayerInfo?
+    @ObservationIgnored var currentPlayerInfo: PlayerInfo? {
+        didSet {
+            if let length = currentPlayerInfo?.video.duration, length > 0 { reportedLength = length }
+        }
+    }
+    /// YouTube's length for the video. Outlives `currentPlayerInfo`, which the WKWebView paths clear.
+    @ObservationIgnored var reportedLength: Double?
     @ObservationIgnored var transcriptConfirmationVideoId: String?
     @ObservationIgnored var currentHLSHeaders: [String: String] = [:]
     @ObservationIgnored var isUsingComposition = false
@@ -241,6 +247,7 @@ final class AVPlayerViewModel: PlayerBackend {
         seekAnchor.time = nil
         originalAudioLanguage = nil
         currentPlayerInfo = nil
+        reportedLength = nil
         currentHLSHeaders = [:]
         isUsingComposition = false
         isUsingWebViewHLS = false

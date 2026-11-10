@@ -699,6 +699,11 @@ extension AVPlayerViewModel {
         }
 
         guard played, player.video?.youtubeId == videoId, !Task.isCancelled else { return false }
+        guard !isCutShort(item) else {
+            Log.player.warning("[AVPlayerView] stream is cut short at \(Int(item.duration.seconds))s: \(videoId)")
+            avPlayer.pause()
+            return false
+        }
         await handleReadyToPlay(item: item, videoId: videoId)
         startFailureObserver(item: item, videoId: videoId)
         return true
@@ -724,7 +729,7 @@ extension AVPlayerViewModel {
             )
             for await _ in notifications {
                 guard !Task.isCancelled else { return }
-                await MainActor.run { onVideoEnded() }
+                await MainActor.run { handlePlayedToEnd(item: item, videoId: videoId) }
             }
         }
     }
@@ -743,7 +748,7 @@ extension AVPlayerViewModel {
                   avPlayer.currentItem === item else { return }
         }
         Log.player.info("[AVPlayerView] clearing isLoading (readyToPlay): \(videoId)")
-        handOverToPlayback(duration: avPlayer.currentItem?.duration.seconds)
+        handOverToPlayback(duration: isCutShort(item) ? nil : item.duration.seconds)
     }
 
     /// Post-success status observer: catches a mid-playback `.failed` (e.g. an expired/403
