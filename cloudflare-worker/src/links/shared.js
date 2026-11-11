@@ -8,7 +8,10 @@ export function sharedItem(url) {
     return youtube(rest[0], params.get("t"), `unwatched://open${url.search ? `${url.search}&` : "?"}v=${rest[0]}`);
   }
   if (first === "p" && rest.length === 2) {
-    return podcast(rest[0], rest[1], params.get("c"));
+    const shared = podcast(rest[0], rest[1], params.get("c"));
+    const start = params.get("t");
+    if (!shared || !start || !/^\d+$/.test(start)) return shared;
+    return { ...shared, inApp: `${shared.inApp}&t=${start}` };
   }
   if (!["open", "play", "queue", "inbox"].includes(first)) {
     return null;

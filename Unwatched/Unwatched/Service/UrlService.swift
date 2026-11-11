@@ -44,7 +44,8 @@ struct UrlService {
         guard let encoded = getWebUrl(video)?.addingPercentEncoding(withAllowedCharacters: queryValue) else {
             return nil
         }
-        return "https://\(AppLink.host)/open?url=\(encoded)"
+        let start = seconds(timestamp).map { "&\(ShareMarkers.startKey)=\($0)" } ?? ""
+        return "https://\(AppLink.host)/open?url=\(encoded)" + start
     }
 
     static func getShortenedUrl(_ youtubeId: String, timestamp: Double? = nil) -> String {
@@ -52,12 +53,13 @@ struct UrlService {
     }
 
     private static func timeQuery(_ timestamp: Double?) -> String {
-        timestamp.map { "?t=\(Int($0))" } ?? ""
+        seconds(timestamp).map { "?t=\($0)" } ?? ""
     }
 
-    /// Names one of several episodes that share a url.
-    static let episodeIdKey = "u"
-    private static let legacyEpisodeIdKey = "unw"
+    private static func seconds(_ timestamp: Double?) -> Int? {
+        timestamp.flatMap { $0.isFinite && $0 >= 0 ? Int($0) : nil }
+    }
+
     private static let episodeIdPrefixLength = 8
 
     static func getShareUrl(_ video: any VideoData, timestamp: Double? = nil) -> String? {
@@ -84,33 +86,16 @@ struct UrlService {
             return nil
         }
         let shortId = youtubeId.trimmingPrefix(PodcastService.episodeIdPrefix).prefix(episodeIdPrefixLength)
-        components.fragment = "\(episodeIdKey)=\(shortId)"
+        components.fragment = "\(ShareMarkers.episodeIdKey)=\(shortId)"
         return components.url
     }
 
     static func getEpisodeIdPrefix(from url: URL) -> String? {
-        guard let fragment = URLComponents(url: url, resolvingAgainstBaseURL: false)?.fragment else {
-            return nil
-        }
-        if let legacyId = value(of: legacyEpisodeIdKey, in: fragment) {
+        guard let markers = ShareMarkers.markers(in: url) else { return nil }
+        if let legacyId = markers[ShareMarkers.legacyEpisodeIdKey] {
             return String(legacyId)
         }
-        return value(of: episodeIdKey, in: fragment).map { PodcastService.episodeIdPrefix + $0 }
-    }
-
-    private static func value(of key: String, in fragment: String) -> Substring? {
-        let prefix = "\(key)="
-        guard fragment.hasPrefix(prefix), fragment.count > prefix.count else { return nil }
-        return fragment.dropFirst(prefix.count)
-    }
-
-    static func removingEpisodeId(from url: URL) -> URL {
-        guard getEpisodeIdPrefix(from: url) != nil,
-              var components = URLComponents(url: url, resolvingAgainstBaseURL: false) else {
-            return url
-        }
-        components.fragment = nil
-        return components.url ?? url
+        return markers[ShareMarkers.episodeIdKey].map { PodcastService.episodeIdPrefix + $0 }
     }
 
     static func getEmailUrl(title: String? = nil, body: String) -> URL {

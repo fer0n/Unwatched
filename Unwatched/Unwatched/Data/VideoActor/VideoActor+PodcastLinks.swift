@@ -20,6 +20,9 @@ extension VideoActor {
         for url in urls {
             do {
                 if let episode = try await podcastEpisode(from: url) {
+                    if let startAt = ShareMarkers.startTime(in: url) {
+                        episode.elapsedSeconds = startAt
+                    }
                     episodes.append(episode)
                     continue
                 }

@@ -59,6 +59,13 @@ final class UrlServiceTests: XCTestCase {
             ("https://u.octabits.net/open?url=https%3A%2F%2Fexample.com%2Fep%23u%3Dab12cd34", "https://example.com/ep#u=ab12cd34"),
             ("https://u.octabits.net/queue?v=jNQXAC9IVRw&next=true", "https://www.youtube.com/watch?v=jNQXAC9IVRw"),
             ("unwatched://open?url=https://example.com/ep#u=ab12cd34", "https://example.com/ep#u=ab12cd34"),
+            ("https://u.octabits.net/open?url=https%3A%2F%2Fexample.com%2Fep%23u%3Dab12cd34&t=754", "https://example.com/ep#u=ab12cd34&t=754"),
+            ("https://u.octabits.net/open?url=https%3A%2F%2Fexample.com%2Fep&t=754", "https://example.com/ep#t=754"),
+            ("unwatched://play?url=https://example.com/ep&t=754", "https://example.com/ep#t=754"),
+            ("https://u.octabits.net/open?url=https%3A%2F%2Fexample.com%2Fep&t=-5", "https://example.com/ep"),
+            ("https://u.octabits.net/open?url=https%3A%2F%2Fexample.com%2Fshow%23ep-5&t=754", "https://example.com/show#ep-5"),
+            ("https://u.octabits.net/p/1092957894/1000799862480?t=90", "https://podcasts.apple.com/podcast/id1092957894?i=1000799862480#t=90"),
+            ("https://u.octabits.net/open?url=https%3A%2F%2Fwww.youtube.com%2Fwatch%3Fv%3DjNQXAC9IVRw&t=90", "https://www.youtube.com/watch?v=jNQXAC9IVRw"),
             ("https://u.octabits.net/v/not-an-id", nil),
             ("https://u.octabits.net/p/abc/123", nil),
             ("https://u.octabits.net/v/abc?url=https://evil.example", nil),
@@ -155,7 +162,7 @@ final class PodcastShareUrlTests: XCTestCase {
 
         let sharedUrl = try XCTUnwrap(URL(string: shared))
         XCTAssertEqual(UrlService.getEpisodeIdPrefix(from: sharedUrl), "pod-8c7d1765")
-        XCTAssertEqual(UrlService.removingEpisodeId(from: sharedUrl), showPage)
+        XCTAssertEqual(ShareMarkers.removing(from: sharedUrl), showPage)
     }
 
     @MainActor
@@ -164,17 +171,55 @@ final class PodcastShareUrlTests: XCTestCase {
         XCTAssertEqual(UrlService.getShareUrl(video), showPage.absoluteString)
     }
 
+    @MainActor
+    func testAppLinkCarriesTimestamp() throws {
+        let video = try insertEpisode("pod-8c7d1765d3f9cae4b1388003", url: showPage)
+        _ = try insertEpisode("pod-1f2e3d4c5b6a798877665544", url: showPage)
+
+        let shared = try XCTUnwrap(UrlService.getAppUrl(video, timestamp: 754.6))
+        XCTAssertEqual(shared, "https://u.octabits.net/open?url=https://www.nytimes.com/the-daily%23u%3D8c7d1765&t=754")
+
+        let resolved = AppLink.resolving(try XCTUnwrap(URL(string: shared)))
+        XCTAssertEqual(ShareMarkers.startTime(in: resolved), 754)
+        XCTAssertEqual(UrlService.getEpisodeIdPrefix(from: resolved), "pod-8c7d1765")
+        XCTAssertEqual(ShareMarkers.removing(from: resolved), showPage)
+        XCTAssertEqual(VideoService.podcastEpisodes(sharedAs: resolved, context: container.mainContext).named?.youtubeId,
+                       video.youtubeId)
+    }
+
+    @MainActor
+    func testUnusableTimestampIsLeftOut() throws {
+        let video = try insertEpisode("pod-aaaabbbbccccddddeeeeffff", url: showPage)
+        for timestamp in [Double.nan, .infinity, -5] {
+            XCTAssertEqual(UrlService.getAppUrl(video, timestamp: timestamp),
+                           "https://u.octabits.net/open?url=https://www.nytimes.com/the-daily")
+        }
+    }
+
+    func testTimestampOnlyMarker() throws {
+        let url = try XCTUnwrap(URL(string: "https://www.nytimes.com/the-daily#t=90"))
+        XCTAssertEqual(ShareMarkers.startTime(in: url), 90)
+        XCTAssertNil(UrlService.getEpisodeIdPrefix(from: url))
+        XCTAssertEqual(ShareMarkers.removing(from: url), showPage)
+    }
+
+    func testForeignFragmentIsNotAMarker() throws {
+        let url = try XCTUnwrap(URL(string: "https://example.com/show#chapter-2&t=90"))
+        XCTAssertNil(ShareMarkers.startTime(in: url))
+        XCTAssertEqual(ShareMarkers.removing(from: url), url)
+    }
+
     func testLegacyMarkerReadsFullId() throws {
         let legacy = try XCTUnwrap(URL(string: "https://www.nytimes.com/the-daily#unw=pod-8c7d1765d3f9cae4b1388003"))
         XCTAssertEqual(UrlService.getEpisodeIdPrefix(from: legacy), "pod-8c7d1765d3f9cae4b1388003")
-        XCTAssertEqual(UrlService.removingEpisodeId(from: legacy), showPage)
+        XCTAssertEqual(ShareMarkers.removing(from: legacy), showPage)
     }
 
     func testUrlWithoutMarkerIsUnchanged() throws {
         let anchored = try XCTUnwrap(URL(string: "https://example.com/show#chapter-2"))
         for url in [showPage, anchored] {
             XCTAssertNil(UrlService.getEpisodeIdPrefix(from: url))
-            XCTAssertEqual(UrlService.removingEpisodeId(from: url), url)
+            XCTAssertEqual(ShareMarkers.removing(from: url), url)
         }
     }
 }

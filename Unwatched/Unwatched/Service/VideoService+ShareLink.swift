@@ -35,7 +35,7 @@ extension VideoService {
     @MainActor
     private static func getPodcastEpisode(sharedAs sharedUrl: URL) -> Video? {
         let match = podcastEpisodes(sharedAs: sharedUrl, context: DataProvider.mainContext)
-        let url = UrlService.removingEpisodeId(from: sharedUrl)
+        let url = ShareMarkers.removing(from: sharedUrl)
         return match.named ?? pickVideo(matching: match.candidates, url: url)
     }
 
@@ -43,7 +43,7 @@ extension VideoService {
         sharedAs sharedUrl: URL,
         context: ModelContext
     ) -> (named: Video?, candidates: [Video]) {
-        let url = UrlService.removingEpisodeId(from: sharedUrl)
+        let url = ShareMarkers.removing(from: sharedUrl)
         let fetch = FetchDescriptor<Video>(predicate: #Predicate { $0.url == url || $0.mediaUrl == url })
         let videos = (try? context.fetch(fetch)) ?? []
         let byMedia = videos.first { $0.mediaUrl == url }

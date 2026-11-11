@@ -59,7 +59,7 @@ extension NavigationManager {
             } catch {
                 Log.sync.error("openVideoDetail: \(error)")
             }
-            UrlService.open(url)
+            UrlService.open(ShareMarkers.removing(from: url))
         }
     }
 

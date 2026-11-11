@@ -29,9 +29,11 @@ public enum AppLink {
         case "p":
             guard path.count == 3, isNumeric(path[1]), isNumeric(path[2]) else { return nil }
             return applePodcastsUrl(show: path[1], episode: path[2], storefront: value("c"))
+                .map { addingStart(value(ShareMarkers.startKey), to: $0) }
         case nil, "open", "play", "queue", "inbox":
             if let link = value("url").flatMap(URL.init(string:)) {
-                return reattachingStrayFragment(components.fragment, to: link)
+                let link = reattachingStrayFragment(components.fragment, to: link)
+                return YoutubeUrlParser.getYoutubeId(from: link) == nil ? addingStart(value(ShareMarkers.startKey), to: link) : link
             }
             return value("v").flatMap { youtubeUrl($0, start: value("t")) }
         default:
@@ -58,6 +60,11 @@ public enum AppLink {
 
     private static func isNumeric(_ value: String) -> Bool {
         !value.isEmpty && value.allSatisfy { $0.isASCII && $0.isNumber }
+    }
+
+    private static func addingStart(_ start: String?, to link: URL) -> URL {
+        guard let seconds = start.flatMap(UInt.init) else { return link }
+        return ShareMarkers.adding(ShareMarkers.startKey, String(seconds), to: link)
     }
 
     private static func reattachingStrayFragment(_ fragment: String?, to link: URL) -> URL {
