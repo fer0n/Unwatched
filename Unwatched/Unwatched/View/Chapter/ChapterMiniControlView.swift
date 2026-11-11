@@ -180,11 +180,14 @@ struct ChapterMiniControlView: View {
 
 struct ChapterMiniControlRemainingText: View {
     var body: some View {
-        ChapterTimeRemaining()
-            .font(.system(size: 12).monospacedDigit())
-            .fontWidth(.condensed)
-            .foregroundStyle(.secondary)
-            .lineLimit(1)
+        ZStack(alignment: .leading) {
+            Text(verbatim: "00m").hidden()
+            ChapterTimeRemaining()
+        }
+        .font(.system(size: 12).monospacedDigit())
+        .fontWidth(.condensed)
+        .foregroundStyle(.secondary)
+        .lineLimit(1)
     }
 }
 
