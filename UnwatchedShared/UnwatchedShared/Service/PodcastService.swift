@@ -59,6 +59,9 @@ public enum PodcastService {
         isPrivateFeed: Bool? = nil
     ) throws -> PodcastFeed {
         let parser = PodcastFeedParser.parse(data, limitEpisodes: limitEpisodes, isPrivateFeed: isPrivateFeed)
+        if parser.episodes.contains(where: isGeneratedDownload) {
+            throw SubscriptionError.notSupported
+        }
         guard var subscription = parser.subscriptionInfo else {
             throw VideoCrawlerError.subscriptionInfoNotFound
         }
@@ -69,6 +72,11 @@ public enum PodcastService {
             showDescription: parser.showDescription,
             isPrivateFeed: parser.isPrivateFeed
         )
+    }
+
+    /// PeerTube's plain feeds link files built on request, which can't be streamed.
+    private static func isGeneratedDownload(_ episode: SendableVideo) -> Bool {
+        episode.mediaUrl?.path().hasPrefix("/download/videos/generate/") == true
     }
 
     // MARK: - Chapters

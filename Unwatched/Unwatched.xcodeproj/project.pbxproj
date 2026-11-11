@@ -1131,6 +1131,7 @@
 		FE100002AA0000000010F207 /* SearchFilterMenu.swift in Sources */ = {isa = PBXBuildFile; fileRef = FE100002AA0000000010F007 /* SearchFilterMenu.swift */; };
 		FE1000FF000000000000C002 /* PodcastPreviewView.swift in Sources */ = {isa = PBXBuildFile; fileRef = FE1000FF000000000000C001 /* PodcastPreviewView.swift */; };
 		FE1000FF000000000000C003 /* PodcastPreviewView.swift in Sources */ = {isa = PBXBuildFile; fileRef = FE1000FF000000000000C001 /* PodcastPreviewView.swift */; };
+		E5E8B0D48BFC7EA1E12860BE /* PeerTubeFeedTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0C8CD449A1C97ECE11B7A47C /* PeerTubeFeedTests.swift */; };
 		FE1000FF000000000000C012 /* PodcastFeedParserTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = FE1000FF000000000000C011 /* PodcastFeedParserTests.swift */; };
 		FE1000FF000000000000C112 /* TranscriptAlignmentTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = FE1000FF000000000000C111 /* TranscriptAlignmentTests.swift */; };
 		FE1000FF000000000000C212 /* Mp3ClockTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = FE1000FF000000000000C211 /* Mp3ClockTests.swift */; };
@@ -1888,6 +1889,7 @@
 		FE100002AA0000000010F006 /* ChannelHeaderView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ChannelHeaderView.swift; sourceTree = "<group>"; };
 		FE100002AA0000000010F007 /* SearchFilterMenu.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SearchFilterMenu.swift; sourceTree = "<group>"; };
 		FE1000FF000000000000C001 /* PodcastPreviewView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PodcastPreviewView.swift; sourceTree = "<group>"; };
+		0C8CD449A1C97ECE11B7A47C /* PeerTubeFeedTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PeerTubeFeedTests.swift; sourceTree = "<group>"; };
 		FE1000FF000000000000C011 /* PodcastFeedParserTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PodcastFeedParserTests.swift; sourceTree = "<group>"; };
 		FE1000FF000000000000C111 /* TranscriptAlignmentTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TranscriptAlignmentTests.swift; sourceTree = "<group>"; };
 		FE1000FF000000000000C211 /* Mp3ClockTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Mp3ClockTests.swift; sourceTree = "<group>"; };
@@ -2193,6 +2195,7 @@
 				7312325F1E1B583FD0972991 /* ChapterAutomationTests.swift */,
 				88AA10072F0000000000A0F7 /* FilteredQueueWriteTests.swift */,
 				88AA10092F0000000000A009 /* SearchMaterializeTests.swift */,
+				0C8CD449A1C97ECE11B7A47C /* PeerTubeFeedTests.swift */,
 				FE1000FF000000000000C011 /* PodcastFeedParserTests.swift */,
 				5D8C9530CD3AAAF94FF91E67 /* PodcastPrivateFeedTests.swift */,
 				FE1000FF000000000000C111 /* TranscriptAlignmentTests.swift */,
@@ -3543,6 +3546,7 @@
 				4079F10962C9A8E5A75115DE /* ChapterAutomationTests.swift in Sources */,
 				88AA10082F0000000000A0F8 /* FilteredQueueWriteTests.swift in Sources */,
 				88AA100A2F0000000000A00A /* SearchMaterializeTests.swift in Sources */,
+				E5E8B0D48BFC7EA1E12860BE /* PeerTubeFeedTests.swift in Sources */,
 				FE1000FF000000000000C012 /* PodcastFeedParserTests.swift in Sources */,
 				5542A21616C2A5562836703A /* PodcastPrivateFeedTests.swift in Sources */,
 				FE1000FF000000000000C112 /* TranscriptAlignmentTests.swift in Sources */,
