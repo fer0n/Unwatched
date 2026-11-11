@@ -8,10 +8,14 @@ import OSLog
 import UnwatchedShared
 
 enum IssueReportService {
+    static func prepareLogs() async -> Data {
+        await collectLogs(state: await currentState())
+    }
+
     static func send(
         message: String,
         contact: String,
-        includeLogs: Bool,
+        logs: Data?,
         attachments: [IssueReportAttachment]
     ) async throws {
         guard let url = URL(string: "\(Credentials.analyticsEndpoint)/report") else {
@@ -26,8 +30,7 @@ enum IssueReportService {
         form.addField("channel", BuildInfo.channel)
         form.addField("os", system)
         form.addField("device", device)
-        if includeLogs {
-            let logs = await collectLogs(state: await currentState())
+        if let logs {
             form.addFile("log", fileName: "Unwatched.log", mimeType: "text/plain", data: logs)
         }
         for attachment in attachments {
@@ -120,6 +123,7 @@ enum IssueReportService {
         do {
             let store = try OSLogStore(scope: .currentProcessIdentifier)
             let entries = try store.getEntries(matching: NSPredicate(format: "subsystem == %@", appSubsystem))
+            if Task.isCancelled { return Data() }
             let lines = withoutInnerTubeFlood(entries.compactMap { $0 as? OSLogEntryLog })
                 .map { entry in
                     let time = entry.date.formatted(date: .omitted, time: .standard)
