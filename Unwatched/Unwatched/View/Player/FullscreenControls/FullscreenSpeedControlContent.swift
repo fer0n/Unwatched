@@ -31,6 +31,7 @@ struct FullscreenSpeedControlContent: View {
     var frameWidth: CGFloat = 30
 
     @State var viewModel = ViewModel()
+    @Environment(PlayerManager.self) var player
 
     var body: some View {
         ScrollView {
@@ -63,7 +64,7 @@ struct FullscreenSpeedControlContent: View {
             viewModel.isUserScrolling = phase == .tracking || phase == .interacting || phase == .decelerating
         }
         .sensoryFeedback(Const.sensoryFeedback, trigger: viewModel.currentPage) { old, _ in
-            old != nil && viewModel.isUserScrolling
+            old != nil && (viewModel.isUserScrolling || viewModel.isTemporarySpeedChange)
         }
         .scrollTargetBehavior(.viewAligned)
         .safeAreaPadding(.vertical, Values.padding)
@@ -93,6 +94,7 @@ struct FullscreenSpeedControlContent: View {
             }
         }
         .onChange(of: value) {
+            viewModel.handleTemporarySpeed(player.temporaryPlaybackSpeed)
             withAnimation {
                 viewModel.setCurrentPage(value)
             }
@@ -150,6 +152,8 @@ extension FullscreenSpeedControlContent {
         var task: Task<Void, Never>?
         var currentPage: Int?
         @ObservationIgnored var isUserScrolling = false
+        @ObservationIgnored var isTemporarySpeedChange = false
+        @ObservationIgnored private var temporarySpeed: Double?
 
         #if os(macOS)
         /// Ends the scrolling state after the last scroll wheel step, in place of the scroll phase
@@ -199,6 +203,11 @@ extension FullscreenSpeedControlContent {
                     isScrolling = isActive
                 }
             }
+        }
+
+        func handleTemporarySpeed(_ speed: Double?) {
+            isTemporarySpeedChange = speed != temporarySpeed
+            temporarySpeed = speed
         }
 
         func handleAppear(_ value: Double) {
