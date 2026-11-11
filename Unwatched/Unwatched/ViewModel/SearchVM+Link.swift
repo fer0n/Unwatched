@@ -22,9 +22,7 @@ extension SearchVM {
                 self = .playlist
             } else if SearchVM.videoUrl(link) != nil {
                 self = .video
-            } else if let url, UrlService.getChannelIdFromUrl(url) != nil
-                        || UrlService.getChannelUserNameFromUrl(url) != nil
-                        || UrlService.isYoutubeFeedUrl(url: url) {
+            } else if let url, YoutubeUrlParser.isChannelUrl(url) {
                 self = .channel
             } else if let url, Self.looksLikePodcast(url) {
                 self = .podcast
@@ -44,10 +42,6 @@ extension SearchVM {
                 || [".xml", ".rss", "/rss", "/rss/"].contains { path.hasSuffix($0) }
                 || url.pathComponents.contains { ["feed", "feeds"].contains($0.lowercased()) }
         }
-    }
-
-    private struct LinkError: LocalizedError {
-        let errorDescription: String?
     }
 
     var activeLink: String? {
@@ -125,16 +119,6 @@ extension SearchVM {
             }
             return .video(VideoDetailRoute(video))
         }
-        let (state, sub) = await SubscriptionService.loadSubscriptionInfo(url)
-        if let id = state.subscriptionId,
-           let existing = DataProvider.mainContext.existingModel(for: id) as Subscription?,
-           let export = existing.toExport {
-            return .subscription(export)
-        }
-        if let sub {
-            return .subscription(sub)
-        }
-        let message = state.error ?? SubscriptionError.noInfoFoundToSubscribeTo.localizedDescription
-        throw LinkError(errorDescription: message)
+        return .subscription(try await SubscriptionService.resolveSubscription(url))
     }
 }

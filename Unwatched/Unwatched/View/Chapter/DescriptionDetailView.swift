@@ -99,7 +99,7 @@ struct DescriptionDetailView: View {
             var copied = parsed.startIndex
 
             for (link, range) in parsed.runs[\.link] {
-                guard let link, UrlService.isYoutubeVideoUrl(url: link) else { continue }
+                guard let link, DescriptionLinkTarget(link) != nil else { continue }
                 plain.append(parsed[copied..<range.upperBound])
                 copied = range.upperBound
                 plain.append(AttributedString(" "))
@@ -126,11 +126,15 @@ struct DescriptionDetailView: View {
         guard url.scheme == YoutubeAction.scheme,
               let urlString = URLComponents(url: url, resolvingAgainstBaseURL: false)?
                 .queryItems?.first(where: { $0.name == "url" })?.value,
-              let youtubeUrl = URL(string: urlString) else {
+              let link = URL(string: urlString),
+              let target = DescriptionLinkTarget(link) else {
             return .systemAction
         }
         // revealMenu has its own haptic
-        navManager.openVideoDetail(for: youtubeUrl)
+        switch target {
+        case .video: navManager.openVideoDetail(for: link)
+        case .subscription: navManager.openSubscriptionDetail(for: link)
+        }
         return .handled
     }
 }

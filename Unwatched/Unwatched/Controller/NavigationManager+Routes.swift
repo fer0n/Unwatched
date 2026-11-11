@@ -43,22 +43,39 @@ extension NavigationManager {
 
     /// Falls back to opening the link
     func openVideoDetail(for url: URL) {
-        Task { @MainActor in
+        openLink(url) {
+            guard let video = try await VideoService.importFirst(url, in: nil) else { return nil }
+            return { self.pushVideoDetail(video) }
+        }
+    }
+
+    func openSubscriptionDetail(for url: URL) {
+        openLink(url) {
+            let sub = try await SubscriptionService.resolveSubscription(url)
+            return { self.pushSubscription(sendableSubscription: sub) }
+        }
+    }
+
+    private func openLink(_ url: URL, resolve: @escaping @MainActor () async throws -> (() -> Void)?) {
+        linkTask?.cancel()
+        linkTask = Task { @MainActor in
             do {
-                if let video = try await VideoService.importFirst(url, in: nil) {
+                if let push = try await resolve() {
+                    try Task.checkCancellation()
                     showBrowser = false
                     // an animated push renders at the pre-rise sheet height
                     var transaction = Transaction()
                     transaction.disablesAnimations = !showMenu || SheetPositionReader.shared.isMinimumSheet
-                    withTransaction(transaction) {
-                        pushVideoDetail(video)
-                    }
+                    withTransaction(transaction, push)
                     revealMenu()
                     return
                 }
+            } catch is CancellationError {
+                return
             } catch {
-                Log.sync.error("openVideoDetail: \(error)")
+                Log.sync.error("openLink: \(error)")
             }
+            guard !Task.isCancelled else { return }
             UrlService.open(ShareMarkers.removing(from: url))
         }
     }

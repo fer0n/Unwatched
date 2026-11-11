@@ -38,7 +38,8 @@ public enum PodcastSearchService {
     /// The show id in an Apple Podcasts show or episode link.
     public static func collectionId(from url: URL) -> String? {
         guard let host = url.host()?.lowercased(),
-              host == "podcasts.apple.com" || host == "itunes.apple.com" else {
+              host == "podcasts.apple.com" || host == "itunes.apple.com",
+              url.pathComponents.contains("podcast") else {
             return nil
         }
         let last = url.lastPathComponent

@@ -64,6 +64,25 @@ struct SubscriptionService {
         await SubscriptionActor().loadSubscriptionInfo(from: url)
     }
 
+    @MainActor
+    static func resolveSubscription(_ url: URL) async throws -> SendableSubscription {
+        let (state, info) = await loadSubscriptionInfo(url)
+        if let id = state.subscriptionId,
+           let existing = DataProvider.mainContext.existingModel(for: id) as Subscription?,
+           let export = existing.toExport {
+            return export
+        }
+        if let info {
+            return info
+        }
+        let message = state.error ?? SubscriptionError.noInfoFoundToSubscribeTo.localizedDescription
+        throw LookupError(errorDescription: message)
+    }
+
+    private struct LookupError: LocalizedError {
+        let errorDescription: String?
+    }
+
     static func addSubscriptionWithoutRSS(_ info: SubscriptionInfo) async throws {
         let repo = SubscriptionActor()
         try await repo.addSubscriptionWithoutRSS(info)

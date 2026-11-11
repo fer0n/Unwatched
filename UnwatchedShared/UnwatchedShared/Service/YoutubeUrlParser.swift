@@ -96,8 +96,13 @@ public enum YoutubeUrlParser {
 
     /// True if the URL points at a channel or user page (not a video/playlist).
     public static func isChannelUrl(_ url: URL) -> Bool {
-        !isContentUrl(url)
+        isYoutubeHost(url) && !isContentUrl(url)
             && (getChannelId(from: url) != nil || getChannelUserName(from: url) != nil || isFeedUrl(url))
+    }
+
+    private static func isYoutubeHost(_ url: URL) -> Bool {
+        let host = url.host()?.lowercased() ?? ""
+        return host == "youtube.com" || host.hasSuffix(".youtube.com")
     }
 
     public static func getStartTime(from url: URL) -> Double? {

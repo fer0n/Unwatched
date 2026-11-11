@@ -50,6 +50,7 @@ import UnwatchedShared
 
     @ObservationIgnored var topListItemId: String?
     @ObservationIgnored private var lastTabTwiceDate: Date?
+    @ObservationIgnored var linkTask: Task<Void, Never>?
     var lastLibrarySubscriptionId: PersistentIdentifier?
 
     /// The slice on screen; what plays next is latched on `PlayerManager` instead.

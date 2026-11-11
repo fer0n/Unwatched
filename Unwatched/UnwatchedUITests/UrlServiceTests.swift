@@ -126,6 +126,38 @@ final class UrlServiceTests: XCTestCase {
         }
     }
 
+    func testDescriptionLinkTargets() {
+        let cases: [(String, DescriptionLinkTarget?)] = [
+            ("https://www.youtube.com/watch?v=jNQXAC9IVRw", .video),
+            ("https://youtu.be/jNQXAC9IVRw", .video),
+            ("https://www.youtube.com/@TomScottGo", .subscription),
+            ("https://m.youtube.com/@TomScottGo/videos", .subscription),
+            ("https://www.youtube.com/channel/UCBa659QWEk1AI4Tg--mrJ2A", .subscription),
+            ("https://www.youtube.com/c/GamertagVR", .subscription),
+            ("https://podcasts.apple.com/de/podcast/lage-der-nation/id1188543221?i=1000690000000", .video),
+            ("https://podcasts.apple.com/us/podcast/the-daily/id1200361736", .subscription),
+            ("https://itunes.apple.com/us/podcast/id1200361736", .subscription),
+            ("https://www.youtube.com/user/JPRPokeTrainer98", .subscription),
+            ("https://podcasts.apple.com/us/channel/the-new-york-times/id6442462766", nil),
+            ("https://twitter.com/@someone", nil),
+            ("https://medium.com/@someone/post", nil),
+            ("https://www.youtube.com/feed/subscriptions", nil),
+            ("https://www.youtube.com/playlist?list=PLBsP89CPrMeO7uztAu6YxSB10cRMpjgiY", nil),
+            ("https://feeds.megaphone.fm/vergecast", nil),
+            ("https://example.com", nil),
+        ]
+        for (link, expected) in cases {
+            XCTAssertEqual(DescriptionLinkTarget(URL(string: link)!), expected, link)
+        }
+    }
+
+    func testDescriptionAddsActionAfterChannelLink() {
+        let segments = DescriptionDetailView.segments(
+            "[Tom](https://www.youtube.com/@TomScottGo) and [X](https://x.com/@tom)"
+        )
+        let actions = segments.filter { if case .action = $0 { true } else { false } }
+        XCTAssertEqual(actions.count, 1)
+    }
 }
 
 final class PodcastShareUrlTests: XCTestCase {
