@@ -279,6 +279,12 @@ import UnwatchedShared
         let currentVideoId = video?.youtubeId
 
         func handleTopVideo(_ context: ModelContext) {
+            // A video played from outside the latched tag (search, library) tops the whole queue but not the
+            // slice; a sync finishing on pause would otherwise swap it for the slice's top.
+            if filter == nil, !playIfCurrent, playbackTag != .all, let currentVideoId,
+               VideoService.getTopVideoInQueue(context, .all)?.youtubeId == currentVideoId {
+                return
+            }
             let topVideo = filter.map { VideoService.getTopVideoInQueue(context, $0) } ?? topVideoInQueue(context)
             if let topVideo {
                 if topVideo.youtubeId != currentVideoId || playIfCurrent {

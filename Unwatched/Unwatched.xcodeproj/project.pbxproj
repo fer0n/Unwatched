@@ -675,6 +675,7 @@
 		88AA10062F0000000000B006 /* CloudKeyValueStoreTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 88AA10052F0000000000B005 /* CloudKeyValueStoreTests.swift */; };
 		88AA10082F0000000000A008 /* QueueFilterTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 88AA10072F0000000000A007 /* QueueFilterTests.swift */; };
 		88AA10082F0000000000A0F8 /* FilteredQueueWriteTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 88AA10072F0000000000A0F7 /* FilteredQueueWriteTests.swift */; };
+		88AA1F022F0000000000B002 /* LatchedTagTopVideoTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 88AA1F012F0000000000B001 /* LatchedTagTopVideoTests.swift */; };
 		88AA100A2F0000000000A00A /* SearchMaterializeTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 88AA10092F0000000000A009 /* SearchMaterializeTests.swift */; };
 		88AA10122F0000000000A012 /* QueueTagMenu.swift in Sources */ = {isa = PBXBuildFile; fileRef = 88AA10112F0000000000A011 /* QueueTagMenu.swift */; };
 		88AA10132F0000000000A013 /* QueueTagMenu.swift in Sources */ = {isa = PBXBuildFile; fileRef = 88AA10112F0000000000A011 /* QueueTagMenu.swift */; };
@@ -1625,6 +1626,7 @@
 		88AA10052F0000000000B005 /* CloudKeyValueStoreTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CloudKeyValueStoreTests.swift; sourceTree = "<group>"; };
 		88AA10072F0000000000A007 /* QueueFilterTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = QueueFilterTests.swift; sourceTree = "<group>"; };
 		88AA10072F0000000000A0F7 /* FilteredQueueWriteTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FilteredQueueWriteTests.swift; sourceTree = "<group>"; };
+		88AA1F012F0000000000B001 /* LatchedTagTopVideoTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LatchedTagTopVideoTests.swift; sourceTree = "<group>"; };
 		88AA10092F0000000000A009 /* SearchMaterializeTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SearchMaterializeTests.swift; sourceTree = "<group>"; };
 		88AA10112F0000000000A011 /* QueueTagMenu.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = QueueTagMenu.swift; sourceTree = "<group>"; };
 		88AA10212F0000000000A021 /* TagEntity.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TagEntity.swift; sourceTree = "<group>"; };
@@ -2194,6 +2196,7 @@
 				88AA10072F0000000000A007 /* QueueFilterTests.swift */,
 				7312325F1E1B583FD0972991 /* ChapterAutomationTests.swift */,
 				88AA10072F0000000000A0F7 /* FilteredQueueWriteTests.swift */,
+				88AA1F012F0000000000B001 /* LatchedTagTopVideoTests.swift */,
 				88AA10092F0000000000A009 /* SearchMaterializeTests.swift */,
 				0C8CD449A1C97ECE11B7A47C /* PeerTubeFeedTests.swift */,
 				FE1000FF000000000000C011 /* PodcastFeedParserTests.swift */,
@@ -3545,6 +3548,7 @@
 				88AA10082F0000000000A008 /* QueueFilterTests.swift in Sources */,
 				4079F10962C9A8E5A75115DE /* ChapterAutomationTests.swift in Sources */,
 				88AA10082F0000000000A0F8 /* FilteredQueueWriteTests.swift in Sources */,
+				88AA1F022F0000000000B002 /* LatchedTagTopVideoTests.swift in Sources */,
 				88AA100A2F0000000000A00A /* SearchMaterializeTests.swift in Sources */,
 				E5E8B0D48BFC7EA1E12860BE /* PeerTubeFeedTests.swift in Sources */,
 				FE1000FF000000000000C012 /* PodcastFeedParserTests.swift in Sources */,
