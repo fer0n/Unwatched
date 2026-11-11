@@ -40,6 +40,9 @@ struct YtBrowserWebView: PlatformViewRepresentable {
             webViewConfig.allowsPictureInPictureMediaPlayback = true
             webViewConfig.allowsInlineMediaPlayback = true
             #endif
+            #if os(iOS)
+            WebTextEditing.install(in: webViewConfig)
+            #endif
 
             webView = WKWebView(frame: .zero, configuration: webViewConfig)
             webView.allowsBackForwardNavigationGestures = true

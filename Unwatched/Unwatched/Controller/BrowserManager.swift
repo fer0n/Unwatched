@@ -62,6 +62,9 @@ import UnwatchedShared
     @MainActor
     func webViewDetached() {
         attachCount = max(0, attachCount - 1)
+        #if os(iOS)
+        if attachCount == 0 { WebTextEditing.endEditing() }
+        #endif
     }
 
     /// Delayed so jumping straight back into the browser keeps the loaded page. A pending release is

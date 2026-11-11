@@ -23,9 +23,11 @@ private struct PriorityKeyCommands: View {
     @Environment(PlayerManager.self) var player
     @Environment(NavigationManager.self) var navManager
     @State private var isEditingText = false
+    @State private var isEditingWebText = false
 
     var body: some View {
-        KeyCommandInstaller(isActive: player.video != nil && !navManager.showBrowser && !isEditingText)
+        let isEditing = isEditingText || isEditingWebText
+        KeyCommandInstaller(isActive: player.video != nil && !navManager.showBrowser && !isEditing)
             .frame(width: 0, height: 0)
             .accessibilityHidden(true)
             .onReceive(Self.editingChanges) { _ in
@@ -35,6 +37,7 @@ private struct PriorityKeyCommands: View {
                     isEditingText = UIResponder.isEditingText
                 }
             }
+            .onReceive(WebTextEditing.isEditing) { isEditingWebText = $0 }
     }
 
     private static let editingChanges = Publishers.MergeMany([

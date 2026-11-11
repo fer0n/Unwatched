@@ -1004,6 +1004,8 @@
 		AAAE745A96FB143D33C48E35 /* PinchPanGestureRecognizer.swift in Sources */ = {isa = PBXBuildFile; fileRef = 90718CF9780D2F36404128E9 /* PinchPanGestureRecognizer.swift */; };
 		AB1CDE012ED0000000000002 /* PriorityKeyCommands.swift in Sources */ = {isa = PBXBuildFile; fileRef = AB1CDE012ED0000000000001 /* PriorityKeyCommands.swift */; };
 		AB1CDE012ED0000000000003 /* PriorityKeyCommands.swift in Sources */ = {isa = PBXBuildFile; fileRef = AB1CDE012ED0000000000001 /* PriorityKeyCommands.swift */; };
+		F7E5D3C1A9B8000000000002 /* WebTextEditing.swift in Sources */ = {isa = PBXBuildFile; fileRef = F7E5D3C1A9B8000000000001 /* WebTextEditing.swift */; };
+		F7E5D3C1A9B8000000000003 /* WebTextEditing.swift in Sources */ = {isa = PBXBuildFile; fileRef = F7E5D3C1A9B8000000000001 /* WebTextEditing.swift */; };
 		AB1CDE012ED0000000000012 /* KeyboardShortcut+Help.swift in Sources */ = {isa = PBXBuildFile; fileRef = AB1CDE012ED0000000000011 /* KeyboardShortcut+Help.swift */; };
 		AB1CDE012ED0000000000013 /* KeyboardShortcut+Help.swift in Sources */ = {isa = PBXBuildFile; fileRef = AB1CDE012ED0000000000011 /* KeyboardShortcut+Help.swift */; };
 		B08193B720FD48BE7B73E45D /* CollapsingSectionLayout.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9188F162CA1319558F37116B /* CollapsingSectionLayout.swift */; };
@@ -1826,6 +1828,7 @@
 		AA11C0DE5E1F00D1C0FFEE09 /* Tag+Defaults.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "Tag+Defaults.swift"; sourceTree = "<group>"; };
 		AA11CD012E00000000000002 /* ChapterMaterializeTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ChapterMaterializeTests.swift; sourceTree = "<group>"; };
 		AB1CDE012ED0000000000001 /* PriorityKeyCommands.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PriorityKeyCommands.swift; sourceTree = "<group>"; };
+		F7E5D3C1A9B8000000000001 /* WebTextEditing.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = WebTextEditing.swift; sourceTree = "<group>"; };
 		AB1CDE012ED0000000000011 /* KeyboardShortcut+Help.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "KeyboardShortcut+Help.swift"; sourceTree = "<group>"; };
 		BE66417B2F2F4BB8AA39AE78 /* AVPlayerStreamHelpers.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AVPlayerStreamHelpers.swift; sourceTree = "<group>"; };
 		BED6CD7573C958DFD3E749A7 /* PlayerTypeButton.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PlayerTypeButton.swift; sourceTree = "<group>"; };
@@ -2993,6 +2996,7 @@
 				88F1EE522B5D3211009866A0 /* BrowserView.swift */,
 				88F3868D2BBE8B07009F9811 /* DropUrlArea.swift */,
 				88F1EE4D2B5C6CBC009866A0 /* YtBrowserWebView.swift */,
+				F7E5D3C1A9B8000000000001 /* WebTextEditing.swift */,
 				CD0FBE7A0000000000000004 /* YoutubeLoginWebView.swift */,
 				88EE64B92E64933F00A3DD36 /* YtBrowserWebViewCoordinator.swift */,
 				88EE64BD2E64A1B700A3DD36 /* ContextMenuAction.swift */,
@@ -3739,6 +3743,7 @@
 				88AA10132F0000000000A013 /* QueueTagMenu.swift in Sources */,
 				881EEF4D2D0308240028EAF8 /* PlayerCommands.swift in Sources */,
 				AB1CDE012ED0000000000002 /* PriorityKeyCommands.swift in Sources */,
+				F7E5D3C1A9B8000000000002 /* WebTextEditing.swift in Sources */,
 				8816A2FD2CCD5125001FE63E /* PageControl.swift in Sources */,
 				889AF8CE2C50ECA9001CEDE6 /* AsyncSharableUrl.swift in Sources */,
 				889AF8CF2C50ECA9001CEDE6 /* SubscriptionSorting.swift in Sources */,
@@ -4512,6 +4517,7 @@
 				88F347212CF6003D00A2EEB0 /* SheetOverlayMinimumSize.swift in Sources */,
 				881EEF4E2D0308240028EAF8 /* PlayerCommands.swift in Sources */,
 				AB1CDE012ED0000000000003 /* PriorityKeyCommands.swift in Sources */,
+				F7E5D3C1A9B8000000000003 /* WebTextEditing.swift in Sources */,
 				8809D8942DE8E54500B28165 /* HiddenEntriesInfo.swift in Sources */,
 				88C4F6A52F24C82E005893D1 /* PodcastDownloadSettingsView.swift in Sources */,
 				88339AAB2E5BA6EA00B295B7 /* PremiumOfferView.swift in Sources */,
