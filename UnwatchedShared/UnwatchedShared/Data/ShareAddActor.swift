@@ -116,7 +116,11 @@ public actor ShareAddActor {
             } catch VideoError.faultyYoutubeVideoId(let videoId) {
                 throw VideoError.faultyYoutubeVideoId(videoId)
             } catch {
-                videoData = SendableVideo(youtubeId: youtubeId, title: "", url: nil)
+                videoData = SendableVideo(
+                    youtubeId: youtubeId,
+                    title: "",
+                    url: YoutubeUrlParser.watchUrl(youtubeId: youtubeId)
+                )
             }
         }
 

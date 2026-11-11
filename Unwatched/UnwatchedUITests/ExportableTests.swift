@@ -493,6 +493,29 @@ class ExportableTests: XCTestCase {
             XCTFail("Types do not match or are not supported: \(String(describing: lhs)) and \(String(describing: rhs))", file: file, line: line)
         }
     }
+
+    /// #241: a video with `"url": null` made the whole backup undecodable.
+    func testBackupWithBadVideoRowsDecodes() throws {
+        let json = """
+        {"subscriptions": [], "queueEntries": [], "inboxEntries": [], "watchEntries": [], "videos": [
+            {"youtubeId": "nullUrl0001", "title": "Null", "url": null, "isNew": false},
+            {"youtubeId": "noUrlKey001", "title": "Missing", "isNew": false},
+            {"youtubeId": "pod-abc", "title": "Episode", "url": null,
+             "mediaUrl": "https://example.com/ep.mp3", "isNew": false},
+            {"youtubeId": "brokenRow01", "title": null, "isNew": false}
+        ]}
+        """
+        let backup = try UserDataService.decodeBackup(Data(json.utf8))
+        XCTAssertEqual(backup.videos.count, 3, "an unreadable row is skipped, the rest still restores")
+        let urls = Dictionary(uniqueKeysWithValues: backup.videos.map { ($0.youtubeId, $0.url) })
+        XCTAssertEqual(urls["nullUrl0001"]??.absoluteString, "https://www.youtube.com/watch?v=nullUrl0001")
+        XCTAssertEqual(urls["noUrlKey001"]??.absoluteString, "https://www.youtube.com/watch?v=noUrlKey001")
+        XCTAssertNil(urls["pod-abc"] ?? nil, "a podcast episode's url can't be derived from its id")
+
+        let episode = try XCTUnwrap(backup.videos.first { $0.youtubeId == "pod-abc" })
+        let encoded = try XCTUnwrap(String(data: JSONEncoder().encode(episode), encoding: .utf8))
+        XCTAssertFalse(encoded.contains("\"url\""), "a nil url is left out rather than written as null")
+    }
 }
 
 // swiftlint:enable all

@@ -20,6 +20,8 @@ struct UserDataSettingsView: View {
     @State var isDeletingEverythingTask: Task<(), Never>?
     @State var hasicloudDirectory = true
     @State var isExporting = false
+    @State var showRestoreFailed = false
+    @State var restoreError: String?
 
     var body: some View {
         let backupType = Const.backupType ?? .json
@@ -177,6 +179,19 @@ struct UserDataSettingsView: View {
                 Log.data.error("\(error.localizedDescription)")
             }
         }
+        .alert("fileReadFailed", isPresented: $showRestoreFailed) {
+            Button("ok") { }
+        } message: {
+            Text("restoreBackupFailedMessage")
+        }
+        .alert("errorOccured", isPresented: .init(
+            get: { restoreError != nil },
+            set: { if !$0 { restoreError = nil } }
+        )) {
+            Button("ok") { }
+        } message: {
+            Text(verbatim: restoreError ?? "")
+        }
         .task(id: isDeletingEverythingTask) {
             guard isDeletingEverythingTask != nil else { return }
             await isDeletingEverythingTask?.value
@@ -248,15 +263,18 @@ struct UserDataSettingsView: View {
 
     func restoreBackup(_ file: URL) {
         Signal.log("Backup.Restore")
-        let task = deleteEverything()
-        doWithFileData(file, after: task) { data in
-            UserDataService.importBackup(data)
+        Task {
+            // Reads the whole backup before deleting anything: one that can't be read leaves the data as is
+            guard let backup = readBackup(file) else { return }
+            await deleteEverything().value
+            restore(backup)
         }
     }
 
     func restoreSettingsFromBackup(_ file: URL) {
-        doWithFileData(file) { data in
-            UserDataService.importBackup(data, settingsOnly: true)
+        Task {
+            guard let backup = readBackup(file) else { return }
+            restore(backup, settingsOnly: true)
         }
     }
 
@@ -284,8 +302,8 @@ struct UserDataSettingsView: View {
         }
     }
 
-    func deleteEverything() -> Task<(), Never>? {
-        if isDeletingEverythingTask != nil { return nil }
+    func deleteEverything() -> Task<(), Never> {
+        if let isDeletingEverythingTask { return isDeletingEverythingTask }
         withAnimation {
             player.clearVideo(modelContext)
             player.video = nil
@@ -297,25 +315,35 @@ struct UserDataSettingsView: View {
         return task
     }
 
-    func doWithFileData(_ filePath: URL,
-                        after: Task<(), Never>? = nil,
-                        action: @escaping (Data) -> Void) {
-        Log.data.info("importFile: \(filePath)")
-        let isSecureAccess = filePath.startAccessingSecurityScopedResource()
-
-        Task {
-            await after?.value
-            Log.data.info("after task done")
-            do {
-                let data = try Data(contentsOf: filePath)
-                Log.data.info("data is there")
-                action(data)
-            } catch {
-                Log.data.error("error when importing: \(error)")
-            }
+    func readBackup(_ file: URL) -> UnwatchedBackup? {
+        Log.data.info("importFile: \(file)")
+        let isSecureAccess = file.startAccessingSecurityScopedResource()
+        defer {
             if isSecureAccess {
-                filePath.stopAccessingSecurityScopedResource()
+                file.stopAccessingSecurityScopedResource()
             }
+        }
+        do {
+            let backup = try UserDataService.decodeBackup(Data(contentsOf: file))
+            if backup.isEmpty {
+                throw UserDataServiceError.noDataToBackupFound
+            }
+            return backup
+        } catch {
+            Log.data.error("error reading backup: \(error)")
+            Signal.error("backupRestoreFailed")
+            showRestoreFailed = true
+            return nil
+        }
+    }
+
+    func restore(_ backup: UnwatchedBackup, settingsOnly: Bool = false) {
+        do {
+            try UserDataService.restore(backup, settingsOnly: settingsOnly)
+        } catch {
+            Log.data.error("error restoring backup: \(error)")
+            Signal.error("backupRestoreFailed")
+            restoreError = error.localizedDescription
         }
     }
 }

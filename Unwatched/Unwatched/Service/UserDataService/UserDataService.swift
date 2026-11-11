@@ -173,23 +173,6 @@ struct UserDataService {
         try context.save()
     }
 
-    // loads user data from .unwatchedbackup files
-    static func importBackup(_ data: Data, settingsOnly: Bool = false) {
-        Log.data.info("importBackup, userdataservice")
-        let decoder = JSONDecoder()
-
-        do {
-            let backup = try decoder.decode(UnwatchedBackup.self, from: decompress(data))
-            restoreSettings(backup.settings)
-            if !settingsOnly {
-                try restoreVideoData(from: backup)
-            }
-        } catch {
-            Log.data.error("error decoding: \(error)")
-            Signal.error("backupRestoreFailed")
-        }
-    }
-
     static private func insertModelsFor<T: ModelConvertable>(
         _ entries: [T],
         videoIdDict: [Int: Video],
@@ -418,6 +401,29 @@ struct UserDataService {
     }
 }
 
+extension UserDataService {
+    static func decodeBackup(_ data: Data) throws -> UnwatchedBackup {
+        try JSONDecoder().decode(UnwatchedBackup.self, from: decompress(data))
+    }
+
+    static func restore(_ backup: UnwatchedBackup, settingsOnly: Bool = false) throws {
+        restoreSettings(backup.settings)
+        if !settingsOnly {
+            try restoreVideoData(from: backup)
+        }
+    }
+
+    static func importBackup(_ data: Data, settingsOnly: Bool = false) {
+        Log.data.info("importBackup, userdataservice")
+        do {
+            try restore(decodeBackup(data), settingsOnly: settingsOnly)
+        } catch {
+            Log.data.error("error decoding: \(error)")
+            Signal.error("backupRestoreFailed")
+        }
+    }
+}
+
 struct UnwatchedBackup: Codable {
     var settings: [String: AnyCodable]? = [:]
     var subscriptions   = [SendableSubscription]()
@@ -436,5 +442,63 @@ struct UnwatchedBackup: Codable {
             && inboxEntries.isEmpty
             && subscriptions.isEmpty
             && (settings?.isEmpty ?? true)
+    }
+}
+
+extension UnwatchedBackup {
+    enum CodingKeys: String, CodingKey {
+        case settings, subscriptions, tags, videos, queueEntries, inboxEntries, channelStatistics, watchEntries
+    }
+
+    /// One unreadable row is skipped so it can't make the whole backup unrestorable.
+    init(from decoder: Decoder) throws {
+        let container = try decoder.container(keyedBy: CodingKeys.self)
+        settings = try container.decodeIfPresent([String: Lossy<AnyCodable>].self, forKey: .settings)?
+            .compactMapValues { $0.value }
+        subscriptions = try Self.lossy(container, .subscriptions)
+        tags = try Self.lossyIfPresent(container, .tags)
+        videos = try Self.lossy(container, .videos)
+        queueEntries = try Self.lossy(container, .queueEntries)
+        inboxEntries = try Self.lossy(container, .inboxEntries)
+        channelStatistics = try Self.lossyIfPresent(container, .channelStatistics)
+        watchEntries = try Self.lossy(container, .watchEntries)
+    }
+
+    private static func lossy<T: Decodable>(
+        _ container: KeyedDecodingContainer<CodingKeys>,
+        _ key: CodingKeys
+    ) throws -> [T] {
+        try readable(container.decode([Lossy<T>].self, forKey: key), key)
+    }
+
+    private static func lossyIfPresent<T: Decodable>(
+        _ container: KeyedDecodingContainer<CodingKeys>,
+        _ key: CodingKeys
+    ) throws -> [T]? {
+        try container.decodeIfPresent([Lossy<T>].self, forKey: key).map { readable($0, key) }
+    }
+
+    private static func readable<T>(_ rows: [Lossy<T>], _ key: CodingKeys) -> [T] {
+        for (index, row) in rows.enumerated() {
+            if let error = row.error {
+                Log.data.error("backup: skipped unreadable \(key.stringValue)[\(index)]: \(error)")
+            }
+        }
+        return rows.compactMap(\.value)
+    }
+}
+
+private struct Lossy<T: Decodable>: Decodable {
+    let value: T?
+    let error: Error?
+
+    init(from decoder: Decoder) throws {
+        do {
+            value = try T(from: decoder)
+            error = nil
+        } catch {
+            value = nil
+            self.error = error
+        }
     }
 }

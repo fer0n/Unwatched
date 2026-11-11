@@ -21343,6 +21343,40 @@
         }
       }
     },
+    "restoreBackupFailedMessage" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "The backup file is damaged or not supported. Your current data wasn't changed."
+          }
+        },
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Die Backup-Datei ist beschädigt oder wird nicht unterstützt. Deine aktuellen Daten wurden nicht verändert."
+          }
+        },
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "El archivo de copia de seguridad está dañado o no es compatible. Tus datos actuales no se han modificado."
+          }
+        },
+        "fr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Le fichier de sauvegarde est endommagé ou n'est pas pris en charge. Vos données actuelles n'ont pas été modifiées."
+          }
+        },
+        "pl" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Plik kopii zapasowej jest uszkodzony lub nieobsługiwany. Twoje bieżące dane nie zostały zmienione."
+          }
+        }
+      }
+    },
     "restoreChapters" : {
       "localizations" : {
         "de" : {

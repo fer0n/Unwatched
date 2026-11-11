@@ -159,7 +159,7 @@ public struct SendableVideo: VideoData, Sendable, Codable, Hashable, Equatable {
         videoId = try container.decodeIfPresent(Int.self, forKey: .persistendId)
         youtubeId = try container.decode(String.self, forKey: .youtubeId)
         title = try container.decode(String.self, forKey: .title)
-        url = try container.decode(URL.self, forKey: .url)
+        url = try container.decodeIfPresent(URL.self, forKey: .url)
         thumbnailUrl = try container.decodeIfPresent(URL.self, forKey: .thumbnailUrl)
         youtubeChannelId = try container.decodeIfPresent(String.self, forKey: .youtubeChannelId)
         feedTitle = try container.decodeIfPresent(String.self, forKey: .feedTitle)
@@ -174,6 +174,9 @@ public struct SendableVideo: VideoData, Sendable, Codable, Hashable, Equatable {
         videoDescription = try container.decodeIfPresent(String.self, forKey: .videoDescription)
         bookmarkedDate = try container.decodeIfPresent(Date.self, forKey: .bookmarkedDate)
         mediaUrl = try container.decodeIfPresent(URL.self, forKey: .mediaUrl)
+        if url == nil && mediaUrl == nil {
+            url = YoutubeUrlParser.watchUrl(youtubeId: youtubeId)
+        }
         isAudioOnly = try container.decodeIfPresent(Bool.self, forKey: .isAudioOnly)
         chaptersUrl = try container.decodeIfPresent(URL.self, forKey: .chaptersUrl)
         createdDate = try container.decodeIfPresent(Date.self, forKey: .createdDate)
@@ -186,7 +189,7 @@ public struct SendableVideo: VideoData, Sendable, Codable, Hashable, Equatable {
         try container.encodeIfPresent(persistentId?.hashValue, forKey: .persistendId)
         try container.encode(youtubeId, forKey: .youtubeId)
         try container.encode(title, forKey: .title)
-        try container.encode(url, forKey: .url)
+        try container.encodeIfPresent(url, forKey: .url)
         try container.encodeIfPresent(thumbnailUrl, forKey: .thumbnailUrl)
         try container.encodeIfPresent(youtubeChannelId, forKey: .youtubeChannelId)
         try container.encodeIfPresent(feedTitle, forKey: .feedTitle)
