@@ -67,6 +67,13 @@ public final class Tag: CustomStringConvertible, Exportable {
     /// The speed this tag's videos play at; `nil` follows the global setting.
     public var playbackSpeed: Double?
 
+    /// Raw `PlayerTypeSetting`; `nil` follows the global setting.
+    public var _playerType: String?
+    public var playerType: PlayerTypeSetting? {
+        get { _playerType.flatMap(PlayerTypeSetting.init(rawValue:)) }
+        set { _playerType = newValue?.rawValue }
+    }
+
     /// Raw so a value the app doesn't know reads as `include` instead of failing the store.
     public var _mode: Int? = TagMode.include.rawValue
     public var mode: TagMode {
@@ -91,7 +98,8 @@ public final class Tag: CustomStringConvertible, Exportable {
         continuousPlay: Bool? = nil,
         suggestVideos: Bool? = nil,
         seekSeconds: Double? = nil,
-        playbackSpeed: Double? = nil
+        playbackSpeed: Double? = nil,
+        playerType: PlayerTypeSetting? = nil
     ) {
         self.name = name
         self.order = order
@@ -104,6 +112,7 @@ public final class Tag: CustomStringConvertible, Exportable {
         self.suggestVideos = suggestVideos
         self.seekSeconds = seekSeconds
         self.playbackSpeed = playbackSpeed
+        self._playerType = playerType?.rawValue
     }
 
     /// The tags a channel or video can be added to.
@@ -154,6 +163,11 @@ public final class Tag: CustomStringConvertible, Exportable {
     /// The tag whose playback speed a video follows.
     public static func playbackSpeedTag(for video: Video) -> Tag? {
         decidingTag(for: video, \.playbackSpeed)
+    }
+
+    /// The tag whose player type a video follows.
+    public static func playerTypeTag(for video: Video) -> Tag? {
+        decidingTag(for: video, \.playerType)
     }
 
     /// The tag the player's tag speed lock writes to: the one whose speed is in effect, otherwise the one that would
@@ -241,7 +255,8 @@ public final class Tag: CustomStringConvertible, Exportable {
             continuousPlay: continuousPlay,
             suggestVideos: suggestVideos,
             seekSeconds: seekSeconds,
-            playbackSpeed: playbackSpeed
+            playbackSpeed: playbackSpeed,
+            playerType: _playerType
         )
     }
 }

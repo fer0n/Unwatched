@@ -202,7 +202,9 @@ import UnwatchedShared
         applyRemotePosition(seek: false)
         signalMediaType()
         #if os(iOS)
-        // after the reset, whose `revertNativeFallback` would undo it
+        // after the reset, whose `revertNativeFallback` would undo them; the tag's pick first, so a background
+        // fallback stands in for it
+        PlayerSwitchManager.shared.applyTagPlayerType(for: video)
         switchToNativeForBackgroundPlayback(videoSource)
         #endif
         // before the cue: it settles which player is up, and so which URL variant to load.

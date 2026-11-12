@@ -267,6 +267,17 @@ extension TagEditView {
                 } label: {
                     Text("continuousPlay")
                 }
+
+                #if os(iOS)
+                Picker(selection: $tag.playerType) {
+                    Text("useDefault").tag(PlayerTypeSetting?.none)
+                    ForEach(PlayerTypeSetting.allCases, id: \.self) { type in
+                        Text(type.description).tag(PlayerTypeSetting?.some(type))
+                    }
+                } label: {
+                    Text("playerType")
+                }
+                #endif
             }
 
             MySection {

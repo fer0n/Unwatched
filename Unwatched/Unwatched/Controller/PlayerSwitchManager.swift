@@ -4,6 +4,7 @@
 //
 
 import SwiftUI
+import SwiftData
 import OSLog
 import UnwatchedShared
 
@@ -29,6 +30,8 @@ final class PlayerSwitchManager {
     private(set) var isTakingOver = false
 
     @ObservationIgnored private var warmupTask: Task<Void, Never>?
+    /// The tag whose player type was last applied, so a manual switch sticks for the rest of that tag's videos.
+    @ObservationIgnored private var playerTypeTagId: PersistentIdentifier?
     @ObservationIgnored private var takeOverTask: Task<Void, Never>?
 
     /// What's on screen: a podcast episode has no YouTube page to embed and always plays natively.
@@ -105,6 +108,25 @@ final class PlayerSwitchManager {
             }
             self?.isTakingOver = false
         }
+    }
+
+    /// Like `applyTagContinuousPlay`; run before `handleVideoChanged`.
+    func applyTagPlayerType(for video: Video?) {
+        guard let video, !video.isPodcast else { return }
+        guard let tag = Tag.playerTypeTag(for: video), let type = tag.playerType else {
+            playerTypeTagId = nil
+            return
+        }
+        // a stand-in for a failed embed or for background playback holds until it reverts
+        guard tag.persistentModelID != playerTypeTagId, !PlayerManager.shared.nativeFallbackActive else { return }
+        playerTypeTagId = tag.persistentModelID
+        guard type != PlayerTypeSetting.stored else { return }
+        Log.player.info("playerSwitch: tag picks \(type.rawValue)")
+        if PlayerTypeSetting.stored != .native {
+            UserDefaults.standard.set(PlayerTypeSetting.stored.rawValue, forKey: Const.previousPlayerType)
+        }
+        UserDefaults.standard.set(type.rawValue, forKey: Const.playerType)
+        handleSettingChanged()
     }
 
     /// A new video reloads either player anyway: nothing left to warm up for or hand over.

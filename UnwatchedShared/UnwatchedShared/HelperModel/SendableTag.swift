@@ -36,6 +36,9 @@ public struct SendableTag: Sendable, Codable, Hashable {
     /// `nil` means the tag has no opinion, see `Tag.playbackSpeed`.
     public var playbackSpeed: Double?
 
+    /// Raw so an unknown player type reads as no opinion instead of failing the decode; see `Tag.playerType`.
+    public var playerType: String?
+
     public init(
         name: String,
         order: Int = Int.max,
@@ -49,7 +52,8 @@ public struct SendableTag: Sendable, Codable, Hashable {
         continuousPlay: Bool? = nil,
         suggestVideos: Bool? = nil,
         seekSeconds: Double? = nil,
-        playbackSpeed: Double? = nil
+        playbackSpeed: Double? = nil,
+        playerType: String? = nil
     ) {
         self.name = name
         self.order = order
@@ -64,6 +68,7 @@ public struct SendableTag: Sendable, Codable, Hashable {
         self.suggestVideos = suggestVideos
         self.seekSeconds = seekSeconds
         self.playbackSpeed = playbackSpeed
+        self.playerType = playerType
     }
 
     /// Membership is re-linked by `UserDataService`, once the rows it names exist.
@@ -79,7 +84,8 @@ public struct SendableTag: Sendable, Codable, Hashable {
             continuousPlay: continuousPlay,
             suggestVideos: suggestVideos,
             seekSeconds: seekSeconds,
-            playbackSpeed: playbackSpeed
+            playbackSpeed: playbackSpeed,
+            playerType: playerType.flatMap(PlayerTypeSetting.init(rawValue:))
         )
     }
 }
