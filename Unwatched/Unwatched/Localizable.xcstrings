@@ -871,7 +871,7 @@
         "es" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Siempre use este botón para añadir un canal a esta Aplicación. El botón \"suscribirse\" de YouTube solo funciona para el sitio web/Aplicación de YouTube.RetryClaude can make mistakes. Please double-check responses."
+            "value" : "Siempre use este botón para añadir un canal a esta Aplicación. El botón \"suscribirse\" de YouTube solo funciona para el sitio web/Aplicación de YouTube."
           }
         },
         "fr" : {
@@ -7833,31 +7833,31 @@
         "de" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "YouTube-RSS-Feeds enthalten keine Video-Dauern. Sobald das Video im Player geladen ist, wird die Dauer angezeigt.\n\nBei Videos mit Kapiteln wird die Startzeit des letzten Kapitels als ungefähre Dauer verwendet und als minimale \"+\"-Zeit angezeigt.\n\nMit Unwatched Premium zeigen neue Videos automatisch ihre volle Dauer an."
+            "value" : "YouTube-RSS-Feeds enthalten keine Video-Dauern. Sobald das Video im Player geladen ist, wird die Dauer angezeigt.\n\nBei Videos mit Kapiteln wird die Startzeit des letzten Kapitels als ungefähre Dauer verwendet und als minimale \"+\"-Zeit angezeigt.\n\nMit Unwatched Premium zeigen neue Videos automatisch ihre volle Dauer an.\n\nPodcast-Folgen verwenden die Dauer aus ihrem Feed oder, falls der Feed keine enthält, aus der heruntergeladenen Folge."
           }
         },
         "en" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "YouTube RSS feeds don't include video durations. Once the video loads in the player, the duration will appear.\n\nFor videos with chapters, the start time of the last chapter is used as an approximate duration, shown as the minimum \"+\" time.\n\nWith Unwatched Premium, new videos automatically display their full duration."
+            "value" : "YouTube RSS feeds don't include video durations. Once the video loads in the player, the duration will appear.\n\nFor videos with chapters, the start time of the last chapter is used as an approximate duration, shown as the minimum \"+\" time.\n\nWith Unwatched Premium, new videos automatically display their full duration.\n\nPodcast episodes use the duration from their feed, or from the downloaded episode if the feed doesn't include it."
           }
         },
         "es" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Los feeds RSS de YouTube no incluyen la duración de los videos. Una vez que el video se carga en el reproductor, la duración aparecerá.\n\nPara los videos con capítulos, se utiliza la hora de inicio del último capítulo como una duración aproximada, mostrada como el tiempo mínimo con “+”.\n\nUnwatched Premium, los nuevos videos muestran automáticamente su duración completa."
+            "value" : "Los feeds RSS de YouTube no incluyen la duración de los videos. Una vez que el video se carga en el reproductor, la duración aparecerá.\n\nPara los videos con capítulos, se utiliza la hora de inicio del último capítulo como una duración aproximada, mostrada como el tiempo mínimo con “+”.\n\nCon Unwatched Premium, los nuevos videos muestran automáticamente su duración completa.\n\nLos episodios de podcasts usan la duración de su feed o, si el feed no la incluye, la del episodio descargado."
           }
         },
         "fr" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Les flux RSS de YouTube ne contiennent pas la durée des vidéos. Une fois les vidéos chargés dans le lecteur, la durée apparaîtra. \n\nPour les vidéos avec des chapitres, l’heure de début du dernier chapitre est utilisée comme durée approximative, indiquée comme temps minimum \"+\".\n\nAvec Unwatched Premium, les nouvelles vidéos affichent automatiquement leur durée complète."
+            "value" : "Les flux RSS de YouTube ne contiennent pas la durée des vidéos. Une fois la vidéo chargée dans le lecteur, la durée apparaîtra.\n\nPour les vidéos avec des chapitres, l’heure de début du dernier chapitre est utilisée comme durée approximative, indiquée comme temps minimum \"+\".\n\nAvec Unwatched Premium, les nouvelles vidéos affichent automatiquement leur durée complète.\n\nLes épisodes de podcasts utilisent la durée indiquée dans leur flux ou, si le flux ne la contient pas, celle de l’épisode téléchargé."
           }
         },
         "pl" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Kanały RSS YouTube nie zawierają długości filmów. Gdy film zostanie załadowany w odtwarzaczu, pojawi się jego długość.\n\nW przypadku filmów z rozdziałami, czas rozpoczęcia ostatniego rozdziału jest używany jako przybliżona długość, wyświetlana jako minimalny czas \"+\".\n\nUnwatched Premium nowe filmy automatycznie wyświetlają pełny czas trwania."
+            "value" : "Kanały RSS YouTube nie zawierają długości filmów. Gdy film zostanie załadowany w odtwarzaczu, pojawi się jego długość.\n\nW przypadku filmów z rozdziałami, czas rozpoczęcia ostatniego rozdziału jest używany jako przybliżona długość, wyświetlana jako minimalny czas \"+\".\n\nZ Unwatched Premium nowe filmy automatycznie wyświetlają pełny czas trwania.\n\nOdcinki podcastów korzystają z długości podanej w kanale lub, jeśli jej tam nie ma, z pobranego odcinka."
           }
         }
       }
@@ -13928,31 +13928,31 @@
         "de" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Unwatched ist als einzelne Warteschlange mit einem Player konzipiert. Für eine umfassendere Organisation ist [Play: Save Videos Watch Later](https://apps.apple.com/app/id1596506190) die bessere Wahl. Diese App erfüllt wahrscheinlich alle gewünschten Funktionen und mehr!"
+            "value" : "Ja, mit Tags. Du kannst sie unter Bibliothek → Tags erstellen; jeder Tag öffnet eine eigene Liste mit Videos. Was du als Nächstes schaust, kommt weiterhin aus einer einzigen Queue."
           }
         },
         "en" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Unwatched is designed as a single queue with a player. For a more comprehensive organizer, consider using [Play: Save Videos Watch Later](https://apps.apple.com/app/id1596506190). It'll most like do everything you want and more!"
+            "value" : "Yes, with tags. Create them under Library → Tags; each tag opens as its own list of videos. What you watch next still comes from a single Queue."
           }
         },
         "es" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Unwatched está diseñado como una sola cola con un reproductor. Para un organizador más completo, considera usar [Play: Save Videos Watch Later](https://apps.apple.com/app/id1596506190). ¡Lo más probable es que haga todo lo que quieres y más!"
+            "value" : "Sí, con etiquetas. Créalas en Biblioteca → Etiquetas; cada etiqueta se abre como su propia lista de videos. Lo que ves a continuación sigue viniendo de una única Cola."
           }
         },
         "fr" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Unwatched est conçu comme une file d'attente avec un lecteur. Pour une organisation plus complète, envisagez d'utiliser [Play: Save Videos Watch Later](https://apps.apple.com/app/id1596506190). Il fera tout ce que vous souhaitez et bien plus encore !"
+            "value" : "Oui, avec les tags. Créez-les dans Bibliothèque → Tags ; chaque tag s’ouvre comme sa propre liste de vidéos. Ce que vous regardez ensuite vient toujours d’une seule File d’attente."
           }
         },
         "pl" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Unwatched to po prostu kolejka z odtwarzaczem. Jeśli szukasz bardziej wszechstronnej aplikacji, rozważ użycie [Play: Save Videos Watch Later](https://apps.apple.com/app/id1596506190). Prawdopodobnie zrobi wszystko, czego potrzebujesz, a nawet więcej!"
+            "value" : "Tak, za pomocą tagów. Utwórz je w Biblioteka → Tagi; każdy tag otwiera się jako osobna lista filmów. To, co oglądasz jako następne, nadal pochodzi z jednej Kolejki."
           }
         }
       }
@@ -13962,31 +13962,31 @@
         "de" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Wird es mehrere Playlists oder ein Tagging-System geben?"
+            "value" : "Kann ich Videos in eigene Listen sortieren?"
           }
         },
         "en" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Will there be multiple playlists or a tagging system?"
+            "value" : "Can I sort videos into separate lists?"
           }
         },
         "es" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "¿Habrá múltiples listas de reproducción o un sistema de etiquetas?"
+            "value" : "¿Puedo organizar los videos en listas separadas?"
           }
         },
         "fr" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Y aura-t-il plusieurs playlists ou un système d'étiquetage ?"
+            "value" : "Puis-je classer les vidéos dans des listes séparées ?"
           }
         },
         "pl" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Czy będzie dostępne wiele playlist lub system tagów?"
+            "value" : "Czy mogę układać filmy w osobne listy?"
           }
         }
       }
@@ -13996,31 +13996,31 @@
         "de" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Playlisten & Tags"
+            "value" : "Tags"
           }
         },
         "en" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Playlists & Tags"
+            "value" : "Tags"
           }
         },
         "es" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Listas de reproducción y etiquetas"
+            "value" : "Etiquetas"
           }
         },
         "fr" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Playlists & Tags"
+            "value" : "Tags"
           }
         },
         "pl" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Playlisty i tagi"
+            "value" : "Tagi"
           }
         }
       }
@@ -16383,31 +16383,31 @@
         "de" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Leider verstößt das gegen die Nutzungsbedingungen von YouTube und würde wahrscheinlich dazu führen, dass Unwatched aus dem App Store entfernt wird."
+            "value" : "Nicht bei YouTube-Videos: Das verstößt gegen die Nutzungsbedingungen von YouTube und würde wahrscheinlich dazu führen, dass Unwatched aus dem App Store entfernt wird.\n\nPodcast-Folgen lassen sich herunterladen. Das kannst du unter Einstellungen → Podcast-Downloads einrichten."
           }
         },
         "en" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Sadly, this is against YouTube’s Terms of Service and would likely result in Unwatched being removed from the App Store."
+            "value" : "Not for YouTube videos: downloading them is against YouTube’s Terms of Service and would likely result in Unwatched being removed from the App Store.\n\nPodcast episodes can be downloaded. Set this up in Settings → Podcast Downloads."
           }
         },
         "es" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Lamentablemente, esto va en contra de los Términos de servicio de YouTube y probablemente haría que Unwatched fuera eliminado de la App Store."
+            "value" : "No para los videos de YouTube: descargarlos va en contra de los Términos de servicio de YouTube y probablemente haría que Unwatched fuera eliminado de la App Store.\n\nLos episodios de podcasts sí se pueden descargar. Configúralo en Configuración → Descargas de podcasts."
           }
         },
         "fr" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Malheureusement, cela va à l’encontre des conditions d’utilisation de YouTube et entraînerait probablement la suppression de Unwatched de l’App Store."
+            "value" : "Pas pour les vidéos YouTube : les télécharger va à l’encontre des conditions d’utilisation de YouTube et entraînerait probablement la suppression d’Unwatched de l’App Store.\n\nLes épisodes de podcasts peuvent être téléchargés. Configurez cela dans Paramètres → Téléchargements de podcasts."
           }
         },
         "pl" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Niestety, jest to sprzeczne z warunkami korzystania z YouTube i prawdopodobnie spowodowałoby usunięcie Unwatched ze sklepu App Store."
+            "value" : "Nie w przypadku filmów z YouTube: ich pobieranie jest sprzeczne z warunkami korzystania z YouTube i prawdopodobnie spowodowałoby usunięcie Unwatched z App Store.\n\nOdcinki podcastów można pobierać. Skonfigurujesz to w Ustawienia → Pobrane podcasty."
           }
         }
       }
@@ -17539,31 +17539,31 @@
         "de" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Ein Grund dafür ist, zu viele Videos in der Inbox oder in der Queue zu haben. Ich werde das hoffentlich in Zukunft verbessern. In der Zwischenzeit wird das Entfernen von Einträgen dort das Problem beheben – keine Sorge, alle Videos bleiben unter Bibliothek → Alle Videos zugänglich. Der einfachste Weg, Einträge zu entfernen, ist nach links zu wischen, den „...\"-Button zu tippen und „oberhalb/unterhalb löschen\" zu wählen."
+            "value" : "Das kann passieren, wenn sehr viele Videos in der Inbox oder in der Queue sind. Das Entfernen von Einträgen dort behebt das Problem – keine Sorge, alle Videos bleiben unter Bibliothek → Alle Medien zugänglich. Der einfachste Weg ist, auf einem Video nach links zu wischen, den „...“-Button zu tippen und „Alles darüber entfernen“ oder „Alles darunter entfernen“ zu wählen."
           }
         },
         "en" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "One reason for this is having too many videos in the Inbox or Queue. I'll hopefully improve this in the future. Meanwhile, removing entries from there will fix it – don't worry, all videos remain accessible under Library → All Videos. The easiest way to clear videos is to swipe left on one, tap the \"...\" button, and select \"clear above/below\"."
+            "value" : "This can happen when there are a lot of videos in the Inbox or Queue. Removing entries from there fixes it – don't worry, all videos remain accessible under Library → All Media. The easiest way to clear videos is to swipe left on one, tap the \"...\" button, and select \"Clear Above\" or \"Clear Below\"."
           }
         },
         "es" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Una razón para esto es tener demasiados videos en el Inbox o Queue. Espero mejorar esto en el futuro. Mientras tanto, eliminar entradas de ahí solucionará el problema – no te preocupes, todos los videos permanecen accesibles en Biblioteca → Todos los videos. La forma más fácil de limpiar videos es deslizar hacia la izquierda en uno, tocar el botón \"...\" y seleccionar \"limpiar arriba/abajo\"."
+            "value" : "Esto puede ocurrir cuando hay muchos videos en la Bandeja de entrada o en la Cola. Eliminar entradas de ahí lo soluciona – no te preocupes, todos los videos siguen accesibles en Biblioteca → Toda la multimedia. La forma más fácil de limpiar videos es deslizar hacia la izquierda en uno, tocar el botón \"...\" y seleccionar \"Borrar anteriores\" o \"Borrar posteriores\"."
           }
         },
         "fr" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Une des raisons est d'avoir trop de vidéos dans l'Inbox ou la Queue. J'espère améliorer cela à l'avenir. En attendant, supprimer des entrées de là corrigera le problème – ne vous inquiétez pas, toutes les vidéos restent accessibles sous Bibliothèque → Toutes les vidéos. Le moyen le plus simple de vider les vidéos est de glisser vers la gauche sur une vidéo, appuyer sur le bouton « ... » et sélectionner « vider au-dessus/en-dessous »."
+            "value" : "Cela peut arriver lorsqu’il y a beaucoup de vidéos dans l’Inbox ou la File d’attente. Supprimer des entrées corrige le problème – ne vous inquiétez pas, toutes les vidéos restent accessibles sous Bibliothèque → Tous les médias. Le moyen le plus simple est de glisser vers la gauche sur une vidéo, d’appuyer sur le bouton « ... » et de sélectionner « Effacer au-dessus » ou « Effacer en dessous »."
           }
         },
         "pl" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Jednym z powodów jest posiadanie zbyt wielu filmów w Inbox lub Queue. Mam nadzieję poprawić to w przyszłości. Tymczasem usunięcie wpisów stamtąd naprawi problem – nie martw się, wszystkie filmy pozostaną dostępne w Biblioteka → Wszystkie filmy. Najłatwiejszym sposobem czyszczenia filmów jest przesunięcie palcem w lewo na jednym z nich, dotknięcie przycisku „...\" i wybranie „wyczyść powyżej/poniżej\"."
+            "value" : "Może się to zdarzyć, gdy w Skrzynce lub Kolejce jest bardzo dużo filmów. Usunięcie wpisów rozwiązuje problem – nie martw się, wszystkie filmy pozostaną dostępne w Biblioteka → Wszystkie multimedia. Najłatwiej jest przesunąć palcem w lewo na filmie, dotknąć przycisku „...” i wybrać „Wyczyść powyżej” lub „Wyczyść poniżej”."
           }
         }
       }
@@ -17641,31 +17641,31 @@
         "de" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Unwatched versucht automatisch, Audio im Hintergrund weiterzuspielen. Falls das nicht funktioniert, kannst du Bild-in-Bild manuell aktivieren:\n- Tippe den Pip-Button unterhalb des Videos\n- Wische auf einem laufenden Video nach unten\n- Starte den nativen iOS-Vollbildmodus, indem du auf den Button unten rechts im Video tippst. Von dort aus kannst du den „Pip\"-Button antippen oder die App verlassen, um das Video weiterlaufen zu lassen.\n\nBild-in-Bild wird derzeit von Apples WebView auf macOS nicht unterstützt."
+            "value" : "Unwatched versucht automatisch, Audio im Hintergrund weiterzuspielen. Falls das nicht funktioniert, kannst du Bild-in-Bild manuell starten:\n- Tippe den PiP-Button unterhalb des Videos\n- Wische auf einem laufenden Video nach unten\n- Starte den Vollbildmodus über den Button unten rechts im Video und tippe dort auf den PiP-Button oder verlasse die App\n\nMit dem nativen Player (Einstellungen → Wiedergabe → Player-Typ) kannst du den PiP-Button lange drücken und „Automatisch aktivieren“ einschalten, damit Bild-in-Bild beim Verlassen der App startet; sonst läuft nur das Audio weiter.\n\nAuf macOS ist Bild-in-Bild nur mit dem nativen Player verfügbar."
           }
         },
         "en" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Unwatched attempts to continue playing audio in the background automatically. If that doesn’t work, you can manually enable Picture-in-Picture:\n- Tap the Pip-button underneath the video\n- Swipe down on a playing video\n- Start the native iOS fullscreen by tapping the button on the bottom right inside the video. From there, tap the \"Pip\" button or leave the app to keep the video playing.\n\nPicture-in-Picture is currently not supported by Apple’s WebView on macOS."
+            "value" : "Unwatched tries to keep playing audio in the background automatically. If that doesn’t work, you can start Picture-in-Picture manually:\n- Tap the PiP button underneath the video\n- Swipe down on a playing video\n- Enter fullscreen with the button at the bottom right inside the video, then tap the PiP button or leave the app\n\nWith the Native player (Settings → Playback → Player type), long-press the PiP button and turn on “Auto enable” to start Picture-in-Picture whenever you leave the app; otherwise only the audio keeps playing.\n\nOn macOS, Picture-in-Picture is only available with the Native player."
           }
         },
         "es" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Unwatched intenta continuar reproduciendo el audio en segundo plano automáticamente. Si eso no funciona, puedes activar manualmente Picture-in-Picture:\n- Toca el botón Pip debajo del video\n- Desliza hacia abajo en un video en reproducción\n- Inicia la pantalla completa nativa de iOS tocando el botón en la esquina inferior derecha dentro del video. Desde allí, toca el botón \"Pip\" o sal de la aplicación para seguir reproduciendo el video.\n\nPicture-in-Picture actualmente no es compatible con WebView de Apple en macOS."
+            "value" : "Unwatched intenta seguir reproduciendo el audio en segundo plano automáticamente. Si eso no funciona, puedes iniciar Picture-in-Picture manualmente:\n- Toca el botón PiP debajo del video\n- Desliza hacia abajo sobre un video en reproducción\n- Entra en pantalla completa con el botón de la esquina inferior derecha del video y luego toca el botón PiP o sal de la aplicación\n\nCon el reproductor Nativo (Configuración → Reproducción → Tipo de reproductor), mantén pulsado el botón PiP y activa “Activar automáticamente” para iniciar Picture-in-Picture al salir de la aplicación; de lo contrario, solo sigue sonando el audio.\n\nEn macOS, Picture-in-Picture solo está disponible con el reproductor Nativo."
           }
         },
         "fr" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Unwatched tente automatiquement de continuer à lire l'audio en arrière-plan. Si cela ne fonctionne pas, vous pouvez activer manuellement Picture-in-Picture :\n- Appuyez sur le bouton Pip sous la vidéo\n- Glissez vers le bas sur une vidéo en cours de lecture\n- Activez le plein écran natif iOS en appuyant sur le bouton en bas à droite de la vidéo. De là, appuyez sur le bouton \"Pip\" ou quittez l'application pour continuer la lecture.\n\nPicture-in-Picture n'est actuellement pas pris en charge par WebView d'Apple sur macOS."
+            "value" : "Unwatched tente automatiquement de continuer à lire l’audio en arrière-plan. Si cela ne fonctionne pas, vous pouvez lancer Picture-in-Picture manuellement :\n- Appuyez sur le bouton PiP sous la vidéo\n- Glissez vers le bas sur une vidéo en cours de lecture\n- Passez en plein écran avec le bouton en bas à droite de la vidéo, puis appuyez sur le bouton PiP ou quittez l’application\n\nAvec le lecteur Natif (Paramètres → Lecture → Type de lecteur), maintenez le bouton PiP enfoncé et activez « Activer automatiquement » pour lancer Picture-in-Picture en quittant l’application ; sinon, seul l’audio continue.\n\nSur macOS, Picture-in-Picture n’est disponible qu’avec le lecteur Natif."
           }
         },
         "pl" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Unwatched automatycznie próbuje kontynuować odtwarzanie dźwięku w tle. Jeśli to nie działa, możesz ręcznie włączyć Picture-in-Picture:\n- Kliknij przycisk Pip pod filmem\n- Przesuń palcem w dół na odtwarzanym filmie\n- Włącz natywny tryb pełnoekranowy iOS, klikając przycisk w prawym dolnym rogu wideo. Następnie kliknij przycisk \"Pip\" lub opuść aplikację, aby kontynuować odtwarzanie.\n\nPicture-in-Picture nie jest obecnie obsługiwane przez WebView firmy Apple na macOS."
+            "value" : "Unwatched automatycznie próbuje kontynuować odtwarzanie dźwięku w tle. Jeśli to nie działa, możesz ręcznie włączyć Picture-in-Picture:\n- Kliknij przycisk PiP pod filmem\n- Przesuń palcem w dół na odtwarzanym filmie\n- Włącz tryb pełnoekranowy przyciskiem w prawym dolnym rogu filmu, a następnie kliknij przycisk PiP lub opuść aplikację\n\nW odtwarzaczu Natywnym (Ustawienia → Odtwarzanie → Typ odtwarzacza) przytrzymaj przycisk PiP i włącz „Włącz automatycznie”, aby Picture-in-Picture uruchamiało się po opuszczeniu aplikacji; w przeciwnym razie odtwarzany jest tylko dźwięk.\n\nNa macOS Picture-in-Picture jest dostępne tylko w odtwarzaczu Natywnym."
           }
         }
       }
@@ -18321,31 +18321,31 @@
         "de" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Normalerweise wird YouTubes eingebetteten Player verwendet. Wenn Kanäle diese Funktion deaktivieren, wird stattdessen die YouTube-Website angezeigt.  Alle Steuerungen bleiben funktionsfähig. Der Vollbildmodus unterstützt ebenfalls Picture-in-Picture."
+            "value" : "Normalerweise wird YouTubes eingebetteter Player verwendet. Wenn ein Kanal das Einbetten deaktiviert, wird stattdessen die YouTube-Website angezeigt. Alle Steuerungen funktionieren weiterhin, und über YouTubes Vollbild-Button kannst du das Video im Vollbild ansehen.\n\nIst „Nativer Player als Rückfall“ aktiviert (Einstellungen → Wiedergabe), kann Unwatched stattdessen zum nativen Player wechseln, wenn der eingebettete Player ein Video nicht abspielen kann."
           }
         },
         "en" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "The player usually uses YouTube's embedded player, but if channels disable this feature, the YouTube website will be shown instead.   All controls remain functional, and you can use YouTube's fullscreen button to watch the video in fullscreen."
+            "value" : "The player usually uses YouTube's embedded player. If a channel disables embedding, the YouTube website is shown instead. All controls keep working, and you can use YouTube's fullscreen button to watch in fullscreen.\n\nWith “Native Player Fallback” turned on (Settings → Playback), Unwatched can switch to the native player instead when the embedded player can't play a video."
           }
         },
         "es" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "El reproductor generalmente usa el reproductor integrado de YouTube, pero si los canales desactivan esta función, se mostrará el sitio web de YouTube en su lugar. Todos los controles siguen funcionando y puedes usar el botón de pantalla completa de YouTube para ver el video en pantalla completa."
+            "value" : "El reproductor normalmente usa el reproductor integrado de YouTube. Si un canal desactiva la inserción, se muestra el sitio web de YouTube en su lugar. Todos los controles siguen funcionando y puedes usar el botón de pantalla completa de YouTube para verlo en pantalla completa.\n\nCon “Reproductor nativo de reserva” activado (Configuración → Reproducción), Unwatched puede cambiar al reproductor nativo cuando el reproductor integrado no puede reproducir un video."
           }
         },
         "fr" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "En général, le lecteur intégré de YouTube est utilisé, mais si les chaînes désactivent cette fonction, le site web de YouTube s'affichera à sa place. Toutes les commandes restent fonctionnelles, et vous pouvez utiliser le bouton plein écran de YouTube pour regarder la vidéo en plein écran."
+            "value" : "En général, le lecteur intégré de YouTube est utilisé. Si une chaîne désactive l’intégration, le site web de YouTube s’affiche à la place. Toutes les commandes restent fonctionnelles, et vous pouvez utiliser le bouton plein écran de YouTube pour regarder en plein écran.\n\nAvec « Lecteur natif de secours » activé (Paramètres → Lecture), Unwatched peut passer au lecteur natif lorsque le lecteur intégré ne parvient pas à lire une vidéo."
           }
         },
         "pl" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Domyślnie odtwarzacz korzysta z wbudowanego odtwarzacza YouTube, ale jeśli kanały wyłączą tę opcję, zamiast niego zostanie wyświetlona strona YouTube.\n\nWszystkie funkcje sterowania pozostają aktywne, a przycisk pełnego ekranu YouTube pozwala oglądać filmy w trybie pełnoekranowym."
+            "value" : "Domyślnie używany jest wbudowany odtwarzacz YouTube. Jeśli kanał wyłączy osadzanie, zamiast niego wyświetlana jest strona YouTube. Wszystkie funkcje sterowania nadal działają, a przycisk pełnego ekranu YouTube pozwala oglądać w trybie pełnoekranowym.\n\nGdy włączony jest „Zapasowy natywny odtwarzacz” (Ustawienia → Odtwarzanie), Unwatched może przełączyć się na natywny odtwarzacz, jeśli wbudowany odtwarzacz nie może odtworzyć filmu."
           }
         }
       }
@@ -30126,31 +30126,31 @@
         "de" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Ja, aber Unwatched unterstützt keinen eigenen Player auf tvOS und öffnet stattdessen die YouTube App. Ein eigener Player ist leider aufgrund von technischen & rechtlichen Einschränkungen nicht möglich.  Alternativ kann AirPlay verwendet werden. Dazu muss im Player unten rechts der native iOS Vollbild-Modus gestartet werden. Von dort kann AirPlay ausgewählt werden."
+            "value" : "Ja. Auf dem Apple TV werden Videos standardmäßig in der YouTube App geöffnet. Um sie stattdessen direkt in Unwatched abzuspielen, wähle in den Einstellungen von Unwatched auf dem Apple TV „In-App-Player“.\n\nAlternativ kannst du per AirPlay von Unwatched auf ein Apple TV streamen: Starte den Vollbildmodus über den Button unten rechts im Player (nicht auf macOS) und wähle dann AirPlay."
           }
         },
         "en" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Yes, but it doesn't support a custom player and opens the YouTube app instead. A custom player is sadly not possible due to technical & legal restrictions.  You can also use AirPlay to cast from Unwatched to Apple TV. Enter fullscreen by tapping the fullscreen button on the video player (bottom right, not on macOS), then choose AirPlay."
+            "value" : "Yes. On Apple TV, videos open in the YouTube app by default. To play them inside Unwatched instead, choose “In-App player” in the settings of Unwatched on Apple TV.\n\nYou can also use AirPlay to cast from Unwatched to an Apple TV: enter fullscreen with the button at the bottom right of the video player (not on macOS), then choose AirPlay."
           }
         },
         "es" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Sí, pero no es compatible con un reproductor personalizado y abre la aplicación de YouTube en su lugar. Un reproductor personalizado lamentablemente no es posible debido a restricciones técnicas y legales. También puedes usar AirPlay para transmitir desde Unwatched a Apple TV. Entra en pantalla completa tocando el botón de pantalla completa en el reproductor de video (abajo a la derecha, no en macOS), luego elige AirPlay."
+            "value" : "Sí. En Apple TV, los videos se abren en la aplicación de YouTube de forma predeterminada. Para reproducirlos dentro de Unwatched, elige “Reproductor integrado” en los ajustes de Unwatched en Apple TV.\n\nTambién puedes usar AirPlay para transmitir desde Unwatched a un Apple TV: entra en pantalla completa con el botón de la esquina inferior derecha del reproductor (no en macOS) y luego elige AirPlay."
           }
         },
         "fr" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Oui, mais cela ne prend pas en charge un lecteur personnalisé et ouvre l'application YouTube à la place. Un lecteur personnalisé n'est malheureusement pas possible en raison de restrictions techniques et légales.\n\nVous pouvez également utiliser AirPlay pour diffuser depuis Unwatched vers Apple TV. Passez en plein écran en appuyant sur le bouton plein écran du lecteur vidéo (en bas à droite, pas sur macOS), puis choisissez AirPlay."
+            "value" : "Oui. Sur Apple TV, les vidéos s’ouvrent par défaut dans l’application YouTube. Pour les lire directement dans Unwatched, choisissez « Lecteur intégré » dans les réglages d’Unwatched sur Apple TV.\n\nVous pouvez aussi utiliser AirPlay pour diffuser depuis Unwatched vers une Apple TV : passez en plein écran avec le bouton en bas à droite du lecteur (pas sur macOS), puis choisissez AirPlay."
           }
         },
         "pl" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Tak, ale nie obsługuje niestandardowego odtwarzacza i zamiast tego otwiera aplikację YouTube. Niestandardowy odtwarzacz jest niestety niedostępny z powodów technicznych i prawnych.  Możesz również użyć AirPlay do przesyłania z Unwatched na Apple TV. Uruchom tryb pełnoekranowy (prawy dolny róg, nie na macOS), a następnie wybierz AirPlay."
+            "value" : "Tak. Na Apple TV filmy domyślnie otwierają się w aplikacji YouTube. Aby odtwarzać je bezpośrednio w Unwatched, wybierz „Wbudowany odtwarzacz” w ustawieniach Unwatched na Apple TV.\n\nMożesz też użyć AirPlay, aby przesyłać z Unwatched na Apple TV: uruchom tryb pełnoekranowy przyciskiem w prawym dolnym rogu odtwarzacza (nie na macOS), a następnie wybierz AirPlay."
           }
         }
       }
@@ -32001,31 +32001,31 @@
         "de" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Die Option \"Einstellungen → Datenschutz → Keine Cookies Modus\" muss deaktiviert sein. Stelle außerdem Sicher, dass du im in-App Browser unter Bibliothek → YouTube Browser mit deinem YouTube Account angemeldet bist."
+            "value" : "Deaktiviere „Einstellungen → Datenschutz → Keine Cookies Modus“, damit gesehene Videos auf YouTube erscheinen, und melde dich im In-App-Browser (Suche → YouTube Browser) mit deinem YouTube-Account an."
           }
         },
         "en" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Disable “Settings → Privacy → No Cookies Mode” to ensure watched videos appear on YouTube, and sign in through the in-app browser under Library → Search YouTube."
+            "value" : "Turn off “Settings → Privacy → No Cookies Mode” so watched videos appear on YouTube, and sign in to YouTube in the in-app browser (Search → Search YouTube)."
           }
         },
         "es" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Desactiva \"Configuración → Privacidad → Modo sin cookies\" para asegurar que los videos vistos aparezcan en YouTube, e inicia sesión a través del navegador de la aplicación en Biblioteca → Buscar en YouTube.\nRetryClaude can make mistakes. Please double-check responses."
+            "value" : "Desactiva “Configuración → Privacidad → Modo sin cookies” para que los videos vistos aparezcan en YouTube, e inicia sesión en YouTube en el navegador de la aplicación (Buscar → Buscar en YouTube)."
           }
         },
         "fr" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Désactivez « Réglages → Confidentialité → Mode sans cookies » pour que les vidéos regardées apparaissent sur YouTube, et connectez-vous via le navigateur intégré sous Bibliothèque → Rechercher sur YouTube."
+            "value" : "Désactivez « Paramètres → Confidentialité → Mode sans cookies » pour que les vidéos regardées apparaissent sur YouTube, et connectez-vous à YouTube dans le navigateur intégré (Recherche → Rechercher sur YouTube)."
           }
         },
         "pl" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Wyłącz „Ustawienia → Prywatność → Tryb bez ciasteczek\", aby obejrzane filmy pojawiały się na YouTube, i zaloguj się przez przeglądarkę w aplikacji w Biblioteka → Szukaj w YouTube."
+            "value" : "Wyłącz „Ustawienia → Prywatność → Tryb bez ciasteczek”, aby obejrzane filmy pojawiały się na YouTube, i zaloguj się do YouTube w przeglądarce w aplikacji (Szukaj → Szukaj na YouTube)."
           }
         }
       }
