@@ -38,18 +38,18 @@ enum PremiumFeatureLarge: String, CaseIterable {
 }
 
 enum PremiumFeature: String, CaseIterable {
-    case customTemporaryPlaybackSpeed,
-         trimSilence,
+    case customTheme,
+         statistics,
          tags,
+         generateChaptersFromTranscript,
+         trimSilence,
+         customTemporaryPlaybackSpeed,
          videoTitleFilter,
          liveStreamFilter,
          seeVideoDuration,
-         generateChaptersFromTranscript,
          generateTranscript,
          chapterFilter,
-         skipIntroOutro,
-         customTheme,
-         statistics
+         skipIntroOutro
 
     var title: String {
         switch self {
