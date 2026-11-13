@@ -118,6 +118,8 @@ enum OverlayIcon: Equatable {
     case speedUp
     case slowDown
     case regularSpeed
+    case captionsOn
+    case captionsOff
 
     var systemName: String {
         switch self {
@@ -134,6 +136,8 @@ enum OverlayIcon: Equatable {
         case .speedUp: return "waveform.circle.fill"
         case .slowDown: return "waveform.circle.fill"
         case .regularSpeed: return "slash.circle.fill"
+        case .captionsOn: return "captions.bubble.fill"
+        case .captionsOff: return "captions.bubble"
         }
     }
 

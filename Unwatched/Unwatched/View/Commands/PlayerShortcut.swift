@@ -16,6 +16,7 @@ enum PlayerShortcut: String, CaseIterable {
     case nextChapter
     case previousChapter
     case hideControls
+    case toggleCaptions
     case temporarySpeedUp
     case temporarySlowDown
     case markWatched
@@ -44,6 +45,7 @@ enum PlayerShortcut: String, CaseIterable {
         case .nextChapter: return "nextChapter"
         case .previousChapter: return "previousChapter"
         case .hideControls: return "toggleSidebar"
+        case .toggleCaptions: return "toggleCaptions"
         case .temporarySpeedUp: return "temporarySpeedUp"
         case .temporarySlowDown: return "temporarySlowDown"
         case .markWatched: return "markWatched"
@@ -76,6 +78,7 @@ enum PlayerShortcut: String, CaseIterable {
         case .previousChapter:
             return [KeyboardShortcut(.leftArrow, modifiers: .command), KeyboardShortcut("j", modifiers: .command)]
         case .hideControls: return [KeyboardShortcut("t", modifiers: [])]
+        case .toggleCaptions: return [KeyboardShortcut("c", modifiers: [])]
         case .temporarySpeedUp: return [KeyboardShortcut("d", modifiers: [])]
         case .temporarySlowDown: return [KeyboardShortcut("s", modifiers: [])]
         case .markWatched: return [KeyboardShortcut("w", modifiers: .shift)]
@@ -166,6 +169,13 @@ enum PlayerShortcut: String, CaseIterable {
             }
         case .hideControls:
             hideControls()
+        case .toggleCaptions:
+            if player.showsCustomUICaptionControls {
+                let isOn = player.toggleCustomUICaptions()
+                OverlayFullscreenVM.shared.show(isOn ? .captionsOn : .captionsOff)
+            } else {
+                player.toggleYouTubeCaptions()
+            }
         case .temporarySpeedUp:
             _ = player.tempSpeedChange(faster: true)
         case .temporarySlowDown:
@@ -252,6 +262,12 @@ enum PlayerShortcut: String, CaseIterable {
             TinyUndoManager.shared.registerAction(.moveToQueue([video.id], position: 0))
         }
     }
+}
+
+extension PlayerShortcut {
+    var primary: KeyboardShortcut? {
+        keyboardShortcuts.first
+    }
 
     @MainActor
     func clearVideo() {
@@ -274,12 +290,6 @@ enum PlayerShortcut: String, CaseIterable {
             }
             .keyboardShortcut(shortcut)
         }
-    }
-}
-
-extension PlayerShortcut {
-    var primary: KeyboardShortcut? {
-        keyboardShortcuts.first
     }
 }
 

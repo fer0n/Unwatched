@@ -369,13 +369,3 @@ extension PlayerWebViewCoordinator {
     }
     #endif
 }
-
-struct CaptionOption: Decodable, Equatable {
-    let code: String
-    let name: String
-}
-
-struct CaptionReport: Decodable, Equatable {
-    let tracks: [CaptionOption]
-    let selected: String?
-}

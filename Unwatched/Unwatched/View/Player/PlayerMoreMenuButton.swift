@@ -77,7 +77,6 @@ struct PlayerMoreMenuContent: View {
     @AppStorage(Const.playerType) var playerType: PlayerTypeSetting = .youtubeEmbedded
     @AppStorage(Const.browserDisplayMode) var browserDisplayMode: BrowserDisplayMode = .inApp
     @AppStorage(Const.preferPlayerType) var preferPlayerType: Bool = false
-    @AppStorage(Const.disableCaptions) var disableCaptions: Bool = false
     @AppStorage(Const.customUICaptions) var customUICaptions: Bool = false
     @AppStorage(Const.customUICaptionLanguage) var customUICaptionLanguage: String = ""
 
@@ -149,9 +148,9 @@ struct PlayerMoreMenuContent: View {
 
             bookmarkButton
             deferDateButton
-            if showsCaptionsToggle {
-                if let tracks = player.captions?.tracks, tracks.count > 1 {
-                    captionLanguageMenu(tracks)
+            if player.showsCustomUICaptionControls {
+                if let captions = player.captions, captions.tracks.count > 1 {
+                    captionLanguageMenu(captions)
                 } else {
                     captionsToggle
                 }
@@ -221,16 +220,6 @@ struct PlayerMoreMenuContent: View {
     }
     #endif
 
-    var showsCaptionsToggle: Bool {
-        guard !disableCaptions,
-              let video = player.video,
-              TranscriptDescriptionSelection.canHaveTranscript(
-                video, isCurrentVideo: true, transcriptUrl: player.transcriptUrl
-              ) else { return false }
-        return PlayerSwitchManager.shared.activeType
-            .webPlayerType(embeddingDisabled: player.embeddingDisabled) == .youtubeCustomUI
-    }
-
     var captionsToggle: some View {
         Toggle(isOn: Binding(
             get: { customUICaptions },
@@ -254,10 +243,36 @@ struct PlayerMoreMenuContent: View {
             .first(where: codes.contains) ?? codes.first ?? Self.captionsOffTag
     }
 
-    func captionLanguageMenu(_ tracks: [CaptionOption]) -> some View {
-        Picker(selection: Binding(
-            get: { shownCaptionLanguage(tracks) },
-            set: { code in
+    func captionLanguageMenu(_ captions: CaptionReport) -> some View {
+        let shown = shownCaptionLanguage(captions.tracks)
+        let groups = captions.grouped(shown: shown, lastPicked: customUICaptionLanguage)
+        return Menu {
+            Section {
+                captionChoice(Self.captionsOffTag, shown: shown, label: Text("off"))
+            }
+            Section {
+                captionChoices(groups.relevant, shown: shown)
+                if !groups.more.isEmpty {
+                    Menu("moreLanguages") {
+                        captionChoices(groups.more, shown: shown)
+                    }
+                }
+            }
+        } label: {
+            Label("captions", systemImage: customUICaptions ? "captions.bubble.fill" : "captions.bubble")
+        }
+    }
+
+    func captionChoices(_ tracks: [CaptionOption], shown: String) -> some View {
+        ForEach(tracks, id: \.code) { track in
+            captionChoice(track.code, shown: shown, label: Text(verbatim: track.name))
+        }
+    }
+
+    func captionChoice(_ code: String, shown: String, label: Text) -> some View {
+        Toggle(isOn: Binding(
+            get: { shown == code },
+            set: { _ in
                 customUICaptions = code != Self.captionsOffTag
                 if customUICaptions {
                     customUICaptionLanguage = code
@@ -266,14 +281,8 @@ struct PlayerMoreMenuContent: View {
                 Signal.interaction("Player.MoreMenu", "captionLanguage")
             }
         )) {
-            Text("off").tag(Self.captionsOffTag)
-            ForEach(tracks, id: \.code) { track in
-                Text(verbatim: track.name).tag(track.code)
-            }
-        } label: {
-            Label("captions", systemImage: customUICaptions ? "captions.bubble.fill" : "captions.bubble")
+            label
         }
-        .pickerStyle(.menu)
     }
 
     var deferDateButton: some View {

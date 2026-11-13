@@ -754,11 +754,24 @@ extension PlayerWebView {
             ytPlayer.setOption('captions', 'track', {});
             reportCaptionsSoon();
         }
+        // the tracklist leaves out the auto-generated track; the player response has it
+        function spokenCaptionLanguage(ytPlayer) {
+            const renderer = ytPlayer?.getPlayerResponse?.()?.captions?.playerCaptionsTracklistRenderer;
+            const all = renderer?.captionTracks || [];
+            const asr = all.find(t => t.kind === 'asr');
+            if (asr) return asr.languageCode;
+            const audio = renderer?.audioTracks?.[renderer?.defaultAudioTrackIndex ?? 0];
+            return all[audio?.defaultCaptionTrackIndex]?.languageCode ?? null;
+        }
         var lastCaptionsReport = null;
         function reportCaptions() {
             const ytPlayer = document.getElementById('movie_player');
             const tracks = captionTracks(ytPlayer).map(t => ({ code: t.languageCode, name: t.displayName }));
-            const report = JSON.stringify({ tracks, selected: tracks.length ? currentCaptionLanguage(ytPlayer) : null });
+            const report = JSON.stringify({
+                tracks,
+                selected: tracks.length ? currentCaptionLanguage(ytPlayer) : null,
+                spokenLanguage: spokenCaptionLanguage(ytPlayer)
+            });
             if (report === lastCaptionsReport) return;
             lastCaptionsReport = report;
             sendMessage("captions", report);

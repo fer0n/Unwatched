@@ -29,6 +29,10 @@ struct PlayerCommands: Commands {
                 PlayerShortcut.nextChapter.render()
             }
 
+            Section {
+                PlayerShortcut.toggleCaptions.render()
+            }
+
             Section("playbackSpeed") {
                 PlayerShortcut.speedUp.render()
                 PlayerShortcut.slowDown.render()
