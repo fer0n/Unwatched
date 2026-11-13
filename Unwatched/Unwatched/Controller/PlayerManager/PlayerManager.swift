@@ -554,6 +554,23 @@ extension PlayerManager {
         }
     }
 
+    /// Fullscreen hid the menu; with the queue empty that leaves a blank player.
+    @MainActor
+    func showMenuIfQueueRanOut() {
+        #if os(iOS)
+        let navManager = NavigationManager.shared
+        let sheetPos = SheetPositionReader.shared
+        guard video == nil, !navManager.showMenu, !navManager.showBrowser, !sheetPos.bigScreen else { return }
+        Log.player.info("showMenuIfQueueRanOut")
+        if tallFullscreenOverlay {
+            sheetPos.menuStateBeforeFullscreen = MenuState(showMenu: true, detent: .large)
+            setTallFullscreen(false)
+        }
+        sheetPos.setLargeSheet()
+        navManager.showMenu = true
+        #endif
+    }
+
     @MainActor
     func setShowMenu() {
         let sheetPos = SheetPositionReader.shared

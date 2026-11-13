@@ -123,6 +123,7 @@ final class BackgroundPlaybackManager {
             player.restartVideo()
             return
         }
+        defer { player.showMenuIfQueueRanOut() }
         let continuousPlay = UserDefaults.standard.bool(forKey: Const.continuousPlay)
         Log.player.info("backgroundPlayback: videoEnded, continuousPlay: \(continuousPlay)")
         Signal.interaction("Player.Finished")

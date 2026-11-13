@@ -286,6 +286,7 @@ struct PlayerView: View {
             player.pause()
             player.setVideoEnded(true)
         }
+        player.showMenuIfQueueRanOut()
     }
 
     func handleMiniPlayerTap() {

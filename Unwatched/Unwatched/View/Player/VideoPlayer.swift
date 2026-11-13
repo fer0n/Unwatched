@@ -238,7 +238,11 @@ struct VideoPlayer: View {
                 if player.tallFullscreenActive { return }
                 if navManager.showMenu {
                     // menu was open in landscape -> show it in portrait at the player detent
-                    sheetPos.setDetentVideoPlayer()
+                    if player.video == nil {
+                        sheetPos.setLargeSheet()
+                    } else {
+                        sheetPos.setDetentVideoPlayer()
+                    }
                 } else {
                     navManager.showMenu = true
                 }
