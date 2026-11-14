@@ -8,10 +8,11 @@ import UnwatchedShared
 
 struct MyTint: ViewModifier {
     @AppStorage(Const.themeColor) var theme: ThemeColor = .defaultTheme
+    @Environment(\.pageThemeColor) var pageThemeColor
 
     func body(content: Content) -> some View {
         content
-            .tint(theme.color)
+            .tint(pageThemeColor ?? theme.color)
     }
 }
 

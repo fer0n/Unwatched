@@ -17,6 +17,7 @@ struct MenuTabBarController: UIViewControllerRepresentable {
     let player: PlayerManager
     let selection: NavigationTab
     let labels: MenuTabLabels
+    let neutralTint: Bool
     let onPlayPauseTapped: () -> Void
 
     /// Prominent tabs are only supported on iOS 27+, and only look right on iPhone's compact bar.
@@ -51,6 +52,7 @@ struct MenuTabBarController: UIViewControllerRepresentable {
         }
         coordinator.apply(labels, to: controller)
         coordinator.select(selection, in: controller)
+        coordinator.applyTint(neutral: neutralTint, to: controller)
         return controller
     }
 
@@ -62,6 +64,7 @@ struct MenuTabBarController: UIViewControllerRepresentable {
         coordinator.updateEnvironment(context.environment)
         coordinator.apply(labels, to: controller)
         coordinator.select(selection, in: controller)
+        coordinator.applyTint(neutral: neutralTint, to: controller)
     }
 }
 

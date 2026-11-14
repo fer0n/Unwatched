@@ -7,6 +7,9 @@ import SwiftUI
 
 struct CapsuleButtonStyle: ButtonStyle {
     @Environment(\.isEnabled) var isEnabled
+    @Environment(\.settingControlStyle) var controlStyle
+    @Environment(\.settingIsActive) var settingIsActive
+    @Environment(\.pageThemeColor) var pageThemeColor
     let background: Color
     let foreground: Color
     let interactive: Bool
@@ -24,7 +27,28 @@ struct CapsuleButtonStyle: ButtonStyle {
         self.interactive = interactive
     }
 
+    @ViewBuilder
     func makeBody(configuration: Configuration) -> some View {
+        switch controlStyle {
+        case .capsule:
+            capsuleBody(configuration)
+        case .chip:
+            let active = settingIsActive ?? primary
+            let contrast = pageThemeColor?.contrastingTextColor ?? Color.backgroundColor
+            configuration.label
+                .environment(\.chipContentColor, active ? contrast : nil)
+                .opacity(isEnabled ? (configuration.isPressed ? 0.7 : 1) : 0.3)
+                .foregroundStyle(active ? contrast : Color.primary)
+                .background(active
+                                ? (pageThemeColor ?? Color.neutralAccentColor)
+                                : Color.primary.opacity(0.08),
+                            in: Capsule())
+        case .menuItem:
+            configuration.label
+        }
+    }
+
+    func capsuleBody(_ configuration: Configuration) -> some View {
         configuration.label
             .opacity(isEnabled ? 1 : 0.2)
             .padding(.vertical, 3)

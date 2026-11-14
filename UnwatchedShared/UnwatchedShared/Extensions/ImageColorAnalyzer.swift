@@ -12,6 +12,10 @@ public extension CGImage {
         let cgColor = colorAnalyzer.extractVibrantColor(from: self)
         return cgColor.map { Color($0) }
     }
+
+    func extractVibrantAccentColors(limit: Int) -> [Color] {
+        ImageColorAnalyzer().rankedVibrantColors(from: self).prefix(limit).map { Color($0) }
+    }
 }
 
 private class ImageColorAnalyzer {
@@ -27,10 +31,20 @@ private class ImageColorAnalyzer {
     private let idealBrightnessRange: ClosedRange<Float> = 0.5...0.999
 
     func extractVibrantColor(from cgImage: CGImage) -> CGColor? {
-        let colorCounts = analyzeImageColors(cgImage)
-        let groupedColors = groupSimilarColors(colorCounts)
+        rankedVibrantColors(from: cgImage).first
+    }
 
-        return selectBestColorByScore(from: groupedColors)
+    func rankedVibrantColors(from cgImage: CGImage) -> [CGColor] {
+        let colorCounts = groupSimilarColors(analyzeImageColors(cgImage))
+        let totalPixelsSampled = colorCounts.values.reduce(0, +)
+        let maxCount = colorCounts.values.max() ?? 1
+        return colorCounts
+            .map { color, count in
+                (color, calculateColorScore(color: color, count: count, totalPixels: totalPixelsSampled, maxCount: maxCount))
+            }
+            .filter { $0.1 > 0 }
+            .sorted { $0.1 > $1.1 }
+            .map(\.0)
     }
 
     private func analyzeImageColors(_ cgImage: CGImage) -> [CGColor: Int] {
@@ -118,27 +132,6 @@ private class ImageColorAnalyzer {
         let briDiff = abs(hsb1.brightness - hsb2.brightness) * 100
 
         return hueDiff < colorTolerance && satDiff < colorTolerance && briDiff < colorTolerance
-    }
-
-    private func selectBestColorByScore(from colorCounts: [CGColor: Int]) -> CGColor? {
-        guard !colorCounts.isEmpty else { return nil }
-
-        let totalPixelsSampled = colorCounts.values.reduce(0, +)
-        let maxCount = colorCounts.values.max() ?? 1
-
-        var bestColor: CGColor?
-        var bestScore: Float = 0
-
-        for (color, count) in colorCounts {
-            let score = calculateColorScore(color: color, count: count, totalPixels: totalPixelsSampled, maxCount: maxCount)
-
-            if score > bestScore {
-                bestScore = score
-                bestColor = color
-            }
-        }
-        
-        return bestColor
     }
 
     private func calculateColorScore(color: CGColor, count: Int, totalPixels: Int, maxCount: Int) -> Float {

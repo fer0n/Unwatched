@@ -13,6 +13,8 @@ import SwiftUI
     public var createdOn: Date?
     public var lastAccessedOn: Date?
     public var colorHex: String?
+    public var lightModeColorHex: String?
+    public var darkModeColorHex: String?
 
     public var color: Color? {
         get {
@@ -25,6 +27,19 @@ import SwiftUI
             } else {
                 colorHex = nil
             }
+        }
+    }
+
+    public var readableColors: ReadableColors {
+        get {
+            ReadableColors(
+                light: lightModeColorHex.flatMap { Color(hex: $0) },
+                dark: darkModeColorHex.flatMap { Color(hex: $0) }
+            )
+        }
+        set {
+            lightModeColorHex = newValue.light?.toHex()
+            darkModeColorHex = newValue.dark?.toHex()
         }
     }
 

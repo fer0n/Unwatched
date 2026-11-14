@@ -18,6 +18,7 @@ extension MenuTabBarController {
         let environment = MenuTabEnvironment()
         var scrollProxies = [NavigationTab: ScrollViewProxy]()
         private var appliedLabels: MenuTabLabels?
+        private var appliedNeutralTint: Bool?
 
         init(navManager: NavigationManager, player: PlayerManager, onPlayPauseTapped: @escaping () -> Void) {
             self.navManager = navManager
@@ -80,6 +81,12 @@ extension MenuTabBarController {
             let search = uiTab(for: .search, in: controller)
             search?.title = ""
             search?.viewController?.tabBarItem.accessibilityLabel = NavigationTab.search.description
+        }
+
+        func applyTint(neutral: Bool, to controller: UITabBarController) {
+            guard neutral != appliedNeutralTint else { return }
+            appliedNeutralTint = neutral
+            controller.tabBar.tintColor = neutral ? UIColor(named: "neutralAccentColor") : nil
         }
 
         func tabBarController(_ tabBarController: UITabBarController, shouldSelectTab tab: UITab) -> Bool {

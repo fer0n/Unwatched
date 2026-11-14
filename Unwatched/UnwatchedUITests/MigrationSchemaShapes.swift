@@ -202,6 +202,20 @@ extension MigrationTests {
                 "updatedDate"
             ],
             "CachedVideoFeed": ["data", "sourceKey", "updatedDate"]
+        ],
+        "2.5.0": [
+            "CachedImage": [
+                "colorHex", "createdOn", "darkModeColorHex", "imageData", "imageUrl",
+                "lastAccessedOn", "lightModeColorHex"
+            ],
+            "Transcript": ["data", "youtubeId"],
+            "CachedChapters": ["data", "sourceHash", "updatedDate", "youtubeId"],
+            "CachedEpisode": [
+                "chaptersUrl", "duration", "episodeDescription", "episodeId", "episodeUrl",
+                "feedUrl", "isAudioOnly", "mediaUrl", "publishedDate", "thumbnailUrl", "title",
+                "updatedDate"
+            ],
+            "CachedVideoFeed": ["data", "sourceKey", "updatedDate"]
         ]
     ]
 }

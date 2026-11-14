@@ -8,17 +8,11 @@ import UnwatchedShared
 
 struct ImageAccentBackground: ViewModifier {
     @Environment(ImageCacheManager.self) var imageCacheManager
-    @AppStorage(Const.themeColor) var theme = ThemeColor()
-    @State var imageColor: Color?
+    @State var color: Color?
 
     var url: URL?
-    var useThemeColor = false
     let topPadding: CGFloat = 200
     let gradientStart: CGFloat = 70
-
-    var color: Color? {
-        useThemeColor ? theme.color.opacity(0.35) : imageColor
-    }
 
     func body(content: Content) -> some View {
         content
@@ -43,9 +37,7 @@ struct ImageAccentBackground: ViewModifier {
             .listRowSeparator(.hidden)
             #endif
             .task(id: url) {
-                if !useThemeColor {
-                    await updateColor()
-                }
+                await updateColor()
             }
             .background {
                 (Const.macOS26 || Device.isVision
@@ -67,14 +59,14 @@ struct ImageAccentBackground: ViewModifier {
         guard let url else { return }
         let task = await ImageService.getAccentColor(from: url, imageCacheManager)
         if let info = await task.value {
-            imageColor = info.color
+            color = info.color
             imageCacheManager[url.absoluteString] = info
         }
     }
 }
 
 extension View {
-    func imageAccentBackground(url: URL?, useThemeColor: Bool = false) -> some View {
-        self.modifier(ImageAccentBackground(url: url, useThemeColor: useThemeColor))
+    func imageAccentBackground(url: URL?) -> some View {
+        self.modifier(ImageAccentBackground(url: url))
     }
 }

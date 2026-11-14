@@ -36,6 +36,7 @@ struct MenuTabBar: View {
                 inboxValue: InboxTabLabel.accessibilityValue(isEmpty: anyInboxEntry.isEmpty),
                 isPlaying: player.isPlaying && !player.videoEnded
             ),
+            neutralTint: !navManager.visibleSubscriptionPages.isEmpty,
             onPlayPauseTapped: { playPauseHaptic.toggle() }
         )
         .sensoryFeedback(Const.sensoryFeedback, trigger: playPauseHaptic)

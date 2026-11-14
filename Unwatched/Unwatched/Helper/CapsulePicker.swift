@@ -10,14 +10,57 @@ import SwiftData
 
 struct CapsulePicker<T: Hashable>: View {
     @Environment(\.modelContext) var modelContext
+    @Environment(\.settingControlStyle) var style
+    @Environment(\.premiumLockedFeature) var premiumLockedFeature
 
     @Binding var selection: T
     var options: [T]
     var label: (T) -> (text: String, image: String?)
     var menuLabel: LocalizedStringKey
     var fallbackSystemImage = "questionmark"
+    var compactText: ((T) -> String)?
+    var compactIconText: String?
+
+    @Environment(\.compactSettingValues) private var compact
 
     var body: some View {
+        if style == .menuItem {
+            menuPicker
+        } else {
+            capsuleMenu
+        }
+    }
+
+    var menuPicker: some View {
+        let guarded = Binding(
+            get: { selection },
+            set: { value in
+                if let premiumLockedFeature, !guardPremium(premiumLockedFeature) {
+                    return
+                }
+                selection = value
+                try? modelContext.save()
+            }
+        )
+        let (text, image) = label(selection)
+        return Menu {
+            Picker(selection: guarded) {
+                ForEach(options, id: \.self) { option in
+                    Text(label(option).text)
+                        .tag(option)
+                }
+            } label: {
+                EmptyView()
+            }
+            .pickerStyle(.inline)
+        } label: {
+            Text(menuLabel)
+            Text(text)
+            Image(systemName: image ?? fallbackSystemImage)
+        }
+    }
+
+    var capsuleMenu: some View {
         Menu {
             ForEach(options, id: \.self) { option in
                 Button {
@@ -39,7 +82,8 @@ struct CapsulePicker<T: Hashable>: View {
             let (text, image) = label(selection)
             CapsuleMenuLabel(systemImage: image ?? fallbackSystemImage,
                              menuLabel: menuLabel,
-                             text: text)
+                             text: compact ? (compactText?(selection) ?? text) : text,
+                             iconText: compactIconText)
         }
         .buttonStyle(CapsuleButtonStyle(primary: false))
     }

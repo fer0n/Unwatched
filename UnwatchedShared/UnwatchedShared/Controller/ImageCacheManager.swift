@@ -128,6 +128,7 @@ public struct ImageCacheInfo: Sendable {
     public var url: URL
     public var data: Data
     public var color: Color?
+    public var readableColors: ReadableColors
     public var persistImage: Bool
     public var persistColor: Bool
 
@@ -135,13 +136,36 @@ public struct ImageCacheInfo: Sendable {
         url: URL,
         data: Data,
         color: Color? = nil,
+        readableColors: ReadableColors = ReadableColors(),
         persistImage: Bool = true,
         persistColor: Bool = true
     ) {
         self.url = url
         self.data = data
         self.color = color
+        self.readableColors = readableColors
         self.persistImage = persistImage
         self.persistColor = persistColor
+    }
+}
+
+public struct ReadableColors: Sendable {
+    public var light: Color?
+    public var dark: Color?
+
+    public init(light: Color? = nil, dark: Color? = nil) {
+        self.light = light
+        self.dark = dark
+    }
+
+    public subscript(colorScheme: ColorScheme) -> Color? {
+        get { colorScheme == .dark ? dark : light }
+        set {
+            if colorScheme == .dark {
+                dark = newValue
+            } else {
+                light = newValue
+            }
+        }
     }
 }
