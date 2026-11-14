@@ -185,7 +185,7 @@ struct InboxCard: View, Equatable {
     private var description: some View {
         if let description = content.description {
             CollapsingSectionLayout(spacing: 10) {
-                Text(verbatim: description)
+                Text(description)
                     .font(.system(size: infoSize))
                     .foregroundStyle(.secondary)
                     .multilineTextAlignment(.leading)
@@ -224,7 +224,7 @@ struct InboxCard: View, Equatable {
         let title: String
         let playlistTitle: String?
         let subscriptionTitle: String?
-        let description: String?
+        let description: AttributedString?
         let details: [String]
         let imageUrls: [URL?]
         /// Not shown, keeps `==` from missing chapters that arrive after the card was built
@@ -242,7 +242,7 @@ struct InboxCard: View, Equatable {
             }
 
             if let text = video.videoDescription, !text.isEmpty {
-                description = String(text.prefix(Self.descriptionLimit))
+                description = AttributedString(inlineMarkdown: text, limit: Self.descriptionLimit)
             } else {
                 description = nil
             }

@@ -80,7 +80,7 @@ extension ShareCardView {
     @ViewBuilder
     func descriptionText(for video: SendableVideo) -> some View {
         if let description = video.videoDescription, !description.isEmpty {
-            Text(description)
+            Text(AttributedString(inlineMarkdown: description))
                 .font(.body)
                 .foregroundStyle(.secondary)
                 .textSelection(.enabled)
