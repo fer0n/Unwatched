@@ -17,9 +17,7 @@ struct SubscriptionTitleFilterButton: View {
             Button {
                 showFilter.toggle()
             } label: {
-                Text("filterSettings")
-                Text(text)
-                Image(systemName: systemImage)
+                MenuItemLabel(title: "filterSettings", value: text, systemImage: systemImage)
             }
         } else {
             capsuleButton

@@ -54,9 +54,7 @@ struct CapsulePicker<T: Hashable>: View {
             }
             .pickerStyle(.inline)
         } label: {
-            Text(menuLabel)
-            Text(text)
-            Image(systemName: image ?? fallbackSystemImage)
+            MenuItemLabel(title: menuLabel, value: text, systemImage: image ?? fallbackSystemImage)
         }
     }
 

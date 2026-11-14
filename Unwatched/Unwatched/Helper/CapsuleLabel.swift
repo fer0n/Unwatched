@@ -134,10 +134,23 @@ struct CapsuleMenuLabel: View {
             .padding(.horizontal, 15)
             .padding(.vertical, 10)
         case .menuItem:
-            Text(menuLabel)
-            Text(text)
-            Image(systemName: systemImage)
+            MenuItemLabel(title: menuLabel, value: text, systemImage: systemImage)
         }
+    }
+}
+
+// a second line stays white on the near-white macOS highlight
+struct MenuItemLabel: View {
+    var title: LocalizedStringKey
+    var value: String
+    var systemImage: String
+
+    var body: some View {
+        Text(title)
+        #if !os(macOS)
+        Text(value)
+        #endif
+        Image(systemName: systemImage)
     }
 }
 
