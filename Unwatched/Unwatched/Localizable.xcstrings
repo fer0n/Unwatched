@@ -2594,31 +2594,31 @@
         "de" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Schwarz/Weiß"
+            "value" : "Monochrom"
           }
         },
         "en" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Black/White"
+            "value" : "Monochrome"
           }
         },
         "es" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Negro/Blanco"
+            "value" : "Monocromo"
           }
         },
         "fr" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Noir/Blanc"
+            "value" : "Monochrome"
           }
         },
         "pl" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Czarny/Biały"
+            "value" : "Monochromatyczny"
           }
         }
       }
