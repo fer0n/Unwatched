@@ -25867,40 +25867,6 @@
         }
       }
     },
-    "showTabBarLabels" : {
-      "localizations" : {
-        "de" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Tab Bar Label anzeigen"
-          }
-        },
-        "en" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Show Tab Bar Labels"
-          }
-        },
-        "es" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Mostrar etiquetas de la barra de pestañas"
-          }
-        },
-        "fr" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Afficher les étiquettes de la barre d'onglets"
-          }
-        },
-        "pl" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Pokaż etykiety na pasku nawigacji"
-          }
-        }
-      }
-    },
     "sideloads" : {
       "localizations" : {
         "de" : {

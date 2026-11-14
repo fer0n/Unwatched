@@ -321,7 +321,6 @@ class ExportableTests: XCTestCase {
                 Const.rotateOnPlay: true,
 
                 // Appearance
-                Const.showTabBarLabels: false,
                 Const.showTabBarBadge: false,
                 Const.themeColor: ThemeColor.red.rawValue,
                 Const.browserDisplayMode: BrowserDisplayMode.external.rawValue,

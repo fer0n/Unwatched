@@ -42,7 +42,6 @@ export const BOOL_SETTINGS = [
   ["copyAppUrl", false, "Copy App URL"],
   ["surroundingEffect", true, "Surrounding Effect"],
   // Appearance
-  ["showTabBarLabels", true, "Show Tab Bar Labels"],
   ["showTabBarBadge", true, "Show Tab Bar Badge"],
   ["hidePlayerPageIndicator", false, "Hide Player Page Indicator"],
   ["inboxOldestFirst", false, "Inbox Oldest First"],

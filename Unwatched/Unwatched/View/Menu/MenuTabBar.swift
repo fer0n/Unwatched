@@ -14,7 +14,6 @@ struct MenuTabBar: View {
     @Environment(PlayerManager.self) var player
     @Environment(RefreshManager.self) var refresher
 
-    @AppStorage(Const.showTabBarLabels) var showTabBarLabels = true
     @AppStorage(Const.showTabBarBadge) var showTabBarBadge = true
 
     @Query(QueueTabItemViewModifier.descriptor) var newQueueEntry: [QueueEntry]
@@ -35,8 +34,7 @@ struct MenuTabBar: View {
                 queueValue: QueueTabLabel.accessibilityValue(showBadge: queueBadge),
                 inboxSymbol: InboxTabLabel.symbol(isLoading: refresher.isLoading, isEmpty: anyInboxEntry.isEmpty),
                 inboxValue: InboxTabLabel.accessibilityValue(isEmpty: anyInboxEntry.isEmpty),
-                isPlaying: player.isPlaying && !player.videoEnded,
-                showLabels: showTabBarLabels
+                isPlaying: player.isPlaying && !player.videoEnded
             ),
             onPlayPauseTapped: { playPauseHaptic.toggle() }
         )
@@ -51,6 +49,5 @@ struct MenuTabLabels: Equatable {
     var inboxSymbol: String
     var inboxValue: String
     var isPlaying: Bool
-    var showLabels: Bool
 }
 #endif

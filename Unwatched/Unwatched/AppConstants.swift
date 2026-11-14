@@ -93,7 +93,6 @@ extension Const {
 
         // Appearance
         Const.browserDisplayMode: BrowserDisplayMode.inApp.rawValue,
-        Const.showTabBarLabels: true,
         Const.showTabBarBadge: true,
         Const.hidePlayerPageIndicator: false,
         Const.videoListFormat: VideoListFormat.compact.rawValue,

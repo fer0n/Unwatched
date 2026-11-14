@@ -18,7 +18,6 @@ extension MenuTabBarController {
         let environment = MenuTabEnvironment()
         var scrollProxies = [NavigationTab: ScrollViewProxy]()
         private var appliedLabels: MenuTabLabels?
-        private var systemSearchTitle: String?
 
         init(navManager: NavigationManager, player: PlayerManager, onPlayPauseTapped: @escaping () -> Void) {
             self.navManager = navManager
@@ -59,7 +58,7 @@ extension MenuTabBarController {
 
             func update(_ tab: UITab?, image: UIImage?, title: String, badge: Bool = false, value: String = "") {
                 tab?.image = image
-                tab?.title = MenuTabLabel.title(title, showBadge: badge, showLabels: labels.showLabels)
+                tab?.title = MenuTabLabel.title(showBadge: badge)
                 // VoiceOver reads hidden titles as the symbol name and the badge as "●"
                 tab?.viewController?.tabBarItem.accessibilityLabel = title
                 tab?.viewController?.tabBarItem.accessibilityValue = value
@@ -78,10 +77,9 @@ extension MenuTabBarController {
                 title: labels.isPlaying ? String(localized: "pause") : String(localized: "play")
             )
 
-            if let search = uiTab(for: .search, in: controller) {
-                systemSearchTitle = systemSearchTitle ?? search.title
-                search.title = MenuTabLabel.title(systemSearchTitle ?? "", showLabels: labels.showLabels)
-            }
+            let search = uiTab(for: .search, in: controller)
+            search?.title = ""
+            search?.viewController?.tabBarItem.accessibilityLabel = NavigationTab.search.description
         }
 
         func tabBarController(_ tabBarController: UITabBarController, shouldSelectTab tab: UITab) -> Bool {

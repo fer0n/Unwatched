@@ -448,7 +448,6 @@ public struct Const {
     public static let navigationManager = "NavigationManager"
     public static let playerManager = "PlayerManager"
     public static let lastAutoRefreshDate = "lastAutoRefreshDate"
-    public static let showTabBarLabels = "showTabBarLabels"
     public static let requireClearConfirmation = "requireClearConfirmation"
     public static let showClearQueueButton = "showClearQueueButton"
     public static let useNoCookieUrl = "useNoCookieUrl"

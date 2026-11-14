@@ -8,7 +8,6 @@ import OSLog
 import UnwatchedShared
 
 struct AppearanceSettingsView: View {
-    @AppStorage(Const.showTabBarLabels) var showTabBarLabels: Bool = true
     @AppStorage(Const.themeColor) var themeColor: ThemeColor = .defaultTheme
     @AppStorage(Const.videoListFormat) var videoListFormat: VideoListFormat = .compact
     @AppStorage(Const.inboxAppearance) var inboxAppearance: InboxAppearance = .cards
@@ -27,9 +26,6 @@ struct AppearanceSettingsView: View {
             MyForm {
                 MySection {
                     #if os(iOS)
-                    Toggle(isOn: $showTabBarLabels) {
-                        Text("showTabBarLabels")
-                    }
                     if !Device.isIphoneDuo {
                         Toggle(isOn: $hidePlayerPageIndicator) {
                             Text("hidePlayerPageIndicator")
