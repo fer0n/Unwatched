@@ -435,7 +435,7 @@ struct TrailingSwipeActionsView: View {
                     action: clearVideoEverywhere
                 )
                 .labelStyle(.iconOnly)
-                .tint(theme.color.mix(with: Color.black, by: 0.9))
+                .tint(theme.color.mix(with: Color.black, by: 0.5))
             }
             #if os(iOS)
             TrailingSwipeMoreMenu(
@@ -468,7 +468,7 @@ struct TrailingSwipeActionsView: View {
                 Label("videoDescription", image: Const.videoDescriptionSF)
             }
             .labelStyle(.iconOnly)
-            .tint(theme.color.mix(with: Color.black, by: 0.3))
+            .tint(theme.color.mix(with: Color.black, by: 0.1))
         }
     }
 }

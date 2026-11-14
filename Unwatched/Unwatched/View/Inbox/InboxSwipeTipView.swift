@@ -27,7 +27,7 @@ struct InboxSwipeTipView: View {
             .swipeActions(edge: .trailing, allowsFullSwipe: true) {
                 Button("clear", systemImage: Const.clearSF, action: invalidateTip)
                     .labelStyle(.iconOnly)
-                    .tint(theme.color.mix(with: Color.black, by: 0.9))
+                    .tint(theme.color.mix(with: Color.black, by: 0.5))
             }
     }
 
