@@ -55,6 +55,7 @@ struct SubscriptionDetailView: View {
         }
         .tint(pageColor)
         .environment(\.pageThemeColor, pageColor)
+        .environment(\.swipeActionColor, pageColor?.darkenedForSwipeActions)
         .environment(\.chipIconColor, pageColorResolver.iconColor(for: pageColor))
         .task(id: PageColorKey(imageUrl: imageUrl, colorScheme: colorScheme)) {
             await resolvePageColor()

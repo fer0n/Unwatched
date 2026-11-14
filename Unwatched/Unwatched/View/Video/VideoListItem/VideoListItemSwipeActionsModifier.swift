@@ -10,6 +10,7 @@ import UnwatchedShared
 
 struct VideoListItemSwipeActionsModifier: ViewModifier {
     @AppStorage(Const.themeColor) var theme = ThemeColor()
+    @Environment(\.swipeActionColor) private var swipeActionColor
 
     @Environment(PlayerManager.self) private var player
     @Environment(\.modelContext) var modelContext
@@ -21,11 +22,15 @@ struct VideoListItemSwipeActionsModifier: ViewModifier {
     var config: VideoListItemConfig
     let onChange: ((_ reason: VideoChangeReason?, _ order: Int?) -> Void)?
 
+    private var color: Color {
+        swipeActionColor ?? theme.color
+    }
+
     func body(content: Content) -> some View {
         content
             .swipeActions(edge: .leading, allowsFullSwipe: true) {
                 LeadingSwipeActionsView(
-                    theme: theme,
+                    color: color,
                     config: config,
                     addVideoToTopQueue: { addVideoToTopQueue(via: "swipe") },
                     addVideoToBottomQueue: { addVideoToBottomQueue(via: "swipe") },
@@ -35,7 +40,7 @@ struct VideoListItemSwipeActionsModifier: ViewModifier {
             .swipeActions(edge: .trailing, allowsFullSwipe: true) {
                 TrailingSwipeActionsView(
                     videoData: videoData,
-                    theme: theme,
+                    color: color,
                     config: config,
                     clearVideoEverywhere: clearVideoEverywhere,
                     setWatched: setWatched,
@@ -380,95 +385,6 @@ struct VideoListItemSwipeActionsModifier: ViewModifier {
             if hasQueueEntry {
                 player.loadTopmostVideoFromQueue()
             }
-        }
-    }
-}
-
-struct LeadingSwipeActionsView: View {
-    var theme: ThemeColor
-    var config: VideoListItemConfig
-    var addVideoToTopQueue: () -> Void
-    var addVideoToBottomQueue: () -> Void
-    var toggleIsNew: () -> Void
-
-    var body: some View {
-        // swipe actions ignore .accessibilityLabel; VoiceOver reads the title
-        Group {
-            Button("queueNext", systemImage: Const.queueNextSF, role: config.queueRole, action: addVideoToTopQueue)
-                .tint(theme.color.mix(with: Color.black, by: 0.1))
-            Button("queueLast", systemImage: Const.queueLastSF, role: config.queueRole, action: addVideoToBottomQueue)
-                .tint(theme.color.mix(with: Color.black, by: 0.3))
-            if config.isNew == true {
-                Button("removeIsNew", systemImage: Const.removeNewSF, action: toggleIsNew)
-                    .tint(theme.color.mix(with: Color.black, by: 0.5))
-            }
-        }
-        .labelStyle(.iconOnly)
-    }
-}
-
-struct TrailingSwipeActionsView: View {
-    @Environment(NavigationManager.self) private var navManager
-    @Environment(\.modelContext) var modelContext
-
-    var videoData: VideoData
-    var theme: ThemeColor
-    var config: VideoListItemConfig
-    var clearVideoEverywhere: () -> Void
-    var setWatched: (Bool) -> Void
-    var addVideoToTopQueue: () -> Void
-    var addVideoToBottomQueue: () -> Void
-    var toggleBookmark: () -> Void
-    var toggleIsNew: () -> Void
-    var moveToInbox: () -> Void
-    var clearList: (ClearList, ClearDirection) -> Void
-    var canBeCleared: Bool
-    var deleteVideo: () -> Void
-
-    var body: some View {
-        Group {
-            if canBeCleared {
-                Button(
-                    "clearVideo",
-                    systemImage: Const.clearNoFillSF,
-                    role: config.clearRole,
-                    action: clearVideoEverywhere
-                )
-                .labelStyle(.iconOnly)
-                .tint(theme.color.mix(with: Color.black, by: 0.5))
-            }
-            #if os(iOS)
-            TrailingSwipeMoreMenu(
-                videoData: videoData,
-                theme: theme,
-                config: config,
-                setWatched: setWatched,
-                addVideoToTopQueue: addVideoToTopQueue,
-                addVideoToBottomQueue: addVideoToBottomQueue,
-                clearVideoEverywhere: clearVideoEverywhere,
-                canBeCleared: canBeCleared,
-                toggleBookmark: toggleBookmark,
-                toggleIsNew: toggleIsNew,
-                moveToInbox: moveToInbox,
-                clearList: clearList,
-                deleteVideo: deleteVideo
-            )
-            #endif
-            Button {
-                guard let video = VideoService.getVideoModel(
-                    from: videoData,
-                    modelContext: modelContext
-                ) else {
-                    Log.error("No video to show details for")
-                    return
-                }
-                navManager.pushVideoDetail(video)
-                video.isNew = false
-            } label: {
-                Label("videoDescription", image: Const.videoDescriptionSF)
-            }
-            .labelStyle(.iconOnly)
-            .tint(theme.color.mix(with: Color.black, by: 0.1))
         }
     }
 }

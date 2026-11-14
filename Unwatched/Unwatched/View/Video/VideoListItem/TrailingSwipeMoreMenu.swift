@@ -10,7 +10,7 @@ struct TrailingSwipeMoreMenu: View {
     @Environment(NavigationManager.self) private var navManager
 
     var videoData: VideoData
-    var theme: ThemeColor
+    var color: Color
     var config: VideoListItemConfig
     var setWatched: (Bool) -> Void
     var addVideoToTopQueue: () -> Void
@@ -46,6 +46,6 @@ struct TrailingSwipeMoreMenu: View {
             Label("moreOptions", systemImage: "ellipsis")
                 .labelStyle(.iconOnly)
         }
-        .tint(theme.color.mix(with: Color.black, by: 0.3))
+        .tint(color.swipeShade(.medium))
     }
 }

@@ -12,7 +12,11 @@ public enum ColorUsage {
 
 public extension Color {
     var contrastingTextColor: Color {
-        luminance > 0.62 ? .black : .white
+        prefersWhiteText ? .white : .black
+    }
+
+    var prefersWhiteText: Bool {
+        luminance <= 0.62
     }
 
     var luminance: Double {

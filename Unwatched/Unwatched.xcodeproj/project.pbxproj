@@ -141,6 +141,8 @@
 		880C28647E6C2BDDA11624A2 /* MenuTabBarCoordinator.swift in Sources */ = {isa = PBXBuildFile; fileRef = 88624DE699CAF49A1F248A23 /* MenuTabBarCoordinator.swift */; };
 		880E85D32F655B88001DAAE8 /* TrailingSwipeMoreMenu.swift in Sources */ = {isa = PBXBuildFile; fileRef = 880E85D22F655B88001DAAE8 /* TrailingSwipeMoreMenu.swift */; };
 		880E85D42F655B88001DAAE8 /* TrailingSwipeMoreMenu.swift in Sources */ = {isa = PBXBuildFile; fileRef = 880E85D22F655B88001DAAE8 /* TrailingSwipeMoreMenu.swift */; };
+		88A1F0C22F9A3B5400C0FFEE /* VideoListItemSwipeActionsView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 88A1F0C12F9A3B5400C0FFEE /* VideoListItemSwipeActionsView.swift */; };
+		88A1F0C32F9A3B5400C0FFEE /* VideoListItemSwipeActionsView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 88A1F0C12F9A3B5400C0FFEE /* VideoListItemSwipeActionsView.swift */; };
 		880E87002F6562F2001DAAE8 /* VideoListItemActions.swift in Sources */ = {isa = PBXBuildFile; fileRef = 880E86FF2F6562F2001DAAE8 /* VideoListItemActions.swift */; };
 		880E87012F6562F2001DAAE8 /* VideoListItemActions.swift in Sources */ = {isa = PBXBuildFile; fileRef = 880E86FF2F6562F2001DAAE8 /* VideoListItemActions.swift */; };
 		880E87052F656315001DAAE8 /* PlayerShadow.swift in Sources */ = {isa = PBXBuildFile; fileRef = 880E87042F656315001DAAE8 /* PlayerShadow.swift */; };
@@ -1378,6 +1380,7 @@
 		880C211D2D7ECEB500E859A5 /* DeferDateButtonStyle.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DeferDateButtonStyle.swift; sourceTree = "<group>"; };
 		880C21202D7ECEDE00E859A5 /* DateSelectorSheet.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DateSelectorSheet.swift; sourceTree = "<group>"; };
 		880E85D22F655B88001DAAE8 /* TrailingSwipeMoreMenu.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TrailingSwipeMoreMenu.swift; sourceTree = "<group>"; };
+		88A1F0C12F9A3B5400C0FFEE /* VideoListItemSwipeActionsView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = VideoListItemSwipeActionsView.swift; sourceTree = "<group>"; };
 		880E86FF2F6562F2001DAAE8 /* VideoListItemActions.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = VideoListItemActions.swift; sourceTree = "<group>"; };
 		880E87032F656315001DAAE8 /* PlayerPageControl.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PlayerPageControl.swift; sourceTree = "<group>"; };
 		880E87042F656315001DAAE8 /* PlayerShadow.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PlayerShadow.swift; sourceTree = "<group>"; };
@@ -2060,6 +2063,7 @@
 				880E85D22F655B88001DAAE8 /* TrailingSwipeMoreMenu.swift */,
 				88DFC0BF2B4489C2001895C8 /* VideoListItem.swift */,
 				88DB7EB82BD8F3FB00FD9EBC /* VideoListItemSwipeActionsModifier.swift */,
+				88A1F0C12F9A3B5400C0FFEE /* VideoListItemSwipeActionsView.swift */,
 				889D61672D521EF30070389D /* VideoListItemEntryModifier.swift */,
 				8804A3EE2B8B88A000D3F4F1 /* VideoListItemDetails.swift */,
 				8804A3F12B8B898000D3F4F1 /* VideoListItemStatus.swift */,
@@ -3848,6 +3852,7 @@
 				88AA00112F9A000100000005 /* YoutubeCookieFilterTests.swift in Sources */,
 				886E21732EC1488A00BF03B5 /* UpdateWindowSizeModifier.swift in Sources */,
 				880E85D32F655B88001DAAE8 /* TrailingSwipeMoreMenu.swift in Sources */,
+				88A1F0C22F9A3B5400C0FFEE /* VideoListItemSwipeActionsView.swift in Sources */,
 				889A84E82E6C198E006F210A /* DeleteEverythingExceptSubsButton.swift in Sources */,
 				8801CBC83067B097007E4C90 /* ChapterDescriptionView+Actions.swift in Sources */,
 				889AF8DF2C50ECA9001CEDE6 /* TextFieldClearButton.swift in Sources */,
@@ -4458,6 +4463,7 @@
 				F7401C1BC1811AE84826B642 /* SubscribeErrorPopover.swift in Sources */,
 				8816A2FE2CCD5125001FE63E /* PageControl.swift in Sources */,
 				880E85D42F655B88001DAAE8 /* TrailingSwipeMoreMenu.swift in Sources */,
+				88A1F0C32F9A3B5400C0FFEE /* VideoListItemSwipeActionsView.swift in Sources */,
 				883CA8172B5BA94900028D52 /* SheetPositionReader.swift in Sources */,
 				887EB2E12CFE676700F9D517 /* QueueViewUnavailable.swift in Sources */,
 				88F844772FCAB25F000FC034 /* PlayerScrubberOverlay.swift in Sources */,
