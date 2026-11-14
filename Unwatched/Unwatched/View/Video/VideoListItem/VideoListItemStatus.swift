@@ -10,16 +10,19 @@ private struct StatusInfo {
     let systemName: String
     let color: Color
     let label: LocalizedStringKey
+    var symbolColor: Color = .white
 
-    init(_ systemName: String, _ color: Color, _ label: LocalizedStringKey) {
+    init(_ systemName: String, _ color: Color, _ label: LocalizedStringKey, symbolColor: Color = .white) {
         self.systemName = systemName
         self.color = color
         self.label = label
+        self.symbolColor = symbolColor
     }
 }
 
 struct VideoListItemStatus: View {
     @Environment(PlayerManager.self) private var player
+    @Environment(\.pageThemeColor) private var pageThemeColor
 
     var showAllStatus: Bool = true
     var youtubeId: String
@@ -36,7 +39,7 @@ struct VideoListItemStatus: View {
         if let statusInfo {
             Image(systemName: statusInfo.systemName)
                 .resizable()
-                .foregroundStyle(.white, statusInfo.color.mix(with: .black, by: 0.1))
+                .foregroundStyle(statusInfo.symbolColor, statusInfo.color.mix(with: .black, by: 0.1))
                 .frame(width: size, height: size)
                 .accessibilityLabel("videoStatus")
                 .accessibilityValue(statusInfo.label)
@@ -50,13 +53,13 @@ struct VideoListItemStatus: View {
         let defaultColor = Color.green
         if showAllStatus {
             if youtubeId == player.video?.youtubeId {
-                return StatusInfo("play.circle.fill", defaultColor, "nowPlaying")
+                return accentStatus("play.circle.fill", fallback: defaultColor, "nowPlaying")
             }
             if hasInboxEntry == true {
                 return StatusInfo("tray.circle.fill", .teal, "inbox")
             }
             if hasQueueEntry == true {
-                return StatusInfo("arrow.uturn.right.circle.fill", defaultColor, "queue")
+                return accentStatus("arrow.uturn.right.circle.fill", fallback: defaultColor, "queue")
             }
         }
         if isNew == true {
@@ -67,10 +70,17 @@ struct VideoListItemStatus: View {
                 return StatusInfo("clock.circle.fill", .orange, "statusDeferred")
             }
             if watched == true {
-                return StatusInfo(Const.watchedSF, defaultColor.mix(with: .black, by: 0.3), "watched")
+                return accentStatus(Const.watchedSF, fallback: defaultColor.mix(with: .black, by: 0.3), "watched")
             }
         }
         return nil
+    }
+
+    private func accentStatus(_ systemName: String, fallback: Color, _ label: LocalizedStringKey) -> StatusInfo {
+        guard let pageThemeColor else {
+            return StatusInfo(systemName, fallback, label)
+        }
+        return StatusInfo(systemName, pageThemeColor, label, symbolColor: pageThemeColor.contrastingTextColor)
     }
 }
 

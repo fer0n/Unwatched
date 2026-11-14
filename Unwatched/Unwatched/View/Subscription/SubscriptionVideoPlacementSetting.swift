@@ -21,7 +21,10 @@ struct SubscriptionVideoPlacementSetting: View {
                     ?? "questionmark"
                 return (text, img)
             },
-            menuLabel: "videoPlacement"
+            menuLabel: "videoPlacement",
+            compactText: {
+                $0 == .defaultPlacement ? String(localized: "defaultSettingShort") : $0.shortDescription
+            }
         )
     }
 }

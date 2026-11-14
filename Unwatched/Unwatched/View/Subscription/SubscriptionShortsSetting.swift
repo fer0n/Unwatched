@@ -23,7 +23,15 @@ struct SubscriptionShortsSetting: View {
                     ?? "questionmark"
                 return (text, img)
             },
-            menuLabel: "shortsSetting"
+            menuLabel: "shortsSetting",
+            compactText: {
+                switch $0 {
+                case .show: String(localized: "showShorts")
+                case .hide: String(localized: "hideShorts")
+                case .defaultSetting: String(localized: "defaultSettingShort")
+                }
+            },
+            compactIconText: "#s"
         )
         .onChange(of: subscription.shortsSetting) {
             if !subscription.shortsSetting.shouldHide() {

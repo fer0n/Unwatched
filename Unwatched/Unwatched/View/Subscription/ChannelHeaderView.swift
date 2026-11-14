@@ -15,7 +15,6 @@ struct ChannelHeaderView: View {
     var userName: String?
     var author: String?
     var videoCount: Int?
-    var onAuthorTap: (() -> Void)?
     /// Reserve the circular image slot even before `imageUrl` is known, so the layout
     /// doesn't jump when an avatar is loaded asynchronously (used by the Search preview).
     var reserveImage: Bool = false
@@ -63,9 +62,6 @@ struct ChannelHeaderView: View {
                     Text(verbatim: author)
                         .font(.title2)
                         .foregroundStyle(.primary)
-                        .onTapGesture {
-                            onAuthorTap?()
-                        }
                 }
 
                 #if DEBUG

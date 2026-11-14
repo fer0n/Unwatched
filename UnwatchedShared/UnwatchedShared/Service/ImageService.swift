@@ -27,6 +27,9 @@ public struct ImageService {
                     color = info.color
                 }
                 let imageCache = CachedImage(info.url, imageData: info.data, color: color)
+                if info.persistColor {
+                    imageCache.readableColors = info.readableColors
+                }
                 context.insert(imageCache)
                 Log.info("persistImages: saved image \(color == nil ? "+ color " : "")(\(info.url))")
             } else {
@@ -37,6 +40,7 @@ public struct ImageService {
                 if info.persistColor == true, let color = info.color {
                     Log.info("persistImages: saved color (\(info.url))")
                     image.color = color
+                    image.readableColors = info.readableColors
                 }
                 if (image.lastAccessedOn ?? .distantPast) < twoDaysAgo {
                     image.lastAccessedOn = .now
@@ -363,6 +367,7 @@ public struct ImageService {
                     url: url,
                     data: imageData,
                     color: model.color,
+                    readableColors: model.readableColors,
                     persistImage: false,
                     persistColor: false
                 )
@@ -412,6 +417,19 @@ public struct ImageService {
             }
             return info
         }
+    }
+
+    @MainActor
+    public static func getAccentColorCandidates(
+        from url: URL,
+        _ imageCacheManager: ImageCacheManager,
+        limit: Int = 6
+    ) async -> [Color] {
+        let task = ImageService.getImage(url, imageCacheManager)
+        return await Task.detached {
+            guard let image = try? await task.value.0 else { return [] }
+            return image.extractVibrantAccentColors(limit: limit)
+        }.value
     }
 }
 

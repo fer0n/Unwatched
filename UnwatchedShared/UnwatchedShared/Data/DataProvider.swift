@@ -231,7 +231,7 @@ public final class DataProvider: Sendable {
 
     public static let schema = Schema(DataProvider.dbEntries)
 
-    public static let cacheEntries = CachedImageSchemaV2p4.models
+    public static let cacheEntries = CachedImageSchemaV2p5.models
 
     public static let previewContainer: ModelContainer = {
         var sharedModelContainer: ModelContainer = {

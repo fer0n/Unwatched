@@ -53,6 +53,7 @@ struct SubscriptionTagsSetting: View {
             }
         }
         .buttonStyle(CapsuleButtonStyle(primary: false))
+        .environment(\.settingIsActive, !assignedTags.isEmpty)
         .requiresPremium(feature: "tags")
     }
 

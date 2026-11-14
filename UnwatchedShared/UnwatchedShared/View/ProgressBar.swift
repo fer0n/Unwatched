@@ -5,8 +5,13 @@
 
 import SwiftUI
 
+public extension EnvironmentValues {
+    @Entry var pageThemeColor: Color?
+}
+
 struct ProgressBar: View {
     @AppStorage(Const.themeColor) var theme = ThemeColor()
+    @Environment(\.pageThemeColor) var pageThemeColor
 
     let color: Color?
     let width: Double?
@@ -32,7 +37,7 @@ struct ProgressBar: View {
                 #endif
                 downloadOverlay
                 HStack(spacing: 0) {
-                    (color ?? theme.color)
+                    (color ?? pageThemeColor ?? theme.color)
                         .frame(width: width ?? 0)
                     Color.black
                         .opacity(0.2)

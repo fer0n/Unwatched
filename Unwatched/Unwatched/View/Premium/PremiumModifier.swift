@@ -10,12 +10,19 @@ struct RequiresPremiumModifier: ViewModifier {
     @CloudStorage(Const.unwatchedPremiumAcknowledged) var premium: Bool = false
     @AppStorage(Const.hidePremium) var hidePremium: Bool = false
 
+    @Environment(\.settingControlStyle) var controlStyle
+
     let enabled: Bool
     let feature: String
     var onInteraction: (() -> Void)?
 
     func body(content: Content) -> some View {
-        if !(hidePremium && isLocked) {
+        if controlStyle == .menuItem {
+            if !(hidePremium && isLocked) {
+                content
+                    .environment(\.premiumLockedFeature, isLocked ? feature : nil)
+            }
+        } else if !(hidePremium && isLocked) {
             content
                 .allowsHitTesting(!isLocked)
                 .environment(\.isEnabled, true)

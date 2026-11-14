@@ -26,6 +26,7 @@ enum SkipEdge {
 
 struct SubscriptionSkipSetting: View {
     @Environment(\.colorScheme) var colorScheme
+    @Environment(\.settingControlStyle) var style
 
     var subscription: Subscription
     var edge: SkipEdge
@@ -46,6 +47,25 @@ struct SubscriptionSkipSetting: View {
             }
         )
 
+        if style == .menuItem {
+            CapsulePicker(
+                selection: seconds,
+                options: Self.menuOptions(including: seconds.wrappedValue),
+                label: { (SkipPopoverContent.text(for: $0), edge.systemImage) },
+                menuLabel: edge.label
+            )
+            .requiresPremium(seconds.wrappedValue == 0, feature: "skipIntroOutro")
+        } else {
+            popoverButton(seconds: seconds)
+        }
+    }
+
+    static func menuOptions(including seconds: Double) -> [Double] {
+        let presets: [Double] = [0, 5, 10, 15, 20, 30, 45, 60, 90]
+        return presets.contains(seconds) ? presets : (presets + [seconds]).sorted()
+    }
+
+    func popoverButton(seconds: Binding<Double>) -> some View {
         Button {
             showPopover.toggle()
         } label: {
@@ -227,11 +247,12 @@ struct SubscriptionAutoSkipSetting: View {
             Menu {
                 Section("autoSkipChaptersHelper") {
                     ForEach(titles, id: \.self) { title in
-                        Button(role: .destructive) {
+                        Button(title, role: .destructive) {
                             subscription.setAutoSkip(title, false)
-                        } label: {
-                            Label(title, systemImage: Const.clearNoFillSF)
                         }
+                        #if !os(macOS)
+                        .menuActionDismissBehavior(.disabled)
+                        #endif
                     }
                 }
             } label: {

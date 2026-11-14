@@ -18,84 +18,46 @@ struct SubscriptionDetailView: View {
     @State var showTitle: Bool = false
     @State var showFilter = false
 
+    @Environment(ImageCacheManager.self) var imageCacheManager
+    @State var pageColor: Color?
+    @Environment(\.colorScheme) var colorScheme
+
     @Bindable var subscription: Subscription
 
     var body: some View {
-        VStack {
-            List {
-                VStack {
-                    SubscriptionInfoDetails(subscription: subscription,
-                                            requiresUnsubscribe: $requiresUnsubscribe,
-                                            showFilter: $showFilter)
-                        .onAppear {
-                            withAnimation(.default.speed(1.5)) {
-                                showTitle = false
-                            }
-                        }
-                        .onDisappear {
-                            withAnimation(.default.speed(1.5)) {
-                                showTitle = true
-                            }
-                        }
-                }
-                #if os(visionOS)
-                .listRowInsets(EdgeInsets())
-                #else
-                .imageAccentBackground(url: imageUrl, useThemeColor: subscription.isWatchLater)
-                #endif
-                .myListRowBackground()
-
-                if showFilter {
-                    Button {
-                        showFilter = false
-                    } label: {
-                        Text("filterPreviewClose")
-                            .padding(.horizontal, 5)
-                    }
-                    #if !os(visionOS)
-                    .glassEffect(.regular.interactive())
-                    .foregroundStyle(Color.automaticBlack)
-                    .tint(Color.insetBackgroundColor)
-                    .buttonStyle(.borderedProminent)
-                    .buttonBorderShape(.capsule)
-                    #endif
-                    .buttonStyle(.bordered)
-                    .myListRowBackground()
-                    .listRowSeparator(.hidden)
-                    .frame(maxWidth: .infinity, alignment: .center)
-
-                    SubscriptionTitleFitlerPreview(subscription: subscription)
-                        .listRowSeparator(.hidden)
-                } else if subscription.isPodcast {
-                    PodcastEpisodeListView(subscription: subscription)
-                } else if let source = SubscriptionVideoListVM.Source(subscription) {
-                    SubscriptionVideoList(
-                        subscriptionId: subscription.persistentModelID,
-                        source: source,
-                        title: subscription.title
-                    )
-                    .environment(\.videoListShowsUploader, subscription.youtubePlaylistId != nil)
-                } else {
-                    VideoListView(subscriptionId: subscription.persistentModelID)
-                }
-            }
-            .scrollContentBackground(.hidden)
-            #if !os(visionOS)
-            .scrollEdgeEffectHidden(!showTitle, for: .top)
-            #endif
+        List {
+            SubscriptionHeader(
+                subscription: subscription,
+                requiresUnsubscribe: $requiresUnsubscribe,
+                showFilter: $showFilter,
+                showTitle: $showTitle,
+                imageUrl: imageUrl
+            )
+            videoSection
         }
+        .listStyle(.plain)
+        .scrollContentBackground(.hidden)
+        #if !os(visionOS)
+        .scrollEdgeEffectHidden(!showTitle, for: .top)
+        #endif
         .background {
             MyBackgroundColor()
         }
-        .listStyle(.plain)
         .concentricMacWorkaround()
-        .myNavigationTitle(LocalizedStringKey(subscription.title),
-                           titleHidden: !showTitle
-        )
-        .paneToolbar(placement: .confirmationAction) {
+        .myNavigationTitle(LocalizedStringKey(subscription.title), titleHidden: !showTitle)
+        .paneToolbar(placement: .primaryAction) {
             if !subscription.isArchived {
-                RefreshButton(refreshOnlySubscription: subscription.persistentModelID)
+                RefreshButton(
+                    refreshOnlySubscription: subscription.persistentModelID,
+                    forceNeutral: true
+                )
             }
+        }
+        .tint(pageColor)
+        .environment(\.pageThemeColor, pageColor)
+        .environment(\.chipIconColor, pageColorResolver.iconColor(for: pageColor))
+        .task(id: PageColorKey(imageUrl: imageUrl, colorScheme: colorScheme)) {
+            await resolvePageColor()
         }
         #if os(visionOS)
         .tint(nil)
@@ -117,6 +79,42 @@ struct SubscriptionDetailView: View {
         }
     }
 
+    @ViewBuilder var videoSection: some View {
+        if showFilter {
+            Button {
+                showFilter = false
+            } label: {
+                Text("filterPreviewClose")
+                    .padding(.horizontal, 5)
+            }
+            #if !os(visionOS)
+            .glassEffect(.regular.interactive())
+            .foregroundStyle(Color.automaticBlack)
+            .tint(Color.insetBackgroundColor)
+            .buttonStyle(.borderedProminent)
+            .buttonBorderShape(.capsule)
+            #endif
+            .buttonStyle(.bordered)
+            .myListRowBackground()
+            .listRowSeparator(.hidden)
+            .frame(maxWidth: .infinity, alignment: .center)
+
+            SubscriptionTitleFitlerPreview(subscription: subscription)
+                .listRowSeparator(.hidden)
+        } else if subscription.isPodcast {
+            PodcastEpisodeListView(subscription: subscription)
+        } else if let source = SubscriptionVideoListVM.Source(subscription) {
+            SubscriptionVideoList(
+                subscriptionId: subscription.persistentModelID,
+                source: source,
+                title: subscription.title
+            )
+            .environment(\.videoListShowsUploader, subscription.youtubePlaylistId != nil)
+        } else {
+            VideoListView(subscriptionId: subscription.persistentModelID)
+        }
+    }
+
     var imageUrl: URL? {
         if subscription.thumbnailUrl != nil {
             return subscription.thumbnailUrl
@@ -127,13 +125,29 @@ struct SubscriptionDetailView: View {
         return fallbackVideo?.thumbnailUrl
     }
 
+    var pageColorResolver: PageColorResolver {
+        PageColorResolver(imageCacheManager: imageCacheManager, colorScheme: colorScheme)
+    }
+
+    func resolvePageColor() async {
+        guard !subscription.isWatchLater, let imageUrl else {
+            pageColor = nil
+            return
+        }
+        let color = await pageColorResolver.resolve(imageUrl: imageUrl)
+        guard !Task.isCancelled else { return }
+        pageColor = color
+    }
+
     func handleOnAppear() {
+        navManager.visibleSubscriptionPages.insert(subscription.persistentModelID)
         if navManager.tab == .library {
             navManager.lastLibrarySubscriptionId = subscription.persistentModelID
         }
     }
 
     func handleOnDisappear() {
+        navManager.visibleSubscriptionPages.remove(subscription.persistentModelID)
         if subscription.isArchived && requiresUnsubscribe {
             let subId = subscription.persistentModelID
             _ = SubscriptionService.deleteSubscriptions([subId])
@@ -183,4 +197,9 @@ struct SubscriptionDetailView: View {
         return SubscriptionDetailView(subscription: Subscription.getDummy())
             .previewEnvironments()
     }
+}
+
+private struct PageColorKey: Equatable {
+    let imageUrl: URL?
+    let colorScheme: ColorScheme
 }

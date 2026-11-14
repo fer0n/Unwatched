@@ -11,6 +11,7 @@ import UnwatchedShared
 struct MenuView: View {
     @Environment(NavigationManager.self) var navManager
     @Environment(\.bigScreenLayout) var bigScreenLayout
+    @AppStorage(Const.themeColor) var theme = ThemeColor()
 
     var body: some View {
         @Bindable var navManager = navManager
@@ -84,6 +85,7 @@ struct MenuView: View {
                 }
             }
             .environment(\.scrollViewProxy, proxy)
+            .tint(!navManager.visibleSubscriptionPages.isEmpty ? .neutralAccentColor : theme.color)
         }
     }
 

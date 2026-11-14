@@ -9,12 +9,17 @@ import SwiftUI
 public struct ChannelImageShape: Shape {
     /// Corner radius as a share of the image's side, so the rounding reads the same at every size.
     public static let cornerFactor: CGFloat = 0.22
+    public static let heroCornerFactor: CGFloat = 0.12
 
-    public init() { }
+    var cornerFactor: CGFloat
+
+    public init(cornerFactor: CGFloat = Self.cornerFactor) {
+        self.cornerFactor = cornerFactor
+    }
 
     public func path(in rect: CGRect) -> Path {
         RoundedRectangle(
-            cornerRadius: min(rect.width, rect.height) * Self.cornerFactor,
+            cornerRadius: min(rect.width, rect.height) * cornerFactor,
             style: .continuous
         )
         .path(in: rect)
@@ -24,9 +29,12 @@ public struct ChannelImageShape: Shape {
 public extension View {
     /// Clips a channel avatar (circle) or podcast cover (`ChannelImageShape`).
     @ViewBuilder
-    func channelImageClip(isPodcast: Bool) -> some View {
+    func channelImageClip(
+        isPodcast: Bool,
+        cornerFactor: CGFloat = ChannelImageShape.cornerFactor
+    ) -> some View {
         if isPodcast {
-            clipShape(ChannelImageShape())
+            clipShape(ChannelImageShape(cornerFactor: cornerFactor))
         } else {
             clipShape(Circle())
         }

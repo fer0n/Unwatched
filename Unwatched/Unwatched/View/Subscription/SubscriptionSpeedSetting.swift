@@ -8,11 +8,17 @@ import SwiftUI
 import UnwatchedShared
 
 struct SubscriptionSpeedSetting: View {
+    @Environment(\.compactSettingValues) var compact
     @Bindable var subscription: Subscription
 
     var body: some View {
         CustomSpeedSetting(customSpeed: $subscription.customSpeedSetting) { text in
-            CapsuleMenuLabel(systemImage: "timer", menuLabel: "speedSetting", text: text)
+            let isDefault = subscription.customSpeedSetting == nil
+            CapsuleMenuLabel(
+                systemImage: "timer",
+                menuLabel: "speedSetting",
+                text: compact && isDefault ? String(localized: "defaultSettingShort") : text
+            )
         }
         .myTint()
     }

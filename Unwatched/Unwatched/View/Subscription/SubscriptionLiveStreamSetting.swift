@@ -14,7 +14,7 @@ struct SubscriptionLiveStreamSetting: View {
 
     var body: some View {
         CapsulePicker(
-            selection: $subscription.liveStreamSetting,
+            selection: Binding(get: { subscription.liveStreamSetting }, set: select),
             options: LiveStreamSetting.allCases,
             label: {
                 let text = $0.description(defaultSetting: defaultLiveStreamSetting.description)
@@ -26,11 +26,15 @@ struct SubscriptionLiveStreamSetting: View {
             menuLabel: "liveStreamSetting"
         )
         .requiresPremium(subscription.liveStreamSetting == .defaultSetting, feature: "liveStreamFilter")
-        .onChange(of: subscription.liveStreamSetting) {
-            if !subscription.liveStreamSetting.shouldHide() {
-                Task {
-                    await refresher.refreshSubscription(subscriptionId: subscription.persistentModelID)
-                }
+    }
+
+    private func select(_ setting: LiveStreamSetting) {
+        guard setting != subscription.liveStreamSetting else { return }
+        subscription.liveStreamSetting = setting
+        if !setting.shouldHide() {
+            let subscriptionId = subscription.persistentModelID
+            Task {
+                await refresher.refreshSubscription(subscriptionId: subscriptionId)
             }
         }
     }

@@ -14,16 +14,19 @@ struct SubscriptionChapterGenerationSetting: View {
     var body: some View {
         if mode != .off {
             CapsulePicker(
-                selection: $subscription.chapterGeneration,
+                selection: Binding(get: { subscription.chapterGeneration }, set: select),
                 options: [nil, true, false],
                 label: { (text(for: $0), $0 == false ? "circle.slash" : "sparkles") },
                 menuLabel: "generateChapters"
             )
             .requiresPremium(subscription.chapterGeneration == nil, feature: "chapterGeneration")
-            .onChange(of: subscription.chapterGeneration) {
-                ChapterAutomation.scheduleRun()
-            }
         }
+    }
+
+    private func select(_ value: Bool?) {
+        guard value != subscription.chapterGeneration else { return }
+        subscription.chapterGeneration = value
+        ChapterAutomation.scheduleRun()
     }
 
     private func text(for value: Bool?) -> String {
