@@ -88,6 +88,7 @@ struct SubscriptionHeader: View {
                     subscription.isArchived = true
                 }
             }
+            try? subscription.modelContext?.save()
         } label: {
             CapsuleLabel(text: subscription.isArchived
                             ? String(localized: "subscribe")
