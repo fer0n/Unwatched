@@ -29,7 +29,9 @@ public struct PodcastEpisodeCache {
     public static func store(_ episodes: [SendableVideo], feedUrl: URL, replaceExisting: Bool = false) {
         guard !episodes.isEmpty || replaceExisting else { return }
         let context = newContext
-        let existing = (try? context.fetch(feedFetch(feedUrl))) ?? []
+        let existing = (try? context.fetch(replaceExisting
+            ? feedFetch(feedUrl)
+            : episodesFetch(episodes.map(\.youtubeId), feedUrl: feedUrl))) ?? []
         var byId = [String: CachedEpisode]()
         for entry in existing {
             byId[entry.episodeId] = entry
@@ -51,11 +53,18 @@ public struct PodcastEpisodeCache {
             }
         }
 
+        guard context.hasChanges else { return }
         do {
             try context.save()
         } catch {
             Log.podcasts.error("PodcastEpisodeCache.store: \(error)")
         }
+    }
+
+    private static func episodesFetch(_ ids: [String], feedUrl: URL) -> FetchDescriptor<CachedEpisode> {
+        FetchDescriptor<CachedEpisode>(predicate: #Predicate {
+            $0.feedUrl == feedUrl && ids.contains($0.episodeId)
+        })
     }
 
     public static func episodes(
@@ -124,16 +133,24 @@ public struct PodcastEpisodeCache {
     }
 
     private static func apply(_ episode: SendableVideo, to entry: CachedEpisode) {
-        entry.title = episode.title
-        entry.publishedDate = episode.publishedDate
-        entry.duration = episode.duration
-        entry.thumbnailUrl = episode.thumbnailUrl
-        entry.mediaUrl = episode.mediaUrl
-        entry.episodeUrl = episode.url
-        entry.episodeDescription = episode.videoDescription
-        entry.chaptersUrl = episode.chaptersUrl
-        entry.isAudioOnly = episode.isAudioOnly
-        entry.updatedDate = .now
+        var changed = false
+        func update<Value: Equatable>(_ keyPath: ReferenceWritableKeyPath<CachedEpisode, Value>, _ value: Value) {
+            guard entry[keyPath: keyPath] != value else { return }
+            entry[keyPath: keyPath] = value
+            changed = true
+        }
+        update(\.title, episode.title)
+        update(\.publishedDate, episode.publishedDate)
+        update(\.duration, episode.duration)
+        update(\.thumbnailUrl, episode.thumbnailUrl)
+        update(\.mediaUrl, episode.mediaUrl)
+        update(\.episodeUrl, episode.url)
+        update(\.episodeDescription, episode.videoDescription)
+        update(\.chaptersUrl, episode.chaptersUrl)
+        update(\.isAudioOnly, episode.isAudioOnly)
+        if changed {
+            entry.updatedDate = .now
+        }
     }
 }
 

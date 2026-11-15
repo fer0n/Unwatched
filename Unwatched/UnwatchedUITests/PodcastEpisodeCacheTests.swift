@@ -88,6 +88,23 @@ class PodcastEpisodeCacheTests: XCTestCase {
         XCTAssertEqual(titles, ["Episode 3", "Renamed", "Episode 1"])
     }
 
+    func testStoringUnchangedEpisodesWritesNothing() throws {
+        PodcastEpisodeCache.store([episode(1), episode(2)], feedUrl: feedUrl)
+        let before = try updatedDates()
+
+        PodcastEpisodeCache.store([episode(1), episode(2, title: "Renamed")], feedUrl: feedUrl)
+        let after = try updatedDates()
+
+        XCTAssertEqual(after["pod-cache-test-1"], before["pod-cache-test-1"])
+        XCTAssertNotEqual(after["pod-cache-test-2"], before["pod-cache-test-2"])
+    }
+
+    private func updatedDates() throws -> [String: Date] {
+        let context = ModelContext(DataProvider.shared.localCacheContainer)
+        let entries = try context.fetch(FetchDescriptor<CachedEpisode>())
+        return Dictionary(entries.map { ($0.episodeId, $0.updatedDate) }, uniquingKeysWith: { first, _ in first })
+    }
+
     /// A partial refresh must not prune, a full backfill must.
     func testOnlyReplaceExistingPrunesDroppedEpisodes() {
         PodcastEpisodeCache.store([episode(1), episode(2), episode(3)], feedUrl: feedUrl)
