@@ -167,6 +167,7 @@ struct UserDataService {
                 context.insert(model)
                 model.subscriptions = tag.subscriptionKeys.compactMap { subscriptionsByKey[$0] }
                 model.videos = (tag.videoIds ?? []).compactMap { videosById[$0] }
+                model.excludedVideos = (tag.excludedVideoIds ?? []).compactMap { videosById[$0] }
             }
         }
 

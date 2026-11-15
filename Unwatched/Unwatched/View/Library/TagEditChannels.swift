@@ -115,18 +115,18 @@ private struct ChannelRow: View {
 struct TaggedVideosSection: View {
     let title: LocalizedStringKey
     let tag: Tag
-    let videos: [Video]
+    var members: KeyPath<Tag, [Video]?> = \.videos
 
     var body: some View {
         MySection {
             NavigationLink {
-                TaggedVideosList(title: title, tag: tag)
+                TaggedVideosList(title: title, tag: tag, members: members)
             } label: {
                 HStack {
                     Text(title)
                         .foregroundStyle(Color.neutralAccentColor)
                     Spacer()
-                    Text(verbatim: "\(videos.count)")
+                    Text(verbatim: "\(tag[keyPath: members]?.count ?? 0)")
                         .foregroundStyle(Color.secondary)
                 }
             }

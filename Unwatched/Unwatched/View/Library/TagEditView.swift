@@ -245,6 +245,9 @@ extension TagEditView {
                 Text("tagMode")
             }
             .onChange(of: tag.mode) {
+                if tag.mode != .include, tag.excludedVideos?.isEmpty == false {
+                    tag.excludedVideos = []
+                }
                 saveIfExisting()
             }
         }
@@ -315,13 +318,12 @@ extension TagEditView {
 
         // an untagged tag is defined by the other tags, so it has nothing to pick
         if tag.mode != .untagged {
-            let taggedVideos = tag.videos ?? []
-            if !taggedVideos.isEmpty {
-                TaggedVideosSection(
-                    title: tag.mode == .exclude ? "excludedVideos" : "videos",
-                    tag: tag,
-                    videos: taggedVideos
-                )
+            if tag.videos?.isEmpty == false {
+                TaggedVideosSection(title: tag.mode == .exclude ? "excludedVideos" : "videos", tag: tag)
+            }
+
+            if tag.mode == .include, tag.excludedVideos?.isEmpty == false {
+                TaggedVideosSection(title: "excludedVideos", tag: tag, members: \.excludedVideos)
             }
 
             ChannelsSection(

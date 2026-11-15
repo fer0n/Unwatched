@@ -61,6 +61,7 @@ public enum WatchQueueStore {
             context.insert(tag)
             tag.subscriptions = item.channelTitles.compactMap { subscriptions[$0] }
             tag.videos = item.youtubeIds.compactMap { videos[$0] }
+            tag.excludedVideos = (item.excludedYoutubeIds ?? []).compactMap { videos[$0] }
         }
 
         try context.save()

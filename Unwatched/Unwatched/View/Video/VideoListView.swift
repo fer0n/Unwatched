@@ -64,22 +64,51 @@ struct VideoListView: View {
         return filter
     }
 
-    /// `flatMap`, not optional chaining: only that shape translates to a plain `IN`. The three
-    /// shapes are written out because folding them into one times out the type-checker.
+    /// `flatMap`, not optional chaining: only that shape translates to a plain `IN`. The shapes are
+    /// written out because folding them into one times out the type-checker.
     ///
     /// - Parameters:
     ///   - subscriptionIds: the channels to keep, or — when `isExcluding` — the ones to drop.
     ///   - addedVideoIds: named videos, from any channel. They skip the shorts check.
     ///   - removedVideoIds: named videos to drop, out of the channels otherwise kept.
+    ///   - channelExceptionIds: videos whose channel match doesn't count, see `QueueFilter.channelExceptionIds`.
     nonisolated static func getVideoFilter(
         subscriptionIds: [PersistentIdentifier],
         addedVideoIds: [String] = [],
         removedVideoIds: [String] = [],
+        channelExceptionIds: [String] = [],
         isExcluding: Bool = false
     ) -> Predicate<Video>? {
         let shortsSettingRaw = Int(CloudKeyValueStore.shared.longLong(forKey: Const.defaultShortsSetting))
         let show = ShortsSetting.show.rawValue
         let defaultSetting = ShortsSetting.defaultSetting.rawValue
+
+        if !channelExceptionIds.isEmpty {
+            if isExcluding {
+                return #Predicate<Video> { video in
+                    !removedVideoIds.contains(video.youtubeId)
+                        && (video.subscription.flatMap { sub in
+                            (!subscriptionIds.contains(sub.persistentModelID)
+                                || channelExceptionIds.contains(video.youtubeId))
+                                && (!(video.isYtShort ?? false)
+                                        || (sub._shortsSetting == defaultSetting
+                                                ? shortsSettingRaw
+                                                : sub._shortsSetting) == show)
+                        } ?? true)
+                }
+            }
+            return #Predicate<Video> { video in
+                addedVideoIds.contains(video.youtubeId)
+                    || (video.subscription.flatMap { sub in
+                        subscriptionIds.contains(sub.persistentModelID)
+                            && !channelExceptionIds.contains(video.youtubeId)
+                            && (!(video.isYtShort ?? false)
+                                    || (sub._shortsSetting == defaultSetting
+                                            ? shortsSettingRaw
+                                            : sub._shortsSetting) == show)
+                    }) == true
+            }
+        }
 
         // a video with no channel stays in, the same way the queue reads these modes
         if isExcluding {

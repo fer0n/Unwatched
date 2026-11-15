@@ -131,10 +131,10 @@ struct UpdateMedia: AppIntent {
     @MainActor
     private func updateTags(of video: Video) throws {
         for entity in addTags ?? [] {
-            try Self.tag(entity).setCovers(video: video, true)
+            try Self.tag(entity).setContains(video, true)
         }
         for entity in removeTags ?? [] {
-            try Self.tag(entity).setCovers(video: video, false)
+            try Self.tag(entity).setContains(video, false)
         }
     }
 

@@ -227,7 +227,8 @@ public enum UnwatchedMigrationPlan: SchemaMigrationPlan {
         toVersion: UnwatchedSchemaV1p17.self
     )
 
-    /// Adds `Video.channelTitle`, `WatchTimeEntry.channelName` and `Subscription.episodeLimit`.
+    /// Adds `Video.channelTitle`, `WatchTimeEntry.channelName`, `Subscription.episodeLimit`, `Tag._playerType` and
+    /// `Tag.excludedVideos`.
     public static let migrateV1p17toV1p18 = MigrationStage.lightweight(
         fromVersion: UnwatchedSchemaV1p17.self,
         toVersion: UnwatchedSchemaV1p18.self

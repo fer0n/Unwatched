@@ -14,6 +14,9 @@ public struct SendableTag: Sendable, Codable, Hashable {
     /// Optional so a backup written before videos could be tagged still decodes.
     public var videoIds: [String]?
 
+    /// Videos taken back out of the tag's channels; optional for the same reason.
+    public var excludedVideoIds: [String]?
+
     public var symbol: String?
 
     /// Optional so a backup written before the setting existed still decodes; `nil` reads as on.
@@ -45,6 +48,7 @@ public struct SendableTag: Sendable, Codable, Hashable {
         createdDate: Date? = nil,
         subscriptionKeys: [String] = [],
         videoIds: [String]? = nil,
+        excludedVideoIds: [String]? = nil,
         symbol: String? = nil,
         quickSwitch: Bool? = nil,
         mode: Int? = nil,
@@ -60,6 +64,7 @@ public struct SendableTag: Sendable, Codable, Hashable {
         self.createdDate = createdDate
         self.subscriptionKeys = subscriptionKeys
         self.videoIds = videoIds
+        self.excludedVideoIds = excludedVideoIds
         self.symbol = symbol
         self.quickSwitch = quickSwitch
         self.mode = mode

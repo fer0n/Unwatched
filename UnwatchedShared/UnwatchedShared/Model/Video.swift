@@ -24,6 +24,9 @@ public final class Video: VideoData, CustomStringConvertible, Exportable {
 
     public var tags: [Tag]? = []
 
+    /// Tags this video's channel puts it in that it opted out of.
+    public var excludedFromTags: [Tag]? = []
+
     /// This video's identity, and what queue entries, chapters, stats and the image cache are all keyed by — a
     /// YouTube id for a video, a `pod-…` hash of the RSS guid for a podcast episode (see `PodcastService.episodeId`).
     public var youtubeId: String = UUID().uuidString

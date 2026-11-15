@@ -612,6 +612,7 @@ extension CleanupActor {
         moveEntries(from: duplicate, to: keeper)
         moveChapters(from: duplicate, to: keeper)
         moveTags(from: duplicate, to: keeper, \.tags)
+        moveTags(from: duplicate, to: keeper, \.excludedFromTags)
     }
 
     /// A device's tags arrive on its own copy of the row, which the dedupe deletes.

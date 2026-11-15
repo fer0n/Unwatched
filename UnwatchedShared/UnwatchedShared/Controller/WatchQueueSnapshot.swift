@@ -56,6 +56,9 @@ public struct WatchQueueSnapshot: WatchPayload {
         public var quickSwitch: Bool
         public var channelTitles: [String]
         public var youtubeIds: [String]
+        /// Videos of `channelTitles` taken back out, see `Tag.excludedVideos`. Optional so an older snapshot
+        /// still decodes.
+        public var excludedYoutubeIds: [String]?
         /// `nil` means the tag has no opinion, see `Tag.seekSeconds`. Optional so an older
         /// snapshot still decodes.
         public var seekSeconds: Double?
@@ -72,6 +75,7 @@ public struct WatchQueueSnapshot: WatchPayload {
             quickSwitch: Bool = true,
             channelTitles: [String] = [],
             youtubeIds: [String] = [],
+            excludedYoutubeIds: [String]? = nil,
             seekSeconds: Double? = nil,
             continuousPlay: Bool? = nil,
             playbackSpeed: Double? = nil
@@ -83,6 +87,7 @@ public struct WatchQueueSnapshot: WatchPayload {
             self.quickSwitch = quickSwitch
             self.channelTitles = channelTitles
             self.youtubeIds = youtubeIds
+            self.excludedYoutubeIds = excludedYoutubeIds
             self.seekSeconds = seekSeconds
             self.continuousPlay = continuousPlay
             self.playbackSpeed = playbackSpeed

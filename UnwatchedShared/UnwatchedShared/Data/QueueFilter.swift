@@ -14,6 +14,9 @@ public struct QueueFilter: Hashable, Sendable {
 
     public let videoIds: [String]
 
+    /// Videos whose channel match doesn't count.
+    public let channelExceptionIds: [String]
+
     public let isExcluding: Bool
 
     public let podcasts: TagPodcasts
@@ -23,11 +26,13 @@ public struct QueueFilter: Hashable, Sendable {
     public init(
         subscriptionIds: [PersistentIdentifier]?,
         videoIds: [String] = [],
+        channelExceptionIds: [String] = [],
         isExcluding: Bool = false,
         podcasts: TagPodcasts = .listed
     ) {
         self.subscriptionIds = subscriptionIds
         self.videoIds = videoIds
+        self.channelExceptionIds = channelExceptionIds
         self.isExcluding = isExcluding
         self.podcasts = podcasts
     }
@@ -41,23 +46,31 @@ public struct QueueFilter: Hashable, Sendable {
         let podcasts = tag.effectivePodcasts(in: tags)
         switch tag.mode {
         case .include:
-            self.init(tag.subscriptions, tag.videos, podcasts: podcasts)
+            self.init(tag.subscriptions, tag.videos, exceptions: tag.excludedVideos, podcasts: podcasts)
         case .exclude:
             self.init(tag.subscriptions, tag.videos, isExcluding: true, podcasts: podcasts)
         case .untagged:
-            self.init(Tag.coveredSubscriptions(tags), Tag.coveredVideos(tags), isExcluding: true, podcasts: podcasts)
+            self.init(
+                Tag.coveredSubscriptions(tags),
+                Tag.coveredVideos(tags),
+                exceptions: Tag.releasedVideos(tags),
+                isExcluding: true,
+                podcasts: podcasts
+            )
         }
     }
 
     private init(
         _ subscriptions: [Subscription]?,
         _ videos: [Video]?,
+        exceptions: [Video]? = nil,
         isExcluding: Bool = false,
         podcasts: TagPodcasts
     ) {
         self.init(
             subscriptionIds: (subscriptions ?? []).map(\.persistentModelID),
             videoIds: (videos ?? []).map(\.youtubeId),
+            channelExceptionIds: (exceptions ?? []).map(\.youtubeId),
             isExcluding: isExcluding,
             podcasts: podcasts
         )
@@ -116,6 +129,18 @@ public struct QueueFilter: Hashable, Sendable {
     private var slicePredicate: Predicate<QueueEntry>? {
         guard let subscriptionIds else { return nil }
         let isExcluding = isExcluding
+        let videoIds = videoIds
+        let exceptionIds = channelExceptionIds
+        guard exceptionIds.isEmpty else {
+            return #Predicate<QueueEntry> { entry in
+                (entry.video.flatMap { video in
+                    ((video.subscription.flatMap { subscription in
+                        subscriptionIds.contains(subscription.persistentModelID)
+                    } ?? false) && !exceptionIds.contains(video.youtubeId))
+                        || videoIds.contains(video.youtubeId)
+                } ?? false) != isExcluding
+            }
+        }
         guard !videoIds.isEmpty else {
             return #Predicate<QueueEntry> { entry in
                 (entry.video.flatMap { video in
@@ -125,7 +150,6 @@ public struct QueueFilter: Hashable, Sendable {
                 } ?? false) != isExcluding
             }
         }
-        let videoIds = videoIds
         return #Predicate<QueueEntry> { entry in
             (entry.video.flatMap { video in
                 (video.subscription.flatMap { subscription in

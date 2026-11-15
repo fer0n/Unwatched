@@ -50,6 +50,10 @@ public final class Tag: CustomStringConvertible, Exportable {
     @Relationship(inverse: \Subscription.tags)
     public var subscriptions: [Subscription]?
 
+    /// Videos of the tag's channels taken back out. Only `include` tags have any.
+    @Relationship(inverse: \Video.excludedFromTags)
+    public var excludedVideos: [Video]?
+
     public var symbol: String?
 
     /// Whether the queue's tag button steps through this tag.
@@ -134,6 +138,39 @@ public final class Tag: CustomStringConvertible, Exportable {
         covered(tags, \.videos, isPodcast: \.isPodcast)
     }
 
+    /// Excluded videos no `include` tag still claims: `untagged` lists them again.
+    public static func releasedVideos(_ tags: [Tag]) -> [Video] {
+        let including = tags.filter { $0.mode == .include }
+        let excluded = including.flatMap { $0.excludedVideos ?? [] }
+        guard !excluded.isEmpty else { return [] }
+        let claims = including.map(Claims.init)
+        let unique = Dictionary(excluded.map { ($0.persistentModelID, $0) }, uniquingKeysWith: { first, _ in first })
+        return unique.values.filter { video in !claims.contains { $0.claims(video) } }
+    }
+
+    /// A tag's membership as id sets, for checking many videos against it.
+    private struct Claims {
+        let hidesPodcasts: Bool
+        let subscriptionIds: Set<PersistentIdentifier>
+        let videoIds: Set<PersistentIdentifier>
+        let excludedIds: Set<PersistentIdentifier>
+
+        init(_ tag: Tag) {
+            hidesPodcasts = tag.podcasts == .hidden
+            subscriptionIds = Set((tag.subscriptions ?? []).map(\.persistentModelID))
+            videoIds = Set((tag.videos ?? []).map(\.persistentModelID))
+            excludedIds = Set((tag.excludedVideos ?? []).map(\.persistentModelID))
+        }
+
+        func claims(_ video: Video) -> Bool {
+            guard !hidesPodcasts || !video.isPodcast else { return false }
+            let id = video.persistentModelID
+            if videoIds.contains(id) { return true }
+            guard let subscriptionId = video.subscription?.persistentModelID else { return false }
+            return subscriptionIds.contains(subscriptionId) && !excludedIds.contains(id)
+        }
+    }
+
     private static func covered<T>(_ tags: [Tag], _ members: KeyPath<Tag, [T]?>, isPodcast: KeyPath<T, Bool>) -> [T] {
         tags.filter { $0.mode == .include }.flatMap { tag in
             (tag[keyPath: members] ?? []).filter { tag.podcasts != .hidden || !$0[keyPath: isPodcast] }
@@ -186,7 +223,9 @@ public final class Tag: CustomStringConvertible, Exportable {
 
     private static func decidingTags(for video: Video) -> [Tag] {
         let isEpisode = video.isPodcast
-        let listing = ((video.tags ?? []) + (video.subscription?.tags ?? []))
+        let excluded = Set((video.excludedFromTags ?? []).map(\.persistentModelID))
+        let viaChannel = (video.subscription?.tags ?? []).filter { !excluded.contains($0.persistentModelID) }
+        let listing = ((video.tags ?? []) + viaChannel)
             .filter { $0.mode == .include && (!isEpisode || $0.podcasts == .listed) }
         guard isEpisode || listing.isEmpty else { return listing }
 
@@ -211,12 +250,28 @@ public final class Tag: CustomStringConvertible, Exportable {
         holds(video, \.videos)
     }
 
-    public func setCovers(_ subscription: Subscription, _ isCovered: Bool) {
-        setHolds(subscription, \.subscriptions, isCovered)
+    public func excludes(_ video: Video?) -> Bool {
+        holds(video, \.excludedVideos)
     }
 
-    public func setCovers(video: Video, _ isCovered: Bool) {
-        setHolds(video, \.videos, isCovered)
+    public func contains(_ video: Video?) -> Bool {
+        covers(video: video) || (covers(video?.subscription) && !excludes(video))
+    }
+
+    /// A channel video is excluded rather than named.
+    public func setContains(_ video: Video, _ isContained: Bool) {
+        let viaChannel = covers(video.subscription)
+        setHolds(video, \.videos, isContained && !viaChannel)
+        setHolds(video, \.excludedVideos, !isContained && viaChannel)
+    }
+
+    /// Taking a channel out also drops its videos' exclusions, so adding it back starts clean.
+    public func setCovers(_ subscription: Subscription, _ isCovered: Bool) {
+        setHolds(subscription, \.subscriptions, isCovered)
+        if !isCovered, let excluded = excludedVideos,
+           excluded.contains(where: { $0.subscription?.persistentModelID == subscription.persistentModelID }) {
+            excludedVideos = excluded.filter { $0.subscription?.persistentModelID != subscription.persistentModelID }
+        }
     }
 
     private func holds<T: PersistentModel>(_ model: T?, _ members: KeyPath<Tag, [T]?>) -> Bool {
@@ -229,6 +284,7 @@ public final class Tag: CustomStringConvertible, Exportable {
         _ members: ReferenceWritableKeyPath<Tag, [T]?>,
         _ isCovered: Bool
     ) {
+        guard holds(model, members) != isCovered else { return }
         var models = (self[keyPath: members] ?? []).filter { $0.persistentModelID != model.persistentModelID }
         if isCovered {
             models.append(model)
@@ -248,6 +304,7 @@ public final class Tag: CustomStringConvertible, Exportable {
             createdDate: createdDate,
             subscriptionKeys: (subscriptions ?? []).compactMap(\.subscriptionKey),
             videoIds: (videos ?? []).map(\.youtubeId),
+            excludedVideoIds: (excludedVideos ?? []).map(\.youtubeId),
             symbol: symbol,
             quickSwitch: quickSwitch,
             mode: mode.rawValue,

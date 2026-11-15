@@ -56,7 +56,8 @@ struct TagVideosView: View {
         case .include:
             TagMembership(
                 subscriptionIds: (tag.subscriptions ?? []).map(\.persistentModelID),
-                addedVideoIds: (tag.videos ?? []).map(\.youtubeId)
+                addedVideoIds: (tag.videos ?? []).map(\.youtubeId),
+                channelExceptionIds: (tag.excludedVideos ?? []).map(\.youtubeId)
             )
         case .exclude:
             TagMembership(
@@ -68,21 +69,23 @@ struct TagVideosView: View {
             TagMembership(
                 subscriptionIds: Tag.coveredSubscriptions(tags).map(\.persistentModelID),
                 removedVideoIds: Tag.coveredVideos(tags).map(\.youtubeId),
+                channelExceptionIds: Tag.releasedVideos(tags).map(\.youtubeId),
                 isExcluding: true
             )
         }
     }
 }
 
-/// The videos a tag names one by one, as a regular video list.
+/// The videos a tag names one by one, or the ones it takes out of its channels, as a regular video list.
 struct TaggedVideosList: View {
     @State private var videoListVM = VideoListVM(listId: "taggedVideos")
 
     let title: LocalizedStringKey
     let tag: Tag
+    var members: KeyPath<Tag, [Video]?> = \.videos
 
     var body: some View {
-        let videoIds = (tag.videos ?? []).map(\.youtubeId)
+        let videoIds = (tag[keyPath: members] ?? []).map(\.youtubeId)
 
         ZStack {
             MyBackgroundColor()
@@ -119,6 +122,7 @@ struct TagMembership: Equatable {
     var subscriptionIds: [PersistentIdentifier] = []
     var addedVideoIds: [String] = []
     var removedVideoIds: [String] = []
+    var channelExceptionIds: [String] = []
     var isExcluding: Bool = false
     var podcasts: TagPodcasts = .listed
 
@@ -132,6 +136,7 @@ struct TagMembership: Equatable {
             subscriptionIds: subscriptionIds,
             addedVideoIds: addedVideoIds,
             removedVideoIds: removedVideoIds,
+            channelExceptionIds: channelExceptionIds,
             isExcluding: isExcluding
         )
         guard let slice else { return nil }

@@ -676,6 +676,7 @@
 		88AA10062F0000000000A006 /* SettingsMigrationTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 88AA10052F0000000000A005 /* SettingsMigrationTests.swift */; };
 		88AA10062F0000000000B006 /* CloudKeyValueStoreTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 88AA10052F0000000000B005 /* CloudKeyValueStoreTests.swift */; };
 		88AA10082F0000000000A008 /* QueueFilterTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 88AA10072F0000000000A007 /* QueueFilterTests.swift */; };
+		88AA10072F0000000000E102 /* TagExclusionTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 88AA10072F0000000000E101 /* TagExclusionTests.swift */; };
 		88AA10082F0000000000A0F8 /* FilteredQueueWriteTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 88AA10072F0000000000A0F7 /* FilteredQueueWriteTests.swift */; };
 		88AA1F022F0000000000B002 /* LatchedTagTopVideoTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 88AA1F012F0000000000B001 /* LatchedTagTopVideoTests.swift */; };
 		88AA100A2F0000000000A00A /* SearchMaterializeTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 88AA10092F0000000000A009 /* SearchMaterializeTests.swift */; };
@@ -1640,6 +1641,7 @@
 		88AA10052F0000000000A005 /* SettingsMigrationTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SettingsMigrationTests.swift; sourceTree = "<group>"; };
 		88AA10052F0000000000B005 /* CloudKeyValueStoreTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CloudKeyValueStoreTests.swift; sourceTree = "<group>"; };
 		88AA10072F0000000000A007 /* QueueFilterTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = QueueFilterTests.swift; sourceTree = "<group>"; };
+		88AA10072F0000000000E101 /* TagExclusionTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TagExclusionTests.swift; sourceTree = "<group>"; };
 		88AA10072F0000000000A0F7 /* FilteredQueueWriteTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FilteredQueueWriteTests.swift; sourceTree = "<group>"; };
 		88AA1F012F0000000000B001 /* LatchedTagTopVideoTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LatchedTagTopVideoTests.swift; sourceTree = "<group>"; };
 		88AA10092F0000000000A009 /* SearchMaterializeTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SearchMaterializeTests.swift; sourceTree = "<group>"; };
@@ -2211,6 +2213,7 @@
 				AA11C0DE5E1F00D1C0FFEE04 /* DefaultPodcastTagsTests.swift */,
 				88AA10012F0000000000A001 /* MigrationTests.swift */,
 				88AA10072F0000000000A007 /* QueueFilterTests.swift */,
+				88AA10072F0000000000E101 /* TagExclusionTests.swift */,
 				7312325F1E1B583FD0972991 /* ChapterAutomationTests.swift */,
 				88AA10072F0000000000A0F7 /* FilteredQueueWriteTests.swift */,
 				88AA1F012F0000000000B001 /* LatchedTagTopVideoTests.swift */,
@@ -3570,6 +3573,7 @@
 				AA11C0DE5E1F00D1C0FFEE05 /* DefaultPodcastTagsTests.swift in Sources */,
 				88AA10022F0000000000A002 /* MigrationTests.swift in Sources */,
 				88AA10082F0000000000A008 /* QueueFilterTests.swift in Sources */,
+				88AA10072F0000000000E102 /* TagExclusionTests.swift in Sources */,
 				4079F10962C9A8E5A75115DE /* ChapterAutomationTests.swift in Sources */,
 				88AA10082F0000000000A0F8 /* FilteredQueueWriteTests.swift in Sources */,
 				88AA1F022F0000000000B002 /* LatchedTagTopVideoTests.swift in Sources */,

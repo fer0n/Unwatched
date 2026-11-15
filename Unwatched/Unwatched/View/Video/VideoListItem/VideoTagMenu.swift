@@ -20,7 +20,6 @@ struct VideoTagMenu: View {
             let video = storedVideo
             Menu {
                 ForEach(tags) { tag in
-                    let viaChannel = tag.covers(video?.subscription)
                     Button {
                         withAnimation {
                             toggle(tag)
@@ -28,12 +27,9 @@ struct VideoTagMenu: View {
                     } label: {
                         Label(
                             tag.name,
-                            systemImage: viaChannel || tag.covers(video: video)
-                                ? Const.checkmarkSF
-                                : tag.displaySymbol
+                            systemImage: tag.contains(video) ? Const.checkmarkSF : tag.displaySymbol
                         )
                     }
-                    .disabled(viaChannel)
                 }
             } label: {
                 Label("tags", systemImage: Const.tagSF)
@@ -47,7 +43,7 @@ struct VideoTagMenu: View {
 
     private func toggle(_ tag: Tag) {
         guard let video = VideoService.getVideoModel(from: videoData, modelContext: modelContext) else { return }
-        tag.setCovers(video: video, !tag.covers(video: video))
+        tag.setContains(video, !tag.contains(video))
         try? modelContext.save()
     }
 }
