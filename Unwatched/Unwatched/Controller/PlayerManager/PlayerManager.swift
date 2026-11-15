@@ -554,13 +554,23 @@ extension PlayerManager {
         }
     }
 
-    /// Fullscreen hid the menu; with the queue empty that leaves a blank player.
+    /// Fullscreen hid the menu (the sheet, or the menu column on big screens); with the queue empty that leaves a blank player.
     @MainActor
     func showMenuIfQueueRanOut() {
-        #if os(iOS)
         let navManager = NavigationManager.shared
         let sheetPos = SheetPositionReader.shared
-        guard video == nil, !navManager.showMenu, !navManager.showBrowser, !sheetPos.bigScreen else { return }
+        guard video == nil, !navManager.showBrowser else { return }
+        let defaults = UserDefaults.standard
+        defaults.set(false, forKey: Const.bigScreenFullscreenToRestore)
+        if sheetPos.bigScreen || Device.isVision {
+            if defaults.bool(forKey: Const.hideControlsFullscreen) {
+                Log.player.info("showMenuIfQueueRanOut: leave big-screen fullscreen")
+                defaults.set(false, forKey: Const.hideControlsFullscreen)
+            }
+            return
+        }
+        #if os(iOS)
+        guard !navManager.showMenu else { return }
         Log.player.info("showMenuIfQueueRanOut")
         if tallFullscreenOverlay {
             sheetPos.menuStateBeforeFullscreen = MenuState(showMenu: true, detent: .large)

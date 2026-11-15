@@ -25935,6 +25935,9 @@
         }
       }
     },
+    "Sign in to YouTube to watch this video." : {
+
+    },
     "sixMonths" : {
       "localizations" : {
         "de" : {
@@ -26716,6 +26719,9 @@
           }
         }
       }
+    },
+    "Starts %@" : {
+
     },
     "startToLoadTranscript" : {
       "localizations" : {
@@ -28760,6 +28766,12 @@
           }
         }
       }
+    },
+    "This video hasn't started yet." : {
+
+    },
+    "This video is age-restricted. Sign in to YouTube to watch it." : {
+
     },
     "threeDays" : {
       "localizations" : {
