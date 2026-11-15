@@ -68,10 +68,10 @@ extension VideoActor {
         let known = libraryVideos(withIds: Array(knownIds)).filter { $0.inboxEntry == nil && $0.queueEntry == nil }
         let added = triageSubscriptionVideos(subscription, videos: known + inserted, defaultPlacement: defaultPlacement)
         updateRecentVideoDate(subscription, getMostRecentDate(fresh))
-        try modelContext.save()
+        try saveVideos()
         WatchLaterState.record(videos.map(\.youtubeId))
         VideoService.fetchMissingInfoInBg(youtubeIds: added.map(\.youtubeId))
-        return (inserted.map(\.persistentModelID), added.map(\.persistentModelID))
+        return (inserted.map(\.youtubeId), added.map(\.youtubeId))
     }
 
     /// One row per id, from any subscription

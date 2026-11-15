@@ -19,7 +19,8 @@ struct FetchResult: Sendable {
     }
 }
 
-typealias FetchedVideoIds = (loadedVideos: [PersistentIdentifier], addedVideos: [PersistentIdentifier])
+/// YouTube ids: a model's `persistentModelID` changes when it's first saved
+typealias FetchedVideoIds = (loadedVideos: [String], addedVideos: [String])
 typealias PendingShortCheck = (id: PersistentIdentifier, thumbnailUrl: URL?)
 
 /// What a refresh run has to say about one feed, see `VideoActor.recordFetchOutcomes`.
@@ -44,6 +45,9 @@ actor VideoActor: SharedContextActor {
 
     /// Watch Later needs a web page, too slow for a background refresh
     var skipWatchLater = false
+
+    private var hasUnsavedAddedVideos = false
+    private var lastAddedVideosSave: ContinuousClock.Instant?
 
     @discardableResult
     func addForeignUrls(_ urls: [URL],
@@ -185,6 +189,8 @@ actor VideoActor: SharedContextActor {
             self.firstTimeSubCount = 0
             self.ignoreCache = false
             self.skipWatchLater = false
+            self.hasUnsavedAddedVideos = false
+            self.lastAddedVideosSave = nil
         }
 
         let sendableSubs = try getSubscriptions(subscriptionIds)
@@ -215,10 +221,14 @@ actor VideoActor: SharedContextActor {
                 }
                 newVideoInfo.append(try await handleFetched(fetched, placementInfo))
             }
+            if hasUnsavedAddedVideos {
+                try saveVideos()
+            }
             let fallback = try await handleFeedFallback(outcomes, unavailableSubs, placementInfo)
             newVideoInfo += fallback.videoInfo
             recordFetchOutcomes(outcomes, recovered: fallback.recovered)
             if fetchDurations {
+                try saveVideos()
                 try await handleFetchDurationsLoaded(
                     newVideoInfo,
                     onlyForAdded: subscriptionIds == nil // for all if specific subscription
@@ -237,8 +247,8 @@ actor VideoActor: SharedContextActor {
         onlyForAdded: Bool = true
     ) async throws {
         Log.refresh.info("handleFetchDurationsLoaded")
-        let videoIds = newVideoInfo.flatMap { $0.addedVideos }
-        let optionalVideoIds = newVideoInfo.flatMap { $0.loadedVideos }
+        let videoIds = rowIds(forYoutubeIds: newVideoInfo.flatMap { $0.addedVideos })
+        let optionalVideoIds = rowIds(forYoutubeIds: newVideoInfo.flatMap { $0.loadedVideos })
         let videoInfo = try await fetchVideoDurations(for: videoIds, optional: optionalVideoIds)
         Task { @MainActor in
             await VideoService.forceUpdateDurations(videoInfo)
@@ -417,14 +427,37 @@ extension VideoActor {
             defaultPlacement: placementInfo,
             catchUp: finishFallback(after: fetched)
         )
-        if result.addedVideos.count > 0 {
-            // save sooner if videos got added
-            try modelContext.save()
+        if !result.addedVideos.isEmpty {
+            hasUnsavedAddedVideos = true
         }
+        try saveAddedVideosIfDue()
         return (
-            loadedVideos: result.loadedVideos.map(\.persistentModelID),
-            addedVideos: result.addedVideos.map(\.persistentModelID)
+            loadedVideos: result.loadedVideos.map(\.youtubeId),
+            addedVideos: result.addedVideos.map(\.youtubeId)
         )
+    }
+
+    /// Shows new videos early, but at most once a second: every save refetches the app's lists
+    private func saveAddedVideosIfDue() throws {
+        guard hasUnsavedAddedVideos else { return }
+        if let lastAddedVideosSave, ContinuousClock.now - lastAddedVideosSave < .seconds(1) {
+            return
+        }
+        try saveVideos()
+    }
+
+    /// Every row of each video, those still without a duration first
+    private func rowIds(forYoutubeIds ids: [String]) -> [PersistentIdentifier] {
+        guard !ids.isEmpty else { return [] }
+        let fetch = FetchDescriptor<Video>(predicate: #Predicate { ids.contains($0.youtubeId) })
+        let rows = (try? modelContext.fetch(fetch)) ?? []
+        return rows.sorted { $0.duration == nil && $1.duration != nil }.map(\.persistentModelID)
+    }
+
+    func saveVideos() throws {
+        try modelContext.save()
+        hasUnsavedAddedVideos = false
+        lastAddedVideosSave = .now
     }
 
     static func isYtShort(_ imageUrl: URL?) async -> (Bool?, Data?) {
