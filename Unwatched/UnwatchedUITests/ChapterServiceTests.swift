@@ -291,6 +291,41 @@ final class ChapterServiceTests: XCTestCase {
         }
     }
 
+    /// SponsorBlock's community chapters sit back to back, and the first one here starts a second
+    /// before the sponsor ends (youtu.be/_4iuMoJVChg). Merging them stretched the sponsor to the end.
+    func testSponsorOverlappingCommunityChapters() {
+        let segments: [SendableChapter] = [
+            .init(58.8, to: 133.444, category: .sponsor),
+            .init(132.41, to: 751.374, "Brown bricks", category: .chapter),
+            .init(751.374, to: 1504.707, "The split community", category: .chapter),
+            .init(3448.6, to: 4401.935, "Skycrab", category: .chapter),
+            .init(4401.935, to: 4421.981, category: .selfpromo)
+        ]
+        let cleaned = ChapterService.cleanExternalChapters(segments)
+        let expected: [SendableChapter] = [
+            .init(58.8, to: 133.444, category: .sponsor),
+            .init(133.444, to: 751.374, "Brown bricks", category: .chapter),
+            .init(751.374, to: 1504.707, "The split community", category: .chapter),
+            .init(3448.6, to: 4401.935, "Skycrab", category: .chapter),
+            .init(4401.935, to: 4421.981, category: .selfpromo)
+        ]
+        XCTAssertTrue(checkChapterEqual(cleaned, expected), "\(cleaned)")
+    }
+
+    func testSponsorInsideCommunityChapterSplitsIt() {
+        let segments: [SendableChapter] = [
+            .init(0, to: 300, "Part one", category: .chapter),
+            .init(100, to: 160, category: .sponsor)
+        ]
+        let cleaned = ChapterService.cleanExternalChapters(segments)
+        let expected: [SendableChapter] = [
+            .init(0, to: 100, "Part one", category: .chapter),
+            .init(100, to: 160, category: .sponsor),
+            .init(160, to: 300, "Part one", category: .chapter)
+        ]
+        XCTAssertTrue(checkChapterEqual(cleaned, expected), "\(cleaned)")
+    }
+
     func testOneSponsorAcrossMultipleChapters() {
         let chapters: [SendableChapter] = [
             .init(0,    to: 250,     "Cool tech, no fluff!"),

@@ -372,34 +372,69 @@ extension ChapterService {
         return hasChanges
     }
 
+    /// Merges touching skip segments; chapters are cut around them, never merged.
     static func cleanExternalChapters(_ chapters: [SendableChapter]) -> [SendableChapter] {
-        guard !chapters.isEmpty else { return [] }
-
-        // Sort chapters by startTime first, and then by endTime if they have the same start
         let sortedChapters = chapters.sorted {
             $0.startTime < $1.startTime || ($0.startTime == $1.startTime && $0.endTime ?? 0 < $1.endTime ?? 0)
         }
+        let skipSegments = mergeSkipSegments(sortedChapters.filter { $0.category != .chapter })
+        let cutChapters = trimOverlaps(of: sortedChapters.filter { $0.category == .chapter }).flatMap {
+            cut($0, around: skipSegments)
+        }
+        return updateDuration(in: (skipSegments + cutChapters).sorted { $0.startTime < $1.startTime })
+    }
 
-        var mergedChapters: [SendableChapter] = []
-        var currentChapter = sortedChapters[0]
+    private static func mergeSkipSegments(_ sortedSegments: [SendableChapter]) -> [SendableChapter] {
+        guard var current = sortedSegments.first else { return [] }
+        var merged: [SendableChapter] = []
 
-        for chapter in sortedChapters.dropFirst() {
-            // Check if chapters are overlapping or continuous
-            if let currentEndTime = currentChapter.endTime, let chapterEndTime = chapter.endTime,
-               currentEndTime >= chapter.startTime {
-
-                // Merge chapters by extending the endTime of the current chapter if needed
-                currentChapter.endTime = max(currentEndTime, chapterEndTime)
+        for segment in sortedSegments.dropFirst() {
+            if let currentEndTime = current.endTime, let segmentEndTime = segment.endTime,
+               currentEndTime >= segment.startTime {
+                current.endTime = max(currentEndTime, segmentEndTime)
             } else {
-                // No overlap, add current chapter to the result and update current chapter
-                mergedChapters.append(currentChapter)
-                currentChapter = chapter
+                merged.append(current)
+                current = segment
             }
         }
+        merged.append(current)
+        return merged
+    }
 
-        // Add the last merged chapter
-        mergedChapters.append(currentChapter)
+    /// A chapter running into the next one, or without an end, ends where the next one starts.
+    private static func trimOverlaps(of sortedChapters: [SendableChapter]) -> [SendableChapter] {
+        var result = sortedChapters
+        for index in result.indices.dropLast() {
+            let nextStart = result[index + 1].startTime
+            if result[index].endTime.map({ $0 > nextStart }) ?? true {
+                result[index].endTime = nextStart
+            }
+        }
+        return result
+    }
 
-        return mergedChapters
+    /// The parts of `chapter` no skip segment covers. Slivers shorter than the tolerance are dropped.
+    private static func cut(_ chapter: SendableChapter, around skipSegments: [SendableChapter]) -> [SendableChapter] {
+        guard let chapterEnd = chapter.endTime else { return [chapter] }
+        var pieces = [SendableChapter]()
+        var remainingStart = chapter.startTime
+
+        func appendPiece(from start: Double, to end: Double) {
+            guard end - start > Const.chapterTimeTolerance else { return }
+            var piece = chapter
+            piece.startTime = start
+            piece.endTime = end
+            pieces.append(piece)
+        }
+
+        for segment in skipSegments {
+            guard let segmentEnd = segment.endTime,
+                  segmentEnd > remainingStart,
+                  segment.startTime < chapterEnd else { continue }
+            appendPiece(from: remainingStart, to: segment.startTime)
+            remainingStart = max(remainingStart, segmentEnd)
+        }
+        appendPiece(from: remainingStart, to: chapterEnd)
+        return pieces
     }
 }
