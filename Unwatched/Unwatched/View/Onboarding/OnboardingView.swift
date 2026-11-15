@@ -28,13 +28,17 @@ struct OnboardingView: View {
     @State private var showOpmlPicker = false
     @State private var usedImport: String?
     @State private var hasSubscriptions = false
+    @State private var welcomeBack: WelcomeBack?
 
     var body: some View {
         NavigationStack {
-            OnboardingChannelsPage(viewModel: viewModel) {
+            OnboardingChannelsPage(viewModel: viewModel, welcomeBack: $welcomeBack) {
                 openImport(.youtube)
             } onImportPodcasts: {
                 showOpmlPicker = true
+            } onBackupRestored: {
+                usedImport = "backupRestore"
+                handleContinue()
             }
             .onboardingBottomBar(
                 viewModel.continueTitle,
@@ -65,6 +69,10 @@ struct OnboardingView: View {
         .onboardingSheetStyle(dismissable: hasSubscriptions)
         .task {
             hasSubscriptions = (await SubscriptionService.getActiveSubscriptionCount().value ?? 0) > 0
+        }
+        .task {
+            guard viewModel.isFirstRun, let found = await WelcomeBack.find() else { return }
+            withAnimation { welcomeBack = found }
         }
         .fileImporter(isPresented: $showOpmlPicker, allowedContentTypes: [.opml, .xml]) { result in
             if let url = try? result.get() {

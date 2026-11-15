@@ -15,6 +15,7 @@ extension RefreshManager {
         }
         isActive = true
         setupCloudKitListener()
+        SyncHandoff.publishSyncState(enableIcloudSync)
         Log.refresh.info("iCloud sync: refreshOnStartup started")
         if Const.requiresDurationFetch.bool ?? false {
             VideoService.fetchVideoDurationsQueueInbox()

@@ -52,6 +52,8 @@ struct UserDataService {
             }
         }
         backup.settings         = getSettings()
+        backup.deviceId         = DeviceIdentity.id
+        backup.deviceKind       = SyncDeviceKind.current.rawValue
         backup.queueEntries     = fetchMapExportable(QueueEntry.self, prefetching: [\.video])
         backup.inboxEntries     = fetchMapExportable(InboxEntry.self, prefetching: [\.video])
         var subs                = fetchMapExportable(Subscription.self)
@@ -407,8 +409,12 @@ extension UserDataService {
         try JSONDecoder().decode(UnwatchedBackup.self, from: decompress(data))
     }
 
-    static func restore(_ backup: UnwatchedBackup, settingsOnly: Bool = false) throws {
-        restoreSettings(backup.settings)
+    static func decodeBackupSummary(_ data: Data) throws -> BackupSummary {
+        try JSONDecoder().decode(BackupSummary.self, from: decompress(data))
+    }
+
+    static func restore(_ backup: UnwatchedBackup, settingsOnly: Bool = false, includeSynced: Bool = true) throws {
+        restoreSettings(backup.settings, includeSynced: includeSynced)
         if !settingsOnly {
             try restoreVideoData(from: backup)
         }
@@ -433,6 +439,8 @@ struct UnwatchedBackup: Codable {
     var queueEntries    = [SendableQueueEntry]()
     var inboxEntries    = [SendableInboxEntry]()
     var channelStatistics: [SendableChannelStatistics]? = []
+    var deviceId: String?
+    var deviceKind: String?
 
     var watchEntries    = [SendableWatchEntry]() // Legacy
 
@@ -448,7 +456,7 @@ struct UnwatchedBackup: Codable {
 
 extension UnwatchedBackup {
     enum CodingKeys: String, CodingKey {
-        case settings, subscriptions, tags, videos, queueEntries, inboxEntries, channelStatistics, watchEntries
+        case settings, subscriptions, tags, videos, queueEntries, inboxEntries, channelStatistics, deviceId, deviceKind, watchEntries
     }
 
     /// One unreadable row is skipped so it can't make the whole backup unrestorable.
@@ -462,6 +470,8 @@ extension UnwatchedBackup {
         queueEntries = try Self.lossy(container, .queueEntries)
         inboxEntries = try Self.lossy(container, .inboxEntries)
         channelStatistics = try Self.lossyIfPresent(container, .channelStatistics)
+        deviceId = try? container.decodeIfPresent(String.self, forKey: .deviceId)
+        deviceKind = try? container.decodeIfPresent(String.self, forKey: .deviceKind)
         watchEntries = try Self.lossy(container, .watchEntries)
     }
 
@@ -489,7 +499,7 @@ extension UnwatchedBackup {
     }
 }
 
-private struct Lossy<T: Decodable>: Decodable {
+struct Lossy<T: Decodable>: Decodable {
     let value: T?
     let error: Error?
 

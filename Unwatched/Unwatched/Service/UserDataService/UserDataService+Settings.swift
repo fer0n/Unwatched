@@ -27,13 +27,14 @@ extension UserDataService {
         return result
     }
 
-    static func restoreSettings(_ settings: [String: AnyCodable]?) {
+    static func restoreSettings(_ settings: [String: AnyCodable]?, includeSynced: Bool = true) {
         guard let settings else {
             return
         }
         resetDefaultSettingsIfNeeded()
         for (key, value) in settings {
             if Const.syncedSettingsDefaults.contains(where: { $0.key == key }) {
+                guard includeSynced else { continue }
                 CloudKeyValueStore.shared.set(value.value, forKey: key)
             } else {
                 UserDefaults.standard.setValue(value.value, forKey: key)

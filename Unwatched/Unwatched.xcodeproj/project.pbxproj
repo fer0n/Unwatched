@@ -272,7 +272,9 @@
 		883C38372EBC817500741119 /* CleanupDuplicatesView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 883C38362EBC817500741119 /* CleanupDuplicatesView.swift */; };
 		883C38382EBC817500741119 /* CleanupDuplicatesView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 883C38362EBC817500741119 /* CleanupDuplicatesView.swift */; };
 		883C383B2EBC830000741119 /* CloudSyncSetting.swift in Sources */ = {isa = PBXBuildFile; fileRef = 883C383A2EBC830000741119 /* CloudSyncSetting.swift */; };
+		C1A0DE5B0000000000000101 /* SyncRequestAlert.swift in Sources */ = {isa = PBXBuildFile; fileRef = C1A0DE5B0000000000000100 /* SyncRequestAlert.swift */; };
 		883C383C2EBC830000741119 /* CloudSyncSetting.swift in Sources */ = {isa = PBXBuildFile; fileRef = 883C383A2EBC830000741119 /* CloudSyncSetting.swift */; };
+		C1A0DE5B0000000000000102 /* SyncRequestAlert.swift in Sources */ = {isa = PBXBuildFile; fileRef = C1A0DE5B0000000000000100 /* SyncRequestAlert.swift */; };
 		883CA8062B5A8FFA00028D52 /* VideoListView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 883CA8052B5A8FFA00028D52 /* VideoListView.swift */; };
 		883CA8082B5AE47E00028D52 /* MenuView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 883CA8072B5AE47E00028D52 /* MenuView.swift */; };
 		883CA80A2B5AFB4100028D52 /* CapsuleButtonStyle.swift in Sources */ = {isa = PBXBuildFile; fileRef = 883CA8092B5AFB4100028D52 /* CapsuleButtonStyle.swift */; };
@@ -1074,7 +1076,9 @@
 		CD0FBE7A0000000000000005 /* YoutubeLoginWebView.swift in Sources */ = {isa = PBXBuildFile; fileRef = CD0FBE7A0000000000000004 /* YoutubeLoginWebView.swift */; };
 		CD0FBE7A0000000000000006 /* YoutubeLoginWebView.swift in Sources */ = {isa = PBXBuildFile; fileRef = CD0FBE7A0000000000000004 /* YoutubeLoginWebView.swift */; };
 		CD0FBE7A0000000000000008 /* OnboardingImportCards.swift in Sources */ = {isa = PBXBuildFile; fileRef = CD0FBE7A0000000000000007 /* OnboardingImportCards.swift */; };
+		C1A0DE5B0000000000000001 /* WelcomeBackCard.swift in Sources */ = {isa = PBXBuildFile; fileRef = C1A0DE5B0000000000000000 /* WelcomeBackCard.swift */; };
 		CD0FBE7A0000000000000009 /* OnboardingImportCards.swift in Sources */ = {isa = PBXBuildFile; fileRef = CD0FBE7A0000000000000007 /* OnboardingImportCards.swift */; };
+		C1A0DE5B0000000000000002 /* WelcomeBackCard.swift in Sources */ = {isa = PBXBuildFile; fileRef = C1A0DE5B0000000000000000 /* WelcomeBackCard.swift */; };
 		CD0FBE7A000000000000000E /* ActiveSubscriptions.swift in Sources */ = {isa = PBXBuildFile; fileRef = CD0FBE7A000000000000000D /* ActiveSubscriptions.swift */; };
 		CD0FBE7A000000000000000F /* ActiveSubscriptions.swift in Sources */ = {isa = PBXBuildFile; fileRef = CD0FBE7A000000000000000D /* ActiveSubscriptions.swift */; };
 		CD1A2B3C2E7000010000AA02 /* LaunchTraceTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = CD1A2B3C2E7000010000AA01 /* LaunchTraceTests.swift */; };
@@ -1460,6 +1464,7 @@
 		883A292C2E5FA34B00FE4E65 /* PremiumFeature.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PremiumFeature.swift; sourceTree = "<group>"; };
 		883C38362EBC817500741119 /* CleanupDuplicatesView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CleanupDuplicatesView.swift; sourceTree = "<group>"; };
 		883C383A2EBC830000741119 /* CloudSyncSetting.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CloudSyncSetting.swift; sourceTree = "<group>"; };
+		C1A0DE5B0000000000000100 /* SyncRequestAlert.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SyncRequestAlert.swift; sourceTree = "<group>"; };
 		883CA8052B5A8FFA00028D52 /* VideoListView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = VideoListView.swift; sourceTree = "<group>"; };
 		883CA8072B5AE47E00028D52 /* MenuView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MenuView.swift; sourceTree = "<group>"; };
 		883CA8092B5AFB4100028D52 /* CapsuleButtonStyle.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CapsuleButtonStyle.swift; sourceTree = "<group>"; };
@@ -1875,6 +1880,7 @@
 		CD0FBE7A0000000000000001 /* OnboardingImportPage.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = OnboardingImportPage.swift; sourceTree = "<group>"; };
 		CD0FBE7A0000000000000004 /* YoutubeLoginWebView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = YoutubeLoginWebView.swift; sourceTree = "<group>"; };
 		CD0FBE7A0000000000000007 /* OnboardingImportCards.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = OnboardingImportCards.swift; sourceTree = "<group>"; };
+		C1A0DE5B0000000000000000 /* WelcomeBackCard.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = WelcomeBackCard.swift; sourceTree = "<group>"; };
 		CD0FBE7A000000000000000D /* ActiveSubscriptions.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ActiveSubscriptions.swift; sourceTree = "<group>"; };
 		CD1A2B3C2E7000010000AA01 /* LaunchTraceTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LaunchTraceTests.swift; sourceTree = "<group>"; };
 		CD3E27AE2E239FF200AB8F74 /* GenerateChaptersButton.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = GenerateChaptersButton.swift; sourceTree = "<group>"; };
@@ -2605,6 +2611,7 @@
 				88CD38942E21480200E7B21C /* DeleteTranscriptCacheButton.swift */,
 				88F7B2C72C4D823B00E722F3 /* BackupSettings.swift */,
 				883C383A2EBC830000741119 /* CloudSyncSetting.swift */,
+				C1A0DE5B0000000000000100 /* SyncRequestAlert.swift */,
 				8867F5422BC7ABD9008EC182 /* AutoDeleteBackupView.swift */,
 				888F74AA2BA1FEC600B94822 /* PlaybackSettingsView.swift */,
 				8800CAFE2B000001000000AA /* PlayerTypeSettingsView.swift */,
@@ -2751,6 +2758,7 @@
 				CD0FBE0000000000000000FA /* UploadRate+Description.swift */,
 				CD0FBE000000000000000007 /* OnboardingChannelsPage.swift */,
 				CD0FBE7A0000000000000007 /* OnboardingImportCards.swift */,
+				C1A0DE5B0000000000000000 /* WelcomeBackCard.swift */,
 				CD0FBE7A0000000000000001 /* OnboardingImportPage.swift */,
 				CD0FBE000000000000000004 /* OnboardingViewModel.swift */,
 				CD0FBE000000000000000001 /* OnboardingView.swift */,
@@ -3737,6 +3745,7 @@
 				888CDF782C997A20007A8A54 /* FullscreenControls.swift in Sources */,
 				8842DFCC2EACB5E800D11C5D /* SwipeGestureSettings.swift in Sources */,
 				883C383C2EBC830000741119 /* CloudSyncSetting.swift in Sources */,
+				C1A0DE5B0000000000000102 /* SyncRequestAlert.swift in Sources */,
 				889AF9342C50ECEE001CEDE6 /* PlayButton.swift in Sources */,
 				887E82B12CD8FD8800B196EA /* Notification.swift in Sources */,
 				889AF9352C50ECEE001CEDE6 /* RotateOrientationButton.swift in Sources */,
@@ -3951,6 +3960,7 @@
 				CD0FBE000000000000000008 /* OnboardingChannelsPage.swift in Sources */,
 				CD0FBE7A0000000000000002 /* OnboardingImportPage.swift in Sources */,
 				CD0FBE7A0000000000000008 /* OnboardingImportCards.swift in Sources */,
+				C1A0DE5B0000000000000001 /* WelcomeBackCard.swift in Sources */,
 				CD0FBE000000000000000005 /* OnboardingViewModel.swift in Sources */,
 				CD0FBE000000000000000002 /* OnboardingView.swift in Sources */,
 				888050C22D3E5576002D02EB /* DeferDateSelector.swift in Sources */,
@@ -4187,6 +4197,7 @@
 				88190E3C2B99D32100F048C3 /* RefreshManager+CloudKit.swift in Sources */,
 				88AA1F0130000002000000A2 /* RefreshManager+Lifecycle.swift in Sources */,
 				883C383B2EBC830000741119 /* CloudSyncSetting.swift in Sources */,
+				C1A0DE5B0000000000000101 /* SyncRequestAlert.swift in Sources */,
 				883A0F702E5F5D9E000CE416 /* PremiumNavListItem.swift in Sources */,
 				888C49C22B5F288F00CDEC76 /* Binding.swift in Sources */,
 				883A292E2E5FA34B00FE4E65 /* PremiumFeature.swift in Sources */,
@@ -4248,6 +4259,7 @@
 				CD0FBE000000000000000009 /* OnboardingChannelsPage.swift in Sources */,
 				CD0FBE7A0000000000000003 /* OnboardingImportPage.swift in Sources */,
 				CD0FBE7A0000000000000009 /* OnboardingImportCards.swift in Sources */,
+				C1A0DE5B0000000000000002 /* WelcomeBackCard.swift in Sources */,
 				CD0FBE000000000000000006 /* OnboardingViewModel.swift in Sources */,
 				CD0FBE000000000000000003 /* OnboardingView.swift in Sources */,
 				8804F91F2B4805A100E19B7A /* LibraryView.swift in Sources */,

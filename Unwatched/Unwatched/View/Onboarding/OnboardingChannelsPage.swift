@@ -8,8 +8,10 @@ import UnwatchedShared
 
 struct OnboardingChannelsPage: View {
     @Bindable var viewModel: OnboardingViewModel
+    @Binding var welcomeBack: WelcomeBack?
     var onImportFromYoutube: () -> Void
     var onImportPodcasts: () -> Void
+    var onBackupRestored: () -> Void
 
     var body: some View {
         let results = viewModel.listedResults
@@ -18,6 +20,14 @@ struct OnboardingChannelsPage: View {
         ScrollView {
             LazyVStack(spacing: 0) {
                 if viewModel.searchText.isEmpty {
+                    if let welcomeBack {
+                        WelcomeBackCard(welcomeBack: welcomeBack, onRestored: onBackupRestored) {
+                            withAnimation { self.welcomeBack = nil }
+                        }
+                        .padding(.horizontal, OnboardingLayout.horizontalPadding)
+                        .padding(.top, 8)
+                        .transition(.opacity.combined(with: .scale(scale: 0.96)))
+                    }
                     OnboardingImportCards(
                         onImportFromYoutube: onImportFromYoutube,
                         onImportPodcasts: onImportPodcasts
@@ -93,7 +103,10 @@ struct OnboardingChannelsPage: View {
 }
 
 #Preview {
-    OnboardingChannelsPage(viewModel: OnboardingViewModel(), onImportFromYoutube: { }, onImportPodcasts: { })
+    OnboardingChannelsPage(
+        viewModel: OnboardingViewModel(),
+        welcomeBack: .constant(nil),
+        onImportFromYoutube: { }, onImportPodcasts: { }, onBackupRestored: { })
         .environment(ImageCacheManager())
         .modelContainer(DataProvider.previewContainer)
 }
