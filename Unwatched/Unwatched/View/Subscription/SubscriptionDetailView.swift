@@ -17,6 +17,7 @@ struct SubscriptionDetailView: View {
     @State var loadNewVideosTask: Task<(), Never>?
     @State var showTitle: Bool = false
     @State var showFilter = false
+    @State private var storedVideoLimit = Const.channelVideoFetchLimit
 
     @Bindable var subscription: Subscription
 
@@ -95,7 +96,9 @@ struct SubscriptionDetailView: View {
             SubscriptionVideoList(
                 subscriptionId: subscription.persistentModelID,
                 source: source,
-                title: subscription.title
+                title: subscription.title,
+                limit: source.keepsListOrder ? nil : storedVideoLimit,
+                showMoreStored: { storedVideoLimit += Const.channelVideoFetchLimit }
             )
             .environment(\.videoListShowsUploader, subscription.youtubePlaylistId != nil)
         } else {

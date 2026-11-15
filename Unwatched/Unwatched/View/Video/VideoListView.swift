@@ -16,12 +16,17 @@ struct VideoListView: View {
         _videos = Self.query(subscriptionId: subscriptionId, searchText: searchText)
     }
 
-    static func query(subscriptionId: PersistentIdentifier? = nil, searchText: String = "") -> Query<Video, [Video]> {
-        Query(
-            filter: getVideoFilter(subscriptionId, searchText: searchText),
-            sort: [SortDescriptor(\.publishedDate, order: .reverse)],
-            animation: .default
+    static func query(
+        subscriptionId: PersistentIdentifier? = nil,
+        searchText: String = "",
+        limit: Int? = nil
+    ) -> Query<Video, [Video]> {
+        var fetch = FetchDescriptor<Video>(
+            predicate: getVideoFilter(subscriptionId, searchText: searchText),
+            sortBy: [SortDescriptor(\.publishedDate, order: .reverse)]
         )
+        fetch.fetchLimit = limit
+        return Query(fetch, animation: .default)
     }
 
     var body: some View {

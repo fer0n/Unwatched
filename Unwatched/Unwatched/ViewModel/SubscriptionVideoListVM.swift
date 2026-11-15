@@ -26,6 +26,11 @@ import UnwatchedShared
         case channel(String)
         case playlist(String)
 
+        /// Relative dates are too coarse to sort Watch Later by
+        var keepsListOrder: Bool {
+            self == .playlist(YoutubeUrlParser.watchLaterPlaylistId)
+        }
+
         init?(_ subscription: Subscription) {
             if let playlistId = subscription.youtubePlaylistId {
                 self = .playlist(playlistId)
@@ -62,9 +67,8 @@ import UnwatchedShared
         return mapped
     }
 
-    /// Relative dates are too coarse to sort Watch Later by
     var keepsListOrder: Bool {
-        source == .playlist(YoutubeUrlParser.watchLaterPlaylistId)
+        source.keepsListOrder
     }
 
     var canLoadMore: Bool {

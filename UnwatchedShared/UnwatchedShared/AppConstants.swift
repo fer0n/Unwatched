@@ -280,6 +280,9 @@ public struct Const {
     /// The maximum number of videos shown in the queue before a "show all" button appears
     public static let queueFetchLimit = 200
 
+    /// Stored videos a channel page shows before its "show more" row
+    public static let channelVideoFetchLimit = 100
+
     /// Option to keep the last x videos in the inbox when clearing it
     public static let inboxOverflowKeepCount = 20
     public static let inboxOverflowKeepCountAlt = 50

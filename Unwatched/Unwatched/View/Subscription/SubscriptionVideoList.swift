@@ -13,17 +13,42 @@ struct SubscriptionVideoList: View, Equatable {
 
     private let subscriptionId: PersistentIdentifier
     private let source: SubscriptionVideoListVM.Source
+    private let limit: Int?
+    private let showMoreStored: () -> Void
 
-    init(subscriptionId: PersistentIdentifier, source: SubscriptionVideoListVM.Source, title: String) {
+    init(
+        subscriptionId: PersistentIdentifier,
+        source: SubscriptionVideoListVM.Source,
+        title: String,
+        limit: Int?,
+        showMoreStored: @escaping () -> Void
+    ) {
         self.subscriptionId = subscriptionId
         self.source = source
-        _videos = VideoListView.query(subscriptionId: subscriptionId)
+        self.limit = limit
+        self.showMoreStored = showMoreStored
+        _videos = VideoListView.query(subscriptionId: subscriptionId, limit: limit.map { $0 + 1 })
         _viewModel = State(initialValue: SubscriptionVideoListVM(source: source, title: title))
     }
 
     // skips page redraws (e.g. the scrolling title); don't use .equatable(), it lays out every List row
     nonisolated static func == (lhs: SubscriptionVideoList, rhs: SubscriptionVideoList) -> Bool {
-        lhs.subscriptionId == rhs.subscriptionId && lhs.source == rhs.source
+        lhs.subscriptionId == rhs.subscriptionId && lhs.source == rhs.source && lhs.limit == rhs.limit
+    }
+
+    /// The query fetches one past the limit to tell whether more are stored
+    private var hidesStoredVideos: Bool {
+        limit.map { videos.count > $0 } ?? false
+    }
+
+    private var shownVideos: ArraySlice<Video> {
+        videos.prefix(limit ?? videos.count)
+    }
+
+    /// While stored videos are hidden, older remote ones could be copies of them
+    private var remoteCutoff: Date? {
+        guard hidesStoredVideos else { return nil }
+        return shownVideos.last(where: { $0.publishedDate != nil })?.publishedDate ?? .distantFuture
     }
 
     var body: some View {
@@ -35,28 +60,33 @@ struct SubscriptionVideoList: View, Equatable {
         }
         .myListRowBackground()
 
-        if viewModel.canLoadMore {
+        if hidesStoredVideos || viewModel.canLoadMore {
             showMoreButton
         }
     }
 
     var showMoreButton: some View {
         Button {
-            Task { await viewModel.loadMore(excluding: Set(videos.map(\.youtubeId))) }
+            if hidesStoredVideos {
+                showMoreStored()
+            } else {
+                Task { await viewModel.loadMore(excluding: Set(shownVideos.map(\.youtubeId))) }
+            }
         } label: {
             HStack(spacing: 4) {
-                if viewModel.isLoading {
+                let loadFailed = viewModel.loadFailed && !hidesStoredVideos
+                if viewModel.isLoading && !hidesStoredVideos {
                     ProgressView()
                 } else {
-                    Text(!viewModel.loadFailed ? "showMoreResults"
+                    Text(!loadFailed ? "showMoreResults"
                             : viewModel.signedOut ? "watchLaterSignedOut" : "channelLoadFailed")
-                    Image(systemName: viewModel.loadFailed ? "arrow.clockwise" : "chevron.down")
+                    Image(systemName: loadFailed ? "arrow.clockwise" : "chevron.down")
                 }
             }
             .padding(.vertical, 5)
             .frame(maxWidth: .infinity)
         }
-        .disabled(viewModel.isLoading)
+        .disabled(viewModel.isLoading && !hidesStoredVideos)
         .showMoreRow()
     }
 
@@ -64,8 +94,14 @@ struct SubscriptionVideoList: View, Equatable {
         if viewModel.keepsListOrder {
             return listOrderedRows
         }
+        let videos = shownVideos
         let storedIds = Set(videos.map(\.youtubeId))
-        let remote = viewModel.remoteVideos.filter { !storedIds.contains($0.youtubeId) }
+        let cutoff = remoteCutoff
+        let remote = viewModel.remoteVideos.filter { video in
+            guard !storedIds.contains(video.youtubeId) else { return false }
+            guard let cutoff else { return true }
+            return (video.publishedDate ?? .distantPast) > cutoff
+        }
         guard !remote.isEmpty else { return videos.map(Row.stored) }
 
         var result: [Row] = []
