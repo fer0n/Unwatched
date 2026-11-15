@@ -101,7 +101,11 @@ web view's cookie file.
 age-gate branch in `parsePlayerInfo`'s unplayable block, which throws `APIError.ageRestricted`
 *before* the `signInRequired` check: an age gate is definitive on every unauthenticated client,
 whereas "sign in to confirm you're not a bot" is per-client and must stay `signInRequired` so the
-retry loop keeps going.
+retry loop keeps going. Keep the error-screen detail in the same block: `playabilityDetail` (the
+`playerInterstitialRenderer…interstitialViewModel.description` text, else the
+`playerErrorMessageRenderer` subreason) is what `APIError.unavailable` carries, so a removed video
+reads "This video has been removed by the uploader" rather than `reason`'s bare "Video unavailable",
+and the keyword checks run over reason + detail.
 
 **`InnerTubeAPI+Search.swift`** (a trimmed port of upstream's browse/renderer parsers):
 `InnerTubeAPI+Search.swift`'s `parseSearchPage(from:)` is internal instead of `private`, so

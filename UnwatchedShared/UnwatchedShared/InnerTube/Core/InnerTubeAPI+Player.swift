@@ -634,10 +634,15 @@ extension InnerTubeAPI {
         let streamingData = json["streamingData"] as? [String: Any]
         let playabilityDict  = json["playabilityStatus"] as? [String: Any]
         let playabilityStatus = playabilityDict?["status"] as? String ?? "unknown"
-        let playabilityReason = playabilityDict?["reason"] as? String
-            ?? (playabilityDict?["errorScreen"] as? [String: Any])
-                .flatMap { ($0["playerErrorMessageRenderer"] as? [String: Any])?["subreason"] as? [String: Any] }
-                .flatMap { extractText($0) }
+        let errorScreen = playabilityDict?["errorScreen"] as? [String: Any]
+        let errorSubreason = (errorScreen?["playerErrorMessageRenderer"] as? [String: Any])
+            .flatMap { $0["subreason"] as? [String: Any] }
+            .flatMap { extractText($0) }
+        let playabilityReason = playabilityDict?["reason"] as? String ?? errorSubreason
+        // "Video unavailable" says less than the error screen's "This video has been removed by the uploader"
+        let interstitialDescription = ((((errorScreen?["playerInterstitialRenderer"] as? [String: Any])?["content"]
+            as? [String: Any])?["interstitialViewModel"] as? [String: Any])?["description"] as? [String: Any])?["content"] as? String
+        let playabilityDetail = interstitialDescription ?? errorSubreason
         Log.innerTube.notice("parsePlayerInfo id=\(videoId) playability=\(playabilityStatus) reason=\(playabilityReason ?? "nil") hasStreamingData=\(streamingData != nil)")
 
         // Fail early for definitely-unplayable videos so callers don't waste work on
@@ -656,7 +661,7 @@ extension InnerTubeAPI {
             // Age-gate / sign-in: checked before IP-block so the caller shows "Sign In" not "Try Again".
             // An age gate is singled out because it names the reason; "sign in to confirm you're not
             // a bot" is bot detection and stays `signInRequired`.
-            let lowerReason = reason.lowercased()
+            let lowerReason = [reason, playabilityDetail].compactMap { $0 }.joined(separator: " ").lowercased()
             let ageStatuses: Set<String> = ["AGE_VERIFICATION_REQUIRED", "AGE_CHECK_REQUIRED"]
             let ageKeywords = [
                 "confirm your age", "age-restricted", "age restricted",
@@ -674,7 +679,7 @@ extension InnerTubeAPI {
             if ipBlockKeywords.contains(where: { lowerReason.contains($0) }) {
                 throw APIError.ipBlocked(reason)
             }
-            throw APIError.unavailable(reason)
+            throw APIError.unavailable(playabilityDetail ?? reason)
         }
 
         var formats: [VideoFormat] = []

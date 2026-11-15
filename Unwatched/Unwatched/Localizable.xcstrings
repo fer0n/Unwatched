@@ -548,74 +548,6 @@
         }
       }
     },
-    "addPlaylistVideos" : {
-      "localizations" : {
-        "de" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Playlist-Videos hinzufügen"
-          }
-        },
-        "en" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Add Playlist Videos"
-          }
-        },
-        "es" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Añadir vídeos de la lista"
-          }
-        },
-        "fr" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Ajouter les vidéos de la playlist"
-          }
-        },
-        "pl" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Dodaj filmy z playlisty"
-          }
-        }
-      }
-    },
-    "addTags" : {
-      "localizations" : {
-        "de" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Tags hinzufügen"
-          }
-        },
-        "en" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Add Tags"
-          }
-        },
-        "es" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Añadir etiquetas"
-          }
-        },
-        "fr" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Ajouter des tags"
-          }
-        },
-        "pl" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Dodaj tagi"
-          }
-        }
-      }
-    },
     "addedVideo" : {
       "localizations" : {
         "de" : {
@@ -714,6 +646,40 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "Oznacz jako Nowe"
+          }
+        }
+      }
+    },
+    "addPlaylistVideos" : {
+      "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Playlist-Videos hinzufügen"
+          }
+        },
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Add Playlist Videos"
+          }
+        },
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Añadir vídeos de la lista"
+          }
+        },
+        "fr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Ajouter les vidéos de la playlist"
+          }
+        },
+        "pl" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Dodaj filmy z playlisty"
           }
         }
       }
@@ -918,6 +884,40 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "Dodaje subskrypcję w Niewidzianych dla kanału YouTube pod podanym adresem URL kanału lub playlisty."
+          }
+        }
+      }
+    },
+    "addTags" : {
+      "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Tags hinzufügen"
+          }
+        },
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Add Tags"
+          }
+        },
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Añadir etiquetas"
+          }
+        },
+        "fr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Ajouter des tags"
+          }
+        },
+        "pl" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Dodaj tagi"
           }
         }
       }
@@ -2143,6 +2143,40 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "Obejrzane multimedia"
+          }
+        }
+      }
+    },
+    "autoFocusSearch" : {
+      "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Suchfeld automatisch fokussieren"
+          }
+        },
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Auto-Focus Search Field"
+          }
+        },
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Enfocar el campo de búsqueda automáticamente"
+          }
+        },
+        "fr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Activer automatiquement le champ de recherche"
+          }
+        },
+        "pl" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Automatycznie aktywuj pole wyszukiwania"
           }
         }
       }
@@ -8382,12 +8416,6 @@
         "pl" : {
           "variations" : {
             "plural" : {
-              "one" : {
-                "stringUnit" : {
-                  "state" : "translated",
-                  "value" : "Ustawienie tego limitu usunie %lld starszy film tego kanału ze Skrzynki i Kolejki."
-                }
-              },
               "few" : {
                 "stringUnit" : {
                   "state" : "translated",
@@ -8398,6 +8426,12 @@
                 "stringUnit" : {
                   "state" : "translated",
                   "value" : "Ustawienie tego limitu usunie %lld starszych filmów tego kanału ze Skrzynki i Kolejki."
+                }
+              },
+              "one" : {
+                "stringUnit" : {
+                  "state" : "translated",
+                  "value" : "Ustawienie tego limitu usunie %lld starszy film tego kanału ze Skrzynki i Kolejki."
                 }
               },
               "other" : {
@@ -8488,12 +8522,6 @@
         "pl" : {
           "variations" : {
             "plural" : {
-              "one" : {
-                "stringUnit" : {
-                  "state" : "translated",
-                  "value" : "Ograniczyć do %lld wpisu?"
-                }
-              },
               "few" : {
                 "stringUnit" : {
                   "state" : "translated",
@@ -8504,6 +8532,12 @@
                 "stringUnit" : {
                   "state" : "translated",
                   "value" : "Ograniczyć do %lld wpisów?"
+                }
+              },
+              "one" : {
+                "stringUnit" : {
+                  "state" : "translated",
+                  "value" : "Ograniczyć do %lld wpisu?"
                 }
               },
               "other" : {
@@ -8594,12 +8628,6 @@
         "pl" : {
           "variations" : {
             "plural" : {
-              "one" : {
-                "stringUnit" : {
-                  "state" : "translated",
-                  "value" : "%lld wpis"
-                }
-              },
               "few" : {
                 "stringUnit" : {
                   "state" : "translated",
@@ -8610,6 +8638,12 @@
                 "stringUnit" : {
                   "state" : "translated",
                   "value" : "%lld wpisów"
+                }
+              },
+              "one" : {
+                "stringUnit" : {
+                  "state" : "translated",
+                  "value" : "%lld wpis"
                 }
               },
               "other" : {
@@ -13073,6 +13107,40 @@
         }
       }
     },
+    "markedAsNew" : {
+      "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Neu"
+          }
+        },
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "New"
+          }
+        },
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Nuevo"
+          }
+        },
+        "fr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Nouveau"
+          }
+        },
+        "pl" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Nowe"
+          }
+        }
+      }
+    },
     "markUnwatched" : {
       "localizations" : {
         "de" : {
@@ -13205,40 +13273,6 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "Automatycznie oznacza wideo jako obejrzane i wczytuje następne w kolejce po zakończeniu odtwarzania."
-          }
-        }
-      }
-    },
-    "markedAsNew" : {
-      "localizations" : {
-        "de" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Neu"
-          }
-        },
-        "en" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "New"
-          }
-        },
-        "es" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Nuevo"
-          }
-        },
-        "fr" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Nouveau"
-          }
-        },
-        "pl" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Nowe"
           }
         }
       }
@@ -20425,40 +20459,6 @@
         }
       }
     },
-    "removeTags" : {
-      "localizations" : {
-        "de" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Tags entfernen"
-          }
-        },
-        "en" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Remove Tags"
-          }
-        },
-        "es" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Quitar etiquetas"
-          }
-        },
-        "fr" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Retirer des tags"
-          }
-        },
-        "pl" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Usuń tagi"
-          }
-        }
-      }
-    },
     "removedDuplicates\n%lld\n%lld\n%lld\n%lld\n%lld\n%lld" : {
       "localizations" : {
         "de" : {
@@ -20727,6 +20727,40 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "Usuń ^[%lld #short](inflect: true) ze Skrzynki odbiorczej"
+          }
+        }
+      }
+    },
+    "removeTags" : {
+      "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Tags entfernen"
+          }
+        },
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Remove Tags"
+          }
+        },
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Quitar etiquetas"
+          }
+        },
+        "fr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Retirer des tags"
+          }
+        },
+        "pl" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Usuń tagi"
           }
         }
       }
@@ -21413,16 +21447,16 @@
     },
     "restoreBackupFailedMessage" : {
       "localizations" : {
-        "en" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "The backup file is damaged or not supported. Your current data wasn't changed."
-          }
-        },
         "de" : {
           "stringUnit" : {
             "state" : "translated",
             "value" : "Die Backup-Datei ist beschädigt oder wird nicht unterstützt. Deine aktuellen Daten wurden nicht verändert."
+          }
+        },
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "The backup file is damaged or not supported. Your current data wasn't changed."
           }
         },
         "es" : {
@@ -25629,6 +25663,40 @@
         }
       }
     },
+    "showRecentSearches" : {
+      "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Letzte Suchen anzeigen"
+          }
+        },
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Show Recent Searches"
+          }
+        },
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Mostrar búsquedas recientes"
+          }
+        },
+        "fr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Afficher les recherches récentes"
+          }
+        },
+        "pl" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Pokazuj ostatnie wyszukiwania"
+          }
+        }
+      }
+    },
     "showRecommendations" : {
       "localizations" : {
         "de" : {
@@ -25727,74 +25795,6 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "Pokaż przycisk YouTube"
-          }
-        }
-      }
-    },
-    "autoFocusSearch" : {
-      "localizations" : {
-        "de" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Suchfeld automatisch fokussieren"
-          }
-        },
-        "en" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Auto-Focus Search Field"
-          }
-        },
-        "es" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Enfocar el campo de búsqueda automáticamente"
-          }
-        },
-        "fr" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Activer automatiquement le champ de recherche"
-          }
-        },
-        "pl" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Automatycznie aktywuj pole wyszukiwania"
-          }
-        }
-      }
-    },
-    "showRecentSearches" : {
-      "localizations" : {
-        "de" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Letzte Suchen anzeigen"
-          }
-        },
-        "en" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Show Recent Searches"
-          }
-        },
-        "es" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Mostrar búsquedas recientes"
-          }
-        },
-        "fr" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Afficher les recherches récentes"
-          }
-        },
-        "pl" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Pokazuj ostatnie wyszukiwania"
           }
         }
       }
@@ -32437,6 +32437,9 @@
           }
         }
       }
+    },
+    "YouTube is blocking this network. Turn off your VPN or try again later." : {
+
     },
     "youtubeApiKey" : {
       "localizations" : {

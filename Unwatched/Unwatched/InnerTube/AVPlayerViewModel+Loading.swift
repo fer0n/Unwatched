@@ -191,16 +191,19 @@ extension AVPlayerViewModel {
             case ipBlocked(Error)
             case scheduled(Error)
             case ageRestricted(Error)
+            case unavailable(priority: Int, error: Error)
         }
 
-        @Sendable func verdict(_ error: Error) -> FetchOutcome? {
+        @Sendable func verdict(_ error: Error, priority: Int) -> FetchOutcome? {
             if case APIError.ageRestricted = error { return .ageRestricted(error) }
             if case APIError.ipBlocked = error { return .ipBlocked(error) }
             if case APIError.scheduled = error { return .scheduled(error) }
+            if case APIError.unavailable = error { return .unavailable(priority: priority, error: error) }
             return nil
         }
 
         let api = self.api
+        var unavailable: (priority: Int, error: Error)?
 
         for attempt in 1...3 {
             guard !Task.isCancelled, player.video?.youtubeId == videoId else { return }
@@ -223,7 +226,7 @@ extension AVPlayerViewModel {
                             }
                             return .result(FetchResult(priority: client.priority, client: client.name, info: info))
                         } catch {
-                            return verdict(error)
+                            return verdict(error, priority: client.priority)
                         }
                     }
                 }
@@ -242,6 +245,10 @@ extension AVPlayerViewModel {
                     case .ageRestricted(let err):
                         // TVEmbedded and AndroidVR can still serve an age gate: let them finish
                         ageError = err
+                    case .unavailable(let priority, let err):
+                        if priority < unavailable?.priority ?? .max {
+                            unavailable = (priority, err)
+                        }
                     case .result(let r):
                         if r.client == "Android" { androidInfoForMuxed = r.info }
                         if r.info.hlsURL != nil {
@@ -309,7 +316,7 @@ extension AVPlayerViewModel {
         guard !Task.isCancelled, player.video?.youtubeId == videoId else { return }
         Log.player.error("[AVPlayerView] all retry attempts exhausted: \(videoId)")
         Signal.error("nativeStreamUnavailable")
-        failPlayback(APIError.unavailable("Unable to play this video"))
+        failPlayback(unavailable?.error ?? APIError.unavailable("Unable to play this video"))
     }
 
     /// Tries HLS → adaptive composition → (optionally) muxed from one `PlayerInfo`.

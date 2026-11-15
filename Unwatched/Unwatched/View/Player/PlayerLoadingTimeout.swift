@@ -26,27 +26,25 @@ struct PlayerLoadingTimeout: View {
     var body: some View {
         ZStack {
             ProgressView()
-                .opacity(showSpinner ? 1 : 0)
-            Button {
-                if let reloadAction {
-                    reloadAction()
-                } else {
-                    PlayerManager.reloadPlayer()
+                .opacity(showSpinner && error == nil ? 1 : 0)
+            VStack(spacing: 12) {
+                reloadButton
+                if let errorMessage {
+                    Text(errorMessage)
+                        .font(.footnote)
+                        .foregroundStyle(Color.automaticBlack)
+                        .multilineTextAlignment(.center)
+                        .lineLimit(3)
+                        .padding(.horizontal, 14)
+                        .padding(.vertical, 8)
+                        .background(Color.backgroundColor, in: Capsule())
+                        #if !os(visionOS)
+                        .glassEffect(.regular, in: Capsule())
+                        #endif
+                        .frame(maxWidth: 280)
+                        .padding(.horizontal)
                 }
-                hapticToggle.toggle()
-            } label: {
-                Image(systemName: Const.reloadCircleSF)
-                    .resizable()
-                    .frame(width: 45, height: 45)
-                    .symbolRenderingMode(.palette)
-                    .foregroundStyle(Color.automaticBlack, Color.backgroundColor)
-                    .fontWeight(.regular)
-                    #if !os(visionOS)
-                    // over the video, not on screen while the player's pages move
-                    .glassEffect(.regular, in: Capsule())
-                #endif
             }
-            .buttonStyle(.plain)
             .opacity(showReload ? 1 : 0)
         }
         .opacity(player.isLoading != nil || error != nil ? 1 : 0)
@@ -79,5 +77,43 @@ struct PlayerLoadingTimeout: View {
                 showReload = false
             }
         }
+    }
+
+    private var errorMessage: String? {
+        if let error = error as? URLError {
+            return error.localizedDescription
+        }
+        guard let error = error as? APIError else { return nil }
+        switch error {
+        case .ipBlocked:
+            return String(localized: "YouTube is blocking this network. Turn off your VPN or try again later.")
+        case .unavailable, .signInRequired, .ageRestricted, .scheduled:
+            return error.errorDescription
+        case .httpError, .decodingError, .notAuthenticated, .invalidURL:
+            return nil
+        }
+    }
+
+    private var reloadButton: some View {
+        Button {
+            if let reloadAction {
+                reloadAction()
+            } else {
+                PlayerManager.reloadPlayer()
+            }
+            hapticToggle.toggle()
+        } label: {
+            Image(systemName: Const.reloadCircleSF)
+                .resizable()
+                .frame(width: 45, height: 45)
+                .symbolRenderingMode(.palette)
+                .foregroundStyle(Color.automaticBlack, Color.backgroundColor)
+                .fontWeight(.regular)
+                #if !os(visionOS)
+                // over the video, not on screen while the player's pages move
+                .glassEffect(.regular, in: Capsule())
+            #endif
+        }
+        .buttonStyle(.plain)
     }
 }
