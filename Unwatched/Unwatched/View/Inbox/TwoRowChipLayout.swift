@@ -5,7 +5,7 @@
 
 import SwiftUI
 
-/// Lays out a chip that is always two rows tall, picking between the two variants it is given.
+/// Lays out a chip that is always two rows tall, picking between the variants it is given.
 ///
 /// A `Layout` is needed because a horizontally scrolling stack proposes an unspecified width, which
 /// `.frame(maxWidth:)` resolves to the ideal size — for text, always a single line.
@@ -15,19 +15,14 @@ struct TwoRowChipLayout: Layout {
 
     private static let widthPrecision: CGFloat = 3
 
-    /// The same chapter laid out both ways, in the order the subviews are declared in
+    /// The same chapter laid out each way, in the order the subviews are declared in
     enum Variant: Int, CaseIterable {
         /// title on the first row, duration on the second
         case stacked
         /// title wrapped over both rows, duration flowing after it
         case inline
-
-        var separator: String {
-            switch self {
-            case .stacked: "\n"
-            case .inline: "  "
-            }
-        }
+        /// title cut off with an ellipsis after two rows, duration beside it
+        case truncated
     }
 
     struct Resolved {
@@ -87,10 +82,17 @@ struct TwoRowChipLayout: Layout {
             )
         }
 
-        let (size, width) = narrowestTwoRowWidth(of: inline, rowHeight: rowHeight)
+        guard let (size, width) = narrowestTwoRowWidth(of: inline, rowHeight: rowHeight) else {
+            let truncated = subviews[Variant.truncated.rawValue]
+            let truncatedSize = truncated.sizeThatFits(ProposedViewSize(width: maxWidth, height: nil))
+            return Resolved(
+                variant: .truncated,
+                size: CGSize(width: truncatedSize.width, height: max(rowHeight * 2, truncatedSize.height)),
+                proposal: ProposedViewSize(width: maxWidth, height: truncatedSize.height)
+            )
+        }
         return Resolved(
             variant: .inline,
-            // a title too long for two rows even at `maxWidth` grows the chip rather than being clipped
             size: CGSize(width: size.width, height: max(rowHeight * 2, size.height)),
             proposal: ProposedViewSize(width: width, height: size.height)
         )
@@ -99,7 +101,7 @@ struct TwoRowChipLayout: Layout {
     private func narrowestTwoRowWidth(
         of subview: LayoutSubview,
         rowHeight: CGFloat
-    ) -> (size: CGSize, width: CGFloat) {
+    ) -> (size: CGSize, width: CGFloat)? {
         // a third row is at least ~2.7x a single one, even where it only holds the smaller duration font
         let twoRowHeight = rowHeight * 2.5
         func size(at width: CGFloat) -> CGSize {
@@ -111,15 +113,13 @@ struct TwoRowChipLayout: Layout {
         var tooNarrow = idealWidth / 2
         var fits = min(idealWidth, maxWidth)
 
-        // a title too long for two rows even at `fits` can't be narrowed any further
-        if size(at: fits).height <= twoRowHeight {
-            while fits - tooNarrow > Self.widthPrecision {
-                let middle = (tooNarrow + fits) / 2
-                if size(at: middle).height <= twoRowHeight {
-                    fits = middle
-                } else {
-                    tooNarrow = middle
-                }
+        guard size(at: fits).height <= twoRowHeight else { return nil }
+        while fits - tooNarrow > Self.widthPrecision {
+            let middle = (tooNarrow + fits) / 2
+            if size(at: middle).height <= twoRowHeight {
+                fits = middle
+            } else {
+                tooNarrow = middle
             }
         }
         return (size(at: fits), fits)

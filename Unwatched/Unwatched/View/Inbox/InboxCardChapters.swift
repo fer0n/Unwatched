@@ -40,10 +40,14 @@ struct InboxCardChapters: View {
         } label: {
             TwoRowChipLayout(singleLineWidth: singleLineChipWidth, maxWidth: maxChipWidth) {
                 ForEach(TwoRowChipLayout.Variant.allCases, id: \.rawValue) { variant in
-                    chipLabel(for: chapter, variant)
-                        .multilineTextAlignment(.leading)
+                    switch variant {
+                    case .stacked: chipLabel(for: chapter, separator: "\n")
+                    case .inline: chipLabel(for: chapter, separator: "  ")
+                    case .truncated: truncatedChipLabel(for: chapter)
+                    }
                 }
             }
+            .multilineTextAlignment(.leading)
             .foregroundStyle(.primary)
             .padding(.horizontal, 10)
             .padding(.vertical, 6)
@@ -51,20 +55,38 @@ struct InboxCardChapters: View {
             .contentShape(.rect(cornerRadius: 12))
         }
         .buttonStyle(.plain)
+        .accessibilityLabel(chipLabel(for: chapter, separator: ", "))
     }
 
+    private var titleFont: Font { .system(size: fontSize, weight: .semibold) }
+    private var durationFont: Font { .system(size: fontSize) }
+
     /// One run of text, so the duration can flow inline after a wrapped title
-    private func chipLabel(for chapter: SendableChapter, _ variant: TwoRowChipLayout.Variant) -> Text {
+    private func chipLabel(for chapter: SendableChapter, separator: String) -> Text {
         var title = AttributedString(chapter.titleText(fallback: video.title))
-        title.font = .system(size: fontSize, weight: .semibold)
+        title.font = titleFont
 
         guard let duration = chapter.duration?.formattedSeconds else {
             return Text(title)
         }
-        var time = AttributedString("\(variant.separator)\(duration)")
-        time.font = .system(size: fontSize)
+        var time = AttributedString("\(separator)\(duration)")
+        time.font = durationFont
         time.foregroundColor = .secondary
         return Text(title + time)
+    }
+
+    private func truncatedChipLabel(for chapter: SendableChapter) -> some View {
+        HStack(alignment: .lastTextBaseline, spacing: 0) {
+            Text(chapter.titleText(fallback: video.title))
+                .font(titleFont)
+                .lineLimit(2)
+            if let duration = chapter.duration?.formattedSeconds {
+                Text("  \(duration)")
+                    .font(durationFont)
+                    .foregroundStyle(.secondary)
+                    .fixedSize()
+            }
+        }
     }
 
     private func setChapter(_ chapter: SendableChapter) {
@@ -90,7 +112,12 @@ struct InboxCardChapters: View {
                 duration: 305
             ),
             SendableChapter(title: "Two words", startTime: 347, duration: 90),
-            SendableChapter(title: "Supercalifragilisticexpialidocious", startTime: 437, duration: 12)
+            SendableChapter(title: "Supercalifragilisticexpialidocious", startTime: 437, duration: 12),
+            SendableChapter(
+                title: "A chapter title so long that it can't possibly fit into two rows, even at the widest a chip gets",
+                startTime: 449,
+                duration: 600
+            )
         ]
     )
     .previewEnvironments()
