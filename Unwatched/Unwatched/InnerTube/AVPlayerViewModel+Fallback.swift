@@ -8,6 +8,12 @@ import OSLog
 import SwiftUI
 import UnwatchedShared
 
+extension APIError {
+    static func isRemoved(_ error: Error?) -> Bool {
+        if case .removed = error as? APIError { true } else { false }
+    }
+}
+
 /// What the player does when resolving a stream produced a verdict no client will get past.
 extension AVPlayerViewModel {
 
@@ -46,7 +52,8 @@ extension AVPlayerViewModel {
     @discardableResult
     func failPlayback(_ error: Error?) -> Bool {
         clearPendingReposition()
-        if handOffToWebsitePlayer() { return true }
+        // the YouTube page can't play a removed video either
+        if !APIError.isRemoved(error), handOffToWebsitePlayer() { return true }
         player.isLoading = nil
         loadError = error
         return false

@@ -679,6 +679,9 @@ extension InnerTubeAPI {
             if ipBlockKeywords.contains(where: { lowerReason.contains($0) }) {
                 throw APIError.ipBlocked(reason)
             }
+            if playabilityStatus == "ERROR" {
+                throw APIError.removed(playabilityDetail ?? reason)
+            }
             throw APIError.unavailable(playabilityDetail ?? reason)
         }
 

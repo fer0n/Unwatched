@@ -5,10 +5,12 @@
 
 import SwiftUI
 import OSLog
+import SwiftData
 import UnwatchedShared
 
 struct PlayerLoadingTimeout: View {
     @Environment(PlayerManager.self) var player
+    @Environment(\.modelContext) var modelContext
 
     var error: Error?
     var reloadAction: (() -> Void)?
@@ -28,7 +30,21 @@ struct PlayerLoadingTimeout: View {
             ProgressView()
                 .opacity(showSpinner && error == nil ? 1 : 0)
             VStack(spacing: 12) {
-                reloadButton
+                HStack(spacing: 16) {
+                    overlayButton(Const.reloadCircleSF) {
+                        if let reloadAction {
+                            reloadAction()
+                        } else {
+                            PlayerManager.reloadPlayer()
+                        }
+                    }
+                    if APIError.isRemoved(error) {
+                        overlayButton("trash.circle.fill") {
+                            player.clearVideo(modelContext)
+                        }
+                        .accessibilityLabel(Text("clearVideo"))
+                    }
+                }
                 if let errorMessage {
                     Text(errorMessage)
                         .font(.footnote)
@@ -87,23 +103,19 @@ struct PlayerLoadingTimeout: View {
         switch error {
         case .ipBlocked:
             return String(localized: "YouTube is blocking this network. Turn off your VPN or try again later.")
-        case .unavailable, .signInRequired, .ageRestricted, .scheduled:
+        case .unavailable, .removed, .signInRequired, .ageRestricted, .scheduled:
             return error.errorDescription
         case .httpError, .decodingError, .notAuthenticated, .invalidURL:
             return nil
         }
     }
 
-    private var reloadButton: some View {
+    private func overlayButton(_ systemImage: String, action: @escaping () -> Void) -> some View {
         Button {
-            if let reloadAction {
-                reloadAction()
-            } else {
-                PlayerManager.reloadPlayer()
-            }
+            action()
             hapticToggle.toggle()
         } label: {
-            Image(systemName: Const.reloadCircleSF)
+            Image(systemName: systemImage)
                 .resizable()
                 .frame(width: 45, height: 45)
                 .symbolRenderingMode(.palette)

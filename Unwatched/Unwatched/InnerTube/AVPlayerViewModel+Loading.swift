@@ -192,6 +192,7 @@ extension AVPlayerViewModel {
             case scheduled(Error)
             case ageRestricted(Error)
             case unavailable(priority: Int, error: Error)
+            case removed(Error)
         }
 
         @Sendable func verdict(_ error: Error, priority: Int) -> FetchOutcome? {
@@ -199,11 +200,13 @@ extension AVPlayerViewModel {
             if case APIError.ipBlocked = error { return .ipBlocked(error) }
             if case APIError.scheduled = error { return .scheduled(error) }
             if case APIError.unavailable = error { return .unavailable(priority: priority, error: error) }
+            if case APIError.removed = error { return .removed(error) }
             return nil
         }
 
         let api = self.api
         var unavailable: (priority: Int, error: Error)?
+        var removed: Error?
 
         for attempt in 1...3 {
             guard !Task.isCancelled, player.video?.youtubeId == videoId else { return }
@@ -249,6 +252,8 @@ extension AVPlayerViewModel {
                         if priority < unavailable?.priority ?? .max {
                             unavailable = (priority, err)
                         }
+                    case .removed(let err):
+                        removed = err
                     case .result(let r):
                         if r.client == "Android" { androidInfoForMuxed = r.info }
                         if r.info.hlsURL != nil {
@@ -316,7 +321,7 @@ extension AVPlayerViewModel {
         guard !Task.isCancelled, player.video?.youtubeId == videoId else { return }
         Log.player.error("[AVPlayerView] all retry attempts exhausted: \(videoId)")
         Signal.error("nativeStreamUnavailable")
-        failPlayback(unavailable?.error ?? APIError.unavailable("Unable to play this video"))
+        failPlayback(removed ?? unavailable?.error ?? APIError.unavailable("Unable to play this video"))
     }
 
     /// Tries HLS → adaptive composition → (optionally) muxed from one `PlayerInfo`.

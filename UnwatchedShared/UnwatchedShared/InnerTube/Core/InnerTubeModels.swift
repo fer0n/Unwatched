@@ -292,6 +292,8 @@ public enum APIError: LocalizedError {
     case decodingError(String)
     case notAuthenticated
     case unavailable(String)
+    /// `playabilityStatus: "ERROR"`: removed, its account terminated, or never existed. No client will play it.
+    case removed(String)
     case invalidURL(String)
     /// Thrown when YouTube's `/player` response indicates the request was blocked due to
     /// the source IP address (VPN, proxy, shared datacenter IP). The associated value is
@@ -313,6 +315,7 @@ public enum APIError: LocalizedError {
         case .decodingError(let msg):   return "Decoding error: \(msg)"
         case .notAuthenticated:         return "You are not signed in"
         case .unavailable(let reason):  return reason
+        case .removed(let reason):      return reason
         case .invalidURL(let endpoint): return "Could not build URL for endpoint: \(endpoint)"
         case .signInRequired:
             return "This video is age-restricted or requires sign in to watch."
