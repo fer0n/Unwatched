@@ -1276,7 +1276,8 @@ extension PlayerWebView {
             function checkError() {
                 // the interstitial is the newer error screen; content warnings have a button to go on
                 const errorContent = document.querySelector('.ytp-error-content')
-                    || [...document.querySelectorAll('yt-interstitial-view-model')].find(e => !e.querySelector('button'))
+                    || [...document.querySelectorAll('yt-interstitial-view-model')]
+                        .find(e => !e.querySelector('button') && e.checkVisibility() && !(document.querySelector('video')?.currentTime > 0))
                 if (errorContent) {
                     sendMessage("youtubeError", errorContent?.innerText);
                 }

@@ -217,6 +217,7 @@ extension AVPlayerViewModel {
             var ipBlockError: Error?
             var scheduledError: Error?
             var ageError: Error?
+            var removedCount = 0
             var played = false
 
             // each fetch survives transient network blips via retryWithBackoff
@@ -254,6 +255,7 @@ extension AVPlayerViewModel {
                         }
                     case .removed(let err):
                         removed = err
+                        removedCount += 1
                     case .result(let r):
                         if r.client == "Android" { androidInfoForMuxed = r.info }
                         if r.info.hlsURL != nil {
@@ -273,6 +275,13 @@ extension AVPlayerViewModel {
             }
 
             if played { return }
+
+            if removedCount == Self.retryClients.count, let removed {
+                if !failPlayback(removed) {
+                    player.pause()
+                }
+                return
+            }
 
             if let ageError, handleAgeRestrictedVideo(ageError, videoId: videoId) {
                 return
@@ -321,7 +330,7 @@ extension AVPlayerViewModel {
         guard !Task.isCancelled, player.video?.youtubeId == videoId else { return }
         Log.player.error("[AVPlayerView] all retry attempts exhausted: \(videoId)")
         Signal.error("nativeStreamUnavailable")
-        failPlayback(removed ?? unavailable?.error ?? APIError.unavailable("Unable to play this video"))
+        failPlayback(unavailable?.error ?? removed ?? APIError.unavailable("Unable to play this video"))
     }
 
     /// Tries HLS → adaptive composition → (optionally) muxed from one `PlayerInfo`.

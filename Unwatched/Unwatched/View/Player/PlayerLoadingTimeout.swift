@@ -31,11 +31,13 @@ struct PlayerLoadingTimeout: View {
                 .opacity(showSpinner && error == nil ? 1 : 0)
             VStack(spacing: 12) {
                 HStack(spacing: 16) {
-                    overlayButton(Const.reloadCircleSF) {
-                        if let reloadAction {
-                            reloadAction()
-                        } else {
-                            PlayerManager.reloadPlayer()
+                    if !isScheduled {
+                        overlayButton(Const.reloadCircleSF) {
+                            if let reloadAction {
+                                reloadAction()
+                            } else {
+                                PlayerManager.reloadPlayer()
+                            }
                         }
                     }
                     if APIError.isRemoved(error) {
@@ -95,6 +97,10 @@ struct PlayerLoadingTimeout: View {
         }
     }
 
+    private var isScheduled: Bool {
+        if case .scheduled = error as? APIError { true } else { false }
+    }
+
     private var errorMessage: String? {
         if let error = error as? URLError {
             return error.localizedDescription
@@ -103,11 +109,15 @@ struct PlayerLoadingTimeout: View {
         switch error {
         case .ipBlocked:
             return String(localized: "YouTube is blocking this network. Turn off your VPN or try again later.")
-        case .scheduled(let date?):
+        case .scheduled(let date?) where date > .now:
             return String(localized: "Starts \(date.formatted(.relative(presentation: .named)))")
-        case .scheduled(nil):
+        case .scheduled:
             return String(localized: "This video hasn't started yet.")
-        case .unavailable, .removed, .signInRequired, .ageRestricted:
+        case .signInRequired:
+            return String(localized: "Sign in to YouTube to watch this video.")
+        case .ageRestricted:
+            return String(localized: "This video is age-restricted. Sign in to YouTube to watch it.")
+        case .unavailable, .removed:
             return error.errorDescription
         case .httpError, .decodingError, .notAuthenticated, .invalidURL:
             return nil

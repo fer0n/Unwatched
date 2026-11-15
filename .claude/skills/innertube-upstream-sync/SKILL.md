@@ -104,8 +104,8 @@ whereas "sign in to confirm you're not a bot" is per-client and must stay `signI
 retry loop keeps going. Keep the error-screen detail in the same block: `playabilityDetail` (the
 `playerInterstitialRenderer…interstitialViewModel.description` text, else the
 `playerErrorMessageRenderer` subreason) is what `APIError.unavailable` carries, so a removed video
-reads "This video has been removed by the uploader" rather than `reason`'s bare "Video unavailable",
-and the keyword checks run over reason + detail. A `playabilityStatus: "ERROR"` that is none of those throws
+reads "This video has been removed by the uploader" rather than `reason`'s bare "Video unavailable" (the
+keyword checks still run over `reason` alone). A `playabilityStatus: "ERROR"` that is none of those throws
 `APIError.removed` (an Unwatched-only case in `InnerTubeModels.swift`): the player then skips the
 YouTube page hand-off and offers to clear the video.
 

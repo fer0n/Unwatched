@@ -639,9 +639,12 @@ extension InnerTubeAPI {
             .flatMap { $0["subreason"] as? [String: Any] }
             .flatMap { extractText($0) }
         let playabilityReason = playabilityDict?["reason"] as? String ?? errorSubreason
-        // "Video unavailable" says less than the error screen's "This video has been removed by the uploader"
-        let interstitialDescription = ((((errorScreen?["playerInterstitialRenderer"] as? [String: Any])?["content"]
-            as? [String: Any])?["interstitialViewModel"] as? [String: Any])?["description"] as? [String: Any])?["content"] as? String
+        // Unwatched: the error screen's detail, e.g. "This video has been removed by the uploader"
+        let interstitialDescription = (errorScreen?["playerInterstitialRenderer"] as? [String: Any])
+            .flatMap { $0["content"] as? [String: Any] }
+            .flatMap { $0["interstitialViewModel"] as? [String: Any] }
+            .flatMap { $0["description"] as? [String: Any] }
+            .flatMap { $0["content"] as? String }
         let playabilityDetail = interstitialDescription ?? errorSubreason
         Log.innerTube.notice("parsePlayerInfo id=\(videoId) playability=\(playabilityStatus) reason=\(playabilityReason ?? "nil") hasStreamingData=\(streamingData != nil)")
 
@@ -661,7 +664,7 @@ extension InnerTubeAPI {
             // Age-gate / sign-in: checked before IP-block so the caller shows "Sign In" not "Try Again".
             // An age gate is singled out because it names the reason; "sign in to confirm you're not
             // a bot" is bot detection and stays `signInRequired`.
-            let lowerReason = [reason, playabilityDetail].compactMap { $0 }.joined(separator: " ").lowercased()
+            let lowerReason = reason.lowercased()
             let ageStatuses: Set<String> = ["AGE_VERIFICATION_REQUIRED", "AGE_CHECK_REQUIRED"]
             let ageKeywords = [
                 "confirm your age", "age-restricted", "age restricted",
