@@ -5,27 +5,35 @@
 
 import SwiftUI
 
-struct DeferDateButtonStyle: ButtonStyle {
-    @Environment(\.isEnabled) var isEnabled
+extension View {
+    func deferDateButtonStyle(prominent: Bool, tint: Color, contrast: Color) -> some View {
+        modifier(DeferDateButtonStyle(prominent: prominent, tint: tint, contrast: contrast))
+    }
+}
 
-    var isHighlighted: Bool = false
-    var color: Color
-    var contrastColor: Color
+private struct DeferDateButtonStyle: ViewModifier {
+    let prominent: Bool
+    let tint: Color
+    let contrast: Color
 
-    func makeBody(configuration: Configuration) -> some View {
-        configuration.label
-            .frame(maxWidth: .infinity)
-            .padding(10)
-            .contentShape(Rectangle())
-            .background(
-                RoundedRectangle(cornerRadius: 10, style: .continuous)
-                    .fill(isHighlighted ? color : Color.clear)
-                    .overlay(
-                        RoundedRectangle(cornerRadius: 10, style: .continuous)
-                            .strokeBorder(color, lineWidth: 1)
-                    )
-            )
-            .foregroundStyle(isHighlighted ? contrastColor : color)
-            .opacity(isEnabled ? 1 : 0.5)
+    func body(content: Content) -> some View {
+        Group {
+            #if os(visionOS)
+            if prominent {
+                content.buttonStyle(.borderedProminent).foregroundStyle(contrast)
+            } else {
+                content.buttonStyle(.bordered)
+            }
+            #else
+            if prominent {
+                content.buttonStyle(.glassProminent).foregroundStyle(contrast)
+            } else {
+                content.buttonStyle(.glass)
+            }
+            #endif
+        }
+        .tint(tint)
+        .controlSize(.large)
+        .buttonBorderShape(.capsule)
     }
 }

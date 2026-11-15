@@ -45,24 +45,18 @@ struct DeferDateSelector: View {
                     self.date = detectedDateValue
                 } label: {
                     Text(formatted(detectedDateValue))
+                        .frame(maxWidth: .infinity)
                 }
-                .buttonStyle(DeferDateButtonStyle(
-                    isHighlighted: date == detectedDateValue,
-                    color: theme.color,
-                    contrastColor: theme.contrastColor
-                ))
+                .deferDateButtonStyle(prominent: date == detectedDateValue, tint: theme.color, contrast: theme.contrastColor)
             }
 
             Button {
                 date = nextFullHour
             } label: {
                 Text("selected")
+                    .frame(maxWidth: .infinity)
             }
-            .buttonStyle(DeferDateButtonStyle(
-                isHighlighted: date != nil && date != detectedDateValue,
-                color: theme.color,
-                contrastColor: theme.contrastColor
-            ))
+            .deferDateButtonStyle(prominent: date != nil && date != detectedDateValue, tint: theme.color, contrast: theme.contrastColor)
 
             Button(role: .destructive) {
                 date = nil
@@ -70,12 +64,7 @@ struct DeferDateSelector: View {
                 Text("none")
                     .frame(maxWidth: .infinity)
             }
-            .contentShape(Rectangle())
-            .buttonStyle(DeferDateButtonStyle(
-                isHighlighted: date == nil,
-                color: .red,
-                contrastColor: .white
-            ))
+            .deferDateButtonStyle(prominent: date == nil, tint: .red, contrast: .white)
         }
         .padding(.horizontal)
 
@@ -92,14 +81,15 @@ struct DeferDateSelector: View {
             .disabled(date == nil)
 
         HStack {
-            DismissSheetButton()
-                .buttonStyle(DeferDateButtonStyle(
-                    isHighlighted: false,
-                    color: theme.color,
-                    contrastColor: theme.contrastColor
-                ))
+            Button {
+                dismiss()
+            } label: {
+                Label("cancel", systemImage: "xmark")
+                    .frame(maxWidth: .infinity)
+            }
+            .deferDateButtonStyle(prominent: false, tint: theme.color, contrast: theme.contrastColor)
 
-            Button("confirm", systemImage: "checkmark") {
+            Button {
                 if let video, let videoId = video.persistentId {
                     if let date {
                         VideoService.deferVideo(
@@ -112,12 +102,11 @@ struct DeferDateSelector: View {
                     }
                     dismiss()
                 }
+            } label: {
+                Label("confirm", systemImage: "clock.fill")
+                    .frame(maxWidth: .infinity)
             }
-            .buttonStyle(DeferDateButtonStyle(
-                isHighlighted: true,
-                color: theme.color,
-                contrastColor: theme.contrastColor
-            ))
+            .deferDateButtonStyle(prominent: true, tint: theme.color, contrast: theme.contrastColor)
             .disabled(!isDirty)
         }
         .fontWeight(.medium)
