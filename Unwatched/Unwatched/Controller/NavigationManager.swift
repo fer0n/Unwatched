@@ -52,7 +52,8 @@ import UnwatchedShared
     @ObservationIgnored private var lastTabTwiceDate: Date?
     @ObservationIgnored var linkTask: Task<Void, Never>?
     var lastLibrarySubscriptionId: PersistentIdentifier?
-    var visibleSubscriptionPages = Set<PersistentIdentifier>()
+    /// Subscription and video detail pages on screen; the tab bar goes neutral meanwhile.
+    var visibleChannelPages = Set<PersistentIdentifier>()
 
     /// The slice on screen; what plays next is latched on `PlayerManager` instead.
     var queueTag: QueueTagSelection = .all

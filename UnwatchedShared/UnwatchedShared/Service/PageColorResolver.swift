@@ -31,6 +31,14 @@ public struct PageColorResolver {
         return readable
     }
 
+    /// `resolve` for a color already in memory, without waiting.
+    public func cachedColor(imageUrl: URL) -> Color? {
+        guard let info = imageCacheManager[imageUrl.absoluteString], let primary = info.color else {
+            return nil
+        }
+        return primary.isReadable(in: colorScheme) ? primary : info.readableColors[colorScheme]
+    }
+
     public func iconColor(for pageColor: Color?) -> Color? {
         guard let pageColor, !pageColor.isReadable(in: colorScheme, as: .foreground) else {
             return pageColor

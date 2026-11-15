@@ -14,6 +14,9 @@ extension EnvironmentValues {
 
     @Entry var isInMenuStack: Bool = false
 
+    /// The channel color readable as text; `pageThemeColor` is the fill variant.
+    @Entry var pageForegroundColor: Color?
+
     /// A playlist's own video list: rows name the uploader instead of the playlist.
     @Entry var videoListShowsUploader: Bool = false
 

@@ -14,6 +14,7 @@ struct ChapterDescriptionView: View {
     @Environment(\.dismiss) var dismiss
     @Environment(TinyUndoManager.self) var undoManager
     @Environment(AppNotificationVM.self) var appNotificationVM
+    @Environment(\.isInMenuStack) var isInMenuStack
 
     @State var hapticToggle = false
     @State var transcriptVM = TranscriptView.ViewModel()
@@ -142,6 +143,10 @@ struct ChapterDescriptionView: View {
             #endif
         }
         .tint(.neutralAccentColor)
+        // VideoDetailPage applies it itself
+        .if(!isInMenuStack) { view in
+            view.channelPageColor(imageUrl: video.channelColorImageUrl)
+        }
     }
 
     /// The description/transcript segmented control with the chapter settings menu kept as its own

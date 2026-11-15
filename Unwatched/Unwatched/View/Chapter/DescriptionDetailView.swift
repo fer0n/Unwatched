@@ -9,13 +9,15 @@ import UnwatchedShared
 struct DescriptionDetailView: View {
     @AppStorage(Const.themeColor) private var theme: ThemeColor = .defaultTheme
     @Environment(NavigationManager.self) private var navManager
+    @Environment(\.pageThemeColor) private var pageThemeColor
+    @Environment(\.pageForegroundColor) private var pageForegroundColor
 
     var description: String?
 
     var body: some View {
         if let description {
             descriptionText(description)
-                .myTint()
+                .tint(linkColor)
                 .environment(\.openURL, OpenURLAction(handler: handleDescriptionLink))
         }
     }
@@ -25,19 +27,31 @@ struct DescriptionDetailView: View {
         #if os(iOS)
         DescriptionTextView(
             description: description,
-            linkColor: theme.color,
-            actionColor: theme.darkContrastColor,
-            capsuleColor: theme.darkColor
+            linkColor: linkColor,
+            actionColor: actionColor,
+            capsuleColor: capsuleColor
         )
         #else
         VStack(alignment: .leading, spacing: 0) {
             ForEach(Array(Self.chunks(of: description).enumerated()), id: \.offset) { _, chunk in
-                Self.text(for: chunk, actionColor: theme.darkContrastColor)
-                    .textRenderer(ActionCapsuleRenderer(color: theme.darkColor))
+                Self.text(for: chunk, actionColor: actionColor)
+                    .textRenderer(ActionCapsuleRenderer(color: capsuleColor))
             }
         }
         .textSelection(.enabled)
         #endif
+    }
+
+    private var linkColor: Color {
+        pageForegroundColor ?? theme.color
+    }
+
+    private var actionColor: Color {
+        pageThemeColor == nil ? theme.darkContrastColor : capsuleColor.contrastingTextColor
+    }
+
+    private var capsuleColor: Color {
+        pageThemeColor?.mix(with: .black, by: 0.2) ?? theme.darkColor
     }
 
     // a very tall Text with a custom renderer draws nothing

@@ -18,10 +18,6 @@ struct SubscriptionDetailView: View {
     @State var showTitle: Bool = false
     @State var showFilter = false
 
-    @Environment(ImageCacheManager.self) var imageCacheManager
-    @State var pageColor: Color?
-    @Environment(\.colorScheme) var colorScheme
-
     @Bindable var subscription: Subscription
 
     var body: some View {
@@ -53,16 +49,7 @@ struct SubscriptionDetailView: View {
                 )
             }
         }
-        .tint(pageColor)
-        .environment(\.pageThemeColor, pageColor)
-        .environment(\.swipeActionColor, pageColor?.darkenedForSwipeActions)
-        .environment(\.chipIconColor, pageColorResolver.iconColor(for: pageColor))
-        .task(id: PageColorKey(imageUrl: imageUrl, colorScheme: colorScheme)) {
-            await resolvePageColor()
-        }
-        #if os(visionOS)
-        .tint(nil)
-        #endif
+        .channelPageColor(imageUrl: subscription.isWatchLater ? nil : imageUrl)
         .task(id: loadNewVideosTask) {
             if let task = loadNewVideosTask {
                 await task.value
@@ -126,29 +113,15 @@ struct SubscriptionDetailView: View {
         return fallbackVideo?.thumbnailUrl
     }
 
-    var pageColorResolver: PageColorResolver {
-        PageColorResolver(imageCacheManager: imageCacheManager, colorScheme: colorScheme)
-    }
-
-    func resolvePageColor() async {
-        guard !subscription.isWatchLater, let imageUrl else {
-            pageColor = nil
-            return
-        }
-        let color = await pageColorResolver.resolve(imageUrl: imageUrl)
-        guard !Task.isCancelled else { return }
-        pageColor = color
-    }
-
     func handleOnAppear() {
-        navManager.visibleSubscriptionPages.insert(subscription.persistentModelID)
+        navManager.visibleChannelPages.insert(subscription.persistentModelID)
         if navManager.tab == .library {
             navManager.lastLibrarySubscriptionId = subscription.persistentModelID
         }
     }
 
     func handleOnDisappear() {
-        navManager.visibleSubscriptionPages.remove(subscription.persistentModelID)
+        navManager.visibleChannelPages.remove(subscription.persistentModelID)
         if subscription.isArchived && requiresUnsubscribe {
             let subId = subscription.persistentModelID
             _ = SubscriptionService.deleteSubscriptions([subId])
@@ -198,9 +171,4 @@ struct SubscriptionDetailView: View {
         return SubscriptionDetailView(subscription: Subscription.getDummy())
             .previewEnvironments()
     }
-}
-
-private struct PageColorKey: Equatable {
-    let imageUrl: URL?
-    let colorScheme: ColorScheme
 }

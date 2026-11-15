@@ -12,7 +12,7 @@ struct CapsuleLabel<Icon: View>: View {
 
     @Environment(\.settingControlStyle) var style
     @Environment(\.chipContentColor) var chipContentColor
-    @Environment(\.chipIconColor) var chipIconColor
+    @Environment(\.pageForegroundColor) var pageForegroundColor
 
     var body: some View {
         switch style {
@@ -32,7 +32,7 @@ struct CapsuleLabel<Icon: View>: View {
             HStack(spacing: 4) {
                 icon
                     .imageScale(.small)
-                    .foregroundStyle(AnyShapeStyle.chipIcon(content: chipContentColor, icon: chipIconColor))
+                    .foregroundStyle(AnyShapeStyle.chipIcon(content: chipContentColor, icon: pageForegroundColor))
                 if !text.isEmpty {
                     Text(text)
                 }
@@ -93,7 +93,7 @@ struct CapsuleMenuLabel: View {
     @Environment(\.settingControlStyle) var style
     @Environment(\.compactSettingValues) var compact
     @Environment(\.chipContentColor) var chipContentColor
-    @Environment(\.chipIconColor) var chipIconColor
+    @Environment(\.pageForegroundColor) var pageForegroundColor
 
     var body: some View {
         switch style {
@@ -119,7 +119,7 @@ struct CapsuleMenuLabel: View {
                             .imageScale(.small)
                     }
                 }
-                .foregroundStyle(AnyShapeStyle.chipIcon(content: chipContentColor, icon: chipIconColor))
+                .foregroundStyle(AnyShapeStyle.chipIcon(content: chipContentColor, icon: pageForegroundColor))
                 if !compact {
                     Text(menuLabel)
                         .foregroundStyle(.secondary)

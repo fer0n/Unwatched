@@ -10,7 +10,7 @@ struct SubscriptionMoreMenu: View {
     @Bindable var subscription: Subscription
     @Binding var showFilter: Bool
 
-    @Environment(\.chipIconColor) var chipIconColor
+    @Environment(\.pageForegroundColor) var pageForegroundColor
     @State private var pendingEpisodeLimit: PendingEpisodeLimit?
 
     var body: some View {
@@ -62,7 +62,7 @@ struct SubscriptionMoreMenu: View {
             }
         }
         .menuIndicator(.hidden)
-        .tint(chipIconColor)
+        .tint(pageForegroundColor)
         .accessibilityLabel("moreOptions")
         .buttonStyle(CapsuleButtonStyle(primary: false))
         .modifier(EpisodeLimitConfirmation(subscription: subscription, pending: $pendingEpisodeLimit))

@@ -16,10 +16,13 @@ struct VideoDetailRoute: Hashable, Codable {
 }
 
 struct VideoDetailPage: View {
+    @Environment(NavigationManager.self) private var navManager
     @Query private var videos: [Video]
+    private let videoId: PersistentIdentifier
 
     init(_ route: VideoDetailRoute) {
         let videoId = route.videoId
+        self.videoId = videoId
         _videos = Query(filter: #Predicate<Video> { $0.persistentModelID == videoId })
     }
 
@@ -34,7 +37,14 @@ struct VideoDetailPage: View {
             }
         }
         .myNavigationTitle()
+        .channelPageColor(imageUrl: videos.first?.channelColorImageUrl)
         .appNotificationOverlay(topPadding: 10)
+        .onAppear {
+            navManager.visibleChannelPages.insert(videoId)
+        }
+        .onDisappear {
+            navManager.visibleChannelPages.remove(videoId)
+        }
         #if os(macOS)
         .sidebarPage()
         #endif

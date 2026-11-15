@@ -85,7 +85,7 @@ struct MenuView: View {
                 }
             }
             .environment(\.scrollViewProxy, proxy)
-            .tint(!navManager.visibleSubscriptionPages.isEmpty ? .neutralAccentColor : theme.color)
+            .tint(!navManager.visibleChannelPages.isEmpty ? .neutralAccentColor : theme.color)
         }
     }
 
