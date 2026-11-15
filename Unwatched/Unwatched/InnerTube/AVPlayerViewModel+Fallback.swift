@@ -26,6 +26,7 @@ extension AVPlayerViewModel {
         player.isLoading = nil
         player.pause()
         clearPendingReposition()
+        loadError = error
         if let date {
             player.deferVideoDate = date
         } else {

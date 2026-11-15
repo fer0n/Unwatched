@@ -103,7 +103,11 @@ struct PlayerLoadingTimeout: View {
         switch error {
         case .ipBlocked:
             return String(localized: "YouTube is blocking this network. Turn off your VPN or try again later.")
-        case .unavailable, .removed, .signInRequired, .ageRestricted, .scheduled:
+        case .scheduled(let date?):
+            return String(localized: "Starts \(date.formatted(.relative(presentation: .named)))")
+        case .scheduled(nil):
+            return String(localized: "This video hasn't started yet.")
+        case .unavailable, .removed, .signInRequired, .ageRestricted:
             return error.errorDescription
         case .httpError, .decodingError, .notAuthenticated, .invalidURL:
             return nil
