@@ -28,10 +28,6 @@ extension PlayerManager {
     }
 
     @MainActor
-    func extractCurrentChapter(at time: Double) -> SendableChapter? {
-        extractCurrentChapter(at: time, in: video?.sortedChapterData ?? [])
-    }
-
     func extractCurrentChapter(at time: Double, in chapters: [SendableChapter]) -> SendableChapter? {
         chapters.first { $0.startTime <= time && time < ($0.endTime ?? .infinity) }
     }
@@ -85,7 +81,8 @@ extension PlayerManager {
             return
         }
 
-        if let jump = chapterOrderJump(at: time, in: video) {
+        let ordered = ChapterService.inPlaybackOrder(chapters)
+        if let jump = chapterOrderJump(at: time, in: video, chapters: chapters, ordered: ordered) {
             switch jump {
             case .chapter(let chapter):
                 Log.player.info("chapter order: jump to \(chapter)")
@@ -101,7 +98,7 @@ extension PlayerManager {
         }
 
         // current chapter
-        guard let current = extractCurrentChapter(at: time) else {
+        guard let current = extractCurrentChapter(at: time, in: chapters) else {
             Log.player.info("extractCurrentChapter failed")
             handleTimeOutsideChapters(time, in: chapters)
             return
@@ -111,7 +108,6 @@ extension PlayerManager {
         let next = chapters.first(where: { chapter in
             chapter.startTime > current.startTime
         })
-        let ordered = video.orderedChapterData
         let position = ordered.firstIndex(where: { $0.startTime == current.startTime })
         let nextActive = position.flatMap { ordered.dropFirst($0 + 1).first(where: \.isActive) }
         nextChapter = nextActive
@@ -147,7 +143,12 @@ extension PlayerManager {
     /// `ChapterService.inPlaybackOrder`. `nil` unless the playhead just ran out of the chapter it
     /// was in and into whatever follows that on the timeline; anything else is a seek.
     @MainActor
-    private func chapterOrderJump(at time: Double, in video: Video) -> ChapterOrderJump? {
+    private func chapterOrderJump(
+        at time: Double,
+        in video: Video,
+        chapters: [SendableChapter],
+        ordered: [SendableChapter]
+    ) -> ChapterOrderJump? {
         // a chapter running out overshoots its end by at most one monitor tick, a seek lands anywhere
         guard video.hasCustomChapterOrder,
               let previous = currentChapter,
@@ -156,13 +157,12 @@ extension PlayerManager {
             return nil
         }
 
-        let atTime = extractCurrentChapter(at: time)
-        let timeNext = video.sortedChapterData.first(where: { $0.startTime > previous.startTime })
+        let atTime = extractCurrentChapter(at: time, in: chapters)
+        let timeNext = chapters.first(where: { $0.startTime > previous.startTime })
         guard atTime?.startTime == timeNext?.startTime else {
             return nil
         }
 
-        let ordered = video.orderedChapterData
         guard let position = ordered.firstIndex(where: { $0.startTime == previous.startTime }) else {
             return nil
         }
@@ -361,20 +361,10 @@ extension PlayerManager {
             Log.player.warning("ensureStartPositionWorksWithChapters: no video")
             return time
         }
-        // regular chapter is active, time is okay
-        if video.sortedChapterData.first(
-            where: {
-                $0.isActive && $0.startTime <= time
-            }) != nil {
+        let active = video.sortedChapterData.filter(\.isActive)
+        if active.contains(where: { $0.startTime <= time }) {
             return time
         }
-        // no active chapter found, try to find the first chapter with a start time after the current time
-        if let nextChapter = video.sortedChapterData.first(
-            where: {
-                $0.isActive && $0.startTime > time
-            }) {
-            return nextChapter.startTime
-        }
-        return time
+        return active.first { $0.startTime > time }?.startTime ?? time
     }
 }
