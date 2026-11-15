@@ -66,6 +66,7 @@ public struct ImageService {
     }
 
     public static func storeImages(_ images: [(url: URL, data: Data)]) {
+        guard !images.isEmpty else { return }
         Task.detached {
             await saveImages(images)
         }
@@ -95,6 +96,7 @@ public struct ImageService {
     }
 
     public static func deleteImages(_ urls: [URL]) {
+        guard !urls.isEmpty else { return }
         Task {
             let imageContainer = DataProvider.shared.localCacheContainer
             let context = ModelContext(imageContainer)

@@ -17,6 +17,7 @@ struct PlayerScrubber: View {
     @State private var isInactive: Bool = false
     @State private var isGestureActive = false
     @State private var gestureScrubberWidth: CGFloat = 0
+    @State private var cachedChapters: [SendableChapter] = []
     @State private var cachedChapterTimes: [Double] = []
     @State private var cachedSnapTimeThreshold: Double = 0
     @State private var snappedChapterTime: Double?
@@ -291,7 +292,8 @@ struct PlayerScrubber: View {
         isGestureActive = true
         if initialDragPosition == nil {
             gestureScrubberWidth = scrubberWidth
-            cachedChapterTimes = player.video?.sortedChapterData.map(\.startTime) ?? []
+            cachedChapters = player.video?.sortedChapterData ?? []
+            cachedChapterTimes = cachedChapters.map(\.startTime)
             let duration = player.video?.duration ?? 1
             cachedSnapTimeThreshold = Double(chapterSnapPixels / scrubberWidth) * duration
             onScrubbingChanged?(true)
@@ -328,7 +330,7 @@ struct PlayerScrubber: View {
             if showThumbnailPreview { ScrubberThumbnailProvider.shared.previewTime = nil }
             snappedChapterTime = nil
         } else if let snappedTime = currentTime {
-            player.setCurrentChapterPreview(at: snappedTime)
+            player.setCurrentChapterPreview(at: snappedTime, in: cachedChapters)
             if showThumbnailPreview { ScrubberThumbnailProvider.shared.previewTime = snappedTime }
             let isSnapped = cachedChapterTimes.contains { abs($0 - snappedTime) < 0.01 }
             snappedChapterTime = isSnapped ? snappedTime : nil
@@ -348,6 +350,7 @@ struct PlayerScrubber: View {
         isInactive = false
         isGestureActive = false
         dragOffset = 0
+        cachedChapters = []
         cachedChapterTimes = []
         cachedSnapTimeThreshold = 0
         snappedChapterTime = nil

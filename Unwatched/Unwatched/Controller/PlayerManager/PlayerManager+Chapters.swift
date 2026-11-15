@@ -29,25 +29,23 @@ extension PlayerManager {
 
     @MainActor
     func extractCurrentChapter(at time: Double) -> SendableChapter? {
-        return video?.sortedChapterData.first(where: { chapter in
-            return chapter.startTime <= time && time < (chapter.endTime ?? .infinity)
-        })
+        extractCurrentChapter(at: time, in: video?.sortedChapterData ?? [])
+    }
+
+    func extractCurrentChapter(at time: Double, in chapters: [SendableChapter]) -> SendableChapter? {
+        chapters.first { $0.startTime <= time && time < ($0.endTime ?? .infinity) }
     }
 
     @MainActor
-    func setCurrentChapterPreview(at time: Double) {
+    func setCurrentChapterPreview(at time: Double, in chapters: [SendableChapter]? = nil) {
         guard let video = video else {
             currentChapterPreview = nil
             return
         }
 
-        let newChapter = extractCurrentChapter(at: time) ?? {
-            if time <= 0 {
-                return video.sortedChapterData.first
-            } else {
-                return video.sortedChapterData.last
-            }
-        }()
+        let chapters = chapters ?? video.sortedChapterData
+        let newChapter = extractCurrentChapter(at: time, in: chapters)
+            ?? (time <= 0 ? chapters.first : chapters.last)
 
         if newChapter?.startTime != currentChapterPreview?.startTime {
             currentChapterPreview = newChapter

@@ -31,9 +31,11 @@ public struct VideoListItemThumbnailOverlay: View {
     }
 
     public var body: some View {
+        let roughDuration = roughDuration
+        let hasDuration = hasDuration(roughDuration)
         ZStack {
-            progressOverlay
-            listItemDuration
+            progressOverlay(hasDuration: hasDuration)
+            listItemDuration(hasDuration: hasDuration, roughDuration: roughDuration)
             if video.isPodcast {
                 downloadIndicator
             }
@@ -43,7 +45,7 @@ public struct VideoListItemThumbnailOverlay: View {
     // MARK: - Progress Bar Overlay
 
     @ViewBuilder
-    var progressOverlay: some View {
+    func progressOverlay(hasDuration: Bool) -> some View {
         let progress = cleanedProgress
         let download = downloadProgress
         if progress != nil || download != nil {
@@ -61,7 +63,7 @@ public struct VideoListItemThumbnailOverlay: View {
     }
 
     @ViewBuilder
-    var listItemDuration: some View {
+    func listItemDuration(hasDuration: Bool, roughDuration: Double?) -> some View {
         if hasDuration {
             VideoListItemDurationOverlay(
                 video: video,
@@ -97,7 +99,7 @@ public struct VideoListItemThumbnailOverlay: View {
         return nil
     }
 
-    private var hasDuration: Bool {
+    private func hasDuration(_ roughDuration: Double?) -> Bool {
         showDuration && (
             roughDuration != nil
             || (videoDuration ?? video.duration) != nil

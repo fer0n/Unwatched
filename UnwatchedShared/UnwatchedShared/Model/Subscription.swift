@@ -213,10 +213,16 @@ public final class Subscription: SubscriptionData, CustomStringConvertible, Expo
         self.thumbnailUrl = thumbnailUrl
     }
 
+    public var toBackupExport: SendableSubscription? {
+        var export = toExport
+        export?.videosIds = videos?.map { $0.persistentModelID.hashValue } ?? []
+        return export
+    }
+
+    /// Without `videosIds`, which fault every video; see `toBackupExport`
     public var toExport: SendableSubscription? {
         SendableSubscription(
             persistentId: self.persistentModelID,
-            videosIds: videos?.map { $0.persistentModelID.hashValue } ?? [],
             link: link,
             title: title,
             author: author,

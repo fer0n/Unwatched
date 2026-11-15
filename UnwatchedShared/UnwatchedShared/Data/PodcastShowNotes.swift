@@ -82,7 +82,7 @@ public enum PodcastShowNotes {
                         result.append("](\(href))")
                         linkHref = nil
                     }
-                } else if let href = attribute("href", in: tag), !href.isEmpty {
+                } else if let href = hrefValue(in: tag), !href.isEmpty {
                     linkHref = href
                     result.append("[")
                 }
@@ -126,7 +126,7 @@ public enum PodcastShowNotes {
         let lines = result.split(separator: "\n", omittingEmptySubsequences: false).map {
             $0.trimmingCharacters(in: markupIndent)
         }
-        result = lines.joined(separator: "\n").replacingMatches(of: #"\n{3,}"#, with: "\n\n")
+        result = lines.joined(separator: "\n").replacingMatches(of: blankLinesRegex, with: "\n\n")
         let trimmed = result.trimmingCharacters(in: .whitespacesAndNewlines)
         return trimmed.isEmpty ? nil : trimmed
     }
@@ -134,8 +134,7 @@ public enum PodcastShowNotes {
     /// `&#8217;` and friends: show notes are full of them, and left alone they read as the raw entity in the middle
     /// of a word.
     private static func decodeNumericEntities(_ text: String) -> String {
-        guard text.contains("&#"),
-              let regex = try? NSRegularExpression(pattern: #"&#(x?)([0-9a-fA-F]+);"#) else {
+        guard text.contains("&#"), let regex = numericEntityRegex else {
             return text
         }
         var result = text
@@ -156,12 +155,16 @@ public enum PodcastShowNotes {
         return result
     }
 
-    /// The value of `name` in a raw tag body, single or double quoted.
-    private static func attribute(_ name: String, in tag: String) -> String? {
-        guard let regex = try? NSRegularExpression(
-            pattern: "\(name)\\s*=\\s*[\"\']([^\"\']*)[\"\']",
-            options: [.caseInsensitive]
-        ) else {
+    private static let numericEntityRegex = try? NSRegularExpression(pattern: #"&#(x?)([0-9a-fA-F]+);"#)
+    private static let hrefRegex = try? NSRegularExpression(
+        pattern: "href\\s*=\\s*[\"\']([^\"\']*)[\"\']",
+        options: [.caseInsensitive]
+    )
+    private static let blankLinesRegex = try? NSRegularExpression(pattern: #"\n{3,}"#)
+
+    /// The `href` value in a raw tag body, single or double quoted.
+    private static func hrefValue(in tag: String) -> String? {
+        guard let regex = hrefRegex else {
             return nil
         }
         let range = NSRange(tag.startIndex..., in: tag)
@@ -174,8 +177,8 @@ public enum PodcastShowNotes {
 }
 
 private extension String {
-    func replacingMatches(of pattern: String, with replacement: String) -> String {
-        guard let regex = try? NSRegularExpression(pattern: pattern, options: [.caseInsensitive]) else {
+    func replacingMatches(of regex: NSRegularExpression?, with replacement: String) -> String {
+        guard let regex else {
             return self
         }
         return regex.stringByReplacingMatches(
