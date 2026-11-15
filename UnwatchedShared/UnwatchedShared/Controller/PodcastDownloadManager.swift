@@ -155,6 +155,7 @@ public final class PodcastDownloadManager {
         downloadingIds = inFlight
         downloadProgress = downloadProgress.filter { inFlight.contains($0.key) }
         PodcastDownloadStore.removeAll(except: plan.keep)
+        PodcastDownloadStore.leftWindowDates = plan.leftWindowDates
         setDownloadedIds(PodcastDownloadStore.downloadedIds())
 
         for pending in plan.download where !inFlight.contains(pending.youtubeId) {

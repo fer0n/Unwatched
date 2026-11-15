@@ -6849,31 +6849,31 @@
         "de" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Wie lange eine geladene Folge nach dem Ansehen behalten wird."
+            "value" : "Wie lange eine geladene Folge behalten wird, nachdem sie angesehen wurde oder aus dem Download-Bereich gefallen ist, z. B. wenn sie in die Inbox verschoben wird."
           }
         },
         "en" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "How long a downloaded episode is kept once it’s been watched."
+            "value" : "How long a downloaded episode is kept once it’s been watched or has left the download window, for example when it’s moved to the Inbox."
           }
         },
         "es" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Cuánto tiempo se conserva un episodio descargado después de verlo."
+            "value" : "Cuánto tiempo se conserva un episodio descargado después de verlo o de salir del rango de descarga, por ejemplo al moverlo a la Bandeja de entrada."
           }
         },
         "fr" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Combien de temps un épisode téléchargé est conservé après avoir été écouté."
+            "value" : "Combien de temps un épisode téléchargé est conservé après avoir été écouté ou être sorti de la plage de téléchargement, par exemple lorsqu’il est déplacé dans l’Inbox."
           }
         },
         "pl" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Jak długo pobrany odcinek jest przechowywany po obejrzeniu."
+            "value" : "Jak długo pobrany odcinek jest przechowywany po obejrzeniu lub po wypadnięciu z zakresu pobierania, np. po przeniesieniu do Skrzynki."
           }
         }
       }

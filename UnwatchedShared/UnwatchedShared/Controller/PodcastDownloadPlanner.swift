@@ -16,6 +16,8 @@ struct PodcastDownloadPlan: Sendable {
     /// Every episode whose file may stay on disk; anything else is swept.
     var keep = Set<String>()
     var download = [PendingPodcastDownload]()
+    /// For `PodcastDownloadStore.leftWindowDates`, stored by `sync()` alone.
+    var leftWindowDates = [String: Date]()
 }
 
 actor PodcastDownloadActor: SharedContextActor {
@@ -34,7 +36,7 @@ actor PodcastDownloadActor: SharedContextActor {
 /// `DataProvider.shared`, which is what the actor is bound to.
 enum PodcastDownloadPlanner {
     /// Takes the playing episode, then walks the queue in play order until `limitHours` of unplayed time is covered,
-    /// and decides what a watched episode's file has left. The episode that crosses the limit is still taken whole.
+    /// and decides how long the files outside it have left. The episode that crosses the limit is still taken whole.
     /// The first `cellularHours` of that walk may download on cellular data, measured the same way.
     static func plan(
         in context: ModelContext,
@@ -74,17 +76,31 @@ enum PodcastDownloadPlanner {
             }
         }
 
-        guard enabled, keepDays > 0 else { return plan }
+        keepRecentlyLeft(in: context, keepDays: enabled ? keepDays : 0, plan: &plan)
+        return plan
+    }
+
+    /// Counted from `watchedDate`, else from the first plan that found the episode outside the window.
+    private static func keepRecentlyLeft(in context: ModelContext, keepDays: Int, plan: inout PodcastDownloadPlan) {
+        let onDisk = PodcastDownloadStore.downloadedIds().subtracting(plan.keep)
+        plan.leftWindowDates = PodcastDownloadStore.leftWindowDates.filter { onDisk.contains($0.key) }
+        guard keepDays > 0, !onDisk.isEmpty else { return }
+
         let expiry = Calendar.current.date(byAdding: .day, value: -keepDays, to: .now) ?? .now
-        let onDisk = Array(PodcastDownloadStore.downloadedIds().subtracting(plan.keep))
-        guard !onDisk.isEmpty else { return plan }
-        let fetch = FetchDescriptor<Video>(predicate: #Predicate { onDisk.contains($0.youtubeId) })
+        let ids = Array(onDisk)
+        let fetch = FetchDescriptor<Video>(predicate: #Predicate { ids.contains($0.youtubeId) })
         for video in (try? context.fetch(fetch)) ?? [] {
-            if let watchedDate = video.watchedDate, watchedDate > expiry {
+            let leftWindowDate: Date
+            if let watchedDate = video.watchedDate {
+                leftWindowDate = watchedDate
+            } else {
+                leftWindowDate = plan.leftWindowDates[video.youtubeId] ?? .now
+                plan.leftWindowDates[video.youtubeId] = leftWindowDate
+            }
+            if leftWindowDate > expiry {
                 plan.keep.insert(video.youtubeId)
             }
         }
-        return plan
     }
 
     private static func seconds(_ hours: Int) -> Double {

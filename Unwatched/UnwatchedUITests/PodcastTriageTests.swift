@@ -247,6 +247,54 @@ class PodcastDownloadKeepTests: XCTestCase {
         XCTAssertTrue(downloaded.contains("pod-keep-recent"))
         XCTAssertFalse(downloaded.contains("pod-keep-old"))
     }
+
+    /// Moved to the inbox, cleared, or pushed past the limit: the file is kept as long as a watched one would be.
+    func testEpisodeLeavingTheQueueUnwatchedKeepsItsFile() async throws {
+        let defaults = UserDefaults.standard
+        let keys = [Const.podcastDownloadLimitHours, Const.podcastDownloadKeepDays,
+                    Const.podcastDownloadLeftWindowDates]
+        let previous = keys.map { defaults.object(forKey: $0) }
+        defaults.set(-1, forKey: Const.podcastDownloadLimitHours)
+        defaults.set(7, forKey: Const.podcastDownloadKeepDays)
+        defaults.set(["pod-left-old": Date.now.addingTimeInterval(-8 * 86400)],
+                     forKey: Const.podcastDownloadLeftWindowDates)
+
+        let context = DataProvider.writeExecutor.modelContext
+        let recent = Video(title: "recent", url: nil, youtubeId: "pod-left-recent",
+                           mediaUrl: URL(string: "https://example.com/recent.mp3"))
+        let old = Video(title: "old", url: nil, youtubeId: "pod-left-old",
+                        mediaUrl: URL(string: "https://example.com/old.mp3"))
+        context.insert(recent)
+        context.insert(old)
+        try context.save()
+
+        let directory = try XCTUnwrap(PodcastDownloadStore.directory)
+        let recentFile = directory.appending(path: "pod-left-recent.mp3")
+        let oldFile = directory.appending(path: "pod-left-old.mp3")
+        try Data().write(to: recentFile)
+        try Data().write(to: oldFile)
+
+        defer {
+            context.delete(recent)
+            context.delete(old)
+            try? context.save()
+            try? FileManager.default.removeItem(at: recentFile)
+            try? FileManager.default.removeItem(at: oldFile)
+            for (key, value) in zip(keys, previous) {
+                defaults.set(value, forKey: key)
+            }
+        }
+
+        await PodcastDownloadManager.shared.sync()
+        await PodcastDownloadManager.shared.sync()
+
+        let files = FileManager.default
+        XCTAssertTrue(files.fileExists(atPath: recentFile.path(percentEncoded: false)), "just left the queue")
+        XCTAssertFalse(files.fileExists(atPath: oldFile.path(percentEncoded: false)), "left before the keep window")
+        let leftDates = defaults.dictionary(forKey: Const.podcastDownloadLeftWindowDates) ?? [:]
+        XCTAssertNotNil(leftDates["pod-left-recent"], "the date it left is recorded on the first sync")
+        XCTAssertNil(leftDates["pod-left-old"], "a date goes with its file")
+    }
 }
 
 @MainActor

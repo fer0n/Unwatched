@@ -528,8 +528,11 @@ public struct Const {
 
     /// Hours of unplayed queue kept downloaded ahead: 0 off, -1 unlimited
     public static let podcastDownloadLimitHours = "podcastDownloadLimitHours"
-    /// Days a downloaded episode is kept after it's been watched; 0 deletes it right away
+    /// Days a downloaded episode is kept after it's been watched or has otherwise left the download window;
+    /// 0 deletes it right away
     public static let podcastDownloadKeepDays = "podcastDownloadKeepDays"
+    /// Device-local `[youtubeId: Date]` of when an unwatched download left the window, see `podcastDownloadKeepDays`
+    public static let podcastDownloadLeftWindowDates = "podcastDownloadLeftWindowDates"
     /// Hours of the download-ahead window that may use cellular data, same scale as `podcastDownloadLimitHours`.
     public static let podcastDownloadCellularHours = "podcastDownloadCellularHours"
     public static let legacyPodcastDownloadOnCellular = "podcastDownloadOnCellular"

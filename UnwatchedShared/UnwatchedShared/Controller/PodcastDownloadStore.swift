@@ -66,6 +66,20 @@ public enum PodcastDownloadStore {
         Set(episodeFiles().map(episodeId(of:)))
     }
 
+    static var leftWindowDates: [String: Date] {
+        get {
+            UserDefaults.standard.dictionary(forKey: Const.podcastDownloadLeftWindowDates) as? [String: Date] ?? [:]
+        }
+        set {
+            guard newValue != leftWindowDates else { return }
+            if newValue.isEmpty {
+                UserDefaults.standard.removeObject(forKey: Const.podcastDownloadLeftWindowDates)
+            } else {
+                UserDefaults.standard.set(newValue, forKey: Const.podcastDownloadLeftWindowDates)
+            }
+        }
+    }
+
     static func removeAll(except keep: Set<String>) {
         for file in contents() where !keep.contains(episodeId(of: file)) {
             try? FileManager.default.removeItem(at: file)
