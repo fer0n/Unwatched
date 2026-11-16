@@ -137,7 +137,9 @@
 		880C211E2D7ECEB500E859A5 /* DeferDateButtonStyle.swift in Sources */ = {isa = PBXBuildFile; fileRef = 880C211D2D7ECEB500E859A5 /* DeferDateButtonStyle.swift */; };
 		880C211F2D7ECEB500E859A5 /* DeferDateButtonStyle.swift in Sources */ = {isa = PBXBuildFile; fileRef = 880C211D2D7ECEB500E859A5 /* DeferDateButtonStyle.swift */; };
 		880C21212D7ECEDE00E859A5 /* DateSelectorSheet.swift in Sources */ = {isa = PBXBuildFile; fileRef = 880C21202D7ECEDE00E859A5 /* DateSelectorSheet.swift */; };
+		9333BFF5E3D6A4781C9E8B95 /* DeferRequestSheet.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7D78BD093FF9BC8D97D8E082 /* DeferRequestSheet.swift */; };
 		880C21222D7ECEDE00E859A5 /* DateSelectorSheet.swift in Sources */ = {isa = PBXBuildFile; fileRef = 880C21202D7ECEDE00E859A5 /* DateSelectorSheet.swift */; };
+		274BC5738463B2AB77989936 /* DeferRequestSheet.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7D78BD093FF9BC8D97D8E082 /* DeferRequestSheet.swift */; };
 		880C28647E6C2BDDA11624A2 /* MenuTabBarCoordinator.swift in Sources */ = {isa = PBXBuildFile; fileRef = 88624DE699CAF49A1F248A23 /* MenuTabBarCoordinator.swift */; };
 		880E85D32F655B88001DAAE8 /* TrailingSwipeMoreMenu.swift in Sources */ = {isa = PBXBuildFile; fileRef = 880E85D22F655B88001DAAE8 /* TrailingSwipeMoreMenu.swift */; };
 		880E85D42F655B88001DAAE8 /* TrailingSwipeMoreMenu.swift in Sources */ = {isa = PBXBuildFile; fileRef = 880E85D22F655B88001DAAE8 /* TrailingSwipeMoreMenu.swift */; };
@@ -624,6 +626,7 @@
 		889AF95C2C50ED05001CEDE6 /* HandleVideoListItemTap.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8899246C2C480112001185A6 /* HandleVideoListItemTap.swift */; };
 		889AF95D2C50ED05001CEDE6 /* SubscriptionActor.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8898B6782B481F2100348D01 /* SubscriptionActor.swift */; };
 		889AF95E2C50ED05001CEDE6 /* VideoListItemSwipeActionsModifier.swift in Sources */ = {isa = PBXBuildFile; fileRef = 88DB7EB82BD8F3FB00FD9EBC /* VideoListItemSwipeActionsModifier.swift */; };
+		C4F6D49B498CE3B59B8D71F6 /* VideoListItemSwipeActionsModifier+Actions.swift in Sources */ = {isa = PBXBuildFile; fileRef = F8A5583BC2F29B2682368552 /* VideoListItemSwipeActionsModifier+Actions.swift */; };
 		889AF95F2C50ED05001CEDE6 /* ClearAllVideosButton.swift in Sources */ = {isa = PBXBuildFile; fileRef = 887DBB542BB6AC5A0012238A /* ClearAllVideosButton.swift */; };
 		889AF9602C50ED05001CEDE6 /* VideoActor+Videos.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8891F0AC2B4E7E170098A3FB /* VideoActor+Videos.swift */; };
 		889AF9612C50ED05001CEDE6 /* UrlService.swift in Sources */ = {isa = PBXBuildFile; fileRef = 888C49C42B5FA75700CDEC76 /* UrlService.swift */; };
@@ -859,6 +862,7 @@
 		88DB36922D561B55007CF5F8 /* DescriptionButton.swift in Sources */ = {isa = PBXBuildFile; fileRef = 88DB36912D561B55007CF5F8 /* DescriptionButton.swift */; };
 		88DB36932D561B55007CF5F8 /* DescriptionButton.swift in Sources */ = {isa = PBXBuildFile; fileRef = 88DB36912D561B55007CF5F8 /* DescriptionButton.swift */; };
 		88DB7EB92BD8F3FB00FD9EBC /* VideoListItemSwipeActionsModifier.swift in Sources */ = {isa = PBXBuildFile; fileRef = 88DB7EB82BD8F3FB00FD9EBC /* VideoListItemSwipeActionsModifier.swift */; };
+		F12D0A22EBD472B94B8CFE9C /* VideoListItemSwipeActionsModifier+Actions.swift in Sources */ = {isa = PBXBuildFile; fileRef = F8A5583BC2F29B2682368552 /* VideoListItemSwipeActionsModifier+Actions.swift */; };
 		88DD14752E7E981F007BA1F4 /* PlayerEmbedded.swift in Sources */ = {isa = PBXBuildFile; fileRef = 88DD14742E7E981F007BA1F4 /* PlayerEmbedded.swift */; };
 		88DD14762E7E981F007BA1F4 /* PlayerEmbedded.swift in Sources */ = {isa = PBXBuildFile; fileRef = 88DD14742E7E981F007BA1F4 /* PlayerEmbedded.swift */; };
 		88DD14782E7E9865007BA1F4 /* ThumbnailPlaceholder.swift in Sources */ = {isa = PBXBuildFile; fileRef = 88DD14772E7E9865007BA1F4 /* ThumbnailPlaceholder.swift */; };
@@ -1384,6 +1388,7 @@
 		880C21192D7ECE5A00E859A5 /* DismissSheetButton.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DismissSheetButton.swift; sourceTree = "<group>"; };
 		880C211D2D7ECEB500E859A5 /* DeferDateButtonStyle.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DeferDateButtonStyle.swift; sourceTree = "<group>"; };
 		880C21202D7ECEDE00E859A5 /* DateSelectorSheet.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DateSelectorSheet.swift; sourceTree = "<group>"; };
+		7D78BD093FF9BC8D97D8E082 /* DeferRequestSheet.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DeferRequestSheet.swift; sourceTree = "<group>"; };
 		880E85D22F655B88001DAAE8 /* TrailingSwipeMoreMenu.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TrailingSwipeMoreMenu.swift; sourceTree = "<group>"; };
 		88A1F0C12F9A3B5400C0FFEE /* VideoListItemSwipeActionsView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = VideoListItemSwipeActionsView.swift; sourceTree = "<group>"; };
 		880E86FF2F6562F2001DAAE8 /* VideoListItemActions.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = VideoListItemActions.swift; sourceTree = "<group>"; };
@@ -1754,6 +1759,7 @@
 		88DA0EB92CC8F7C50041841E /* VideoListViewAsync.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = VideoListViewAsync.swift; sourceTree = "<group>"; };
 		88DB36912D561B55007CF5F8 /* DescriptionButton.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DescriptionButton.swift; sourceTree = "<group>"; };
 		88DB7EB82BD8F3FB00FD9EBC /* VideoListItemSwipeActionsModifier.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = VideoListItemSwipeActionsModifier.swift; sourceTree = "<group>"; };
+		F8A5583BC2F29B2682368552 /* VideoListItemSwipeActionsModifier+Actions.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "VideoListItemSwipeActionsModifier+Actions.swift"; sourceTree = "<group>"; };
 		88DD14742E7E981F007BA1F4 /* PlayerEmbedded.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PlayerEmbedded.swift; sourceTree = "<group>"; };
 		88DD14772E7E9865007BA1F4 /* ThumbnailPlaceholder.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ThumbnailPlaceholder.swift; sourceTree = "<group>"; };
 		88DD147A2E7E9878007BA1F4 /* MiniPlayerContent.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MiniPlayerContent.swift; sourceTree = "<group>"; };
@@ -2071,6 +2077,7 @@
 				880E85D22F655B88001DAAE8 /* TrailingSwipeMoreMenu.swift */,
 				88DFC0BF2B4489C2001895C8 /* VideoListItem.swift */,
 				88DB7EB82BD8F3FB00FD9EBC /* VideoListItemSwipeActionsModifier.swift */,
+				F8A5583BC2F29B2682368552 /* VideoListItemSwipeActionsModifier+Actions.swift */,
 				88A1F0C12F9A3B5400C0FFEE /* VideoListItemSwipeActionsView.swift */,
 				889D61672D521EF30070389D /* VideoListItemEntryModifier.swift */,
 				8804A3EE2B8B88A000D3F4F1 /* VideoListItemDetails.swift */,
@@ -2104,6 +2111,7 @@
 				888050C12D3E5576002D02EB /* DeferDateSelector.swift */,
 				880C211D2D7ECEB500E859A5 /* DeferDateButtonStyle.swift */,
 				880C21202D7ECEDE00E859A5 /* DateSelectorSheet.swift */,
+				7D78BD093FF9BC8D97D8E082 /* DeferRequestSheet.swift */,
 			);
 			path = DeferDate;
 			sourceTree = "<group>";
@@ -3622,6 +3630,7 @@
 				88274F0A301E47800033352A /* GestureTrackingState.swift in Sources */,
 				889AF95D2C50ED05001CEDE6 /* SubscriptionActor.swift in Sources */,
 				889AF95E2C50ED05001CEDE6 /* VideoListItemSwipeActionsModifier.swift in Sources */,
+				C4F6D49B498CE3B59B8D71F6 /* VideoListItemSwipeActionsModifier+Actions.swift in Sources */,
 				889AF95F2C50ED05001CEDE6 /* ClearAllVideosButton.swift in Sources */,
 				889AF9602C50ED05001CEDE6 /* VideoActor+Videos.swift in Sources */,
 				281A24F0DAEF5C347FE5FBC2 /* VideoActor+LiveStreams.swift in Sources */,
@@ -3741,6 +3750,7 @@
 				88A4F40C2E6F89650074126C /* AnimatableDetents.swift in Sources */,
 				880C211E2D7ECEB500E859A5 /* DeferDateButtonStyle.swift in Sources */,
 				880C21222D7ECEDE00E859A5 /* DateSelectorSheet.swift in Sources */,
+				274BC5738463B2AB77989936 /* DeferRequestSheet.swift in Sources */,
 				88F3AA8C2C998B040030B2EA /* Color.swift in Sources */,
 				888CDF782C997A20007A8A54 /* FullscreenControls.swift in Sources */,
 				8842DFCC2EACB5E800D11C5D /* SwipeGestureSettings.swift in Sources */,
@@ -4344,6 +4354,7 @@
 				88F3AA8B2C998B040030B2EA /* Color.swift in Sources */,
 				887785EB2EEA08C700795394 /* TranscriptRow.swift in Sources */,
 				88DB7EB92BD8F3FB00FD9EBC /* VideoListItemSwipeActionsModifier.swift in Sources */,
+				F12D0A22EBD472B94B8CFE9C /* VideoListItemSwipeActionsModifier+Actions.swift in Sources */,
 				881964F42CCA449E0084ADE4 /* VideoListVM.swift in Sources */,
 				442700FBFDC047FC8EDEA48E /* PodcastEpisodeListVM.swift in Sources */,
 				5A7C1E90B2D34F6A8C1D0E12 /* SubscriptionVideoListVM.swift in Sources */,
@@ -4596,6 +4607,7 @@
 				26D9959208BC1172F032E4FA /* ProgressSweeping.swift in Sources */,
 				880F03832D8EE73D0049B902 /* CursorHideModifier.swift in Sources */,
 				880C21212D7ECEDE00E859A5 /* DateSelectorSheet.swift in Sources */,
+				9333BFF5E3D6A4781C9E8B95 /* DeferRequestSheet.swift in Sources */,
 				88D438A92B45B27600482F29 /* VideoPlayer.swift in Sources */,
 				883CA81B2B5BC81600028D52 /* RefreshManager.swift in Sources */,
 				8816E3912FEB16D0004EB1ED /* InnerTubeAPI+Metadata.swift in Sources */,

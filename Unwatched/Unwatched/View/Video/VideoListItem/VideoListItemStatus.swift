@@ -67,7 +67,7 @@ struct VideoListItemStatus: View {
         }
         if showAllStatus {
             if deferred == true {
-                return StatusInfo("clock.circle.fill", .orange, "statusDeferred")
+                return StatusInfo("clock.circle.fill", .deferred, "statusDeferred")
             }
             if watched == true {
                 return accentStatus(Const.watchedSF, fallback: defaultColor.mix(with: .black, by: 0.3), "watched")

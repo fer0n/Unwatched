@@ -22,6 +22,7 @@ struct TrailingSwipeMoreMenu: View {
     var moveToInbox: () -> Void
     var clearList: (ClearList, ClearDirection) -> Void
     var deleteVideo: () -> Void
+    var deferVideo: () -> Void
 
     var body: some View {
         Menu {
@@ -40,7 +41,8 @@ struct TrailingSwipeMoreMenu: View {
                     navManager.openUrlInApp(.url(urlString))
                 },
                 clearList: clearList,
-                deleteVideo: deleteVideo
+                deleteVideo: deleteVideo,
+                deferVideo: deferVideo
             )
         } label: {
             Label("moreOptions", systemImage: "ellipsis")

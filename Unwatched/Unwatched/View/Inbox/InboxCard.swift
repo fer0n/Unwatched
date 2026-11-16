@@ -146,11 +146,29 @@ struct InboxCard: View, Equatable {
         HStack(spacing: 5) {
             source
 
-            ForEach(content.details, id: \.self) { detail in
+            if let published = content.published {
                 Text(verbatim: Const.dotString)
-                Text(verbatim: detail)
+                Text(verbatim: published)
                     .lineLimit(1)
                     .fixedSize()
+            } else if let start = content.upcomingStart {
+                Text(verbatim: Const.dotString)
+                // a Button, not a Menu: a Menu label would swallow the card's swipe
+                Button {
+                    navManager.deferRequest = DeferRequest(video: video, context: .inboxCards)
+                } label: {
+                    HStack(spacing: 3) {
+                        Image(systemName: "clock")
+                            .accessibilityHidden(true)
+                        Text(verbatim: start)
+                            .lineLimit(1)
+                    }
+                    .fixedSize()
+                    .foregroundStyle(Color.deferred)
+                    .contentShape(Rectangle())
+                }
+                .buttonStyle(.plain)
+                .accessibilityHint("deferVideo")
             }
         }
         .font(.system(size: infoSize))
@@ -225,7 +243,8 @@ struct InboxCard: View, Equatable {
         let playlistTitle: String?
         let subscriptionTitle: String?
         let description: AttributedString?
-        let details: [String]
+        let published: String?
+        let upcomingStart: String?
         let imageUrls: [URL?]
         /// Not shown, keeps `==` from missing chapters that arrive after the card was built
         let chapterCount: Int
@@ -247,13 +266,8 @@ struct InboxCard: View, Equatable {
                 description = nil
             }
 
-            var details = [String]()
-            if let start = video.upcomingStartDate {
-                details.append(start.formattedStart)
-            } else if let published = video.publishedDate {
-                details.append(published.formattedRelative)
-            }
-            self.details = details
+            upcomingStart = video.upcomingStartDate?.formattedStart
+            published = upcomingStart == nil ? video.publishedDate?.formattedRelative : nil
 
             imageUrls = [
                 UrlService.getImageUrl(video.displayThumbnailUrl, .large),

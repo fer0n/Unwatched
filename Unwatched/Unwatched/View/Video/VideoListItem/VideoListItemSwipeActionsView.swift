@@ -47,6 +47,7 @@ struct TrailingSwipeActionsView: View {
     var clearList: (ClearList, ClearDirection) -> Void
     var canBeCleared: Bool
     var deleteVideo: () -> Void
+    var deferVideo: () -> Void
 
     var body: some View {
         Group {
@@ -74,7 +75,8 @@ struct TrailingSwipeActionsView: View {
                 toggleIsNew: toggleIsNew,
                 moveToInbox: moveToInbox,
                 clearList: clearList,
-                deleteVideo: deleteVideo
+                deleteVideo: deleteVideo,
+                deferVideo: deferVideo
             )
             #endif
             Button {

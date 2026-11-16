@@ -572,18 +572,21 @@ extension VideoService {
     }
 
     @MainActor
-    static func deferVideo(_ videoId: PersistentIdentifier, deferDate: Date) {
+    @discardableResult
+    static func deferVideo(_ videoId: PersistentIdentifier, deferDate: Date) -> Bool {
         Log.info("deferVideo: \(deferDate)")
         let context = DataProvider.mainContext
         let video: Video? = context.existingModel(for: videoId)
         guard let video else {
-            return
+            return false
         }
         video.deferDate = deferDate
+        video.isNew = false
         clearEntries(from: video, modelContext: context)
         try? context.save()
 
         scheduleDeferedVideoNotification(video, deferDate: deferDate)
+        return true
     }
 
     @MainActor
@@ -614,6 +617,7 @@ extension VideoService {
     @MainActor
     static func cancelDeferVideo(_ video: Video) {
         video.deferDate = nil
+        try? video.modelContext?.save()
         #if os(iOS) || os(visionOS)
         Task {
             await NotificationManager.cancelNotificationForVideo(video.youtubeId)

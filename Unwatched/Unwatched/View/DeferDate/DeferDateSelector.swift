@@ -84,7 +84,7 @@ struct DeferDateSelector: View {
             Button {
                 dismiss()
             } label: {
-                Label("cancel", systemImage: "xmark")
+                Text("cancel")
                     .frame(maxWidth: .infinity)
             }
             .deferDateButtonStyle(prominent: false, tint: theme.color, contrast: theme.contrastColor)
@@ -92,18 +92,16 @@ struct DeferDateSelector: View {
             Button {
                 if let video, let videoId = video.persistentId {
                     if let date {
-                        VideoService.deferVideo(
-                            videoId,
-                            deferDate: date
-                        )
-                        onSuccess?()
+                        if VideoService.deferVideo(videoId, deferDate: date) {
+                            onSuccess?()
+                        }
                     } else {
                         VideoService.cancelDeferVideo(video)
                     }
                     dismiss()
                 }
             } label: {
-                Label("confirm", systemImage: "clock.fill")
+                Text("confirm")
                     .frame(maxWidth: .infinity)
             }
             .deferDateButtonStyle(prominent: true, tint: theme.color, contrast: theme.contrastColor)

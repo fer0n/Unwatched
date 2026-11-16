@@ -63,7 +63,8 @@ extension ChapterDescriptionView {
                     moveToInbox: moveToInbox,
                     openUrlInApp: { navManager.openUrlInApp(.url($0)) },
                     viewChannel: viewChannel,
-                    viewPlaylist: viewPlaylist
+                    viewPlaylist: viewPlaylist,
+                    deferVideo: deferVideo
                 )
             } label: {
                 Image(systemName: "ellipsis")
@@ -157,6 +158,16 @@ extension ChapterDescriptionView {
         }
         Signal.videoAction("inbox", .detail)
         handleDone(undo: undo)
+    }
+
+    func deferVideo() {
+        let requiresQueueChange = requiresQueueChange()
+        navManager.deferRequest = DeferRequest(video: video, context: .detail) {
+            if requiresQueueChange {
+                handlePotentialQueueChange()
+            }
+            handleDone(undo: nil)
+        }
     }
 
     func setWatched(_ watched: Bool) {

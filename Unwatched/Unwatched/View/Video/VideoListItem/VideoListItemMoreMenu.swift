@@ -25,6 +25,7 @@ struct VideoListItemMoreMenuView: View {
     var deleteVideo: (() -> Void)?
     var viewChannel: (() -> Void)?
     var viewPlaylist: (() -> Void)?
+    var deferVideo: (() -> Void)?
 
     private var playlistAction: (() -> Void)? {
         videoData.subscriptionData?.youtubePlaylistId != nil ? viewPlaylist : nil
@@ -115,6 +116,10 @@ struct VideoListItemMoreMenuView: View {
 
             if videoData.hasInboxEntry != true {
                 Button("moveToInbox", systemImage: "tray.and.arrow.down", action: moveToInbox)
+            }
+
+            if let deferVideo {
+                Button("deferVideo", systemImage: "clock", action: deferVideo)
             }
 
             if browserDisplayMode != .disabled, let url = videoData.url {

@@ -21,6 +21,7 @@ struct MenuView: View {
             .browserViewSheet(navManager: $navManager)
             .premiumOfferSheet()
             .tagEditSheet()
+            .deferRequestSheet()
             // not on the root: an alert there can't present while the menu sheet is up
             .acceptsSyncRequests()
             .background {

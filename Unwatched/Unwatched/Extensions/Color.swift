@@ -6,6 +6,8 @@
 import SwiftUI
 
 public extension Color {
+    static let deferred = Color.orange
+
     static func random(randomOpacity: Bool = false) -> Color {
         Color(
             red: .random(in: 0...1),

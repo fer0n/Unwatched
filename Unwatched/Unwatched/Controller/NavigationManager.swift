@@ -20,6 +20,7 @@ import UnwatchedShared
     var openWindow: OpenWindowAction?
     var columnVisibility: NavigationSplitViewVisibility = .automatic
     var showDeferDateSelector = false
+    var deferRequest: DeferRequest?
     var showPremiumOffer = false
     var editedTag: TagEdit?
     var showOnboarding = false
