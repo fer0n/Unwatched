@@ -90,13 +90,7 @@ struct InboxCardChapters: View {
     }
 
     private func setChapter(_ chapter: SendableChapter) {
-        if video != player.video {
-            video.elapsedSeconds = chapter.startTime
-            player.playVideo(video)
-            Signal.playbackStarted(VideoListContext.inboxCards.rawValue)
-            VideoService.insertQueueEntries(videos: [video], modelContext: modelContext)
-        }
-        player.setChapter(chapter)
+        player.playChapter(chapter, of: video, source: VideoListContext.inboxCards.rawValue, modelContext: modelContext)
         Signal.interaction("Chapter.Jump")
     }
 }

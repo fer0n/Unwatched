@@ -205,6 +205,22 @@ extension PlayerManager {
     }
 
     @MainActor
+    func playChapter(_ chapter: SendableChapter, of video: Video, source: String, modelContext: ModelContext) {
+        if video == self.video {
+            setChapter(chapter)
+            if !isPlaying {
+                play()
+            }
+        } else {
+            video.elapsedSeconds = chapter.startTime
+            playVideo(video)
+            Signal.playbackStarted(source)
+            VideoService.insertQueueEntries(videos: [video], modelContext: modelContext)
+            setChapter(chapter)
+        }
+    }
+
+    @MainActor
     func goToNextChapter() -> Bool {
         if let next = nextChapter {
             setChapter(next)

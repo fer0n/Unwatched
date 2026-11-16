@@ -231,13 +231,7 @@ struct ChapterList: View {
     }
 
     func setChapter(_ chapter: SendableChapter) {
-        if video != player.video {
-            video.elapsedSeconds = chapter.startTime
-            player.playVideo(video)
-            Signal.playbackStarted("detail")
-            VideoService.insertQueueEntries(videos: [video], modelContext: modelContext)
-        }
-        player.setChapter(chapter)
+        player.playChapter(chapter, of: video, source: "detail", modelContext: modelContext)
     }
 
     func setPosition(to chapter: SendableChapter) {
