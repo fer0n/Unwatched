@@ -16,6 +16,21 @@ public extension CGImage {
     func extractVibrantAccentColors(limit: Int) -> [Color] {
         ImageColorAnalyzer().rankedVibrantColors(from: self).prefix(limit).map { Color($0) }
     }
+
+    /// `extractVibrantAccentColor` first, then lower-ranked colors that look different from all before them.
+    func extractDistinctAccentColors(limit: Int) -> [Color] {
+        let ranked = ImageColorAnalyzer().rankedVibrantColorsWithShare(from: self)
+        guard let first = ranked.first?.color else { return [] }
+        var picked = [(color: first, lab: first.lab)]
+        for (color, pixelShare) in ranked.dropFirst() where !color.isGray || (pixelShare >= 0.2 && color.isMidtone) {
+            guard picked.count < limit else { break }
+            let lab = color.lab
+            if picked.allSatisfy({ $0.lab.distance(to: lab) >= Lab.distinctDistance }) {
+                picked.append((color, lab))
+            }
+        }
+        return picked.map { Color($0.color) }
+    }
 }
 
 private class ImageColorAnalyzer {
@@ -35,16 +50,24 @@ private class ImageColorAnalyzer {
     }
 
     func rankedVibrantColors(from cgImage: CGImage) -> [CGColor] {
+        rankedVibrantColorsWithShare(from: cgImage).map(\.color)
+    }
+
+    func rankedVibrantColorsWithShare(from cgImage: CGImage) -> [(color: CGColor, pixelShare: Double)] {
         let colorCounts = groupSimilarColors(analyzeImageColors(cgImage))
         let totalPixelsSampled = colorCounts.values.reduce(0, +)
         let maxCount = colorCounts.values.max() ?? 1
-        return colorCounts
-            .map { color, count in
-                (color, calculateColorScore(color: color, count: count, totalPixels: totalPixelsSampled, maxCount: maxCount))
+        let scored: [(color: CGColor, count: Int, score: Float)] = colorCounts.map { color, count in
+            let score = calculateColorScore(color: color, count: count, totalPixels: totalPixelsSampled, maxCount: maxCount)
+            return (color, count, score)
+        }
+        let total = Double(max(totalPixelsSampled, 1))
+        return scored
+            .filter { $0.score > 0 }
+            .sorted { lhs, rhs in
+                lhs.score != rhs.score ? lhs.score > rhs.score : lhs.color.precedes(rhs.color)
             }
-            .filter { $0.1 > 0 }
-            .sorted { $0.1 > $1.1 }
-            .map(\.0)
+            .map { ($0.color, Double($0.count) / total) }
     }
 
     private func analyzeImageColors(_ cgImage: CGImage) -> [CGColor: Int] {
@@ -95,7 +118,10 @@ private class ImageColorAnalyzer {
         var groupedColors: [CGColor: Int] = [:]
         var processedColors: Set<CGColor> = []
 
-        for (color, count) in colorCounts {
+        let sortedCounts = colorCounts.sorted { lhs, rhs in
+            lhs.value != rhs.value ? lhs.value > rhs.value : lhs.key.precedes(rhs.key)
+        }
+        for (color, count) in sortedCounts {
             guard !processedColors.contains(color) else { continue }
 
             var totalCount = count
@@ -103,7 +129,7 @@ private class ImageColorAnalyzer {
             processedColors.insert(color)
 
             // Find similar colors and group them
-            for (otherColor, otherCount) in colorCounts {
+            for (otherColor, otherCount) in sortedCounts {
                 guard otherColor != color,
                       !processedColors.contains(otherColor),
                       areColorsSimilar(color, otherColor) else { continue }
@@ -245,6 +271,48 @@ private extension CGColor {
 
     var saturation: Float {
         return hsbComponents.saturation
+    }
+
+    /// A fixed order for colors that tie, as Dictionary order changes from launch to launch.
+    func precedes(_ other: CGColor) -> Bool {
+        (components ?? []).lexicographicallyPrecedes(other.components ?? [])
+    }
+
+    var isGray: Bool {
+        Double(saturation) < Color.graySaturation
+    }
+
+    var isMidtone: Bool {
+        (0.25...0.9).contains(hsbComponents.brightness)
+    }
+
+    /// Assumes sRGB components, as `analyzeImageColors` draws in sRGB.
+    var lab: Lab {
+        guard let components, components.count >= 3 else { return Lab(l: 0, a: 0, b: 0) }
+        func linear(_ value: CGFloat) -> Double {
+            let value = Double(value)
+            return value <= 0.04045 ? value / 12.92 : pow((value + 0.055) / 1.055, 2.4)
+        }
+        let red = linear(components[0]), green = linear(components[1]), blue = linear(components[2])
+        let x = (0.4124 * red + 0.3576 * green + 0.1805 * blue) / 0.95047
+        let y = 0.2126 * red + 0.7152 * green + 0.0722 * blue
+        let z = (0.0193 * red + 0.1192 * green + 0.9505 * blue) / 1.08883
+        func scaled(_ value: Double) -> Double {
+            value > 216.0 / 24389 ? cbrt(value) : (24389.0 / 27 * value + 16) / 116
+        }
+        let fx = scaled(x), fy = scaled(y), fz = scaled(z)
+        return Lab(l: 116 * fy - 16, a: 500 * (fx - fy), b: 200 * (fy - fz))
+    }
+}
+
+struct Lab {
+    static let distinctDistance = 30.0
+
+    let l: Double, a: Double, b: Double
+
+    func distance(to other: Lab) -> Double {
+        let dl = l - other.l, da = a - other.a, db = b - other.b
+        return (dl * dl + da * da + db * db).squareRoot()
     }
 }
 

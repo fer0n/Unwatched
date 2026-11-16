@@ -18,6 +18,7 @@ import OSLog
     }()
 
     private var cache = [String: ImageCacheInfo]()
+    private var writeCounts = [String: Int]()
     public init() { }
 
     public subscript(id: String?) -> ImageCacheInfo? {
@@ -29,25 +30,35 @@ import OSLog
             guard let id else { return }
             if let value = newValue {
                 cache[id] = value
+                writeCounts[id, default: 0] += 1
             }
         }
     }
 
     @MainActor
     public func persistCache() async {
-        let cache = cache
-        await ImageService.persistImages(
-            cache: cache
-        )
-        clearCacheAll()
+        let snapshot = cache
+        let snapshotCounts = writeCounts
+        await ImageService.persistImages(cache: snapshot)
+        // entries written during the save stay for the next one
+        for key in Array(cache.keys) {
+            if writeCounts[key] == snapshotCounts[key] {
+                cache[key] = nil
+                writeCounts[key] = nil
+            } else if snapshot[key] != nil {
+                cache[key]?.persistImage = false
+            }
+        }
     }
 
     public func clearCacheAll() {
         cache = [:]
+        writeCounts = [:]
     }
 
     public func clearCache(_ imageUrl: String) {
         cache[imageUrl] = nil
+        writeCounts[imageUrl] = nil
     }
     
     @MainActor

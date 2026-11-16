@@ -88,6 +88,10 @@ public extension UIImage {
         cgImage?.extractVibrantAccentColors(limit: limit) ?? []
     }
 
+    func extractDistinctAccentColors(limit: Int) -> [Color] {
+        cgImage?.extractDistinctAccentColors(limit: limit) ?? []
+    }
+
     func uniformEdgeColors() -> (edge: Color, center: Color)? {
         cgImage?.uniformEdgeColors()
     }
@@ -162,6 +166,10 @@ public extension NSImage {
 
     func extractVibrantAccentColors(limit: Int) -> [Color] {
         cgImage(forProposedRect: nil, context: nil, hints: nil)?.extractVibrantAccentColors(limit: limit) ?? []
+    }
+
+    func extractDistinctAccentColors(limit: Int) -> [Color] {
+        cgImage(forProposedRect: nil, context: nil, hints: nil)?.extractDistinctAccentColors(limit: limit) ?? []
     }
 
     func uniformEdgeColors() -> (edge: Color, center: Color)? {

@@ -427,10 +427,28 @@ public struct ImageService {
         _ imageCacheManager: ImageCacheManager,
         limit: Int = 6
     ) async -> [Color] {
+        await colors(from: url, imageCacheManager) { $0.extractVibrantAccentColors(limit: limit) }
+    }
+
+    @MainActor
+    public static func getDistinctAccentColors(
+        from url: URL,
+        _ imageCacheManager: ImageCacheManager,
+        limit: Int
+    ) async -> [Color] {
+        await colors(from: url, imageCacheManager) { $0.extractDistinctAccentColors(limit: limit) }
+    }
+
+    @MainActor
+    private static func colors(
+        from url: URL,
+        _ imageCacheManager: ImageCacheManager,
+        extract: @escaping @Sendable (PlatformImage) -> [Color]
+    ) async -> [Color] {
         let task = ImageService.getImage(url, imageCacheManager)
         return await Task.detached {
             guard let image = try? await task.value.0 else { return [] }
-            return image.extractVibrantAccentColors(limit: limit)
+            return extract(image)
         }.value
     }
 }

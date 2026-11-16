@@ -27,6 +27,7 @@ public struct SendableSubscription: SubscriptionData, Sendable, Codable, Hashabl
     public var selfPromoSegmentSetting: SponsorBlockSegmentSetting?
     public var chapterGeneration: Bool?
     public var episodeLimit: Int?
+    public var tint: PageColorChoice = .automatic
 
     public var customSpeedSetting: Double?
     public var customAspectRatio: Double?
@@ -67,6 +68,7 @@ public struct SendableSubscription: SubscriptionData, Sendable, Codable, Hashabl
         selfPromoSegmentSetting: SponsorBlockSegmentSetting? = nil,
         chapterGeneration: Bool? = nil,
         episodeLimit: Int? = nil,
+        tint: PageColorChoice = .automatic,
         customSpeedSetting: Double? = nil,
         customAspectRatio: Double? = nil,
         skipIntroSeconds: Double? = nil,
@@ -98,6 +100,7 @@ public struct SendableSubscription: SubscriptionData, Sendable, Codable, Hashabl
         self.selfPromoSegmentSetting = selfPromoSegmentSetting
         self.chapterGeneration = chapterGeneration
         self.episodeLimit = episodeLimit
+        self.tint = tint
         self.customSpeedSetting = customSpeedSetting
         self.customAspectRatio = customAspectRatio
         self.skipIntroSeconds = skipIntroSeconds
@@ -154,6 +157,7 @@ public struct SendableSubscription: SubscriptionData, Sendable, Codable, Hashabl
         subscription.liveStreamSetting = liveStreamSetting
         subscription.chapterGeneration = chapterGeneration
         subscription.episodeLimit = episodeLimit
+        subscription.tint = tint
         return subscription
     }
 
@@ -180,6 +184,7 @@ public struct SendableSubscription: SubscriptionData, Sendable, Codable, Hashabl
             .flatMap { SponsorBlockSegmentSetting(rawValue: $0) }
         chapterGeneration = try container.decodeIfPresent(Bool.self, forKey: .chapterGeneration)
         episodeLimit = try container.decodeIfPresent(Int.self, forKey: .episodeLimit)
+        tint = PageColorChoice(rawValue: try container.decodeIfPresent(String.self, forKey: .tint))
         customSpeedSetting = try container.decodeIfPresent(Double.self, forKey: .customSpeedSetting)
         customAspectRatio = try container.decodeIfPresent(Double.self, forKey: .customAspectRatio)
         skipIntroSeconds = try container.decodeIfPresent(Double.self, forKey: .skipIntroSeconds)
@@ -220,6 +225,7 @@ public struct SendableSubscription: SubscriptionData, Sendable, Codable, Hashabl
         try container.encodeIfPresent(selfPromoSegmentSetting?.rawValue, forKey: .selfPromoSegmentSetting)
         try container.encodeIfPresent(chapterGeneration, forKey: .chapterGeneration)
         try container.encodeIfPresent(episodeLimit, forKey: .episodeLimit)
+        try container.encodeIfPresent(tint.rawValue, forKey: .tint)
         try container.encodeIfPresent(customSpeedSetting, forKey: .customSpeedSetting)
         try container.encodeIfPresent(customAspectRatio, forKey: .customAspectRatio)
         try container.encodeIfPresent(skipIntroSeconds, forKey: .skipIntroSeconds)
@@ -249,6 +255,7 @@ public struct SendableSubscription: SubscriptionData, Sendable, Codable, Hashabl
              selfPromoSegmentSetting,
              chapterGeneration,
              episodeLimit,
+             tint,
              customSpeedSetting,
              customAspectRatio,
              skipIntroSeconds,

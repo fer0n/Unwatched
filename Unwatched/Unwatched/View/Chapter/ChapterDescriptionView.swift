@@ -145,7 +145,7 @@ struct ChapterDescriptionView: View {
         .tint(.neutralAccentColor)
         // VideoDetailPage applies it itself
         .if(!isInMenuStack) { view in
-            view.channelPageColor(imageUrl: video.channelColorImageUrl)
+            view.channelPageColor(imageUrl: video.channelColorImageUrl, choice: video.channelColorChoice)
         }
     }
 

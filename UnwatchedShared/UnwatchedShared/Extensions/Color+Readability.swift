@@ -11,6 +11,8 @@ public enum ColorUsage {
 }
 
 public extension Color {
+    static let graySaturation = 0.15
+
     var contrastingTextColor: Color {
         prefersWhiteText ? .white : .black
     }
@@ -32,6 +34,10 @@ public extension Color {
 
     var saturation: Double {
         hsb.saturation
+    }
+
+    var hue: Double {
+        hsb.hue
     }
 
     func isReadable(in colorScheme: ColorScheme, as usage: ColorUsage = .fill) -> Bool {

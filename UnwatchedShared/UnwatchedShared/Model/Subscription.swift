@@ -127,6 +127,12 @@ public final class Subscription: SubscriptionData, CustomStringConvertible, Expo
 
     public var episodeLimit: Int?
 
+    public var _tint: String?
+    public var tint: PageColorChoice {
+        get { PageColorChoice(rawValue: _tint) }
+        set { _tint = newValue.rawValue }
+    }
+
     public var customSpeedSetting: Double?
     public var customAspectRatio: Double?
     public var skipIntroSeconds: Double?
@@ -238,6 +244,7 @@ public final class Subscription: SubscriptionData, CustomStringConvertible, Expo
             selfPromoSegmentSetting: selfPromoSegmentSetting,
             chapterGeneration: chapterGeneration,
             episodeLimit: episodeLimit,
+            tint: tint,
             customSpeedSetting: customSpeedSetting,
             customAspectRatio: customAspectRatio,
             skipIntroSeconds: skipIntroSeconds,

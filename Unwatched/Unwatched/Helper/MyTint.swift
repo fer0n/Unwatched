@@ -24,6 +24,7 @@ private struct ChannelPageColor: ViewModifier {
 
     /// nil: no channel color, e.g. on Watch Later
     let imageUrl: URL?
+    let choice: PageColorChoice
 
     func body(content: Content) -> some View {
         content
@@ -31,7 +32,7 @@ private struct ChannelPageColor: ViewModifier {
             .environment(\.pageThemeColor, pageColor)
             .environment(\.swipeActionColor, pageColor?.darkenedForSwipeActions)
             .environment(\.pageForegroundColor, resolver.iconColor(for: pageColor))
-            .task(id: PageColorKey(imageUrl: imageUrl, colorScheme: colorScheme)) {
+            .task(id: PageColorKey(imageUrl: imageUrl, choice: choice, colorScheme: colorScheme)) {
                 await resolvePageColor()
             }
             #if os(visionOS)
@@ -48,6 +49,10 @@ private struct ChannelPageColor: ViewModifier {
             pageColor = nil
             return
         }
+        if let chosen = resolver.color(for: choice) {
+            pageColor = chosen
+            return
+        }
         // no flash of the old or theme color when it's already known
         pageColor = resolver.cachedColor(imageUrl: imageUrl)
         let color = await resolver.resolve(imageUrl: imageUrl)
@@ -58,6 +63,7 @@ private struct ChannelPageColor: ViewModifier {
 
 private struct PageColorKey: Equatable {
     let imageUrl: URL?
+    let choice: PageColorChoice
     let colorScheme: ColorScheme
 }
 
@@ -66,11 +72,15 @@ extension Video {
     var channelColorImageUrl: URL? {
         subscription?.thumbnailUrl ?? thumbnailUrl
     }
+
+    var channelColorChoice: PageColorChoice {
+        subscription?.tint ?? .automatic
+    }
 }
 
 extension View {
-    func channelPageColor(imageUrl: URL?) -> some View {
-        modifier(ChannelPageColor(imageUrl: imageUrl))
+    func channelPageColor(imageUrl: URL?, choice: PageColorChoice = .automatic) -> some View {
+        modifier(ChannelPageColor(imageUrl: imageUrl, choice: choice))
     }
 
     func myTint(neutral: Bool = false) -> some View {

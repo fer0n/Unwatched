@@ -50,7 +50,7 @@ struct SubscriptionDetailView: View {
                 )
             }
         }
-        .channelPageColor(imageUrl: subscription.isWatchLater ? nil : imageUrl)
+        .channelPageColor(imageUrl: subscription.isWatchLater ? nil : imageUrl, choice: subscription.tint)
         .task(id: loadNewVideosTask) {
             if let task = loadNewVideosTask {
                 await task.value

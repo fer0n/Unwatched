@@ -27,7 +27,7 @@ public struct PageColorResolver {
         }
         let readable = await readableAlternative(to: primary, imageUrl: imageUrl)
         guard !Task.isCancelled else { return nil }
-        store(readable, for: imageUrl, fallback: info)
+        store(readable, of: primary, for: imageUrl, fallback: info)
         return readable
     }
 
@@ -40,10 +40,17 @@ public struct PageColorResolver {
     }
 
     public func iconColor(for pageColor: Color?) -> Color? {
-        guard let pageColor, !pageColor.isReadable(in: colorScheme, as: .foreground) else {
-            return pageColor
-        }
-        return pageColor.shiftedToBeReadable(in: colorScheme, as: .foreground) ?? pageColor
+        pageColor.map { Self.readable($0, in: colorScheme, as: .foreground) }
+    }
+
+    public func readable(_ color: Color) -> Color {
+        Self.readable(color, in: colorScheme)
+    }
+
+    static func readable(_ color: Color, in colorScheme: ColorScheme, as usage: ColorUsage = .fill) -> Color {
+        color.isReadable(in: colorScheme, as: usage)
+            ? color
+            : color.shiftedToBeReadable(in: colorScheme, as: usage) ?? color
     }
 
     private func accentInfo(for imageUrl: URL) async -> ImageCacheInfo? {
@@ -69,9 +76,11 @@ public struct PageColorResolver {
         return primary.shiftedToBeReadable(in: colorScheme) ?? (colorScheme == .dark ? .white : .black)
     }
 
-    private func store(_ readable: Color, for imageUrl: URL, fallback: ImageCacheInfo) {
+    private func store(_ readable: Color, of primary: Color, for imageUrl: URL, fallback: ImageCacheInfo) {
         let key = imageUrl.absoluteString
         var info: ImageCacheInfo = imageCacheManager[key] ?? fallback
+        // cached color replaced meanwhile
+        guard info.color?.toHex() == primary.toHex() else { return }
         info.readableColors[colorScheme] = readable
         info.persistColor = true
         imageCacheManager[key] = info

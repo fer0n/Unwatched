@@ -34,6 +34,11 @@ struct SubscriptionMoreMenu: View {
                     SubscriptionSegmentSetting(subscription: subscription, category: .selfPromo)
                     SubscriptionChapterGenerationSetting(subscription: subscription)
                 }
+                if !subscription.isWatchLater, let imageUrl = subscription.thumbnailUrl {
+                    Section {
+                        SubscriptionTintSetting(subscription: subscription, imageUrl: imageUrl)
+                    }
+                }
                 Section {
                     SubscriptionTitleFilterButton(
                         showFilter: $showFilter,

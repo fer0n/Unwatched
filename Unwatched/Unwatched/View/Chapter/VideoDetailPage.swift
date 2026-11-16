@@ -37,7 +37,10 @@ struct VideoDetailPage: View {
             }
         }
         .myNavigationTitle()
-        .channelPageColor(imageUrl: videos.first?.channelColorImageUrl)
+        .channelPageColor(
+            imageUrl: videos.first?.channelColorImageUrl,
+            choice: videos.first?.channelColorChoice ?? .automatic
+        )
         .appNotificationOverlay(topPadding: 10)
         .onAppear {
             navManager.visibleChannelPages.insert(videoId)
