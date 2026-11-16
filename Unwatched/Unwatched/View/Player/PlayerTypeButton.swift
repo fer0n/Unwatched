@@ -50,7 +50,8 @@ struct PlayerTypeButton<Content: View>: View {
         [
             MenuActionGroup(title: String(localized: "playerType"), PlayerTypeSetting.allCases.map { type in
                 MenuAction(
-                    type.menuDescription,
+                    type.description,
+                    subtitle: type.menuSubtitle,
                     icon: type == playerType
                         ? .system("checkmark")
                         : type.showsIconInTypeMenu
@@ -102,12 +103,17 @@ struct PlayerTypeMenuContent: View {
                 playerType = type
                 Signal.interaction("Player.MoreMenu", "playerType")
             } label: {
+                Text(type.description)
+                // two-line rows stay white on macOS's near-white menu highlight
+                #if !os(macOS)
+                if let subtitle = type.menuSubtitle {
+                    Text(subtitle)
+                }
+                #endif
                 if type == playerType {
-                    Label(type.menuDescription, systemImage: "checkmark")
+                    Image(systemName: "checkmark")
                 } else if type.showsIconInTypeMenu {
-                    Label(type.menuDescription, systemImage: type.systemImage)
-                } else {
-                    Text(type.menuDescription)
+                    Image(systemName: type.systemImage)
                 }
             }
         }

@@ -27,12 +27,11 @@ extension PlayerTypeSetting {
         }
     }
 
-    /// Label used in the player's "more" menu, where the experimental status is
-    /// shown inline rather than as a separate badge.
-    var menuDescription: String {
+    /// Second line in the player's type menu, for the trade-off the name alone doesn't tell.
+    var menuSubtitle: String? {
         switch self {
-        case .native: return String(localized: "playerTypeNativeMenu")
-        default: return description
+        case .native: return String(localized: "playerTypeNativeSubtitle")
+        default: return nil
         }
     }
 

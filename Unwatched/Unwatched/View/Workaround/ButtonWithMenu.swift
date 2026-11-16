@@ -17,6 +17,7 @@ struct MenuAction: Identifiable {
 
     let id = UUID()
     let title: String
+    let subtitle: String?
     let icon: Icon
     let action: () -> Void
 
@@ -24,8 +25,9 @@ struct MenuAction: Identifiable {
         self.init(title, icon: .system(systemImage), action: action)
     }
 
-    init(_ title: String, icon: Icon = .none, action: @escaping () -> Void) {
+    init(_ title: String, subtitle: String? = nil, icon: Icon = .none, action: @escaping () -> Void) {
         self.title = title
+        self.subtitle = subtitle
         self.icon = icon
         self.action = action
     }
@@ -89,6 +91,12 @@ extension View {
                     ForEach(group.actions) { action in
                         Button(action: action.action) {
                             Text(action.title)
+                            // two-line rows stay white on macOS's near-white menu highlight
+                            #if !os(macOS)
+                            if let subtitle = action.subtitle {
+                                Text(subtitle)
+                            }
+                            #endif
                             action.icon.image
                         }
                     }
@@ -213,9 +221,11 @@ private struct MenuHostingView: UIViewRepresentable {
                         title: group.title ?? "",
                         options: .displayInline,
                         children: group.actions.map { action in
-                            UIAction(title: action.title, image: action.icon.uiImage) { _ in
+                            let item = UIAction(title: action.title, image: action.icon.uiImage) { _ in
                                 action.action()
                             }
+                            item.subtitle = action.subtitle
+                            return item
                         }
                     )
                 }
