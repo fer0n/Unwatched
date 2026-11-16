@@ -73,7 +73,7 @@ extension SearchVM {
     }
 
     private static func unwatchedVideos(_ videos: [ITVideo]) -> [SendableVideo] {
-        let sendable = videos.map(sendable(from:))
+        let sendable = preferringKnownChannels(videos).map(sendable(from:))
         let stored = storedStatuses(for: sendable.map(\.youtubeId))
         return sendable.compactMap { video in
             guard let match = stored[video.youtubeId] else { return video }

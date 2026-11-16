@@ -42,6 +42,8 @@ public struct ITVideo: Identifiable, Hashable, Codable, Sendable {
     public var localFileURL: URL? = nil
     /// `true` when this video refers to a local downloaded file rather than a remote stream.
     public var isDownloaded: Bool { localFileURL != nil }
+    /// Unwatched: runtime only, byline order; empty unless a collaboration.
+    public var collaborators: [ITCollaborator] = []
 
     private enum CodingKeys: String, CodingKey {
         case id, title, channelTitle, channelId, description, thumbnailURL, duration
@@ -160,5 +162,15 @@ public extension ITVideo {
     /// YouTube generates `oardefault.jpg` (360×640) for every Short.
     var portraitThumbnailURL: URL? {
         URL(string: "https://i.ytimg.com/vi/\(id)/oardefault.jpg")
+    }
+}
+
+public struct ITCollaborator: Hashable, Sendable {
+    public let channelId: String
+    public let title: String
+
+    public init(channelId: String, title: String) {
+        self.channelId = channelId
+        self.title = title
     }
 }

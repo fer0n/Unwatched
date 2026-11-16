@@ -104,4 +104,38 @@ final class SearchMaterializeTests: XCTestCase {
         context.delete(second)
         try context.save()
     }
+
+    @MainActor
+    func testCollaborationVideoPrefersTheKnownChannel() throws {
+        let context = DataProvider.mainContext
+        let otherId = "UCcollabOther\(UUID().uuidString.prefix(6))"
+        let archivedId = "UCcollabArch\(UUID().uuidString.prefix(6))"
+        let subscribedId = "UCcollabSub\(UUID().uuidString.prefix(6))"
+        let archived = Subscription(link: nil, title: "Archived Channel", isArchived: true, youtubeChannelId: archivedId)
+        let subscribed = Subscription(link: nil, title: "My Channel", youtubeChannelId: subscribedId)
+        context.insert(archived)
+        context.insert(subscribed)
+        try context.save()
+        defer {
+            context.delete(archived)
+            context.delete(subscribed)
+            try? context.save()
+        }
+
+        func collab(_ ids: [String]) -> ITVideo {
+            var video = ITVideo(id: "collab", title: "Collab", channelTitle: "A and B", channelId: ids.first)
+            video.collaborators = ids.map { ITCollaborator(channelId: $0, title: "YT \($0)") }
+            return video
+        }
+
+        let toSubscribed = SearchVM.preferringKnownChannels([collab([otherId, archivedId, subscribedId])])
+        XCTAssertEqual(toSubscribed.first?.channelId, subscribedId)
+        XCTAssertEqual(toSubscribed.first?.channelTitle, "My Channel")
+
+        let toArchived = SearchVM.preferringKnownChannels([collab([otherId, archivedId])])
+        XCTAssertEqual(toArchived.first?.channelId, archivedId)
+
+        let unknown = SearchVM.preferringKnownChannels([collab([otherId, "UCnobody"])])
+        XCTAssertEqual(unknown.first?.channelId, otherId, "no known channel keeps YouTube's first")
+    }
 }

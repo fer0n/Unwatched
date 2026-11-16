@@ -130,7 +130,7 @@ final class SearchVM {
                 let page = try await api.search(query: trimmed, filter: filter)
                 if Task.isCancelled { return }
                 withAnimation {
-                    results = page.videos.map(Self.sendable(from:))
+                    results = Self.preferringKnownChannels(page.videos).map(Self.sendable(from:))
                     nextPageToken = page.nextPageToken
                     isSearching = false
                 }
@@ -200,7 +200,7 @@ final class SearchVM {
                 let page = try await api.search(query: queryAtStart, continuationToken: token, filter: filter)
                 if Task.isCancelled || queryAtStart != activeQuery { return }
                 let existing = Set(results.map(\.youtubeId))
-                let new = page.videos
+                let new = Self.preferringKnownChannels(page.videos)
                     .filter { !existing.contains($0.id) }
                     .map(Self.sendable(from:))
                 withAnimation {

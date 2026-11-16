@@ -148,8 +148,9 @@ import UnwatchedShared
     /// nil when a continuation is stale: rejected with a 400, or answered in a shape that reads as empty.
     private func sendable(_ video: ITVideo) -> SendableVideo {
         switch source {
-        case .channel:
+        case .channel(let channelId):
             var video = video
+            video.channelId = channelId
             video.channelTitle = title
             return SearchVM.sendable(from: video)
         case .playlist(let playlistId):

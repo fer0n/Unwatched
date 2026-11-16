@@ -330,7 +330,7 @@ extension InnerTubeAPI {
             isLive: isLive,
             isShort: isShort,
             badges: badges
-        )
+        ).withCollaborators(in: r["ownerText"] ?? r["shortBylineText"])
     }
 
     /// Shorts reelItemRenderer parser.
@@ -518,6 +518,6 @@ extension InnerTubeAPI {
             viewCount: viewCount,
             publishedAt: publishedAt,
             isShort: isShort
-        )
+        ).withCollaborators(in: metaRows.first)
     }
 }

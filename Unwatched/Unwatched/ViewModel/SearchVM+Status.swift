@@ -86,3 +86,31 @@ extension SearchVM {
         )
     }
 }
+
+extension SearchVM {
+    /// Subscribed collaborator first, then archived, else YouTube's first.
+    static func preferringKnownChannels(_ videos: [ITVideo]) -> [ITVideo] {
+        let ids: [String?] = videos.flatMap { $0.collaborators.map(\.channelId) }
+        guard !ids.isEmpty else { return videos }
+        let fetch = FetchDescriptor<Subscription>(predicate: #Predicate {
+            $0.youtubePlaylistId == nil && ids.contains($0.youtubeChannelId)
+        })
+        var known: [String: Subscription] = [:]
+        for sub in (try? DataProvider.mainContext.fetch(fetch)) ?? [] {
+            guard let id = sub.youtubeChannelId, known[id].map({ $0.isArchived }) ?? true else { continue }
+            known[id] = sub
+        }
+
+        return videos.map { video in
+            let matches = video.collaborators.compactMap { collaborator in
+                known[collaborator.channelId].map { (collaborator, $0) }
+            }
+            guard let match = matches.first(where: { !$0.1.isArchived }) ?? matches.first else { return video }
+            let (collaborator, sub) = match
+            var video = video
+            video.channelId = collaborator.channelId
+            video.channelTitle = sub.title.isEmpty ? collaborator.title : sub.title
+            return video
+        }
+    }
+}

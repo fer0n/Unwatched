@@ -80,7 +80,8 @@ method's parameter and result types must be public as well.
 - Keep type names `ITVideo`/`ITChapter` everywhere (avoids SwiftData name conflicts).
 - Preserve, don't overwrite: `hasPortraitThumbnail`, `notInterestedToken`,
   `dontLikeToken`, `hideChannelToken`, `deArrowTitle`, `deArrowThumbnailTimestamp`,
-  `localFileURL`/`isDownloaded` (transient, excluded from `CodingKeys`), all
+  `localFileURL`/`isDownloaded` and `collaborators` + `ITCollaborator` (transient, excluded
+  from `CodingKeys`), all
   `CodingKeys` (upstream has none), the thumbnail URL helpers extension.
 - `formattedDuration` is inlined in the extension (upstream keeps it as a global
   `formatDuration` in `TimeFormatting.swift`, which doesn't exist in Unwatched).
@@ -120,6 +121,12 @@ Re-apply the `private` → internal change on every sync.
 (`contentImage.thumbnailViewModel.overlays[].thumbnailBottomOverlayViewModel.badges[]`); upstream
 passes `duration: nil` there, so lockup results (most home, related and many search results)
 showed no length. Re-apply on every sync.
+
+`parseVideoRenderer` and `parseLockupViewModel` end their `ITVideo(…)` with
+`.withCollaborators(in: <byline>)` (defined outside Core, in
+`InnerTube/Channel/InnerTubeAPI+Collaborators.swift`). It fills `collaborators` from the byline's
+collaborators dialog and sets `channelId` to the first one. The app uses them to file a
+collaboration video under the channel the user already has. Re-apply on every sync.
 
 ---
 
