@@ -248,7 +248,9 @@ struct InboxCard: View, Equatable {
             }
 
             var details = [String]()
-            if let published = video.publishedDate {
+            if let start = video.upcomingStartDate {
+                details.append(start.formattedStart)
+            } else if let published = video.publishedDate {
                 details.append(published.formattedRelative)
             }
             self.details = details

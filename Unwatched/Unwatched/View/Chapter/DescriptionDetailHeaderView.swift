@@ -50,11 +50,11 @@ struct DescriptionDetailHeaderView: View {
                     source: source,
                     style: .stacked,
                     imageSize: source.playlist == nil ? 36 : 48,
-                    subtitle: publishedText
+                    subtitle: dateText
                 )
                 .lineLimit(1)
-            } else if let publishedText {
-                Text(verbatim: publishedText)
+            } else if let dateText {
+                Text(verbatim: dateText)
             }
             Spacer(minLength: 16)
             VideoDetailStatusIcons(video: video)
@@ -65,8 +65,11 @@ struct DescriptionDetailHeaderView: View {
         .padding(.bottom, chapterGap)
     }
 
-    /// e.g. "25 Sep · 14h ago"; the year only once it's not the current one
-    var publishedText: String? {
+    /// "25 Sep · 14h ago", the year only once it's not the current one
+    var dateText: String? {
+        if let start = video.upcomingStartDate {
+            return start.formattedStart
+        }
         guard let published = video.publishedDate else { return nil }
         let isThisYear = Calendar.current.isDate(published, equalTo: .now, toGranularity: .year)
         let date = isThisYear

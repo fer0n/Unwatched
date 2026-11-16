@@ -78,6 +78,11 @@ extension Date {
         }
     }
 
+    /// "Starts Tue 17 Nov, 09:34"
+    var formattedStart: String {
+        String(localized: "Starts \(formatted(.dateTime.weekday(.abbreviated).day().month(.abbreviated).hour().minute()))")
+    }
+
     var formattedRelative: String {
         self.formatted(.relative(presentation: .numeric, unitsStyle: .narrow))
     }

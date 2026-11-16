@@ -697,7 +697,11 @@ extension VideoActor {
             // mark as updated even without a duration: deleted videos aren't in the response
             video.apiUpdatedDate = Date()
 
-            guard var info = durations[entry.youtubeId] else {
+            let info = durations[entry.youtubeId]
+            if video.scheduledStartDate != info?.scheduledStartDate {
+                video.scheduledStartDate = info?.scheduledStartDate
+            }
+            guard var info else {
                 continue
             }
             video.duration = info.duration

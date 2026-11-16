@@ -19,6 +19,8 @@ public struct SendableVideo: VideoData, Sendable, Codable, Hashable, Equatable {
     public var channelTitle: String? { feedTitle }
     public var duration: Double?
     public var noDuration: Bool?
+    /// Not backed up
+    public var scheduledStartDate: Date?
     public var elapsedSeconds: Double?
     public var chapters = [SendableChapter]()
 
@@ -82,6 +84,7 @@ public struct SendableVideo: VideoData, Sendable, Codable, Hashable, Equatable {
             channelTitle: feedTitle ?? self.feedTitle,
             duration: duration ?? self.duration,
             noDuration: self.noDuration,
+            scheduledStartDate: self.scheduledStartDate,
             elapsedSeconds: self.elapsedSeconds,
             videoDescription: description,
             watchedDate: self.watchedDate,
@@ -106,6 +109,7 @@ public struct SendableVideo: VideoData, Sendable, Codable, Hashable, Equatable {
         feedTitle: String? = nil,
         duration: Double? = nil,
         noDuration: Bool? = nil,
+        scheduledStartDate: Date? = nil,
         elapsedSeconds: Double? = nil,
         chapters: [SendableChapter] = [SendableChapter](),
         publishedDate: Date? = nil,
@@ -133,6 +137,7 @@ public struct SendableVideo: VideoData, Sendable, Codable, Hashable, Equatable {
         self.feedTitle = feedTitle
         self.duration = duration
         self.noDuration = noDuration
+        self.scheduledStartDate = scheduledStartDate
         self.elapsedSeconds = elapsedSeconds
         self.chapters = chapters
         self.publishedDate = publishedDate

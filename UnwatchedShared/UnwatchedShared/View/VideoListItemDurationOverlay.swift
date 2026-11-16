@@ -31,7 +31,11 @@ public struct VideoListItemDurationOverlay: View {
 
     public var body: some View {
         ZStack {
-            if video.isYtShort == true {
+            if let start = video.upcomingStartDate {
+                upcomingStart(start)
+                    .padding(.horizontal, padding)
+                    .padding(.vertical, 1)
+            } else if video.isYtShort == true {
                 Text(verbatim: "#s")
                     .accessibilityElement(children: .ignore)
                     .accessibilityValue("#short")
@@ -78,6 +82,13 @@ public struct VideoListItemDurationOverlay: View {
         .accessibilityValue(String(localized: "At least \(accessibilityDuration(duration)) long"))
     }
     
+    /// "in 1d"
+    private func upcomingStart(_ start: Date) -> some View {
+        Text(start.formatted(.relative(presentation: .numeric, unitsStyle: .narrow)))
+            .accessibilityElement(children: .ignore)
+            .accessibilityValue(String(localized: "Starts \(start.formatted(date: .abbreviated, time: .shortened))"))
+    }
+
     func accessibilityDuration(_ duration: Double) -> String {
         Duration.seconds(duration).formatted(.units(allowed: [.hours, .minutes]))
     }

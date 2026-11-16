@@ -10,6 +10,7 @@ public protocol VideoData {
     var elapsedSeconds: Double? { get }
     var duration: Double? { get }
     var noDuration: Bool? { get }
+    var scheduledStartDate: Date? { get }
     var isYtShort: Bool? { get }
     var thumbnailUrl: URL? { get }
     var youtubeId: String { get }
@@ -35,6 +36,11 @@ public protocol VideoData {
 public extension VideoData {
     var isPodcast: Bool {
         mediaUrl != nil
+    }
+
+    var upcomingStartDate: Date? {
+        guard let scheduledStartDate, scheduledStartDate > .now else { return nil }
+        return scheduledStartDate
     }
 
     /// "Playlist (Channel)" for a playlist's video, otherwise the subscription's title

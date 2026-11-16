@@ -186,6 +186,9 @@ extension VideoService {
                         video.noDuration = info.noDuration
                     }
                 }
+                if video.scheduledStartDate != info.scheduledStartDate {
+                    video.scheduledStartDate = info.scheduledStartDate
+                }
             } else {
                 Log.warning("forceUpdateDurations: video not found/no persistentId")
             }

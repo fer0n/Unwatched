@@ -100,7 +100,7 @@ public struct YoutubeDataAPI {
 
                 group.addTask {
                     let idString = batchIds.joined(separator: ",")
-                    let apiUrl = "\(baseUrl)videos?key=\(premiumApiKey)&id=\(idString)&part=contentDetails"
+                    let apiUrl = "\(baseUrl)videos?key=\(premiumApiKey)&id=\(idString)&part=contentDetails,liveStreamingDetails"
                     Log.refresh.info("Fetching durations for batch \(index/idsPerRequest + 1)")
                     var batchResults: [VideoDurationInfo] = []
 
@@ -120,7 +120,8 @@ public struct YoutubeDataAPI {
                             batchResults.append(VideoDurationInfo(
                                 youtubeId: item.id,
                                 duration: durationSeconds,
-                                noDuration: duration == "P0D"
+                                noDuration: duration == "P0D",
+                                scheduledStartDate: item.liveStreamingDetails?.upcomingStart
                             ))
                         }
                         return batchResults
@@ -208,12 +209,14 @@ public struct VideoDurationInfo {
     public let youtubeId: String
     public let duration: Double?
     public let noDuration: Bool?
+    public let scheduledStartDate: Date?
     public var persistentId: PersistentIdentifier?
     public let updatedDate = Date()
 
-    public init(youtubeId: String, duration: Double?, noDuration: Bool?) {
+    public init(youtubeId: String, duration: Double?, noDuration: Bool?, scheduledStartDate: Date? = nil) {
         self.youtubeId = youtubeId
         self.duration = duration
         self.noDuration = noDuration
+        self.scheduledStartDate = scheduledStartDate
     }
 }

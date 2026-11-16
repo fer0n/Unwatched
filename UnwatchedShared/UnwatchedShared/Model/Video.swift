@@ -41,6 +41,7 @@ public final class Video: VideoData, CustomStringConvertible, Exportable {
     public var duration: Double?
     public var apiUpdatedDate: Date?
     public var noDuration: Bool?
+    public var scheduledStartDate: Date?
     public var elapsedSeconds: Double?
     public var videoDescription: String?
     public var watchedDate: Date?
@@ -252,6 +253,7 @@ public final class Video: VideoData, CustomStringConvertible, Exportable {
             feedTitle: channelTitle,
             duration: duration,
             noDuration: noDuration,
+            scheduledStartDate: scheduledStartDate,
             elapsedSeconds: elapsedSeconds,
             publishedDate: publishedDate,
             updatedDate: updatedDate,
@@ -300,6 +302,7 @@ public final class Video: VideoData, CustomStringConvertible, Exportable {
                 channelTitle: String? = nil,
                 duration: Double? = nil,
                 noDuration: Bool? = nil,
+                scheduledStartDate: Date? = nil,
                 elapsedSeconds: Double? = nil,
                 videoDescription: String? = nil,
                 watchedDate: Date? = nil,
@@ -322,6 +325,7 @@ public final class Video: VideoData, CustomStringConvertible, Exportable {
         self.updatedDate = updatedDate
         self.duration = duration
         self.noDuration = noDuration
+        self.scheduledStartDate = scheduledStartDate
         self.elapsedSeconds = elapsedSeconds
         self.videoDescription = videoDescription
         self.watchedDate = watchedDate
