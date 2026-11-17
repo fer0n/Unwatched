@@ -46,6 +46,8 @@ public final class PodcastFeedParser: NSObject, XMLParserDelegate {
         var enclosureUrl: String?
         var enclosureType: String?
         var chaptersUrl: String?
+        var episodeNumber = ""
+        var itunesTitle = ""
         var chapters: [SendableChapter] = []
         var transcripts: [PodcastTranscriptSource] = []
     }
@@ -172,6 +174,8 @@ public final class PodcastFeedParser: NSObject, XMLParserDelegate {
         case "link": item.link = value
         case "pubDate": item.pubDate = value
         case "itunes:duration": item.duration = value
+        case "itunes:episode": item.episodeNumber = value
+        case "itunes:title": item.itunesTitle = value
         case "itunes:summary": item.summary = value
         case "content:encoded": item.content = value
         case "description": item.description = value
@@ -254,10 +258,12 @@ public final class PodcastFeedParser: NSObject, XMLParserDelegate {
             videoDuration: duration
         )
 
+        let episodeNumber = Int(item.episodeNumber)
+
         episodes.append(
             SendableVideo(
                 youtubeId: id,
-                title: item.title,
+                title: Self.episodeTitle(item.title, itunesTitle: item.itunesTitle, episodeNumber: episodeNumber),
                 url: URL(string: item.link) ?? mediaUrl,
                 thumbnailUrl: PodcastService.secureUrl(string: item.imageUrl),
                 duration: duration,
@@ -268,12 +274,37 @@ public final class PodcastFeedParser: NSObject, XMLParserDelegate {
                 videoDescription: description,
                 mediaUrl: PodcastService.secureUrl(mediaUrl) ?? mediaUrl,
                 isAudioOnly: !(item.enclosureType?.hasPrefix("video") ?? false),
-                chaptersUrl: PodcastService.secureUrl(string: item.chaptersUrl)
+                chaptersUrl: PodcastService.secureUrl(string: item.chaptersUrl),
+                episodeNumber: episodeNumber
             )
         )
     }
 
     // MARK: - Value parsing
+
+    /// The title without the number when the row shows it anyway. Apple's spec keeps the number out of
+    /// `itunes:title`, while many feeds (ATP: "717: Two Hot Streaks") put it at the start of `title`.
+    static func episodeTitle(_ title: String, itunesTitle: String, episodeNumber: Int?) -> String {
+        guard let episodeNumber else { return title }
+        if !itunesTitle.isEmpty {
+            return itunesTitle
+        }
+        return stripLeadingNumber(episodeNumber, from: title) ?? title
+    }
+
+    /// "717: Title", "#717 - Title", "Ep. 717 | Title" → "Title". Only the episode's own number and a
+    /// separator, so episode 10 "10 Things" or "10-Minute Meditation" stays whole.
+    static func stripLeadingNumber(_ number: Int, from title: String) -> String? {
+        let pattern = #"^\s*(?:#|ep(?:isode)?\.?\s*|no\.?\s*)?0*"#
+            + String(number)
+            + #"\s*(?:[:|]|[.\-–—](?=\s))\s*"#
+        guard let regex = try? NSRegularExpression(pattern: pattern, options: .caseInsensitive) else { return nil }
+        let range = NSRange(title.startIndex..., in: title)
+        guard let match = regex.firstMatch(in: title, range: range),
+              let matched = Range(match.range, in: title) else { return nil }
+        let rest = title[matched.upperBound...].trimmingCharacters(in: .whitespaces)
+        return rest.isEmpty ? nil : rest
+    }
 
     /// `itunes:duration` and Podlove start times: plain seconds, `mm:ss` or `hh:mm:ss` (the latter optionally with
     /// fractional seconds).

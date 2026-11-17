@@ -10,6 +10,7 @@ struct VideoListItemDetails: View {
     @Environment(\.videoListShowsUploader) private var showsUploader
 
     let video: VideoData
+    var episodeNumber: Int?
 
     @ScaledMetric private var titleSize = 15
     @ScaledMetric private var subSize = 14
@@ -49,17 +50,28 @@ struct VideoListItemDetails: View {
                     #endif
                 }
 
-                if let published = video.publishedDate {
-                    Text(published.formattedRelative)
-                        .font(.system(size: timeSize))
-                        .accessibilityLabel(
-                            published.formatted(
-                                .relative(
-                                    presentation: .numeric,
-                                    unitsStyle: .spellOut
+                if episodeNumber != nil || video.publishedDate != nil {
+                    HStack(spacing: 0) {
+                        if let episodeNumber {
+                            Text(verbatim: "#\(episodeNumber)")
+                            if video.publishedDate != nil {
+                                Text(verbatim: " · ")
+                                    .accessibilityHidden(true)
+                            }
+                        }
+                        if let published = video.publishedDate {
+                            Text(published.formattedRelative)
+                                .accessibilityLabel(
+                                    published.formatted(
+                                        .relative(
+                                            presentation: .numeric,
+                                            unitsStyle: .spellOut
+                                        )
+                                    )
                                 )
-                            )
-                        )
+                        }
+                    }
+                    .font(.system(size: timeSize))
                 }
             }
             .foregroundStyle(.secondary)

@@ -42,7 +42,8 @@ struct PodcastEpisodeListView: View {
                     videoDuration: episode.duration,
                     watched: video?.watchedDate != nil,
                     deferred: video?.deferDate != nil,
-                    isNew: video?.isNew ?? false
+                    isNew: video?.isNew ?? false,
+                    episodeNumber: episode.episodeNumber
                 )
             )
             .equatable()

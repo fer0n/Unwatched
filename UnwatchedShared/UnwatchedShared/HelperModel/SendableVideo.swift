@@ -39,6 +39,8 @@ public struct SendableVideo: VideoData, Sendable, Codable, Hashable, Equatable {
     public var mediaUrl: URL?
     public var isAudioOnly: Bool?
     public var chaptersUrl: URL?
+    /// A podcast episode's `itunes:episode`.
+    public var episodeNumber: Int?
     public var createdDate: Date?
     public var isNew: Bool
 
@@ -94,6 +96,7 @@ public struct SendableVideo: VideoData, Sendable, Codable, Hashable, Equatable {
             mediaUrl: self.mediaUrl,
             isAudioOnly: self.isAudioOnly,
             chaptersUrl: self.chaptersUrl,
+            episodeNumber: self.episodeNumber,
             createdDate: self.createdDate,
             isNew: self.isNew,
             )
@@ -122,6 +125,7 @@ public struct SendableVideo: VideoData, Sendable, Codable, Hashable, Equatable {
         mediaUrl: URL? = nil,
         isAudioOnly: Bool? = nil,
         chaptersUrl: URL? = nil,
+        episodeNumber: Int? = nil,
         createdDate: Date? = .now,
         hasInboxEntry: Bool? = nil,
         queueEntry: SendableQueueEntry? = nil,
@@ -150,6 +154,7 @@ public struct SendableVideo: VideoData, Sendable, Codable, Hashable, Equatable {
         self.mediaUrl = mediaUrl
         self.isAudioOnly = isAudioOnly
         self.chaptersUrl = chaptersUrl
+        self.episodeNumber = episodeNumber
         self.createdDate = createdDate
         self.hasInboxEntry = hasInboxEntry
         self.queueEntry = queueEntry
@@ -184,6 +189,7 @@ public struct SendableVideo: VideoData, Sendable, Codable, Hashable, Equatable {
         }
         isAudioOnly = try container.decodeIfPresent(Bool.self, forKey: .isAudioOnly)
         chaptersUrl = try container.decodeIfPresent(URL.self, forKey: .chaptersUrl)
+        episodeNumber = try container.decodeIfPresent(Int.self, forKey: .episodeNumber)
         createdDate = try container.decodeIfPresent(Date.self, forKey: .createdDate)
         isNew = try container.decodeIfPresent(Bool.self, forKey: .isNew) ?? false
     }
@@ -211,6 +217,7 @@ public struct SendableVideo: VideoData, Sendable, Codable, Hashable, Equatable {
         try container.encodeIfPresent(mediaUrl, forKey: .mediaUrl)
         try container.encodeIfPresent(isAudioOnly, forKey: .isAudioOnly)
         try container.encodeIfPresent(chaptersUrl, forKey: .chaptersUrl)
+        try container.encodeIfPresent(episodeNumber, forKey: .episodeNumber)
         try container.encodeIfPresent(createdDate, forKey: .createdDate)
         try container.encode(isNew, forKey: .isNew)
     }
@@ -238,6 +245,7 @@ enum SendableVideoCodingKeys: String, CodingKey {
          mediaUrl,
          isAudioOnly,
          chaptersUrl,
+         episodeNumber,
          createdDate,
          isNew
 }

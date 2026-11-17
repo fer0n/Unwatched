@@ -13,6 +13,7 @@ public struct VideoListItemConfig: Equatable, Sendable {
         lhs.watched == rhs.watched &&
         lhs.deferred == rhs.deferred &&
         lhs.isNew == rhs.isNew &&
+        lhs.episodeNumber == rhs.episodeNumber &&
         lhs.showContextMenu == rhs.showContextMenu
     }
     
@@ -22,6 +23,8 @@ public struct VideoListItemConfig: Equatable, Sendable {
     public let watched: Bool?
     public let deferred: Bool?
     public let isNew: Bool?
+    /// A podcast episode's number from the cache, for a `Video` row a refresh hasn't brought it to yet.
+    public let episodeNumber: Int?
     public let showAllStatus: Bool
     public let clearRole: ButtonRole?
     public let queueRole: ButtonRole?
@@ -38,6 +41,7 @@ public struct VideoListItemConfig: Equatable, Sendable {
         watched: Bool? = nil,
         deferred: Bool? = nil,
         isNew: Bool = false,
+        episodeNumber: Int? = nil,
         showAllStatus: Bool = true,
         clearRole: ButtonRole? = nil,
         queueRole: ButtonRole? = nil,
@@ -53,6 +57,7 @@ public struct VideoListItemConfig: Equatable, Sendable {
         self.watched = watched
         self.deferred = deferred
         self.isNew = isNew
+        self.episodeNumber = episodeNumber
         self.showAllStatus = showAllStatus
         self.clearRole = clearRole
         self.queueRole = queueRole

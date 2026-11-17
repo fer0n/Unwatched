@@ -62,6 +62,12 @@ class PodcastFeedParserTests: XCTestCase {
         )
     }
 
+    func testParsesEpisodeNumbers() throws {
+        let episodes = try feed.episodes
+        XCTAssertEqual(episodes[0].episodeNumber, 142)
+        XCTAssertNil(episodes[1].episodeNumber)
+    }
+
     /// Descriptions come as HTML and are parsed for timestamps, so the tags have to go while the line breaks stay.
     func testStripsHtmlFromDescriptions() throws {
         let description = try XCTUnwrap(feed.episodes.first?.videoDescription)
@@ -386,6 +392,7 @@ class PodcastFeedParserTests: XCTestCase {
           <link>https://example.com/one</link>
           <pubDate>Sat, 21 Feb 2026 08:00:00 +0000</pubDate>
           <itunes:duration>01:01:01</itunes:duration>
+          <itunes:episode>142</itunes:episode>
           <itunes:image href="https://example.com/one.jpg"/>
           <enclosure url="https://example.com/one.mp3" type="audio/mpeg" length="1000"/>
           <content:encoded><![CDATA[<p>Intro &amp; welcome</p>
@@ -481,5 +488,44 @@ class PodcastTranscriptParserTests: XCTestCase {
     func testUnknownTranscriptFormatIsEmpty() {
         let entries = PodcastTranscriptParser.parse(Data("<html><body>hi</body></html>".utf8), format: nil)
         XCTAssertTrue(entries.isEmpty)
+    }
+}
+
+extension PodcastFeedParserTests {
+    /// The row shows the number, so the title shouldn't repeat it.
+    func testEpisodeTitlesLeaveOutTheNumber() throws {
+        func title(_ title: String, itunesTitle: String? = nil, number: Int?) throws -> String {
+            let xml = """
+            <?xml version="1.0" encoding="UTF-8"?>
+            <rss version="2.0" xmlns:itunes="http://www.itunes.com/dtds/podcast-1.0.dtd">
+              <channel>
+                <title>Show</title>
+                <item>
+                  <title>\(title)</title>
+                  \(itunesTitle.map { "<itunes:title>\($0)</itunes:title>" } ?? "")
+                  \(number.map { "<itunes:episode>\($0)</itunes:episode>" } ?? "")
+                  <guid>one</guid>
+                  <enclosure url="https://example.com/one.mp3" type="audio/mpeg" length="1"/>
+                </item>
+              </channel>
+            </rss>
+            """
+            let feed = try PodcastService.parseFeed(Data(xml.utf8), feedUrl: URL(string: "https://example.com/feed.xml")!)
+            return try XCTUnwrap(feed.episodes.first).title
+        }
+
+        XCTAssertEqual(try title("717: Two Hot Streaks", itunesTitle: "Two Hot Streaks", number: 717), "Two Hot Streaks")
+        XCTAssertEqual(try title("717: Two Hot Streaks", number: 717), "Two Hot Streaks")
+        XCTAssertEqual(try title("#42 - The Answer", number: 42), "The Answer")
+        XCTAssertEqual(try title("Episode 7 | Seven", number: 7), "Seven")
+        XCTAssertEqual(try title("Ep. 007: Bond", number: 7), "Bond")
+        // not the episode's own number, or no separator
+        XCTAssertEqual(try title("10 Things I Hate", number: 10), "10 Things I Hate")
+        XCTAssertEqual(try title("10-Minute Meditation", number: 10), "10-Minute Meditation")
+        XCTAssertEqual(try title("1.5 Hours of Q&amp;A", number: 1), "1.5 Hours of Q&A")
+        XCTAssertEqual(try title("717. Dots", number: 717), "Dots")
+        XCTAssertEqual(try title("2026: A Review", number: 12), "2026: A Review")
+        // without a number to show, the title stays whole, whatever itunes:title says
+        XCTAssertEqual(try title("717: Two Hot Streaks", itunesTitle: "Two Hot Streaks", number: nil), "717: Two Hot Streaks")
     }
 }

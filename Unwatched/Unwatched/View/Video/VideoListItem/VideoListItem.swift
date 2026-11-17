@@ -71,8 +71,11 @@ struct VideoListItem: View, Equatable {
                 .limitDynamicType()
             }
 
-            VideoListItemDetails(video: videoData)
-                .padding(.horizontal, videoListFormat == .expansive ? 5 : 0)
+            VideoListItemDetails(
+                video: videoData,
+                episodeNumber: config.episodeNumber ?? videoData.episodeNumber
+            )
+            .padding(.horizontal, videoListFormat == .expansive ? 5 : 0)
         }
         .accessibilityElement(children: .combine)
         .modifier(VideoListItemSwipeActionsModifier(

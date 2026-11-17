@@ -57,6 +57,8 @@ public final class Video: VideoData, CustomStringConvertible, Exportable {
     public var downloadedDate: Date?
     /// Podcasting 2.0 `podcast:chapters` JSON, fetched the first time the episode plays.
     public var chaptersUrl: URL?
+    /// A podcast episode's `itunes:episode`.
+    public var episodeNumber: Int?
     public var chapterGenerationDate: Date?
 
     public var createdDate: Date?
@@ -265,6 +267,7 @@ public final class Video: VideoData, CustomStringConvertible, Exportable {
             mediaUrl: mediaUrl,
             isAudioOnly: isAudioOnly,
             chaptersUrl: chaptersUrl,
+            episodeNumber: episodeNumber,
             createdDate: createdDate,
             hasInboxEntry: inboxEntry != nil,
             // built from self rather than `queueEntry.toExport`, which faults the entry's `video`
@@ -312,6 +315,7 @@ public final class Video: VideoData, CustomStringConvertible, Exportable {
                 mediaUrl: URL? = nil,
                 isAudioOnly: Bool? = nil,
                 chaptersUrl: URL? = nil,
+                episodeNumber: Int? = nil,
                 createdDate: Date? = .now,
                 isNew: Bool = false,
                 ) {
@@ -335,6 +339,7 @@ public final class Video: VideoData, CustomStringConvertible, Exportable {
         self.mediaUrl = mediaUrl
         self.isAudioOnly = isAudioOnly
         self.chaptersUrl = chaptersUrl
+        self.episodeNumber = episodeNumber
         self.createdDate = createdDate
         self.isNew = isNew
     }

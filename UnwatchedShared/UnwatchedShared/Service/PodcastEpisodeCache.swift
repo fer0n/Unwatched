@@ -128,6 +128,7 @@ public struct PodcastEpisodeCache {
             episodeUrl: episode.url,
             episodeDescription: episode.videoDescription,
             chaptersUrl: episode.chaptersUrl,
+            episodeNumber: episode.episodeNumber,
             isAudioOnly: episode.isAudioOnly
         )
     }
@@ -147,6 +148,7 @@ public struct PodcastEpisodeCache {
         update(\.episodeUrl, episode.url)
         update(\.episodeDescription, episode.videoDescription)
         update(\.chaptersUrl, episode.chaptersUrl)
+        update(\.episodeNumber, episode.episodeNumber)
         update(\.isAudioOnly, episode.isAudioOnly)
         if changed {
             entry.updatedDate = .now
@@ -169,6 +171,7 @@ public extension CachedEpisode {
             mediaUrl: mediaUrl,
             isAudioOnly: isAudioOnly,
             chaptersUrl: chaptersUrl,
+            episodeNumber: episodeNumber,
             subscription: show
         )
     }

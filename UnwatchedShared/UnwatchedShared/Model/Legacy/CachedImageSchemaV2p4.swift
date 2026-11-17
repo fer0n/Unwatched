@@ -26,4 +26,27 @@ public enum CachedImageSchemaV2p4: VersionedSchema {
             self.lastAccessedOn = .now
         }
     }
+
+    /// `CachedEpisode` before `episodeNumber`, shared by 2.3.0 and 2.4.0.
+    @Model public final class CachedEpisode {
+        @Attribute(.unique) public var episodeId: String
+        public var feedUrl: URL
+        public var title: String
+        public var publishedDate: Date?
+        public var duration: Double?
+        public var thumbnailUrl: URL?
+        public var mediaUrl: URL?
+        public var episodeUrl: URL?
+        public var episodeDescription: String?
+        public var chaptersUrl: URL?
+        public var isAudioOnly: Bool?
+        public var updatedDate: Date
+
+        public init(episodeId: String, feedUrl: URL, title: String, updatedDate: Date = .now) {
+            self.episodeId = episodeId
+            self.feedUrl = feedUrl
+            self.title = title
+            self.updatedDate = updatedDate
+        }
+    }
 }

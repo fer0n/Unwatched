@@ -189,6 +189,9 @@ extension VideoActor {
             if video.chaptersUrl != updatedVideo.chaptersUrl {
                 video.chaptersUrl = updatedVideo.chaptersUrl
             }
+            if video.episodeNumber != updatedVideo.episodeNumber {
+                video.episodeNumber = updatedVideo.episodeNumber
+            }
         }
 
         if video.videoDescription != updatedVideo.videoDescription {

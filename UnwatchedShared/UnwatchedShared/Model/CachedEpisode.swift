@@ -21,6 +21,8 @@ import SwiftData
     public var episodeUrl: URL?
     public var episodeDescription: String?
     public var chaptersUrl: URL?
+    /// `itunes:episode`
+    public var episodeNumber: Int?
     public var isAudioOnly: Bool?
     public var updatedDate: Date
 
@@ -35,6 +37,7 @@ import SwiftData
         episodeUrl: URL? = nil,
         episodeDescription: String? = nil,
         chaptersUrl: URL? = nil,
+        episodeNumber: Int? = nil,
         isAudioOnly: Bool? = nil,
         updatedDate: Date = .now
     ) {
@@ -48,6 +51,7 @@ import SwiftData
         self.episodeUrl = episodeUrl
         self.episodeDescription = episodeDescription
         self.chaptersUrl = chaptersUrl
+        self.episodeNumber = episodeNumber
         self.isAudioOnly = isAudioOnly
         self.updatedDate = updatedDate
     }

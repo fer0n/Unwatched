@@ -154,7 +154,7 @@ extension MigrationTests {
             "QueueEntry": ["order", "video", "youtubeId"],
             "Subscription": ["_liveStreamSetting", "_selfPromoSegmentSetting", "_shortsSetting", "_sponsorSegmentSetting", "_tint", "_videoPlacement", "allowOnMatch", "author", "autoSkipChapterTitles", "chapterGeneration", "customAspectRatio", "customSpeedSetting", "episodeLimit", "failedFetchCount", "filterText", "isArchived", "isPodcast", "lastFetchErrorMessage", "lastFetchFailedDate", "link", "mostRecentVideoDate", "skipIntroSeconds", "skipOutroSeconds", "subscribedDate", "tags", "thumbnailUrl", "title", "videos", "youtubeChannelId", "youtubePlaylistId", "youtubeUserName"],
             "Tag": ["_mode", "_playerType", "_podcasts", "continuousPlay", "createdDate", "excludedVideos", "name", "order", "playbackSpeed", "quickSwitch", "seekSeconds", "subscriptions", "suggestVideos", "symbol", "videos"],
-            "Video": ["apiUpdatedDate", "bookmarkedDate", "channelTitle", "chapterGenerationDate", "chapters", "chaptersUrl", "createdDate", "deferDate", "downloadedDate", "duration", "elapsedSeconds", "excludedFromTags", "inboxEntry", "isAudioOnly", "isNew", "isYtShort", "keepIntro", "keepOutro", "mediaUrl", "mergedChapters", "noDuration", "publishedDate", "queueEntry", "scheduledStartDate", "sponserBlockUpdateDate", "subscription", "tags", "thumbnailUrl", "title", "updatedDate", "url", "videoDescription", "watchedDate", "youtubeChannelId", "youtubeId"],
+            "Video": ["apiUpdatedDate", "bookmarkedDate", "channelTitle", "chapterGenerationDate", "chapters", "chaptersUrl", "createdDate", "deferDate", "downloadedDate", "duration", "elapsedSeconds", "episodeNumber", "excludedFromTags", "inboxEntry", "isAudioOnly", "isNew", "isYtShort", "keepIntro", "keepOutro", "mediaUrl", "mergedChapters", "noDuration", "publishedDate", "queueEntry", "scheduledStartDate", "sponserBlockUpdateDate", "subscription", "tags", "thumbnailUrl", "title", "updatedDate", "url", "videoDescription", "watchedDate", "youtubeChannelId", "youtubeId"],
             "WatchTimeEntry": ["channelId", "channelName", "date", "watchTime"]
         ]
     ]
@@ -211,9 +211,9 @@ extension MigrationTests {
             "Transcript": ["data", "youtubeId"],
             "CachedChapters": ["data", "sourceHash", "updatedDate", "youtubeId"],
             "CachedEpisode": [
-                "chaptersUrl", "duration", "episodeDescription", "episodeId", "episodeUrl",
-                "feedUrl", "isAudioOnly", "mediaUrl", "publishedDate", "thumbnailUrl", "title",
-                "updatedDate"
+                "chaptersUrl", "duration", "episodeDescription", "episodeId", "episodeNumber",
+                "episodeUrl", "feedUrl", "isAudioOnly", "mediaUrl", "publishedDate", "thumbnailUrl",
+                "title", "updatedDate"
             ],
             "CachedVideoFeed": ["data", "sourceKey", "updatedDate"]
         ]
