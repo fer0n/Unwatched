@@ -338,8 +338,6 @@
 		884777372D21509F0044E812 /* AnyCodable.swift in Sources */ = {isa = PBXBuildFile; fileRef = 884777352D21509F0044E812 /* AnyCodable.swift */; };
 		8847D6C72C99865400BFA12F /* ChapterCategory.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8847D6C62C99865400BFA12F /* ChapterCategory.swift */; };
 		8847D6C82C99865400BFA12F /* ChapterCategory.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8847D6C62C99865400BFA12F /* ChapterCategory.swift */; };
-		8849F38F2DF068550040DD9A /* ImageAccentBackground.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8849F38E2DF068550040DD9A /* ImageAccentBackground.swift */; };
-		8849F3902DF068550040DD9A /* ImageAccentBackground.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8849F38E2DF068550040DD9A /* ImageAccentBackground.swift */; };
 		884C430C2ED8B7FE00FA8DC4 /* DescriptionDetailView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 884C430B2ED8B7FE00FA8DC4 /* DescriptionDetailView.swift */; };
 		884C430D2ED8B7FE00FA8DC4 /* DescriptionDetailView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 884C430B2ED8B7FE00FA8DC4 /* DescriptionDetailView.swift */; };
 		884CC88C2DC3890F00FC59DF /* QueueTabItemView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 884CC88B2DC3890F00FC59DF /* QueueTabItemView.swift */; };
@@ -1142,7 +1140,8 @@
 		FE100002AA0000000010F103 /* SearchVM.swift in Sources */ = {isa = PBXBuildFile; fileRef = FE100002AA0000000010F003 /* SearchVM.swift */; };
 		FE100002AA0000000010F104 /* SearchView.swift in Sources */ = {isa = PBXBuildFile; fileRef = FE100002AA0000000010F004 /* SearchView.swift */; };
 		FE100002AA0000000010F105 /* ChannelPreviewView.swift in Sources */ = {isa = PBXBuildFile; fileRef = FE100002AA0000000010F005 /* ChannelPreviewView.swift */; };
-		FE100002AA0000000010F106 /* ChannelHeaderView.swift in Sources */ = {isa = PBXBuildFile; fileRef = FE100002AA0000000010F006 /* ChannelHeaderView.swift */; };
+		FE100002AA0000000010F106 /* SubscriptionSearch.swift in Sources */ = {isa = PBXBuildFile; fileRef = FE100002AA0000000010F006 /* SubscriptionSearch.swift */; };
+		FE100002AA00000000101900 /* SubscriptionHero.swift in Sources */ = {isa = PBXBuildFile; fileRef = FE100002AA00000000100900 /* SubscriptionHero.swift */; };
 		AB5D17E0000000000000E101 /* SubscriptionHeader.swift in Sources */ = {isa = PBXBuildFile; fileRef = AB5D17E0000000000000E001 /* SubscriptionHeader.swift */; };
 		AB5D17E0000000000000E102 /* SubscriptionMoreMenu.swift in Sources */ = {isa = PBXBuildFile; fileRef = AB5D17E0000000000000E002 /* SubscriptionMoreMenu.swift */; };
 		AB5D17E0000000000000E104 /* OpenOnYouTubeLongPress.swift in Sources */ = {isa = PBXBuildFile; fileRef = AB5D17E0000000000000E004 /* OpenOnYouTubeLongPress.swift */; };
@@ -1150,7 +1149,8 @@
 		FE100002AA0000000010F203 /* SearchVM.swift in Sources */ = {isa = PBXBuildFile; fileRef = FE100002AA0000000010F003 /* SearchVM.swift */; };
 		FE100002AA0000000010F204 /* SearchView.swift in Sources */ = {isa = PBXBuildFile; fileRef = FE100002AA0000000010F004 /* SearchView.swift */; };
 		FE100002AA0000000010F205 /* ChannelPreviewView.swift in Sources */ = {isa = PBXBuildFile; fileRef = FE100002AA0000000010F005 /* ChannelPreviewView.swift */; };
-		FE100002AA0000000010F206 /* ChannelHeaderView.swift in Sources */ = {isa = PBXBuildFile; fileRef = FE100002AA0000000010F006 /* ChannelHeaderView.swift */; };
+		FE100002AA0000000010F206 /* SubscriptionSearch.swift in Sources */ = {isa = PBXBuildFile; fileRef = FE100002AA0000000010F006 /* SubscriptionSearch.swift */; };
+		FE100002AA00000000102900 /* SubscriptionHero.swift in Sources */ = {isa = PBXBuildFile; fileRef = FE100002AA00000000100900 /* SubscriptionHero.swift */; };
 		AB5D17E0000000000000E201 /* SubscriptionHeader.swift in Sources */ = {isa = PBXBuildFile; fileRef = AB5D17E0000000000000E001 /* SubscriptionHeader.swift */; };
 		AB5D17E0000000000000E202 /* SubscriptionMoreMenu.swift in Sources */ = {isa = PBXBuildFile; fileRef = AB5D17E0000000000000E002 /* SubscriptionMoreMenu.swift */; };
 		AB5D17E0000000000000E204 /* OpenOnYouTubeLongPress.swift in Sources */ = {isa = PBXBuildFile; fileRef = AB5D17E0000000000000E004 /* OpenOnYouTubeLongPress.swift */; };
@@ -1515,7 +1515,6 @@
 		884777322D2150850044E812 /* URL.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = URL.swift; sourceTree = "<group>"; };
 		884777352D21509F0044E812 /* AnyCodable.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AnyCodable.swift; sourceTree = "<group>"; };
 		8847D6C62C99865400BFA12F /* ChapterCategory.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ChapterCategory.swift; sourceTree = "<group>"; };
-		8849F38E2DF068550040DD9A /* ImageAccentBackground.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ImageAccentBackground.swift; sourceTree = "<group>"; };
 		884C430B2ED8B7FE00FA8DC4 /* DescriptionDetailView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DescriptionDetailView.swift; sourceTree = "<group>"; };
 		884CC88B2DC3890F00FC59DF /* QueueTabItemView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = QueueTabItemView.swift; sourceTree = "<group>"; };
 		884D8D592ED867A100CBB62B /* VideoDetailThumbnail.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = VideoDetailThumbnail.swift; sourceTree = "<group>"; };
@@ -1923,7 +1922,8 @@
 		FE100002AA0000000010F003 /* SearchVM.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SearchVM.swift; sourceTree = "<group>"; };
 		FE100002AA0000000010F004 /* SearchView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SearchView.swift; sourceTree = "<group>"; };
 		FE100002AA0000000010F005 /* ChannelPreviewView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ChannelPreviewView.swift; sourceTree = "<group>"; };
-		FE100002AA0000000010F006 /* ChannelHeaderView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ChannelHeaderView.swift; sourceTree = "<group>"; };
+		FE100002AA0000000010F006 /* SubscriptionSearch.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SubscriptionSearch.swift; sourceTree = "<group>"; };
+		FE100002AA00000000100900 /* SubscriptionHero.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SubscriptionHero.swift; sourceTree = "<group>"; };
 		AB5D17E0000000000000E001 /* SubscriptionHeader.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SubscriptionHeader.swift; sourceTree = "<group>"; };
 		AB5D17E0000000000000E002 /* SubscriptionMoreMenu.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SubscriptionMoreMenu.swift; sourceTree = "<group>"; };
 		AB5D17E0000000000000E004 /* OpenOnYouTubeLongPress.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = OpenOnYouTubeLongPress.swift; sourceTree = "<group>"; };
@@ -2401,13 +2401,13 @@
 		883CA80F2B5AFE1300028D52 /* Subscription */ = {
 			isa = PBXGroup;
 			children = (
-				FE100002AA0000000010F006 /* ChannelHeaderView.swift */,
+				FE100002AA0000000010F006 /* SubscriptionSearch.swift */,
+				FE100002AA00000000100900 /* SubscriptionHero.swift */,
 				AB5D17E0000000000000E001 /* SubscriptionHeader.swift */,
 				AB5D17E0000000000000E002 /* SubscriptionMoreMenu.swift */,
 				AB5D17E0000000000000E004 /* OpenOnYouTubeLongPress.swift */,
 				8898B67E2B483D6F00348D01 /* SubscriptionListItem.swift */,
 				887AC8D12B499E7B00512852 /* SubscriptionDetailView.swift */,
-				8849F38E2DF068550040DD9A /* ImageAccentBackground.swift */,
 				88C4F6962F24CAD4005893C5 /* SubscriptionVideoPlacementSetting.swift */,
 				88AA10312F0000000000A031 /* SubscriptionTagsSetting.swift */,
 				88C4F6992F24CD6E005893C5 /* SubscriptionShortsSetting.swift */,
@@ -3525,7 +3525,8 @@
 				FE7A00000000000000000014 /* ZoomPanGestureView.swift in Sources */,
 				AAAE745A96FB143D33C48E35 /* PinchPanGestureRecognizer.swift in Sources */,
 				4823416A34B9B0861290898C /* PagerPanLock.swift in Sources */,
-				FE100002AA0000000010F206 /* ChannelHeaderView.swift in Sources */,
+				FE100002AA0000000010F206 /* SubscriptionSearch.swift in Sources */,
+				FE100002AA00000000102900 /* SubscriptionHero.swift in Sources */,
 				AB5D17E0000000000000E201 /* SubscriptionHeader.swift in Sources */,
 				AB5D17E0000000000000E202 /* SubscriptionMoreMenu.swift in Sources */,
 				AB5D17E0000000000000E204 /* OpenOnYouTubeLongPress.swift in Sources */,
@@ -3875,7 +3876,6 @@
 				889AF8DE2C50ECA9001CEDE6 /* HandleVideoUrlDropModifier.swift in Sources */,
 				88339AB42E5BA94800B295B7 /* PremiumOfferSheetModifer.swift in Sources */,
 				8846DF332F76A599008AC6FE /* UTType.swift in Sources */,
-				8849F3902DF068550040DD9A /* ImageAccentBackground.swift in Sources */,
 				88F4E75A2CA47EFE00DCF70E /* UrlServiceTests.swift in Sources */,
 				88AA00112F9A000100000005 /* YoutubeCookieFilterTests.swift in Sources */,
 				886E21732EC1488A00BF03B5 /* UpdateWindowSizeModifier.swift in Sources */,
@@ -4109,7 +4109,8 @@
 				5A4E5E0000000000000001B4 /* UnwatchedShareExtension/ShareSheetStyles.swift in Sources */,
 				5A4E5E0000000000000001B5 /* UnwatchedShareExtension/ShareCardView+VideoPreview.swift in Sources */,
 				5A4E5E0000000000000001B6 /* UnwatchedShareExtension/ShareCardView+ChannelPreview.swift in Sources */,
-				FE100002AA0000000010F106 /* ChannelHeaderView.swift in Sources */,
+				FE100002AA0000000010F106 /* SubscriptionSearch.swift in Sources */,
+				FE100002AA00000000101900 /* SubscriptionHero.swift in Sources */,
 				AB5D17E0000000000000E101 /* SubscriptionHeader.swift in Sources */,
 				AB5D17E0000000000000E102 /* SubscriptionMoreMenu.swift in Sources */,
 				AB5D17E0000000000000E104 /* OpenOnYouTubeLongPress.swift in Sources */,
@@ -4584,7 +4585,6 @@
 				88C4F6A52F24C82E005893D1 /* PodcastDownloadSettingsView.swift in Sources */,
 				88339AAB2E5BA6EA00B295B7 /* PremiumOfferView.swift in Sources */,
 				88C5EF8B2CCABA9300DA802F /* TransactionVM.swift in Sources */,
-				8849F38F2DF068550040DD9A /* ImageAccentBackground.swift in Sources */,
 				8804A3F22B8B898000D3F4F1 /* VideoListItemStatus.swift in Sources */,
 				889F760E2E461B9B00EB55E4 /* AutoRemoveNewViewModifier.swift in Sources */,
 				8899246B2C47FAE3001185A6 /* InboxTabItemView.swift in Sources */,

@@ -16,8 +16,11 @@ struct PodcastEpisodeListView: View {
 
     private let feedUrl: URL?
     private let show: SendableSubscription?
+    /// Empty: the whole list
+    private let searchText: String
 
-    init(subscription: Subscription) {
+    init(subscription: Subscription, searchText: String = "") {
+        self.searchText = searchText
         let subscriptionId = subscription.persistentModelID
         _touchedVideos = Query(
             filter: #Predicate<Video> { $0.subscription?.persistentModelID == subscriptionId },
@@ -29,8 +32,10 @@ struct PodcastEpisodeListView: View {
 
     var body: some View {
         let touched = touchedById
+        let isSearch = !searchText.trimmingCharacters(in: .whitespaces).isEmpty
+        let episodes = isSearch ? (vm.searchResults ?? []) : vm.episodes
 
-        ForEach(vm.episodes, id: \.youtubeId) { episode in
+        ForEach(episodes, id: \.youtubeId) { episode in
             let video = touched[episode.youtubeId]
 
             VideoListItem(
@@ -49,16 +54,34 @@ struct PodcastEpisodeListView: View {
             .equatable()
             .videoListItemEntry()
             .onAppear {
-                vm.loadMoreIfNeeded(currentItem: episode)
+                if !isSearch {
+                    vm.loadMoreIfNeeded(currentItem: episode)
+                }
             }
         }
         .myListRowBackground()
 
+        if isSearch && !vm.isSearching && vm.searchResults?.isEmpty == true {
+            ContentUnavailableView.search(text: searchText)
+                .listRowSeparator(.hidden)
+                .myListRowBackground()
+        }
+
         // a modifier on `ForEach` applies per row, so the load has to hang off a row that exists
         // before there are any episodes
-        loadingRow
+        loadingRow(isSearch: isSearch)
             .task {
                 await vm.setUp(feedUrl: feedUrl, show: show)
+            }
+            .task(id: searchText) {
+                guard isSearch else {
+                    await vm.search("")
+                    return
+                }
+                // wait for a pause in typing
+                try? await Task.sleep(for: .milliseconds(250))
+                guard !Task.isCancelled else { return }
+                await vm.search(searchText)
             }
             // episodes live in `PodcastEpisodeCache`, not in the `Video` rows `@Query` watches,
             // so a refresh that fetched new ones needs to be picked up by hand
@@ -71,9 +94,9 @@ struct PodcastEpisodeListView: View {
     }
 
     @ViewBuilder
-    private var loadingRow: some View {
+    private func loadingRow(isSearch: Bool) -> some View {
         Group {
-            if vm.isLoading || !vm.hasLoadedFirstPage {
+            if isSearch ? vm.isSearching : (vm.isLoading || !vm.hasLoadedFirstPage) {
                 ProgressView()
                     .frame(maxWidth: .infinity)
             } else {

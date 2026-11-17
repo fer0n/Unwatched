@@ -17,37 +17,53 @@ struct SubscriptionDetailView: View {
     @State var loadNewVideosTask: Task<(), Never>?
     @State var showTitle: Bool = false
     @State var showFilter = false
+    @State private var isSearching = false
+    @State private var searchText = ""
     @State private var storedVideoLimit = Const.channelVideoFetchLimit
 
     @Bindable var subscription: Subscription
 
     var body: some View {
         List {
-            SubscriptionHeader(
-                subscription: subscription,
-                requiresUnsubscribe: $requiresUnsubscribe,
-                showFilter: $showFilter,
-                showTitle: $showTitle,
-                imageUrl: imageUrl
-            )
+            if isSearching {
+                SubscriptionSearchField(text: $searchText)
+            } else {
+                SubscriptionHeader(
+                    subscription: subscription,
+                    requiresUnsubscribe: $requiresUnsubscribe,
+                    showFilter: $showFilter,
+                    showTitle: $showTitle,
+                    imageUrl: imageUrl
+                )
+            }
             videoSection
         }
         .listStyle(.plain)
         .scrollContentBackground(.hidden)
         #if !os(visionOS)
-        .scrollEdgeEffectHidden(!showTitle, for: .top)
+        .scrollEdgeEffectHidden(!showTitle && !isSearching, for: .top)
         #endif
         .background {
             MyBackgroundColor()
         }
         .concentricMacWorkaround()
-        .myNavigationTitle(LocalizedStringKey(subscription.title), titleHidden: !showTitle)
+        .myNavigationTitle(LocalizedStringKey(subscription.title), titleHidden: !showTitle && !isSearching)
         .paneToolbar(placement: .primaryAction) {
-            if !subscription.isArchived {
-                RefreshButton(
-                    refreshOnlySubscription: subscription.persistentModelID,
-                    forceNeutral: true
-                )
+            HStack {
+                SubscriptionSearchButton(isSearching: $isSearching)
+                if !subscription.isArchived && !isSearching {
+                    RefreshButton(
+                        refreshOnlySubscription: subscription.persistentModelID,
+                        forceNeutral: true
+                    )
+                }
+            }
+        }
+        .onChange(of: isSearching) {
+            if isSearching {
+                showFilter = false
+            } else {
+                searchText = ""
             }
         }
         .channelPageColor(imageUrl: subscription.isWatchLater ? nil : imageUrl, choice: subscription.tint)
@@ -91,7 +107,13 @@ struct SubscriptionDetailView: View {
             SubscriptionTitleFitlerPreview(subscription: subscription)
                 .listRowSeparator(.hidden)
         } else if subscription.isPodcast {
-            PodcastEpisodeListView(subscription: subscription)
+            PodcastEpisodeListView(subscription: subscription, searchText: isSearching ? searchText : "")
+        } else if isSearching {
+            // stored videos only: what the channel has beyond them isn't searchable
+            VideoListView(
+                subscriptionId: subscription.persistentModelID,
+                searchText: searchText.trimmingCharacters(in: .whitespaces)
+            )
         } else if let source = SubscriptionVideoListVM.Source(subscription) {
             SubscriptionVideoList(
                 subscriptionId: subscription.persistentModelID,

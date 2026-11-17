@@ -83,6 +83,25 @@ public struct PodcastEpisodeCache {
         return entries.map { $0.toSendableVideo(show: show) }
     }
 
+    /// A show's episodes whose title contains `text`, or whose number it is, newest first.
+    public static func episodes(feedUrl: URL, show: SendableSubscription?, matching text: String) -> [SendableVideo] {
+        let number = searchedEpisodeNumber(text)
+        let fetch = FetchDescriptor<CachedEpisode>(
+            predicate: #Predicate {
+                $0.feedUrl == feedUrl
+                    && ($0.title.localizedStandardContains(text) || (number != nil && $0.episodeNumber == number))
+            },
+            sortBy: [SortDescriptor(\.publishedDate, order: .reverse)]
+        )
+        let entries = (try? newContext.fetch(fetch)) ?? []
+        return entries.map { $0.toSendableVideo(show: show) }
+    }
+
+    /// "142", "#142" or "# 142": titles leave the number out, see `PodcastFeedParser.episodeTitle`
+    public static func searchedEpisodeNumber(_ text: String) -> Int? {
+        Int(text.trimmingCharacters(in: CharacterSet(charactersIn: "#").union(.whitespaces)))
+    }
+
     public static func count(feedUrl: URL) -> Int {
         return (try? newContext.fetchCount(feedFetch(feedUrl))) ?? 0
     }

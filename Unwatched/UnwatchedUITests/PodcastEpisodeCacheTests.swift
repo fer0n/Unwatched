@@ -143,6 +143,19 @@ class PodcastEpisodeCacheTests: XCTestCase {
         XCTAssertTrue(PodcastEpisodeCache.search("nothing here", limit: 10).isEmpty)
     }
 
+    func testShowSearchMatchesTitleOrNumber() {
+        var numbered = episode(1, title: "Two Hot Streaks")
+        numbered.episodeNumber = 717
+        PodcastEpisodeCache.store([numbered, episode(2, title: "Take the Null")], feedUrl: feedUrl)
+
+        let byTitle = PodcastEpisodeCache.episodes(feedUrl: feedUrl, show: nil, matching: "null")
+        XCTAssertEqual(byTitle.map(\.title), ["Take the Null"])
+        let byNumber = PodcastEpisodeCache.episodes(feedUrl: feedUrl, show: nil, matching: "#717")
+        XCTAssertEqual(byNumber.map(\.title), ["Two Hot Streaks"])
+        XCTAssertEqual(byNumber.first?.episodeNumber, 717)
+        XCTAssertTrue(PodcastEpisodeCache.episodes(feedUrl: feedUrl, show: nil, matching: "718").isEmpty)
+    }
+
     func testSearchRespectsLimit() {
         PodcastEpisodeCache.store((1...5).map { episode($0, title: "Match \($0)") }, feedUrl: feedUrl)
         XCTAssertEqual(PodcastEpisodeCache.search("match", limit: 3).count, 3)

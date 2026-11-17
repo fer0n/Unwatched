@@ -15,66 +15,41 @@ struct SubscriptionHeader: View {
     var imageUrl: URL?
 
     var body: some View {
-        VStack(spacing: 12) {
-            SubscriptionArtwork(subscription: subscription, size: 132)
-                .shadow(color: .black.opacity(0.25), radius: 18, y: 8)
-                #if os(macOS)
-                .padding(.top, 12)
-            #endif
-
+        SubscriptionHero(
+            artwork: SubscriptionArtwork(subscription: subscription),
+            backgroundUrl: imageUrl,
+            useThemeColor: subscription.isWatchLater,
+            showTitle: $showTitle
+        ) {
             VStack(spacing: 4) {
                 #if !os(visionOS)
-                Text(subscription.title)
-                    .font(.system(size: 30, weight: .bold))
-                    .multilineTextAlignment(.center)
+                SubscriptionHeroTitle(subscription.title)
                     .modifier(OpenOnYouTubeLongPress(subscription: subscription))
                 #endif
-                Text(meta)
-                    .font(.subheadline)
-                    .foregroundStyle(.secondary)
+                SubscriptionHeroMeta(meta)
                     .onTapGesture(perform: openRegularChannel)
             }
-            .padding(.horizontal, 20)
 
             if subscription.hasFeedIssue {
                 feedIssueNotice
-                    .padding(.horizontal, 20)
             }
-
-            ScrollView(.horizontal, showsIndicators: false) {
-                HStack(spacing: 8) {
-                    subscribeButton
-                    SubscriptionTagsSetting(subscription: subscription)
-                    Group {
-                        SubscriptionVideoPlacementSetting(subscription: subscription)
-                            .environment(\.settingIsActive, subscription.videoPlacement != .defaultPlacement)
-                        SubscriptionSpeedSetting(subscription: subscription)
-                            .buttonStyle(CapsuleButtonStyle(primary: false))
-                            .environment(\.settingIsActive, subscription.customSpeedSetting != nil)
-                        if !subscription.isPodcast {
-                            SubscriptionShortsSetting(subscription: subscription)
-                                .environment(\.settingIsActive, subscription.shortsSetting != .defaultSetting)
-                        }
-                    }
-                    .environment(\.compactSettingValues, true)
-                    SubscriptionMoreMenu(subscription: subscription, showFilter: $showFilter)
+        } chips: {
+            subscribeButton
+            SubscriptionTagsSetting(subscription: subscription)
+            Group {
+                SubscriptionVideoPlacementSetting(subscription: subscription)
+                    .environment(\.settingIsActive, subscription.videoPlacement != .defaultPlacement)
+                SubscriptionSpeedSetting(subscription: subscription)
+                    .buttonStyle(CapsuleButtonStyle(primary: false))
+                    .environment(\.settingIsActive, subscription.customSpeedSetting != nil)
+                if !subscription.isPodcast {
+                    SubscriptionShortsSetting(subscription: subscription)
+                        .environment(\.settingIsActive, subscription.shortsSetting != .defaultSetting)
                 }
-                .padding(.horizontal, 20)
             }
-            .environment(\.settingControlStyle, .chip)
-            .padding(.top, 4)
+            .environment(\.compactSettingValues, true)
+            SubscriptionMoreMenu(subscription: subscription, showFilter: $showFilter)
         }
-        .padding(.bottom, 16)
-        .frame(maxWidth: .infinity)
-        .modifier(ArtworkBackground(url: imageUrl, useThemeColor: subscription.isWatchLater))
-        .onAppear {
-            withAnimation(.default.speed(1.5)) { showTitle = false }
-        }
-        .onDisappear {
-            withAnimation(.default.speed(1.5)) { showTitle = true }
-        }
-        .listRowSeparator(.hidden)
-        .myListRowBackground()
     }
 
     var subscribeButton: some View {
@@ -102,15 +77,11 @@ struct SubscriptionHeader: View {
     }
 
     var meta: String {
-        let handle = subscription.youtubeUserName.map { "@\($0)" } ?? subscription.author
-        let kind = if subscription.isPodcast {
-            String(localized: "mediaTypePodcast")
-        } else if subscription.youtubePlaylistId != nil {
-            String(localized: "playlist")
-        } else {
-            String(localized: "channel")
-        }
-        return [handle, kind].compactMap { $0 }.joined(separator: " · ")
+        SubscriptionHeroMeta.text(
+            handle: subscription.youtubeUserName.map { "@\($0)" } ?? subscription.author,
+            isPodcast: subscription.isPodcast,
+            isPlaylist: subscription.youtubePlaylistId != nil
+        )
     }
 
     func openRegularChannel() {
@@ -137,87 +108,5 @@ struct SubscriptionHeader: View {
         .frame(maxWidth: .infinity, alignment: .leading)
         .padding(10)
         .background(Color.insetBackgroundColor, in: .rect(cornerRadius: 10))
-    }
-}
-
-struct SubscriptionArtwork: View {
-    let subscription: Subscription
-    let size: CGFloat
-
-    var body: some View {
-        Group {
-            if subscription.isWatchLater {
-                WatchLaterAvatar(size: size)
-            } else if let url = subscription.thumbnailUrl {
-                CachedImageView(imageUrl: url) { image in
-                    image
-                        .resizable()
-                        .aspectRatio(contentMode: .fill)
-                } placeholder: {
-                    Color.insetBackgroundColor
-                }
-            } else {
-                Color.insetBackgroundColor
-            }
-        }
-        .frame(width: size, height: size)
-        .channelImageClip(isPodcast: subscription.isPodcast, cornerFactor: ChannelImageShape.heroCornerFactor)
-    }
-}
-
-private struct ArtworkBackground: ViewModifier {
-    @AppStorage(Const.themeColor) var theme = ThemeColor()
-
-    var url: URL?
-    var useThemeColor: Bool
-
-    #if os(iOS)
-    let bleed: CGFloat = 200
-    #else
-    let bleed: CGFloat = 0
-    #endif
-
-    #if os(macOS)
-    let fadeStart: CGFloat = 0.1
-    #else
-    let fadeStart: CGFloat = 0.45
-    #endif
-
-    func body(content: Content) -> some View {
-        content
-            .padding(.top, bleed)
-            .background {
-                // aspect fill would oversize the clip
-                Color.clear
-                    .overlay { artwork }
-                    .clipped()
-                    .mask(LinearGradient(
-                        stops: [.init(color: .black, location: fadeStart), .init(color: .clear, location: 1)],
-                        startPoint: .top,
-                        endPoint: .bottom
-                    ))
-                    #if os(macOS)
-                    .clipShape(UnevenRoundedRectangle(topLeadingRadius: 25, topTrailingRadius: 25))
-                #endif
-            }
-            .listRowInsets(EdgeInsets(top: -bleed, leading: 0, bottom: 0, trailing: 0))
-    }
-
-    @ViewBuilder var artwork: some View {
-        if useThemeColor {
-            theme.color.opacity(0.35)
-        } else {
-            CachedImageView(imageUrl: url) { image in
-                image
-                    .resizable()
-                    .aspectRatio(contentMode: .fill)
-            } placeholder: {
-                Color.clear
-            }
-            .frame(maxWidth: .infinity, maxHeight: .infinity)
-            .scaleEffect(1.4)
-            .blur(radius: 40)
-            .opacity(0.75)
-        }
     }
 }

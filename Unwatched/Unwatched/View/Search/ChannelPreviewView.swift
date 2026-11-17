@@ -11,8 +11,7 @@ import UnwatchedShared
 /// videos from its RSS feed without persisting the channel — nothing is written to
 /// the store unless the user taps Subscribe (or plays/queues one of the videos).
 ///
-/// Reuses `ChannelHeaderView`, `imageAccentBackground`, `CapsuleButtonStyle` and the
-/// scroll-hiding `myNavigationTitle` so it matches the regular subscription detail view.
+/// Reuses `SubscriptionHero` and `channelPageColor` so it matches the regular subscription detail view.
 struct ChannelPreviewView: View {
     @Environment(NavigationManager.self) var navManager
     @Environment(RefreshManager.self) var refresher
@@ -27,6 +26,8 @@ struct ChannelPreviewView: View {
     @State private var isLoading = true
     @State private var loadFailed = false
     @State private var showTitle = false
+    @State private var isSearching = false
+    @State private var searchText = ""
     @State private var subManager = SubscribeManager()
 
     private let api = InnerTubeAPI()
@@ -42,47 +43,37 @@ struct ChannelPreviewView: View {
 
     var body: some View {
         List {
-            VStack {
-                ChannelHeaderView(
-                    title: sub.displayTitle,
-                    imageUrl: sub.thumbnailUrl ?? channelImageUrl,
-                    isPodcast: sub.isPodcast,
-                    isWatchLater: sub.isWatchLater,
-                    userName: sub.youtubeUserName,
-                    author: sub.author,
-                    videoCount: videos.isEmpty ? nil : videos.count,
-                    reserveImage: true
-                )
-                subscribeRow
+            if isSearching {
+                SubscriptionSearchField(text: $searchText)
+            } else {
+                header
+                playlistsShelf
             }
-            .padding(.bottom, 20)
-            .onAppear {
-                withAnimation(.default.speed(1.5)) { showTitle = false }
-            }
-            .onDisappear {
-                withAnimation(.default.speed(1.5)) { showTitle = true }
-            }
-            #if !os(visionOS)
-            .imageAccentBackground(url: backgroundImageUrl)
-            #endif
-            .myListRowBackground()
-
-            playlistsShelf
-
             videoList
         }
         .scrollContentBackground(.hidden)
         .listStyle(.plain)
+        #if !os(visionOS)
+        .scrollEdgeEffectHidden(!showTitle && !isSearching, for: .top)
+        #endif
         .background {
             MyBackgroundColor()
         }
-        .myNavigationTitle(LocalizedStringKey(sub.displayTitle), titleHidden: !showTitle)
-        .paneToolbar(placement: .confirmationAction) {
-            RefreshButton(forceNeutral: true)
+        .myNavigationTitle(LocalizedStringKey(sub.displayTitle), titleHidden: !showTitle && !isSearching)
+        .paneToolbar(placement: .primaryAction) {
+            HStack {
+                SubscriptionSearchButton(isSearching: $isSearching)
+                if !isSearching {
+                    RefreshButton(forceNeutral: true)
+                }
+            }
         }
-        .tint(.neutralAccentColor)
+        .channelPageColor(imageUrl: sub.isWatchLater ? nil : backgroundImageUrl)
         .task {
             await load()
+        }
+        .onChange(of: isSearching) {
+            if !isSearching { searchText = "" }
         }
         .onDisappear {
             // If the user subscribed while here, refresh on the way out so the new
@@ -91,6 +82,31 @@ struct ChannelPreviewView: View {
                 subManager.hasNewSubscriptions = false
                 Task { await refresher.refreshAll() }
             }
+        }
+    }
+
+    var header: some View {
+        SubscriptionHero(
+            artwork: SubscriptionArtwork(
+                thumbnailUrl: sub.thumbnailUrl ?? channelImageUrl,
+                isWatchLater: sub.isWatchLater
+            ),
+            backgroundUrl: backgroundImageUrl,
+            useThemeColor: sub.isWatchLater,
+            showTitle: $showTitle
+        ) {
+            VStack(spacing: 4) {
+                #if !os(visionOS)
+                SubscriptionHeroTitle(sub.displayTitle)
+                #endif
+                SubscriptionHeroMeta(SubscriptionHeroMeta.text(
+                    handle: sub.youtubeUserName.map { "@\($0)" } ?? sub.author,
+                    isPodcast: false,
+                    isPlaylist: isPlaylist
+                ))
+            }
+        } chips: {
+            chips
         }
     }
 
@@ -152,7 +168,7 @@ struct ChannelPreviewView: View {
             )
             .myListRowBackground()
         } else {
-            ForEach(videos, id: \.youtubeId) { video in
+            ForEach(shownVideos, id: \.youtubeId) { video in
                 VideoListItem(
                     video,
                     video.youtubeId,
@@ -168,45 +184,52 @@ struct ChannelPreviewView: View {
             }
             .myListRowBackground()
             .environment(\.videoListShowsUploader, isPlaylist)
+
+            if isSearching && !searchText.isEmpty && shownVideos.isEmpty {
+                ContentUnavailableView.search(text: searchText)
+                    .listRowSeparator(.hidden)
+                    .myListRowBackground()
+            }
         }
     }
 
-    var subscribeRow: some View {
-        ScrollView(.horizontal, showsIndicators: false) {
-            HStack {
-                Button {
-                    Task { await toggleSubscribe() }
-                } label: {
-                    SubscribeCapsuleLabel(
-                        isSubscribed: subManager.isSubscribedSuccess == true,
-                        isLoading: subManager.isLoading
-                    )
-                }
-                .buttonStyle(CapsuleButtonStyle())
-                .disabled(sub.youtubeChannelId == nil && sub.youtubePlaylistId == nil)
-                .allowsHitTesting(!subManager.isLoading)
-                .subscribeErrorPopover(subManager)
-
-                if isPlaylist, let youtubeUrl {
-                    PlaylistAddVideosMenu(playlistUrl: youtubeUrl)
-                }
-
-                if browserDisplayMode != .disabled, let youtubeUrl {
-                    Button {
-                        navManager.openUrlInApp(.url(youtubeUrl.absoluteString))
-                    } label: {
-                        Image(systemName: Const.youtubeSF)
-                            .fontWeight(.black)
-                            .padding(10)
-                    }
-                    .accessibilityLabel("browser")
-                    .buttonStyle(CapsuleButtonStyle(primary: false))
-                }
-            }
-            .animation(.default, value: subManager.isSubscribedSuccess == true)
-            .fixedSize(horizontal: false, vertical: true)
-            .padding(.horizontal, 15)
+    @ViewBuilder
+    var chips: some View {
+        let isSubscribed = subManager.isSubscribedSuccess == true
+        Button {
+            Task { await toggleSubscribe() }
+        } label: {
+            SubscribeCapsuleLabel(
+                isSubscribed: isSubscribed,
+                isLoading: subManager.isLoading
+            )
         }
+        .buttonStyle(CapsuleButtonStyle())
+        .environment(\.settingIsActive, isSubscribed)
+        .disabled(sub.youtubeChannelId == nil && sub.youtubePlaylistId == nil)
+        .allowsHitTesting(!subManager.isLoading)
+        .subscribeErrorPopover(subManager)
+
+        if isPlaylist, let youtubeUrl {
+            PlaylistAddVideosMenu(playlistUrl: youtubeUrl)
+        }
+
+        if browserDisplayMode != .disabled, let youtubeUrl {
+            Button {
+                navManager.openUrlInApp(.url(youtubeUrl.absoluteString))
+            } label: {
+                Image(systemName: Const.youtubeSF)
+                    .fontWeight(.black)
+                    .padding(10)
+            }
+            .accessibilityLabel("browser")
+            .buttonStyle(CapsuleButtonStyle(primary: false))
+        }
+    }
+
+    private var shownVideos: [SendableVideo] {
+        guard isSearching else { return videos }
+        return videos.filter { $0.matchesSubscriptionSearch(searchText) }
     }
 
     var youtubeUrl: URL? {

@@ -14,11 +14,17 @@ import UnwatchedShared
     private(set) var isLoading = false
     private(set) var reachedEnd = false
     private(set) var hasLoadedFirstPage = false
+    /// nil while not searching
+    private(set) var searchResults: [SendableVideo]?
+    private(set) var isSearching = false
 
     @ObservationIgnored private var feedUrl: URL?
     @ObservationIgnored private var show: SendableSubscription?
     @ObservationIgnored private var didSetUp = false
     @ObservationIgnored private var didBackfill = false
+    /// Unstructured, so a cancelled search doesn't cancel the download
+    @ObservationIgnored private var backfillTask: Task<Bool, Never>?
+    @ObservationIgnored private var searchGeneration = 0
     @ObservationIgnored private var loadedIds = Set<String>()
 
     func setUp(feedUrl: URL?, show: SendableSubscription?) async {
@@ -30,6 +36,7 @@ import UnwatchedShared
         loadedIds = []
         reachedEnd = false
         didBackfill = false
+        backfillTask = nil
         hasLoadedFirstPage = false
         await loadNextPage()
         hasLoadedFirstPage = true
@@ -72,6 +79,29 @@ import UnwatchedShared
         }
     }
 
+    /// The first search backfills the full feed: a refresh only caches the newest few episodes.
+    func search(_ text: String) async {
+        searchGeneration &+= 1
+        let generation = searchGeneration
+        let text = text.trimmingCharacters(in: .whitespaces)
+        guard let feedUrl, !text.isEmpty else {
+            searchResults = nil
+            isSearching = false
+            return
+        }
+        isSearching = true
+        defer {
+            if searchGeneration == generation { isSearching = false }
+        }
+        await backfillOnce(feedUrl: feedUrl)
+        let show = show
+        let results = await Task.detached {
+            PodcastEpisodeCache.episodes(feedUrl: feedUrl, show: show, matching: text)
+        }.value
+        guard !Task.isCancelled else { return }
+        searchResults = results
+    }
+
     func loadMoreIfNeeded(currentItem: SendableVideo) {
         guard !isLoading, !reachedEnd,
               let index = episodes.firstIndex(where: { $0.youtubeId == currentItem.youtubeId }),
@@ -90,8 +120,7 @@ import UnwatchedShared
 
         var page = await fetchPage(feedUrl: feedUrl, skip: episodes.count)
         if page.isEmpty && !didBackfill {
-            didBackfill = true
-            await backfill(feedUrl: feedUrl)
+            await backfillOnce(feedUrl: feedUrl)
             page = await fetchPage(feedUrl: feedUrl, skip: episodes.count)
         }
 
@@ -124,11 +153,24 @@ import UnwatchedShared
         }.value
     }
 
-    private func backfill(feedUrl: URL) async {
-        do {
-            try await VideoCrawler.backfillPodcastEpisodes(feedUrl: feedUrl)
-        } catch {
-            Log.podcasts.error("backfillPodcastEpisodes: \(error)")
+    /// A failed backfill is retried by the next search or page
+    private func backfillOnce(feedUrl: URL) async {
+        guard !didBackfill else { return }
+        let task = backfillTask ?? Task {
+            do {
+                try await VideoCrawler.backfillPodcastEpisodes(feedUrl: feedUrl)
+                return true
+            } catch {
+                Log.podcasts.error("backfillPodcastEpisodes: \(error)")
+                return false
+            }
+        }
+        backfillTask = task
+        let succeeded = await task.value
+        if succeeded {
+            didBackfill = true
+        } else if backfillTask == task {
+            backfillTask = nil
         }
     }
 }
