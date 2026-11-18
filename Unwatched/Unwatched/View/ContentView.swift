@@ -16,10 +16,6 @@ struct ContentView: View {
     @Environment(SheetPositionReader.self) var sheetPos
     @AppStorage(Const.bigScreenFullscreenToRestore) var fullscreenToRestore = false
 
-    var videoExists: Bool {
-        player.video != nil
-    }
-
     var regularSize: Bool {
         Device.isBigScreen(sizeClass, verticalSizeClass)
     }

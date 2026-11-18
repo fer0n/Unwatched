@@ -55,8 +55,6 @@ enum RefreshSource {
     @ObservationIgnored var triggerPasteAndQueueAction = false
     @ObservationIgnored var triggerSearchYoutube = false
 
-    @ObservationIgnored var minimumAnimationDuration: Double = 0.5
-
     @ObservationIgnored var cancellables: Set<AnyCancellable> = []
     @ObservationIgnored var syncDoneTask: Task<(), Never>?
 

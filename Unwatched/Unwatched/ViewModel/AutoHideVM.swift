@@ -17,7 +17,6 @@ import UnwatchedShared
     @ObservationIgnored var hideControlsTask: (Task<(), Never>)?
 
     private var keepVisibleDict = Set<String>()
-    var positionLeft = false
 
     /// Bumped to open `FullscreenChapterDescriptionButton`'s popover from a gesture.
     var descriptionPopoverRequest = 0

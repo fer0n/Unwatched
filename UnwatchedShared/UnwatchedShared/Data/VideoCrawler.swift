@@ -47,15 +47,6 @@ public struct VideoCrawler {
         }
     }
 
-    public static func parseFeedUrl(_ url: URL, limitVideos: Int?) async throws -> RSSParserDelegate {
-        let data = try await fetchFeedData(url)
-        let delegate = parseFeedData(data: data, limitVideos: limitVideos)
-        guard hasUsableResult(delegate) else {
-            throw VideoCrawlerError.failedToParse
-        }
-        return delegate
-    }
-
     /// A broken feed otherwise looks like an empty one and counts as a successful refresh.
     public static func hasUsableResult(_ delegate: RSSParserDelegate) -> Bool {
         delegate.parsingSucceeded

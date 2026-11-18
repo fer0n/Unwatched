@@ -416,17 +416,6 @@ extension VideoService {
         )
     }
 
-    static func clearListAsync(_ list: ClearList,
-                               _ direction: ClearDirection,
-                               index: Int?,
-                               date: Date?) -> Task<(), Error> {
-        let task = Task.detached {
-            let repo = VideoActor()
-            try await repo.clearList(list, direction, index: index, date: date)
-        }
-        return task
-    }
-
     static func inboxShortsCount() -> Task<Int?, Never> {
         return Task.detached {
             let repo = VideoActor()
@@ -442,21 +431,6 @@ extension VideoService {
             }
             try? modelContext.save()
         }
-    }
-
-    static func getDurationText(for video: Video, duration: Double? = nil) -> (total: Double?, text: String?) {
-        let duration = duration ?? video.duration
-
-        if let durationText = duration?.formattedSecondsColon {
-            return (duration, durationText)
-        }
-
-        if let lastChapter = video.sortedChapterData.last {
-            let time = lastChapter.endTime ?? lastChapter.startTime
-            return (duration, ">\(time.formattedSecondsColon)")
-        }
-
-        return (duration, nil)
     }
 
     static func existingVideoModel(from videoData: VideoData, modelContext: ModelContext) -> Video? {

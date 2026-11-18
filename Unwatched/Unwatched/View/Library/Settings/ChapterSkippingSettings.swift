@@ -153,23 +153,6 @@ extension SponsorBlockSegmentSetting {
     }
 }
 
-struct RightCheckboxToggleStyle: ToggleStyle {
-    func makeBody(configuration: Configuration) -> some View {
-        HStack {
-            configuration.label
-            Spacer()
-            Image(systemName: "checkmark")
-                .opacity(configuration.isOn ? 1 : 0)
-        }
-        .contentShape(Rectangle())
-        .onTapGesture {
-            withAnimation {
-                configuration.isOn.toggle()
-            }
-        }
-    }
-}
-
 #Preview {
     List {
         ChapterSkippingSettings()

@@ -237,7 +237,6 @@ public struct Const {
 
     public static let askForReviewPointThreshold = 20
     public static let askForReviewMaxCount = 2
-    public static let sheetOpacityValue = 0.6
 
     /// Time difference within which it will be considered the same time between start/end of chapters
     public static let chapterTimeTolerance: Double = 2.0
@@ -315,18 +314,13 @@ public struct Const {
     public static let refreshFailedSF = "exclamationmark.arrow.trianglehead.2.clockwise.rotate.90"
     public static let refreshWarningSF = "exclamationmark.triangle"
     public static let inboxTabFullSF = "tray.full"
-    public static let libraryTabSF = "books.vertical"
 
     public static let settingsViewSF = "gearshape.fill"
     public static let allVideosViewSF = "square.stack.3d.down.forward.fill"
-    public static let watchHistoryViewSF = "checkmark.circle"
     public static let premiumIndicatorSF = "star.circle.fill"
-
-    public static let sideloadSF = "arrow.right.circle"
 
     public static let filterSF = "line.3.horizontal.decrease.circle.fill"
     public static let filterEmptySF = "line.3.horizontal.decrease.circle"
-    public static let addSF = "plus"
 
     public static let customPlaybackSpeedSF = "lock.fill"
     public static let customPlaybackSpeedOffSF = "lock.open.fill"
@@ -338,11 +332,7 @@ public struct Const {
     public static let trimSilenceSF = "waveform.circle.fill"
     public static let trimSilenceOffSF = "waveform.circle"
 
-    public static let alreadyInLibrarySF = "books.vertical.circle.fill"
-
-    public static let rateAppSF = "star.fill"
     public static let contactMailSF = "envelope.fill"
-    public static let listItemChevronSF = "chevron.right"
 
     public static let circleBackgroundSF = "circle.fill"
 

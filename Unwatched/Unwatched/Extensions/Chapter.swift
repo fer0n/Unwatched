@@ -24,9 +24,3 @@ extension ChapterData {
         titleText ?? videoTitle ?? "-"
     }
 }
-
-extension Chapter {
-    public var titleTextForced: String {
-        titleText(fallback: video?.title ?? mergedChapterVideo?.title)
-    }
-}

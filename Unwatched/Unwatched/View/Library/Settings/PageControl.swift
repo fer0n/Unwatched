@@ -67,11 +67,3 @@ struct PageControl: View {
 #endif
 
 // Common interface for both platforms
-struct AnyPageControl: View {
-    @Binding var currentPage: Int?
-    let numberOfPages: Int
-
-    var body: some View {
-        PageControl(currentPage: $currentPage, numberOfPages: numberOfPages)
-    }
-}

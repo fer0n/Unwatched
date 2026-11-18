@@ -161,7 +161,6 @@ extension PlayerWebView {
         }
 
         var video = null;
-        let videoFindAttempts = 0;
         var isSwiping = false;
         // set while WebPlayerWarmup runs this page off screen, so setupVideo doesn't unmute it
         var warmupMuted = false;

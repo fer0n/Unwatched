@@ -56,7 +56,6 @@ struct HandleVideoListItemTap: ViewModifier {
 // workaround: .tapGesture breaks .onMove on macOS
 class TapHandlerView: NSView {
     var onTap: () -> Void
-    private var mouseDownLocation: NSPoint?
 
     init(onTap: @escaping () -> Void) {
         self.onTap = onTap

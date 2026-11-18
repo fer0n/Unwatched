@@ -15,7 +15,6 @@ struct VideoNotAvailableView: View {
 
     @AppStorage(Const.themeColor) var theme = ThemeColor()
 
-    @GestureState private var dragState: CGFloat = 0
     @State private var isDropTarget: Bool = false
 
     var body: some View {

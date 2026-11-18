@@ -41,7 +41,6 @@ import UnwatchedShared
     /// Menu state captured when entering portrait fullscreen, so it can be restored on exit.
     @ObservationIgnored var menuStateBeforeFullscreen: MenuState?
     var selectedDetent: PresentationDetent = .height(Const.minSheetDetent)
-    @ObservationIgnored var needsRestoreMiniPlayer: Bool = false
     @ObservationIgnored var sheetHeight: CGFloat = .zero
     @ObservationIgnored private(set) var sheetDistanceToTop: CGFloat = .zero
 

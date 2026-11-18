@@ -255,10 +255,6 @@ import UnwatchedShared
         embeddingDisabled || isTallAspectRatio || isAudioOnly
     }
 
-    var isContinuousPlay: Bool {
-        UserDefaults.standard.bool(forKey: Const.continuousPlay)
-    }
-
     @ObservationIgnored var currentEndTime: Double?
 
     @MainActor

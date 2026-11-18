@@ -11,12 +11,6 @@ extension Date {
         return DateFormatter()
     }()
 
-    private static let relativeFormatter: RelativeDateTimeFormatter = {
-        let formatter = RelativeDateTimeFormatter()
-        formatter.unitsStyle = .short
-        return formatter
-    }()
-
     var formatted: String {
         let calendar = Calendar.current
         let formatter = Date.formatter
@@ -60,24 +54,6 @@ extension Date {
         }
     }
 
-    var formattedToday: String {
-        let calendar = Calendar.current
-        let formatter = Date.formatter
-
-        if calendar.isDateInToday(self) {
-            return String(localized: "Today")
-        } else if calendar.isDateInLastWeek(self) {
-            formatter.dateFormat = "EEE d"
-            return formatter.string(from: self).uppercased()
-        } else if calendar.isDateInLastSixMonths(self) {
-            formatter.dateFormat = "MMM d"
-            return formatter.string(from: self).uppercased()
-        } else {
-            formatter.dateFormat = "MMM d yyyy"
-            return formatter.string(from: self).uppercased()
-        }
-    }
-
     /// "Starts Tue 17 Nov, 09:34"
     var formattedStart: String {
         String(localized: "Starts \(formatted(.dateTime.weekday(.abbreviated).day().month(.abbreviated).hour().minute()))")
@@ -85,10 +61,6 @@ extension Date {
 
     var formattedRelative: String {
         self.formatted(.relative(presentation: .numeric, unitsStyle: .narrow))
-    }
-
-    var formattedRelativeVerbatim: String {
-        Date.relativeFormatter.localizedString(for: self, relativeTo: Date.now)
     }
 
     static func parseYtOfflineDate(_ dateString: String) -> Date? {
@@ -130,36 +102,9 @@ extension Date {
 
         return nil
     }
-
-    /// Returns tomorrow at noon
-    static var tomorrow: Date {
-        let calendar = Calendar.current
-        var components = calendar.dateComponents([.year, .month, .day], from: Date.now)
-
-        guard var day = components.day else {
-            return Date.now.addingTimeInterval(24 * 60 * 60)
-        }
-
-        // Add one day
-        day += 1
-        components.day = day
-
-        // Set to noon
-        components.hour = 12
-        components.minute = 0
-        components.second = 0
-
-        return calendar.date(from: components) ?? Date.now.addingTimeInterval(24 * 60 * 60)
-    }
 }
 
 extension Calendar {
-    func isDateInLastDay(_ date: Date) -> Bool {
-        let currentDate = Date()
-        let oneDayAgo = self.date(byAdding: .day, value: -1, to: currentDate)!
-        return date >= oneDayAgo && date < currentDate
-    }
-
     func isDateInLastWeek(_ date: Date) -> Bool {
         let currentDate = Date()
         let oneWeekAgo = self.date(byAdding: .weekOfYear, value: -1, to: currentDate)!
@@ -170,12 +115,6 @@ extension Calendar {
         let currentDate = Date()
         let sixMonthsAgo = self.date(byAdding: .month, value: -6, to: currentDate)!
         return date >= sixMonthsAgo && date < currentDate
-    }
-
-    func isDateInLastYear(_ date: Date) -> Bool {
-        let currentDate = Date()
-        let oneYearAgo = self.date(byAdding: .year, value: -1, to: currentDate)!
-        return date >= oneYearAgo && date < currentDate
     }
 }
 

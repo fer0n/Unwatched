@@ -95,10 +95,7 @@ struct ChapterMiniControlView: View {
                             image
                                 .font(.system(size: 20))
                         }
-                        .buttonStyle(ChangeChapterButtonStyle(
-                            chapter: player.currentChapter,
-                            size: chapterButtonSize
-                        ))
+                        .buttonStyle(ChangeChapterButtonStyle(size: chapterButtonSize))
                         .disabled(player.nextChapter == nil)
 
                         if inlineTime {
@@ -148,11 +145,6 @@ struct ChapterMiniControlView: View {
                 player.handleChapterChange()
             }
         }
-    }
-
-    func openSubscription(_ sub: Subscription) {
-        navManager.pushSubscription(subscription: sub)
-        player.setShowMenu()
     }
 
     func handleTitleTap() {

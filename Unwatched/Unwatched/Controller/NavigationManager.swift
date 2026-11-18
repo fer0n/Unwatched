@@ -50,7 +50,6 @@ import UnwatchedShared
     var presentedLibrary = NavigationPath()
 
     @ObservationIgnored var topListItemId: String?
-    @ObservationIgnored private var lastTabTwiceDate: Date?
     @ObservationIgnored var linkTask: Task<Void, Never>?
     var lastLibrarySubscriptionId: PersistentIdentifier?
     /// Subscription and video detail pages on screen; the tab bar goes neutral meanwhile.

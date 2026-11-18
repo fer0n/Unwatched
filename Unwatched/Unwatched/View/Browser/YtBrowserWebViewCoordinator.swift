@@ -17,10 +17,6 @@ extension YtBrowserWebView {
         var isFirstLoad = true
         var isSwitchingChannel = false
 
-        #if os(macOS)
-        private var contextMenuUrl: URL?
-        #endif
-
         // MARK: - Lifecycle
 
         init(_ parent: YtBrowserWebView) {

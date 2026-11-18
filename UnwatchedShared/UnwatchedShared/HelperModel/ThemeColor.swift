@@ -99,17 +99,8 @@ public extension Color {
     static var backgroundColor: Color {
         Color("BackgroundColor")
     }
-    static var grayColor: Color {
-        Color("CustomGray")
-    }
-    static var myBackgroundGray: Color {
-        Color("backgroundGray")
-    }
     static var myBackgroundGray2: Color {
         Color("backgroundGray2")
-    }
-    static var myForegroundGray: Color {
-        Color("foregroundGray")
     }
     static var youtubeWebBackground: Color {
         Color("YouTubeWebBackground")

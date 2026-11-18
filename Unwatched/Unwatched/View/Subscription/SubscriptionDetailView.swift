@@ -11,10 +11,7 @@ struct SubscriptionDetailView: View {
     @Environment(\.modelContext) var modelContext
     @Environment(NavigationManager.self) var navManager
 
-    @State var isLoading = false
-    @State var subscribeManager = SubscribeManager()
     @State var requiresUnsubscribe = false
-    @State var loadNewVideosTask: Task<(), Never>?
     @State var showTitle: Bool = false
     @State var showFilter = false
     @State private var isSearching = false
@@ -67,12 +64,6 @@ struct SubscriptionDetailView: View {
             }
         }
         .channelPageColor(imageUrl: subscription.isWatchLater ? nil : imageUrl, choice: subscription.tint)
-        .task(id: loadNewVideosTask) {
-            if let task = loadNewVideosTask {
-                await task.value
-                isLoading = false
-            }
-        }
         .onAppear {
             handleOnAppear()
         }
@@ -165,19 +156,6 @@ struct SubscriptionDetailView: View {
             return
         }
         subscription.thumbnailUrl = avatarUrl
-    }
-
-    func loadNewVideos() {
-        if isLoading { return }
-        isLoading = true
-        let subId = subscription.persistentModelID
-        loadNewVideosTask = Task {
-            let task = VideoService.loadNewVideosInBg(
-                subscriptionIds: [subId],
-                fetchDurations: true
-            )
-            _ = try? await task.value
-        }
     }
 }
 

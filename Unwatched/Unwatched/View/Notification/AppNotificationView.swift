@@ -90,17 +90,6 @@ struct AppNotificationView: View {
             ? .red
             : .black.opacity(0.2)
     }
-
-    func reportMessage(_ error: Error) {
-        let versionInfo = Device.versionInfo
-        let body = """
-            \(versionInfo)
-
-            \(error)
-            """
-        let url = UrlService.getEmailUrl(title: error.localizedDescription, body: body)
-        UrlService.open(url)
-    }
 }
 
 private extension View {
