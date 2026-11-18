@@ -47,6 +47,12 @@ class WelcomeBackSettingsTests: XCTestCase {
         XCTAssertEqual(WelcomeBack.deviceName(from: backup("my_mac", daysOld: 0, manual: true).url), "my_mac")
     }
 
+    func testOnlyTheFilenameSuffixMarksABackupAsManual() {
+        XCTAssertTrue(UserDataService.isManualBackup(backup("iPhone", daysOld: 0, manual: true).url))
+        XCTAssertTrue(UserDataService.isManualBackup(backup("my_mac", daysOld: 0, manual: true).url))
+        XCTAssertFalse(UserDataService.isManualBackup(backup("my_mac", daysOld: 0).url))
+    }
+
     func testCandidatesPutThisDeviceFirstAndKeepNewestPerDevice() {
         let newest = backup("iPad", daysOld: 0)
         let customNamedMac = backup("Studio", daysOld: 2)

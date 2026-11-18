@@ -325,7 +325,7 @@ struct UserDataService {
         }
 
         for file in files {
-            if file.lastPathComponent.contains("_m") {
+            if isManualBackup(file) {
                 manualFiles.append(file)
                 continue
             }
@@ -389,19 +389,6 @@ struct UserDataService {
         }
         Log.data.info("backupsDirectory: nil")
         return nil
-    }
-
-    static func getFileName(_ deviceName: String, manual: Bool = false) -> String {
-        let dateString = Date().formatted(.iso8601)
-        return "\(deviceName)_\(dateString)\(manual ? "_m" : "").unwatchedbackup"
-    }
-
-    static func backupDeviceName(from url: URL) -> String? {
-        var name = url.deletingPathExtension().lastPathComponent
-        if name.hasSuffix("_m") {
-            name.removeLast(2)
-        }
-        return name.lastIndex(of: "_").map { String(name[..<$0]) }
     }
 
     static func clearMemory() {

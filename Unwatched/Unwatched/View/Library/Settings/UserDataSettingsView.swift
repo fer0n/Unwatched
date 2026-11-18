@@ -219,11 +219,10 @@ struct UserDataSettingsView: View {
     }
 
     func getFileInfo(_ file: URL) -> FileInfo {
-        let fileName = file.lastPathComponent
         let deviceName = UserDataService.backupDeviceName(from: file)
         var fileSizeString: String?
         var dateString: String?
-        let isManual = fileName.contains("_m")
+        let isManual = UserDataService.isManualBackup(file)
 
         if let fileAttributes = try? FileManager.default.attributesOfItem(atPath: file.path) {
             if let fileSizeInBytes = fileAttributes[.size] as? Int64 {
