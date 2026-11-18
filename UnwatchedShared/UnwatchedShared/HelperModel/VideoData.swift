@@ -44,6 +44,14 @@ public extension VideoData {
         return scheduledStartDate
     }
 
+    var overdueStartDate: Date? {
+        guard let scheduledStartDate, scheduledStartDate <= .now,
+              Date.now.timeIntervalSince(scheduledStartDate) < Const.overdueStartWindow else {
+            return nil
+        }
+        return scheduledStartDate
+    }
+
     /// "Playlist (Channel)" for a playlist's video, otherwise the subscription's title
     var channelDisplayTitle: String? {
         subscriptionData?.videoSourceTitle(channelTitle: channelTitle)

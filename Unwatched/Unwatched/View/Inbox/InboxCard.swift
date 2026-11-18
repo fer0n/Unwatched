@@ -151,7 +151,7 @@ struct InboxCard: View, Equatable {
                 Text(verbatim: published)
                     .lineLimit(1)
                     .fixedSize()
-            } else if let start = content.upcomingStart {
+            } else if let start = content.scheduledStart {
                 Text(verbatim: Const.dotString)
                 // a Button, not a Menu: a Menu label would swallow the card's swipe
                 Button {
@@ -244,7 +244,7 @@ struct InboxCard: View, Equatable {
         let subscriptionTitle: String?
         let description: AttributedString?
         let published: String?
-        let upcomingStart: String?
+        let scheduledStart: String?
         let imageUrls: [URL?]
         /// Not shown, keeps `==` from missing chapters that arrive after the card was built
         let chapterCount: Int
@@ -266,8 +266,8 @@ struct InboxCard: View, Equatable {
                 description = nil
             }
 
-            upcomingStart = video.upcomingStartDate?.formattedStart
-            published = upcomingStart == nil ? video.publishedDate?.formattedRelative : nil
+            scheduledStart = video.formattedScheduledStart
+            published = scheduledStart == nil ? video.publishedDate?.formattedRelative : nil
 
             imageUrls = [
                 UrlService.getImageUrl(video.displayThumbnailUrl, .large),

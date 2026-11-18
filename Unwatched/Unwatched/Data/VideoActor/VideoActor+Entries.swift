@@ -571,12 +571,16 @@ extension VideoActor {
         return try? modelContext.fetchCount(fetch)
     }
 
-    func getEntryVideosWithoutDuration() -> [Video] {
-        let inboxFetch = FetchDescriptor<InboxEntry>(predicate: #Predicate { $0.video?.duration == nil })
+    func getEntryVideosToRefresh() -> [Video] {
+        let inboxFetch = FetchDescriptor<InboxEntry>(predicate: #Predicate {
+            $0.video?.duration == nil || $0.video?.scheduledStartDate != nil
+        })
         let inboxEntries = try? modelContext.fetch(inboxFetch)
         var videosToProcess = inboxEntries?.compactMap { $0.video } ?? []
 
-        let queueFetch = FetchDescriptor<QueueEntry>(predicate: #Predicate { $0.video?.duration == nil })
+        let queueFetch = FetchDescriptor<QueueEntry>(predicate: #Predicate {
+            $0.video?.duration == nil || $0.video?.scheduledStartDate != nil
+        })
         let queueEntries = try? modelContext.fetch(queueFetch)
         videosToProcess.append(contentsOf: queueEntries?.compactMap { $0.video } ?? [])
 
@@ -599,9 +603,9 @@ extension VideoActor {
         var seenYouTubeIds = Set<String>()
 
         if includeEntries {
-            let entryVideos = getEntryVideosWithoutDuration()
+            let entryVideos = getEntryVideosToRefresh()
             checkVideos.append(contentsOf: entryVideos)
-            Log.refresh.info("getVideosToFetchDurationFor: \(entryVideos.count) entry videos without duration")
+            Log.refresh.info("getVideosToFetchDurationFor: \(entryVideos.count) entry videos to refresh")
         }
 
         let staleCutoffDate = Date().addingTimeInterval(-Const.durationFetchInterval)
@@ -649,6 +653,9 @@ extension VideoActor {
     private func shouldFetchDurationForVideo(_ video: Video, cutoffDate: Date) -> Bool {
         guard let apiUpdatedDate = video.apiUpdatedDate else {
             return true // No update date means we should fetch
+        }
+        if video.overdueStartDate != nil {
+            return Date().timeIntervalSince(apiUpdatedDate) > Const.overdueStartFetchInterval
         }
         return apiUpdatedDate < cutoffDate
     }

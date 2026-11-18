@@ -4,6 +4,7 @@
 //
 
 import Foundation
+import UnwatchedShared
 import SwiftUI
 
 extension Date {
@@ -56,7 +57,15 @@ extension Date {
 
     /// "Starts Tue 17 Nov, 09:34"
     var formattedStart: String {
-        String(localized: "Starts \(formatted(.dateTime.weekday(.abbreviated).day().month(.abbreviated).hour().minute()))")
+        String(localized: "Starts \(formattedStartDate)")
+    }
+
+    var formattedOverdueStart: String {
+        String(localized: "Scheduled \(formattedStartDate)")
+    }
+
+    private var formattedStartDate: String {
+        formatted(.dateTime.weekday(.abbreviated).day().month(.abbreviated).hour().minute())
     }
 
     var formattedRelative: String {
@@ -124,5 +133,11 @@ extension Calendar {
         Text(Date.now.addingTimeInterval(-60 * 60 * 24).formattedExtensive)
         Text(Date.now.addingTimeInterval(-60 * 60 * 24 * 7).formattedExtensive)
         Text(Date.now.addingTimeInterval(-60 * 60 * 24 * 365 * 2).formattedExtensive)
+    }
+}
+
+extension VideoData {
+    var formattedScheduledStart: String? {
+        upcomingStartDate?.formattedStart ?? overdueStartDate?.formattedOverdueStart
     }
 }

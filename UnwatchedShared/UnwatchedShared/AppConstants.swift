@@ -94,6 +94,8 @@ public struct Const {
 
     /// Cooldown period before fetching the duration again (might happen sooner if batched with other requests)
     public static let durationFetchInterval: Double = 12 * 60 * 60 // 10 hours
+    public static let overdueStartFetchInterval: Double = 15 * 60
+    public static let overdueStartWindow: Double = 6 * 60 * 60
     
     /// When seeking to the end, the video will seek to duraiton - thisBuffer
     public static let seekToEndBuffer: CGFloat = 0.5

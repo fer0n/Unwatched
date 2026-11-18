@@ -67,8 +67,8 @@ struct DescriptionDetailHeaderView: View {
 
     /// "25 Sep · 14h ago", the year only once it's not the current one
     var dateText: String? {
-        if let start = video.upcomingStartDate {
-            return start.formattedStart
+        if let start = video.formattedScheduledStart {
+            return start
         }
         guard let published = video.publishedDate else { return nil }
         let isThisYear = Calendar.current.isDate(published, equalTo: .now, toGranularity: .year)
