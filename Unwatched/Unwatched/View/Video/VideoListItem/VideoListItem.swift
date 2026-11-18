@@ -34,30 +34,20 @@ struct VideoListItem: View, Equatable {
         self.onChange = onChange
     }
 
-    private var normalSize: Bool {
-        dynamicTypeSize <= .large
-    }
-
-    private var compactFormat: Bool {
-        dynamicTypeSize <= .xxxLarge && videoListFormat == .compact
-    }
-
-    private var layout: AnyLayout {
-        compactFormat
-            ? AnyLayout(HStackLayout(alignment: normalSize ? .center : .top, spacing: 8))
-            : AnyLayout(VStackLayout(spacing: 8))
+    private var layout: VideoListItemLayout {
+        VideoListItemLayout(format: videoListFormat, dynamicTypeSize: dynamicTypeSize)
     }
 
     var body: some View {
-        layout {
+        let layout = layout
+        layout.stack {
             VideoListItemThumbnail(
                 videoData,
                 config: config,
-                size: compactFormat ? CGSize(width: 168, height: 94.5) : nil,
-                largeThumbnail: !compactFormat
+                size: layout.thumbnailSize,
+                largeThumbnail: !layout.isCompact
             )
-            // stacked: the thumbnail spans the full width, so it needs the trailing inset too
-            .padding(compactFormat ? [.vertical, .leading] : .all, 5)
+            .padding(layout.thumbnailInsets, 5)
             .overlay(alignment: .topLeading) {
                 VideoListItemStatus(
                     showAllStatus: config.showAllStatus,
@@ -75,7 +65,7 @@ struct VideoListItem: View, Equatable {
                 video: videoData,
                 episodeNumber: config.episodeNumber ?? videoData.episodeNumber
             )
-            .padding(.horizontal, videoListFormat == .expansive ? 5 : 0)
+            .padding(.horizontal, layout.detailsInset)
         }
         .accessibilityElement(children: .combine)
         .modifier(VideoListItemSwipeActionsModifier(
@@ -84,13 +74,70 @@ struct VideoListItem: View, Equatable {
             onChange: onChange
         ))
         #if os(macOS)
-        .rasterized(compactFormat)
+        .rasterized(layout.isCompact)
         .foregroundStyle(Color.neutralAccentColor)
         .handleVideoListItemTap(videoData)
         #else
-        .rasterized(compactFormat)
+        .rasterized(layout.isCompact)
         .handleVideoListItemTap(videoData)
         #endif
+    }
+}
+
+private struct VideoListItemLayout {
+    let format: VideoListFormat
+    let dynamicTypeSize: DynamicTypeSize
+
+    var isCompact: Bool {
+        dynamicTypeSize <= .xxxLarge && format == .compact
+    }
+
+    var stack: AnyLayout {
+        isCompact
+            ? AnyLayout(HStackLayout(alignment: dynamicTypeSize <= .large ? .center : .top, spacing: 8))
+            : AnyLayout(VStackLayout(spacing: 8))
+    }
+
+    var thumbnailSize: CGSize? {
+        isCompact ? CGSize(width: 168, height: 94.5) : nil
+    }
+
+    var thumbnailInsets: Edge.Set {
+        isCompact ? [.vertical, .leading] : .all
+    }
+
+    var detailsInset: CGFloat {
+        format == .expansive ? 5 : 0
+    }
+}
+
+struct VideoListItemPlaceholder: View {
+    @AppStorage(Const.videoListFormat) private var videoListFormat: VideoListFormat = .compact
+    @Environment(\.dynamicTypeSize) private var dynamicTypeSize
+
+    private static let video = SendableVideo(
+        youtubeId: "",
+        title: "Placeholder title that is long enough for two lines",
+        url: nil,
+        feedTitle: "Channel name",
+        publishedDate: .now
+    )
+
+    var body: some View {
+        let layout = VideoListItemLayout(format: videoListFormat, dynamicTypeSize: dynamicTypeSize)
+        layout.stack {
+            VideoListItemThumbnail(
+                Self.video,
+                config: VideoListItemConfig(),
+                size: layout.thumbnailSize,
+                largeThumbnail: !layout.isCompact
+            )
+            .padding(layout.thumbnailInsets, 5)
+
+            VideoListItemDetails(video: Self.video)
+                .redacted(reason: .placeholder)
+                .padding(.horizontal, layout.detailsInset)
+        }
     }
 }
 

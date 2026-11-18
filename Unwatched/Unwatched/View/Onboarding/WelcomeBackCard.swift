@@ -213,11 +213,8 @@ struct WelcomeBackCard: View {
         Button(action: action) {
             Text(title).frame(maxWidth: .infinity)
         }
-        .buttonStyle(.borderedProminent)
-        .buttonBorderShape(.capsule)
+        .themeProminentButton(theme, capsule: true)
         .controlSize(.large)
-        .tint(theme.color)
-        .foregroundStyle(theme.readableContrastColor)
     }
 
     private func textButton(_ title: LocalizedStringKey, action: @escaping () -> Void) -> some View {

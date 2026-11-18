@@ -13,9 +13,10 @@ struct EmptyEntry<Entry>: View where Entry: PersistentModel & HasVideo {
     @Environment(\.modelContext) var modelContext
     @AppStorage(Const.themeColor) var theme = ThemeColor()
 
-    @State var isVisible = false
     @State var hasError = false
     @State var isLoading = false
+    @State var showsDetails = false
+    @State var repairFeedback: Task<Void, Never>?
 
     let entry: Entry
 
@@ -24,73 +25,93 @@ struct EmptyEntry<Entry>: View where Entry: PersistentModel & HasVideo {
     }
 
     var body: some View {
-        Color.backgroundColor
-
         ZStack {
-            Color.insetBackgroundColor
-
-            VStack {
-                Text("emptyEntry")
-                    .multilineTextAlignment(.center)
-                    .foregroundStyle(.secondary)
-                    .font(.body)
-                    .opacity(hasError ? 0 : 1)
-                    .overlay {
-                        Text("emptyEntryError")
-                            .foregroundStyle(.red)
-                            .padding(.vertical, 3)
-                            .opacity(hasError ? 1 : 0)
-                    }
-
-                HStack {
-                    Button {
-                        reconnectVideo(force: true)
-                    } label: {
-                        if isLoading {
-                            ProgressView()
-                                .frame(maxWidth: .infinity)
-                                .tint(theme.readableContrastColor)
-                        } else {
-                            Text("repair")
-                                .frame(maxWidth: .infinity)
-                        }
-                    }
-                    .buttonStyle(.borderedProminent)
-                    .tint(theme.color)
-                    .foregroundStyle(theme.readableContrastColor)
-
-                    Button {
-                        clearEntry()
-                    } label: {
-                        Text("remove")
-                            .frame(maxWidth: .infinity)
-                    }
-                    .buttonStyle(.bordered)
-                }
+            Button(action: toggleDetails) {
+                VideoListItemPlaceholder()
+                    .opacity(showsDetails ? 0 : 1)
+                    .allowsHitTesting(false)
+                    .frame(maxWidth: .infinity, maxHeight: .infinity)
+                    .contentShape(.rect)
             }
-            .padding(.horizontal, 10)
-            .padding(.vertical, 2)
-            .frame(maxWidth: .infinity)
+            .buttonStyle(.plain)
+            .accessibilityLabel("emptyEntry")
+
+            details
+                .opacity(showsDetails ? 1 : 0)
+                .allowsHitTesting(showsDetails)
+                .disabled(!showsDetails)
+                .accessibilityHidden(!showsDetails)
         }
-        .clipShape(RoundedRectangle(cornerRadius: 10))
-        .scaleEffect(isVisible ? 1 : 0.9)
-        .opacity(isVisible ? 1 : 0)
         .task {
             reconnectVideo()
         }
-        .task {
-            do {
-                try await Task.sleep(for: .seconds(1))
-                withAnimation {
-                    isVisible = true
-                }
-            } catch { }
+        .onDisappear {
+            showsDetails = false
+            resetRepairFeedback()
         }
+    }
+
+    var details: some View {
+        VStack {
+            Text("emptyEntry")
+                .multilineTextAlignment(.center)
+                .foregroundStyle(.secondary)
+                .font(.body)
+                .opacity(hasError ? 0 : 1)
+                .overlay {
+                    Text("emptyEntryError")
+                        .foregroundStyle(.red)
+                        .padding(.vertical, 3)
+                        .opacity(hasError ? 1 : 0)
+                }
+                .allowsHitTesting(false)
+
+            HStack {
+                Button {
+                    reconnectVideo(force: true)
+                } label: {
+                    Text("repair")
+                        .opacity(isLoading ? 0 : 1)
+                        .frame(maxWidth: .infinity)
+                        .overlay {
+                            if isLoading {
+                                ProgressView()
+                                    .controlSize(.small)
+                                    .tint(theme.readableContrastColor)
+                            }
+                        }
+                }
+                .themeProminentButton(theme)
+
+                Button {
+                    clearEntry()
+                } label: {
+                    Text("remove")
+                        .frame(maxWidth: .infinity)
+                }
+                .buttonStyle(.bordered)
+            }
+        }
+        .padding(.horizontal, 10)
+        .padding(.vertical, 2)
+        .frame(maxWidth: .infinity)
+    }
+
+    func toggleDetails() {
+        withAnimation {
+            showsDetails.toggle()
+        }
+    }
+
+    func resetRepairFeedback() {
+        repairFeedback?.cancel()
+        isLoading = false
+        hasError = false
     }
 
     func reconnectVideo(force: Bool = false) {
         if force {
-            hasError = false
+            resetRepairFeedback()
             isLoading = true
         }
 
@@ -130,7 +151,7 @@ struct EmptyEntry<Entry>: View where Entry: PersistentModel & HasVideo {
             return
         }
 
-        Task {
+        repairFeedback = Task {
             do {
                 try await Task.sleep(for: .seconds(1))
                 withAnimation {
@@ -142,7 +163,6 @@ struct EmptyEntry<Entry>: View where Entry: PersistentModel & HasVideo {
                     hasError = false
                 }
             } catch { }
-            isLoading = false
         }
     }
 

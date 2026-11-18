@@ -4,6 +4,7 @@
 //
 
 import SwiftUI
+import UnwatchedShared
 
 struct CapsuleButtonStyle: ButtonStyle {
     @Environment(\.isEnabled) var isEnabled
@@ -83,3 +84,40 @@ struct CapsuleButtonStyle: ButtonStyle {
     }
     .buttonStyle(CapsuleButtonStyle())
 }
+
+extension View {
+    /// macOS: `.borderedProminent` turns the blue theme cyan
+    @ViewBuilder
+    func themeProminentButton(_ theme: ThemeColor, capsule: Bool = false) -> some View {
+        #if os(macOS)
+        self.buttonStyle(ThemeFillButtonStyle(theme: theme, capsule: capsule))
+        #else
+        self
+            .buttonStyle(.borderedProminent)
+            .buttonBorderShape(capsule ? .capsule : .automatic)
+            .tint(theme.color)
+            .foregroundStyle(theme.readableContrastColor)
+        #endif
+    }
+}
+
+#if os(macOS)
+private struct ThemeFillButtonStyle: ButtonStyle {
+    @Environment(\.isEnabled) private var isEnabled
+    @Environment(\.controlSize) private var controlSize
+
+    let theme: ThemeColor
+    let capsule: Bool
+
+    func makeBody(configuration: Configuration) -> some View {
+        let shape = capsule ? AnyShape(Capsule()) : AnyShape(RoundedRectangle(cornerRadius: 8))
+        configuration.label
+            .padding(.horizontal, 12)
+            .padding(.vertical, controlSize == .large ? 7 : 4)
+            .foregroundStyle(theme.readableContrastColor)
+            .background(theme.color, in: shape)
+            .contentShape(shape)
+            .opacity(isEnabled ? (configuration.isPressed ? 0.75 : 1) : 0.4)
+    }
+}
+#endif
