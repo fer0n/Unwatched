@@ -26,6 +26,7 @@ public struct Const {
     public static let nowPlayingVideo = "nowPlayingVideo"
     public static let playbackPositionRecord = "playbackPositionRecord"
     public static let syncTotals = "syncTotals"
+    public static let syncTotalsCaughtUp = "syncTotalsCaughtUp"
     public static let localPlaybackInteractions = "localPlaybackInteractions"
     public static let enableIcloudSync = "enableIcloudSync"
     public static let watchFullSync = "watchFullSync"

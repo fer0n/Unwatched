@@ -20,7 +20,7 @@ public struct WatchLaterAvatar: View {
             .overlay {
                 Image(systemName: "clock")
                     .font(.system(size: size * 0.5, weight: .semibold))
-                    .foregroundStyle(theme.contrastColor)
+                    .foregroundStyle(theme.readableContrastColor)
             }
             .frame(width: size, height: size)
             .accessibilityHidden(true)

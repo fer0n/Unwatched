@@ -27,7 +27,9 @@ public final class SyncProgress {
                 withAnimation {
                     counts = latest
                 }
-                lastChanged = .now
+                if lastPolled != nil {
+                    lastChanged = .now
+                }
             }
             lastPolled = .now
             try? await Task.sleep(for: .seconds(Self.pollInterval))
@@ -39,13 +41,16 @@ public final class SyncProgress {
         return min(1, Double(counts.total) / Double(total))
     }
 
-    /// Short of 100%: the totals predate the import, so an exact match may never arrive.
     public func hasCaughtUp(with totals: SyncTotals?) -> Bool {
-        guard let share = share(of: totals) else { return false }
-        return share >= Self.handoverShare
+        guard let totals, totals.total > 0 else { return false }
+        return counts.hasCaughtUp(with: totals)
     }
 
-    private static let handoverShare: Double = 0.95
+    /// nil once caught up, as the last few percent may never arrive
+    public func pendingShare(of totals: SyncTotals?) -> Double? {
+        hasCaughtUp(with: totals) ? nil : share(of: totals)
+    }
+
     private static let pollInterval: TimeInterval = 5
     private static let staleAfter: TimeInterval = 30
 }

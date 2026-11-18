@@ -47,7 +47,7 @@ struct DeferDateSelector: View {
                     Text(formatted(detectedDateValue))
                         .frame(maxWidth: .infinity)
                 }
-                .deferDateButtonStyle(prominent: date == detectedDateValue, tint: theme.color, contrast: theme.contrastColor)
+                .deferDateButtonStyle(prominent: date == detectedDateValue, tint: theme.color, contrast: theme.readableContrastColor)
             }
 
             Button {
@@ -56,7 +56,7 @@ struct DeferDateSelector: View {
                 Text("selected")
                     .frame(maxWidth: .infinity)
             }
-            .deferDateButtonStyle(prominent: date != nil && date != detectedDateValue, tint: theme.color, contrast: theme.contrastColor)
+            .deferDateButtonStyle(prominent: date != nil && date != detectedDateValue, tint: theme.color, contrast: theme.readableContrastColor)
 
             Button(role: .destructive) {
                 date = nil
@@ -87,7 +87,7 @@ struct DeferDateSelector: View {
                 Text("cancel")
                     .frame(maxWidth: .infinity)
             }
-            .deferDateButtonStyle(prominent: false, tint: theme.color, contrast: theme.contrastColor)
+            .deferDateButtonStyle(prominent: false, tint: theme.color, contrast: theme.readableContrastColor)
 
             Button {
                 if let video, let videoId = video.persistentId {
@@ -104,7 +104,7 @@ struct DeferDateSelector: View {
                 Text("confirm")
                     .frame(maxWidth: .infinity)
             }
-            .deferDateButtonStyle(prominent: true, tint: theme.color, contrast: theme.contrastColor)
+            .deferDateButtonStyle(prominent: true, tint: theme.color, contrast: theme.readableContrastColor)
             .disabled(!isDirty)
         }
         .fontWeight(.medium)

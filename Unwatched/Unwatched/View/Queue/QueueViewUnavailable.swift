@@ -9,12 +9,49 @@ import UnwatchedShared
 struct QueueViewUnavailable: View {
     @AppStorage(Const.themeColor) var theme = ThemeColor()
     @Environment(NavigationManager.self) private var navManager
+    @AppStorage(Const.enableIcloudSync) private var enableIcloudSync = false
+    @Environment(RefreshManager.self) private var refresher
+    @State private var progress = SyncProgress()
 
     /// An empty tag looks like an empty queue, so the way out is offered here too.
     var isFiltered: Bool = false
     var tag: Tag?
 
     var body: some View {
+        let isImporting = tracksSync && progress.isImporting(isSyncing: refresher.isSyncingIcloud)
+        Group {
+            if isImporting {
+                importingContent
+            } else {
+                emptyContent
+            }
+        }
+        .animation(.default, value: isImporting)
+        .contentShape(Rectangle())
+        .handleVideoUrlDrop(.queue)
+        .task(id: tracksSync) {
+            guard tracksSync else { return }
+            await progress.track(in: DataProvider.shared.container)
+        }
+    }
+
+    private var tracksSync: Bool {
+        enableIcloudSync && !isFiltered && !SyncTotals.installHasCaughtUp
+    }
+
+    private var importingContent: some View {
+        ContentUnavailableView {
+            Label {
+                Text("syncImportTitle")
+            } icon: {
+                SyncImportRing(share: progress.pendingShare(of: SyncTotals.published), color: theme.color)
+            }
+        } description: {
+            Text("syncImportDescription")
+        }
+    }
+
+    private var emptyContent: some View {
         ContentUnavailableView {
             Label {
                 Text(isFiltered ? "noQueueItemsInTag" : "noQueueItems")
@@ -53,10 +90,33 @@ struct QueueViewUnavailable: View {
             }
             .buttonStyle(.borderedProminent)
             .bold()
-            .foregroundStyle(theme.contrastColor)
+            .foregroundStyle(theme.readableContrastColor)
             .tint(theme.color)
         }
-        .contentShape(Rectangle())
-        .handleVideoUrlDrop(.queue)
+    }
+}
+
+/// Fills with the share of the library that has arrived; without known totals the icon pulses
+struct SyncImportRing: View {
+    let share: Double?
+    let color: Color
+
+    var body: some View {
+        ZStack {
+            Circle()
+                .stroke(.quaternary, lineWidth: 5)
+            Circle()
+                .trim(from: 0, to: share ?? 0)
+                .stroke(color, style: StrokeStyle(lineWidth: 5, lineCap: .round))
+                .rotationEffect(.degrees(-90))
+            Image(systemName: "icloud.and.arrow.down")
+                .font(.system(size: 26))
+                .foregroundStyle(.secondary)
+                .symbolEffect(.pulse, isActive: share == nil)
+        }
+        .frame(width: 64, height: 64)
+        .accessibilityElement(children: .ignore)
+        .accessibilityHidden(share == nil)
+        .accessibilityValue(Text(share ?? 0, format: .percent.precision(.fractionLength(0))))
     }
 }

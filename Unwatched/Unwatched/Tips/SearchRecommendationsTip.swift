@@ -27,7 +27,7 @@ struct SearchRecommendationsTip: Tip {
     var actions: [Action] {
         Action {
             Text("searchRecommendationsTipNo")
-                .foregroundStyle(theme.contrastColor)
+                .foregroundStyle(theme.readableContrastColor)
         }
         // macOS ignores the tint here
         Action(id: Self.enableActionId) {

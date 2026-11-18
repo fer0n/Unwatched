@@ -49,13 +49,15 @@ struct EmptyEntry<Entry>: View where Entry: PersistentModel & HasVideo {
                         if isLoading {
                             ProgressView()
                                 .frame(maxWidth: .infinity)
-                                .tint(theme.darkContrastColor)
+                                .tint(theme.readableContrastColor)
                         } else {
                             Text("repair")
                                 .frame(maxWidth: .infinity)
                         }
                     }
                     .buttonStyle(.borderedProminent)
+                    .tint(theme.color)
+                    .foregroundStyle(theme.readableContrastColor)
 
                     Button {
                         clearEntry()

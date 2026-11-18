@@ -24,7 +24,7 @@ struct HideShortsTip: Tip {
     var actions: [Action] {
         Action {
             Text("hideShortsTipAction")
-                .foregroundStyle(theme.contrastColor)
+                .foregroundStyle(theme.readableContrastColor)
         }
     }
 

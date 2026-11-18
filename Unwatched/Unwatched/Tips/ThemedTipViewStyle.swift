@@ -45,7 +45,7 @@ struct ThemedTipViewStyle: TipViewStyle {
             ForEach(configuration.actions) { tipAction in
                 Button(action: action) {
                     tipAction.label()
-                        .foregroundStyle(theme.contrastColor)
+                        .foregroundStyle(theme.readableContrastColor)
                         .fontWeight(.semibold)
                         .frame(maxWidth: .infinity)
                 }

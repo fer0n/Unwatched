@@ -17,7 +17,7 @@ struct SyncStatusLabel: View {
                 Image(systemName: "progress.indicator")
                     .symbolEffect(.variableColor.iterative)
                 Text("syncing")
-                if let share = progress.share(of: totals), !progress.hasCaughtUp(with: totals) {
+                if let share = progress.pendingShare(of: totals) {
                     Text(share, format: .percent.precision(.fractionLength(1)))
                         .monospacedDigit()
                         .contentTransition(.numericText())

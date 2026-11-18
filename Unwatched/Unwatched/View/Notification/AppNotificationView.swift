@@ -36,7 +36,7 @@ struct AppNotificationView: View {
                     } label: {
                         Text(action.label)
                             .fontWeight(.semibold)
-                            .foregroundStyle(theme.contrastColor)
+                            .foregroundStyle(theme.readableContrastColor)
                     }
                     .buttonStyle(.borderedProminent)
                     .tint(theme.color)

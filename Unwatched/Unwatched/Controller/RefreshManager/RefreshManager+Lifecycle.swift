@@ -71,7 +71,8 @@ extension RefreshManager {
         autoRefreshTask?.cancel()
         repeatingRefreshTask?.cancel()
         if enableIcloudSync {
-            Task { await SyncTotals.publish(from: DataProvider.shared.container) }
+            let isSyncing = isSyncingIcloud
+            Task { await SyncTotals.publish(from: DataProvider.shared.container, isSyncing: isSyncing) }
         }
     }
 

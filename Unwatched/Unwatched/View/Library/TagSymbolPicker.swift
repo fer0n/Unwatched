@@ -30,7 +30,7 @@ struct TagSymbolPicker: View {
                                 let isSelected = name == selectedSymbol
                                 SymbolCell(
                                     name: name,
-                                    foreground: isSelected ? theme.contrastColor : Color.neutralAccentColor,
+                                    foreground: isSelected ? theme.readableContrastColor : Color.neutralAccentColor,
                                     background: isSelected ? theme.color : Color.insetBackgroundColor
                                 )
                                 .onTapGesture { symbol = name }
