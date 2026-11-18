@@ -113,6 +113,7 @@ struct VideoPlayer: View {
                 player.video?.isNew = false
             }
         }
+        .modifier(SleepTimerPlaybackSync(viewModel: sleepTimerVM))
         .ignoresSafeArea(edges: keepsOffCameraEdge
                             ? (landscapeControlBand?.edge == .top ? .bottom : .top)
                             : layoutMode.ignoredSafeAreaEdges(embeddingDisabled: player.embeddingDisabled))
@@ -319,17 +320,16 @@ extension VideoPlayer {
     VideoPlayer(compactSize: false,
                 horizontalLayout: false,
                 landscapeFullscreen: false,
-                hideControls: false,
-                )
-    .modelContainer(DataProvider.previewContainer)
-    .environment(NavigationManager.getDummy(true))
-    .environment(player)
-    .environment(ImageCacheManager())
-    .environment(RefreshManager())
-    .environment(SheetPositionReader())
-    .environment(TinyUndoManager())
-    .tint(Color.neutralAccentColor)
-    .preferredColorScheme(.dark)
+                hideControls: false)
+        .modelContainer(DataProvider.previewContainer)
+        .environment(NavigationManager.getDummy(true))
+        .environment(player)
+        .environment(ImageCacheManager())
+        .environment(RefreshManager())
+        .environment(SheetPositionReader())
+        .environment(TinyUndoManager())
+        .tint(Color.neutralAccentColor)
+        .preferredColorScheme(.dark)
 }
 
 private struct VideoPlayerSheetStatePreview: View {

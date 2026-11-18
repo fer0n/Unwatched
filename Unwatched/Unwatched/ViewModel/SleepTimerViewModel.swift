@@ -64,8 +64,8 @@ import UnwatchedShared
     }
 
     func startTimer() {
-        self.timer = Timer.scheduledTimer(withTimeInterval: 1, repeats: true) { _ in
-            self.handleTimerUpdate()
+        self.timer = Timer.scheduledTimer(withTimeInterval: 1, repeats: true) { [weak self] _ in
+            self?.handleTimerUpdate()
         }
     }
 
@@ -125,14 +125,22 @@ import UnwatchedShared
         }
     }
 
-    func pauseTimer() {
+    private func pauseTimer() {
         timer?.invalidate()
         timer = nil
     }
 
-    func resumeTimer() {
+    private func resumeTimer() {
         if remainingSeconds > 0 && timer == nil {
             startTimer()
+        }
+    }
+
+    func syncWithPlayback(isPlaying: Bool) {
+        if isPlaying {
+            resumeTimer()
+        } else {
+            pauseTimer()
         }
     }
 }

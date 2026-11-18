@@ -95,7 +95,7 @@ struct PlayerMoreMenuContent: View {
     var body: some View {
         Group {
             #if !os(visionOS)
-            SleepTimer(viewModel: $sleepTimerVM, onEnded: player.onSleepTimerEnded)
+            SleepTimer(viewModel: $sleepTimerVM)
             #endif
 
             if playerType == .native && player.availableAudioLanguages.count > 1 {

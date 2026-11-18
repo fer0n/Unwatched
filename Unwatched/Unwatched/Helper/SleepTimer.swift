@@ -11,16 +11,8 @@ struct SleepTimer: View {
     @Environment(PlayerManager.self) var player
     @AppStorage(Const.themeColor) var theme = ThemeColor()
 
-    #if os(iOS)
-    @State var slider: UISlider?
-    #endif
     @State var hapticToggle: Bool = false
     @Binding var viewModel: SleepTimerViewModel
-
-    init(viewModel: Binding<SleepTimerViewModel>, onEnded: @escaping (_ fadeOutSeconds: Double?) -> Void) {
-        viewModel.wrappedValue.onEnded = onEnded
-        self._viewModel = viewModel
-    }
 
     var accessibilityLabel: String {
         if let remainingText = viewModel.remainingText {
@@ -52,34 +44,8 @@ struct SleepTimer: View {
         .accessibilityLabel(accessibilityLabel)
         #if os(iOS)
         .menuActionDismissBehavior(.disabled)
-        .onAppear {
-            slider = MPVolumeView().subviews.first(where: { $0 is UISlider }) as? UISlider
-        }
-        .task(id: viewModel.lowerVolumeBy) {
-            if let vol = viewModel.lowerVolumeBy {
-                slider?.value -= vol
-                viewModel.lowerVolumeBy = nil
-            }
-        }
-        .task(id: viewModel.setVolumeTo) {
-            if let vol = viewModel.setVolumeTo {
-                slider?.value = vol
-                viewModel.setVolumeTo = nil
-            }
-        }
         .sensoryFeedback(Const.sensoryFeedback, trigger: hapticToggle)
         #endif
-        .onPlayerPlayingChange { isPlaying in
-            handleTimerPause(isPlaying)
-        }
-    }
-
-    func handleTimerPause(_ isPlaying: Bool) {
-        if isPlaying {
-            viewModel.resumeTimer()
-        } else {
-            viewModel.pauseTimer()
-        }
     }
 
     func addTimeButton(_ minutes: Int) -> some View {
@@ -92,7 +58,7 @@ struct SleepTimer: View {
                 viewModel.addTime(minutes)
             }
             viewModel.restoreVolume()
-            handleTimerPause(player.isPlaying)
+            viewModel.syncWithPlayback(isPlaying: player.isPlaying)
             hapticToggle.toggle()
             Signal.interaction("Player.MoreMenu", "sleepTimer")
         } label: {
@@ -103,7 +69,50 @@ struct SleepTimer: View {
     }
 }
 
+/// On VideoPlayer, not in SleepTimer: menu content is only built once opened, and each player layout has its own.
+struct SleepTimerPlaybackSync: ViewModifier {
+    @Environment(PlayerManager.self) private var player
+    let viewModel: SleepTimerViewModel
+
+    #if os(iOS)
+    @State private var slider: UISlider?
+    #endif
+
+    func body(content: Content) -> some View {
+        content
+            .onAppear {
+                viewModel.onEnded = player.onSleepTimerEnded
+            }
+            .onPlayerPlayingChange { isPlaying in
+                viewModel.syncWithPlayback(isPlaying: isPlaying)
+            }
+            #if os(iOS)
+            .task(id: viewModel.lowerVolumeBy) {
+                if let vol = viewModel.lowerVolumeBy {
+                    volumeSlider?.value -= vol
+                    viewModel.lowerVolumeBy = nil
+                }
+            }
+            .task(id: viewModel.setVolumeTo) {
+                if let vol = viewModel.setVolumeTo {
+                    volumeSlider?.value = vol
+                    viewModel.setVolumeTo = nil
+                }
+            }
+        #endif
+    }
+
+    #if os(iOS)
+    private var volumeSlider: UISlider? {
+        if slider == nil {
+            slider = MPVolumeView().subviews.first(where: { $0 is UISlider }) as? UISlider
+        }
+        return slider
+    }
+    #endif
+}
+
 #Preview {
-    SleepTimer(viewModel: .constant(SleepTimerViewModel()), onEnded: { _ in })
+    SleepTimer(viewModel: .constant(SleepTimerViewModel()))
         .environment(PlayerManager())
 }
