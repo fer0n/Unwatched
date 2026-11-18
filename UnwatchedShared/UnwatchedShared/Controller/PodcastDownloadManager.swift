@@ -6,6 +6,7 @@
 import Foundation
 import OSLog
 import SwiftData
+import SwiftUI
 
 /// Keeps the next stretch of queued podcast episodes on disk, so they play without a connection.
 @MainActor
@@ -22,6 +23,12 @@ public final class PodcastDownloadManager {
 
     /// How far each in-flight episode has written, for the list item's progress bar.
     public private(set) var downloadProgress = [String: Double]()
+
+    /// Downloaded, but the bar is still showing.
+    public private(set) var finishingIds = Set<String>()
+    /// Downloaded, but the bar isn't full yet; the downloaded icon waits.
+    public private(set) var fillingIds = Set<String>()
+    @ObservationIgnored private var finishingTasks = [String: Task<Void, Never>]()
 
     /// The episode that's playing, kept out of observation: it only steers the next `sync()`.
     @ObservationIgnored public var playingYoutubeId: String?
@@ -153,7 +160,7 @@ public final class PodcastDownloadManager {
             }
         }
         downloadingIds = inFlight
-        downloadProgress = downloadProgress.filter { inFlight.contains($0.key) }
+        downloadProgress = downloadProgress.filter { inFlight.contains($0.key) || finishingIds.contains($0.key) }
         PodcastDownloadStore.removeAll(except: plan.keep)
         PodcastDownloadStore.leftWindowDates = plan.leftWindowDates
         setDownloadedIds(PodcastDownloadStore.downloadedIds())
@@ -176,6 +183,10 @@ public final class PodcastDownloadManager {
         }
         downloadingIds = []
         downloadProgress = [:]
+        finishingTasks.values.forEach { $0.cancel() }
+        finishingTasks = [:]
+        finishingIds = []
+        fillingIds = []
         PodcastDownloadStore.removeAll(except: [])
         setDownloadedIds([])
     }
@@ -194,16 +205,21 @@ public final class PodcastDownloadManager {
         task.taskDescription = pending.youtubeId
         task.resume()
         downloadingIds.insert(pending.youtubeId)
+        stopFinishing(pending.youtubeId)
+        if downloadProgress[pending.youtubeId] != nil {
+            downloadProgress[pending.youtubeId] = nil
+        }
     }
 
     fileprivate func didDownload(_ youtubeId: String) {
         failedIds.remove(youtubeId)
+        if downloadProgress[youtubeId] != nil {
+            animateCompletion(youtubeId)
+        }
         setDownloadedIds(downloadedIds.union([youtubeId]))
         onEpisodeDownloaded?(youtubeId)
     }
 
-    /// A finished download holds a full bar for a moment before it's dropped, so the bar completes on screen instead
-    /// of vanishing at whatever step it last reported.
     fileprivate func didFinish(_ youtubeId: String, succeeded: Bool, wasCancelled: Bool) {
         downloadingIds.remove(youtubeId)
         let isStored = succeeded && PodcastDownloadStore.downloadedFile(for: youtubeId) != nil
@@ -212,18 +228,49 @@ public final class PodcastDownloadManager {
             onEpisodeDownloadFailed?()
         }
         guard isStored, downloadProgress[youtubeId] != nil else {
-            downloadProgress[youtubeId] = nil
+            if downloadProgress[youtubeId] != nil {
+                downloadProgress[youtubeId] = nil
+            }
+            stopFinishing(youtubeId)
             return
         }
-        downloadProgress[youtubeId] = 1
-        Task {
-            try? await Task.sleep(for: .seconds(0.6))
-            guard !downloadingIds.contains(youtubeId) else { return }
-            downloadProgress[youtubeId] = nil
+        animateCompletion(youtubeId)
+    }
+
+    private func animateCompletion(_ youtubeId: String) {
+        guard finishingTasks[youtubeId] == nil else { return }
+        if downloadProgress[youtubeId] != 1 {
+            downloadProgress[youtubeId] = 1
+        }
+        finishingIds.insert(youtubeId)
+        fillingIds.insert(youtubeId)
+        let fill = ProgressBar.fillDuration
+        finishingTasks[youtubeId] = Task {
+            try? await Task.sleep(for: .seconds(fill))
+            guard !Task.isCancelled else { return }
+            fillingIds.remove(youtubeId)
+            try? await Task.sleep(for: .seconds(0.3))
+            guard !Task.isCancelled else { return }
+            withAnimation(.easeOut(duration: fill)) {
+                downloadProgress[youtubeId] = nil
+            }
+            stopFinishing(youtubeId)
+        }
+    }
+
+    private func stopFinishing(_ youtubeId: String) {
+        finishingTasks.removeValue(forKey: youtubeId)?.cancel()
+        if finishingIds.contains(youtubeId) {
+            finishingIds.remove(youtubeId)
+        }
+        if fillingIds.contains(youtubeId) {
+            fillingIds.remove(youtubeId)
         }
     }
 
     fileprivate func didWrite(_ youtubeId: String, _ fraction: Double) {
+        // a late step would shrink the full bar back
+        guard !downloadedIds.contains(youtubeId) else { return }
         let stepped = (fraction * 50).rounded(.down) / 50
         guard downloadProgress[youtubeId] != stepped else { return }
         downloadProgress[youtubeId] = stepped

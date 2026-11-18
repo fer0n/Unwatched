@@ -48,7 +48,8 @@ public struct VideoListItemThumbnailOverlay: View {
     func progressOverlay(hasDuration: Bool) -> some View {
         let progress = cleanedProgress
         let download = downloadProgress
-        if progress != nil || download != nil {
+        // one branch keeps the bar's identity, so the download fill can fade
+        if progress != nil || download != nil || hasDuration {
             GeometryReader { geo in
                 ProgressBar(
                     color,
@@ -57,8 +58,7 @@ public struct VideoListItemThumbnailOverlay: View {
                     downloadWidth: download.map { geo.size.width * $0 }
                 )
             }
-        } else if hasDuration {
-            ProgressBar(color, nil, barHeight)
+            .transition(.opacity)
         }
     }
 
@@ -108,10 +108,14 @@ public struct VideoListItemThumbnailOverlay: View {
         )
     }
 
-    /// Only read for an episode that isn't downloaded yet, so its list item doesn't redraw at every step.
+    /// Read only while downloading or finishing, so downloaded rows skip progress steps.
     private var downloadProgress: Double? {
         let manager = PodcastDownloadManager.shared
-        guard video.isPodcast, !manager.downloadedIds.contains(video.youtubeId) else { return nil }
+        guard video.isPodcast else { return nil }
+        if manager.downloadedIds.contains(video.youtubeId),
+           !manager.finishingIds.contains(video.youtubeId) {
+            return nil
+        }
         return manager.downloadProgress[video.youtubeId]
     }
 

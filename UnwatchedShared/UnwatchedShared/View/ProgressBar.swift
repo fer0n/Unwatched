@@ -10,6 +10,8 @@ public extension EnvironmentValues {
 }
 
 struct ProgressBar: View {
+    static let fillDuration = 0.4
+
     @AppStorage(Const.themeColor) var theme = ThemeColor()
     @Environment(\.pageThemeColor) var pageThemeColor
 
@@ -69,7 +71,7 @@ struct ProgressBar: View {
             }
         }
         .frame(height: barHeight)
-        .animation(.easeOut(duration: 0.4), value: downloadWidth)
+        .animation(.easeOut(duration: Self.fillDuration), value: downloadWidth)
     }
 }
 
