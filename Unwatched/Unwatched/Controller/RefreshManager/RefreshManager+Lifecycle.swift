@@ -4,6 +4,7 @@
 //
 
 import Foundation
+import SwiftData
 import Network
 import OSLog
 import UnwatchedShared
@@ -94,12 +95,15 @@ extension RefreshManager {
             return
         }
 
-        let task = UserDataService.saveToIcloud()
         isBackingUp = true
         Task {
             defer { isBackingUp = false }
+            guard await shouldAutoBackup() else {
+                Log.refresh.info("onboarding pending and library empty, skipping auto backup")
+                return
+            }
             do {
-                try await task.value
+                try await UserDataService.saveToIcloud().value
             } catch {
                 Log.refresh.error("auto backup failed: \(error)")
                 return
@@ -112,6 +116,15 @@ extension RefreshManager {
                 _ = await UserDataService.autoDeleteBackups(recompressLimit: Const.autoRecompressBackupLimit)
             }
         }
+    }
+
+    /// An empty backup would hide the real ones from `WelcomeBack`
+    private func shouldAutoBackup() async -> Bool {
+        if UserDefaults.standard.bool(forKey: Const.onboardingCompleted) {
+            return true
+        }
+        let totals = try? await SyncTotals.counted(in: DataProvider.shared.container)
+        return (totals?.total ?? 1) > 0
     }
 
     func executeAutoRefresh() async {
