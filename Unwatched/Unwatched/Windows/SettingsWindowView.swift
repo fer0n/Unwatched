@@ -7,7 +7,7 @@ import SwiftUI
 import UnwatchedShared
 
 enum SettingsWindowTab {
-    case general, search, appearance, playback, mediaFilter, chapters, userData, debug, privacy
+    case general, search, appearance, playback, podcastDownloads, mediaFilter, chapters, userData, debug, privacy
 }
 
 struct SettingsWindowView: View {
@@ -28,6 +28,9 @@ struct SettingsWindowView: View {
             }
             settingsTab(.playback, "playback", systemImage: Const.playbackSettingsSF) {
                 PlaybackSettingsView()
+            }
+            settingsTab(.podcastDownloads, "podcastDownloads", systemImage: Const.downloadedSF) {
+                PodcastDownloadSettingsView()
             }
             settingsTab(.mediaFilter, "mediaFilter", systemImage: Const.filterSettingsSF) {
                 FilterSettingsView()
