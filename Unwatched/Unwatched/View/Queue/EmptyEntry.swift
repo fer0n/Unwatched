@@ -144,12 +144,24 @@ struct EmptyEntry<Entry>: View where Entry: PersistentModel & HasVideo {
             return
         }
 
+        let changesTopOfQueue = force && moveChangesTopOfQueue(video)
         if let queueEntry = entry as? QueueEntry {
             attach(queueEntry, to: video, via: \.queueEntry, force: force)
         } else if let inboxEntry = entry as? InboxEntry {
             attach(inboxEntry, to: video, via: \.inboxEntry, force: force)
         }
         try? modelContext.save()
+        if changesTopOfQueue {
+            player.loadTopmostVideoFromQueue(modelContext: modelContext)
+        }
+    }
+
+    func moveChangesTopOfQueue(_ video: Video) -> Bool {
+        guard let queueEntry = entry as? QueueEntry, let duplicate = video.queueEntry else {
+            return false
+        }
+        return player.isTopOfQueue(order: duplicate.order, modelContext)
+            || player.isTopOfQueue(order: queueEntry.order, modelContext)
     }
 
     func attach<Target: PersistentModel>(
