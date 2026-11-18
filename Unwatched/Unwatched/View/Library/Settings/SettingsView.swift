@@ -34,7 +34,7 @@ struct SettingsView: View {
                     }
 
                     NavigationLink(value: LibraryDestination.settingsPodcastDownloads) {
-                        Label("podcastDownloads", systemImage: Const.downloadedSF)
+                        Label("podcasts", systemImage: Const.downloadedSF)
                     }
 
                     NavigationLink(value: LibraryDestination.settingsNotifications) {

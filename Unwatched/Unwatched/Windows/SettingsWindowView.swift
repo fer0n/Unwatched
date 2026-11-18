@@ -29,7 +29,7 @@ struct SettingsWindowView: View {
             settingsTab(.playback, "playback", systemImage: Const.playbackSettingsSF) {
                 PlaybackSettingsView()
             }
-            settingsTab(.podcastDownloads, "podcastDownloads", systemImage: Const.downloadedSF) {
+            settingsTab(.podcastDownloads, "podcasts", systemImage: Const.downloadedSF) {
                 PodcastDownloadSettingsView()
             }
             settingsTab(.mediaFilter, "mediaFilter", systemImage: Const.filterSettingsSF) {
@@ -63,7 +63,10 @@ struct SettingsWindowView: View {
         @ViewBuilder content: () -> Content
     ) -> some View {
         ScrollView {
+            // The outer ScrollView does the scrolling; the Form inside is its own scroll view,
+            // which flashes a scroller while it's first sized to fit its content.
             content()
+                .scrollIndicators(.never)
                 .settingsView()
                 .padding(.vertical)
         }

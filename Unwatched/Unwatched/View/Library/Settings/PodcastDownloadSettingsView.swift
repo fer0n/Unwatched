@@ -55,7 +55,7 @@ struct PodcastDownloadSettingsView: View {
                 }
             }
             .animation(.default, value: storedBytes > 0)
-            .myNavigationTitle("podcastDownloads")
+            .myNavigationTitle("podcasts")
         }
         .onChange(of: limitHours) { sync() }
         .onChange(of: keepDays) { sync() }
