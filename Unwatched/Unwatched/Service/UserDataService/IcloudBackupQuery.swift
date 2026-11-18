@@ -5,57 +5,84 @@
 
 import Foundation
 
+struct IcloudBackup: Equatable {
+    let url: URL
+    let date: Date
+    var isDownloaded = true
+}
+
 @MainActor
 final class IcloudBackupQuery {
-    private struct Item {
-        let url: URL
-        let date: Date
-        let isDownloaded: Bool
-    }
-
     private let query = NSMetadataQuery()
 
-    static func newestDownloadedBackup(timeout: Duration) async -> URL? {
-        let backupQuery = IcloudBackupQuery()
-        defer { backupQuery.query.stop() }
-        return await backupQuery.run(until: .now + timeout)
-    }
-
-    private func run(until deadline: ContinuousClock.Instant) async -> URL? {
+    init() {
         query.searchScopes = [NSMetadataQueryUbiquitousDocumentsScope]
         query.predicate = NSPredicate(format: "%K LIKE %@", NSMetadataItemFSNameKey, "*.unwatchedbackup")
         query.operationQueue = .main
         query.start()
+    }
 
+    func stop() {
+        query.stop()
+    }
+
+    func newestDownloadedBackup(until deadline: ContinuousClock.Instant) async -> IcloudBackup? {
         var requestedDownload: URL?
         while ContinuousClock.now < deadline, !Task.isCancelled {
-            if !query.isGathering, let item = newestItem() {
-                if item.isDownloaded {
-                    return item.url
+            if !query.isGathering, let newest = newestBackup() {
+                if newest.isDownloaded {
+                    return newest
                 }
-                if requestedDownload != item.url {
-                    try? FileManager.default.startDownloadingUbiquitousItem(at: item.url)
-                    requestedDownload = item.url
+                if requestedDownload != newest.url {
+                    try? FileManager.default.startDownloadingUbiquitousItem(at: newest.url)
+                    requestedDownload = newest.url
                 }
             }
             try? await Task.sleep(for: .milliseconds(500))
         }
-        return newestItem().flatMap { $0.isDownloaded ? $0.url : nil }
+        return newestBackup().flatMap { $0.isDownloaded ? $0 : nil }
     }
 
-    private func newestItem() -> Item? {
+    func download(_ backup: IcloudBackup, until deadline: ContinuousClock.Instant) async -> Bool {
+        if isDownloaded(backup) {
+            return true
+        }
+        guard ContinuousClock.now < deadline, !Task.isCancelled,
+              (try? FileManager.default.startDownloadingUbiquitousItem(at: backup.url)) != nil else {
+            return false
+        }
+        while ContinuousClock.now < deadline, !Task.isCancelled {
+            if isDownloaded(backup) {
+                return true
+            }
+            try? await Task.sleep(for: .milliseconds(500))
+        }
+        return isDownloaded(backup)
+    }
+
+    func backups() -> [IcloudBackup] {
         query.disableUpdates()
         defer { query.enableUpdates() }
-        return query.results
-            .compactMap { result -> Item? in
-                guard let item = result as? NSMetadataItem,
-                      let url = item.value(forAttribute: NSMetadataItemURLKey) as? URL,
-                      let date = item.value(forAttribute: NSMetadataItemFSCreationDateKey) as? Date else {
-                    return nil
-                }
-                let status = item.value(forAttribute: NSMetadataUbiquitousItemDownloadingStatusKey) as? String
-                return Item(url: url, date: date, isDownloaded: status == NSMetadataUbiquitousItemDownloadingStatusCurrent)
+        return query.results.compactMap { result -> IcloudBackup? in
+            guard let item = result as? NSMetadataItem,
+                  let url = item.value(forAttribute: NSMetadataItemURLKey) as? URL,
+                  let date = item.value(forAttribute: NSMetadataItemFSCreationDateKey) as? Date else {
+                return nil
             }
-            .max { $0.date < $1.date }
+            let status = item.value(forAttribute: NSMetadataUbiquitousItemDownloadingStatusKey) as? String
+            return IcloudBackup(
+                url: url,
+                date: date,
+                isDownloaded: status == NSMetadataUbiquitousItemDownloadingStatusCurrent
+            )
+        }
+    }
+
+    private func newestBackup() -> IcloudBackup? {
+        backups().max { $0.date < $1.date }
+    }
+
+    private func isDownloaded(_ backup: IcloudBackup) -> Bool {
+        backups().first { $0.url == backup.url }?.isDownloaded == true
     }
 }

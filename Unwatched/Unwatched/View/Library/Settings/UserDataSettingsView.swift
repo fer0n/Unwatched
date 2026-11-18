@@ -220,9 +220,7 @@ struct UserDataSettingsView: View {
 
     func getFileInfo(_ file: URL) -> FileInfo {
         let fileName = file.lastPathComponent
-        let deviceName = fileName.contains("_")
-            ? fileName.components(separatedBy: "_").first
-            : nil
+        let deviceName = UserDataService.backupDeviceName(from: file)
         var fileSizeString: String?
         var dateString: String?
         let isManual = fileName.contains("_m")

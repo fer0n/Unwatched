@@ -48,6 +48,7 @@ struct WelcomeBack {
     private let settings: [String: AnyCodable]?
 
     private static let handledKey = "welcomeBackHandled"
+    private static let maxSettingsAge: TimeInterval = 180 * 24 * 60 * 60
 
     static var isHandled: Bool {
         get { UserDefaults.standard.bool(forKey: handledKey) }
@@ -62,18 +63,94 @@ struct WelcomeBack {
             return nil
         }
         SyncHandoff.refresh()
-        guard let url = await IcloudBackupQuery.newestDownloadedBackup(timeout: .seconds(30)),
-              let summary = await readSummary(url) else {
+        let query = IcloudBackupQuery()
+        defer { query.stop() }
+        guard let newest = await query.newestDownloadedBackup(until: .now + .seconds(30)),
+              let summary = await readSummary(newest.url) else {
             return nil
         }
         return WelcomeBack(
             offer: offer(for: summary),
-            backupURL: url,
-            backupDate: url.creationDate,
-            backupDeviceName: deviceName(from: url),
+            backupURL: newest.url,
+            backupDate: newest.date,
+            backupDeviceName: deviceName(from: newest.url),
             backupDeviceId: summary.deviceId,
-            settings: summary.settings
+            settings: await preferredSettings(newest: newest, newestSummary: summary, query: query)
         )
+    }
+
+    @MainActor
+    private static func preferredSettings(
+        newest: IcloudBackup,
+        newestSummary: BackupSummary,
+        query: IcloudBackupQuery
+    ) async -> [String: AnyCodable]? {
+        let deadline = ContinuousClock.now + .seconds(10)
+        let candidates = settingsCandidates(
+            in: query.backups(),
+            newest: newest,
+            currentKind: .current,
+            currentDeviceName: Device.deviceName
+        )
+        for candidate in candidates {
+            let summary: BackupSummary?
+            if candidate.url == newest.url {
+                summary = newestSummary
+            } else if await query.download(candidate, until: deadline) {
+                summary = await readSummary(candidate.url)
+            } else {
+                summary = nil
+            }
+            if let summary, summary.settings?.isEmpty == false, isFromCurrentDeviceFamily(
+                summary,
+                backupDeviceName: deviceName(from: candidate.url),
+                currentDeviceId: DeviceIdentity.id,
+                currentKind: .current,
+                currentDeviceName: Device.deviceName
+            ) {
+                return summary.settings
+            }
+        }
+        return newestSummary.settings
+    }
+
+    static func settingsCandidates(
+        in backups: [IcloudBackup],
+        newest: IcloudBackup,
+        currentKind: SyncDeviceKind,
+        currentDeviceName: String
+    ) -> [IcloudBackup] {
+        let oldestAllowed = newest.date.addingTimeInterval(-maxSettingsAge)
+        let otherKindNames = Set(SyncDeviceKind.allCases.filter { $0 != currentKind }.compactMap(\.productName))
+        let eligible = backups.filter { backup in
+            backup.date >= oldestAllowed
+                && (backup.url == newest.url || !otherKindNames.contains(deviceName(from: backup.url)))
+        }
+        let newestPerDevice = Dictionary(grouping: eligible) {
+            deviceName(from: $0.url)
+        }.compactMapValues { $0.max { $0.date < $1.date } }
+
+        return newestPerDevice
+            .sorted { lhs, rhs in
+                let lhsIsCurrent = lhs.key == currentDeviceName
+                let rhsIsCurrent = rhs.key == currentDeviceName
+                return lhsIsCurrent != rhsIsCurrent ? lhsIsCurrent : lhs.value.date > rhs.value.date
+            }
+            .map(\.value)
+    }
+
+    static func isFromCurrentDeviceFamily(
+        _ summary: BackupSummary,
+        backupDeviceName: String,
+        currentDeviceId: String,
+        currentKind: SyncDeviceKind,
+        currentDeviceName: String
+    ) -> Bool {
+        if summary.deviceId == currentDeviceId {
+            return true
+        }
+        let hasNoDeviceKind = summary.deviceKind == .other
+        return hasNoDeviceKind ? backupDeviceName == currentDeviceName : summary.deviceKind == currentKind
     }
 
     @MainActor
@@ -98,9 +175,8 @@ struct WelcomeBack {
         }.value
     }
 
-    private static func deviceName(from url: URL) -> String {
-        let name = url.deletingPathExtension().lastPathComponent
-        return name.split(separator: "_").first.map(String.init) ?? name
+    static func deviceName(from url: URL) -> String {
+        UserDataService.backupDeviceName(from: url) ?? url.deletingPathExtension().lastPathComponent
     }
 }
 
@@ -135,7 +211,8 @@ extension WelcomeBack {
         let backup = try await Task.detached(priority: .userInitiated) {
             try UserDataService.decodeBackup(Data(contentsOf: url))
         }.value
-        try UserDataService.restore(backup, includeSynced: false)
+        UserDataService.restoreSettings(settings, includeSynced: false)
+        try UserDataService.restoreVideoData(from: backup)
         finishRestore(action: "restore")
     }
 

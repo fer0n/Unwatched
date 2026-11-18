@@ -5,7 +5,7 @@
 
 import Foundation
 
-public enum SyncDeviceKind: String, Sendable {
+public enum SyncDeviceKind: String, Sendable, CaseIterable {
     case iPhone, iPad, mac, vision, tv, watch, other
 
     public init(stored: Any?) {

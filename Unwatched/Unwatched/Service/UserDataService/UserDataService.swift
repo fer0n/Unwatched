@@ -396,6 +396,14 @@ struct UserDataService {
         return "\(deviceName)_\(dateString)\(manual ? "_m" : "").unwatchedbackup"
     }
 
+    static func backupDeviceName(from url: URL) -> String? {
+        var name = url.deletingPathExtension().lastPathComponent
+        if name.hasSuffix("_m") {
+            name.removeLast(2)
+        }
+        return name.lastIndex(of: "_").map { String(name[..<$0]) }
+    }
+
     static func clearMemory() {
         Log.data.info("clearMemory")
         Task { @MainActor in
