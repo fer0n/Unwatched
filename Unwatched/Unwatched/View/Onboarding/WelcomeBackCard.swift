@@ -10,6 +10,7 @@ import UnwatchedShared
 struct WelcomeBackCard: View {
     @AppStorage(Const.onboardingCompleted) var onboardingCompleted = false
     @AppStorage(Const.settingsSplashShown) var settingsSplashShown = false
+    @AppStorage(Const.themeColor) var theme = ThemeColor()
 
     let welcomeBack: WelcomeBack
     let onRestored: () -> Void
@@ -215,6 +216,8 @@ struct WelcomeBackCard: View {
         .buttonStyle(.borderedProminent)
         .buttonBorderShape(.capsule)
         .controlSize(.large)
+        .tint(theme.color)
+        .foregroundStyle(theme.readableContrastColor)
     }
 
     private func textButton(_ title: LocalizedStringKey, action: @escaping () -> Void) -> some View {

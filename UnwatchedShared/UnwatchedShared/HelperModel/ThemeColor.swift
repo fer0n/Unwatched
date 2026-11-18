@@ -64,6 +64,14 @@ public enum ThemeColor: Int, CaseIterable, Sendable {
         return color.mix(with: .black, by: 0.2)
     }
 
+    /// Text on a `color` fill; white reaches under 3:1 contrast on the light themes
+    public var readableContrastColor: Color {
+        switch self {
+        case .orange, .yellow, .green, .mint, .teal: .black
+        default: contrastColor
+        }
+    }
+
     public var darkContrastColor: Color {
         if self == .blackWhite {
             return .automaticBlack

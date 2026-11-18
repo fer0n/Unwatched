@@ -101,7 +101,7 @@ struct OnboardingContinueButton: View {
                 button
                     .buttonStyle(.borderedProminent)
                     .tint(theme.color)
-                    .foregroundStyle(theme.contrastColor)
+                    .foregroundStyle(theme.readableContrastColor)
             } else {
                 button
                     .buttonStyle(.bordered)
