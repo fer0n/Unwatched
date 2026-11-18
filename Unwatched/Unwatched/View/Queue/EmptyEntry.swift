@@ -115,37 +115,7 @@ struct EmptyEntry<Entry>: View where Entry: PersistentModel & HasVideo {
             isLoading = true
         }
 
-        if entry.video == nil, let youtubeId = entry.youtubeId {
-            if let video = VideoService.getVideo(for: youtubeId, modelContext: modelContext) {
-                if let queueEntry = entry as? QueueEntry {
-                    if let duplicate = video.queueEntry {
-                        if force {
-                            modelContext.delete(duplicate)
-                            video.queueEntry = queueEntry
-                            Log.info("Moved video from duplicate queue entry to this one")
-                        }
-                    } else {
-                        video.queueEntry = queueEntry
-                        Log.info("Reconnected video to queue entry")
-                    }
-                }
-                if let inboxEntry = entry as? InboxEntry {
-                    if let duplicate = video.inboxEntry {
-                        if force {
-                            modelContext.delete(duplicate)
-                            video.inboxEntry = inboxEntry
-                            Log.info("Moved video from duplicate inbox entry to this one")
-                        }
-                    } else {
-                        video.inboxEntry = inboxEntry
-                        Log.info("Reconnected video to inbox entry")
-                    }
-                }
-                try? modelContext.save()
-            }
-        } else {
-            Log.info("Couldn't reconnect video to entry")
-        }
+        attachVideo(force: force)
 
         if !force {
             return
@@ -164,6 +134,38 @@ struct EmptyEntry<Entry>: View where Entry: PersistentModel & HasVideo {
                 }
             } catch { }
         }
+    }
+
+    func attachVideo(force: Bool) {
+        guard entry.video == nil,
+              let youtubeId = entry.youtubeId,
+              let video = VideoService.getVideo(for: youtubeId, modelContext: modelContext) else {
+            Log.info("Couldn't reconnect video to entry")
+            return
+        }
+
+        if let queueEntry = entry as? QueueEntry {
+            attach(queueEntry, to: video, via: \.queueEntry, force: force)
+        } else if let inboxEntry = entry as? InboxEntry {
+            attach(inboxEntry, to: video, via: \.inboxEntry, force: force)
+        }
+        try? modelContext.save()
+    }
+
+    func attach<Target: PersistentModel>(
+        _ target: Target,
+        to video: Video,
+        via relationship: ReferenceWritableKeyPath<Video, Target?>,
+        force: Bool
+    ) {
+        if let duplicate = video[keyPath: relationship] {
+            guard force else { return }
+            modelContext.delete(duplicate)
+            Log.info("Moved video from duplicate entry to this one")
+        } else {
+            Log.info("Reconnected video to entry")
+        }
+        video[keyPath: relationship] = target
     }
 
     func clearEntry() {
