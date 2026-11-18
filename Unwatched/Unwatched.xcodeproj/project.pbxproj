@@ -197,6 +197,8 @@
 		882153622FC03C6900167AEF /* PlayerObservers.swift in Sources */ = {isa = PBXBuildFile; fileRef = 882153602FC03C6900167AEF /* PlayerObservers.swift */; };
 		88250C612B49273100174C8D /* Date.swift in Sources */ = {isa = PBXBuildFile; fileRef = 88250C602B49273100174C8D /* Date.swift */; };
 		88253072A9EC95E688D9565F /* SubscriptionSkipSetting.swift in Sources */ = {isa = PBXBuildFile; fileRef = 88E2ABCAAC0887D9028AAAD5 /* SubscriptionSkipSetting.swift */; };
+		B1253072A9EC95E688D9565F /* SubscriptionSegmentSetting.swift in Sources */ = {isa = PBXBuildFile; fileRef = A1E2ABCAAC0887D9028AAAD5 /* SubscriptionSegmentSetting.swift */; };
+		B2253072A9EC95E688D9565F /* SubscriptionAutoSkipSetting.swift in Sources */ = {isa = PBXBuildFile; fileRef = A2E2ABCAAC0887D9028AAAD5 /* SubscriptionAutoSkipSetting.swift */; };
 		8826DD222E6EE9CA008234B3 /* PrivacySettingsView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8826DD212E6EE9CA008234B3 /* PrivacySettingsView.swift */; };
 		8826DD232E6EE9CA008234B3 /* PrivacySettingsView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8826DD212E6EE9CA008234B3 /* PrivacySettingsView.swift */; };
 		88274EFC301E46FC0033352A /* PlayerEdgeSwipe.swift in Sources */ = {isa = PBXBuildFile; fileRef = 88274EFB301E46FC0033352A /* PlayerEdgeSwipe.swift */; };
@@ -464,6 +466,8 @@
 		88904B092C089DE500F95C67 /* SubscriptionSpeedSetting.swift in Sources */ = {isa = PBXBuildFile; fileRef = 88904B082C089DE500F95C67 /* SubscriptionSpeedSetting.swift */; };
 		88905DA62C5865EE00DD27B8 /* FullscreenPlayerControlsWrapper.swift in Sources */ = {isa = PBXBuildFile; fileRef = 88905DA52C5865EE00DD27B8 /* FullscreenPlayerControlsWrapper.swift */; };
 		88913A38E9920BF251498E5C /* SubscriptionSkipSetting.swift in Sources */ = {isa = PBXBuildFile; fileRef = 88E2ABCAAC0887D9028AAAD5 /* SubscriptionSkipSetting.swift */; };
+		C1913A38E9920BF251498E5C /* SubscriptionSegmentSetting.swift in Sources */ = {isa = PBXBuildFile; fileRef = A1E2ABCAAC0887D9028AAAD5 /* SubscriptionSegmentSetting.swift */; };
+		C2913A38E9920BF251498E5C /* SubscriptionAutoSkipSetting.swift in Sources */ = {isa = PBXBuildFile; fileRef = A2E2ABCAAC0887D9028AAAD5 /* SubscriptionAutoSkipSetting.swift */; };
 		8891AAEE2CE3372F0058DD7C /* ChapterHandlingContext.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8891AAED2CE3372F0058DD7C /* ChapterHandlingContext.swift */; };
 		8891AAEF2CE3372F0058DD7C /* ChapterHandlingContext.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8891AAED2CE3372F0058DD7C /* ChapterHandlingContext.swift */; };
 		8891F0AD2B4E7E170098A3FB /* VideoActor+Videos.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8891F0AC2B4E7E170098A3FB /* VideoActor+Videos.swift */; };
@@ -1776,6 +1780,8 @@
 		88DFC0C52B448C01001895C8 /* VideoService.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = VideoService.swift; sourceTree = "<group>"; };
 		88E1132B2D0EE22D00076DF2 /* EnvironmentValues.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = EnvironmentValues.swift; sourceTree = "<group>"; };
 		88E2ABCAAC0887D9028AAAD5 /* SubscriptionSkipSetting.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SubscriptionSkipSetting.swift; sourceTree = "<group>"; };
+		A1E2ABCAAC0887D9028AAAD5 /* SubscriptionSegmentSetting.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SubscriptionSegmentSetting.swift; sourceTree = "<group>"; };
+		A2E2ABCAAC0887D9028AAAD5 /* SubscriptionAutoSkipSetting.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SubscriptionAutoSkipSetting.swift; sourceTree = "<group>"; };
 		88E48D6A2F215D7100EE199A /* UnwatchedSafariExtension.appex */ = {isa = PBXFileReference; explicitFileType = "wrapper.app-extension"; includeInIndex = 0; path = UnwatchedSafariExtension.appex; sourceTree = BUILT_PRODUCTS_DIR; };
 		88E589B22D06FB2B008C4F31 /* ProgressBarChapterIndicators.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ProgressBarChapterIndicators.swift; sourceTree = "<group>"; };
 		88E58AAB2D0768CE008C4F31 /* ExtendedPlayerActions.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ExtendedPlayerActions.swift; sourceTree = "<group>"; };
@@ -2419,6 +2425,8 @@
 				88899D8F2E035E1B002C05BC /* SubscriptionTitleFilterButton.swift */,
 				88904B082C089DE500F95C67 /* SubscriptionSpeedSetting.swift */,
 				88E2ABCAAC0887D9028AAAD5 /* SubscriptionSkipSetting.swift */,
+				A1E2ABCAAC0887D9028AAAD5 /* SubscriptionSegmentSetting.swift */,
+				A2E2ABCAAC0887D9028AAAD5 /* SubscriptionAutoSkipSetting.swift */,
 				881E51432B5A75AD006384E4 /* SubscriptionListView.swift */,
 				889924702C4824EE001185A6 /* InteractiveSubscriptionTitle.swift */,
 				C0FFEE0A1B2C3D4E5F600001 /* VideoSourceTitle.swift */,
@@ -3654,6 +3662,8 @@
 				F33DFA11BACC0000000000D1 /* VideoActor+MissingInfo.swift in Sources */,
 				889AF9382C50ECF5001CEDE6 /* SubscriptionSpeedSetting.swift in Sources */,
 				88913A38E9920BF251498E5C /* SubscriptionSkipSetting.swift in Sources */,
+				C1913A38E9920BF251498E5C /* SubscriptionSegmentSetting.swift in Sources */,
+				C2913A38E9920BF251498E5C /* SubscriptionAutoSkipSetting.swift in Sources */,
 				88EBB40F2F5C607600A25A70 /* AutoDeleteVideosView.swift in Sources */,
 				882966F62CCE1F9400E96D3C /* View.swift in Sources */,
 				889AF93B2C50ECF5001CEDE6 /* SubscriptionListView.swift in Sources */,
@@ -4599,6 +4609,8 @@
 				88274F01301E47250033352A /* DescriptionEdgeSwipe.swift in Sources */,
 				88904B092C089DE500F95C67 /* SubscriptionSpeedSetting.swift in Sources */,
 				88253072A9EC95E688D9565F /* SubscriptionSkipSetting.swift in Sources */,
+				B1253072A9EC95E688D9565F /* SubscriptionSegmentSetting.swift in Sources */,
+				B2253072A9EC95E688D9565F /* SubscriptionAutoSkipSetting.swift in Sources */,
 				8808820D2E565AEA008C38DA /* TemporaryPlaybackSpeedSettings.swift in Sources */,
 				88C4F69B2F24CD6E005893C5 /* SubscriptionShortsSetting.swift in Sources */,
 				607EC990D43D1688D091AB62 /* SubscriptionLiveStreamSetting.swift in Sources */,

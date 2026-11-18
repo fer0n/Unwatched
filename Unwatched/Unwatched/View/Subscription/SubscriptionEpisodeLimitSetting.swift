@@ -29,7 +29,8 @@ struct SubscriptionEpisodeLimitSetting: View {
                 return (String(localized: "episodeLimitEntries \(limit)"), nil)
             },
             menuLabel: "episodeLimit",
-            fallbackSystemImage: "line.3.horizontal.decrease"
+            fallbackSystemImage: "line.3.horizontal.decrease",
+            hidesMenuValue: subscription.episodeLimit == nil
         )
     }
 

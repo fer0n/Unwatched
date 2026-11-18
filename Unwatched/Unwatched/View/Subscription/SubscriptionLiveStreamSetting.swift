@@ -13,6 +13,8 @@ struct SubscriptionLiveStreamSetting: View {
     @Bindable var subscription: Subscription
 
     var body: some View {
+        let followsDefault = subscription.liveStreamSetting == .defaultSetting
+
         CapsulePicker(
             selection: Binding(get: { subscription.liveStreamSetting }, set: select),
             options: LiveStreamSetting.allCases,
@@ -23,9 +25,10 @@ struct SubscriptionLiveStreamSetting: View {
                     ?? "questionmark"
                 return (text, img)
             },
-            menuLabel: "liveStreamSetting"
+            menuLabel: "liveStreamSetting",
+            hidesMenuValue: followsDefault
         )
-        .requiresPremium(subscription.liveStreamSetting == .defaultSetting, feature: "liveStreamFilter")
+        .requiresPremium(followsDefault, feature: "liveStreamFilter")
     }
 
     private func select(_ setting: LiveStreamSetting) {

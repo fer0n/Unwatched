@@ -20,6 +20,7 @@ struct CapsulePicker<T: Hashable>: View {
     var fallbackSystemImage = "questionmark"
     var compactText: ((T) -> String)?
     var compactIconText: String?
+    var hidesMenuValue = false
 
     @Environment(\.compactSettingValues) private var compact
 
@@ -54,7 +55,11 @@ struct CapsulePicker<T: Hashable>: View {
             }
             .pickerStyle(.inline)
         } label: {
-            MenuItemLabel(title: menuLabel, value: text, systemImage: image ?? fallbackSystemImage)
+            MenuItemLabel(
+                title: menuLabel,
+                value: hidesMenuValue ? nil : text,
+                systemImage: image ?? fallbackSystemImage
+            )
         }
     }
 

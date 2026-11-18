@@ -17,7 +17,7 @@ struct SubscriptionTitleFilterButton: View {
             Button {
                 showFilter.toggle()
             } label: {
-                MenuItemLabel(title: "filterSettings", value: text, systemImage: systemImage)
+                MenuItemLabel(title: "filterSettings", value: hasFilter ? text : nil, systemImage: systemImage)
             }
         } else {
             capsuleButton

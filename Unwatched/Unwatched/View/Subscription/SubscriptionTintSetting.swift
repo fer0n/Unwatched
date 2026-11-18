@@ -39,7 +39,9 @@ struct SubscriptionTintSetting: View {
         } label: {
             MenuItemLabel(
                 title: "channelTint",
-                value: options.first { $0.tint == subscription.tint }?.name ?? "",
+                value: subscription.tint == .automatic
+                    ? nil
+                    : options.first { $0.tint == subscription.tint }?.name,
                 systemImage: "paintpalette"
             )
         }

@@ -13,13 +13,16 @@ struct SubscriptionChapterGenerationSetting: View {
 
     var body: some View {
         if mode != .off {
+            let followsDefault = subscription.chapterGeneration == nil
+
             CapsulePicker(
                 selection: Binding(get: { subscription.chapterGeneration }, set: select),
                 options: [nil, true, false],
                 label: { (text(for: $0), $0 == false ? "circle.slash" : "sparkles") },
-                menuLabel: "generateChapters"
+                menuLabel: "generateChapters",
+                hidesMenuValue: followsDefault
             )
-            .requiresPremium(subscription.chapterGeneration == nil, feature: "chapterGeneration")
+            .requiresPremium(followsDefault, feature: "chapterGeneration")
         }
     }
 

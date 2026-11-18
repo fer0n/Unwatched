@@ -48,13 +48,16 @@ struct SubscriptionSkipSetting: View {
         )
 
         if style == .menuItem {
+            let isOff = seconds.wrappedValue == 0
+
             CapsulePicker(
                 selection: seconds,
                 options: Self.menuOptions(including: seconds.wrappedValue),
                 label: { (SkipPopoverContent.text(for: $0), edge.systemImage) },
-                menuLabel: edge.label
+                menuLabel: edge.label,
+                hidesMenuValue: isOff
             )
-            .requiresPremium(seconds.wrappedValue == 0, feature: "skipIntroOutro")
+            .requiresPremium(isOff, feature: "skipIntroOutro")
         } else {
             popoverButton(seconds: seconds)
         }
@@ -169,102 +172,6 @@ struct SkipPopoverContent: View {
     private func step(to value: Double) {
         guard range.contains(value) else { return }
         seconds = value
-    }
-}
-
-/// Which SponsorBlock category a per-channel override applies to.
-enum SegmentCategory {
-    case sponsor
-    case selfPromo
-
-    var label: LocalizedStringKey {
-        self == .sponsor ? "sponsorSegments" : "selfPromoSegments"
-    }
-
-    var systemImage: String {
-        self == .sponsor ? "dollarsign" : "megaphone.fill"
-    }
-
-    var setting: ReferenceWritableKeyPath<Subscription, SponsorBlockSegmentSetting?> {
-        self == .sponsor ? \.sponsorSegmentSetting : \.selfPromoSegmentSetting
-    }
-}
-
-/// Overrides the global setting for one segment category, for this channel only.
-struct SubscriptionSegmentSetting: View {
-    @CloudStorage(Const.sponsorSegmentSetting)
-    var globalSponsor: SponsorBlockSegmentSetting = SponsorBlockSegmentSetting.sponsorDefault
-    @CloudStorage(Const.selfPromoSegmentSetting)
-    var globalSelfPromo: SponsorBlockSegmentSetting = SponsorBlockSegmentSetting.selfPromoDefault
-    @CloudStorage(Const.youtubePremium) var youtubePremium: Bool = false
-
-    var subscription: Subscription
-    var category: SegmentCategory
-
-    var body: some View {
-        let selection = Binding(
-            get: {
-                subscription[keyPath: category.setting]
-            }, set: { value in
-                subscription[keyPath: category.setting] = value
-            }
-        )
-
-        CapsulePicker(
-            selection: selection,
-            options: options,
-            label: {
-                let text = $0?.description ?? String(localized: "defaultSegmentSetting \(globalSetting.description)")
-                let img = $0?.systemImage ?? globalSetting.systemImage
-                return (text, img)
-            },
-            menuLabel: category.label
-        )
-        .requiresPremium(selection.wrappedValue == nil, feature: "sponsorBlock")
-    }
-
-    private var globalSetting: SponsorBlockSegmentSetting {
-        category == .sponsor ? globalSponsor : globalSelfPromo
-    }
-
-    private var options: [SponsorBlockSegmentSetting?] {
-        let settings = SponsorBlockSegmentSetting.allCases
-            .filter { youtubePremium || !$0.skips }
-        return [nil] + settings.map { $0 }
-    }
-}
-
-/// The chapter titles this channel skips automatically, and a way to stop skipping one.
-struct SubscriptionAutoSkipSetting: View {
-    @PremiumCloudStorage(Const.autoSkipRecurringChapters) var autoSkipRecurringChapters = true
-
-    var subscription: Subscription
-
-    var body: some View {
-        let titles = subscription.autoSkipChapterTitles ?? []
-
-        if autoSkipRecurringChapters, !titles.isEmpty {
-            Menu {
-                Section("autoSkipChaptersHelper") {
-                    ForEach(titles, id: \.self) { title in
-                        Button(title, role: .destructive) {
-                            subscription.setAutoSkip(title, false)
-                        }
-                        #if !os(macOS)
-                        .menuActionDismissBehavior(.disabled)
-                        #endif
-                    }
-                }
-            } label: {
-                CapsuleMenuLabel(
-                    systemImage: "forward.circle.fill",
-                    menuLabel: "autoSkipChapters",
-                    text: "\(titles.count)"
-                )
-            }
-            .menuIndicator(.hidden)
-            .buttonStyle(CapsuleButtonStyle(primary: false))
-        }
     }
 }
 

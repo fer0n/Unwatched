@@ -142,13 +142,15 @@ struct CapsuleMenuLabel: View {
 // a second line stays white on the near-white macOS highlight
 struct MenuItemLabel: View {
     var title: LocalizedStringKey
-    var value: String
+    var value: String?
     var systemImage: String
 
     var body: some View {
         Text(title)
         #if !os(macOS)
-        Text(value)
+        if let value {
+            Text(value)
+        }
         #endif
         Image(systemName: systemImage)
     }
