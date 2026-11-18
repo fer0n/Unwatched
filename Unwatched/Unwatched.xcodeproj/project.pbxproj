@@ -73,6 +73,7 @@
 		61F009F2825E611A218F0D36 /* SearchVM+HomeFeed.swift in Sources */ = {isa = PBXBuildFile; fileRef = C1780AB3DD374EE1B755D3EB /* SearchVM+HomeFeed.swift */; };
 		6302111413B74E042F4AD469 /* InboxCardSwipe.swift in Sources */ = {isa = PBXBuildFile; fileRef = 20A57C76B1628092FD746792 /* InboxCardSwipe.swift */; };
 		63D218143A793B23E784C56E /* CapsuleLabel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 24EB98A6B9324001ABEE8DE1 /* CapsuleLabel.swift */; };
+		A7D218143A793B23E784C56E /* MenuValueStepper.swift in Sources */ = {isa = PBXBuildFile; fileRef = A7EB98A6B9324001ABEE8DE1 /* MenuValueStepper.swift */; };
 		6E4AEBEE463448C2BCDC7B25 /* PodcastEpisodeCacheTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 67E1C9774B64420098EC98D5 /* PodcastEpisodeCacheTests.swift */; };
 		6F19F90DEA57474D9B415781 /* VideoService+ShareLink.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1B2820AA9BAF4DF3B49491E3 /* VideoService+ShareLink.swift */; };
 		734CD64A858649A5ABFDDDD4 /* VideoService+ShareLink.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1B2820AA9BAF4DF3B49491E3 /* VideoService+ShareLink.swift */; };
@@ -1032,6 +1033,7 @@
 		BCFC9C6ECD12C28EFE982AAD /* ChapterAutomationSettings.swift in Sources */ = {isa = PBXBuildFile; fileRef = FC26B48EF88832652EFF106A /* ChapterAutomationSettings.swift */; };
 		BDFD7892557E62ECF4D225B5 /* InboxCardDrag.swift in Sources */ = {isa = PBXBuildFile; fileRef = 967BA74E83FCF892E693F4DB /* InboxCardDrag.swift */; };
 		BE5B5A937F8BB55681EC034B /* CapsuleLabel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 24EB98A6B9324001ABEE8DE1 /* CapsuleLabel.swift */; };
+		A75B5A937F8BB55681EC034B /* MenuValueStepper.swift in Sources */ = {isa = PBXBuildFile; fileRef = A7EB98A6B9324001ABEE8DE1 /* MenuValueStepper.swift */; };
 		BED604C449CA906A7F8272D6 /* InboxCardSwipe.swift in Sources */ = {isa = PBXBuildFile; fileRef = 20A57C76B1628092FD746792 /* InboxCardSwipe.swift */; };
 		C6727CDEAC4D58DB4B84CC07 /* InboxCardPlacement.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8368DEA68B942E193EDDF71B /* InboxCardPlacement.swift */; };
 		C7EE8450F3EE12A26C7EEB1C /* CollapsingSectionLayout.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9188F162CA1319558F37116B /* CollapsingSectionLayout.swift */; };
@@ -1323,6 +1325,7 @@
 		20A57C76B1628092FD746792 /* InboxCardSwipe.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = InboxCardSwipe.swift; sourceTree = "<group>"; };
 		248BC558FCF75A956A5A3093 /* PagerPanLock.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PagerPanLock.swift; sourceTree = "<group>"; };
 		24EB98A6B9324001ABEE8DE1 /* CapsuleLabel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CapsuleLabel.swift; sourceTree = "<group>"; };
+		A7EB98A6B9324001ABEE8DE1 /* MenuValueStepper.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MenuValueStepper.swift; sourceTree = "<group>"; };
 		27693FCF8A1DE498E1EB353F /* ChapterSettingsView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ChapterSettingsView.swift; sourceTree = "<group>"; };
 		2B7D24515F013C14E96AC7C4 /* VideoActor+LiveStreams.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "VideoActor+LiveStreams.swift"; sourceTree = "<group>"; };
 		218975BD758418B98B15CC5F /* VideoActor+PodcastLinks.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "VideoActor+PodcastLinks.swift"; sourceTree = "<group>"; };
@@ -2153,6 +2156,7 @@
 				880C21192D7ECE5A00E859A5 /* DismissSheetButton.swift */,
 				888C49CA2B602B4500CDEC76 /* CapsulePicker.swift */,
 				24EB98A6B9324001ABEE8DE1 /* CapsuleLabel.swift */,
+				A7EB98A6B9324001ABEE8DE1 /* MenuValueStepper.swift */,
 				A0C99D870F964FB8714AE40E /* SubscribeErrorPopover.swift */,
 				88D34D742B58F86800533B74 /* Alerter.swift */,
 				883CA8122B5B382900028D52 /* RefreshToolbarContent.swift */,
@@ -3953,6 +3957,7 @@
 				889DFB652E0225FD00D694E0 /* TinyUndoManager.swift in Sources */,
 				889AF8EA2C50ECA9001CEDE6 /* CapsulePicker.swift in Sources */,
 				BE5B5A937F8BB55681EC034B /* CapsuleLabel.swift in Sources */,
+				A75B5A937F8BB55681EC034B /* MenuValueStepper.swift in Sources */,
 				203308CB040C66E6793E132B /* SubscribeErrorPopover.swift in Sources */,
 				88C1A1E22FF5D9CC001ED1DD /* AnalyticsEvent.swift in Sources */,
 				8809D8922DE8E38200B28165 /* InboxSwipeTipView.swift in Sources */,
@@ -4503,6 +4508,7 @@
 				50431C1FF762446807317790 /* CloudAiButton.swift in Sources */,
 				888C49CB2B602B4500CDEC76 /* CapsulePicker.swift in Sources */,
 				63D218143A793B23E784C56E /* CapsuleLabel.swift in Sources */,
+				A7D218143A793B23E784C56E /* MenuValueStepper.swift in Sources */,
 				F7401C1BC1811AE84826B642 /* SubscribeErrorPopover.swift in Sources */,
 				8816A2FE2CCD5125001FE63E /* PageControl.swift in Sources */,
 				880E85D42F655B88001DAAE8 /* TrailingSwipeMoreMenu.swift in Sources */,

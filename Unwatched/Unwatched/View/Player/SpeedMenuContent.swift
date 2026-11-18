@@ -55,36 +55,22 @@ struct SpeedMenuContent: View {
     }
 
     /// Compact row stepping through all speeds, with the current one in the middle.
-    /// The id keeps it apart from the speeds below: menu entries are diffed by title,
-    /// so a duplicate would silently be moved instead of inserted.
     var speedStepper: some View {
-        ControlGroup {
-            Button {
+        MenuValueStepper(
+            value: SpeedHelper.formatSpeed(selectedSpeed),
+            decrementLabel: "slowDown",
+            incrementLabel: "speedUp",
+            onDecrement: {
                 if let speed = SpeedHelper.getPreviousSpeed(before: selectedSpeed) {
                     selectedSpeed = speed
                 }
-            } label: {
-                Image(systemName: "minus")
-            }
-            .accessibilityLabel("slowDown")
-
-            Button {
-                // shows the current speed, no action
-            } label: {
-                Text(SpeedHelper.formatSpeed(selectedSpeed))
-            }
-            .id("currentSpeed")
-
-            Button {
+            },
+            onIncrement: {
                 if let speed = SpeedHelper.getNextSpeed(after: selectedSpeed) {
                     selectedSpeed = speed
                 }
-            } label: {
-                Image(systemName: "plus")
             }
-            .accessibilityLabel("speedUp")
-        }
-        .controlGroupStyle(.compactMenu)
+        )
     }
 
     var customSettingButton: some View {
