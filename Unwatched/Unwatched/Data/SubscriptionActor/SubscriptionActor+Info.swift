@@ -155,7 +155,9 @@ extension SubscriptionActor {
             })
             let subs = try? modelContext.fetch(fetch)
             if let first = subs?.first {
-                updateSubscriptionInfo(first, info: updateInfo)
+                // The playlist's title comes from its feed: YouTube navigates within the page, so a playlist
+                // reached from its channel still carries the channel's og:title.
+                updateSubscriptionImage(first, imageUrl: updateInfo?.imageUrl)
                 return !first.isArchived
             }
         } else if let channelId {
