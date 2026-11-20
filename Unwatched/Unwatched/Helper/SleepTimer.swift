@@ -14,14 +14,6 @@ struct SleepTimer: View {
     @State var hapticToggle: Bool = false
     @Binding var viewModel: SleepTimerViewModel
 
-    var accessibilityLabel: String {
-        if let remainingText = viewModel.remainingText {
-            return String(localized: "sleepTimer\(remainingText)")
-        } else {
-            return String(localized: "sleepTimer")
-        }
-    }
-
     var body: some View {
         Menu {
             addTimeButton(5)
@@ -33,15 +25,11 @@ struct SleepTimer: View {
             } label: {
                 Text("sleepTimerOff")
             }
-            .disabled(viewModel.remainingSeconds <= 0)
+            .disabled(!viewModel.isOn)
         } label: {
-            HStack(alignment: .center, spacing: 2) {
-                Text(viewModel.titleText)
-                Image(systemName: "moon.zzz.fill")
-                    .contentTransition(.symbolEffect(.replace))
-            }
+            // whole minutes only: a per-second countdown rebuilds the open menu and stops it scrolling
+            Label(viewModel.menuTitle, systemImage: "moon.zzz.fill")
         }
-        .accessibilityLabel(accessibilityLabel)
         #if os(iOS)
         .menuActionDismissBehavior(.disabled)
         .sensoryFeedback(Const.sensoryFeedback, trigger: hapticToggle)

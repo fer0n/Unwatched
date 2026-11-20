@@ -17,7 +17,17 @@ import UnwatchedShared
     @ObservationIgnored private var volumeStep: Float?
 
     var timer: Timer?
-    var remainingSeconds: Int = 0
+    /// Unobserved: ticks every second, which would rebuild an open menu and stop it scrolling.
+    @ObservationIgnored var remainingSeconds: Int = 0 {
+        didSet {
+            let minutes = Int((Double(remainingSeconds) / 60).rounded(.up))
+            if minutes != remainingMinutes {
+                remainingMinutes = minutes
+            }
+        }
+    }
+    /// Rounded up, so views only update once a minute.
+    private(set) var remainingMinutes: Int = 0
 
     var lowerVolumeBy: Float?
     var setVolumeTo: Float?
@@ -29,31 +39,21 @@ import UnwatchedShared
     }
 
     var isOn: Bool {
-        remainingSeconds > 0
+        remainingMinutes > 0
     }
 
     var remainingText: String? {
-        if remainingSeconds > 0 {
-            return Double(remainingSeconds).formatTimeMinimal
+        if remainingMinutes > 0 {
+            return Double(remainingMinutes * 60).formatTimeMinimal
         }
         return nil
     }
 
-    var titleText: String {
-        let time = remainingSeconds != 0 ? "(\(timeString(time: remainingSeconds)))" : ""
-        return String(localized: "sleepTimer\(time)")
-    }
-
-    func timeString(time: Int) -> String {
-        let hours = Int(time) / 3600
-        let minutes = Int(time) / 60 % 60
-        let seconds = Int(time) % 60
-
-        if hours > 0 {
-            return String(format: "%02i:%02i:%02i", hours, minutes, seconds)
-        } else {
-            return String(format: "%02i:%02i", minutes, seconds)
+    var menuTitle: String {
+        if let remainingText {
+            return String(localized: "sleepTimer\("(\(remainingText))")")
         }
+        return String(localized: "sleepTimer")
     }
 
     func addTime(_ minutes: Int) {

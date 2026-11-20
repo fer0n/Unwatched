@@ -31,7 +31,7 @@ struct PlayerMoreMenuButton<Content>: View where Content: View {
                 isCircleVariant: isCircleVariant
             )
         } label: {
-            self.contentImage(Image(systemName: systemName))
+            self.contentImage(icon)
                 .contentTransition(transition)
                 .task(id: flashSymbol) {
                     if flashSymbol != nil {
@@ -50,16 +50,44 @@ struct PlayerMoreMenuButton<Content>: View where Content: View {
         .sensoryFeedback(Const.sensoryFeedback, trigger: hapticToggle)
         .help("moreOptions")
         .accessibilityLabel(String(localized: "moreOptions"))
+        .accessibilityValue(sleepTimerVM.remainingText.map { String(localized: "sleepTimer\($0)") } ?? "")
     }
 
     var transition: ContentTransition {
         ContentTransition.symbolEffect(.replace.magic(fallback: .replace))
     }
 
+    var icon: Image {
+        let minutes = sleepTimerVM.remainingMinutes
+        if flashSymbol == nil, !isCircleVariant, minutes > 0, minutes < 100 {
+            return Self.numberImage(minutes)
+        }
+        return Image(systemName: systemName)
+    }
+
+    /// The remaining minutes drawn as a template image, so callers style it like a symbol.
+    static func numberImage(_ number: Int) -> Image {
+        let size = CGSize(width: 30, height: 24)
+        return Image(size: size) { context in
+            // the speed control's font
+            let text = Text(verbatim: "\(number)")
+                .font(.system(size: 18))
+                .fontWidth(.standard)
+                .fontWeight(.bold)
+            context.draw(text, at: CGPoint(x: size.width / 2, y: size.height / 2))
+        }
+        .renderingMode(.template)
+    }
+
     var systemName: String {
         if let flashSymbol {
             return flashSymbol
         } else if sleepTimerVM.isOn {
+            // number symbols only go up to 50
+            let minutes = sleepTimerVM.remainingMinutes
+            if isCircleVariant && minutes <= 50 {
+                return "\(minutes).circle.fill"
+            }
             return isCircleVariant
                 ? "moon.circle.fill"
                 : "moon.zzz.fill"
