@@ -43,7 +43,8 @@ public struct SendableVideo: VideoData, Sendable, Codable, Hashable, Equatable {
     public var episodeNumber: Int?
     public var createdDate: Date?
     public var isNew: Bool
-
+    /// From search and recommendations; not encoded, so never backed up
+    public var viewCount: Int?
 
     // relationship related values
     public var hasInboxEntry: Bool?
@@ -131,6 +132,7 @@ public struct SendableVideo: VideoData, Sendable, Codable, Hashable, Equatable {
         queueEntry: SendableQueueEntry? = nil,
         subscription: SendableSubscription? = nil,
         isNew: Bool = false,
+        viewCount: Int? = nil,
         ) {
         self.persistentId = persistentId
         self.youtubeId = youtubeId
@@ -160,7 +162,7 @@ public struct SendableVideo: VideoData, Sendable, Codable, Hashable, Equatable {
         self.queueEntry = queueEntry
         self.subscription = subscription
         self.isNew = isNew
-
+        self.viewCount = viewCount
     }
 
     public init(from decoder: Decoder) throws {

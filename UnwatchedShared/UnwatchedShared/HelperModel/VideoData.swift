@@ -32,9 +32,12 @@ public protocol VideoData {
     var subscriptionData: (any SubscriptionData)? { get }
     var channelTitle: String? { get }
     var hasInboxEntry: Bool? { get }
+    var viewCount: Int? { get }
 }
 
 public extension VideoData {
+    var viewCount: Int? { nil }
+
     var isPodcast: Bool {
         mediaUrl != nil
     }

@@ -121,7 +121,8 @@ extension InnerTubeAPI {
         let stripped = text
             .replacingOccurrences(of: #"^(Streamed|Premiered|Started)\s+"#, with: "", options: .regularExpression)
             .lowercased()
-        let pattern = #"(\d+)\s+(second|minute|hour|day|week|month|year)s?\s+ago"#
+        // Unwatched: also the short units the home feed uses ("2d ago", "1mo ago")
+        let pattern = #"(\d+)\s*(second|minute|hour|day|week|month|year|min|mo|h|d|w|y)s?\s+ago"#
         guard let regex = try? NSRegularExpression(pattern: pattern),
               let match = regex.firstMatch(in: stripped, range: NSRange(stripped.startIndex..., in: stripped)),
               let valueRange = Range(match.range(at: 1), in: stripped),
@@ -131,7 +132,8 @@ extension InnerTubeAPI {
             Log.innerTube.notice("parseRelativeDate '\(text)' → no regex match")
             return nil
         }
-        let unit = String(stripped[unitRange])
+        let shortUnits = ["min": "minute", "mo": "month", "h": "hour", "d": "day", "w": "week", "y": "year"]
+        let unit = shortUnits[String(stripped[unitRange])] ?? String(stripped[unitRange])
         let seconds: TimeInterval
         switch unit {
         case "second": seconds = TimeInterval(value)

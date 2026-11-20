@@ -122,6 +122,15 @@ Re-apply the `private` → internal change on every sync.
 passes `duration: nil` there, so lockup results (most home, related and many search results)
 showed no length. Re-apply on every sync.
 
+`parseLockupViewModel` tells views and date apart by what the metadata parts look like, not by
+which row they're in (the signed-in home feed puts channel, views and date in one row, search uses
+a row each; upstream's `dropFirst()` over rows skipped the home feed's only row). It looks at every
+part after the first (the channel): the date is the first one `parseRelativeDate` recognizes, the
+view count the first one that is *only* a count, via `lockupViewCount` (outside Core, in `InnerTube/Channel/`) ("3.3M", "1,234 views",
+"No views"; not "1.2K watching" or a date). Text is always English, as every request sets `hl: en`.
+**`InnerTubeAPI+TextHelpers.swift`**'s `parseRelativeDate` also accepts the short units the home
+feed uses ("2d ago", "1mo ago", "7h ago": `min|mo|h|d|w|y`). Re-apply both on every sync.
+
 `parseVideoRenderer` and `parseLockupViewModel` end their `ITVideo(…)` with
 `.withCollaborators(in: <byline>)` (defined outside Core, in
 `InnerTube/Channel/InnerTubeAPI+Collaborators.swift`). It fills `collaborators` from the byline's

@@ -50,32 +50,40 @@ struct VideoListItemDetails: View {
                     #endif
                 }
 
-                if episodeNumber != nil || video.publishedDate != nil {
+                let infoParts = infoParts
+                if !infoParts.isEmpty {
                     HStack(spacing: 0) {
-                        if let episodeNumber {
-                            Text(verbatim: "#\(episodeNumber)")
-                            if video.publishedDate != nil {
+                        ForEach(infoParts.indices, id: \.self) { index in
+                            if index > 0 {
                                 Text(verbatim: " · ")
                                     .accessibilityHidden(true)
                             }
-                        }
-                        if let published = video.publishedDate {
-                            Text(published.formattedRelative)
-                                .accessibilityLabel(
-                                    published.formatted(
-                                        .relative(
-                                            presentation: .numeric,
-                                            unitsStyle: .spellOut
-                                        )
-                                    )
-                                )
+                            infoParts[index]
                         }
                     }
+                    .lineLimit(1)
                     .font(.system(size: timeSize))
                 }
             }
             .foregroundStyle(.secondary)
         }
+    }
+
+    private var infoParts: [Text] {
+        var parts = [Text]()
+        if let episodeNumber {
+            parts.append(Text(verbatim: "#\(episodeNumber)"))
+        }
+        if let published = video.publishedDate {
+            parts.append(
+                Text(published.formattedRelative)
+                    .accessibilityLabel(published.formatted(.relative(presentation: .numeric, unitsStyle: .spellOut)))
+            )
+        }
+        if let viewCount = video.viewCount, viewCount > 0 {
+            parts.append(Text(verbatim: VideoStatsFormat.views(viewCount)))
+        }
+        return parts
     }
 
     private static func handleSourceTap(_ video: VideoData, opensPlaylist: Bool) {

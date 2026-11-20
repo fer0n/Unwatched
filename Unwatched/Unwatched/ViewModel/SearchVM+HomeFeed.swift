@@ -76,8 +76,8 @@ extension SearchVM {
         let sendable = preferringKnownChannels(videos).map(sendable(from:))
         let stored = storedStatuses(for: sendable.map(\.youtubeId))
         return sendable.compactMap { video in
-            guard let match = stored[video.youtubeId] else { return video }
-            return match.watchedDate == nil ? match : nil
+            guard let storedVideo = stored[video.youtubeId] else { return video }
+            return storedVideo.watchedDate == nil ? video.withStatus(of: storedVideo) : nil
         }
     }
 

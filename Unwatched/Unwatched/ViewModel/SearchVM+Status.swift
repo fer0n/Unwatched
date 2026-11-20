@@ -56,7 +56,9 @@ extension SearchVM {
         var updated = videos
         var didChange = false
         for index in updated.indices {
-            if let match = stored[updated[index].youtubeId], match != updated[index] {
+            if let storedVideo = stored[updated[index].youtubeId] {
+                let match = updated[index].withStatus(of: storedVideo)
+                guard match != updated[index] else { continue }
                 updated[index] = match
                 didChange = true
             }
@@ -112,5 +114,14 @@ extension SearchVM {
             video.channelTitle = sub.title.isEmpty ? collaborator.title : sub.title
             return video
         }
+    }
+}
+
+extension SendableVideo {
+    /// The stored version, keeping this result's view count
+    func withStatus(of stored: SendableVideo) -> SendableVideo {
+        var stored = stored
+        stored.viewCount = viewCount
+        return stored
     }
 }

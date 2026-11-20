@@ -316,7 +316,8 @@ final class SearchVM {
             publishedDate: video.publishedAt,
             isYtShort: video.isShort,
             subscription: subscription,
-            isNew: false
+            isNew: false,
+            viewCount: video.isLive || video.isUpcoming ? nil : video.viewCount
         )
     }
 }

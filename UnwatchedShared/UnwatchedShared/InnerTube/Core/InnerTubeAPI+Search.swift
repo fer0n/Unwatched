@@ -482,31 +482,16 @@ extension InnerTubeAPI {
         // Unwatched: a lockup's only duration is its thumbnail badge ("22:11"); live ones read "LIVE".
         let duration = thumbVM.flatMap { firstCountBadgeText(in: $0) }.flatMap { parseDuration($0) }
 
-        let publishedAt: Date? = {
-            for row in metaRows.dropFirst() {
-                guard let parts = row["metadataParts"] as? [[String: Any]] else { continue }
-                for part in parts {
-                    guard let text = part["text"] as? [String: Any],
-                          let str = text["content"] as? String ?? extractText(text)
-                    else { continue }
-                    if let date = parseRelativeDate(str) { return date }
-                }
+        // Unwatched: views and date told apart by shape; the home feed has one row, search two
+        let detailParts: [String] = metaRows
+            .flatMap { $0["metadataParts"] as? [[String: Any]] ?? [] }
+            .dropFirst()
+            .compactMap { part in
+                guard let text = part["text"] as? [String: Any] else { return nil }
+                return text["content"] as? String ?? extractText(text)
             }
-            return nil
-        }()
-
-        let viewCount: Int? = {
-            for row in metaRows.dropFirst() {
-                guard let parts = row["metadataParts"] as? [[String: Any]] else { continue }
-                for part in parts {
-                    guard let text = part["text"] as? [String: Any],
-                          let str = text["content"] as? String ?? extractText(text)
-                    else { continue }
-                    if let count = extractNumber(str) { return count }
-                }
-            }
-            return nil
-        }()
+        let publishedAt: Date? = detailParts.lazy.compactMap { self.parseRelativeDate($0) }.first
+        let viewCount: Int? = detailParts.lazy.compactMap { Self.lockupViewCount($0) }.first
 
         return ITVideo(
             id: videoId,
