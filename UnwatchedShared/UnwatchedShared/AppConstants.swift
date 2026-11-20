@@ -254,7 +254,7 @@ public struct Const {
     /// How often the elapsed time is written to the database while playing. Pause, video change
     /// and backgrounding all persist it too, so this only bounds what a crash or a jetsam kill
     /// during uninterrupted (usually background) playback can lose.
-    public static let elapsedTimePersistSeconds: Int = 120
+    public static let elapsedTimePersistSeconds: Int = 300
 
     public static let elapsedTimeSaveDebounceSeconds: Double = 3
     public static let elapsedTimeSaveMaxDelaySeconds: Double = 15
