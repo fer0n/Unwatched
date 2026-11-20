@@ -369,15 +369,17 @@ actor SubscriptionActor: SharedContextActor {
                 _ = FeedFallbackState.finish(channelId: channelId)
             }
             var hasVideosLeft = false
+            var videosToDelete: [Video] = []
             for video in subscription.videos ?? [] {
                 if video.queueEntry == nil &&
                     video.watchedDate == nil &&
                     video.bookmarkedDate == nil {
-                    CleanupService.deleteVideo(video, modelContext)
+                    videosToDelete.append(video)
                 } else {
                     hasVideosLeft = true
                 }
             }
+            CleanupService.deleteVideos(videosToDelete, save: false, modelContext)
             if hasVideosLeft {
                 subscription.mostRecentVideoDate = nil
                 subscription.isArchived = true

@@ -236,3 +236,110 @@ class DeletedQueueEntryTests: XCTestCase {
         XCTAssertTrue(labels.contains { $0 == "queuePosition 3" || $0 == "Queue #3" }, "got \(labels)")
     }
 }
+
+/// Each save is its own CloudKit export.
+class CleanupSaveCountTests: XCTestCase {
+    override func tearDown() async throws {
+        try wipeStore()
+    }
+
+    @discardableResult
+    private func seedOrphans(_ count: Int) -> PersistentIdentifier {
+        let context = DataProvider.newContext()
+        let sub = Subscription.getDummy()
+        sub.isArchived = true
+        context.insert(sub)
+        let old = Calendar.current.date(byAdding: .day, value: -400, to: .now)!
+        for index in 0..<count {
+            let video = Video(
+                title: "orphan-\(index)",
+                url: URL(string: "https://youtu.be/o\(index)"),
+                youtubeId: "o\(index)",
+                createdDate: old
+            )
+            video.subscription = sub
+            context.insert(video)
+            let chapter = Chapter(title: "c-\(index)", time: 0, endTime: 10)
+            context.insert(chapter)
+            video.chapters = [chapter]
+        }
+        try? context.save()
+        return sub.persistentModelID
+    }
+
+    private func countSaves(_ work: () async -> Void) async -> (saves: Int, ms: Double) {
+        let saves = SaveCounter()
+        let observer = NotificationCenter.default.addObserver(
+            forName: ModelContext.didSave, object: nil, queue: nil
+        ) { _ in saves.increment() }
+        let start = Date()
+        await work()
+        let ms = Date().timeIntervalSince(start) * 1000
+        NotificationCenter.default.removeObserver(observer)
+        return (saves.value, ms)
+    }
+
+    private func remainingCounts() throws -> (videos: Int, chapters: Int) {
+        let context = DataProvider.newContext()
+        return (
+            try context.fetchCount(FetchDescriptor<Video>()),
+            try context.fetchCount(FetchDescriptor<Chapter>())
+        )
+    }
+
+    /// The pre-batching behaviour, kept as the baseline the batched run is measured against.
+    func testPerVideoDeleteBaseline() async throws {
+        seedOrphans(60)
+        let result = await countSaves {
+            await CleanupActor().deleteEachOrphanForBaseline()
+        }
+        print("CleanupSaveCount per-video: \(result.saves) saves, \(Int(result.ms)) ms")
+        let remaining = try remainingCounts()
+        XCTAssertEqual(remaining.videos, 0)
+        XCTAssertEqual(remaining.chapters, 0)
+        XCTAssertEqual(result.saves, 60)
+    }
+
+    func testOrphanCleanupSavesOnce() async throws {
+        seedOrphans(60)
+        let result = await countSaves {
+            await CleanupActor().deleteOrphanedVideos(olderThan: 1)
+        }
+        print("CleanupSaveCount batched: \(result.saves) saves, \(Int(result.ms)) ms")
+        let remaining = try remainingCounts()
+        XCTAssertEqual(remaining.videos, 0)
+        XCTAssertEqual(remaining.chapters, 0)
+        XCTAssertEqual(result.saves, 1)
+    }
+
+    func testDeletingSubscriptionSavesOnce() async throws {
+        let subId = seedOrphans(60)
+        let result = await countSaves {
+            try? await SubscriptionActor().deleteSubscriptions([subId])
+        }
+        let remaining = try remainingCounts()
+        XCTAssertEqual(remaining.videos, 0)
+        XCTAssertEqual(remaining.chapters, 0)
+        XCTAssertEqual(result.saves, 1)
+    }
+}
+
+private final class SaveCounter: @unchecked Sendable {
+    private let lock = NSLock()
+    private var count = 0
+
+    var value: Int { lock.withLock { count } }
+
+    func increment() {
+        lock.withLock { count += 1 }
+    }
+}
+
+private extension CleanupActor {
+    func deleteEachOrphanForBaseline() {
+        let videos = (try? modelContext.fetch(FetchDescriptor<Video>())) ?? []
+        for video in videos {
+            CleanupService.deleteVideo(video, modelContext)
+        }
+    }
+}

@@ -76,6 +76,33 @@ struct CleanupService {
 
     /// Deletes video and all relationships (workaround; can be removed if .cascade delete rule works properly)
     static func deleteVideo(_ video: Video, deleteAll: Bool = false, _ modelContext: ModelContext) {
+        deleteVideos([video], deleteAll: deleteAll, modelContext)
+    }
+
+    static func deleteVideos(
+        _ videos: [Video],
+        deleteAll: Bool = false,
+        save: Bool = true,
+        _ modelContext: ModelContext
+    ) {
+        guard !videos.isEmpty else { return }
+        let youtubeIds = Set(videos.map { stageDelete($0, deleteAll: deleteAll, modelContext) })
+        if save {
+            do {
+                try modelContext.save()
+            } catch {
+                Log.data.error("deleteVideos: save failed for \(videos.count) videos: \(error)")
+                return
+            }
+        }
+        cancelNotifications(for: youtubeIds)
+    }
+
+    private static func stageDelete(
+        _ video: Video,
+        deleteAll: Bool,
+        _ modelContext: ModelContext
+    ) -> String {
         if let entry = video.inboxEntry {
             modelContext.delete(entry)
         }
@@ -95,19 +122,21 @@ struct CleanupService {
         }
         video.chapters = []
         video.mergedChapters = []
-        let youtubeId = video.youtubeId
-        #if os(iOS) || os(visionOS)
-        Task {
-            await NotificationManager.cancelNotificationForVideo(youtubeId)
-        }
-        #endif
-
         for chapter in chaptersToDelete {
             modelContext.delete(chapter)
         }
 
+        let youtubeId = video.youtubeId
         modelContext.delete(video)
-        try? modelContext.save()
+        return youtubeId
+    }
+
+    private static func cancelNotifications(for youtubeIds: Set<String>) {
+        #if os(iOS) || os(visionOS)
+        Task {
+            await NotificationManager.cancelNotifications(forVideos: youtubeIds)
+        }
+        #endif
     }
 
     /// Drops the SponsorBlock merge, which is derived from `video.chapters` and stops describing
@@ -471,9 +500,7 @@ actor CleanupActor: SharedContextActor {
                 && $0.queueEntry == nil
                 && !protectedIds.contains($0.persistentModelID)
         }
-        for video in toDelete {
-            CleanupService.deleteVideo(video, modelContext)
-        }
+        CleanupService.deleteVideos(toDelete, modelContext)
         Log.data.info("deleteOldWatchedVideos: deleted \(toDelete.count) videos older than \(days) days")
     }
 
@@ -491,9 +518,7 @@ actor CleanupActor: SharedContextActor {
                 && ($0.createdDate ?? .distantFuture) < cutoff
                 && !protectedIds.contains($0.persistentModelID)
         }
-        for video in toDelete {
-            CleanupService.deleteVideo(video, modelContext)
-        }
+        CleanupService.deleteVideos(toDelete, modelContext)
         Log.data.info("deleteOrphanedVideos: deleted \(toDelete.count) videos older than \(days) days")
     }
 
@@ -561,10 +586,7 @@ extension CleanupActor {
                 && $0.persistentModelID != protectedId
         }
         guard !toDelete.isEmpty else { return }
-        for video in toDelete {
-            CleanupService.deleteVideo(video, modelContext)
-        }
-        try? modelContext.save()
+        CleanupService.deleteVideos(toDelete, modelContext)
         Log.data.info("deleteStatelessPodcastEpisodes: deleted \(toDelete.count) rows")
     }
 

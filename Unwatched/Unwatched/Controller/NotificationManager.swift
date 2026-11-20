@@ -76,18 +76,20 @@ struct NotificationManager {
         }
     }
 
-    static func cancelNotificationForVideo(_ youtubeId: String) async {
+    static func cancelNotifications(forVideos youtubeIds: Set<String>) async {
+        guard !youtubeIds.isEmpty else { return }
         let center = UNUserNotificationCenter.current()
         let pending = await center.pendingNotificationRequests()
-
-        Log.debug("cancelNotificationForVideo pending: \(pending)")
-
-        let matchingRequests = pending.filter { request in
-            request.content.userInfo[Const.notificationVideoId] as? String == youtubeId
-        }
-
-        let identifiers = matchingRequests.map { $0.identifier }
-        Log.info("cancelNotificationForVideo: \(identifiers)")
+        let identifiers = pending
+            .filter { request in
+                guard let videoId = request.content.userInfo[Const.notificationVideoId] as? String else {
+                    return false
+                }
+                return youtubeIds.contains(videoId)
+            }
+            .map(\.identifier)
+        guard !identifiers.isEmpty else { return }
+        Log.info("cancelNotifications: \(identifiers)")
         center.removePendingNotificationRequests(withIdentifiers: identifiers)
     }
 

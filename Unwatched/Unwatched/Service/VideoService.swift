@@ -594,7 +594,7 @@ extension VideoService {
         try? video.modelContext?.save()
         #if os(iOS) || os(visionOS)
         Task {
-            await NotificationManager.cancelNotificationForVideo(video.youtubeId)
+            await NotificationManager.cancelNotifications(forVideos: [video.youtubeId])
         }
         #endif
     }
