@@ -26,6 +26,7 @@ final class StatsVM {
             isLoading = true
         }
 
+        await StatsService.shared.flush()?.value
         let task = Task.detached {
             let actor = StatsActor()
             return try await actor.getStats()
@@ -62,6 +63,7 @@ final class StatsVM {
             endDate = calendar.date(byAdding: .year, value: 1, to: startDate) ?? startDate
         }
 
+        await StatsService.shared.flush()?.value
         let task = Task.detached {
             let actor = StatsActor()
             try await actor.deleteStats(from: startDate, to: endDate, channelId: channelId)

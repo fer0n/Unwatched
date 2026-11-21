@@ -18,7 +18,7 @@ extension PlayerWebViewCoordinator {
               let videoId = pause.videoId else {
             return
         }
-        StatsService.shared.handleVideoTimeUpdate(videoId: videoId, time: time, persist: true)
+        StatsService.shared.handleVideoTimeUpdate(videoId: videoId, time: time, isPause: true)
         parent.player.updateElapsedTime(time, videoId: videoId)
     }
 
@@ -75,7 +75,7 @@ extension PlayerWebViewCoordinator {
         if persist || statsTimeCounter >= Const.updateDbTimeSeconds {
             statsTimeCounter = 0
             if let videoId = youtubeId ?? parent.player.video?.youtubeId {
-                StatsService.shared.handleVideoTimeUpdate(videoId: videoId, time: time, persist: persist)
+                StatsService.shared.handleVideoTimeUpdate(videoId: videoId, time: time, isPause: persist)
             }
         }
 

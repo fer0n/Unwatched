@@ -348,6 +348,51 @@ class BackupRecompressionCheckTests: XCTestCase {
     }
 }
 
+@MainActor
+class StatsPauseFlushTests: XCTestCase {
+    private let videoId = "stats-pause-video"
+
+    override func setUp() async throws {
+        let context = DataProvider.newContext()
+        context.insert(Video(
+            title: "stats",
+            url: URL(string: "https://youtu.be/\(videoId)"),
+            youtubeId: videoId,
+            youtubeChannelId: "stats-pause-channel"
+        ))
+        try context.save()
+        await StatsService.shared.flush()?.value
+    }
+
+    override func tearDown() async throws {
+        let context = DataProvider.newContext()
+        try context.delete(model: WatchTimeEntry.self)
+        try wipeStore()
+    }
+
+    func testShortPausesWaitForTheNextFlush() async throws {
+        let stats = StatsService.shared
+        var time = 0.0
+        for _ in 0..<5 {
+            stats.handleVideoTimeUpdate(videoId: videoId, time: time)
+            try await Task.sleep(for: .milliseconds(600))
+            time += 0.6
+            stats.handleVideoTimeUpdate(videoId: videoId, time: time, isPause: true)
+            try await Task.sleep(for: .milliseconds(300))
+        }
+        XCTAssertEqual(try watchTimeEntries().count, 0)
+
+        await stats.flush()?.value
+        let entries = try watchTimeEntries()
+        XCTAssertEqual(entries.count, 1)
+        XCTAssertGreaterThan(entries.first?.watchTime ?? 0, 0)
+    }
+
+    private func watchTimeEntries() throws -> [WatchTimeEntry] {
+        try DataProvider.newContext().fetch(FetchDescriptor<WatchTimeEntry>())
+    }
+}
+
 private final class SaveCounter: @unchecked Sendable {
     private let lock = NSLock()
     private var count = 0

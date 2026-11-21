@@ -261,6 +261,7 @@ public struct Const {
 
     /// Safety flush for accumulated watch time when playback never pauses
     public static let statsFlushIntervalSeconds: Double = 600
+    public static let statsPauseFlushMinimumSeconds: Double = 60
 
     /// Timer interval to monitor the current playback
     public static let elapsedTimeMonitorSeconds: Double = 1

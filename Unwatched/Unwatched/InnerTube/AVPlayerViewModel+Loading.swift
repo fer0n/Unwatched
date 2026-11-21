@@ -1058,7 +1058,7 @@ extension AVPlayerViewModel {
         guard !time.isNaN, !time.isInfinite, videoId == loadedVideoId else { return }
         lastObservedTime = time
         player.updateElapsedTime(time, videoId: videoId)
-        StatsService.shared.handleVideoTimeUpdate(videoId: videoId, time: time, persist: true)
+        StatsService.shared.handleVideoTimeUpdate(videoId: videoId, time: time, isPause: true)
         updateNowPlayingInfo(elapsed: time)
     }
 

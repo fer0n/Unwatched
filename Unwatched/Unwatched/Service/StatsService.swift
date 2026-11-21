@@ -26,14 +26,13 @@ final class StatsService {
 
     private init() {}
 
-    /// - Parameter persist: flush the accrued time right away (pause, video ended, backgrounding).
-    func handleVideoTimeUpdate(videoId: String, time: Double, persist: Bool = false) {
+    func handleVideoTimeUpdate(videoId: String, time: Double, isPause: Bool = false) {
         let now = Date()
         defer {
             if currentVideoId != videoId { currentVideoId = videoId }
             lastVideoTime = time
             lastWallClockTime = now
-            if persist { flush() }
+            if isPause && pendingSeconds >= Const.statsPauseFlushMinimumSeconds { flush() }
         }
 
         guard videoId == currentVideoId,
@@ -58,15 +57,19 @@ final class StatsService {
         scheduleFlush()
     }
 
+    private var pendingSeconds: TimeInterval {
+        pending.values.reduce(0, +)
+    }
+
     @discardableResult
     func flush() -> Task<Void, Never>? {
         flushTask?.cancel()
         flushTask = nil
         guard !pending.isEmpty else { return nil }
 
+        Log.info("StatsService: flushing \(pendingSeconds)s across \(pending.count) entries")
         let batch = pending
         pending = [:]
-        Log.info("StatsService: flushing \(batch.values.reduce(0, +))s across \(batch.count) entries")
 
         let actor = statsActor
         return Task.detached {
