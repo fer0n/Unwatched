@@ -114,7 +114,7 @@ extension RefreshManager {
 
             // Auto delete
             if UserDefaults.standard.object(forKey: Const.autoDeleteBackups) as? Bool ?? true {
-                _ = await UserDataService.autoDeleteBackups(recompressLimit: Const.autoRecompressBackupLimit)
+                await UserDataService.autoDeleteBackups()
             }
         }
     }

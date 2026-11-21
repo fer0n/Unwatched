@@ -63,10 +63,6 @@ public struct Const {
     public static let minSheetDetent: CGFloat = 75
     public static let backupType = UTType("com.pentlandFirth.unwatchedbackup")
 
-    /// Legacy (pre-compression) backups recompressed per automatic auto-delete run, to avoid a
-    /// large burst of iCloud downloads all at once; the manual "Auto Delete Backups Now" button
-    /// has no limit, since the user is already waiting on it.
-    public static let autoRecompressBackupLimit = 10
 
     /// Max video IDs supported by a single YouTube API request
     public static let maxVideoIdsPerRequest = 50

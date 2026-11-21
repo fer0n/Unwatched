@@ -73,9 +73,9 @@ struct UserDataService {
     }
 
     // backups are zlib-compressed JSON; older backups (and test fixtures) are still plain JSON
-    fileprivate static let compressionMagic = Data([0x55, 0x57, 0x5a, 0x31]) // "UWZ1"
+    private static let compressionMagic = Data([0x55, 0x57, 0x5a, 0x31]) // "UWZ1"
 
-    fileprivate static func compress(_ data: Data) -> Data {
+    private static func compress(_ data: Data) -> Data {
         guard let compressed = try? (data as NSData).compressed(using: .zlib) as Data else {
             return data
         }
@@ -244,15 +244,14 @@ struct UserDataService {
         }
     }
 
-    // both callers run on @MainActor; recompressing reads and writes whole iCloud files
-    static func autoDeleteBackups(recompressLimit: Int? = nil) async -> (deleted: Int, recompressed: Int) {
+    @discardableResult
+    static func autoDeleteBackups() async -> Int {
         await Task.detached(priority: .utility) {
             let files = getFilesToDelete()
             for file in files {
                 deleteFile(file)
             }
-            let recompressed = recompressExistingBackups(limit: recompressLimit)
-            return (files.count, recompressed)
+            return files.count
         }.value
     }
 
@@ -475,56 +474,5 @@ struct Lossy<T: Decodable>: Decodable {
             value = nil
             self.error = error
         }
-    }
-}
-
-extension UserDataService {
-    // older backups predate compression; bring them in line with newly written ones.
-    // `limit` stops after that many recompressions (oldest-first) instead of touching
-    // every file, so an automatic run doesn't trigger a large burst of iCloud downloads.
-    @discardableResult
-    static func recompressExistingBackups(limit: Int? = nil) -> Int {
-        guard let directory = getBackupsDirectory(createIfMissing: false),
-              let fileNames = try? FileManager.default.contentsOfDirectory(atPath: directory.path) else {
-            return 0
-        }
-        let files = fileNames
-            .map { directory.appendingPathComponent($0) }
-            .sorted { $0.creationDate < $1.creationDate }
-
-        var recompressedCount = 0
-        for file in files {
-            if let limit, recompressedCount >= limit {
-                break
-            }
-            guard needsRecompression(file), let data = try? Data(contentsOf: file) else {
-                continue
-            }
-            do {
-                try compress(data).write(to: file)
-                recompressedCount += 1
-            } catch {
-                Log.data.error("recompressExistingBackups: \(error)")
-            }
-        }
-        return recompressedCount
-    }
-
-    static func needsRecompression(_ file: URL) -> Bool {
-        guard !file.lastPathComponent.hasPrefix("."), isDownloaded(file),
-              let handle = try? FileHandle(forReadingFrom: file) else {
-            return false
-        }
-        defer { try? handle.close() }
-        guard let header = try? handle.read(upToCount: compressionMagic.count), !header.isEmpty else {
-            return false
-        }
-        return header != compressionMagic
-    }
-
-    private static func isDownloaded(_ file: URL) -> Bool {
-        let status = try? file.resourceValues(forKeys: [.ubiquitousItemDownloadingStatusKey])
-            .ubiquitousItemDownloadingStatus
-        return status == nil || status == .current
     }
 }

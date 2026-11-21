@@ -2428,40 +2428,6 @@
         }
       }
     },
-    "autoRecompressedCount: %lld" : {
-      "localizations" : {
-        "de" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Komprimierte Backups: %lld"
-          }
-        },
-        "en" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Compressed Backups: %lld"
-          }
-        },
-        "es" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Copias de seguridad comprimidas: %lld"
-          }
-        },
-        "fr" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Sauvegardes compressées : %lld"
-          }
-        },
-        "pl" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Skompresowane kopie zapasowe: %lld"
-          }
-        }
-      }
-    },
     "autoRefresh" : {
       "localizations" : {
         "de" : {
