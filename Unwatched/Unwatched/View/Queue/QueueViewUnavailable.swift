@@ -78,9 +78,7 @@ struct QueueViewUnavailable: View {
                     }
                 } else {
                     Button {
-                        navManager.presentedSearch.removeAll()
-                        navManager.navigateTo(.search)
-                        navManager.pendingSearchFocus = true
+                        navManager.focusSearch()
                         Signal.log("Onboarding.BrowseYoutube")
                     } label: {
                         Text("browser")

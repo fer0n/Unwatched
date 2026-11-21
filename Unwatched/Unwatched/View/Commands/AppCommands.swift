@@ -20,6 +20,13 @@ struct AppCommands: Commands {
             }
         }
 
+        // before the system's Find item, which also claims ⌘F
+        CommandGroup(before: .textEditing) {
+            Section {
+                PlayerShortcut.focusSearch.render()
+            }
+        }
+
         CommandGroup(after: .toolbar) {
             Section {
                 Menu {

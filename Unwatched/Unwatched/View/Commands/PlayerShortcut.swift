@@ -31,6 +31,7 @@ enum PlayerShortcut: String, CaseIterable {
     case goToInbox
     case goToLibrary
     case goToSearch
+    case focusSearch
     case goToBrowser
     case openInAppBrowser
     case openInExternalBrowser
@@ -60,6 +61,7 @@ enum PlayerShortcut: String, CaseIterable {
         case .goToInbox: return NavigationTab.inbox.stringKey
         case .goToLibrary: return NavigationTab.library.stringKey
         case .goToSearch: return NavigationTab.search.stringKey
+        case .focusSearch: return "search"
         case .goToBrowser: return NavigationTab.browser.stringKey
         case .openInAppBrowser: return "openInAppBrowser"
         case .openInExternalBrowser: return "openInExternalBrowser"
@@ -93,6 +95,7 @@ enum PlayerShortcut: String, CaseIterable {
         case .goToInbox: return [KeyboardShortcut("2", modifiers: [.command])]
         case .goToLibrary: return [KeyboardShortcut("3", modifiers: [.command])]
         case .goToSearch: return [KeyboardShortcut("4", modifiers: [.command])]
+        case .focusSearch: return [KeyboardShortcut("f", modifiers: [.command])]
         case .goToBrowser: return [KeyboardShortcut("5", modifiers: [.command])]
         case .openInAppBrowser: return [KeyboardShortcut("o", modifiers: [])]
         case .openInExternalBrowser: return [KeyboardShortcut("o", modifiers: [.shift])]
@@ -218,6 +221,8 @@ enum PlayerShortcut: String, CaseIterable {
             NavigationManager.shared.navigateTo(.library)
         case .goToSearch:
             NavigationManager.shared.navigateTo(.search)
+        case .focusSearch:
+            NavigationManager.shared.focusSearch()
         case .goToBrowser:
             NavigationManager.shared.openUrlInApp(nil)
         case .openInAppBrowser:

@@ -141,6 +141,13 @@ import UnwatchedShared
         revealMenu()
     }
 
+    /// Ignores the auto-focus setting.
+    func focusSearch() {
+        presentedSearch.removeAll()
+        navigateTo(.search)
+        pendingSearchFocus = true
+    }
+
     func revealMenu() {
         if !showMenu {
             showMenu = true

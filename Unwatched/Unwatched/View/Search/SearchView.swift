@@ -96,15 +96,11 @@ struct SearchView: View {
         .onPlayerVideoChange {
             vm.refreshAllStatuses()
         }
-        // Focus the search field for explicit requests: "Search YouTube" quick action,
-        // QueueViewUnavailable's browse button, macOS tab selection (handleTabChanged guards on
-        // searchTabShouldAutoFocus), and when already pending on first appearance.
         .onChange(of: navManager.pendingSearchFocus, initial: true) { _, pending in
             guard pending else { return }
             vm.showsYoutube = false
-            // The very first appearance may still be mounting (notably on cold launch);
-            // later visits are already mounted, so focus can happen immediately.
-            focusSearchField(delay: hasAppearedOnce ? .zero : .milliseconds(300))
+            // retries: a cold launch may still be mounting, and a pop from results needs ~0.6s
+            focusSearchField(delay: hasAppearedOnce ? .zero : .milliseconds(300), attempts: 12)
         }
         .onAppear { hasAppearedOnce = true }
         .onDisappear { focusTask?.cancel() }

@@ -98,9 +98,7 @@ struct WatchNotificationHandlerViewModifier: ViewModifier {
 
     func handleSearchYoutube() {
         Log.sync.info("handleSearchYoutube")
-        navManager.presentedSearch.removeAll()
-        navManager.navigateTo(.search)
-        navManager.pendingSearchFocus = true
+        navManager.focusSearch()
     }
 
     func handlePasteAndQueue() {
