@@ -11,7 +11,11 @@ struct SubscriptionListItem: View {
     var subscription: SendableSubscription
     var onDelete: ((Task<(), Error>) -> Void)?
 
+    #if os(macOS)
+    @ScaledMetric var imageSize = 28
+    #else
     @ScaledMetric var imageSize = 40
+    #endif
 
     func deleteSubscription() {
         guard let id = subscription.persistentId else {

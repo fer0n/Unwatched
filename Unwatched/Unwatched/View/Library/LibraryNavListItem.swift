@@ -51,14 +51,19 @@ struct LibraryNavListItem: View {
                     }
                 }
             } icon: {
-                if let systemName {
-                    Image(systemName: systemName)
-                } else if let imageName {
-                    Image(imageName)
-                        .resizable()
-                        .scaledToFit()
-                        .padding(1)
+                Group {
+                    if let systemName {
+                        Image(systemName: systemName)
+                    } else if let imageName {
+                        Image(imageName)
+                            .resizable()
+                            .scaledToFit()
+                            .padding(1)
+                    }
                 }
+                #if os(macOS)
+                .frame(width: 20, height: 16)
+                #endif
             }
             .foregroundStyle(theme.color)
 

@@ -16,40 +16,73 @@ struct LibraryTagSection: View {
     @Query(sort: \Tag.order, animation: .default) private var tags: [Tag]
 
     var body: some View {
+        #if os(macOS)
+        Section {
+            rows
+        } header: {
+            HStack {
+                Text("tags")
+                    .fontWeight(.semibold)
+                Spacer()
+                newTagButton
+            }
+        }
+        #else
         MySection("tags", showPremiumIndicator: true, hasPadding: false) {
-            NavigationLink(value: LibraryDestination.allVideos) {
-                LibraryNavListItem("allVideos", systemName: Const.allVideosViewSF)
+            rows
+            newTagButton
+        }
+        #endif
+    }
+
+    @ViewBuilder private var rows: some View {
+        NavigationLink(value: LibraryDestination.allVideos) {
+            LibraryNavListItem("allVideos", systemName: Const.allVideosViewSF)
+        }
+        .contextMenu {
+            QuickSwitchToggle(isOn: $quickSwitchAllVideos)
+        }
+
+        ForEach(tags) { tag in
+            NavigationLink(value: LibraryDestination.tag(tag.name)) {
+                LibraryNavListItem(.verbatim(tag.name), systemName: tag.displaySymbol)
             }
             .contextMenu {
-                QuickSwitchToggle(isOn: $quickSwitchAllVideos)
-            }
-
-            ForEach(tags) { tag in
-                NavigationLink(value: LibraryDestination.tag(tag.name)) {
-                    LibraryNavListItem(.verbatim(tag.name), systemName: tag.displaySymbol)
+                Button {
+                    navManager.editedTag = .existing(tag)
+                } label: {
+                    Label("editTag", systemImage: Const.settingsViewSF)
                 }
-                .contextMenu {
-                    Button {
-                        navManager.editedTag = .existing(tag)
-                    } label: {
-                        Label("editTag", systemImage: Const.settingsViewSF)
-                    }
-                    QuickSwitchToggle(isOn: Binding(
-                        get: { tag.quickSwitch },
-                        set: { tag.quickSwitch = $0; save() }
-                    ))
-                }
+                QuickSwitchToggle(isOn: Binding(
+                    get: { tag.quickSwitch },
+                    set: { tag.quickSwitch = $0; save() }
+                ))
             }
-            .onDelete(perform: delete)
-            .onMove(perform: move)
-
-            Button {
-                navManager.editedTag = .new()
-            } label: {
-                LibraryNavListItem("newTag", systemName: "plus")
-            }
-            .requiresPremium(feature: "tags")
         }
+        .onDelete(perform: delete)
+        .onMove(perform: move)
+    }
+
+    private var newTagButton: some View {
+        Button {
+            navManager.editedTag = .new()
+        } label: {
+            #if os(macOS)
+            Label("newTag", systemImage: "plus")
+                .labelStyle(.iconOnly)
+                .fontWeight(.semibold)
+                .foregroundStyle(.secondary)
+                .padding(4)
+                .contentShape(.rect)
+            #else
+            LibraryNavListItem("newTag", systemName: "plus")
+            #endif
+        }
+        #if os(macOS)
+        .buttonStyle(.borderless)
+        .help("newTag")
+        #endif
+        .requiresPremium(feature: "tags")
     }
 
     private func save() {

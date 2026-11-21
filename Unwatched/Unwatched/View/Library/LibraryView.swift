@@ -24,11 +24,17 @@ struct LibraryView: View {
                 MyBackgroundColor()
 
                 List {
-                    LibraryVideoSection()
-                        .id(topListItemId)
-                    LibraryTagSection()
-                    SubscriptionListSection(subManager: $subManager,
-                                            theme: theme)
+                    Group {
+                        LibraryVideoSection()
+                            .id(topListItemId)
+                        LibraryTagSection()
+                        SubscriptionListSection(subManager: $subManager,
+                                                theme: theme)
+                    }
+                    #if os(macOS)
+                    .listRowSeparator(.hidden)
+                    .listSectionSeparator(.hidden)
+                    #endif
                 }
                 .scrollContentBackground(.hidden)
                 .onAppear {
