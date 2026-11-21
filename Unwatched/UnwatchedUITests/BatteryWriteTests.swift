@@ -194,6 +194,31 @@ class DurationToleranceTests: XCTestCase {
     }
 }
 
+class SponsorBlockRecheckTests: XCTestCase {
+    override func tearDown() async throws {
+        try wipeStore()
+    }
+
+    private func recentVideo(checkedMinutesAgo minutes: Double) throws -> PersistentIdentifier {
+        let context = DataProvider.newContext()
+        let video = Video(
+            title: "recent",
+            url: URL(string: "https://youtu.be/sb\(Int(minutes))"),
+            youtubeId: "sb\(Int(minutes))",
+            publishedDate: .now.addingTimeInterval(-60 * 60)
+        )
+        video.sponserBlockUpdateDate = .now.addingTimeInterval(-minutes * 60)
+        context.insert(video)
+        try context.save()
+        return video.persistentModelID
+    }
+
+    func testRecentVideoIsNotRecheckedWithinMinutes() throws {
+        XCTAssertFalse(ChapterService.shouldRefreshSponserBlock(try recentVideo(checkedMinutesAgo: 2), false, true))
+        XCTAssertTrue(ChapterService.shouldRefreshSponserBlock(try recentVideo(checkedMinutesAgo: 10), false, true))
+    }
+}
+
 private final class SaveCounter: @unchecked Sendable {
     private let lock = NSLock()
     private var count = 0

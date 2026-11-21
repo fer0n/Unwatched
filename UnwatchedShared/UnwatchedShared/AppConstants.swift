@@ -263,6 +263,7 @@ public struct Const {
     public static let statsFlushIntervalSeconds: Double = 1800
     public static let statsPauseFlushMinimumSeconds: Double = 60
     public static let durationChangeTolerance: Double = 1
+    public static let sponsorBlockRecentRefreshInterval: TimeInterval = 5 * 60
 
     /// Timer interval to monitor the current playback
     public static let elapsedTimeMonitorSeconds: Double = 1

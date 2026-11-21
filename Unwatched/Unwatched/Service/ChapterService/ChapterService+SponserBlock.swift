@@ -301,7 +301,10 @@ extension ChapterService {
 
         if let publishedDate = video.publishedDate {
             let oneDay: TimeInterval = 60 * 60 * 24
-            if Date().timeIntervalSince(publishedDate) < oneDay {
+            let checkedRecently = video.sponserBlockUpdateDate.map {
+                Date().timeIntervalSince($0) < Const.sponsorBlockRecentRefreshInterval
+            } ?? false
+            if Date().timeIntervalSince(publishedDate) < oneDay && !checkedRecently {
                 Log.chapters.info("SponsorBlock: refresh recent \(publishedDate)")
                 shouldRefresh = true
             }
