@@ -308,7 +308,7 @@ extension PlayerManager {
             if backward {
                 backend.showCaptionsTemporarily(seconds)
             }
-            currentTime = target
+            updateElapsedTime(target, videoId: video?.youtubeId)
             clearVideoEnded()
             handleLocalSeek(target)
             return true
