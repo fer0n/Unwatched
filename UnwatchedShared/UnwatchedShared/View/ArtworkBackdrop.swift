@@ -10,12 +10,14 @@ public struct ArtworkBackdrop: View {
     @Environment(ImageCacheManager.self) private var cacheManager
 
     private let imageUrls: [URL]
+    private let maxPixelSize: CGFloat
     @State private var backdrop: Backdrop?
 
     /// The same URLs the thumbnail loads from, tried in the same order.
-    public init(urls: [URL?]) {
+    public init(urls: [URL?], maxPixelSize: CGFloat = Const.maxDecodedImagePixelSize) {
         let imageUrls = urls.compactMap { $0 }
         self.imageUrls = imageUrls
+        self.maxPixelSize = maxPixelSize
         _backdrop = State(initialValue: imageUrls.first.flatMap { Self.cache[$0.absoluteString] })
     }
 
@@ -25,7 +27,7 @@ public struct ArtworkBackdrop: View {
             case .gradient(let edge, let center):
                 LinearGradient(colors: [edge, center, edge], startPoint: .leading, endPoint: .trailing)
             case .blurredArt:
-                CachedImageView(urls: imageUrls) { image in
+                CachedImageView(urls: imageUrls, maxPixelSize: maxPixelSize) { image in
                     image
                         .resizable()
                         .scaledToFill()
@@ -50,7 +52,7 @@ public struct ArtworkBackdrop: View {
         }
         for url in imageUrls {
             // the same task the thumbnail itself loads through: the image is decoded once
-            let task = ImageService.getImage(url, cacheManager)
+            let task = ImageService.getImage(url, cacheManager, maxPixelSize: maxPixelSize)
             guard let image = try? await task.value.0 else { continue }
             // a 12x12 downsample and 44 pixels: a task hop off the main thread costs more than the work
             let resolved = image.uniformEdgeColors()

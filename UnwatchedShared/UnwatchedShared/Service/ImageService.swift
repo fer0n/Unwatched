@@ -311,16 +311,14 @@ public struct ImageService {
         return false
     }
 
-    /// Cache key for a decoded image: the same URL decoded at two different sizes (the mini player's 107×60pt slot
-    /// vs.
     public static func decodedCacheKey(url: URL, maxPixelSize: CGFloat) -> String {
-        DecodedImageCache.key(url.absoluteString, Int(maxPixelSize))
+        DecodedImageCache.key(url.absoluteString, Int(decodeSize(for: maxPixelSize)))
     }
 
     /// Decodes off the main thread, so neither the view update nor the render pass has to.
     ///
     /// Reading the source is what costs — an episode's 3000px cover takes the same tens of milliseconds whether the
-    /// result wanted is 1200px or 135px — so a bigger decode of the same URL that's already in the cache is scaled
+    /// result wanted is 1200px or 256px — so a bigger decode of the same URL that's already in the cache is scaled
     /// down instead of decoding again.
     private static func decodeAndCache(_ data: Data, _ url: URL, _ maxPixelSize: CGFloat) -> PlatformImage? {
         let dataKey = url.absoluteString
@@ -346,6 +344,7 @@ public struct ImageService {
         _ cacheManager: ImageCacheManager,
         maxPixelSize: CGFloat = Const.maxDecodedImagePixelSize
     ) -> Task<(PlatformImage?, ImageCacheInfo), Error> {
+        let maxPixelSize = decodeSize(for: maxPixelSize)
         let dataKey = url.absoluteString
         let decodedKey = decodedCacheKey(url: url, maxPixelSize: maxPixelSize)
         if let running = inFlight[decodedKey] {

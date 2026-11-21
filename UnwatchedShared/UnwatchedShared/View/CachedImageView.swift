@@ -32,6 +32,7 @@ public struct CachedImageView<Content, Content2>: View where Content: View, Cont
         @ViewBuilder placeholder: @escaping () -> Content2
     ) {
         let imageUrls = urls.compactMap { $0 }
+        let maxPixelSize = ImageService.decodeSize(for: maxPixelSize)
         self.imageUrls = imageUrls
         self.maxPixelSize = maxPixelSize
         self.contentImage = content

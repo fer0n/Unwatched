@@ -18,6 +18,8 @@ public struct VideoListItemThumbnail: View {
 
     let imageUrls: [URL?]
 
+    @Environment(\.displayScale) private var displayScale
+
     public init(
         _ video: VideoData,
         config: VideoListItemConfig,
@@ -43,7 +45,7 @@ public struct VideoListItemThumbnail: View {
             // the slot the rest of the list uses, so rows keep lining up, with the art centred in the space that
             // leaves it and the cover's own background filling the rest.
             slot
-                .overlay { ArtworkBackdrop(urls: imageUrls) }
+                .overlay { ArtworkBackdrop(urls: imageUrls, maxPixelSize: maxPixelSize) }
                 .overlay { artwork }
                 .overlay { thumbnailOverlay }
                 .clipShape(shape)
@@ -54,6 +56,11 @@ public struct VideoListItemThumbnail: View {
                 .clipShape(shape)
                 .artworkBorder(shape)
         }
+    }
+
+    private var maxPixelSize: CGFloat {
+        guard let fixedSize else { return Const.maxDecodedImagePixelSize }
+        return min(ceil(max(fixedSize.width, fixedSize.height) * displayScale), Const.maxDecodedImagePixelSize)
     }
 
     private var shape: RoundedRectangle {
@@ -71,7 +78,7 @@ public struct VideoListItemThumbnail: View {
     }
 
     private var artwork: some View {
-        CachedImageView(urls: imageUrls) { image in
+        CachedImageView(urls: imageUrls, maxPixelSize: maxPixelSize) { image in
             sized(Color.clear)
                 .overlay {
                     image
