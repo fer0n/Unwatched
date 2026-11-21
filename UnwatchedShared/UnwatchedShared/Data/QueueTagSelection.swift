@@ -20,10 +20,6 @@ import SwiftData
         return nil
     }
 
-    public init(tagId: PersistentIdentifier?) {
-        self = tagId.map { .tag($0) } ?? .all
-    }
-
     public func tag(in tags: [Tag]) -> Tag? {
         guard let tagId else { return nil }
         return tags.first { $0.persistentModelID == tagId }

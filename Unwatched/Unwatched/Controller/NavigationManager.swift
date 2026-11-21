@@ -95,18 +95,9 @@ import UnwatchedShared
         presentedLibrary = (try? container.decode(NavigationPath.CodableRepresentation.self, forKey: .presentedLibrary))
             .map(NavigationPath.init) ?? NavigationPath()
 
-        let legacyInbox = try? container.decodeIfPresent(
-            [SendableSubscription].self,
-            forKey: .presentedSubscriptionInbox
-        )
-        presentedInbox = (try? container.decodeIfPresent([MenuRoute].self, forKey: .presentedInbox))
-            ?? legacyInbox?.map(MenuRoute.subscription)
-            ?? []
-        // `queueTagId` is what versions before the tag slices wrote. `try?`, so a selection this
-        // build can no longer read costs the tag and not the whole navigation state.
-        let legacyTagId = try container.decodeIfPresent(PersistentIdentifier.self, forKey: .queueTagId)
-        let decodedTag = (try? container.decodeIfPresent(QueueTagSelection.self, forKey: .queueTag)) ?? nil
-        queueTag = decodedTag ?? QueueTagSelection(tagId: legacyTagId)
+        presentedInbox = (try? container.decodeIfPresent([MenuRoute].self, forKey: .presentedInbox)) ?? []
+        // `try?`, so a selection this build can no longer read costs the tag and not the whole navigation state
+        queueTag = (try? container.decodeIfPresent(QueueTagSelection.self, forKey: .queueTag)) ?? .all
     }
 
     func encode(to encoder: Encoder) throws {
@@ -332,9 +323,6 @@ enum NavManagerCodingKeys: CodingKey {
          askForReviewCount,
          presentedLibrary,
          presentedInbox,
-         presentedSubscriptionInbox,
-         columnVisibility,
-         queueTagId,
          queueTag,
          playerTab
 }

@@ -111,10 +111,8 @@ import UnwatchedShared
         let container = try decoder.container(keyedBy: PlayerCodingKeys.self)
         pipEnabled = try container.decode(Bool.self, forKey: .pipEnabled)
         isRepeating = try container.decodeIfPresent(Bool.self, forKey: .isRepeating) ?? false
-        let legacyTagId = try container.decodeIfPresent(PersistentIdentifier.self, forKey: .playbackTagId)
         // `try?`, so a selection this build can no longer read costs the tag, not the player state
-        let decodedTag = (try? container.decodeIfPresent(QueueTagSelection.self, forKey: .playbackTag)) ?? nil
-        playbackTag = decodedTag ?? QueueTagSelection(tagId: legacyTagId)
+        playbackTag = (try? container.decodeIfPresent(QueueTagSelection.self, forKey: .playbackTag)) ?? .all
     }
 
     func encode(to encoder: Encoder) throws {
@@ -594,6 +592,5 @@ extension PlayerManager {
 enum PlayerCodingKeys: CodingKey {
     case pipEnabled,
          isRepeating,
-         playbackTagId,
          playbackTag
 }
