@@ -120,6 +120,11 @@ public final class DecodedImageCache: @unchecked Sendable {
         return nil
     }
 
+    public func largest(url: String) -> PlatformImage? {
+        let sizes = lock.withLock { sizesByUrl[url] ?? [] }.sorted(by: >)
+        return sizes.lazy.compactMap { self[Self.key(url, $0)] }.first
+    }
+
     /// Every decoded size of one URL. The plain subscript can't do this: its keys carry the size they were decoded
     /// at, so passing a bare URL there removes nothing.
     public func removeAll(url: String) {

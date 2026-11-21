@@ -42,7 +42,10 @@ public struct CachedImageView<Content, Content2>: View where Content: View, Cont
         let decoded = imageUrls.lazy
             .compactMap { ImageService.decodedImageCache[ImageService.decodedCacheKey(url: $0, maxPixelSize: maxPixelSize)] }
             .first
-        _image = State(initialValue: decoded)
+        let otherSize = decoded == nil
+            ? imageUrls.lazy.compactMap { ImageService.decodedImageCache.largest(url: $0.absoluteString) }.first
+            : nil
+        _image = State(initialValue: decoded ?? otherSize)
         _loadedKey = State(
             initialValue: decoded == nil
                 ? nil
