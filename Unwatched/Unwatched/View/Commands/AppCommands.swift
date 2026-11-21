@@ -97,7 +97,7 @@ struct AppCommands: Commands {
             }
 
             Section {
-                ExportSubscriptionsShareLink {
+                ExportSubscriptionsShareLink(showsMenuTitle: false) {
                     Text("exportSubscriptions")
                 }
             }

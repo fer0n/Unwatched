@@ -105,9 +105,9 @@ struct SubscriptionService {
         try await repo.unsubscribeFromPodcast(feedUrl)
     }
 
-    static func getAllFeedUrls() async throws -> [(title: String, link: URL?)] {
+    static func getAllFeedUrls(_ kind: SubscriptionExportKind) async throws -> [(title: String, link: URL?)] {
         let repo = SubscriptionActor()
-        return try await repo.getAllFeedUrls()
+        return try await repo.getAllFeedUrls(kind)
     }
 
     static func deleteSubscriptions(
@@ -195,5 +195,25 @@ struct SubscriptionService {
         let modelContext = DataProvider.newContext()
         let subs = try? modelContext.fetch(fetch)
         return subs?.first
+    }
+}
+
+enum SubscriptionExportKind: CaseIterable, Sendable {
+    case all, youtube, podcasts
+
+    var fileName: String {
+        switch self {
+        case .all: "unwatched.opml"
+        case .youtube: "unwatched-youtube.opml"
+        case .podcasts: "unwatched-podcasts.opml"
+        }
+    }
+
+    func includes(isPodcast: Bool) -> Bool {
+        switch self {
+        case .all: true
+        case .youtube: !isPodcast
+        case .podcasts: isPodcast
+        }
     }
 }

@@ -64,6 +64,8 @@ struct SettingsView: View {
                     }
                     ExportSubscriptionsShareLink {
                         LibraryNavListItem("exportSubscriptions", systemName: "square.and.arrow.up.fill")
+                            .frame(maxWidth: .infinity, alignment: .leading)
+                            .contentShape(.rect)
                     }
                     NavigationLink(value: LibraryDestination.userData) {
                         Label("userData", systemImage: Const.userDataSettingsSF)

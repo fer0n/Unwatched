@@ -5,7 +5,18 @@
 
 import SwiftUI
 
+extension SubscriptionExportKind {
+    var title: LocalizedStringKey {
+        switch self {
+        case .all: "exportSubscriptionsAll"
+        case .youtube: "exportSubscriptionsYoutube"
+        case .podcasts: "podcasts"
+        }
+    }
+}
+
 struct ExportSubscriptionsShareLink<Content: View>: View {
+    var showsMenuTitle = true
     let content: () -> Content
 
     @State var isExporting = false
@@ -15,13 +26,25 @@ struct ExportSubscriptionsShareLink<Content: View>: View {
     #endif
 
     var body: some View {
-        Button(action: startExport) {
+        Menu {
+            MenuSection(showsMenuTitle ? "exportSubscriptions" : nil) {
+                ForEach(SubscriptionExportKind.allCases, id: \.self) { kind in
+                    Button(kind.title) {
+                        startExport(kind)
+                    }
+                }
+            }
+        } label: {
+            #if os(macOS)
+            content()
+            #else
             if isExporting {
                 ProgressView()
                     .frame(maxWidth: .infinity, alignment: .center)
             } else {
                 content()
             }
+            #endif
         }
         .disabled(isExporting)
         .alert("noSubscriptionsToExport", isPresented: $showEmptyAlert) {
@@ -35,44 +58,23 @@ struct ExportSubscriptionsShareLink<Content: View>: View {
         #endif
     }
 
-    func startExport() {
+    func startExport(_ kind: SubscriptionExportKind) {
         Task {
             await MainActor.run { isExporting = true }
-            let urls = (try? await SubscriptionService.getAllFeedUrls()) ?? []
+            let urls = (try? await SubscriptionService.getAllFeedUrls(kind)) ?? []
             guard !urls.isEmpty else {
                 await MainActor.run { isExporting = false; showEmptyAlert = true }
                 return
             }
-            let task = Task.detached(priority: .userInitiated) { try Self.generateOPMLFile(from: urls) }
+            let fileName = kind.fileName
+            let task = Task.detached(priority: .userInitiated) {
+                try generateOPMLFile(from: urls, fileName: fileName)
+            }
             if let fileURL = try? await task.value {
                 await MainActor.run { presentShare(url: fileURL) }
             }
             await MainActor.run { isExporting = false }
         }
-    }
-
-    static func generateOPMLFile(from urls: [(title: String, link: URL?)]) throws -> URL {
-        let outlines = urls
-            .compactMap { sub -> String? in
-                guard let xmlUrl = sub.link?.absoluteString else { return nil }
-                let title = sub.title
-                    .replacingOccurrences(of: "&", with: "&amp;")
-                    .replacingOccurrences(of: "\"", with: "&quot;")
-                return "    <outline text=\"\(title)\" title=\"\(title)\" type=\"rss\" xmlUrl=\"\(xmlUrl)\"/>"
-            }
-            .joined(separator: "\n")
-        let opml = """
-            <?xml version="1.0" encoding="UTF-8"?>
-            <opml version="1.1">
-              <head><title>Subscriptions</title></head>
-              <body>
-            \(outlines)
-              </body>
-            </opml>
-            """
-        let url = FileManager.default.temporaryDirectory.appendingPathComponent("unwatched.opml")
-        try opml.write(to: url, atomically: true, encoding: .utf8)
-        return url
     }
 
     @MainActor
@@ -87,4 +89,28 @@ struct ExportSubscriptionsShareLink<Content: View>: View {
         }
         #endif
     }
+}
+
+private func generateOPMLFile(from urls: [(title: String, link: URL?)], fileName: String) throws -> URL {
+    let outlines = urls
+        .compactMap { sub -> String? in
+            guard let xmlUrl = sub.link?.absoluteString else { return nil }
+            let title = sub.title
+                .replacingOccurrences(of: "&", with: "&amp;")
+                .replacingOccurrences(of: "\"", with: "&quot;")
+            return "    <outline text=\"\(title)\" title=\"\(title)\" type=\"rss\" xmlUrl=\"\(xmlUrl)\"/>"
+        }
+        .joined(separator: "\n")
+    let opml = """
+        <?xml version="1.0" encoding="UTF-8"?>
+        <opml version="1.1">
+          <head><title>Subscriptions</title></head>
+          <body>
+        \(outlines)
+          </body>
+        </opml>
+        """
+    let url = FileManager.default.temporaryDirectory.appendingPathComponent(fileName)
+    try opml.write(to: url, atomically: true, encoding: .utf8)
+    return url
 }
