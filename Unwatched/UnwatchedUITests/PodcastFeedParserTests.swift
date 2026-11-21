@@ -179,6 +179,14 @@ class PodcastFeedParserTests: XCTestCase {
         try PodcastService.parseFeed(Data(xml.utf8), feedUrl: URL(string: "https://example.com/notes.xml")!)
     }
 
+    private func episodeDescription(_ notes: String) throws -> String? {
+        let xml = Self.showNotesXml.replacing(
+            #/<description><!\[CDATA\[<ul>.*?</ul>\]\]></description>/#.dotMatchesNewlines(),
+            with: "<description><![CDATA[\(notes)]]></description>"
+        )
+        return try parseNotesFeed(xml).episodes.first?.videoDescription
+    }
+
     /// Show notes are mostly links, and `DescriptionDetailView` renders them as markdown, so an anchor has to survive
     /// as a link rather than as its bare text.
     func testKeepsLinksAsMarkdown() throws {
@@ -211,11 +219,7 @@ class PodcastFeedParserTests: XCTestCase {
             <li>Third</li>
         </ul>
         """
-        let xml = Self.showNotesXml.replacing(
-            #/<description><!\[CDATA\[<ul>.*?</ul>\]\]></description>/#.dotMatchesNewlines(),
-            with: "<description><![CDATA[\(notes)]]></description>"
-        )
-        let description = try XCTUnwrap(parseNotesFeed(xml).episodes.first?.videoDescription)
+        let description = try XCTUnwrap(episodeDescription(notes))
         XCTAssertEqual(description, "\u{2022} [First](https://example.com/a)\n\u{2022} Second\n\u{2022} Third")
     }
 
@@ -234,13 +238,9 @@ class PodcastFeedParserTests: XCTestCase {
         </ul>
         <p>After</p>
         """
-        let xml = Self.showNotesXml.replacing(
-            #/<description><!\[CDATA\[<ul>.*?</ul>\]\]></description>/#.dotMatchesNewlines(),
-            with: "<description><![CDATA[\(notes)]]></description>"
-        )
         let indent = PodcastShowNotes.listIndent
         XCTAssertEqual(
-            try parseNotesFeed(xml).episodes.first?.videoDescription,
+            try episodeDescription(notes),
             "Intro\n\n\u{2022} Follow-up:\n\(indent)\u{2022} [First](https://example.com/a)\n"
                 + "\(indent)\u{2022} Second\n\u{2022} Next\n\nAfter"
         )
@@ -527,5 +527,38 @@ extension PodcastFeedParserTests {
         XCTAssertEqual(try title("2026: A Review", number: 12), "2026: A Review")
         // without a number to show, the title stays whole, whatever itunes:title says
         XCTAssertEqual(try title("717: Two Hot Streaks", itunesTitle: "Two Hot Streaks", number: nil), "717: Two Hot Streaks")
+    }
+}
+
+extension PodcastFeedParserTests {
+    /// ATP puts a command under an item's label, after a `<br />`: it belongs to the item, and it's code.
+    func testCodeInListItemsStaysInTheItem() throws {
+        let notes = """
+        <ul>
+        <li>Hide the indicator<br />
+        <code>sudo defaults write TCC AX_TRANSPARENCY_INDICATOR -bool false</code></li>
+        <li>Run <code>a `b` c</code><code></code></li>
+        </ul>
+        """
+        XCTAssertEqual(
+            try episodeDescription(notes),
+            "\u{2022} Hide the indicator\u{2028}`sudo defaults write TCC AX_TRANSPARENCY_INDICATOR -bool false`\n"
+                + "\u{2022} Run `` a `b` c ``"
+        )
+    }
+
+    func testInlineStylesBecomeMarkdown() throws {
+        let notes = """
+        <ul>
+        <li><strong>Bold </strong>and <em>italic</em>, <b><i>both</i></b>, <s>gone</s><strong></strong></li>
+        <li><strong>unclosed</li>
+        <li>See <code><a href="https://example.com">example.com</a></code></li>
+        </ul>
+        """
+        XCTAssertEqual(
+            try episodeDescription(notes),
+            "\u{2022} **Bold** and *italic*, ***both***, ~~gone~~\n\u{2022} **unclosed**\n"
+                + "\u{2022} See [example.com](https://example.com)"
+        )
     }
 }

@@ -19,6 +19,7 @@ public enum PodcastShowNotes {
         var result = ""
         var listDepth = 0
         var linkHref: String?
+        var openSpans: [OpenSpan] = []
         var awaitingItemText = false
         var index = html.startIndex
 
@@ -35,7 +36,7 @@ public enum PodcastShowNotes {
                 }
                 awaitingItemText = false
                 // inside a link the brackets are markdown syntax, so they can't stay as they are
-                if linkHref != nil, character == "[" || character == "]" {
+                if linkHref != nil, !openSpans.contains(where: \.style.isCode), character == "[" || character == "]" {
                     result.append("\\")
                 }
                 result.append(character)
@@ -52,7 +53,29 @@ public enum PodcastShowNotes {
                 .prefix { !$0.isWhitespace && $0 != "/" }
                 .lowercased()
 
+            // a span can't cross a block, a code span can't hold a link, and an unclosed one mustn't swallow the rest
+            if blockTags.contains(name) {
+                closeSpans(&openSpans, from: 0, in: &result)
+            } else if name == "a", !isClosing, let code = openSpans.firstIndex(where: \.style.isCode) {
+                closeSpans(&openSpans, from: code, in: &result)
+            }
+
+            if let style = inlineStyles[name] {
+                if isClosing {
+                    if let open = openSpans.lastIndex(where: { $0.style == style }) {
+                        closeSpans(&openSpans, from: open, in: &result)
+                    }
+                } else if !openSpans.contains(where: { $0.style == style || $0.style.isCode }) {
+                    openSpans.append(OpenSpan(style: style, offset: result.utf8.count))
+                    result.append(style.marker)
+                }
+                continue
+            }
+
             switch name {
+            case "br" where listDepth > 0 && !awaitingItemText:
+                trimTrailingSpaces(&result)
+                result.append(lineSeparator)
             case "br", "p", "div", "h1", "h2", "h3", "h4", "h5", "h6":
                 if listDepth > 0 {
                     if !awaitingItemText, !isClosing {
@@ -91,17 +114,87 @@ public enum PodcastShowNotes {
             }
         }
 
+        closeSpans(&openSpans, from: 0, in: &result)
         if linkHref != nil {
             result.append("]")
         }
         return tidy(result)
     }
 
-    /// Breaks the line unless it already is broken, dropping the collapsed whitespace that ends it.
-    private static func startLine(_ result: inout String) {
-        while let last = result.last, last == " " || last == "\t" {
+    /// U+2028: a line break within the paragraph, which is what `<br>` is to a list item.
+    private static let lineSeparator: Character = "\u{2028}"
+    private static let blockTags: Set<String> = ["li", "ul", "ol", "p", "div", "h1", "h2", "h3", "h4", "h5", "h6"]
+
+    private enum InlineStyle {
+        case code, bold, italic, strikethrough
+
+        var marker: String {
+            switch self {
+            case .code: "`"
+            case .bold: "**"
+            case .italic: "*"
+            case .strikethrough: "~~"
+            }
+        }
+
+        var isCode: Bool { self == .code }
+    }
+
+    private static let inlineStyles: [String: InlineStyle] = [
+        "code": .code, "kbd": .code, "tt": .code, "samp": .code,
+        "strong": .bold, "b": .bold,
+        "em": .italic, "i": .italic,
+        "s": .strikethrough, "strike": .strikethrough, "del": .strikethrough
+    ]
+
+    /// `offset` is where the opening marker starts, in UTF-8.
+    private struct OpenSpan {
+        let style: InlineStyle
+        let offset: Int
+    }
+
+    /// Closes `spans[index...]`, innermost first, so the outer offsets stay valid.
+    private static func closeSpans(_ spans: inout [OpenSpan], from index: Int, in result: inout String) {
+        while spans.count > index {
+            closeSpan(spans.removeLast(), in: &result)
+        }
+    }
+
+    private static func closeSpan(_ span: OpenSpan, in result: inout String) {
+        let opening = result.utf8.index(result.utf8.startIndex, offsetBy: span.offset)
+        let text = result[opening...].dropFirst(span.style.marker.count)
+        // markdown only takes a delimiter that hugs its text
+        let leading = text.prefix(while: \.isWhitespace)
+        let rest = text.dropFirst(leading.count)
+        let trailingCount = rest.reversed().prefix(while: \.isWhitespace).count
+        let content = String(rest.dropLast(trailingCount))
+            // a newline would end the paragraph, and the span with it
+            .replacing("\n", with: String(lineSeparator))
+        let wrapped = content.isEmpty ? "" : wrap(content, in: span.style)
+        let replacement = leading + wrapped + rest.suffix(trailingCount)
+        result.replaceSubrange(opening..., with: replacement)
+    }
+
+    private static func wrap(_ content: String, in style: InlineStyle) -> String {
+        guard style.isCode else {
+            return style.marker + content + style.marker
+        }
+        // longer than any backtick run inside, so those stay text
+        let longestRun = content.split { $0 != "`" }.map(\.count).max() ?? 0
+        let fence = String(repeating: "`", count: longestRun + 1)
+        let padding = longestRun > 0 ? " " : ""
+        return fence + padding + content + padding + fence
+    }
+
+    private static func trimTrailingSpaces(_ result: inout String) {
+        while let last = result.last, last == " " || last == "\t" || last == lineSeparator {
             result.removeLast()
         }
+    }
+
+    /// Breaks the line unless it already is broken, dropping the collapsed whitespace that ends it.
+    private static func startLine(_ result: inout String) {
+        trimTrailingSpaces(&result)
         if !result.isEmpty, !result.hasSuffix("\n") {
             result.append("\n")
         }
