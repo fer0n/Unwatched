@@ -197,7 +197,7 @@ extension VideoService {
     }
 
     static func updateDuration(_ video: Video, duration: Double) {
-        if video.duration == duration {
+        if let current = video.duration, abs(current - duration) < Const.durationChangeTolerance {
             return
         }
         withAnimation {

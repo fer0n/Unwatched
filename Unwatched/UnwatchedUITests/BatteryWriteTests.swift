@@ -163,6 +163,37 @@ class StatsPauseFlushTests: XCTestCase {
     }
 }
 
+@MainActor
+class DurationToleranceTests: XCTestCase {
+    override func tearDown() async throws {
+        try wipeStore()
+    }
+
+    func testSubSecondDurationDifferencesDontWrite() async throws {
+        let context = DataProvider.mainContext
+        let video = Video(title: "duration", url: URL(string: "https://youtu.be/dur"), youtubeId: "dur")
+        video.duration = 612
+        context.insert(video)
+        try context.save()
+
+        let saves = SaveCounter()
+        let observer = NotificationCenter.default.addObserver(
+            forName: ModelContext.didSave, object: context, queue: nil
+        ) { _ in saves.increment() }
+        defer { NotificationCenter.default.removeObserver(observer) }
+
+        VideoService.updateDuration(video, duration: 612.04)
+        try await Task.sleep(for: .milliseconds(500))
+        XCTAssertEqual(saves.value, 0)
+        XCTAssertEqual(video.duration, 612)
+
+        VideoService.updateDuration(video, duration: 640)
+        try await Task.sleep(for: .milliseconds(500))
+        XCTAssertEqual(saves.value, 1)
+        XCTAssertEqual(video.duration, 640)
+    }
+}
+
 private final class SaveCounter: @unchecked Sendable {
     private let lock = NSLock()
     private var count = 0
