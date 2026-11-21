@@ -324,6 +324,30 @@ class CleanupSaveCountTests: XCTestCase {
     }
 }
 
+class BackupRecompressionCheckTests: XCTestCase {
+    func testOnlyUncompressedBackupsNeedRecompression() throws {
+        let dir = FileManager.default.temporaryDirectory.appendingPathComponent(UUID().uuidString)
+        try FileManager.default.createDirectory(at: dir, withIntermediateDirectories: true)
+        defer { try? FileManager.default.removeItem(at: dir) }
+
+        let body = Data("{\"videos\":[]}".utf8)
+        let compressed = dir.appendingPathComponent("compressed")
+        try (Data([0x55, 0x57, 0x5a, 0x31]) + body).write(to: compressed)
+        let legacy = dir.appendingPathComponent("legacy")
+        try body.write(to: legacy)
+        let placeholder = dir.appendingPathComponent(".legacy.icloud")
+        try body.write(to: placeholder)
+        let empty = dir.appendingPathComponent("empty")
+        try Data().write(to: empty)
+
+        XCTAssertFalse(UserDataService.needsRecompression(compressed))
+        XCTAssertTrue(UserDataService.needsRecompression(legacy))
+        XCTAssertFalse(UserDataService.needsRecompression(placeholder))
+        XCTAssertFalse(UserDataService.needsRecompression(empty))
+        XCTAssertFalse(UserDataService.needsRecompression(dir.appendingPathComponent("missing")))
+    }
+}
+
 private final class SaveCounter: @unchecked Sendable {
     private let lock = NSLock()
     private var count = 0
