@@ -156,6 +156,15 @@ extension MigrationTests {
             "Tag": ["_mode", "_playerType", "_podcasts", "continuousPlay", "createdDate", "excludedVideos", "name", "order", "playbackSpeed", "quickSwitch", "seekSeconds", "subscriptions", "suggestVideos", "symbol", "videos"],
             "Video": ["apiUpdatedDate", "bookmarkedDate", "channelTitle", "chapterGenerationDate", "chapters", "chaptersUrl", "createdDate", "deferDate", "downloadedDate", "duration", "elapsedSeconds", "episodeNumber", "excludedFromTags", "inboxEntry", "isAudioOnly", "isNew", "isYtShort", "keepIntro", "keepOutro", "mediaUrl", "mergedChapters", "noDuration", "publishedDate", "queueEntry", "scheduledStartDate", "sponserBlockUpdateDate", "subscription", "tags", "thumbnailUrl", "title", "updatedDate", "url", "videoDescription", "watchedDate", "youtubeChannelId", "youtubeId"],
             "WatchTimeEntry": ["channelId", "channelName", "date", "watchTime"]
+        ],
+        "1.19.0": [
+            "Chapter": ["category", "duration", "endTime", "imageUrl", "isActive", "link", "mergedChapterVideo", "order", "startTime", "title", "video"],
+            "InboxEntry": ["date", "video", "youtubeId"],
+            "QueueEntry": ["order", "video", "youtubeId"],
+            "Subscription": ["_liveStreamSetting", "_selfPromoSegmentSetting", "_shortsSetting", "_sponsorSegmentSetting", "_tint", "_videoPlacement", "allowOnMatch", "author", "autoSkipChapterTitles", "chapterGeneration", "customAspectRatio", "customSpeedSetting", "episodeLimit", "failedFetchCount", "filterText", "isArchived", "isPodcast", "lastFetchErrorMessage", "lastFetchFailedDate", "link", "mostRecentVideoDate", "skipIntroSeconds", "skipOutroSeconds", "subscribedDate", "tags", "thumbnailUrl", "title", "videos", "youtubeChannelId", "youtubePlaylistId", "youtubeUserName"],
+            "Tag": ["_mode", "_playerType", "_podcasts", "continuousPlay", "createdDate", "excludedVideos", "name", "order", "playbackSpeed", "quickSwitch", "seekSeconds", "subscriptions", "suggestVideos", "symbol", "videos"],
+            "Video": ["apiUpdatedDate", "bookmarkedDate", "channelTitle", "chapterGenerationDate", "chapters", "chaptersUrl", "clearedDate", "createdDate", "deferDate", "downloadedDate", "duration", "elapsedSeconds", "episodeNumber", "excludedFromTags", "inboxEntry", "isAudioOnly", "isNew", "isYtShort", "keepIntro", "keepOutro", "mediaUrl", "mergedChapters", "noDuration", "publishedDate", "queueEntry", "scheduledStartDate", "sponserBlockUpdateDate", "subscription", "tags", "thumbnailUrl", "title", "updatedDate", "url", "videoDescription", "watchedDate", "youtubeChannelId", "youtubeId"],
+            "WatchTimeEntry": ["channelId", "channelName", "date", "watchTime"]
         ]
     ]
 

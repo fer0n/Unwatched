@@ -321,6 +321,167 @@ class CleanupServiceTests: XCTestCase {
         }
     }
 
+    // MARK: Cleared videos
+
+    func testDedupeKeepsClearedVideoOutOfInbox() async throws {
+        let context = DataProvider.newContext()
+        let copies = makeCopies(keeper: .inbox, duplicate: .inbox, context)
+        VideoService.deleteInboxEntry(try XCTUnwrap(copies.keeper.inboxEntry), modelContext: context)
+        XCTAssertNotNil(copies.keeper.clearedDate, "clearing has to record the decision on the video")
+
+        let kept = try await dedupe(copies, context)
+        XCTAssertFalse(kept.inInbox, "the cleared video is back in the inbox")
+    }
+
+    func testDedupeAppliesClearFromDuplicate() async throws {
+        let context = DataProvider.newContext()
+        let copies = makeCopies(keeper: .inbox, context)
+        copies.duplicate.clearedDate = .now
+
+        let kept = try await dedupe(copies, context)
+        XCTAssertFalse(kept.inInbox, "the clear has to apply to the video, not to one row")
+        XCTAssertTrue(kept.isCleared, "the decision has to survive the merge")
+    }
+
+    /// CloudKit merges per field, so a row can arrive with one device's clear and another's entry.
+    func testKeepersOwnClearDropsItsEntry() async throws {
+        let context = DataProvider.newContext()
+        let copies = makeCopies(keeper: .inbox, context)
+        copies.keeper.clearedDate = .now
+
+        let kept = try await dedupe(copies, context)
+        XCTAssertFalse(kept.inInbox)
+    }
+
+    func testDedupeKeepsRemovedVideoOutOfQueue() async throws {
+        let context = DataProvider.newContext()
+        let copies = makeCopies(keeper: .queue(0), duplicate: .queue(1), context)
+        VideoService.deleteQueueEntry(try XCTUnwrap(copies.keeper.queueEntry), modelContext: context)
+        XCTAssertNotNil(copies.keeper.clearedDate, "removing from the queue has to record the decision")
+
+        let kept = try await dedupe(copies, context)
+        XCTAssertNil(kept.queueOrder, "the removed video is back in the queue")
+    }
+
+    /// One date for both lists: a queue add on the other device loses to a clear made here.
+    func testClearOutranksTheOtherDevicesQueueEntry() async throws {
+        let context = DataProvider.newContext()
+        let copies = makeCopies(keeper: .inbox, duplicate: .queue(2), context)
+        VideoService.deleteInboxEntry(try XCTUnwrap(copies.keeper.inboxEntry), modelContext: context)
+
+        let kept = try await dedupe(copies, context)
+        XCTAssertNil(kept.queueOrder)
+    }
+
+    func testQueueEntryOutranksTheKeepersInboxEntry() async throws {
+        let context = DataProvider.newContext()
+        let copies = makeCopies(keeper: .inbox, duplicate: .queue(4), context)
+
+        let kept = try await dedupe(copies, context)
+        XCTAssertEqual(kept.queueOrder, 4, "the queue entry was dropped")
+        XCTAssertFalse(kept.inInbox, "a video must never hold both entries")
+    }
+
+    /// Watched with no entry to clear, while the other device's copy is still in its inbox.
+    func testWatchedVideoStaysOutOfTheOtherCopysInbox() async throws {
+        let context = DataProvider.newContext()
+        let copies = makeCopies(duplicate: .inbox, context)
+        VideoService.setVideoWatched(copies.keeper, modelContext: context)
+
+        let kept = try await dedupe(copies, context)
+        XCTAssertTrue(kept.isWatched)
+        XCTAssertFalse(kept.inInbox, "the watched episode is back in the inbox")
+    }
+
+    func testMovingToInboxUndoesTheClear() {
+        let context = DataProvider.newContext()
+        let video = Video(title: "reAdded", url: nil, youtubeId: "reAdded-\(UUID().uuidString)")
+        context.insert(video)
+        video.clearedDate = .now
+        QueueInsertionService.addVideosToInbox([video], modelContext: context)
+        XCTAssertNil(video.clearedDate)
+
+        CleanupService.deleteVideo(video, context)
+        try? context.save()
+    }
+
+    private enum Entry {
+        case inbox
+        case queue(Int)
+    }
+
+    private struct Copies {
+        let sub: Subscription
+        let keeper: Video
+        let duplicate: Video
+    }
+
+    private struct Kept {
+        let inInbox: Bool
+        let queueOrder: Int?
+        let isCleared: Bool
+        let isWatched: Bool
+    }
+
+    /// The keeper wins the dedupe on `hasSubscription`.
+    private func makeCopies(keeper: Entry? = nil, duplicate: Entry? = nil, _ context: ModelContext) -> Copies {
+        let youtubeId = "cleared-\(UUID().uuidString)"
+        let sub = Subscription.getDummy()
+        context.insert(sub)
+        let keeperVideo = Video(
+            title: "keeper",
+            url: URL(string: "https://www.youtube.com/watch?v=\(youtubeId)"),
+            youtubeId: youtubeId
+        )
+        context.insert(keeperVideo)
+        sub.videos?.append(keeperVideo)
+        let duplicateVideo = Video(
+            title: "duplicate",
+            url: URL(string: "https://youtu.be/\(youtubeId)"),
+            youtubeId: youtubeId,
+            isNew: true
+        )
+        context.insert(duplicateVideo)
+        add(keeper, to: keeperVideo, context)
+        add(duplicate, to: duplicateVideo, context)
+        return Copies(sub: sub, keeper: keeperVideo, duplicate: duplicateVideo)
+    }
+
+    private func add(_ entry: Entry?, to video: Video, _ context: ModelContext) {
+        switch entry {
+        case .inbox:
+            let inboxEntry = InboxEntry(video)
+            context.insert(inboxEntry)
+            video.inboxEntry = inboxEntry
+        case .queue(let order):
+            let queueEntry = QueueEntry(video: video, order: order)
+            context.insert(queueEntry)
+            video.queueEntry = queueEntry
+        case nil:
+            break
+        }
+    }
+
+    private func dedupe(_ copies: Copies, _ context: ModelContext) async throws -> Kept {
+        try context.save()
+        _ = await CleanupService.cleanupDuplicatesAndInboxDate(quickCheck: false).value
+
+        let youtubeId = copies.keeper.youtubeId
+        let fetch = FetchDescriptor<Video>(predicate: #Predicate<Video> { $0.youtubeId == youtubeId })
+        let videos = try DataProvider.newContext().fetch(fetch)
+        XCTAssertEqual(videos.count, 1)
+        let video = try XCTUnwrap(videos.first)
+        XCTAssertEqual(video.title, "keeper", "kept wrong duplicate")
+        let kept = Kept(
+            inInbox: video.inboxEntry != nil,
+            queueOrder: video.queueEntry?.order,
+            isCleared: video.clearedDate != nil,
+            isWatched: video.watchedDate != nil
+        )
+        cleanUp(videos: try context.fetch(fetch), sub: copies.sub, context: context)
+        return kept
+    }
+
     /// The container is shared between tests, leftovers break suites that fetch unscoped.
     private func cleanUp(videos: [Video], sub: Subscription, context: ModelContext) {
         for video in videos {

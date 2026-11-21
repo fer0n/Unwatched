@@ -28,6 +28,7 @@ public enum UnwatchedMigrationPlan: SchemaMigrationPlan {
             UnwatchedSchemaV1p16.self,
             UnwatchedSchemaV1p17.self,
             UnwatchedSchemaV1p18.self,
+            UnwatchedSchemaV1p19.self,
         ]
     }
     
@@ -234,6 +235,12 @@ public enum UnwatchedMigrationPlan: SchemaMigrationPlan {
         toVersion: UnwatchedSchemaV1p18.self
     )
 
+    /// Adds `Video.clearedDate`.
+    public static let migrateV1p18toV1p19 = MigrationStage.lightweight(
+        fromVersion: UnwatchedSchemaV1p18.self,
+        toVersion: UnwatchedSchemaV1p19.self
+    )
+
     public static var stages: [MigrationStage] {
         [
             migrateV1toV1p1,
@@ -253,7 +260,8 @@ public enum UnwatchedMigrationPlan: SchemaMigrationPlan {
             migrateV1p14toV1p15,
             migrateV1p15toV1p16,
             migrateV1p16toV1p17,
-            migrateV1p17toV1p18
+            migrateV1p17toV1p18,
+            migrateV1p18toV1p19
         ]
     }
 }

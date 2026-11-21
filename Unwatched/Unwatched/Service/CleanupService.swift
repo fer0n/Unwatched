@@ -469,7 +469,7 @@ actor CleanupActor: SharedContextActor {
         for video in videos where video.inboxEntry != nil && video.queueEntry != nil {
             if let inboxEntry = video.inboxEntry {
                 VideoService.deleteInboxEntry(
-                    inboxEntry, modelContext: modelContext
+                    inboxEntry, markCleared: false, modelContext: modelContext
                 )
                 count += 1
             }
@@ -624,6 +624,11 @@ extension CleanupActor {
         if keeper.deferDate == nil, let deferDate = duplicate.deferDate {
             keeper.deferDate = deferDate
         }
+        // the later clear wins
+        if let clearedDate = duplicate.clearedDate,
+           clearedDate > (keeper.clearedDate ?? .distantPast) {
+            keeper.clearedDate = clearedDate
+        }
         // a chapter edit like the rows below, it just has no row of its own
         if keeper.keepIntro == nil, let keepIntro = duplicate.keepIntro {
             keeper.keepIntro = keepIntro
@@ -661,15 +666,30 @@ extension CleanupActor {
         ChapterService.invalidateDerivedChapters(youtubeId: keeper.youtubeId)
     }
 
-    /// Moves entries over before they get deleted along with the duplicate.
-    /// A video must never have an inbox and a queue entry at the same time.
+    /// A clear on either copy (merged into `keeper.clearedDate`) drops every entry;
+    /// otherwise the queue wins over the inbox, whichever copy holds it.
     private func moveEntries(from duplicate: Video, to keeper: Video) {
+        if keeper.clearedDate != nil {
+            if let queueEntry = keeper.queueEntry {
+                VideoService.deleteQueueEntry(queueEntry, markCleared: false, modelContext: modelContext)
+                duplicateInfo.countQueueEntries += 1
+            }
+            if let inboxEntry = keeper.inboxEntry {
+                VideoService.deleteInboxEntry(inboxEntry, markCleared: false, modelContext: modelContext)
+                duplicateInfo.countInboxEntries += 1
+            }
+            return
+        }
         if let queueEntry = duplicate.queueEntry {
             if let keeperQueueEntry = keeper.queueEntry {
                 if queueEntry.order < keeperQueueEntry.order {
                     keeperQueueEntry.order = queueEntry.order
                 }
-            } else if keeper.inboxEntry == nil {
+            } else {
+                if let inboxEntry = keeper.inboxEntry {
+                    VideoService.deleteInboxEntry(inboxEntry, markCleared: false, modelContext: modelContext)
+                    duplicateInfo.countInboxEntries += 1
+                }
                 duplicate.queueEntry = nil
                 queueEntry.video = keeper
                 keeper.queueEntry = queueEntry

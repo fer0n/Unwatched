@@ -427,7 +427,7 @@ extension VideoService {
         let fetch = FetchDescriptor<InboxEntry>(predicate: #Predicate { $0.video?.isYtShort == true })
         if let entries = try? modelContext.fetch(fetch) {
             for entry in entries {
-                modelContext.delete(entry)
+                deleteInboxEntry(entry, modelContext: modelContext)
             }
             try? modelContext.save()
         }

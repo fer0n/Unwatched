@@ -14,6 +14,8 @@ public struct VideoService {
                 modelContext: modelContext
             )
             video.watchedDate = .now
+            // even with no entry to clear
+            video.clearedDate = .now
         } else {
             video.watchedDate = nil
         }
@@ -46,27 +48,42 @@ public struct VideoService {
 
     /// Removing an entry leaves the others' `order` alone — see `QueueOrder`, they only have to stay
     /// in the right sequence relative to each other, not be contiguous.
+    /// - Parameter markCleared: see `deleteInboxEntry`.
     public static func deleteQueueEntry(
         _ queueEntry: QueueEntry,
+        markCleared: Bool = true,
         modelContext: ModelContext
     ) {
         guard let queueEntry = modelContext.resolvedModel(queueEntry) else {
             return
         }
         let video = queueEntry.video.flatMap { modelContext.resolvedModel($0) }
-        if let video, video.isNew {
-            video.isNew = false
+        if let video {
+            if video.isNew {
+                video.isNew = false
+            }
+            if markCleared {
+                video.clearedDate = .now
+            }
         }
         modelContext.delete(queueEntry)
         syncPodcastDownloads(for: video)
     }
 
-    public static func deleteInboxEntry(_ entry: InboxEntry, modelContext: ModelContext) {
+    /// - Parameter markCleared: `false` when the video stays in a list, e.g. moving between lists or a dedupe merge.
+    public static func deleteInboxEntry(
+        _ entry: InboxEntry,
+        markCleared: Bool = true,
+        modelContext: ModelContext
+    ) {
         guard let entry = modelContext.resolvedModel(entry) else {
             return
         }
         if let video = entry.video.flatMap({ modelContext.resolvedModel($0) }) {
             video.isNew = false
+            if markCleared {
+                video.clearedDate = .now
+            }
         }
         modelContext.delete(entry)
     }

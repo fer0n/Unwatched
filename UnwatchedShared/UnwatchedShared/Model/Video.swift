@@ -64,6 +64,10 @@ public final class Video: VideoData, CustomStringConvertible, Exportable {
     public var createdDate: Date?
     public var isNew: Bool = false
 
+    /// When the user last took it out of the inbox/queue or watched it; nil once it's listed again.
+    /// Keeps a dedupe merge from re-listing it, see `CleanupActor.moveEntries`.
+    public var clearedDate: Date?
+
     /// The user re-enabled this video's skipped intro by hand.
     public var keepIntro: Bool?
 

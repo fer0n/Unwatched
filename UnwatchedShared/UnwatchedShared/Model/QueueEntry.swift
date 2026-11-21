@@ -25,6 +25,7 @@ public final class QueueEntry: QueueEntryData, CustomStringConvertible, Exportab
         self.youtubeId = video?.youtubeId
         self.video = video
         self.order = order
+        video?.clearedDate = nil
     }
 
     /// Use instead of `video.queueEntry`, which traps once another context deletes the entry.

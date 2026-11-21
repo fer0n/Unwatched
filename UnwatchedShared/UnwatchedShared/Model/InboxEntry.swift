@@ -24,6 +24,7 @@ public final class InboxEntry: CustomStringConvertible, Exportable, HasVideo {
         self.video = video
         self.youtubeId = video?.youtubeId
         self.date = video?.publishedDate
+        video?.clearedDate = nil
     }
 
     public var description: String {
