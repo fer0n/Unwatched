@@ -18325,6 +18325,74 @@
         }
       }
     },
+    "playbackPositionBackup" : {
+      "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Wiedergabeposition sichern"
+          }
+        },
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Back Up Playback Position"
+          }
+        },
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Copia de seguridad de la posición"
+          }
+        },
+        "fr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Sauvegarder la position de lecture"
+          }
+        },
+        "pl" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Kopia zapasowa pozycji odtwarzania"
+          }
+        }
+      }
+    },
+    "playbackPositionBackupHelper" : {
+      "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Speichert die Position während der Wiedergabe alle 5 Sekunden in einer lokalen Datei, damit ein Beenden der App (z. B. durch eine Neuinstallation aus Xcode) höchstens ein paar Sekunden kostet."
+          }
+        },
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Saves the position to a local file every 5 seconds while playing, so the app being killed (e.g. by a reinstall from Xcode) loses at most a few seconds."
+          }
+        },
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Guarda la posición en un archivo local cada 5 segundos durante la reproducción, para que si la app se cierra a la fuerza (p. ej., al reinstalar desde Xcode) solo se pierdan unos segundos."
+          }
+        },
+        "fr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Enregistre la position dans un fichier local toutes les 5 secondes pendant la lecture, afin qu'un arrêt forcé de l'app (p. ex. une réinstallation depuis Xcode) ne fasse perdre que quelques secondes."
+          }
+        },
+        "pl" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Podczas odtwarzania co 5 sekund zapisuje pozycję w lokalnym pliku, więc wymuszone zamknięcie aplikacji (np. ponowna instalacja z Xcode) traci najwyżej kilka sekund."
+          }
+        }
+      }
+    },
     "playbackPositionDescription" : {
       "localizations" : {
         "de" : {

@@ -65,8 +65,7 @@ extension PlayerWebViewCoordinator {
         }
         if youtubeId == nil || youtubeId == parent.player.video?.youtubeId {
             if parent.player.isPlaying {
-                parent.player.monitorChapters(time: time)
-                parent.player.trackSpeedUsage()
+                parent.player.handlePlayingTick(time)
             } else if parent.player.currentTime != time {
                 parent.player.currentTime = time
             }

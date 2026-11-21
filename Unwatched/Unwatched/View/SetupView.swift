@@ -242,6 +242,7 @@ struct SetupView: View {
         #if os(iOS)
         PlayerManager.revertNativeFallbackOnLaunch()
         #endif
+        PlaybackPositionBackup.applyToStore()
         PlayerManager.shared.restoreNowPlayingVideo()
         prefetchAudioArtworkIfNeeded()
         setupPodcastDownloads()

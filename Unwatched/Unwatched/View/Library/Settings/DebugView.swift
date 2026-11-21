@@ -9,6 +9,7 @@ import UnwatchedShared
 struct DebugView: View {
     @AppStorage(Const.monitorBackgroundFetchesNotification) var monitorBackgroundFetches: Bool = false
     @AppStorage(Const.backgroundPlayback) var backgroundPlayback: Bool = true
+    @AppStorage(Const.playbackPositionBackup) var positionBackup: Bool = PlaybackPositionBackup.defaultEnabled
     @Environment(NavigationManager.self) var navManager
 
     #if os(iOS)
@@ -34,13 +35,16 @@ struct DebugView: View {
                     }
                 }
 
-                #if os(iOS)
-                MySection("playback") {
+                MySection("playback", footer: "playbackPositionBackupHelper") {
+                    #if os(iOS)
                     Toggle(isOn: $backgroundPlayback) {
                         Text("backgroundPlayback")
                     }
+                    #endif
+                    Toggle(isOn: $positionBackup) {
+                        Text("playbackPositionBackup")
+                    }
                 }
-                #endif
 
                 YoutubeApiKeyView()
 

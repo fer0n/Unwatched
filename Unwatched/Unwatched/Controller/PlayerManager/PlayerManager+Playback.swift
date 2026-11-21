@@ -133,6 +133,7 @@ extension PlayerManager {
         }
 
         video?.elapsedSeconds = time
+        PlaybackPositionBackup.record(time, youtubeId: video?.youtubeId, force: true)
         if immediate {
             VideoService.forceUpdateVideoNow(modelId, elapsedSeconds: time)
         } else {
@@ -143,6 +144,13 @@ extension PlayerManager {
                 maxDelay: Const.elapsedTimeSaveMaxDelaySeconds * 1000
             )
         }
+    }
+
+    @MainActor
+    func handlePlayingTick(_ time: Double) {
+        monitorChapters(time: time)
+        trackSpeedUsage()
+        PlaybackPositionBackup.record(time, youtubeId: video?.youtubeId)
     }
 
     @MainActor
