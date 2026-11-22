@@ -97,7 +97,8 @@ public enum YoutubeUrlParser {
     /// True if the URL points at a channel or user page (not a video/playlist).
     public static func isChannelUrl(_ url: URL) -> Bool {
         isYoutubeHost(url) && !isContentUrl(url)
-            && (getChannelId(from: url) != nil || getChannelUserName(from: url) != nil || isFeedUrl(url))
+            && (getChannelId(from: url) != nil || getChannelUserName(from: url) != nil || isFeedUrl(url)
+                || isLegacyChannelUrl(url))
     }
 
     private static func isYoutubeHost(_ url: URL) -> Bool {
@@ -169,13 +170,38 @@ public enum YoutubeUrlParser {
         return nil
     }
 
+    /// An old custom URL (https://www.youtube.com/cgpgrey/videos). Its name isn't a handle, so it's
+    /// resolved through the page: `YoutubeDataAPI.channelId(fromLegacyUrl:)`.
+    public static func isLegacyChannelUrl(_ url: URL) -> Bool {
+        guard legacyHosts.contains(url.host()?.lowercased() ?? "") else { return false }
+        let parts = url.pathComponents.filter { $0 != "/" }
+        guard let name = parts.first, parts.count <= 2 else { return false }
+        return (parts.count == 1 || channelTabs.contains(parts[1].lowercased()))
+            && !reservedPaths.contains(name.lowercased())
+            && name.allSatisfy { $0.isASCII && ($0.isLetter || $0.isNumber) }
+    }
+
+    private static let legacyHosts: Set = ["youtube.com", "www.youtube.com", "m.youtube.com"]
+
+    private static let channelTabs: Set = [
+        "featured", "videos", "shorts", "streams", "playlists", "podcasts", "releases", "community", "about",
+        "search", "channels", "store", "membership", "courses"
+    ]
+
+    private static let reservedPaths: Set = [
+        "about", "account", "ads", "channel", "c", "creators", "embed", "feed", "feeds", "gaming", "hashtag",
+        "howyoutubeworks", "jobs", "kids", "live", "logout", "movies", "music", "new", "oembed", "oops",
+        "playables", "playlist", "podcasts", "post", "premium", "redirect", "reporthistory", "results", "s",
+        "shorts", "signin", "source", "store", "storefront", "t", "trending", "tv", "upload", "user", "watch", "yt"
+    ]
+
     public static func getChannelId(fromAuthorUri uri: String) -> String? {
         firstCapture(in: uri, regex: #"\/channel\/([^\s\/\?\n#]+)"#)
     }
 
     /// Returns the first capture group of `regex` in `string`, an empty string if it matched
     /// without a capture group, or nil if there was no match. (Mirrors `String.matching(regex:)`.)
-    private static func firstCapture(in string: String, regex: String) -> String? {
+    static func firstCapture(in string: String, regex: String) -> String? {
         guard let expression = try? NSRegularExpression(pattern: regex) else { return nil }
         let range = NSRange(location: 0, length: string.utf16.count)
         guard let match = expression.firstMatch(in: string, options: [], range: range) else { return nil }

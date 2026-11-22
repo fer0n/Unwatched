@@ -23,9 +23,7 @@ public actor ShareSubscribeActor {
     /// Subscribes to the channel/user/playlist a shared URL points at. Returns the
     /// subscription's title (existing or newly created) so the caller can confirm it.
     public func subscribe(to url: URL) async throws -> String {
-        let channelId = YoutubeUrlParser.getChannelId(from: url)
-        let userName = YoutubeUrlParser.getChannelUserName(from: url)
-        let playlistId = YoutubeUrlParser.getPlaylistId(from: url)
+        let (channelId, userName, playlistId) = try await ids(in: url)
 
         if let title = unarchive(channelId: channelId, userName: userName, playlistId: playlistId) {
             return title
@@ -51,10 +49,8 @@ public actor ShareSubscribeActor {
     }
 
     /// Archives the subscription a shared URL points at, if one exists.
-    public func unsubscribe(url: URL) {
-        let channelId = YoutubeUrlParser.getChannelId(from: url)
-        let userName = YoutubeUrlParser.getChannelUserName(from: url)
-        let playlistId = YoutubeUrlParser.getPlaylistId(from: url)
+    public func unsubscribe(url: URL) async {
+        guard let (channelId, userName, playlistId) = try? await ids(in: url) else { return }
         guard let sub = fetchExisting(channelId: channelId, userName: userName, playlistId: playlistId) else { return }
         sub.isArchived = true
         try? modelContext.save()
@@ -64,9 +60,7 @@ public actor ShareSubscribeActor {
     /// subscription's real data if there is one, otherwise a best-effort RSS fetch (name only —
     /// a thumbnail requires InnerTube, which is main-app-only). Returns nil if neither works out.
     public func preview(url: URL) async -> ChannelPreview? {
-        let channelId = YoutubeUrlParser.getChannelId(from: url)
-        let userName = YoutubeUrlParser.getChannelUserName(from: url)
-        let playlistId = YoutubeUrlParser.getPlaylistId(from: url)
+        guard let (channelId, userName, playlistId) = try? await ids(in: url) else { return nil }
 
         if let preview = existingPreview(channelId: channelId, userName: userName, playlistId: playlistId) {
             return preview
@@ -90,6 +84,14 @@ public actor ShareSubscribeActor {
         }
 
         return ChannelPreview(subscription: sendableSub, isSubscribed: false)
+    }
+
+    private func ids(in url: URL) async throws -> (channelId: String?, userName: String?, playlistId: String?) {
+        var channelId = YoutubeUrlParser.getChannelId(from: url)
+        if channelId == nil, YoutubeUrlParser.isLegacyChannelUrl(url) {
+            channelId = try await YoutubeDataAPI.channelId(fromLegacyUrl: url)
+        }
+        return (channelId, YoutubeUrlParser.getChannelUserName(from: url), YoutubeUrlParser.getPlaylistId(from: url))
     }
 
     private func existingPreview(channelId: String?, userName: String?, playlistId: String?) -> ChannelPreview? {

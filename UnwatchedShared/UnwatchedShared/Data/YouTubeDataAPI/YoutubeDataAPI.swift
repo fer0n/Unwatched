@@ -48,6 +48,18 @@ public struct YoutubeDataAPI {
         return item.id
     }
 
+    public static func channelId(fromLegacyUrl url: URL) async throws -> String {
+        var components = URLComponents(url: url, resolvingAgainstBaseURL: false)
+        components?.host = "www.youtube.com"
+        let (data, _) = try await URLSession.app.data(from: components?.url ?? url)
+        let html = String(decoding: data, as: UTF8.self)
+        let identifier = #"<meta itemprop="identifier" content="(UC[\w-]+)""#
+        guard let channelId = YoutubeUrlParser.firstCapture(in: html, regex: identifier), !channelId.isEmpty else {
+            throw SubscriptionError.channelNotFound
+        }
+        return channelId
+    }
+
     private static func handleYoutubeRequest<T>(url: String, model: T.Type) async throws -> T where T: Decodable {
         guard let url = URL(string: url) else {
             throw SubscriptionError.notAnUrl(url)

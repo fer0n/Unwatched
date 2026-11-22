@@ -60,6 +60,9 @@ extension SubscriptionActor {
         var subState = SubscriptionState(url: url)
         do {
             subState.channelId = UrlService.getChannelIdFromUrl(url)
+            if subState.channelId == nil, YoutubeUrlParser.isLegacyChannelUrl(url) {
+                subState.channelId = try await YoutubeDataAPI.channelId(fromLegacyUrl: url)
+            }
             subState.userName = UrlService.getChannelUserNameFromUrl(url)
             subState.playlistId = UrlService.getPlaylistIdFromUrl(url)
 
