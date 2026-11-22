@@ -159,7 +159,11 @@ struct PlayerScrubber: View {
                 }
                 #endif
                 .frame(height: scrubberHeight)
+                #if os(macOS)
+                .modifier(ScrubberHoverTracking(enabled: showThumbnailPreview, hitSlop: verticalHitSlop))
+                #else
                 .padding(.vertical, verticalHitSlop)
+                #endif
                 .contentShape(Rectangle())
                 #if os(visionOS)
                 .overlay {
@@ -290,6 +294,7 @@ struct PlayerScrubber: View {
 
     func handleChanged(_ value: DragGesture.Value) {
         isGestureActive = true
+        let isClickStart = enableTapScrubbing && initialDragPosition == nil
         if initialDragPosition == nil {
             gestureScrubberWidth = scrubberWidth
             cachedChapters = player.video?.sortedChapterData ?? []
@@ -310,6 +315,7 @@ struct PlayerScrubber: View {
                         player.seek(to: snappedTime)
                         player.currentTime = snappedTime
                         player.handleChapterChange()
+                        if showThumbnailPreview { ScrubberThumbnailProvider.shared.previewTime = snappedTime }
                     }
                 }
                 // Set initial position for dragging
@@ -327,7 +333,7 @@ struct PlayerScrubber: View {
 
         if isInactive {
             player.currentChapterPreview = nil
-            if showThumbnailPreview { ScrubberThumbnailProvider.shared.previewTime = nil }
+            if showThumbnailPreview && !isClickStart { ScrubberThumbnailProvider.shared.previewTime = nil }
             snappedChapterTime = nil
         } else if let snappedTime = currentTime {
             player.setCurrentChapterPreview(at: snappedTime, in: cachedChapters)
@@ -346,6 +352,13 @@ struct PlayerScrubber: View {
 
         player.currentChapterPreview = nil
         if showThumbnailPreview { ScrubberThumbnailProvider.shared.endScrubbing() }
+        #if os(macOS)
+        // no hover events arrive during a drag; pick up where the pointer was released
+        if showThumbnailPreview, ScrubberHoverState.shared.location != nil {
+            let hitArea = CGRect(x: 0, y: 0, width: scrubberWidth, height: scrubberHeight + 2 * verticalHitSlop)
+            ScrubberHoverState.shared.location = hitArea.contains(value.location) ? value.location.x : nil
+        }
+        #endif
         initialDragPosition = nil
         isInactive = false
         isGestureActive = false

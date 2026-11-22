@@ -834,6 +834,8 @@
 		88D438A92B45B27600482F29 /* VideoPlayer.swift in Sources */ = {isa = PBXBuildFile; fileRef = 88D438A82B45B27600482F29 /* VideoPlayer.swift */; };
 		88D446AD2D05D54E001F9F55 /* PlayerScrubber.swift in Sources */ = {isa = PBXBuildFile; fileRef = 88D446AC2D05D54E001F9F55 /* PlayerScrubber.swift */; };
 		88D446AE2D05D54E001F9F55 /* PlayerScrubber.swift in Sources */ = {isa = PBXBuildFile; fileRef = 88D446AC2D05D54E001F9F55 /* PlayerScrubber.swift */; };
+		9382869E1188B3ACF29632DB /* ScrubberHoverPreview.swift in Sources */ = {isa = PBXBuildFile; fileRef = 28E1274A43DC8F7804F6D420 /* ScrubberHoverPreview.swift */; };
+		DC8DD61DDEC9E16A7EC9EE8A /* ScrubberHoverPreview.swift in Sources */ = {isa = PBXBuildFile; fileRef = 28E1274A43DC8F7804F6D420 /* ScrubberHoverPreview.swift */; };
 		88D5C1A22F0A00AA00DE5C01 /* DescriptionTextView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 88D5C1A12F0A00AA00DE5C01 /* DescriptionTextView.swift */; };
 		88D5C1A32F0A00AA00DE5C01 /* DescriptionTextView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 88D5C1A12F0A00AA00DE5C01 /* DescriptionTextView.swift */; };
 		88D8F03D2BB21135009B54FC /* PrivacyInfo.xcprivacy in Resources */ = {isa = PBXBuildFile; fileRef = 88D8F03C2BB21135009B54FC /* PrivacyInfo.xcprivacy */; };
@@ -1748,6 +1750,7 @@
 		88D438A82B45B27600482F29 /* VideoPlayer.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = VideoPlayer.swift; sourceTree = "<group>"; };
 		88D438AA2B45C3D700482F29 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist; path = Info.plist; sourceTree = "<group>"; };
 		88D446AC2D05D54E001F9F55 /* PlayerScrubber.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PlayerScrubber.swift; sourceTree = "<group>"; };
+		28E1274A43DC8F7804F6D420 /* ScrubberHoverPreview.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ScrubberHoverPreview.swift; sourceTree = "<group>"; };
 		88D5C1A12F0A00AA00DE5C01 /* DescriptionTextView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DescriptionTextView.swift; sourceTree = "<group>"; };
 		88D8F03C2BB21135009B54FC /* PrivacyInfo.xcprivacy */ = {isa = PBXFileReference; lastKnownFileType = text.xml; path = PrivacyInfo.xcprivacy; sourceTree = "<group>"; };
 		88DA0EB92CC8F7C50041841E /* VideoListViewAsync.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = VideoListViewAsync.swift; sourceTree = "<group>"; };
@@ -2803,6 +2806,7 @@
 				88D5C1A12F0A00AA00DE5C01 /* DescriptionTextView.swift */,
 				883CA8182B5BB2FB00028D52 /* ChapterMiniControlView.swift */,
 				88D446AC2D05D54E001F9F55 /* PlayerScrubber.swift */,
+				28E1274A43DC8F7804F6D420 /* ScrubberHoverPreview.swift */,
 				8841E1F82EC7110200C64B58 /* CurrentChapterPopup.swift */,
 				88E589B22D06FB2B008C4F31 /* ProgressBarChapterIndicators.swift */,
 				8817FA9E2C30668E002DE44F /* ChangeChapterButtonStyle.swift */,
@@ -3944,6 +3948,7 @@
 				88C1A1E22FF5D9CC001ED1DD /* AnalyticsEvent.swift in Sources */,
 				8809D8922DE8E38200B28165 /* InboxSwipeTipView.swift in Sources */,
 				88D446AD2D05D54E001F9F55 /* PlayerScrubber.swift in Sources */,
+				9382869E1188B3ACF29632DB /* ScrubberHoverPreview.swift in Sources */,
 				88C10D772D088543005EDB4B /* ShortsSetting.swift in Sources */,
 				F8D9061B3C542158EB020B4C /* LiveStreamSetting.swift in Sources */,
 				888B091D2E2382810014C66C /* TranscriptActor.swift in Sources */,
@@ -4564,6 +4569,7 @@
 				88AA20122F0000000000B012 /* VideoTagMenu.swift in Sources */,
 				889924752C484752001185A6 /* FullscreenSpeedControl.swift in Sources */,
 				88D446AE2D05D54E001F9F55 /* PlayerScrubber.swift in Sources */,
+				DC8DD61DDEC9E16A7EC9EE8A /* ScrubberHoverPreview.swift in Sources */,
 				88373C192C8B381F00ACBB3B /* AppAppearanceSelection.swift in Sources */,
 				88F3AAA22C9990E60030B2EA /* TestData.swift in Sources */,
 				884777332D2150850044E812 /* URL.swift in Sources */,

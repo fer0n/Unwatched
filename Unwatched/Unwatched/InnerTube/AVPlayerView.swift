@@ -70,9 +70,11 @@ struct AVPlayerView: View {
                 .transition(.opacity.animation(.easeOut(duration: 0.3)))
             }
         }
+        #if !os(macOS)
         .overlay {
             ScrubberThumbnailOverlay()
         }
+        #endif
         .clipShape(Self.surfaceShape)
     }
 

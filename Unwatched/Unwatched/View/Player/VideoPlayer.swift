@@ -106,6 +106,10 @@ struct VideoPlayer: View {
             }
             #endif
         }
+        #if os(macOS)
+        // above the video and the controls' tab view, which would clip it
+        .overlay { ScrubberHoverPreview() }
+        #endif
         .appNotificationOverlay(appNotificationVM)
         .tint(.neutralAccentColor)
         .onPlayerPlayingChange { _ in
