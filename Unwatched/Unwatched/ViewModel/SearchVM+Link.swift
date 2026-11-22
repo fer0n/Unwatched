@@ -62,6 +62,23 @@ extension SearchVM {
         return text
     }
 
+    func openOrSearchClipboard(_ navManager: NavigationManager) {
+        guard let text = Self.cleanPasted(ClipboardService.get()) else {
+            navManager.focusSearch()
+            return
+        }
+        navManager.navigateTo(.search)
+        navManager.presentedSearch = []
+        if !openLinkIfPresent(in: text, navManager) {
+            showsYoutube = false
+            query = text
+            search()
+            #if !os(macOS)
+            navManager.presentedSearch = [.results]
+            #endif
+        }
+    }
+
     @discardableResult
     func openLinkIfPresent(in text: String, _ navManager: NavigationManager) -> Bool {
         guard let link = UrlService.firstUrl(in: text) else { return false }

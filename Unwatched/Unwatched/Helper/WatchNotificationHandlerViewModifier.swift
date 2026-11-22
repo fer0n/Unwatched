@@ -13,7 +13,6 @@ struct WatchNotificationHandlerViewModifier: ViewModifier {
     @Environment(\.modelContext) var modelContext
     @Environment(PlayerManager.self) var player
     @Environment(NavigationManager.self) var navManager
-    @Environment(RefreshManager.self) var refresher
 
     func body(content: Content) -> some View {
         content
@@ -29,24 +28,15 @@ struct WatchNotificationHandlerViewModifier: ViewModifier {
             .onReceive(NotificationCenter.default.publisher(for: .openInUnwatched)) {
                 handleOpenInUnwatched($0)
             }
-            .onReceive(NotificationCenter.default.publisher(for: .pasteAndWatch)) { _ in
-                handlePasteAndPlay()
-            }
-            .onReceive(NotificationCenter.default.publisher(for: .pasteAndQueue)) { _ in
-                handlePasteAndQueue()
-            }
-            .onReceive(NotificationCenter.default.publisher(for: .searchYoutube)) { _ in
-                handleSearchYoutube()
+            .onReceive(NotificationCenter.default.publisher(for: .quickAction)) {
+                if let action = $0.object as? QuickAction {
+                    handle(action)
+                }
             }
             .onAppear {
-                if refresher.consumeTriggerPasteAction() {
-                    handlePasteAndPlay()
-                }
-                if refresher.consumeTriggerPasteAndQueueAction() {
-                    handlePasteAndQueue()
-                }
-                if refresher.consumeTriggerSearchYoutube() {
-                    handleSearchYoutube()
+                if let action = QuickAction.pending {
+                    QuickAction.pending = nil
+                    handle(action)
                 }
             }
             #if os(iOS)
@@ -87,27 +77,34 @@ struct WatchNotificationHandlerViewModifier: ViewModifier {
     }
     #endif
 
-    func handlePasteAndPlay() {
-        Log.sync.info("handlePasteAndPlay")
-        guard let string = ClipboardService.get(), let url = URL(string: string) else {
-            Log.sync.warning("handlePasteAndPlay: no valid url pasted")
-            return
+    func handle(_ action: QuickAction) {
+        Signal.log("QuickAction", parameters: ["type": action.rawValue])
+        switch action {
+        case .playPause: handlePlayPauseQuickAction()
+        case .paste: SearchVM.shared.openOrSearchClipboard(navManager)
+        case .search: handleSearch()
         }
-        addAndPlay(url, source: "paste")
     }
 
-    func handleSearchYoutube() {
-        Log.sync.info("handleSearchYoutube")
+    func handlePlayPauseQuickAction() {
+        Log.sync.info("handlePlayPauseQuickAction")
+        if player.isPlaying {
+            player.pause()
+            return
+        }
+        if player.video == nil {
+            guard player.topVideoInQueue(modelContext) != nil else { return }
+            player.loadTopmostVideoFromQueue(modelContext: modelContext, source: .playWhenReady)
+        } else {
+            player.handlePlayButton()
+        }
+        navManager.handlePlay()
+        Signal.playbackStarted("quickAction")
+    }
+
+    func handleSearch() {
+        Log.sync.info("handleSearch")
         navManager.focusSearch()
-    }
-
-    func handlePasteAndQueue() {
-        Log.sync.info("handlePasteAndQueue")
-        guard let string = ClipboardService.get(), let url = URL(string: string) else {
-            Log.sync.warning("handlePasteAndQueue: no valid url pasted")
-            return
-        }
-        addAndQueue(url)
     }
 
     func handleWatchInUnwatched(_ notification: NotificationCenter.Publisher.Output) {

@@ -51,10 +51,6 @@ enum RefreshSource {
         Const.isRefreshOutage(failed: failedYoutubeFeedsCount, total: totalYoutubeFeedsCount)
     }
 
-    @ObservationIgnored var triggerPasteAction = false
-    @ObservationIgnored var triggerPasteAndQueueAction = false
-    @ObservationIgnored var triggerSearchYoutube = false
-
     @ObservationIgnored var cancellables: Set<AnyCancellable> = []
     @ObservationIgnored var syncDoneTask: Task<(), Never>?
 
@@ -96,30 +92,6 @@ enum RefreshSource {
     func clearSyncState() {
         isSyncingIcloud = false
         syncStartedAt = nil
-    }
-
-    func consumeTriggerPasteAction() -> Bool {
-        if triggerPasteAction {
-            triggerPasteAction = false
-            return true
-        }
-        return false
-    }
-
-    func consumeTriggerPasteAndQueueAction() -> Bool {
-        if triggerPasteAndQueueAction {
-            triggerPasteAndQueueAction = false
-            return true
-        }
-        return false
-    }
-
-    func consumeTriggerSearchYoutube() -> Bool {
-        if triggerSearchYoutube {
-            triggerSearchYoutube = false
-            return true
-        }
-        return false
     }
 
     func refreshAll(

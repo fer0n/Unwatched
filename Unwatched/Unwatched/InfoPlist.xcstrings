@@ -71,138 +71,104 @@
         }
       }
     },
-    "From Clipboard" : {
+    "Paste" : {
       "localizations" : {
         "de" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Aus Zwischenablage"
+            "value" : "Einfügen"
           }
         },
         "en" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "From Clipboard"
+            "value" : "Paste"
           }
         },
         "es" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Desde el portapapeles"
+            "value" : "Pegar"
           }
         },
         "fr" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Depuis le presse-papiers"
+            "value" : "Coller"
           }
         },
         "pl" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Ze schowka"
+            "value" : "Wklej"
           }
         }
       }
     },
-    "Play" : {
+    "Play/Pause" : {
       "localizations" : {
         "de" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Play"
+            "value" : "Play/Pause"
           }
         },
         "en" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Play"
+            "value" : "Play/Pause"
           }
         },
         "es" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Reproducir"
+            "value" : "Reproducir/Pausar"
           }
         },
         "fr" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Lecture"
+            "value" : "Lecture/Pause"
           }
         },
         "pl" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Odtwórz"
+            "value" : "Odtwarzaj/Pauza"
           }
         }
       }
     },
-    "Queue" : {
+    "Search" : {
       "localizations" : {
         "de" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Queue"
+            "value" : "Suche"
           }
         },
         "en" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Queue"
+            "value" : "Search"
           }
         },
         "es" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Cola"
+            "value" : "Buscar"
           }
         },
         "fr" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "File d'attente"
+            "value" : "Recherche"
           }
         },
         "pl" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Kolejka"
-          }
-        }
-      }
-    },
-    "Search YouTube" : {
-      "localizations" : {
-        "de" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "YouTube durchsuchen"
-          }
-        },
-        "en" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Search YouTube"
-          }
-        },
-        "es" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Buscar en YouTube"
-          }
-        },
-        "fr" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Rechercher sur YouTube"
-          }
-        },
-        "pl" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Szukaj w YouTube"
+            "value" : "Szukaj"
           }
         }
       }

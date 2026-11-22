@@ -296,10 +296,6 @@ public struct Const {
     public static let notificationActionClear = "notificationActionClear"
     public static let notificationVideoId = "notificationVideoId"
     public static let addEntriesOnReceive = "addEntriesOnReceive"
-    public static let shortcutItemPasteAndPlay = "PasteAndPlay"
-    public static let shortcutItemPasteAndQueue = "PasteAndQueue"
-    public static let shortcutItemSearchYoutube = "SearchYoutube"
-
     // MARK: - SF Symbols
     public static let queueTagSF = "rectangle.stack"
     public static let tagSF = "tag.fill"

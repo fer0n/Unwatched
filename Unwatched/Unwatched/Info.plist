@@ -69,27 +69,23 @@
 	<array>
 		<dict>
 			<key>UIApplicationShortcutItemIconSymbolName</key>
-			<string>play.rectangle.on.rectangle.fill</string>
+			<string>playpause.fill</string>
 			<key>UIApplicationShortcutItemIconType</key>
 			<string>UIApplicationShortcutIconType</string>
-			<key>UIApplicationShortcutItemSubtitle</key>
-			<string>From Clipboard</string>
 			<key>UIApplicationShortcutItemTitle</key>
-			<string>Play</string>
+			<string>Play/Pause</string>
 			<key>UIApplicationShortcutItemType</key>
-			<string>PasteAndPlay</string>
+			<string>PlayPause</string>
 		</dict>
 		<dict>
 			<key>UIApplicationShortcutItemIconSymbolName</key>
-			<string>text.insert</string>
+			<string>doc.on.clipboard</string>
 			<key>UIApplicationShortcutItemIconType</key>
 			<string>UIApplicationShortcutIconType</string>
-			<key>UIApplicationShortcutItemSubtitle</key>
-			<string>From Clipboard</string>
 			<key>UIApplicationShortcutItemTitle</key>
-			<string>Queue</string>
+			<string>Paste</string>
 			<key>UIApplicationShortcutItemType</key>
-			<string>PasteAndQueue</string>
+			<string>Paste</string>
 		</dict>
 		<dict>
 			<key>UIApplicationShortcutItemIconSymbolName</key>
@@ -97,9 +93,9 @@
 			<key>UIApplicationShortcutItemIconType</key>
 			<string>UIApplicationShortcutIconType</string>
 			<key>UIApplicationShortcutItemTitle</key>
-			<string>Search YouTube</string>
+			<string>Search</string>
 			<key>UIApplicationShortcutItemType</key>
-			<string>SearchYoutube</string>
+			<string>Search</string>
 		</dict>
 	</array>
 	<key>UIBackgroundModes</key>

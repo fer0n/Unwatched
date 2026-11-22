@@ -264,8 +264,6 @@ enum WebViewWarmup {
 }
 
 class SceneDelegate: UIResponder, UIWindowSceneDelegate {
-    private let refresher = RefreshManager.shared
-
     /// The app's own scene, cached when UIKit hands it over — avoids walking
     /// `UIApplication.shared.connectedScenes` from unrelated call sites.
     @MainActor private(set) static weak var windowScene: UIWindowScene?
@@ -273,11 +271,14 @@ class SceneDelegate: UIResponder, UIWindowSceneDelegate {
     func windowScene(
         _ windowScene: UIWindowScene,
         performActionFor shortcutItem: UIApplicationShortcutItem,
-        completionHandler: @escaping (
-            Bool
-        ) -> Void
+        completionHandler: @escaping (Bool) -> Void
     ) {
-        handleShortcutItem(shortcutItem)
+        guard let action = QuickAction(rawValue: shortcutItem.type) else {
+            completionHandler(false)
+            return
+        }
+        NotificationCenter.default.post(name: .quickAction, object: action)
+        completionHandler(true)
     }
 
     func scene(
@@ -289,23 +290,7 @@ class SceneDelegate: UIResponder, UIWindowSceneDelegate {
             Self.windowScene = scene as? UIWindowScene
         }
         if let shortcutItem = connectionOptions.shortcutItem {
-            if shortcutItem.type == Const.shortcutItemPasteAndPlay {
-                refresher.triggerPasteAction = true
-            } else if shortcutItem.type == Const.shortcutItemPasteAndQueue {
-                refresher.triggerPasteAndQueueAction = true
-            } else if shortcutItem.type == Const.shortcutItemSearchYoutube {
-                refresher.triggerSearchYoutube = true
-            }
-        }
-    }
-
-    private func handleShortcutItem(_ shortcutItem: UIApplicationShortcutItem) {
-        if shortcutItem.type == Const.shortcutItemPasteAndPlay {
-            NotificationCenter.default.post(name: .pasteAndWatch, object: nil)
-        } else if shortcutItem.type == Const.shortcutItemPasteAndQueue {
-            NotificationCenter.default.post(name: .pasteAndQueue, object: nil)
-        } else if shortcutItem.type == Const.shortcutItemSearchYoutube {
-            NotificationCenter.default.post(name: .searchYoutube, object: nil)
+            QuickAction.pending = QuickAction(rawValue: shortcutItem.type)
         }
     }
 }

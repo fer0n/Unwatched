@@ -49,7 +49,7 @@ struct SetupView: View {
             .handleDeepLinks()
             #if os(macOS)
             .onReceive(NotificationCenter.default.publisher(for: .pasteUrl)) { _ in
-                pasteIntoSearch()
+                SearchVM.shared.openOrSearchClipboard(navManager)
             }
             .appNotificationOverlay()
             // not in MacOSSplitView: ContentView's GeometryReader keeps it from the window
@@ -312,19 +312,6 @@ struct SetupView: View {
 }
 
 extension SetupView {
-    #if os(macOS)
-    func pasteIntoSearch() {
-        guard let text = SearchVM.cleanPasted(ClipboardService.get()) else { return }
-        let search = SearchVM.shared
-        navManager.navigateTo(.search)
-        navManager.presentedSearch = []
-        if !search.openLinkIfPresent(in: text, navManager) {
-            search.query = text
-            search.search()
-        }
-    }
-    #endif
-
     static func setupPodcastDownloads() {
         PodcastDownloadManager.shared.onEpisodeDownloaded = { youtubeId in
             Task {
