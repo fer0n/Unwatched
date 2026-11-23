@@ -64,7 +64,9 @@ struct InboxCardChapters: View {
                 in: .rect(cornerRadius: 12)
             )
             .contentShape(.rect(cornerRadius: 12))
+            #if !os(macOS)
             .contentShape(.contextMenuPreview, .rect(cornerRadius: 12))
+            #endif
             .opacity(chapter.isActive ? 1 : 0.6)
         }
         .buttonStyle(.plain)
