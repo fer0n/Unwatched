@@ -210,6 +210,16 @@
         }
       }
     },
+    "%@%@" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "new",
+            "value" : "%1$@%2$@"
+          }
+        }
+      }
+    },
     "%@%lld New Videos" : {
       "localizations" : {
         "de" : {
@@ -459,12 +469,6 @@
         "pl" : {
           "variations" : {
             "plural" : {
-              "one" : {
-                "stringUnit" : {
-                  "state" : "translated",
-                  "value" : "%lld wyświetlenie"
-                }
-              },
               "few" : {
                 "stringUnit" : {
                   "state" : "translated",
@@ -475,6 +479,12 @@
                 "stringUnit" : {
                   "state" : "translated",
                   "value" : "%lld wyświetleń"
+                }
+              },
+              "one" : {
+                "stringUnit" : {
+                  "state" : "translated",
+                  "value" : "%lld wyświetlenie"
                 }
               },
               "other" : {
@@ -22170,16 +22180,16 @@
     },
     "Scheduled %@" : {
       "localizations" : {
-        "en" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Scheduled %@"
-          }
-        },
         "de" : {
           "stringUnit" : {
             "state" : "translated",
             "value" : "Geplant für %@"
+          }
+        },
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Scheduled %@"
           }
         },
         "es" : {
@@ -26627,6 +26637,40 @@
         }
       }
     },
+    "skipThisChapter" : {
+      "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Kapitel überspringen"
+          }
+        },
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Skip Chapter"
+          }
+        },
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Saltar capítulo"
+          }
+        },
+        "fr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Ignorer le chapitre"
+          }
+        },
+        "pl" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Pomiń rozdział"
+          }
+        }
+      }
+    },
     "skipVideo" : {
       "localizations" : {
         "de" : {
@@ -27105,16 +27149,16 @@
     },
     "Starts %@" : {
       "localizations" : {
-        "en" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Starts %@"
-          }
-        },
         "de" : {
           "stringUnit" : {
             "state" : "translated",
             "value" : "Beginnt %@"
+          }
+        },
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Starts %@"
           }
         },
         "es" : {

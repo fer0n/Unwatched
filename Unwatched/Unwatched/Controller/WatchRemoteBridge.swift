@@ -110,25 +110,13 @@ enum WatchRemoteBridge {
         WatchQueueProvider.pushRemoteState()
     }
 
-    /// What the chapter list's toggle does, see `ChapterList.toggleChapter`.
     private static func setChapterActive(startTime: Double, isActive: Bool) {
         let player = PlayerManager.shared
         guard let video = player.video,
               let chapter = video.sortedChapterData.first(where: { $0.startTime == startTime }),
               chapter.isActive != isActive,
               isActive || CloudKeyValueStore.hasPremium else { return }
-        if chapter.isIntro {
-            video.keepIntro = isActive
-        } else if chapter.isOutro {
-            video.keepOutro = isActive
-        } else {
-            ChapterService.setChapterActive(isActive, chapter, of: video)
-            video.chaptersDidChange()
-        }
-        try? video.modelContext?.save()
-        player.handleChapterChange()
-        // the page seeks by the chapters it was handed, so the edit has to reach it too
-        player.backend.setChapterMarkers(force: false)
+        player.setChapterActive(isActive, chapter, of: video)
     }
 
     /// Minus the position: it moves four times a second, and the watch carries it forward itself.

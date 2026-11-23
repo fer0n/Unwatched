@@ -19,12 +19,15 @@ struct InboxCardChapters: View {
     @ScaledMetric private var fontSize = 13
     @ScaledMetric private var singleLineChipWidth = 160
     @ScaledMetric private var maxChipWidth = 300
+    @State private var toggleHaptic = false
 
     var body: some View {
+        // read outside the `ForEach`, whose content closure isn't tracked by this body
+        let currentChapterId = player.currentChapterId(of: video, in: chapters)
         ScrollView(.horizontal, showsIndicators: false) {
             LazyHStack(alignment: .top, spacing: 6) {
                 ForEach(chapters, id: \.chapterId) { chapter in
-                    chip(for: chapter)
+                    chip(for: chapter, isCurrent: chapter.chapterId == currentChapterId)
                 }
             }
             .padding(bleedEdges, InboxCard.contentPadding)
@@ -34,9 +37,14 @@ struct InboxCardChapters: View {
         .fixedSize(horizontal: false, vertical: true)
     }
 
-    private func chip(for chapter: SendableChapter) -> some View {
+    private func chip(for chapter: SendableChapter, isCurrent: Bool) -> some View {
         Button {
-            setChapter(chapter)
+            if chapter.isActive {
+                setChapter(chapter)
+            } else {
+                player.toggleChapter(chapter, of: video)
+                toggleHaptic.toggle()
+            }
         } label: {
             TwoRowChipLayout(singleLineWidth: singleLineChipWidth, maxWidth: maxChipWidth) {
                 ForEach(TwoRowChipLayout.Variant.allCases, id: \.rawValue) { variant in
@@ -48,14 +56,31 @@ struct InboxCardChapters: View {
                 }
             }
             .multilineTextAlignment(.leading)
-            .foregroundStyle(.primary)
+            .foregroundStyle(isCurrent ? AnyShapeStyle(Color.backgroundColor) : AnyShapeStyle(.primary))
             .padding(.horizontal, 10)
             .padding(.vertical, 6)
-            .background(.quaternary, in: .rect(cornerRadius: 12))
+            .background(
+                isCurrent ? AnyShapeStyle(Color.neutralAccentColor) : AnyShapeStyle(.quaternary),
+                in: .rect(cornerRadius: 12)
+            )
             .contentShape(.rect(cornerRadius: 12))
+            .contentShape(.contextMenuPreview, .rect(cornerRadius: 12))
+            .opacity(chapter.isActive ? 1 : 0.6)
         }
         .buttonStyle(.plain)
+        .contextMenu {
+            Button("setPositionHere", systemImage: "arrow.forward.to.line") {
+                player.setPosition(to: chapter, of: video)
+            }
+            Toggle("skipThisChapter", systemImage: "forward", isOn: Binding(
+                get: { !chapter.isActive },
+                set: { _ in player.toggleChapter(chapter, of: video) }
+            ))
+        }
+        .sensoryFeedback(Const.sensoryFeedback, trigger: toggleHaptic)
         .accessibilityLabel(chipLabel(for: chapter, separator: ", "))
+        .accessibilityHint(chapter.isActive ? Text(verbatim: "") : Text("enable"))
+        .accessibilityAddTraits(isCurrent ? .isSelected : [])
     }
 
     private var titleFont: Font { .system(size: fontSize, weight: .semibold) }
@@ -71,8 +96,7 @@ struct InboxCardChapters: View {
         }
         var time = AttributedString("\(separator)\(duration)")
         time.font = durationFont
-        time.foregroundColor = .secondary
-        return Text(title + time)
+        return Text("\(Text(title))\(Text(time).foregroundStyle(.secondary))")
     }
 
     private func truncatedChipLabel(for chapter: SendableChapter) -> some View {

@@ -26,12 +26,8 @@ struct ChapterList: View {
 
     var body: some View {
         let sortedChapters = video.sortedChapterData
-        // read here rather than inside the `ForEach` below: a row's content closure runs outside this
-        // body's observation scope, so a read in there never marks the list as depending on the current
-        // chapter and the highlight stays at whatever it was when the rows were first built
-        let currentChapterId = video == player.video
-            ? player.currentChapter?.chapterId
-            : video.elapsedSeconds.flatMap { time in sortedChapters.last { $0.startTime <= time }?.chapterId }
+        // read outside the `ForEach`, whose content closure isn't tracked by this body
+        let currentChapterId = player.currentChapterId(of: video, in: sortedChapters)
         let chapters = ChapterService.inPlaybackOrder(sortedChapters)
         let originalNumbers = Self.originalNumbers(sorted: sortedChapters, ordered: chapters)
         if !chapters.isEmpty {
@@ -83,7 +79,7 @@ struct ChapterList: View {
                     .tint(foregroundColor)
                     .contextMenu {
                         Button("setPositionHere", systemImage: "arrow.forward.to.line") {
-                            setPosition(to: chapter)
+                            player.setPosition(to: chapter, of: video)
                         }
                         Button("copyUrl", systemImage: Const.copySF) {
                             if let text = UrlService.getShareUrl(video, timestamp: chapter.startTime) {
@@ -199,49 +195,12 @@ struct ChapterList: View {
         return true
     }
 
-    /// Toggling, like reordering, is an action that needs a row — see `ChapterService.materialize`.
     func toggleChapter(_ chapter: SendableChapter) {
-        guard !chapter.isActive || guardPremium("chapterToggle") else {
-            return
-        }
-        if chapter.isIntro || chapter.isOutro {
-            if chapter.isIntro {
-                video.keepIntro = !(video.keepIntro ?? false)
-            } else {
-                video.keepOutro = !(video.keepOutro ?? false)
-            }
-            try? video.modelContext?.save()
-            if video == player.video {
-                player.handleChapterChange()
-            }
-            return
-        }
-        ChapterService.setChapterActive(!chapter.isActive, chapter, of: video)
-        chapterDidChange()
-    }
-
-    private func chapterDidChange() {
-        video.chaptersDidChange()
-        try? video.modelContext?.save()
-        if video == player.video {
-            player.handleChapterChange()
-            // the page seeks by the chapters it was handed, so the edit has to reach it too
-            player.backend.setChapterMarkers(force: false)
-        }
+        player.toggleChapter(chapter, of: video)
     }
 
     func setChapter(_ chapter: SendableChapter) {
         player.playChapter(chapter, of: video, source: "detail", modelContext: modelContext)
-    }
-
-    func setPosition(to chapter: SendableChapter) {
-        Signal.interaction("Chapter.SetPosition")
-        if video == player.video {
-            player.setChapter(chapter)
-            player.updateElapsedTime(chapter.startTime, videoId: video.youtubeId, immediate: true)
-        } else {
-            VideoService.forceUpdateVideoNow(video.persistentModelID, elapsedSeconds: chapter.startTime)
-        }
     }
 }
 

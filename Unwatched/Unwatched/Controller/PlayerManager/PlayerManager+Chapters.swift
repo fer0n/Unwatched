@@ -221,6 +221,54 @@ extension PlayerManager {
     }
 
     @MainActor
+    func currentChapterId(of video: Video, in sortedChapters: [SendableChapter]) -> String? {
+        if video == self.video {
+            return currentChapter?.chapterId
+        }
+        return video.elapsedSeconds.flatMap { time in sortedChapters.last { $0.startTime <= time }?.chapterId }
+    }
+
+    /// Needs a chapter row, like reordering — see `ChapterService.materialize`
+    @MainActor
+    func toggleChapter(_ chapter: SendableChapter, of video: Video) {
+        guard !chapter.isActive || guardPremium("chapterToggle") else {
+            return
+        }
+        Signal.interaction("Chapter.Toggle")
+        setChapterActive(!chapter.isActive, chapter, of: video)
+    }
+
+    @MainActor
+    func setChapterActive(_ isActive: Bool, _ chapter: SendableChapter, of video: Video) {
+        if chapter.isIntro {
+            video.keepIntro = isActive
+        } else if chapter.isOutro {
+            video.keepOutro = isActive
+        } else {
+            ChapterService.setChapterActive(isActive, chapter, of: video)
+        }
+        video.chaptersDidChange()
+        try? video.modelContext?.save()
+        if video == self.video {
+            handleChapterChange()
+            // the page seeks by the chapters it was handed, so the edit has to reach it too
+            backend.setChapterMarkers(force: false)
+        }
+    }
+
+    /// Moves the playback position to the chapter's start without starting playback
+    @MainActor
+    func setPosition(to chapter: SendableChapter, of video: Video) {
+        Signal.interaction("Chapter.SetPosition")
+        if video == self.video {
+            setChapter(chapter)
+            updateElapsedTime(chapter.startTime, videoId: video.youtubeId, immediate: true)
+        } else {
+            VideoService.forceUpdateVideoNow(video.persistentModelID, elapsedSeconds: chapter.startTime)
+        }
+    }
+
+    @MainActor
     func goToNextChapter() -> Bool {
         if let next = nextChapter {
             setChapter(next)
