@@ -106,7 +106,6 @@ extension AVPlayerViewModel {
             return .success
         }
 
-        // CarPlay's speed button shows 0× without it
         let rateCommand = center.changePlaybackRateCommand
         rateCommand.isEnabled = true
         rateCommand.supportedPlaybackRates = SpeedHelper.remoteSelectable.map { NSNumber(value: $0) }
@@ -174,7 +173,6 @@ extension AVPlayerViewModel {
         var info: [String: Any] = [
             MPMediaItemPropertyTitle: video.title,
             MPNowPlayingInfoPropertyPlaybackRate: player.isPlaying ? player.playbackSpeed : 0.0,
-            // CarPlay's speed button, also while paused
             MPNowPlayingInfoPropertyDefaultPlaybackRate: player.playbackSpeed,
             MPNowPlayingInfoPropertyElapsedPlaybackTime: elapsed,
             MPNowPlayingInfoPropertyMediaType: MPNowPlayingInfoMediaType.video.rawValue

@@ -12,11 +12,12 @@ final class CarPlayNowPlaying {
     private weak var interfaceController: CPInterfaceController?
     private weak var speedTemplate: CPListTemplate?
     private var isInstalled = false
-    private var shownChapters: Chapters?
+    private var shownButtons: Buttons?
 
-    private struct Chapters: Equatable {
+    private struct Buttons: Equatable {
         let hasPrevious: Bool
         let hasNext: Bool
+        let speed: Double
     }
 
     init(interfaceController: CPInterfaceController) {
@@ -30,7 +31,7 @@ final class CarPlayNowPlaying {
 
     func uninstall() {
         isInstalled = false
-        shownChapters = nil
+        shownButtons = nil
         CPNowPlayingTemplate.shared.updateNowPlayingButtons([])
     }
 
@@ -38,28 +39,32 @@ final class CarPlayNowPlaying {
         guard isInstalled else {
             return
         }
-        let chapters = withObservationTracking {
+        let buttons = withObservationTracking {
             let player = PlayerManager.shared
-            return Chapters(hasPrevious: player.currentChapter != nil, hasNext: player.nextChapter != nil)
+            return Buttons(
+                hasPrevious: player.currentChapter != nil,
+                hasNext: player.nextChapter != nil,
+                speed: player.playbackSpeed
+            )
         } onChange: { [weak self] in
             Task { @MainActor in self?.updateButtons() }
         }
-        guard chapters != shownChapters else {
+        guard buttons != shownButtons else {
             return
         }
-        shownChapters = chapters
+        shownButtons = buttons
 
         let previousChapter = Self.button(Const.previousChapterSF) {
             Log.info("carPlay: previous chapter")
             _ = PlayerManager.shared.goToPreviousChapter()
         }
-        previousChapter.isEnabled = chapters.hasPrevious
+        previousChapter.isEnabled = buttons.hasPrevious
         let nextChapter = Self.button(Const.nextChapterSF) {
             Log.info("carPlay: next chapter")
             _ = PlayerManager.shared.goToNextChapter()
         }
-        nextChapter.isEnabled = chapters.hasNext
-        let speed = CPNowPlayingPlaybackRateButton { [weak self] _ in
+        nextChapter.isEnabled = buttons.hasNext
+        let speed = CPNowPlayingImageButton(image: speedImage(buttons.speed)) { [weak self] _ in
             MainActor.assumeIsolated {
                 self?.showSpeeds()
             }
@@ -78,6 +83,20 @@ final class CarPlayNowPlaying {
     }
 
     // MARK: Speed
+
+    // the system's rate button reads the paused rate, 0; CarPlay fits the image to the button's width
+    private func speedImage(_ speed: Double) -> UIImage {
+        let font = UIFont.systemFont(ofSize: 40, weight: .semibold, width: .compressed)
+        let text = NSMutableAttributedString(string: SpeedHelper.formatSpeed(speed), attributes: [.font: font])
+        text.append(NSAttributedString(string: "×", attributes: [.font: font.withSize(28)]))
+        let size = CGSize(width: ceil(text.size().width), height: ceil(font.capHeight))
+        let format = UIGraphicsImageRendererFormat()
+        format.scale = interfaceController?.carTraitCollection.displayScale ?? 2
+        let image = UIGraphicsImageRenderer(size: size, format: format).image { _ in
+            text.draw(at: CGPoint(x: 0, y: size.height - font.ascender))
+        }
+        return image.withRenderingMode(.alwaysTemplate)
+    }
 
     private func showSpeeds() {
         let template = CPListTemplate(title: String(localized: "playbackSpeed"), sections: speedSections())
