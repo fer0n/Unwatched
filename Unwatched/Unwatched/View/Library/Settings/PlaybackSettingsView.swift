@@ -126,6 +126,7 @@ struct PlaybackSettingsView: View {
                     Toggle(isOn: $autoAirplayHD) {
                         Text("autoAirplayHD")
                     }
+                    .disabled(playerType == .native && !player.nativeFallbackActive)
                 }
 
                 MySection(footer: "suggestVideosHelper") {

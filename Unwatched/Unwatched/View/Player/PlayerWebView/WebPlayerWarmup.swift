@@ -49,6 +49,7 @@ final class WebPlayerWarmup: NSObject {
     /// Which page the warmed view actually loaded. A page warmed as the embed can't stand in
     /// for the full-website fallback (or the reverse): they're different URLs.
     @MainActor private var warmedType: PlayerType?
+    @MainActor private var warmedAirplayHD = false
     @MainActor private var failed = false
     /// A page that finishes loading after `warmUp` returned is too late to be waited for.
     @MainActor private var finished = false
@@ -77,6 +78,7 @@ final class WebPlayerWarmup: NSObject {
 
         let type = setting.webPlayerType(embeddingDisabled: player.embeddingDisabled)
         warmedType = type
+        warmedAirplayHD = player.airplayHD
 
         guard PlayerWebView.loadPlayer(
             webView: webView,
@@ -226,7 +228,8 @@ final class WebPlayerWarmup: NSObject {
     /// Hands the warmed page to `PlayerWebView`, which takes over its delegates from here.
     @MainActor
     func takeWebView(for videoId: String?, type: PlayerType) -> Warmed? {
-        guard let warmed, let videoId, videoId == self.videoId, type == warmedType else {
+        guard let warmed, let videoId, videoId == self.videoId, type == warmedType,
+              PlayerManager.shared.airplayHD == warmedAirplayHD else {
             // a warmed page is playing by now, and nothing else will come to adopt it
             cancel()
             return nil

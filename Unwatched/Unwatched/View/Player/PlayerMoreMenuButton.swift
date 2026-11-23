@@ -240,11 +240,12 @@ struct PlayerMoreMenuContent: View {
 
     var airPlayHDToggle: some View {
         Toggle(isOn: Binding(
-            get: { player.airplayHD },
+            get: { player.airplayHD && player.airplayHDApplies },
             set: { player.setAirplayHD($0) }
         )) {
             Label("airplayHD", systemImage: "airplay.video")
         }
+        .disabled(!player.airplayHDApplies)
     }
     #endif
 

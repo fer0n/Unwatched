@@ -1923,31 +1923,31 @@
         "de" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "AirPlay HD versucht die AirPlay-Videoqualität zu verbessern, kann aber Vollbild und andere Funktionen beeinträchtigen.\n\nAirPlay HD aktiviert sich automatisch, wenn ein AirPlay-Gerät (inkl. Lautsprecher) über den AirPlay-Button im Player ausgewählt wird. Gilt nicht für das Kontrollzentrum.\n\nBei Problemen ist es ggf. notwendig, AirPlay HD manuell vor der AirPlay Geräte Auswahl zu aktivieren."
+            "value" : "AirPlay HD versucht die AirPlay-Videoqualität zu verbessern, kann aber Vollbild und andere Funktionen beeinträchtigen.\n\nAirPlay HD aktiviert sich automatisch, wenn ein AirPlay-Gerät (inkl. Lautsprecher) über den AirPlay-Button im Player ausgewählt wird. Gilt nicht für das Kontrollzentrum.\n\nBei Problemen ist es ggf. notwendig, AirPlay HD manuell vor der AirPlay Geräte Auswahl zu aktivieren.\n\nAirPlay HD gilt nur für die YouTube-Player. Der native Player überträgt Videos von sich aus per AirPlay."
           }
         },
         "en" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "AirPlay HD attempts to enhance AirPlay video quality, but may affect fullscreen and other features.\n\nAirPlay HD mode will automatically turn on whenever an AirPlay destination (including speakers) is selected via the player’s AirPlay button (not Control Center).\n\nIf issues occur, try manually enabling AirPlay HD before connecting to your device."
+            "value" : "AirPlay HD attempts to enhance AirPlay video quality, but may affect fullscreen and other features.\n\nAirPlay HD mode will automatically turn on whenever an AirPlay destination (including speakers) is selected via the player’s AirPlay button (not Control Center).\n\nIf issues occur, try manually enabling AirPlay HD before connecting to your device.\n\nAirPlay HD only applies to the YouTube players. The native player sends video via AirPlay on its own."
           }
         },
         "es" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "AirPlay HD intenta mejorar la calidad de video por AirPlay, pero puede afectar la pantalla completa y otras funciones.\n\nEl modo AirPlay HD se activará automáticamente siempre que se seleccione un destino AirPlay (incluidos altavoces) mediante el botón de AirPlay del reproductor (no el Centro de Control).\n\nSi ocurren problemas, intenta activar AirPlay HD manualmente antes de conectar tu dispositivo."
+            "value" : "AirPlay HD intenta mejorar la calidad de video por AirPlay, pero puede afectar la pantalla completa y otras funciones.\n\nEl modo AirPlay HD se activará automáticamente siempre que se seleccione un destino AirPlay (incluidos altavoces) mediante el botón de AirPlay del reproductor (no el Centro de Control).\n\nSi ocurren problemas, intenta activar AirPlay HD manualmente antes de conectar tu dispositivo.\n\nAirPlay HD solo se aplica a los reproductores de YouTube. El reproductor nativo envía el video por AirPlay por sí solo."
           }
         },
         "fr" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "L'AirPlay HD tente d'améliorer la qualité vidéo AirPlay, mais peut affecter le mode plein écran et d'autres fonctionnalités.\n\nLe mode AirPlay HD s'active automatiquement lorsqu'une destination AirPlay (y compris les haut-parleurs) est sélectionnée via le bouton AirPlay du lecteur. Ne s'applique pas au centre de contrôle."
+            "value" : "L'AirPlay HD tente d'améliorer la qualité vidéo AirPlay, mais peut affecter le mode plein écran et d'autres fonctionnalités.\n\nLe mode AirPlay HD s'active automatiquement lorsqu'une destination AirPlay (y compris les haut-parleurs) est sélectionnée via le bouton AirPlay du lecteur. Ne s'applique pas au centre de contrôle.\n\nEn cas de problème, essayez d'activer manuellement l'AirPlay HD avant de vous connecter à votre appareil.\n\nL'AirPlay HD ne s'applique qu'aux lecteurs YouTube. Le lecteur natif diffuse la vidéo via AirPlay de lui-même."
           }
         },
         "pl" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "AirPlay HD próbuje poprawić jakość wideo przesyłanego przez AirPlay, ale może wpływać na tryb pełnoekranowy i inne funkcje.\n\nTryb AirPlay HD włączy się automatycznie po wybraniu urządzenia AirPlay (w tym głośników) przez przycisk AirPlay w odtwarzaczu. Nie dotyczy centrum sterowania.\n\nW razie problemów spróbuj ręcznie włączyć AirPlay HD przed połączeniem z urządzeniem."
+            "value" : "AirPlay HD próbuje poprawić jakość wideo przesyłanego przez AirPlay, ale może wpływać na tryb pełnoekranowy i inne funkcje.\n\nTryb AirPlay HD włączy się automatycznie po wybraniu urządzenia AirPlay (w tym głośników) przez przycisk AirPlay w odtwarzaczu. Nie dotyczy centrum sterowania.\n\nW razie problemów spróbuj ręcznie włączyć AirPlay HD przed połączeniem z urządzeniem.\n\nAirPlay HD dotyczy tylko odtwarzaczy YouTube. Natywny odtwarzacz sam przesyła wideo przez AirPlay."
           }
         }
       }

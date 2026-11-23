@@ -58,17 +58,7 @@ struct AirPlayView: View {
             )
             .buttonWithMenu(
                 accessibilityLabel: String(localized: "airPlay"),
-                groups: [
-                    MenuActionGroup(title: String(localized: "autoAirplayHDHelperShort"), [
-                        MenuAction(
-                            isOn
-                                ? String(localized: "airplayHDOn")
-                                : String(localized: "airplayHDOff")
-                        ) {
-                            player.setAirplayHD(!isOn)
-                        }
-                    ])
-                ],
+                groups: menuGroups,
                 onTap: handlePress
             )
             .sensoryFeedback(Const.sensoryFeedback, trigger: hapticToggle)
@@ -79,8 +69,23 @@ struct AirPlayView: View {
         AirPlayPicker.present()
     }
 
+    var menuGroups: [MenuActionGroup] {
+        guard player.airplayHDApplies else { return [] }
+        return [
+            MenuActionGroup(title: String(localized: "autoAirplayHDHelperShort"), [
+                MenuAction(
+                    isOn
+                        ? String(localized: "airplayHDOn")
+                        : String(localized: "airplayHDOff")
+                ) {
+                    player.setAirplayHD(!isOn)
+                }
+            ])
+        ]
+    }
+
     var isOn: Bool {
-        player.airplayHD
+        player.airplayHD && player.airplayHDApplies
     }
 }
 #endif

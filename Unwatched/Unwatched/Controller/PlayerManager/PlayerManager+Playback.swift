@@ -664,10 +664,16 @@ extension PlayerManager {
     @MainActor
     func setAirplayHD(_ value: Bool) {
         Log.player.info("setAirplayHD: \(value)")
-        if airplayHD != value {
-            airplayHD = value
+        guard airplayHD != value else { return }
+        airplayHD = value
+        if airplayHDApplies {
             hotReloadPlayer()
         }
+    }
+
+    /// The native player AirPlays video by itself; AirPlay HD only changes the web view's user agent.
+    @MainActor var airplayHDApplies: Bool {
+        !PlayerSwitchManager.shared.nativeIsCurrent
     }
 
     @MainActor
