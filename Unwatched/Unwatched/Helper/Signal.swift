@@ -23,20 +23,22 @@ struct Signal {
     static let appVersion: String = BuildInfo.version
 
     static func setup() {
-        #if os(iOS) || os(visionOS)
         AnalyticsSettings.migrateIfNeeded()
         if !AnalyticsSettings.isEnabled { return }
         Task {
             await AnalyticsQueue.shared.flush()
         }
-        #endif
     }
 
     /// Flush the analytics queue when leaving the foreground. Wrapped in a background-task
     /// assertion so the in-flight request isn't killed while the app suspends.
     static func flushOnBackground() {
-        #if os(iOS) || os(visionOS)
         if !AnalyticsSettings.isEnabled { return }
+        #if os(macOS)
+        Task {
+            await AnalyticsQueue.shared.flush()
+        }
+        #else
         Task { @MainActor in
             let app = UIApplication.shared
             var taskId: UIBackgroundTaskIdentifier = .invalid
@@ -67,7 +69,6 @@ struct Signal {
         throttleKey: String? = nil,
         includeUserId: Bool = true
     ) {
-        #if os(iOS) || os(visionOS)
         // before the throttle, which marks its window as used
         if !AnalyticsSettings.isEnabled { return }
         if let throttle {
@@ -90,7 +91,6 @@ struct Signal {
         Task {
             await AnalyticsQueue.shared.enqueue(event)
         }
-        #endif
     }
 
     /// Errors are logged unidentified — a crash/error id should never build a per-user
@@ -101,13 +101,11 @@ struct Signal {
 
     /// Bypasses `log`, which the already-disabled setting would block, and drops anything still queued.
     static func handleOptOut() {
-        #if os(iOS) || os(visionOS)
         Log.info("Signal: Analytics opt-out")
         let event = AnalyticsEvent(name: "Analytics", params: ["value": "Off"], includeUserId: false)
         Task {
             await AnalyticsQueue.shared.replaceAll(with: event)
         }
-        #endif
     }
 
     static func bucket(_ count: Int) -> String {
@@ -150,6 +148,13 @@ struct Signal {
     /// name mapped on-device: the identifier→name table lives in the dashboard instead,
     /// so a new device Apple ships shows up correctly without an app update.
     static var deviceModel: String {
+        #if os(macOS)
+        var size = 0
+        guard sysctlbyname("hw.model", nil, &size, nil, 0) == 0, size > 0 else { return "unknown" }
+        var model = [UInt8](repeating: 0, count: size)
+        guard sysctlbyname("hw.model", &model, &size, nil, 0) == 0 else { return "unknown" }
+        return String(bytes: model.prefix { $0 != 0 }, encoding: .utf8) ?? "unknown"
+        #else
         var systemInfo = utsname()
         uname(&systemInfo)
         let machine = withUnsafeBytes(of: &systemInfo.machine) { bytes -> String in
@@ -164,6 +169,7 @@ struct Signal {
         return ProcessInfo.processInfo.environment["SIMULATOR_MODEL_IDENTIFIER"] ?? machine
         #else
         return machine
+        #endif
         #endif
     }
 
@@ -192,9 +198,7 @@ struct Signal {
 extension View {
     func signalToggle(_ name: String, isOn: Bool) -> some View {
         self.onChange(of: isOn) {
-            #if os(iOS) || os(visionOS)
             Signal.log(name, parameters: ["value": Signal.onOff(isOn)])
-            #endif
         }
     }
 }

@@ -34,7 +34,6 @@ struct PrivacySettingsView: View {
                     }
                 }
 
-                #if os(iOS) || os(visionOS)
                 MySection(footer: "analyticsHelper") {
                     Toggle(isOn: $analytics) {
                         Text("anonymousAnalytics")
@@ -47,7 +46,6 @@ struct PrivacySettingsView: View {
                         }
                     }
                 }
-                #endif
             }
             .myNavigationTitle("privacyPolicy")
         }

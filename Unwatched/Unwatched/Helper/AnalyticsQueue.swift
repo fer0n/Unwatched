@@ -11,6 +11,7 @@ actor AnalyticsQueue {
 
     private let maxBatchSize = 25
     private let fileUrl: URL
+    private var flushTask: Task<Void, Never>?
 
     init() {
         let dir = FileManager.default.urls(for: .applicationSupportDirectory, in: .userDomainMask)[0]
@@ -37,12 +38,20 @@ actor AnalyticsQueue {
     }
 
     func flush() async {
-        var events = load()
-        while !events.isEmpty {
-            let batch = Array(events.prefix(maxBatchSize))
-            guard await send(batch) else { return }
-            events.removeFirst(batch.count)
-            save(events)
+        if let flushTask {
+            return await flushTask.value
+        }
+        let task = Task { await sendQueued() }
+        flushTask = task
+        await task.value
+        flushTask = nil
+    }
+
+    private func sendQueued() async {
+        while true {
+            let batch = Array(load().prefix(maxBatchSize))
+            guard !batch.isEmpty, await send(batch) else { return }
+            save(Array(load().dropFirst(batch.count)))
         }
     }
 

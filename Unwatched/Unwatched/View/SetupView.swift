@@ -108,6 +108,7 @@ struct SetupView: View {
             } handleResignActive: {
                 Log.info("macOSActive: inActive")
                 SetupView.handleAppClosed()
+                Signal.flushOnBackground()
             }
             #endif
             .onAppear {
