@@ -19,6 +19,14 @@ public final class DataProvider: Sendable {
     /// the same SwiftData store without launching the app.
     static let appGroupIdentifier = "group.com.pentlandFirth.Unwatched"
 
+    #if os(macOS)
+    private static let groupContainer: ModelConfiguration.GroupContainer =
+        MacAppGroupMigration.moveStoreOutOfGroup() ? .none : .identifier(appGroupIdentifier)
+
+    public static func takeMacStoreMigrationOutcome() -> MacAppGroupMigration.Outcome? {
+        MacAppGroupMigration.takeOutcome()
+    }
+    #else
     /// Whether the running target actually has the App Group entitlement — tvOS/other targets
     /// don't, so `groupContainer` below falls back to SwiftData's own default (non-shared)
     /// location there instead of failing to resolve the group.
@@ -38,6 +46,7 @@ public final class DataProvider: Sendable {
     private static var groupContainer: ModelConfiguration.GroupContainer {
         hasAppGroupEntitlement ? .identifier(appGroupIdentifier) : .none
     }
+    #endif
 
     public let container: ModelContainer = {
         LaunchTrace.mark(LaunchTrace.Phase.containerBegin)
@@ -146,6 +155,9 @@ public final class DataProvider: Sendable {
         // maintaining its own separate, never-synced `imageCache.sqlite`. Falls back to the
         // per-target sandbox location on targets without the entitlement (tvOS, previews, …).
         let storeURL: URL
+        #if os(macOS)
+        storeURL = URL.applicationSupportDirectory.appending(path: fileName)
+        #else
         if let groupURL = FileManager.default.containerURL(
             forSecurityApplicationGroupIdentifier: DataProvider.appGroupIdentifier
         ) {
@@ -153,12 +165,11 @@ public final class DataProvider: Sendable {
         } else {
             #if os(tvOS) || os(watchOS)
             storeURL = FileManager.default.urls(for: .cachesDirectory, in: .userDomainMask).first!.appendingPathComponent(fileName)
-            #elseif os(macOS)
-            storeURL = URL.applicationSupportDirectory.appending(path: fileName)
             #else
             storeURL = URL.documentsDirectory.appending(path: fileName)
             #endif
         }
+        #endif
 
         let config = ModelConfiguration(
             schema: schema,

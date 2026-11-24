@@ -48,7 +48,9 @@ public enum ShareExtensionSettings {
 }
 
 public extension UserDefaults {
-    /// Backed by the same App Group container as the shared SwiftData store, so the main app and
-    /// `UnwatchedShareExtension` can share simple settings without a hand-off.
+    #if os(macOS)
+    static let appGroup = UserDefaults.standard
+    #else
     static let appGroup = UserDefaults(suiteName: DataProvider.appGroupIdentifier) ?? .standard
+    #endif
 }

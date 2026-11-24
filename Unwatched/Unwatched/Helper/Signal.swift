@@ -24,14 +24,23 @@ struct Signal {
 
     static func setup() {
         AnalyticsSettings.migrateIfNeeded()
+        #if os(macOS)
+        let migrationOutcome = DataProvider.takeMacStoreMigrationOutcome()
+        #endif
         if !AnalyticsSettings.isEnabled { return }
+        #if os(macOS)
+        if let migrationOutcome {
+            log("Migration.MacStore", parameters: ["outcome": migrationOutcome.rawValue])
+            if migrationOutcome == .failed {
+                error("MacStoreMigration")
+            }
+        }
+        #endif
         Task {
             await AnalyticsQueue.shared.flush()
         }
     }
 
-    /// Flush the analytics queue when leaving the foreground. Wrapped in a background-task
-    /// assertion so the in-flight request isn't killed while the app suspends.
     static func flushOnBackground() {
         if !AnalyticsSettings.isEnabled { return }
         #if os(macOS)
