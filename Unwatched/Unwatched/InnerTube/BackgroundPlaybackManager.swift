@@ -77,6 +77,16 @@ final class BackgroundPlaybackManager {
         }
     }
 
+    func prepare() {
+        guard UIApplication.shared.applicationState != .active, viewModel.loadedVideoId == nil,
+              let video = player.video, canStart(video), (try? enableNativePlayer()) != nil else {
+            return
+        }
+        Log.player.info("backgroundPlayback: preparing \(video.youtubeId)")
+        player.videoSource = .restore
+        viewModel.loadVideoIfNeeded()
+    }
+
     func canStart(_ video: Video) -> Bool {
         video.isPodcast || PlayerTypeSetting.stored == .native || PlayerManager.nativeFallbackEnabled
     }

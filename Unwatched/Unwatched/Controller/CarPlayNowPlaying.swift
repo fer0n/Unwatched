@@ -26,6 +26,7 @@ final class CarPlayNowPlaying {
 
     func install() {
         isInstalled = true
+        BackgroundPlaybackManager.shared.prepare()
         updateButtons()
     }
 
