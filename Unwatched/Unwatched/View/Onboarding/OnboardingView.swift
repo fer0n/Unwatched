@@ -52,7 +52,7 @@ struct OnboardingView: View {
             .navigationBarTitleDisplayMode(.inline)
             #endif
             .toolbar {
-                if hasSubscriptions {
+                if showsCancel {
                     ToolbarItem(placement: .cancellationAction) {
                         DismissSheetButton()
                     }
@@ -86,6 +86,14 @@ struct OnboardingView: View {
             }
             onboardingStarted = true
         }
+    }
+
+    private var showsCancel: Bool {
+        #if os(macOS)
+        hasSubscriptions && !viewModel.isSelectionEmpty
+        #else
+        hasSubscriptions
+        #endif
     }
 
     func handleContinue() {
