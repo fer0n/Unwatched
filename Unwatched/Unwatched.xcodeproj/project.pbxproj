@@ -5176,6 +5176,7 @@
 				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;
 				ASSETCATALOG_COMPILER_INCLUDE_ALL_APPICON_ASSETS = NO;
 				CODE_SIGN_ENTITLEMENTS = Unwatched/Unwatched.entitlements;
+				"CODE_SIGN_ENTITLEMENTS[sdk=macosx*]" = "Unwatched/Unwatched-macOS.entitlements";
 				"CODE_SIGN_ENTITLEMENTS[sdk=iphoneos*]" = "Unwatched/Unwatched-iOS.entitlements";
 				"CODE_SIGN_ENTITLEMENTS[sdk=iphonesimulator*]" = "Unwatched/Unwatched-iOS.entitlements";
 				CODE_SIGN_STYLE = Automatic;
@@ -5226,6 +5227,7 @@
 				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;
 				ASSETCATALOG_COMPILER_INCLUDE_ALL_APPICON_ASSETS = YES;
 				CODE_SIGN_ENTITLEMENTS = Unwatched/Unwatched.entitlements;
+				"CODE_SIGN_ENTITLEMENTS[sdk=macosx*]" = "Unwatched/Unwatched-macOS.entitlements";
 				"CODE_SIGN_ENTITLEMENTS[sdk=iphoneos*]" = "Unwatched/Unwatched-iOS.entitlements";
 				"CODE_SIGN_ENTITLEMENTS[sdk=iphonesimulator*]" = "Unwatched/Unwatched-iOS.entitlements";
 				CODE_SIGN_STYLE = Automatic;
