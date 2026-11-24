@@ -498,6 +498,8 @@ public struct Const {
     public static let darkModeTheme = "darkModeTheme"
     public static let onboardingCompleted = "onboardingCompleted"
     public static let onboardingStarted = "onboardingStarted"
+    public static let welcomeBackHandled = "welcomeBackHandled"
+    public static let backupOnlyWithContent = "backupOnlyWithContent"
     public static let settingsSplashShown = "settingsSplashShown"
     public static let lightAppIcon = "lightAppIcon"
 

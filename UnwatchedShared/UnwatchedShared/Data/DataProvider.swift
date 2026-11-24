@@ -20,8 +20,7 @@ public final class DataProvider: Sendable {
     static let appGroupIdentifier = "group.com.pentlandFirth.Unwatched"
 
     #if os(macOS)
-    private static let groupContainer: ModelConfiguration.GroupContainer =
-        MacAppGroupMigration.moveStoreOutOfGroup() ? .none : .identifier(appGroupIdentifier)
+    private static let groupContainer: ModelConfiguration.GroupContainer = .none
 
     public static func takeMacStoreMigrationOutcome() -> MacAppGroupMigration.Outcome? {
         MacAppGroupMigration.takeOutcome()
@@ -69,6 +68,9 @@ public final class DataProvider: Sendable {
         #endif
 
         SettingsMigration.run()
+        #if os(macOS)
+        MacAppGroupMigration.detectSkippedMigration()
+        #endif
 
         let config = ModelConfiguration(
             schema: DataProvider.schema,

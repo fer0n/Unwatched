@@ -47,7 +47,7 @@ struct WelcomeBack {
     private let backupDeviceId: String?
     private let settings: [String: AnyCodable]?
 
-    private static let handledKey = "welcomeBackHandled"
+    private static let handledKey = Const.welcomeBackHandled
     private static let maxSettingsAge: TimeInterval = 180 * 24 * 60 * 60
 
     static var isHandled: Bool {

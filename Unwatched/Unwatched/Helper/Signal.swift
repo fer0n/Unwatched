@@ -31,9 +31,6 @@ struct Signal {
         #if os(macOS)
         if let migrationOutcome {
             log("Migration.MacStore", parameters: ["outcome": migrationOutcome.rawValue])
-            if migrationOutcome == .failed {
-                error("MacStoreMigration")
-            }
         }
         #endif
         Task {

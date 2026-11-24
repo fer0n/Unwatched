@@ -7,37 +7,41 @@
 import Foundation
 import SwiftData
 
-// Workaround: App Store Connect won't transfer a sandboxed Mac app that claims a group container.
-// Remove once the macOS build no longer has the app group entitlement.
+// Workaround: installs that skipped 2.1 can't reach their store in the app group anymore.
+// Remove once 2.1 is no longer a likely update path.
 public enum MacAppGroupMigration {
     static let doneKey = "macStoreMovedOutOfAppGroup"
     static let outcomeKey = "macStoreMigrationOutcome"
 
     public enum Outcome: String {
-        case moved, noStore, appStoreNewer, failed
+        case fresh, skipped, skippedSynced
     }
 
-    static func moveStoreOutOfGroup(defaults: UserDefaults = .standard) -> Bool {
+    static func detectSkippedMigration(defaults: UserDefaults = .standard) {
         if defaults.bool(forKey: doneKey) {
-            return true
+            return
         }
-        let groupStore = ModelConfiguration(
-            groupContainer: .identifier(DataProvider.appGroupIdentifier),
-            cloudKitDatabase: .none
-        ).url
-        let appStore = ModelConfiguration(groupContainer: .none, cloudKitDatabase: .none).url
-        let outcome: Outcome
-        do {
-            outcome = try copyStore(from: groupStore, to: appStore)
-        } catch {
-            Log.data.error("Moving the store out of the app group failed: \(error)")
-            defaults.set(Outcome.failed.rawValue, forKey: outcomeKey)
-            return false
+        let outcome = outcome(defaults: defaults)
+        if outcome != .fresh {
+            setAsideStore(ModelConfiguration(groupContainer: .none, cloudKitDatabase: .none).url)
+            defaults.set(true, forKey: Const.backupOnlyWithContent)
+            defaults.removeObject(forKey: Const.syncTotalsCaughtUp)
         }
-        Log.data.info("Moving the store out of the app group: \(outcome.rawValue)")
+        if outcome == .skipped {
+            defaults.set(false, forKey: Const.onboardingCompleted)
+            defaults.set(false, forKey: Const.onboardingStarted)
+            defaults.set(false, forKey: Const.welcomeBackHandled)
+        }
+        Log.data.info("Store migration: \(outcome.rawValue)")
         defaults.set(outcome.rawValue, forKey: outcomeKey)
         defaults.set(true, forKey: doneKey)
-        return true
+    }
+
+    static func outcome(defaults: UserDefaults) -> Outcome {
+        guard defaults.bool(forKey: Const.onboardingCompleted) else {
+            return .fresh
+        }
+        return defaults.bool(forKey: Const.enableIcloudSync) ? .skippedSynced : .skipped
     }
 
     static func takeOutcome(defaults: UserDefaults = .standard) -> Outcome? {
@@ -46,47 +50,21 @@ public enum MacAppGroupMigration {
         return outcome
     }
 
-    static func copyStore(from source: URL, to destination: URL) throws -> Outcome {
+    static func setAsideStore(_ store: URL) {
         let fileManager = FileManager.default
-        guard fileManager.fileExists(atPath: source.path) else {
-            return .noStore
-        }
-        if let appStoreDate = lastModified(destination), let groupStoreDate = lastModified(source),
-           appStoreDate > groupStoreDate {
-            return .appStoreNewer
-        }
-        let sourceDirectory = source.deletingLastPathComponent()
-        let destinationDirectory = destination.deletingLastPathComponent()
-        try fileManager.createDirectory(at: destinationDirectory, withIntermediateDirectories: true)
-        for name in try storeFiles(of: destination) {
-            try fileManager.removeItem(at: destinationDirectory.appending(path: name))
-        }
-        do {
-            for name in try storeFiles(of: source) {
-                try fileManager.copyItem(
-                    at: sourceDirectory.appending(path: name),
-                    to: destinationDirectory.appending(path: name)
-                )
-            }
-        } catch {
-            for name in (try? storeFiles(of: destination)) ?? [] {
-                try? fileManager.removeItem(at: destinationDirectory.appending(path: name))
-            }
-            throw error
-        }
-        return .moved
-    }
-
-    private static func lastModified(_ store: URL) -> Date? {
-        [store, URL(fileURLWithPath: store.path + "-wal")]
-            .compactMap { try? $0.resourceValues(forKeys: [.contentModificationDateKey]).contentModificationDate }
-            .max()
-    }
-
-    private static func storeFiles(of store: URL) throws -> [String] {
+        let directory = store.deletingLastPathComponent()
         let supportDirectory = ".\(store.deletingPathExtension().lastPathComponent)_SUPPORT"
-        return try FileManager.default.contentsOfDirectory(atPath: store.deletingLastPathComponent().path)
+        let names = ((try? fileManager.contentsOfDirectory(atPath: directory.path)) ?? [])
             .filter { $0.hasPrefix(store.lastPathComponent) || $0 == supportDirectory }
+        for name in names {
+            let target = directory.appending(path: "preAppGroup-\(name)")
+            do {
+                try? fileManager.removeItem(at: target)
+                try fileManager.moveItem(at: directory.appending(path: name), to: target)
+            } catch {
+                Log.data.error("Setting aside \(name) failed: \(error)")
+            }
+        }
     }
 }
 #endif

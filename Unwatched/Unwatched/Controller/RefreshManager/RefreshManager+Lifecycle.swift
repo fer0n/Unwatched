@@ -121,11 +121,16 @@ extension RefreshManager {
 
     /// An empty backup would hide the real ones from `WelcomeBack`
     private func shouldAutoBackup() async -> Bool {
-        if UserDefaults.standard.bool(forKey: Const.onboardingCompleted) {
+        let defaults = UserDefaults.standard
+        if defaults.bool(forKey: Const.onboardingCompleted) && !defaults.bool(forKey: Const.backupOnlyWithContent) {
             return true
         }
         let totals = try? await SyncTotals.counted(in: DataProvider.shared.container)
-        return (totals?.total ?? 1) > 0
+        let hasContent = (totals?.total ?? 1) > 0
+        if hasContent {
+            defaults.removeObject(forKey: Const.backupOnlyWithContent)
+        }
+        return hasContent
     }
 
     func executeAutoRefresh() async {
