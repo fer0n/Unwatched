@@ -11,31 +11,36 @@ import UnwatchedShared
 
 @MainActor
 final class CarPlaySceneDelegate: UIResponder, CPTemplateApplicationSceneDelegate, CPSessionConfigurationDelegate {
-    private struct Shown: Equatable {
-        let ids: [String]
-        let startable: [Bool]
-        let progress: [Int]
-        let currentId: String?
-        let isPlaying: Bool
-        let videoEnded: Bool
-        let seekSeconds: Int
-        let tagSymbol: String?
+    private struct TabTag: Equatable {
+        let id: PersistentIdentifier
+        let name: String
+        let symbol: String
+    }
+
+    private struct TabLayout: Equatable {
+        let tags: [TabTag]
+        let selection: QueueTagSelection
     }
 
     private var interfaceController: CPInterfaceController?
     private var sessionConfiguration: CPSessionConfiguration?
     private var nowPlaying: CarPlayNowPlaying?
-    private var queueTemplate: CPListTemplate?
-    private let artwork = CarPlayArtwork()
+    private var tabBar: CPTabBarTemplate?
+    private var queue: CarPlayQueueList?
+    private var tagsTemplate: CPListTemplate?
+    private var library: CarPlayLibrary?
+    private var selection: QueueTagSelection = .all
+    private var pendingTagOptions: [Tag?]?
+    private var tabLayout: TabLayout?
+    let artwork = CarPlayArtwork()
     private var saveObserver: NSObjectProtocol?
     private var reloadTask: Task<Void, Never>?
-    private var firstLoadTask: Task<Void, Never>?
     private var connection = 0
-    private var selection: QueueTagSelection = .all
-    private var shown: Shown?
 
-    private static var itemLimit: Int { min(50, CPListTemplate.maximumItemCount) }
-    private static let firstScreenCount = 8
+    @available(iOS 26.4, *)
+    var supportsVideoPlayback: Bool {
+        sessionConfiguration?.supportsVideoPlayback == true
+    }
 
     func templateApplicationScene(
         _ templateApplicationScene: CPTemplateApplicationScene,
@@ -51,18 +56,22 @@ final class CarPlaySceneDelegate: UIResponder, CPTemplateApplicationSceneDelegat
         } else {
             Log.info("carPlay: connected")
         }
-        selection = PlayerManager.shared.playbackTag
         let nowPlaying = CarPlayNowPlaying(interfaceController: interfaceController)
         nowPlaying.install()
         self.nowPlaying = nowPlaying
 
-        let template = CPListTemplate(title: String(localized: "queue"), sections: [])
-        template.emptyViewTitleVariants = [String(localized: "noQueueItems")]
-        template.emptyViewSubtitleVariants = [String(localized: "noQueueItemsDescription")]
-        queueTemplate = template
-        interfaceController.setRootTemplate(template, animated: false, completion: nil)
+        let library = CarPlayLibrary(scene: self)
+        self.library = library
+        let tabBar = CPTabBarTemplate(templates: [library.template])
+        tabBar.delegate = self
+        self.tabBar = tabBar
+        interfaceController.setRootTemplate(tabBar, animated: false, completion: nil)
 
-        reloadQueue()
+        selection = PlayerManager.shared.playbackTag
+        reload()
+        if let queue {
+            tabBar.select(queue.template)
+        }
         observePlayer()
         saveObserver = NotificationCenter.default.addObserver(
             forName: ModelContext.didSave,
@@ -86,9 +95,15 @@ final class CarPlaySceneDelegate: UIResponder, CPTemplateApplicationSceneDelegat
         }
         saveObserver = nil
         reloadTask?.cancel()
-        firstLoadTask?.cancel()
-        shown = nil
-        queueTemplate = nil
+        queue?.cancel()
+        queue = nil
+        library?.cancel()
+        library = nil
+        selection = .all
+        pendingTagOptions = nil
+        tagsTemplate = nil
+        tabLayout = nil
+        tabBar = nil
         self.interfaceController = nil
         sessionConfiguration = nil
         nowPlaying?.uninstall()
@@ -121,63 +136,22 @@ final class CarPlaySceneDelegate: UIResponder, CPTemplateApplicationSceneDelegat
             guard !Task.isCancelled else {
                 return
             }
-            self?.reloadQueue()
+            self?.reload()
         }
     }
 
-    private func reloadQueue() {
-        guard let queueTemplate else {
-            return
-        }
-        let context = DataProvider.mainContext
-        let tags = Self.tags(context)
+    private func reload() {
+        let tags = Self.tags(DataProvider.mainContext)
         if selection.tagId != nil && selection.tag(in: tags) == nil {
             selection = .all
         }
-        let videos = QueueFilter(selection, tags).videos(context, limit: Self.itemLimit)
-        let player = PlayerManager.shared
-        let shown = Shown(
-            ids: videos.map(\.youtubeId),
-            startable: videos.map(BackgroundPlaybackManager.shared.canStart),
-            progress: videos.map { Int((Self.progress(of: $0) ?? 0) * 20) },
-            currentId: player.video?.youtubeId,
-            isPlaying: player.isPlaying,
-            videoEnded: player.videoEnded,
-            seekSeconds: Int(player.userSeekSeconds),
-            tagSymbol: tags.isEmpty ? nil : tagSymbol(tags)
-        )
-        guard shown != self.shown else {
-            return
-        }
-        let isFirstLoad = self.shown == nil
-        self.shown = shown
-        queueTemplate.leadingNavigationBarButtons = tags.isEmpty ? [] : [tagButton(tags)]
-        queueTemplate.trailingNavigationBarButtons = playerButtons(first: videos.first)
-
-        firstLoadTask?.cancel()
-        let missing = videos.prefix(Self.firstScreenCount)
-            .compactMap(CarPlayArtwork.url)
-            .filter { artwork.cached($0) == nil }
-        guard isFirstLoad, !missing.isEmpty else {
-            return showRows(videos)
-        }
-        firstLoadTask = Task { [weak self] in
-            await self?.artwork.preload(missing)
-            guard let self, !Task.isCancelled else {
-                return
-            }
-            self.showRows(videos.filter { !$0.isDeleted })
-        }
-    }
-
-    private func showRows(_ videos: [Video]) {
-        let currentId = PlayerManager.shared.video?.youtubeId
-        let items = videos.map { listItem(for: $0, isCurrent: $0.youtubeId == currentId) }
-        queueTemplate?.updateSections([CPListSection(items: items)])
+        updateTabs(tags)
+        queue?.reload(tags)
+        library?.reload()
     }
 
     // the row's spinner shows until start returns
-    private func play(_ youtubeId: String, completion: @escaping () -> Void) {
+    func play(_ youtubeId: String, in selection: QueueTagSelection?, completion: @escaping () -> Void) {
         Log.info("carPlay: tapped \(youtubeId)")
         Task {
             defer { completion() }
@@ -187,12 +161,14 @@ final class CarPlaySceneDelegate: UIResponder, CPTemplateApplicationSceneDelegat
                 return
             }
             guard let video = VideoService.getVideo(for: youtubeId, modelContext: DataProvider.mainContext) else {
-                reloadQueue()
+                reload()
                 return
             }
             do {
                 try await BackgroundPlaybackManager.shared.start(video: video)
-                player.playbackTag = selection
+                if let selection {
+                    player.playbackTag = selection
+                }
                 Signal.playbackStarted("carPlay")
                 if #unavailable(iOS 26.4) {
                     showNowPlaying()
@@ -201,6 +177,16 @@ final class CarPlaySceneDelegate: UIResponder, CPTemplateApplicationSceneDelegat
                 Log.error("carPlay: playing \(youtubeId) failed — \(error.localizedDescription)")
                 showError(error)
             }
+        }
+    }
+
+    func push(_ template: CPTemplate) {
+        interfaceController?.pushTemplate(template, animated: true, completion: nil)
+    }
+
+    func pop(_ template: CPTemplate) {
+        if interfaceController?.topTemplate === template {
+            interfaceController?.popTemplate(animated: true, completion: nil)
         }
     }
 
@@ -229,138 +215,100 @@ final class CarPlaySceneDelegate: UIResponder, CPTemplateApplicationSceneDelegat
     }
 }
 
-// MARK: Rows
+// MARK: Tabs
 
 extension CarPlaySceneDelegate {
-    private func listItem(for video: Video, isCurrent: Bool) -> CPListItem {
-        let url = CarPlayArtwork.url(for: video)
-        let item = CPListItem(
-            text: video.title,
-            detailText: video.channelName,
-            image: url.flatMap(artwork.cached),
-            accessoryImage: nil,
-            accessoryType: .none
-        )
-        item.isPlaying = isCurrent && PlayerManager.shared.isPlaying
-        if #available(iOS 26.4, *) {
-            item.playbackConfiguration = playbackConfiguration(for: video, isCurrent: isCurrent)
-        }
-        if let progress = Self.progress(of: video) {
-            item.playbackProgress = progress
-        }
-        item.isEnabled = BackgroundPlaybackManager.shared.canStart(video)
-        let youtubeId = video.youtubeId
-        item.handler = { [weak self] _, completion in
-            MainActor.assumeIsolated {
-                self?.play(youtubeId, completion: completion)
-            }
-        }
-        if let url, artwork.cached(url) == nil {
-            Task { [artwork] in
-                if let image = await artwork.load(url) {
-                    item.setImage(image)
-                }
-            }
-        }
-        return item
-    }
-
-    @available(iOS 26.4, *)
-    private func playbackConfiguration(for video: Video, isCurrent: Bool) -> CPPlaybackConfiguration {
-        let player = PlayerManager.shared
-        let action: CPPlaybackConfiguration.Action = if isCurrent && player.isPlaying {
-            .pause
-        } else if isCurrent && player.videoEnded {
-            .replay
-        } else {
-            .play
-        }
-        // a car that can't show video never delivers the tap
-        let canShowVideo = sessionConfiguration?.supportsVideoPlayback == true
-        return CPPlaybackConfiguration(
-            preferredPresentation: video.isPodcast || !canShowVideo ? .audio : .video,
-            playbackAction: action,
-            // with an elapsed time, the remaining time wraps next to its progress bar
-            elapsedTime: .zero,
-            duration: CMTime(seconds: video.duration ?? 0, preferredTimescale: 600)
-        )
-    }
-
-    private static func progress(of video: Video) -> Double? {
-        guard let elapsed = video.elapsedSeconds, let duration = video.duration, duration > 0 else {
-            return nil
-        }
-        return min(1, elapsed / duration)
-    }
-}
-
-// MARK: Bar buttons and tags
-
-extension CarPlaySceneDelegate {
-    private func playerButtons(first: Video?) -> [CPBarButton] {
-        let player = PlayerManager.shared
-        guard let youtubeId = player.video?.youtubeId ?? first?.youtubeId else {
-            return []
-        }
-        let playImage = UIImage(systemName: player.isPlaying ? "pause.fill" : "play.fill") ?? UIImage()
-        let playPause = CPBarButton(image: playImage) { [weak self] _ in
-            MainActor.assumeIsolated {
-                self?.play(youtubeId) {}
-            }
-        }
-        guard player.video != nil else {
-            playPause.isEnabled = first.map(BackgroundPlaybackManager.shared.canStart) == true
-            return [playPause]
-        }
-        let seconds = Int(player.userSeekSeconds)
-        let seekImage = UIImage(systemName: "goforward.\(seconds)") ?? UIImage(systemName: "goforward") ?? UIImage()
-        let seek = CPBarButton(image: seekImage) { _ in
-            MainActor.assumeIsolated {
-                Log.info("carPlay: seek forward")
-                _ = PlayerManager.shared.seekForward()
-            }
-        }
-        return [playPause, seek]
-    }
-
     private static func tags(_ context: ModelContext) -> [Tag] {
         (try? context.fetch(FetchDescriptor<Tag>(sortBy: [SortDescriptor(\.order)]))) ?? []
     }
 
-    private func tagSymbol(_ tags: [Tag]) -> String {
-        selection.tag(in: tags)?.symbol ?? Const.queueTagSF
+    private static func symbol(of tag: Tag) -> String {
+        tag.symbol ?? tag.mode.defaultSymbol
     }
 
-    private func tagButton(_ tags: [Tag]) -> CPBarButton {
-        CPBarButton(image: UIImage(systemName: tagSymbol(tags)) ?? UIImage()) { [weak self] _ in
-            MainActor.assumeIsolated {
-                self?.showTagPicker()
-            }
+    private func updateTabs(_ tags: [Tag]) {
+        let layout = TabLayout(
+            tags: tags.map { TabTag(id: $0.persistentModelID, name: $0.name, symbol: Self.symbol(of: $0)) },
+            selection: selection
+        )
+        guard let tabBar, let library, layout != tabLayout else {
+            return
         }
+        tabLayout = layout
+        let current = selection.tag(in: tags)
+        let queue = queueList(current)
+        if queue !== self.queue {
+            self.queue?.cancel()
+            self.queue = queue
+        }
+
+        var templates: [CPTemplate] = [queue.template]
+        if tags.isEmpty {
+            tagsTemplate = nil
+            pendingTagOptions = nil
+        } else {
+            let options: [Tag?] = (selection == .all ? [] : [nil]) + tags.filter { $0.persistentModelID != selection.tagId }
+            let tagsTemplate = self.tagsTemplate ?? CPListTemplate(title: String(localized: "tags"), sections: [])
+            tagsTemplate.tabTitle = String(localized: "tags")
+            tagsTemplate.tabImage = UIImage(systemName: Const.tagSF)
+            self.tagsTemplate = tagsTemplate
+            if tabBar.selectedTemplate === tagsTemplate {
+                pendingTagOptions = options
+            } else {
+                showTagOptions(options)
+            }
+            templates.append(tagsTemplate)
+        }
+        templates.append(library.template)
+        tabBar.updateTemplates(templates)
     }
 
-    private func showTagPicker() {
-        let tags = Self.tags(DataProvider.mainContext)
-        let options = [QueueTagSelection.all] + tags.map { .tag($0.persistentModelID) }
-        let items = options.map { option in
-            let tag = option.tag(in: tags)
-            return CPListItem.option(
-                tag?.name ?? String(localized: "allVideos"),
-                symbol: tag.map { $0.symbol ?? $0.mode.defaultSymbol } ?? Const.queueTagSF,
-                checked: option == selection
-            ) { [weak self] in
-                self?.select(option)
-            }
+    private func queueList(_ tag: Tag?) -> CarPlayQueueList {
+        let selection: QueueTagSelection = tag.map { .tag($0.persistentModelID) } ?? .all
+        let title = tag?.name ?? String(localized: "queue")
+        let reused = queue?.selection == selection && queue?.template.title == title ? queue : nil
+        let list = reused ?? CarPlayQueueList(.queue(selection), title: title, scene: self)
+        list.template.tabImage = UIImage(systemName: tag.map(Self.symbol) ?? Const.queueTagSF)
+        return list
+    }
+
+    private func tagItem(_ tag: Tag?) -> CPListItem {
+        let option: QueueTagSelection = tag.map { .tag($0.persistentModelID) } ?? .all
+        return CPListItem.option(
+            tag?.name ?? String(localized: "queue"),
+            symbol: tag.map(Self.symbol) ?? Const.queueTagSF,
+            checked: false
+        ) { [weak self] in
+            self?.select(option)
         }
-        let picker = CPListTemplate(title: String(localized: "tags"), sections: [CPListSection(items: items)])
-        interfaceController?.pushTemplate(picker, animated: true, completion: nil)
     }
 
     private func select(_ option: QueueTagSelection) {
-        Log.info("carPlay: showing tag \(option.tagId == nil ? "all" : "tag")")
+        Log.info("carPlay: showing \(option.tagId == nil ? "queue" : "tag")")
         selection = option
-        reloadQueue()
-        interfaceController?.popTemplate(animated: true, completion: nil)
+        reload()
+        if let queue {
+            tabBar?.select(queue.template)
+        }
+        applyPendingTagOptions()
+    }
+
+    private func showTagOptions(_ options: [Tag?]) {
+        pendingTagOptions = nil
+        tagsTemplate?.updateSections([CPListSection(items: options.map(tagItem))])
+    }
+
+    private func applyPendingTagOptions() {
+        guard let pendingTagOptions, tabBar?.selectedTemplate !== tagsTemplate else {
+            return
+        }
+        showTagOptions(pendingTagOptions)
+    }
+}
+
+extension CarPlaySceneDelegate: CPTabBarTemplateDelegate {
+    func tabBarTemplate(_ tabBarTemplate: CPTabBarTemplate, didSelect selectedTemplate: CPTemplate) {
+        applyPendingTagOptions()
     }
 }
 #endif

@@ -5,11 +5,25 @@
 
 import Foundation
 import SwiftUI
+import UnwatchedShared
 
 enum SubscriptionSorting: Int, CustomStringConvertible, CaseIterable {
     case title
     case recentlyAdded
     case mostRecentVideo
+
+    static var stored: SubscriptionSorting {
+        (UserDefaults.standard.object(forKey: Const.subscriptionSortOrder) as? Int)
+            .flatMap(SubscriptionSorting.init) ?? .recentlyAdded
+    }
+
+    var sortDescriptors: [SortDescriptor<Subscription>] {
+        switch self {
+        case .title: [SortDescriptor(\.title)]
+        case .recentlyAdded: [SortDescriptor(\.subscribedDate, order: .reverse)]
+        case .mostRecentVideo: [SortDescriptor(\.mostRecentVideoDate, order: .reverse)]
+        }
+    }
 
     var description: String {
         switch self {

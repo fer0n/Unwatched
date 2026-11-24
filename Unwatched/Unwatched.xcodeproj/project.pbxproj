@@ -1040,7 +1040,11 @@
 		CA4B0C0D2F3000000000A005 /* CarPlayNowPlaying.swift in Sources */ = {isa = PBXBuildFile; fileRef = CA4B0C0D2F3000000000A004 /* CarPlayNowPlaying.swift */; };
 		CA4B0C0D2F3000000000A006 /* CarPlayNowPlaying.swift in Sources */ = {isa = PBXBuildFile; fileRef = CA4B0C0D2F3000000000A004 /* CarPlayNowPlaying.swift */; };
 		CA4B0C0D2F3000000000A008 /* CarPlayArtwork.swift in Sources */ = {isa = PBXBuildFile; fileRef = CA4B0C0D2F3000000000A007 /* CarPlayArtwork.swift */; };
+		CA4B0C0D2F3000000000A018 /* CarPlayQueueList.swift in Sources */ = {isa = PBXBuildFile; fileRef = CA4B0C0D2F3000000000A017 /* CarPlayQueueList.swift */; };
+		CA4B0C0D2F3000000000A028 /* CarPlayLibrary.swift in Sources */ = {isa = PBXBuildFile; fileRef = CA4B0C0D2F3000000000A027 /* CarPlayLibrary.swift */; };
 		CA4B0C0D2F3000000000A009 /* CarPlayArtwork.swift in Sources */ = {isa = PBXBuildFile; fileRef = CA4B0C0D2F3000000000A007 /* CarPlayArtwork.swift */; };
+		CA4B0C0D2F3000000000A019 /* CarPlayQueueList.swift in Sources */ = {isa = PBXBuildFile; fileRef = CA4B0C0D2F3000000000A017 /* CarPlayQueueList.swift */; };
+		CA4B0C0D2F3000000000A029 /* CarPlayLibrary.swift in Sources */ = {isa = PBXBuildFile; fileRef = CA4B0C0D2F3000000000A027 /* CarPlayLibrary.swift */; };
 		CAB8DE080B9843BA835E1C3D /* PodcastEpisodeListView.swift in Sources */ = {isa = PBXBuildFile; fileRef = E7FF2D549D5945F281ABE152 /* PodcastEpisodeListView.swift */; };
 		CD00F49C2E6B6DBC00DADB96 /* CustomAlerter.swift in Sources */ = {isa = PBXBuildFile; fileRef = CD00F49B2E6B6DBC00DADB96 /* CustomAlerter.swift */; };
 		CD00F49D2E6B6DBC00DADB96 /* CustomAlerter.swift in Sources */ = {isa = PBXBuildFile; fileRef = CD00F49B2E6B6DBC00DADB96 /* CustomAlerter.swift */; };
@@ -1873,6 +1877,8 @@
 		CA4B0C0D2F3000000000A001 /* CarPlaySceneDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CarPlaySceneDelegate.swift; sourceTree = "<group>"; };
 		CA4B0C0D2F3000000000A004 /* CarPlayNowPlaying.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CarPlayNowPlaying.swift; sourceTree = "<group>"; };
 		CA4B0C0D2F3000000000A007 /* CarPlayArtwork.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CarPlayArtwork.swift; sourceTree = "<group>"; };
+		CA4B0C0D2F3000000000A017 /* CarPlayQueueList.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CarPlayQueueList.swift; sourceTree = "<group>"; };
+		CA4B0C0D2F3000000000A027 /* CarPlayLibrary.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CarPlayLibrary.swift; sourceTree = "<group>"; };
 		CD00F49B2E6B6DBC00DADB96 /* CustomAlerter.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CustomAlerter.swift; sourceTree = "<group>"; };
 		CD03C1DC2C73BED800913256 /* SponsorBlockAPI.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SponsorBlockAPI.swift; sourceTree = "<group>"; };
 		CD0FBE000000000000000001 /* OnboardingView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = OnboardingView.swift; sourceTree = "<group>"; };
@@ -2440,6 +2446,8 @@
 				CA4B0C0D2F3000000000A001 /* CarPlaySceneDelegate.swift */,
 				CA4B0C0D2F3000000000A004 /* CarPlayNowPlaying.swift */,
 				CA4B0C0D2F3000000000A007 /* CarPlayArtwork.swift */,
+				CA4B0C0D2F3000000000A017 /* CarPlayQueueList.swift */,
+				CA4B0C0D2F3000000000A027 /* CarPlayLibrary.swift */,
 				887255F72D94209D008F1DE1 /* NSApplicationDelegate.swift */,
 				881DBDEB2B4D22770082BEFB /* NavigationManager.swift */,
 				8801CBC23067AF93007E4C90 /* NavigationManager+Routes.swift */,
@@ -3937,6 +3945,8 @@
 				CA4B0C0D2F3000000000A003 /* CarPlaySceneDelegate.swift in Sources */,
 				CA4B0C0D2F3000000000A006 /* CarPlayNowPlaying.swift in Sources */,
 				CA4B0C0D2F3000000000A009 /* CarPlayArtwork.swift in Sources */,
+				CA4B0C0D2F3000000000A019 /* CarPlayQueueList.swift in Sources */,
+				CA4B0C0D2F3000000000A029 /* CarPlayLibrary.swift in Sources */,
 				889AF8E72C50ECA9001CEDE6 /* ConfirmableMenuButton.swift in Sources */,
 				889AF8E82C50ECA9001CEDE6 /* KeyboardReadable.swift in Sources */,
 				887EB2DE2CFE167700F9D517 /* MenuSheetDetents.swift in Sources */,
@@ -4155,6 +4165,8 @@
 				CA4B0C0D2F3000000000A002 /* CarPlaySceneDelegate.swift in Sources */,
 				CA4B0C0D2F3000000000A005 /* CarPlayNowPlaying.swift in Sources */,
 				CA4B0C0D2F3000000000A008 /* CarPlayArtwork.swift in Sources */,
+				CA4B0C0D2F3000000000A018 /* CarPlayQueueList.swift in Sources */,
+				CA4B0C0D2F3000000000A028 /* CarPlayLibrary.swift in Sources */,
 				889A84E72E6C198E006F210A /* DeleteEverythingExceptSubsButton.swift in Sources */,
 				887E82B02CD8FD8800B196EA /* Notification.swift in Sources */,
 				8891F0BA2B4F54940098A3FB /* Double.swift in Sources */,

@@ -41,22 +41,7 @@ class SubscriptionListVM: TransactionVM<Subscription> {
 
     @MainActor
     func setSorting(_ sorting: SubscriptionSorting? = nil, refresh: Bool = false) {
-        let sorting = {
-            if let sorting = sorting {
-                return sorting
-            } else {
-                let sortRaw = UserDefaults.standard.integer(forKey: Const.subscriptionSortOrder)
-                return SubscriptionSorting(rawValue: sortRaw) ?? .recentlyAdded
-            }
-        }()
-        switch sorting {
-        case .title:
-            self.sort = [SortDescriptor<Subscription>(\.title)]
-        case .recentlyAdded:
-            self.sort = [SortDescriptor<Subscription>(\.subscribedDate, order: .reverse)]
-        case .mostRecentVideo:
-            self.sort = [SortDescriptor<Subscription>(\.mostRecentVideoDate, order: .reverse)]
-        }
+        self.sort = (sorting ?? .stored).sortDescriptors
         if refresh {
             Task {
                 await updateData(force: true)

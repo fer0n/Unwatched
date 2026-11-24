@@ -29,6 +29,17 @@ final class CarPlayArtwork {
         return await task(for: url).value
     }
 
+    func attach(_ url: URL?, to item: CPListItem) {
+        guard let url, cached(url) == nil else {
+            return
+        }
+        Task {
+            if let image = await load(url) {
+                item.setImage(image)
+            }
+        }
+    }
+
     func preload(_ urls: [URL], timeout: Double = 1) async {
         let pending = urls.filter { cached($0) == nil }
         pending.forEach { _ = task(for: $0) }
