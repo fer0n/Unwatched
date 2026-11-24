@@ -575,8 +575,10 @@ extension CleanupActor {
         protecting protectedId: PersistentIdentifier? = nil
     ) {
         let cutoff = Calendar.current.date(byAdding: .day, value: -days, to: .now) ?? .now
+        // typed nil: three bare `== nil` clauses time out the type-checker on visionOS
+        let noDate: Date? = nil
         let fetch = FetchDescriptor<Video>(predicate: #Predicate {
-            $0.mediaUrl != nil && $0.watchedDate == nil && $0.bookmarkedDate == nil
+            $0.mediaUrl != nil && $0.watchedDate == noDate && $0.bookmarkedDate == noDate
         })
         guard let videos = try? modelContext.fetch(fetch) else { return }
         let downloaded = PodcastDownloadStore.downloadedIds()
