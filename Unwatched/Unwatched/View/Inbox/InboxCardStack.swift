@@ -231,10 +231,13 @@ struct InboxCardStack: View {
         let skipped = Set(skippedIds)
         var result = [Video]()
         var skippedVideos = [String: Video]()
+        // cards are keyed by youtubeId, a duplicate row would share its slot
+        var shownIds = Set<String>()
 
         for entry in entries {
             guard !awaitingRemovalEntryIds.contains(entry.persistentModelID) else { continue }
             guard let video = entry.video, !hidden.contains(video.youtubeId) else { continue }
+            guard shownIds.insert(video.youtubeId).inserted else { continue }
             guard !skipped.contains(video.youtubeId) else {
                 skippedVideos[video.youtubeId] = video
                 continue
