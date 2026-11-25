@@ -51,6 +51,9 @@ public extension Color {
 
     func shiftedToBeReadable(in colorScheme: ColorScheme, as usage: ColorUsage = .fill) -> Color? {
         var (hue, saturation, brightness) = hsb
+        // extended-range colors report components outside 0...1, which can't be stored
+        saturation = min(max(saturation, 0), 1)
+        brightness = min(max(brightness, 0), 1)
         let step = 0.05
         for _ in 0..<40 {
             if colorScheme == .dark {

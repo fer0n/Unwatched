@@ -23,7 +23,7 @@ public extension PageColorResolver {
     func color(for choice: PageColorChoice) -> Color? {
         switch choice {
         case .automatic: nil
-        case .monochrome: colorScheme == .dark ? Color(hex: "F5F5F5") : .black
+        case .monochrome: colorScheme == .dark ? Color(.sRGB, white: 0xF5 / 255) : .black
         case .custom: choice.customColor.map(readable)
         }
     }
