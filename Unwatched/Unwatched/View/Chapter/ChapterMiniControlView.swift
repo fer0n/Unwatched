@@ -61,7 +61,6 @@ struct ChapterMiniControlView: View {
                             .fontWidth(.condensed)
                             .lineLimit(1)
                             .frame(maxWidth: link == nil ? .infinity : nil)
-                            .contentTransition(.identity)
                         }
                         .buttonStyle(.plain)
                         .highPriorityGesture(LongPressGesture(minimumDuration: 0.3).onEnded { _ in
@@ -85,10 +84,11 @@ struct ChapterMiniControlView: View {
                             })
                         }
                     }
-                    .frame(maxWidth: link == nil ? nil : .infinity)
-                    .if(!Device.isIphone) {
-                        $0.geometryGroup()
-                    }
+                    // a new title (and link) of another width would otherwise slide to its new center during an
+                    // animated switch; inside the full-width group it snaps, while the group moves with the controls
+                    .transaction { $0.animation = nil }
+                    .frame(maxWidth: .infinity)
+                    .geometryGroup()
 
                     HStack(spacing: limitHeight ? 0 : -5) {
                         NextChapterButton { image in
