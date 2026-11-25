@@ -11,6 +11,7 @@ const VALUE_SETTING_COLORS = {
 };
 const SETTINGS_COLLAPSED_COUNT = 8;
 const RECENT_COLLAPSED_COUNT = 5;
+const ENGAGEMENT_COLLAPSED_COUNT = 10;
 
 // Build channel to report on. Kept in the URL rather than in memory so the choice
 // survives a reload, can be bookmarked, and — since the page renders once from a
@@ -128,6 +129,16 @@ function legendRow(color, text) {
   return '<div><span class="swatch" style="background:' + color + '"></span>' + text + '</div>';
 }
 
+function collapsibleRows(rows, toggleBtn, limit, noun, state) {
+  const sync = () => {
+    rows.forEach((tr, i) => tr.classList.toggle('hidden', !state.expanded && i >= limit));
+    toggleBtn.textContent = state.expanded ? 'Show fewer' : 'Show all ' + rows.length + ' ' + noun;
+  };
+  toggleBtn.hidden = rows.length <= limit;
+  toggleBtn.onclick = () => { state.expanded = !state.expanded; sync(); };
+  sync();
+}
+
 function collapsibleCards(el, toggleBtn, cards, noun) {
   cards.forEach(function (card) { el.appendChild(card); });
   if (cards.length <= SETTINGS_COLLAPSED_COUNT) {
@@ -216,12 +227,13 @@ function renderPie(el, buckets) {
   el.innerHTML = '';
   const entries = Object.entries(buckets);
   const total = entries.reduce((sum, [, count]) => sum + count, 0);
-  const segments = entries.map(([, count], i) => ({ value: count, color: BUCKET_COLORS[i % BUCKET_COLORS.length] }));
+  const color = (i) => groupColor(GROUP_HUES[i % GROUP_HUES.length]);
+  const segments = entries.map(([, count], i) => ({ value: count, color: color(i) }));
 
   const legend = entries.map(([bucket, count], i) => {
     const pct = total ? Math.round((count / total) * 100) : 0;
     const cls = count === 0 ? ' class="muted"' : '';
-    return '<div' + cls + '><span class="swatch" style="background:' + BUCKET_COLORS[i % BUCKET_COLORS.length] +
+    return '<div' + cls + '><span class="swatch" style="background:' + color(i) +
       '"></span>' + bucket + ': ' + count + ' (' + pct + '%)</div>';
   }).join('');
 
@@ -255,7 +267,7 @@ function renderGroupedPie(el, detailEl, groups, order, detailOrder) {
       const pct = total ? Math.round(totals[i] / total * 100) : 0;
       return '<button type="button" class="pie-pick' + (g === selected ? ' selected' : '') + '" data-group="' + i + '">' +
         '<span class="swatch" style="background:' + groupColor(hues[i]) + '"></span>' +
-        '<span>' + g + ': ' + totals[i] + '&nbsp;(' + pct + '%)</span></button>';
+        '<span>' + esc(g) + ': ' + totals[i] + '&nbsp;(' + pct + '%)</span></button>';
     }).join('');
     el.innerHTML = pieSVG(segments) + '<div class="pie-legend">' + (legend || '<div class="muted">No data yet.</div>') + '</div>';
     el.querySelectorAll('.pie-pick').forEach(function (btn) {
@@ -273,13 +285,13 @@ function renderGroupedPie(el, detailEl, groups, order, detailOrder) {
     const entries = Object.entries(groups[selected]).sort(detailOrder);
     const rows = entries.map(function (e, i) {
       return {
-        label: e[0],
+        label: esc(e[0]),
         count: e[1],
         countText: e[1] + ' · ' + Math.round(e[1] / totals[gi] * 100) + '%',
         color: groupColor(hues[gi], entries.length > 1 ? i / (entries.length - 1) : 0),
       };
     });
-    detailEl.appendChild(barChartCard(selected, totals[gi] + ' users', rows));
+    detailEl.appendChild(barChartCard(esc(selected), totals[gi] + ' users', rows));
   };
   render();
 }
@@ -399,9 +411,58 @@ function dayLabel(day) {
   return d.toLocaleDateString(undefined, { month: 'short', day: 'numeric' });
 }
 
+const CHART_PAD = { l: 34, r: 12, t: 12, b: 22 };
+
+// Tap or hover picks the nearest point; onSelect(-1) clears it.
+function inspectable(el, count, onSelect, initial) {
+  const svg = el.querySelector('svg');
+  if (!svg || !count) return;
+  const vb = svg.viewBox.baseVal;
+  const innerW = vb.width - CHART_PAD.l - CHART_PAD.r;
+  const guide = document.createElementNS('http://www.w3.org/2000/svg', 'line');
+  guide.setAttribute('y1', CHART_PAD.t);
+  guide.setAttribute('y2', vb.height - CHART_PAD.b);
+  guide.setAttribute('stroke', '#999');
+  guide.setAttribute('stroke-dasharray', '3 3');
+  guide.setAttribute('pointer-events', 'none');
+  svg.appendChild(guide);
+  svg.style.cursor = 'crosshair';
+  svg.style.touchAction = 'pan-y';
+  let current = -1;
+  const select = function (i) {
+    current = i;
+    guide.style.display = i < 0 ? 'none' : '';
+    if (i >= 0) {
+      const gx = (CHART_PAD.l + (count === 1 ? innerW / 2 : innerW * i / (count - 1))).toFixed(1);
+      guide.setAttribute('x1', gx);
+      guide.setAttribute('x2', gx);
+    }
+    onSelect(i);
+  };
+  const indexAt = function (ev) {
+    if (count === 1) return 0;
+    const r = svg.getBoundingClientRect();
+    const vx = (ev.clientX - r.left) / r.width * vb.width;
+    return Math.max(0, Math.min(count - 1, Math.round((vx - CHART_PAD.l) / innerW * (count - 1))));
+  };
+  let pointerType = 'mouse';
+  svg.addEventListener('pointerdown', function (ev) { pointerType = ev.pointerType; });
+  svg.addEventListener('click', function (ev) {
+    const i = indexAt(ev);
+    select(i === current && pointerType !== 'mouse' ? -1 : i);
+  });
+  svg.addEventListener('pointermove', function (ev) {
+    if (ev.pointerType !== 'mouse') return;
+    const i = indexAt(ev);
+    if (i !== current) select(i);
+  });
+  svg.addEventListener('pointerleave', function (ev) { if (ev.pointerType === 'mouse') select(-1); });
+  select(initial == null ? -1 : initial);
+}
+
 // Line + area chart from a series of {day, [valueKey]}.
 function lineChartSVG(series, valueKey, color, limit, pxWidth) {
-  const W = pxWidth || 640, H = Math.max(140, Math.round(W * 0.28)), padL = 34, padR = 12, padT = 12, padB = 22;
+  const W = pxWidth || 640, H = Math.max(140, Math.round(W * 0.28)), padL = CHART_PAD.l, padR = CHART_PAD.r, padT = CHART_PAD.t, padB = CHART_PAD.b;
   const pts = series.map(function (row) { return { label: row.day, value: Number(row[valueKey]) || 0 }; });
   if (pts.length === 0) return '<div class="hint">No data yet.</div>';
   const values = pts.map(function (p) { return p.value; });
@@ -454,8 +515,14 @@ function renderLineChart(el, series, valueKey, color, limit, per) {
   const right = limit
     ? 'peak <b>' + fmtNum(peak) + '</b> · <b>' + Math.round(peak / limit * 100) + '%</b> of limit'
     : 'peak <b>' + fmtNum(peak) + '</b>';
-  el.innerHTML = '<div class="chart-meta"><span>avg <b>' + fmtNum(avg) + '</b>/' + per + '</span><span>' + right + '</span></div>' +
-    lineChartSVG(series, valueKey, color, limit, chartWidth(el));
+  const summary = '<span>avg <b>' + fmtNum(avg) + '</b>/' + per + '</span><span>' + right + '</span>';
+  el.innerHTML = '<div class="chart-meta">' + summary + '</div>' + lineChartSVG(series, valueKey, color, limit, chartWidth(el));
+  const meta = el.querySelector('.chart-meta');
+  const unit = valueKey === 'count' ? '' : ' ' + valueKey;
+  inspectable(el, series.length, function (i) {
+    meta.innerHTML = i < 0 ? summary
+      : '<span>' + dayLabel(series[i].day) + '</span><span><b>' + values[i].toLocaleString() + '</b>' + unit + '</span>';
+  });
 }
 
 const FUNNELS = [
@@ -581,7 +648,7 @@ function multiLineChartSVG(series, lines, pxWidth, opts) {
   opts = opts || {};
   const fmt = opts.formatY || fmtNum;
   if (series.length === 0) return '<div class="hint">No data yet.</div>';
-  const W = pxWidth || 640, H = Math.max(140, Math.round(W * 0.28)), padL = 34, padR = 12, padT = 12, padB = 22;
+  const W = pxWidth || 640, H = Math.max(140, Math.round(W * 0.28)), padL = CHART_PAD.l, padR = CHART_PAD.r, padT = CHART_PAD.t, padB = CHART_PAD.b;
   const max = Math.max(1, Math.max.apply(null, series.flatMap(function (row) {
     return lines.map(function (l) { return Number(row[l[0]]) || 0; });
   })));
@@ -701,6 +768,7 @@ function foldTrend(points, maxSeries, order) {
 // Shares, not counts, so a partial latest period doesn't read as a drop.
 function renderTrend(el, title, points, series, width) {
   const off = {};
+  let picked = -1;
   const lineKey = function (s) { return 's:' + s.key; };
   const rows = points.map(function (p) {
     const total = pointTotal(p);
@@ -719,10 +787,9 @@ function renderTrend(el, title, points, series, width) {
     const legend = series.map(function (s, i) {
       return '<button type="button" class="pie-pick' + (off[s.key] ? ' off' : '') + '" data-i="' + i + '">' +
         '<span class="swatch" style="background:' + s.color + '"></span>' +
-        '<span>' + esc(s.label) + (last ? ' · ' + pct(last[lineKey(s)]) : '') + '</span></button>';
+        '<span>' + esc(s.label) + '<span class="trend-val"></span></span></button>';
     }).join('');
-    el.innerHTML = '<div class="chart-meta"><span><b>' + esc(title) + '</b></span>' +
-      (last ? '<span>latest <b>' + last.total + '</b> users</span>' : '') + '</div>' +
+    el.innerHTML = '<div class="chart-meta"><span><b>' + esc(title) + '</b></span><span class="trend-at"></span></div>' +
       multiLineChartSVG(rows, lines, width || chartWidth(el), {
         formatY: pct,
         pointTitle: function (row, line) {
@@ -738,6 +805,17 @@ function renderTrend(el, title, points, series, width) {
         draw();
       };
     });
+    const at = el.querySelector('.trend-at');
+    const vals = el.querySelectorAll('.trend-val');
+    inspectable(el, rows.length, function (i) {
+      picked = i;
+      const row = i < 0 ? last : rows[i];
+      if (!row) return;
+      at.innerHTML = (i < 0 ? 'latest' : esc(dayLabel(row.day))) + ' <b>' + row.total + '</b> users';
+      series.forEach(function (s, k) {
+        vals[k].textContent = ' · ' + pct(row[lineKey(s)]) + (i < 0 ? '' : ' (' + row.n[s.key] + ')');
+      });
+    }, picked);
   };
   draw();
 }
@@ -750,6 +828,17 @@ function compareVersionsDesc(a, b) {
     if (d) return d;
   }
   return String(a).localeCompare(String(b));
+}
+
+function renderVersionPie(el, detailEl, versions) {
+  const groups = {};
+  versions.forEach(function (r) {
+    const g = r.marketing;
+    const build = r.version === g && g !== 'unknown' ? g + ' (App Store)' : r.version;
+    groups[g] = groups[g] || {};
+    groups[g][build] = r.users;
+  });
+  renderGroupedPie(el, detailEl, groups, compareVersionsDesc, function (a, b) { return compareVersionsDesc(a[0], b[0]); });
 }
 
 function renderVersionTrend(el, trend) {
@@ -864,10 +953,17 @@ function renderValueSettingsTrend(el, toggleBtn, settings) {
 }
 
 function renderSearchUsage(trendEl, breakdownEl, usage) {
-  const legend = SEARCH_USAGE_SERIES.map(function (l) { return legendRow(l[2], l[1]); }).join('');
-  trendEl.innerHTML = '<div class="chart-meta"><span><b>People per day</b></span></div>' +
-    multiLineChartSVG(usage.daily || [], SEARCH_USAGE_SERIES, chartWidth(trendEl)) +
+  const daily = usage.daily || [];
+  const legend = SEARCH_USAGE_SERIES.map(function (l) { return legendRow(l[2], l[1] + '<span class="trend-val"></span>'); }).join('');
+  trendEl.innerHTML = '<div class="chart-meta"><span><b>People per day</b></span><span class="trend-at"></span></div>' +
+    multiLineChartSVG(daily, SEARCH_USAGE_SERIES, chartWidth(trendEl)) +
     '<div class="legend">' + legend + '</div>';
+  const at = trendEl.querySelector('.trend-at');
+  const vals = trendEl.querySelectorAll('.trend-val');
+  inspectable(trendEl, daily.length, function (i) {
+    at.textContent = i < 0 ? '' : dayLabel(daily[i].day);
+    SEARCH_USAGE_SERIES.forEach(function (l, k) { vals[k].textContent = i < 0 ? '' : ': ' + daily[i][l[0]]; });
+  });
 
   breakdownEl.innerHTML = '';
   (usage.byVersion || []).forEach(function (v) {
@@ -875,7 +971,7 @@ function renderSearchUsage(trendEl, breakdownEl, usage) {
       const share = v.users ? v[l[0]] / v.users : 0;
       return { label: l[1], count: share, color: l[2], countText: Math.round(share * 100) + '% · ' + v[l[0]] };
     });
-    breakdownEl.appendChild(barChartCard(v.version, v.users + ' active users', rows));
+    breakdownEl.appendChild(barChartCard(esc(v.version), v.users + ' active users', rows));
   });
   breakdownEl.appendChild(barCard('YouTube mode — turned on via (user-days)', usage.youtubeModeVia || {}, 1));
 }
@@ -985,8 +1081,9 @@ function renderBreakdowns(el, paramEvents) {
 // State/snapshot events are shown elsewhere; the engagement table is behavioral only.
 const NON_BEHAVIORAL = { 'SettingsSnapshot': 1, 'Queue.Count': 1, 'Inbox.Count': 1, 'SubscriptionCount': 1 };
 
-function renderEngagement(tbody, counts, weeklyActive) {
+function renderEngagement(tbody, toggleBtn, counts, weeklyActive) {
   tbody.innerHTML = '';
+  const rows = [];
   const wau = Math.max(1, Number(weeklyActive) || 0);
   counts.filter(function (r) { return !NON_BEHAVIORAL[r.name]; }).forEach(function (r) {
     const count = Number(r.count) || 0;
@@ -1001,7 +1098,9 @@ function renderEngagement(tbody, counts, weeklyActive) {
       '<td class="num">' + perUser + '</td>' +
       '<td class="num rate-bar"><span style="width:' + adoption + '%"></span><b>' + adoption + '%</b></td>';
     tbody.appendChild(tr);
+    rows.push(tr);
   });
+  collapsibleRows(rows, toggleBtn, ENGAGEMENT_COLLAPSED_COUNT, 'events', { expanded: false });
 }
 
 function renderErrors(chartEl, table, errors) {
@@ -1019,9 +1118,46 @@ function renderErrors(chartEl, table, errors) {
   });
 }
 
+function statCard(value, label) {
+  const card = document.createElement('div');
+  card.className = 'stat-card';
+  card.innerHTML = '<div class="value">' + value + '</div><div class="label">' + label + '</div>';
+  return card;
+}
+
+function renderMacMigration(cardsEl, hintEl, table, mac) {
+  const p = mac.progress || {};
+  const macs = Number(p.macs) || 0;
+  const migrated = Number(p.migratedMacs) || 0;
+  const fresh = Number(p.freshMacs) || 0;
+  const share = macs - fresh > 0 ? ' (' + Math.round(migrated / (macs - fresh) * 100) + '%)' : '';
+  cardsEl.innerHTML = '';
+  [
+    [macs, 'Macs active (' + mac.activeDays + 'd)'],
+    [migrated + share, 'Migrated'],
+    [Number(p.skippedMacs) || 0, 'Skipped 2.1'],
+    [Number(p.failingMacs) || 0, 'Failing'],
+  ].forEach(function (c) { cardsEl.appendChild(statCard(c[0], c[1])); });
+  hintEl.textContent = 'Macs that sent a Mac settings snapshot or a migration outcome in the last ' + mac.windowDays +
+    ' days and were active in the last ' + mac.activeDays + '. Migrated = moved, noStore or appStoreNewer; Failing = failed and not migrated since; ' +
+    'Skipped 2.1 = reached 2.1.1 without the 2.1 copy.' + (fresh ? ' ' + fresh + ' new installs on 2.1.1 are left out of the share.' : '') +
+    ' Macs still on 2.0.x send nothing: see App Store Connect for those.';
+  const body = table.querySelector('tbody');
+  body.innerHTML = '';
+  if (!mac.outcomes.length) {
+    body.innerHTML = '<tr><td colspan="3" style="color:#777">No migrations reported yet</td></tr>';
+    return;
+  }
+  mac.outcomes.forEach(function (r) {
+    const tr = document.createElement('tr');
+    tr.innerHTML = '<td>' + esc(r.outcome) + '</td><td>' + esc(r.version) + '</td><td class="num">' + r.installs + '</td>';
+    body.appendChild(tr);
+  });
+}
+
 // Idempotent so the section's refresh button can re-render it on its own without
 // duplicating rows. Expand/collapse state is preserved across refreshes.
-let recentExpanded = false;
+const recentState = { expanded: false };
 function renderRecent(recent) {
   const recentBody = document.querySelector('#recent tbody');
   recentBody.innerHTML = '';
@@ -1037,18 +1173,7 @@ function renderRecent(recent) {
     recentBody.appendChild(tr);
     recentRows.push(tr);
   });
-  const recentToggle = document.getElementById('recentToggle');
-  const sync = () => {
-    recentRows.forEach((tr, i) => tr.classList.toggle('hidden', !recentExpanded && i >= RECENT_COLLAPSED_COUNT));
-    recentToggle.textContent = recentExpanded ? 'Show fewer' : 'Show all ' + recentRows.length + ' events';
-  };
-  if (recentRows.length <= RECENT_COLLAPSED_COUNT) {
-    recentToggle.hidden = true;
-  } else {
-    recentToggle.hidden = false;
-    recentToggle.onclick = () => { recentExpanded = !recentExpanded; sync(); };
-  }
-  sync();
+  collapsibleRows(recentRows, document.getElementById('recentToggle'), RECENT_COLLAPSED_COUNT, 'events', recentState);
 }
 
 const recentRefresh = document.getElementById('recentRefresh');
@@ -1101,12 +1226,7 @@ fetch('/dashboard/data' + channelQuery).then(r => r.json()).then(data => {
 
   const activeEl = document.getElementById('activeUsers');
   const activeLabels = { daily: 'DAU (24h)', weekly: 'WAU (7d)', monthly: 'MAU (30d)' };
-  for (const key in activeLabels) {
-    const card = document.createElement('div');
-    card.className = 'stat-card';
-    card.innerHTML = '<div class="value">' + (data.activeUsers[key] ?? 0) + '</div><div class="label">' + activeLabels[key] + '</div>';
-    activeEl.appendChild(card);
-  }
+  for (const key in activeLabels) activeEl.appendChild(statCard(data.activeUsers[key] ?? 0, activeLabels[key]));
 
   const win = '(last ' + data.trendWindowDays + ' days)';
   document.getElementById('eventWindow').textContent = win;
@@ -1147,24 +1267,22 @@ fetch('/dashboard/data' + channelQuery).then(r => r.json()).then(data => {
     data.platform.watchFullSync
   );
 
-  const versionTotals = {};
-  (data.versions || []).forEach(function (r) { versionTotals[r.version] = r.users; });
   const versionTrend = data.versionsTrend || {};
   const versionHint = document.getElementById('versionHint');
   setupViewSwitch('version', document.getElementById('versionSwitch'), [
-    { id: 'now', label: 'Now', elements: [document.getElementById('versionPie')], onShow: function () {
+    { id: 'now', label: 'Now', elements: [document.getElementById('versionNow')], onShow: function () {
       document.getElementById('versionWindow').textContent = win;
-      versionHint.textContent = 'Distinct users per build. Versions people are still on, not versions they last reported a snapshot from.';
+      versionHint.textContent = 'Distinct users per version; pick one to see its builds. Versions people are still on, not versions they last reported a snapshot from.';
     } },
     { id: 'trend', label: 'Over time', elements: [document.getElementById('versionTrend')], renderOnce: function () {
       renderVersionTrend(document.getElementById('versionTrend'), versionTrend);
     }, onShow: function () {
       document.getElementById('versionWindow').textContent = '(last ' + versionTrend.windowDays + ' days)';
-      versionHint.textContent = 'Each build’s share of the people active that day — how fast a release rolls out and an old one drains. ' +
-        'Smaller builds are folded into Other; click a legend entry to hide its line.';
+      versionHint.textContent = 'Each version’s share of the people active that day — how fast a release rolls out and an old one drains. ' +
+        'Smaller versions are folded into Other; click a legend entry to hide its line.';
     } },
   ], 'trend');
-  renderPie(document.getElementById('versionPie'), versionTotals);
+  renderVersionPie(document.getElementById('versionPie'), document.getElementById('versionDetail'), data.versions || []);
 
   const countsByEvent = {}, usersByEvent = {};
   (data.counts || []).forEach(function (r) {
@@ -1173,7 +1291,7 @@ fetch('/dashboard/data' + channelQuery).then(r => r.json()).then(data => {
   });
 
   document.getElementById('engagementWindow').textContent = win;
-  renderEngagement(document.querySelector('#engagement tbody'), data.counts || [], data.activeUsers.weekly);
+  renderEngagement(document.querySelector('#engagement tbody'), document.getElementById('engagementToggle'), data.counts || [], data.activeUsers.weekly);
 
   renderLineChart(document.getElementById('eventTrend'), data.eventTrend, 'events', '#3b82f6');
 
@@ -1274,6 +1392,11 @@ fetch('/dashboard/data' + channelQuery).then(r => r.json()).then(data => {
       renderBucketTrend(document.getElementById('podcastSubsTrend'), 'Podcast subscriptions', subs.podcastTrend, Object.keys(subs.podcastBuckets || subs.buckets));
     } },
   ]);
+
+  if (data.macMigration) {
+    renderMacMigration(document.getElementById('macMigration'), document.getElementById('macMigrationHint'),
+      document.getElementById('macMigrationOutcomes'), data.macMigration);
+  }
 
   document.getElementById('errorWindow').textContent = '(last ' + data.errors.windowDays + ' days)';
   renderErrors(document.getElementById('errorTrend'), document.getElementById('errors'), data.errors);

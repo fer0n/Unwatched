@@ -234,15 +234,30 @@ export function searchUsageKind(name) {
   return 'youtubePage';
 }
 
+// "2.1.0 (362)" -> "2.1.0": off release, Signal.appVersion appends the build number.
+export function marketingVersion(version) {
+  return String(version || 'unknown').replace(/\s*\(.*\)$/, '');
+}
+
+// A user on two builds counts twice.
+function sumByVersion(versionUsers) {
+  const users = {};
+  for (const r of versionUsers) {
+    const version = marketingVersion(r.version);
+    users[version] = (users[version] || 0) + (Number(r.users) || 0);
+  }
+  return users;
+}
+
 // Rows are one per (day, user, version, event, params), so per-user sets stay in the Worker.
+
 export function tallySearchUsage(rows, versionUsers) {
   const daily = {}, byVersion = {}, youtubeModeVia = {};
   for (const row of rows) {
     const kind = searchUsageKind(row.name);
     const day = (daily[row.day] ||= { search: new Set(), youtubeMode: new Set(), youtubePage: new Set() });
     day[kind].add(row.userId);
-    const version = row.version || 'unknown';
-    const v = (byVersion[version] ||= { search: new Set(), youtubeMode: new Set(), youtubePage: new Set() });
+    const v = (byVersion[marketingVersion(row.version)] ||= { search: new Set(), youtubeMode: new Set(), youtubePage: new Set() });
     v[kind].add(row.userId);
     if (kind === 'youtubeMode') {
       const via = parseParams(row.params).action ?? 'toggle';
@@ -253,10 +268,9 @@ export function tallySearchUsage(rows, versionUsers) {
   return {
     windowDays: SEARCH_WINDOW_DAYS,
     daily: Object.keys(daily).sort().map((day) => ({ day, ...sizes(daily[day]) })),
-    byVersion: versionUsers
-      .map((r) => ({ version: r.version || 'unknown', users: Number(r.users) || 0 }))
-      .filter((r) => byVersion[r.version])
-      .map((r) => ({ ...r, ...sizes(byVersion[r.version]) })),
+    byVersion: Object.entries(sumByVersion(versionUsers))
+      .filter(([version]) => byVersion[version])
+      .map(([version, users]) => ({ version, users, ...sizes(byVersion[version]) })),
     youtubeModeVia,
   };
 }

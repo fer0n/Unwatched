@@ -82,6 +82,7 @@
   #partial ul { margin: 0.25rem 0 0; padding-left: 1.1rem; }
 
   .stat-cards { display: grid; grid-template-columns: repeat(3, 1fr); gap: 0.6rem; }
+  .stat-cards-4 { grid-template-columns: repeat(4, 1fr); }
   .stat-card { background: #1b1b1b; border: 1px solid #2a2a2a; border-radius: 10px; padding: 0.75rem; text-align: center; }
   .stat-card .value { font-size: 1.4rem; font-weight: 600; }
   .stat-card .label { font-size: 0.7rem; color: #888; margin-top: 0.15rem; }
@@ -102,7 +103,7 @@
   .setting-meta b.up { color: #4ade80; }
   .setting-meta b.down { color: #fb923c; }
   #settingValues .card.hidden { display: none; }
-  #recent tr.hidden { display: none; }
+  tr.hidden { display: none; }
   .toggle-btn {
     display: block; margin: 0.75rem auto 0; padding: 0.45rem 1rem;
     background: #1b1b1b; border: 1px solid #2a2a2a; border-radius: 8px;
@@ -175,5 +176,6 @@
   }
   @media (max-width: 420px) {
     .stat-cards { grid-template-columns: repeat(3, 1fr); gap: 0.4rem; }
+    .stat-cards-4 { grid-template-columns: repeat(2, 1fr); }
     .stat-card .value { font-size: 1.1rem; }
   }

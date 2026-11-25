@@ -1,5 +1,5 @@
 import { RAW_ROW_LIMIT, SNAPSHOT_WINDOW_DAYS, HISTORY_WINDOW_DAYS, WEEKLY_PERIOD_DAYS, FORTNIGHTLY_PERIOD_DAYS, DAY_MS, TREND_WINDOW_DAYS, CAPACITY_WINDOW_DAYS, SEARCH_WINDOW_DAYS, FREE_DAILY_LIMIT } from "./constants.js";
-import { parseParams, latestPerUser, tallySettings, tallyValueSettings, tallyBuckets, tallyRawBuckets, tallyDevices, serverTime, latestPerUserPerPeriod, platformTrend, settingsTrend, bucketTrend, tallySubscriptionSettings, YOUTUBE_PAGE_EVENTS, tallySearchUsage, tallyParam } from "./aggregate.js";
+import { parseParams, latestPerUser, tallySettings, tallyValueSettings, tallyBuckets, tallyRawBuckets, tallyDevices, serverTime, latestPerUserPerPeriod, platformTrend, settingsTrend, bucketTrend, tallySubscriptionSettings, YOUTUBE_PAGE_EVENTS, tallySearchUsage, tallyParam, marketingVersion } from "./aggregate.js";
 
 async function queryAnalytics(env, sql) {
   const res = await fetch(
@@ -67,6 +67,13 @@ export async function handleRecentData(env, channel) {
   }
 }
 
+// Temporary, until the Mac store has left the app group (MacAppGroupMigration.swift).
+const MAC_MIGRATED = ["moved", "noStore", "appStoreNewer"];
+const macOutcomeIs = (outcomes) =>
+  `blob1 = 'Migration.MacStore' AND blob2 IN (${outcomes.map((o) => `'{"outcome":"${o}"}'`).join(", ")})`;
+const macMigrationProgressSql = (ch) =>
+  `SELECT count() AS macs, sum(migrated) AS migratedMacs, sum(if(migrated = 0 AND skipped = 1, 1, 0)) AS skippedMacs, sum(if(migrated = 0 AND failed = 1, 1, 0)) AS failingMacs, sum(if(migrated = 0 AND skipped = 0 AND failed = 0 AND fresh = 1, 1, 0)) AS freshMacs FROM (SELECT blob3, max(if((blob1 = 'SettingsSnapshot' AND blob2 LIKE '%"device":"Mac"%') OR blob1 = 'Migration.MacStore', 1, 0)) AS isMac, max(if(${macOutcomeIs(MAC_MIGRATED)}, 1, 0)) AS migrated, max(if(${macOutcomeIs(["skipped", "skippedSynced"])}, 1, 0)) AS skipped, max(if(${macOutcomeIs(["failed"])}, 1, 0)) AS failed, max(if(${macOutcomeIs(["fresh"])}, 1, 0)) AS fresh, max(if(timestamp > NOW() - INTERVAL '${FORTNIGHTLY_PERIOD_DAYS}' DAY, 1, 0)) AS recent FROM unwatched_analytics_v3 WHERE ${ch} AND timestamp > NOW() - INTERVAL '${HISTORY_WINDOW_DAYS}' DAY AND blob3 != 'unknown' GROUP BY blob3) WHERE isMac = 1 AND recent = 1`;
+
 // Same order as the queries in handleDashboardData.
 const QUERY_LABELS = [
   "event counts",
@@ -91,6 +98,8 @@ const QUERY_LABELS = [
   "app versions trend",
   "queue/inbox trend",
   "subscription trend",
+  "Mac migration progress",
+  "Mac migration outcomes",
 ];
 
 export async function handleDashboardData(env, channel) {
@@ -197,6 +206,11 @@ export async function handleDashboardData(env, channel) {
         env,
         `SELECT toStartOfInterval(timestamp, INTERVAL '${FORTNIGHTLY_PERIOD_DAYS}' DAY) AS period, blob2 AS params, count(DISTINCT blob3) AS users FROM unwatched_analytics_v3 WHERE ${ch} AND blob1 = 'SubscriptionCount' AND timestamp > NOW() - INTERVAL '${HISTORY_WINDOW_DAYS}' DAY AND blob3 != 'unknown' GROUP BY period, params ORDER BY period DESC LIMIT ${RAW_ROW_LIMIT}`
       ),
+      queryAnalytics(env, macMigrationProgressSql(ch)),
+      queryAnalytics(
+        env,
+        `SELECT blob2 AS params, blob5 AS version, count(DISTINCT blob3) AS installs FROM unwatched_analytics_v3 WHERE ${ch} AND blob1 = 'Migration.MacStore' AND timestamp > NOW() - INTERVAL '${HISTORY_WINDOW_DAYS}' DAY GROUP BY params, version ORDER BY installs DESC LIMIT 100`
+      ),
     ]);
 
     const failures = [];
@@ -223,6 +237,8 @@ export async function handleDashboardData(env, channel) {
       versionsTrendRaw,
       queueInboxTrendRaw,
       subscriptionTrendRaw,
+      macProgressRaw,
+      macOutcomesRaw,
     ] = settled.map((result, index) => {
       if (result.status === "fulfilled") return result.value;
       failures.push(`${QUERY_LABELS[index] ?? `query ${index}`}: ${result.reason}`);
@@ -282,13 +298,14 @@ export async function handleDashboardData(env, channel) {
         },
         versions: versionsRaw.data.map((r) => ({
           version: r.version || "unknown",
+          marketing: marketingVersion(r.version),
           users: Number(r.users) || 0,
         })),
         versionsTrend: {
           windowDays: HISTORY_WINDOW_DAYS,
           rows: versionsTrendRaw.data.map((r) => ({
             day: r.day,
-            version: r.version || "unknown",
+            version: marketingVersion(r.version),
             users: Number(r.users) || 0,
           })),
         },
@@ -331,6 +348,16 @@ export async function handleDashboardData(env, channel) {
           windowDays: SNAPSHOT_WINDOW_DAYS,
           top: errorsRaw.data.map((r) => ({ id: parseParams(r.params).id ?? "unknown", count: Number(r.count) })),
           trend: errorTrend.data,
+        },
+        macMigration: {
+          windowDays: HISTORY_WINDOW_DAYS,
+          activeDays: FORTNIGHTLY_PERIOD_DAYS,
+          progress: macProgressRaw.data[0] ?? {},
+          outcomes: macOutcomesRaw.data.map((r) => ({
+            outcome: parseParams(r.params).outcome ?? "unknown",
+            version: r.version || "unknown",
+            installs: Number(r.installs) || 0,
+          })),
         },
         searchUsage: tallySearchUsage(searchUsageRaw.data, searchVersionsRaw.data),
         // [{ name, params: {...}, count }] for the consolidated events.
