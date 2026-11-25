@@ -35,10 +35,11 @@ extension View {
         @ViewBuilder _ content: () -> Content
     ) -> some View {
         #if os(macOS)
-        modifier(PaneToolbar(placement: placement, item: content()))
+        modifier(PaneToolbar(placement: placement, item: HStack { content() }))
         #else
+        // a group, so several buttons get the system's toolbar spacing
         toolbar {
-            ToolbarItem(placement: placement) {
+            ToolbarItemGroup(placement: placement) {
                 content()
             }
         }

@@ -11,11 +11,17 @@ struct SubscriptionMoreMenu: View {
     @Binding var showFilter: Bool
 
     @Environment(\.pageForegroundColor) var pageForegroundColor
+    @Environment(\.modelContext) var modelContext
+    @Environment(RefreshManager.self) var refresher
     @State private var pendingEpisodeLimit: PendingEpisodeLimit?
 
     var body: some View {
         Menu {
             Group {
+                if !subscription.isArchived {
+                    Button("refresh", systemImage: Const.refreshSF, action: refresh)
+                        .disabled(refresher.isLoading)
+                }
                 Section {
                     if !subscription.isWatchLater {
                         SubscriptionEpisodeLimitSetting(subscription: subscription, pending: $pendingEpisodeLimit)
@@ -71,5 +77,13 @@ struct SubscriptionMoreMenu: View {
         .accessibilityLabel("moreOptions")
         .buttonStyle(CapsuleButtonStyle(primary: false))
         .modifier(EpisodeLimitConfirmation(subscription: subscription, pending: $pendingEpisodeLimit))
+    }
+
+    private func refresh() {
+        try? modelContext.save()
+        let subscriptionId = subscription.persistentModelID
+        Task { @MainActor in
+            await refresher.refreshSubscription(subscriptionId: subscriptionId, ignoreCache: true)
+        }
     }
 }

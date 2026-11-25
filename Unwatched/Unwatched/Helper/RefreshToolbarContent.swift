@@ -10,36 +10,30 @@ import UnwatchedShared
 struct CoreRefreshButton: View {
     @Environment(\.modelContext) var modelContext
     @Environment(RefreshManager.self) var refresher
-    var refreshOnlySubscription: PersistentIdentifier?
 
     var body: some View {
-        HStack {
-            Button {
-                try? modelContext.save()
-                Task { @MainActor in
-                    await refresh()
-                }
-            } label: {
-                Image(systemName: refreshIconName)
-                    .symbolEffect(.rotate,
-                                  options: .speed(1.5),
-                                  isActive: refresher.isLoading)
-            }
-            .accessibilityLabel("refresh")
-            .contextMenu {
-                MenuSection(showsFailure ? failureMessage : nil) {
-                    Button {
-                        Task { @MainActor in
-                            await refresh(hardRefresh: true)
-                        }
-                    } label: {
-                        Label("hardReload", systemImage: "clock.arrow.2.circlepath")
+        Menu {
+            MenuSection(showsFailure ? failureMessage : nil) {
+                Button {
+                    Task { @MainActor in
+                        await refresh(hardRefresh: true)
                     }
+                } label: {
+                    Label("hardReload", systemImage: "gearshape.arrow.trianglehead.2.clockwise.rotate.90")
                 }
+            }
+        } label: {
+            Image(systemName: refreshIconName)
+                .symbolEffect(.rotate,
+                              options: .speed(1.5),
+                              isActive: refresher.isLoading)
+        } primaryAction: {
+            try? modelContext.save()
+            Task { @MainActor in
+                await refresh()
             }
         }
-        .font(.footnote)
-        .fontWeight(.bold)
+        .accessibilityLabel("refresh")
     }
 
     /// Stays up while reloading, so a failure that persists doesn't flicker away and back.
@@ -65,22 +59,17 @@ struct CoreRefreshButton: View {
     @MainActor
     private func refresh(hardRefresh: Bool = false) async {
         if refresher.isLoading { return }
-        if let subId = refreshOnlySubscription {
-            await refresher.refreshSubscription(subscriptionId: subId, hardRefresh: hardRefresh, ignoreCache: true)
-        } else {
-            await refresher.refreshAll(hardRefresh: hardRefresh)
-        }
+        await refresher.refreshAll(hardRefresh: hardRefresh)
     }
 }
 
 /// The refresh button outside a toolbar — the macOS pane header renders its own actions.
 struct RefreshButton: View {
     @Environment(RefreshManager.self) var refresher
-    var refreshOnlySubscription: PersistentIdentifier?
     var forceNeutral: Bool = false
 
     var body: some View {
-        CoreRefreshButton(refreshOnlySubscription: refreshOnlySubscription)
+        CoreRefreshButton()
             .symbolEffect(.pulse,
                           options: .speed(0.8),
                           isActive: refresher.isSyncingIcloud)
@@ -93,7 +82,6 @@ struct RefreshButton: View {
 }
 
 struct RefreshToolbarContent: ToolbarContent {
-    var refreshOnlySubscription: PersistentIdentifier?
     var forceNeutral: Bool = false
 
     var body: some ToolbarContent {
@@ -114,8 +102,7 @@ struct RefreshToolbarContent: ToolbarContent {
             #endif
         }
         ToolbarItemGroup(placement: .confirmationAction) {
-            RefreshButton(refreshOnlySubscription: refreshOnlySubscription,
-                          forceNeutral: forceNeutral)
+            RefreshButton(forceNeutral: forceNeutral)
         }
     }
 }

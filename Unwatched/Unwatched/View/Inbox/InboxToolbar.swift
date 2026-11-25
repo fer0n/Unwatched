@@ -30,8 +30,6 @@ struct UndoToolbarButton: ToolbarContent {
             .keyboardShortcut("z", modifiers: .command)
             .disabled(!undoManager.canUndo)
             .accessibilityLabel("undo")
-            .font(.footnote)
-            .fontWeight(.bold)
             .myTint(neutral: true)
         }
     }
@@ -69,9 +67,6 @@ struct InboxAppearanceToolbarButton: ToolbarContent {
                 inboxAppearance = inboxAppearance == .cards ? .list : .cards
             }
             .accessibilityLabel("inboxAppearance")
-            // same size as the refresh button next to it
-            .font(.footnote)
-            .fontWeight(.bold)
             .myTint(neutral: true)
         }
     }
@@ -83,6 +78,9 @@ struct InboxToolbar: ViewModifier {
             .toolbar {
                 UndoToolbarButton()
                 InboxAppearanceToolbarButton()
+                #if os(iOS) || os(macOS)
+                ToolbarSpacer(.fixed, placement: .confirmationAction)
+                #endif
                 RefreshToolbarContent()
             }
     }

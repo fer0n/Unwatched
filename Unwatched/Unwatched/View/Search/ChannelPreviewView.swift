@@ -61,11 +61,9 @@ struct ChannelPreviewView: View {
         }
         .myNavigationTitle(LocalizedStringKey(sub.displayTitle), titleHidden: !showTitle && !isSearching)
         .paneToolbar(placement: .primaryAction) {
-            HStack {
-                SubscriptionSearchButton(isSearching: $isSearching)
-                if !isSearching {
-                    RefreshButton(forceNeutral: true)
-                }
+            SubscriptionSearchButton(isSearching: $isSearching)
+            if !isSearching {
+                RefreshButton(forceNeutral: true)
             }
         }
         .channelPageColor(imageUrl: sub.isWatchLater ? nil : backgroundImageUrl)

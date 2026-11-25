@@ -46,15 +46,7 @@ struct SubscriptionDetailView: View {
         .concentricMacWorkaround()
         .myNavigationTitle(LocalizedStringKey(subscription.title), titleHidden: !showTitle && !isSearching)
         .paneToolbar(placement: .primaryAction) {
-            HStack {
-                SubscriptionSearchButton(isSearching: $isSearching)
-                if !subscription.isArchived && !isSearching {
-                    RefreshButton(
-                        refreshOnlySubscription: subscription.persistentModelID,
-                        forceNeutral: true
-                    )
-                }
-            }
+            SubscriptionSearchButton(isSearching: $isSearching)
         }
         .onChange(of: isSearching) {
             if isSearching {
