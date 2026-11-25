@@ -82,23 +82,26 @@ extension VideoActor {
         return fullRemaining.filter { $0.order < anchor }.count
     }
 
-    func getVideosFromSub(_ sub: Subscription, oldestDate: Date) -> [Video]? {
+    func getVideosFromSub(_ sub: Subscription, youtubeIds: [String]) throws -> [Video] {
         let subId = sub.persistentModelID
-        let past = Date.distantPast
         let fetch = FetchDescriptor<Video>(predicate: #Predicate {
-            $0.subscription?.persistentModelID == subId &&
-                ($0.publishedDate ?? past) >= oldestDate
+            $0.subscription?.persistentModelID == subId && youtubeIds.contains($0.youtubeId)
         })
-        return try? modelContext.fetch(fetch)
+        return try modelContext.fetch(fetch)
     }
 
     func getNewVideosAndUpdateExisting(
         sub: Subscription,
         videos: [SendableVideo]
     ) -> (newVideos: [SendableVideo], unknownShorts: [PendingShortCheck]) {
-        let oldestDate = videos.compactMap { $0.publishedDate }.min() ?? .distantPast
-        guard let subVideos = getVideosFromSub(sub, oldestDate: oldestDate) else {
-            return (videos, [])
+        guard !videos.isEmpty else { return ([], []) }
+        let subVideos: [Video]
+        do {
+            subVideos = try getVideosFromSub(sub, youtubeIds: videos.map(\.youtubeId))
+        } catch {
+            // treating the whole feed as new would insert every video again
+            Log.refresh.error("getVideosFromSub failed for \(sub.title): \(error)")
+            return ([], [])
         }
         var subVideosDict = [String: Video]()
         for video in subVideos {
@@ -107,9 +110,10 @@ extension VideoActor {
 
         let isPlaylist = sub.youtubePlaylistId != nil
         var newVideos = [SendableVideo]()
+        var seenIds = Set<String>()
         var unknownShorts = [PendingShortCheck]()
         var imagesToBeDeleted = [URL]()
-        for video in videos {
+        for video in videos where seenIds.insert(video.youtubeId).inserted {
             if let oldVideo = subVideosDict[video.youtubeId] {
                 if isPlaylist {
                     updateChannel(of: oldVideo, from: video)
@@ -169,6 +173,9 @@ extension VideoActor {
         }
         if video.updatedDate != updatedVideo.updatedDate {
             video.updatedDate = updatedVideo.updatedDate
+        }
+        if let publishedDate = updatedVideo.publishedDate, video.publishedDate != publishedDate {
+            video.publishedDate = publishedDate
         }
 
         var deleteImage: URL?

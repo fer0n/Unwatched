@@ -100,6 +100,36 @@ class PodcastTriageTests: XCTestCase {
         )
     }
 
+    func testStreamWithMovedPublishDateIsNotInsertedAgain() async throws {
+        let channel = try makeSubscription(isPodcast: false, name: "MovedStreamChannel")
+        let actor = VideoActor()
+        _ = await actor.handleNewVideos(channel, episodes(1...3), defaultPlacement: placement)
+
+        // stored at day 1, now dated day 8
+        var stream = try XCTUnwrap(episodes(1...1).first)
+        stream.publishedDate = Date(timeIntervalSince1970: 8 * 86400)
+        let feed = episodes(5...10) + [stream]
+
+        let loaded = await actor.handleNewVideos(channel, feed, defaultPlacement: placement)
+            .loadedVideos.map(\.youtubeId)
+
+        XCTAssertFalse(loaded.contains(stream.youtubeId), "the stream already has a row")
+        let channelId = try XCTUnwrap(channel.persistentId)
+        let streamRows = try rows(channelId, in: sharedWriteContext).filter { $0.youtubeId == stream.youtubeId }
+        XCTAssertEqual(streamRows.count, 1)
+        XCTAssertEqual(streamRows.first?.publishedDate, stream.publishedDate)
+    }
+
+    func testRepeatedIdInOneFeedBecomesOneRow() async throws {
+        let channel = try makeSubscription(isPodcast: false, name: "RepeatedIdChannel")
+        let feed = episodes(1...2) + episodes(2...2)
+
+        let loaded = await VideoActor().handleNewVideos(channel, feed, defaultPlacement: placement)
+            .loadedVideos
+
+        XCTAssertEqual(loaded.count, 2)
+    }
+
     /// Clearing an inbox entry leaves the row behind, and for a podcast that row is pure sync cost.
     func testStatelessEpisodeRowsAreSweptUp() async throws {
         let show = try makeSubscription(isPodcast: true, name: "SweepShow")
