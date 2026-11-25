@@ -43,6 +43,7 @@ final class AVPlayerViewModel: PlayerBackend {
     /// `avPlayer.currentTime()` on the play/pause path, which blocks the main thread
     /// for tens of milliseconds right after a rate change.
     @ObservationIgnored var lastObservedTime: Double?
+    @ObservationIgnored var lastCaughtUpLiveEdge: (item: ObjectIdentifier, edge: Double)?
 
     @ObservationIgnored var loadedVideoId: String?
     @MainActor var isOnCurrentVideo: Bool { loadedVideoId == player.video?.youtubeId }
@@ -413,9 +414,11 @@ final class AVPlayerViewModel: PlayerBackend {
         } else {
             let anchor = seekAnchor
             avPlayer.seek(to: CMTime(seconds: time, preferredTimescale: 600),
-                          toleranceBefore: .zero, toleranceAfter: .zero) { _ in
+                          toleranceBefore: .zero, toleranceAfter: .zero) { [weak self] finished in
                 // also when unfinished: an anchor still pointing here was superseded by nothing
                 if anchor.time == time { anchor.time = nil }
+                guard finished else { return }
+                Task { @MainActor [weak self] in self?.restoreSpeedAfterLiveSeek() }
             }
             checkForStallAfterSeek()
         }

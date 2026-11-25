@@ -87,6 +87,14 @@ extension AVPlayerViewModel {
 
     @MainActor
     func handlePlayedToEnd(item: AVPlayerItem, videoId: String) {
+        if let window = liveWindow(of: item), hasLiveEdgeMoved(item, to: window.end.seconds) {
+            Log.player.info("[AVPlayerView] caught up with the live stream: \(videoId)")
+            lastStalledAt = Date()
+            let recommended = item.recommendedTimeOffsetFromLive.seconds
+            let offset = recommended.isFinite ? max(recommended, Self.minLiveEdgeOffset) : Self.minLiveEdgeOffset
+            seek(to: max(window.start.seconds, window.end.seconds - offset))
+            return
+        }
         guard isCutShort(item) else {
             onVideoEnded()
             return
@@ -95,5 +103,44 @@ extension AVPlayerViewModel {
         if !failPlayback(APIError.unavailable("Unable to play this video")) {
             player.pause()
         }
+    }
+
+    // MARK: - Live edge
+
+    static let liveEdgeZone: Double = 30
+    static let liveEdgeStallZone: Double = 5
+    static let minLiveEdgeOffset: Double = 10
+
+    /// Close enough to a live stream's edge that playing faster would run out.
+    @MainActor
+    var isNearLiveEdge: Bool { (distanceFromLiveEdge ?? .infinity) < Self.liveEdgeZone }
+
+    @MainActor
+    var isAtLiveEdge: Bool { (distanceFromLiveEdge ?? .infinity) < Self.liveEdgeStallZone }
+
+    @MainActor
+    private var distanceFromLiveEdge: Double? {
+        guard let window = liveWindow(of: avPlayer.currentItem) else { return nil }
+        return window.end.seconds - (lastObservedTime ?? avPlayer.currentTime().seconds)
+    }
+
+    @MainActor
+    private func liveWindow(of item: AVPlayerItem?) -> CMTimeRange? {
+        guard let item, item.duration.isIndefinite else { return nil }
+        return item.seekableTimeRanges.last?.timeRangeValue
+    }
+
+    /// A broadcast that stopped without ending its playlist keeps the same edge.
+    @MainActor
+    private func hasLiveEdgeMoved(_ item: AVPlayerItem, to edge: Double) -> Bool {
+        defer { lastCaughtUpLiveEdge = (ObjectIdentifier(item), edge) }
+        guard let last = lastCaughtUpLiveEdge, last.item == ObjectIdentifier(item) else { return true }
+        return edge > last.edge
+    }
+
+    @MainActor
+    func restoreSpeedAfterLiveSeek() {
+        guard liveWindow(of: avPlayer.currentItem) != nil, player.isPlaying, avPlayer.rate != 0 else { return }
+        startAtCurrentSpeed()
     }
 }

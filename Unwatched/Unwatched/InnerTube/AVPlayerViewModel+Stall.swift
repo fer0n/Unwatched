@@ -48,7 +48,7 @@ extension AVPlayerViewModel {
     @MainActor
     var isRecentStall: Bool {
         if let lastStalledAt, Date().timeIntervalSince(lastStalledAt) < Self.stallWindow { return true }
-        return avPlayer.currentItem?.isPlaybackBufferEmpty == true
+        return avPlayer.currentItem?.isPlaybackBufferEmpty == true || isAtLiveEdge
     }
 
     /// Restarts playback the engine stopped on its own for want of data. With

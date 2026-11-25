@@ -903,7 +903,8 @@ extension AVPlayerViewModel {
     /// progressive podcast enclosure then plays for a few seconds, runs dry and goes quiet.
     @MainActor
     func startAtCurrentSpeed() {
-        let rate = Float(player.playbackSpeed)
+        let speed = isNearLiveEdge ? min(player.playbackSpeed, 1) : player.playbackSpeed
+        let rate = Float(speed)
         if avPlayer.automaticallyWaitsToMinimizeStalling {
             // `defaultRate` also changes the rate of playback already running
             avPlayer.defaultRate = rate
