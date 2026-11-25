@@ -63,6 +63,13 @@ public struct VideoCrawler {
     }
 
     public static func loadVideosFromRSS(url: URL, ignoreCache: Bool = false) async throws -> [SendableVideo] {
+        try await loadFeedFromRSS(url: url, ignoreCache: ignoreCache).videos
+    }
+
+    public static func loadFeedFromRSS(
+        url: URL,
+        ignoreCache: Bool = false
+    ) async throws -> (videos: [SendableVideo], showImageUrl: URL?) {
         let episodeLimit = Const.podcastRefreshEpisodeLimit
         let knownPrivacy = PodcastFeedPrivacy.isPrivate(url)
         let data = try await fetchFeedData(
@@ -81,13 +88,13 @@ public struct VideoCrawler {
                 PodcastFeedPrivacy.remember(feed.isPrivateFeed, for: url)
             }
             PodcastEpisodeCache.store(feed.episodes, feedUrl: url)
-            return feed.episodes
+            return (feed.episodes, feed.subscription.thumbnailUrl)
         }
         let rssParserDelegate = parseFeedData(data: data, limitVideos: nil)
         guard hasUsableResult(rssParserDelegate) else {
             throw VideoCrawlerError.failedToParse
         }
-        return rssParserDelegate.videos.map {
+        let videos = rssParserDelegate.videos.map {
             var video = $0
             if let url = $0.url {
                 // RSS feeds apparently include "/shorts/" urls now
@@ -95,6 +102,7 @@ public struct VideoCrawler {
             }
             return video
         }
+        return (videos, nil)
     }
 
     /// Parses a podcast feed in full into the local episode cache, for the show's list to page through.

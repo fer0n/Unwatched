@@ -17,6 +17,7 @@ struct PodcastPreviewView: View {
 
     @State private var episodes: [SendableVideo] = []
     @State private var showDescription = ""
+    @State private var feedImageUrl: URL?
     @State private var isLoading = true
     @State private var loadFailed = false
     /// Only the newest `Const.podcastPreviewEpisodeLimit` are parsed until the list or a search runs past them
@@ -130,7 +131,9 @@ struct PodcastPreviewView: View {
 
     var subscribeButton: some View {
         Button {
-            Task { await subManager.togglePodcastSubscription(show) }
+            var sub = show
+            sub.thumbnailUrl = feedImageUrl ?? show.thumbnailUrl
+            Task { await subManager.togglePodcastSubscription(sub) }
         } label: {
             SubscribeCapsuleLabel(
                 isSubscribed: isSubscribed,
@@ -222,6 +225,7 @@ struct PodcastPreviewView: View {
             let limit = Const.podcastPreviewEpisodeLimit
             let feed = try await PodcastService.loadFeed(feedUrl, limitEpisodes: limit)
             showDescription = feed.showDescription
+            feedImageUrl = feed.subscription.thumbnailUrl
             episodes = attachingShow(feed)
             hasFullFeed = feed.episodes.count < limit
         } catch {

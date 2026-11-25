@@ -263,6 +263,17 @@ public final class Subscription: SubscriptionData, CustomStringConvertible, Expo
 }
 
 public extension Subscription {
+    /// Appends the old URL to `replaced`; returns whether it changed
+    @discardableResult
+    func replaceThumbnail(with imageUrl: URL?, replaced: inout [URL]) -> Bool {
+        guard let imageUrl, imageUrl != thumbnailUrl else { return false }
+        if let oldUrl = thumbnailUrl {
+            replaced.append(oldUrl)
+        }
+        thumbnailUrl = imageUrl
+        return true
+    }
+
     func autoSkips(_ chapterTitle: String?) -> Bool {
         guard let key = ChapterService.autoSkipKey(chapterTitle) else { return false }
         return autoSkipChapterTitles?.contains(key) == true

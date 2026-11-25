@@ -11,6 +11,8 @@ struct FetchResult: Sendable {
     let errorMessage: String?
     var feedUnavailable = false
     var isFallback = false
+    /// The feed's own cover; search artwork is capped at 600px
+    var showImageUrl: URL?
 
     /// Watch Later depends on this device's YouTube login, so it stays off the synced row and the outage count
     var outcome: [FetchOutcome] {
@@ -48,6 +50,7 @@ actor VideoActor: SharedContextActor {
 
     private var hasUnsavedAddedVideos = false
     private var lastAddedVideosSave: ContinuousClock.Instant?
+    private var replacedCovers = [URL]()
 
     @discardableResult
     func addForeignUrls(_ urls: [URL],
@@ -239,6 +242,7 @@ actor VideoActor: SharedContextActor {
         await deferredVideosTask.value
 
         try modelContext.save()
+        deleteReplacedCovers()
         return newVideos
     }
 
@@ -258,6 +262,7 @@ actor VideoActor: SharedContextActor {
     public func handleNewVideos(
         _ sub: SendableSubscription,
         _ videos: [SendableVideo],
+        showImageUrl: URL? = nil,
         defaultPlacement: DefaultVideoPlacement,
         catchUp: FeedFallbackState.CatchUp? = nil
     ) async -> (loadedVideos: [Video], addedVideos: [Video]) {
@@ -265,6 +270,8 @@ actor VideoActor: SharedContextActor {
             Log.refresh.info("missing info when trying to load videos")
             return ([], [])
         }
+        // before the episodes: their old art may have become the show's cover
+        subModel.replaceThumbnail(with: showImageUrl, replaced: &replacedCovers)
         // network below: hold values and ids, not models
         let subId = subModel.persistentModelID
         let channelId = subModel.youtubeChannelId
@@ -424,6 +431,7 @@ extension VideoActor {
         let result = await handleNewVideos(
             fetched.sub,
             fetched.videos,
+            showImageUrl: fetched.showImageUrl,
             defaultPlacement: placementInfo,
             catchUp: finishFallback(after: fetched)
         )
@@ -435,6 +443,16 @@ extension VideoActor {
             loadedVideos: result.loadedVideos.map(\.youtubeId),
             addedVideos: result.addedVideos.map(\.youtubeId)
         )
+    }
+
+    /// After the save, so nothing still shows the old cover; episodes may still point at it.
+    private func deleteReplacedCovers() {
+        let unused = replacedCovers.filter { url in
+            let fetch = FetchDescriptor<Video>(predicate: #Predicate { $0.thumbnailUrl == url })
+            return (try? modelContext.fetchCount(fetch)) == 0
+        }
+        replacedCovers = []
+        ImageService.deleteImages(unused)
     }
 
     /// Shows new videos early, but at most once a second: every save refetches the app's lists

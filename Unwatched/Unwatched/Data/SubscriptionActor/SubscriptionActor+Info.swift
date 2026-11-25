@@ -204,15 +204,9 @@ extension SubscriptionActor {
     }
 
     private func updateSubscriptionImage(_ sub: Subscription, imageUrl: URL?) {
-        if let imageUrl,
-           sub.thumbnailUrl != imageUrl {
-            Log.refresh.info("Updating thumbnail url")
-            if let oldUrl = sub.thumbnailUrl {
-                imageUrlsToBeDeleted.append(oldUrl)
-            }
-            sub.thumbnailUrl = imageUrl
-            try? modelContext.save()
-        }
+        guard sub.replaceThumbnail(with: imageUrl, replaced: &imageUrlsToBeDeleted) else { return }
+        Log.refresh.info("Updating thumbnail url")
+        try? modelContext.save()
     }
 
     func existingSubscription(channelId: String? = nil,

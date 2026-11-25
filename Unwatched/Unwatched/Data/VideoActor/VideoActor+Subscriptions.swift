@@ -112,8 +112,8 @@ extension VideoActor {
             return FetchResult(sub: sub, videos: [], errorMessage: nil)
         }
         do {
-            let videos = try await VideoCrawler.loadVideosFromRSS(url: url, ignoreCache: ignoreCache)
-            return FetchResult(sub: sub, videos: videos, errorMessage: nil)
+            let feed = try await VideoCrawler.loadFeedFromRSS(url: url, ignoreCache: ignoreCache)
+            return FetchResult(sub: sub, videos: feed.videos, errorMessage: nil, showImageUrl: feed.showImageUrl)
         } catch {
             if Task.isCancelled {
                 throw error
