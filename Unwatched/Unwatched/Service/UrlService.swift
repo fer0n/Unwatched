@@ -75,10 +75,10 @@ struct UrlService {
         }
         guard let url = video.url else { return nil }
         let context = (video as? Video)?.modelContext ?? DataProvider.newContext()
-        guard VideoService.isUrlShared(url, context: context) else {
-            return url.absoluteString
-        }
-        return addEpisodeId(video.youtubeId, to: url)?.absoluteString ?? url.absoluteString
+        let link = VideoService.isUrlShared(url, context: context)
+            ? addEpisodeId(video.youtubeId, to: url) ?? url
+            : url
+        return ShareMarkers.addingStart(seconds(timestamp).map(UInt.init), to: link).absoluteString
     }
 
     static func addEpisodeId(_ youtubeId: String, to url: URL) -> URL? {

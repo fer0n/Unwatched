@@ -227,11 +227,26 @@ final class PodcastShareUrlTests: XCTestCase {
     }
 
     @MainActor
+    func testWebUrlCarriesTimestamp() throws {
+        let video = try insertEpisode("pod-8c7d1765d3f9cae4b1388003", url: showPage)
+        _ = try insertEpisode("pod-1f2e3d4c5b6a798877665544", url: showPage)
+        let episodePage = try XCTUnwrap(URL(string: "https://example.com/ep1"))
+        let unique = try insertEpisode("pod-aaaabbbbccccddddeeeeffff", url: episodePage)
+
+        let shared = try XCTUnwrap(UrlService.getWebUrl(video, timestamp: 754.6))
+        XCTAssertEqual(shared, "https://www.nytimes.com/the-daily#u=8c7d1765&t=754")
+        XCTAssertEqual(ShareMarkers.startTime(in: try XCTUnwrap(URL(string: shared))), 754)
+
+        XCTAssertEqual(UrlService.getWebUrl(unique, timestamp: 90), "https://example.com/ep1#t=90")
+    }
+
+    @MainActor
     func testUnusableTimestampIsLeftOut() throws {
         let video = try insertEpisode("pod-aaaabbbbccccddddeeeeffff", url: showPage)
         for timestamp in [Double.nan, .infinity, -5] {
             XCTAssertEqual(UrlService.getAppUrl(video, timestamp: timestamp),
                            "https://u.octabits.net/open?url=https://www.nytimes.com/the-daily")
+            XCTAssertEqual(UrlService.getWebUrl(video, timestamp: timestamp), showPage.absoluteString)
         }
     }
 

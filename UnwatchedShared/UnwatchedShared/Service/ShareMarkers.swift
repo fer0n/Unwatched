@@ -41,6 +41,10 @@ public enum ShareMarkers {
         return components.url ?? url
     }
 
+    public static func addingStart(_ seconds: UInt?, to url: URL) -> URL {
+        seconds.map { adding(startKey, String($0), to: url) } ?? url
+    }
+
     public static func removing(from url: URL) -> URL {
         guard markers(in: url) != nil,
               var components = URLComponents(url: url, resolvingAgainstBaseURL: false) else {

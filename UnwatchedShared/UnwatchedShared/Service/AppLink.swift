@@ -63,8 +63,7 @@ public enum AppLink {
     }
 
     private static func addingStart(_ start: String?, to link: URL) -> URL {
-        guard let seconds = start.flatMap(UInt.init) else { return link }
-        return ShareMarkers.adding(ShareMarkers.startKey, String(seconds), to: link)
+        ShareMarkers.addingStart(start.flatMap(UInt.init), to: link)
     }
 
     private static func reattachingStrayFragment(_ fragment: String?, to link: URL) -> URL {

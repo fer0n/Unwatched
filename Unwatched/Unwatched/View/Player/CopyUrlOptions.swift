@@ -1,5 +1,5 @@
 //
-//  CopyUrlMenu.swift
+//  CopyUrlOptions.swift
 //  Unwatched
 //
 
@@ -32,9 +32,8 @@ struct CopyUrlOptions: View {
     @ViewBuilder
     var options: some View {
         copyUrlButton
-        // the rest are YouTube URLs; a podcast episode only has its own page
+        copyUrlTimestampButton
         if !video.isPodcast {
-            copyUrlTimestampButton
             copyPlaylistUrlButton
             Divider()
             copyChannelUrlButton
