@@ -233,6 +233,13 @@ struct StatsChannelImage: Sendable {
     let isPodcast: Bool
 }
 
+extension [String: StatsChannelImage] {
+    /// Podcasts without a subscription are still keyed by their feed URL.
+    func isPodcast(_ channelId: String) -> Bool {
+        self[channelId]?.isPodcast ?? channelId.contains("://")
+    }
+}
+
 struct ChannelStat: Identifiable, Sendable {
     var id: String { channelId }
     let channelId: String

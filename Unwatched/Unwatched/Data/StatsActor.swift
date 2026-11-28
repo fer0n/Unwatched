@@ -71,6 +71,33 @@ actor StatsActor: SharedContextActor {
         return images
     }
 
+    func getTagChannels() throws -> [TagChannels] {
+        let tags = try modelContext.fetch(FetchDescriptor<Tag>(sortBy: [SortDescriptor(\.order)]))
+        let untaggedExceptions = channelKeys(Tag.coveredSubscriptions(tags))
+        return tags.enumerated().map { index, tag in
+            TagChannels(
+                id: String(index),
+                name: tag.name,
+                symbol: tag.displaySymbol,
+                channelIds: tag.mode == .untagged ? untaggedExceptions : channelKeys(tag.subscriptions ?? []),
+                isExcluding: tag.mode != .include,
+                podcasts: tag.effectivePodcasts(in: tags)
+            )
+        }
+    }
+
+    private func channelKeys(_ subscriptions: [Subscription]) -> Set<String> {
+        Set(subscriptions.compactMap { $0.isPodcast ? $0.subscriptionKey : $0.youtubeChannelId })
+    }
+
+    func getWatchedItems() throws -> [WatchedItem] {
+        var descriptor = FetchDescriptor<Video>(predicate: #Predicate { $0.watchedDate != nil })
+        descriptor.propertiesToFetch = [\.watchedDate, \.mediaUrl]
+        return try modelContext.fetch(descriptor).compactMap { video in
+            video.watchedDate.map { WatchedItem(date: $0, isPodcast: video.mediaUrl != nil) }
+        }
+    }
+
     func addWatchTime(_ pending: [PendingWatchTime: TimeInterval]) throws {
         guard !pending.isEmpty else { return }
 

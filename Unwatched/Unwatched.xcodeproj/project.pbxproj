@@ -785,7 +785,33 @@
 		88C382412E6DD69400F1FDC2 /* PlayNowButton.swift in Sources */ = {isa = PBXBuildFile; fileRef = 88C382402E6DD69400F1FDC2 /* PlayNowButton.swift */; };
 		88C382422E6DD69400F1FDC2 /* PlayNowButton.swift in Sources */ = {isa = PBXBuildFile; fileRef = 88C382402E6DD69400F1FDC2 /* PlayNowButton.swift */; };
 		88C46B762F124BE100DF2963 /* StatsChannelRow.swift in Sources */ = {isa = PBXBuildFile; fileRef = 88C46B752F124BE100DF2963 /* StatsChannelRow.swift */; };
+		AB139E38CE9838B140C6E417 /* YearReviewView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 81135FFE932397A8BABFA55D /* YearReviewView.swift */; };
+		3358897E290BBD2202F28FF2 /* YearReviewConfetti.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3DB01E206B87AD34F20B3D9A /* YearReviewConfetti.swift */; };
+		42B6F47CE41BFE91A4625805 /* YearReviewOutro.swift in Sources */ = {isa = PBXBuildFile; fileRef = 27B95C888EFAA5A70642A20F /* YearReviewOutro.swift */; };
+		A39CB76924386CB25FBAA3A9 /* YearReviewStreak.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4999C7184CA7D9EC2410E26A /* YearReviewStreak.swift */; };
+		E37C85FE2EB4D63445614AC3 /* YearReviewMediaPicker.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4FD43E350A2F9D38D99AEA04 /* YearReviewMediaPicker.swift */; };
+		42797C08CA729C6DD3EA21D7 /* YearReviewActiveDays.swift in Sources */ = {isa = PBXBuildFile; fileRef = 64E8200DD4E403C1F2D2BFD7 /* YearReviewActiveDays.swift */; };
+		F182432415A7CA4078F1455C /* YearReviewCalendar.swift in Sources */ = {isa = PBXBuildFile; fileRef = D8036CC6686A958B1A15398D /* YearReviewCalendar.swift */; };
+		8858DE3F9F3808E820EB7A30 /* YearReviewMediaSplit.swift in Sources */ = {isa = PBXBuildFile; fileRef = B5181DB76981C6DA244D8F11 /* YearReviewMediaSplit.swift */; };
+		4F2FDC06CF2B8720D8CB8F9E /* YearReviewTopDays.swift in Sources */ = {isa = PBXBuildFile; fileRef = AA6A3701F9613B202D7377B0 /* YearReviewTopDays.swift */; };
+		B3E93D566D16E0884C59831E /* YearReviewBusiestMonth.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6BA29AA13B5F81205E0A142A /* YearReviewBusiestMonth.swift */; };
+		08EC4ED5771C21170CBEF3D5 /* YearReviewRace.swift in Sources */ = {isa = PBXBuildFile; fileRef = D59E9F240FA3EDC05A301468 /* YearReviewRace.swift */; };
+		B6BACCA93E7E837536196375 /* YearReviewComponents.swift in Sources */ = {isa = PBXBuildFile; fileRef = 25F047D7778E9258F3A94A82 /* YearReviewComponents.swift */; };
+		E727CA74BE0ACA1E05DB6CB6 /* YearReviewCardView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 397B6332C6AA705FFD50871D /* YearReviewCardView.swift */; };
 		88C46B772F124BE100DF2963 /* StatsChannelRow.swift in Sources */ = {isa = PBXBuildFile; fileRef = 88C46B752F124BE100DF2963 /* StatsChannelRow.swift */; };
+		8A18F1750460C09EBF936849 /* YearReviewView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 81135FFE932397A8BABFA55D /* YearReviewView.swift */; };
+		F9521194CBA90F2A82F98997 /* YearReviewConfetti.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3DB01E206B87AD34F20B3D9A /* YearReviewConfetti.swift */; };
+		18856D9772E4712C429E228B /* YearReviewOutro.swift in Sources */ = {isa = PBXBuildFile; fileRef = 27B95C888EFAA5A70642A20F /* YearReviewOutro.swift */; };
+		E9F30F1A24445364EAB444BD /* YearReviewStreak.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4999C7184CA7D9EC2410E26A /* YearReviewStreak.swift */; };
+		806D216E474BDC666835BD1E /* YearReviewMediaPicker.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4FD43E350A2F9D38D99AEA04 /* YearReviewMediaPicker.swift */; };
+		FBBA5C176E4F995009F60B90 /* YearReviewActiveDays.swift in Sources */ = {isa = PBXBuildFile; fileRef = 64E8200DD4E403C1F2D2BFD7 /* YearReviewActiveDays.swift */; };
+		B25D51F922826A578C5D26CB /* YearReviewCalendar.swift in Sources */ = {isa = PBXBuildFile; fileRef = D8036CC6686A958B1A15398D /* YearReviewCalendar.swift */; };
+		D36CAE8BD8C2AC6D65350581 /* YearReviewMediaSplit.swift in Sources */ = {isa = PBXBuildFile; fileRef = B5181DB76981C6DA244D8F11 /* YearReviewMediaSplit.swift */; };
+		0AD14C606AA67AF95A6FC1AD /* YearReviewTopDays.swift in Sources */ = {isa = PBXBuildFile; fileRef = AA6A3701F9613B202D7377B0 /* YearReviewTopDays.swift */; };
+		8FC502130075D9E1654EC6AD /* YearReviewBusiestMonth.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6BA29AA13B5F81205E0A142A /* YearReviewBusiestMonth.swift */; };
+		000791E6F3EB6A36567061B3 /* YearReviewRace.swift in Sources */ = {isa = PBXBuildFile; fileRef = D59E9F240FA3EDC05A301468 /* YearReviewRace.swift */; };
+		191ADA5D5EF446C2BB0E596B /* YearReviewComponents.swift in Sources */ = {isa = PBXBuildFile; fileRef = 25F047D7778E9258F3A94A82 /* YearReviewComponents.swift */; };
+		C1E893C19F656FE3AB824A72 /* YearReviewCardView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 397B6332C6AA705FFD50871D /* YearReviewCardView.swift */; };
 		88C4F6972F24CAD4005893C5 /* SubscriptionVideoPlacementSetting.swift in Sources */ = {isa = PBXBuildFile; fileRef = 88C4F6962F24CAD4005893C5 /* SubscriptionVideoPlacementSetting.swift */; };
 		88C4F6982F24CAD4005893C5 /* SubscriptionVideoPlacementSetting.swift in Sources */ = {isa = PBXBuildFile; fileRef = 88C4F6962F24CAD4005893C5 /* SubscriptionVideoPlacementSetting.swift */; };
 		88C4F69A2F24CD6E005893C5 /* SubscriptionShortsSetting.swift in Sources */ = {isa = PBXBuildFile; fileRef = 88C4F6992F24CD6E005893C5 /* SubscriptionShortsSetting.swift */; };
@@ -903,7 +929,11 @@
 		88F149E02F03E81E00516422 /* StatsActor.swift in Sources */ = {isa = PBXBuildFile; fileRef = 88F149DF2F03E81E00516422 /* StatsActor.swift */; };
 		88F149E12F03E81E00516422 /* StatsActor.swift in Sources */ = {isa = PBXBuildFile; fileRef = 88F149DF2F03E81E00516422 /* StatsActor.swift */; };
 		88F149E32F03E89600516422 /* StatsVM.swift in Sources */ = {isa = PBXBuildFile; fileRef = 88F149E22F03E89600516422 /* StatsVM.swift */; };
+		8E2C7D93B4232C916D3BF65E /* YearReviewVM.swift in Sources */ = {isa = PBXBuildFile; fileRef = 248F0A94E3E11C60C7B7AFD5 /* YearReviewVM.swift */; };
+		551884DBE1A8BB4470E6AC70 /* YearReview.swift in Sources */ = {isa = PBXBuildFile; fileRef = F4433423670CEC0B601C0604 /* YearReview.swift */; };
 		88F149E42F03E89600516422 /* StatsVM.swift in Sources */ = {isa = PBXBuildFile; fileRef = 88F149E22F03E89600516422 /* StatsVM.swift */; };
+		F8B217D4083560CAB599BB7A /* YearReviewVM.swift in Sources */ = {isa = PBXBuildFile; fileRef = 248F0A94E3E11C60C7B7AFD5 /* YearReviewVM.swift */; };
+		2D6A6B62DE7A11DBCA3B1FBE /* YearReview.swift in Sources */ = {isa = PBXBuildFile; fileRef = F4433423670CEC0B601C0604 /* YearReview.swift */; };
 		88F1AC2B2E70D5F800676C26 /* IntentError.swift in Sources */ = {isa = PBXBuildFile; fileRef = 88F1AC2A2E70D5F800676C26 /* IntentError.swift */; };
 		88F1AC2C2E70D5F800676C26 /* IntentError.swift in Sources */ = {isa = PBXBuildFile; fileRef = 88F1AC2A2E70D5F800676C26 /* IntentError.swift */; };
 		88F1EE4C2B5C48F5009866A0 /* VideoNotAvailableView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 88F1EE4B2B5C48F5009866A0 /* VideoNotAvailableView.swift */; };
@@ -1727,6 +1757,19 @@
 		88C240A5A3CC92DB16D543CF /* PlayerManagerTestCase.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PlayerManagerTestCase.swift; sourceTree = "<group>"; };
 		88C382402E6DD69400F1FDC2 /* PlayNowButton.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PlayNowButton.swift; sourceTree = "<group>"; };
 		88C46B752F124BE100DF2963 /* StatsChannelRow.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = StatsChannelRow.swift; sourceTree = "<group>"; };
+		81135FFE932397A8BABFA55D /* YearReviewView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = YearReviewView.swift; sourceTree = "<group>"; };
+		3DB01E206B87AD34F20B3D9A /* YearReviewConfetti.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = YearReviewConfetti.swift; sourceTree = "<group>"; };
+		27B95C888EFAA5A70642A20F /* YearReviewOutro.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = YearReviewOutro.swift; sourceTree = "<group>"; };
+		4999C7184CA7D9EC2410E26A /* YearReviewStreak.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = YearReviewStreak.swift; sourceTree = "<group>"; };
+		4FD43E350A2F9D38D99AEA04 /* YearReviewMediaPicker.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = YearReviewMediaPicker.swift; sourceTree = "<group>"; };
+		64E8200DD4E403C1F2D2BFD7 /* YearReviewActiveDays.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = YearReviewActiveDays.swift; sourceTree = "<group>"; };
+		D8036CC6686A958B1A15398D /* YearReviewCalendar.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = YearReviewCalendar.swift; sourceTree = "<group>"; };
+		B5181DB76981C6DA244D8F11 /* YearReviewMediaSplit.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = YearReviewMediaSplit.swift; sourceTree = "<group>"; };
+		AA6A3701F9613B202D7377B0 /* YearReviewTopDays.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = YearReviewTopDays.swift; sourceTree = "<group>"; };
+		6BA29AA13B5F81205E0A142A /* YearReviewBusiestMonth.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = YearReviewBusiestMonth.swift; sourceTree = "<group>"; };
+		D59E9F240FA3EDC05A301468 /* YearReviewRace.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = YearReviewRace.swift; sourceTree = "<group>"; };
+		25F047D7778E9258F3A94A82 /* YearReviewComponents.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = YearReviewComponents.swift; sourceTree = "<group>"; };
+		397B6332C6AA705FFD50871D /* YearReviewCardView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = YearReviewCardView.swift; sourceTree = "<group>"; };
 		88C4F6962F24CAD4005893C5 /* SubscriptionVideoPlacementSetting.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SubscriptionVideoPlacementSetting.swift; sourceTree = "<group>"; };
 		88C4F6992F24CD6E005893C5 /* SubscriptionShortsSetting.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SubscriptionShortsSetting.swift; sourceTree = "<group>"; };
 		88C4F6A32F24C82E005893D1 /* PodcastDownloadSettingsView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PodcastDownloadSettingsView.swift; sourceTree = "<group>"; };
@@ -1802,6 +1845,8 @@
 		88F149DA2F03E45400516422 /* StatsView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = StatsView.swift; sourceTree = "<group>"; };
 		88F149DF2F03E81E00516422 /* StatsActor.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = StatsActor.swift; sourceTree = "<group>"; };
 		88F149E22F03E89600516422 /* StatsVM.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = StatsVM.swift; sourceTree = "<group>"; };
+		248F0A94E3E11C60C7B7AFD5 /* YearReviewVM.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = YearReviewVM.swift; sourceTree = "<group>"; };
+		F4433423670CEC0B601C0604 /* YearReview.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = YearReview.swift; sourceTree = "<group>"; };
 		88F1AC2A2E70D5F800676C26 /* IntentError.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = IntentError.swift; sourceTree = "<group>"; };
 		88F1EE4B2B5C48F5009866A0 /* VideoNotAvailableView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = VideoNotAvailableView.swift; sourceTree = "<group>"; };
 		88F1EE4D2B5C6CBC009866A0 /* YtBrowserWebView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = YtBrowserWebView.swift; sourceTree = "<group>"; };
@@ -2346,6 +2391,19 @@
 				888F74A52BA1FA6B00B94822 /* Settings */,
 				88F149DA2F03E45400516422 /* StatsView.swift */,
 				88C46B752F124BE100DF2963 /* StatsChannelRow.swift */,
+				81135FFE932397A8BABFA55D /* YearReviewView.swift */,
+				3DB01E206B87AD34F20B3D9A /* YearReviewConfetti.swift */,
+				27B95C888EFAA5A70642A20F /* YearReviewOutro.swift */,
+				4999C7184CA7D9EC2410E26A /* YearReviewStreak.swift */,
+				4FD43E350A2F9D38D99AEA04 /* YearReviewMediaPicker.swift */,
+				64E8200DD4E403C1F2D2BFD7 /* YearReviewActiveDays.swift */,
+				D8036CC6686A958B1A15398D /* YearReviewCalendar.swift */,
+				B5181DB76981C6DA244D8F11 /* YearReviewMediaSplit.swift */,
+				AA6A3701F9613B202D7377B0 /* YearReviewTopDays.swift */,
+				6BA29AA13B5F81205E0A142A /* YearReviewBusiestMonth.swift */,
+				D59E9F240FA3EDC05A301468 /* YearReviewRace.swift */,
+				25F047D7778E9258F3A94A82 /* YearReviewComponents.swift */,
+				397B6332C6AA705FFD50871D /* YearReviewCardView.swift */,
 				8804F91E2B4805A100E19B7A /* LibraryView.swift */,
 				889924812C485949001185A6 /* SubscriptionSearchBar.swift */,
 				8899247F2C485913001185A6 /* SubscriptionListSection.swift */,
@@ -2866,6 +2924,8 @@
 			children = (
 				FE100002AA0000000010F003 /* SearchVM.swift */,
 				88F149E22F03E89600516422 /* StatsVM.swift */,
+				248F0A94E3E11C60C7B7AFD5 /* YearReviewVM.swift */,
+				F4433423670CEC0B601C0604 /* YearReview.swift */,
 				88F73D872D2EFCE500F61E99 /* AppNotificationVM.swift */,
 				88C5EF892CCABA9300DA802F /* TransactionVM.swift */,
 				881964F22CCA449A0084ADE4 /* VideoListVM.swift */,
@@ -3882,6 +3942,19 @@
 				883C38382EBC817500741119 /* CleanupDuplicatesView.swift in Sources */,
 				889AF8DA2C50ECA9001CEDE6 /* DebouncedText.swift in Sources */,
 				88C46B772F124BE100DF2963 /* StatsChannelRow.swift in Sources */,
+				8A18F1750460C09EBF936849 /* YearReviewView.swift in Sources */,
+				F9521194CBA90F2A82F98997 /* YearReviewConfetti.swift in Sources */,
+				18856D9772E4712C429E228B /* YearReviewOutro.swift in Sources */,
+				E9F30F1A24445364EAB444BD /* YearReviewStreak.swift in Sources */,
+				806D216E474BDC666835BD1E /* YearReviewMediaPicker.swift in Sources */,
+				FBBA5C176E4F995009F60B90 /* YearReviewActiveDays.swift in Sources */,
+				B25D51F922826A578C5D26CB /* YearReviewCalendar.swift in Sources */,
+				D36CAE8BD8C2AC6D65350581 /* YearReviewMediaSplit.swift in Sources */,
+				0AD14C606AA67AF95A6FC1AD /* YearReviewTopDays.swift in Sources */,
+				8FC502130075D9E1654EC6AD /* YearReviewBusiestMonth.swift in Sources */,
+				000791E6F3EB6A36567061B3 /* YearReviewRace.swift in Sources */,
+				191ADA5D5EF446C2BB0E596B /* YearReviewComponents.swift in Sources */,
+				C1E893C19F656FE3AB824A72 /* YearReviewCardView.swift in Sources */,
 				88CC8FD92CE3BDBC00F6F49D /* ChapterSkippingSettings.swift in Sources */,
 				889AF8DB2C50ECA9001CEDE6 /* SubscriptionInfo.swift in Sources */,
 				88899D912E035E1B002C05BC /* SubscriptionTitleFilterButton.swift in Sources */,
@@ -4078,6 +4151,8 @@
 				889AF9202C50ECE7001CEDE6 /* AllVideosView.swift in Sources */,
 				88C382422E6DD69400F1FDC2 /* PlayNowButton.swift in Sources */,
 				88F149E42F03E89600516422 /* StatsVM.swift in Sources */,
+				F8B217D4083560CAB599BB7A /* YearReviewVM.swift in Sources */,
+				2D6A6B62DE7A11DBCA3B1FBE /* YearReview.swift in Sources */,
 				889AF9212C50ECE7001CEDE6 /* NotificationSettingsView.swift in Sources */,
 				889AF9222C50ECE7001CEDE6 /* SideloadingView.swift in Sources */,
 				889AF9232C50ECE7001CEDE6 /* AppearanceSettingsView.swift in Sources */,
@@ -4159,6 +4234,8 @@
 				8819EA362F3B56F600F3116D /* ScrollViewInteractionDetector.swift in Sources */,
 				888F74A72BA1FAC000B94822 /* NotificationSettingsView.swift in Sources */,
 				88F149E32F03E89600516422 /* StatsVM.swift in Sources */,
+				8E2C7D93B4232C916D3BF65E /* YearReviewVM.swift in Sources */,
+				551884DBE1A8BB4470E6AC70 /* YearReview.swift in Sources */,
 				88F3AA8E2C998B840030B2EA /* VideoListFormat.swift in Sources */,
 				883CA80A2B5AFB4100028D52 /* CapsuleButtonStyle.swift in Sources */,
 				AB5D17E0000000000000E103 /* SettingControlStyle.swift in Sources */,
@@ -4615,6 +4692,19 @@
 				8899246B2C47FAE3001185A6 /* InboxTabItemView.swift in Sources */,
 				88BF31062CAE813400AE26EC /* LocalizedStringKey.swift in Sources */,
 				88C46B762F124BE100DF2963 /* StatsChannelRow.swift in Sources */,
+				AB139E38CE9838B140C6E417 /* YearReviewView.swift in Sources */,
+				3358897E290BBD2202F28FF2 /* YearReviewConfetti.swift in Sources */,
+				42B6F47CE41BFE91A4625805 /* YearReviewOutro.swift in Sources */,
+				A39CB76924386CB25FBAA3A9 /* YearReviewStreak.swift in Sources */,
+				E37C85FE2EB4D63445614AC3 /* YearReviewMediaPicker.swift in Sources */,
+				42797C08CA729C6DD3EA21D7 /* YearReviewActiveDays.swift in Sources */,
+				F182432415A7CA4078F1455C /* YearReviewCalendar.swift in Sources */,
+				8858DE3F9F3808E820EB7A30 /* YearReviewMediaSplit.swift in Sources */,
+				4F2FDC06CF2B8720D8CB8F9E /* YearReviewTopDays.swift in Sources */,
+				B3E93D566D16E0884C59831E /* YearReviewBusiestMonth.swift in Sources */,
+				08EC4ED5771C21170CBEF3D5 /* YearReviewRace.swift in Sources */,
+				B6BACCA93E7E837536196375 /* YearReviewComponents.swift in Sources */,
+				E727CA74BE0ACA1E05DB6CB6 /* YearReviewCardView.swift in Sources */,
 				88DA0EBB2CC8F7D00041841E /* VideoListViewAsync.swift in Sources */,
 				88F031EB2FDEE5F400031301 /* PlayerLayoutMode.swift in Sources */,
 				88358A7A2C64EBA700AF71F8 /* UNNotificationAttachment.swift in Sources */,

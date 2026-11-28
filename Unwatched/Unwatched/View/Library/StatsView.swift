@@ -61,6 +61,9 @@ struct StatsView: View {
             await viewModel.loadStats()
         }
         .myNavigationTitle("stats")
+        .paneToolbar {
+            YearReviewButton()
+        }
         .safeAreaBar(edge: .top) {
             controls
         }
@@ -251,6 +254,29 @@ struct StatsView: View {
         case .total:
             return ""
         }
+    }
+}
+
+struct YearReviewButton: View {
+    @State private var showReview = false
+
+    var body: some View {
+        Button {
+            showReview = true
+        } label: {
+            Image(systemName: "gift.fill")
+        }
+        .accessibilityLabel("yearReview")
+        #if os(macOS)
+        .sheet(isPresented: $showReview) {
+            YearReviewView()
+                .frame(width: 420, height: 720)
+        }
+        #else
+        .fullScreenCover(isPresented: $showReview) {
+        YearReviewView()
+        }
+        #endif
     }
 }
 
