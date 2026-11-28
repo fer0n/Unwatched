@@ -17,8 +17,6 @@ typealias PlatformViewRepresentable = NSViewRepresentable
 struct PlayerWebView: PlatformViewRepresentable {
     @Environment(PlayerManager.self) var player
     @Environment(AppNotificationVM.self) var appNotificationVM
-    @AppStorage(Const.customUICaptions) var customUICaptions = false
-    @AppStorage(Const.customUICaptionLanguage) var customUICaptionLanguage = ""
 
     @Binding var overlayVM: OverlayFullscreenVM
     @Binding var autoHideVM: AutoHideVM
@@ -39,12 +37,7 @@ struct PlayerWebView: PlatformViewRepresentable {
     }
 
     var uiMode: UIMode {
-        UIMode.forSetting(
-            playerTypeSetting,
-            embeddingDisabled: player.embeddingDisabled,
-            customUICaptions: customUICaptions,
-            captionLanguage: customUICaptionLanguage
-        )
+        UIMode.forSetting(playerTypeSetting, embeddingDisabled: player.embeddingDisabled)
     }
 
     func makeView(_ coordinator: PlayerWebViewCoordinator) -> WKWebView {

@@ -606,12 +606,6 @@ extension VideoService {
         }
     }
 
-    static func getVideoTitleFilter(_ filterVideoTitleText: String) -> [String] {
-        return filterVideoTitleText.split(separator: ",").map {
-            $0.trimmingCharacters(in: .whitespacesAndNewlines)
-        }
-    }
-
     @MainActor
     static func updateVideoData(_ videoId: PersistentIdentifier?, videoData: FetchVideoData) -> Video? {
         guard let videoId else {

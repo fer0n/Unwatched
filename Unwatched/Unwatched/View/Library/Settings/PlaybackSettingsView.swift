@@ -18,7 +18,6 @@ struct PlaybackSettingsView: View {
     @AppStorage(Const.originalAudio) var originalAudio: Bool = true
     @AppStorage(Const.playerType) var playerType: PlayerTypeSetting = .youtubeEmbedded
     @AppStorage(Const.preferPlayerType) var preferPlayerType: Bool = false
-    @AppStorage(Const.suggestVideos) var suggestVideos: Bool = false
     @AppStorage(Const.nativePlayerFallback) var nativePlayerFallback: Bool = true
     @Environment(PlayerManager.self) var player
 
@@ -127,12 +126,6 @@ struct PlaybackSettingsView: View {
                         Text("autoAirplayHD")
                     }
                     .disabled(playerType == .native && !player.nativeFallbackActive)
-                }
-
-                MySection(footer: "suggestVideosHelper") {
-                    Toggle(isOn: $suggestVideos) {
-                        Text("suggestVideos")
-                    }
                 }
                 #endif
             }

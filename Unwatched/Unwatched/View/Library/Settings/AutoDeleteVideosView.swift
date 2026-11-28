@@ -9,10 +9,8 @@ import UnwatchedShared
 struct AutoDeleteVideosView: View {
     @CloudStorage(Const.autoDeleteWatchedVideos) var autoDeleteWatchedVideos: Int = 180
     @CloudStorage(Const.autoDeleteOrphanedVideos) var autoDeleteOrphanedVideos: Int = 30
-    @CloudStorage(Const.autoDeleteInboxVideosLimit) var autoDeleteInboxVideosLimit: Int = 100
 
     static let dayOptions = [0, 1, 3, 7, 30, 90, 180, 270, 365]
-    static let inboxLimitOptions = [0, 20, 50, 100, 500]
 
     var body: some View {
         MySection("keepVideos", footer: "keepVideosSyncFooter") {
@@ -26,13 +24,6 @@ struct AutoDeleteVideosView: View {
             Picker("autoDeleteOrphanedVideos", selection: $autoDeleteOrphanedVideos) {
                 ForEach(Self.dayOptions, id: \.self) { days in
                     Text(Self.dayLabel(days)).tag(days)
-                }
-            }
-            .pickerStyle(.menu)
-
-            Picker("autoDeleteInboxLimit", selection: $autoDeleteInboxVideosLimit) {
-                ForEach(Self.inboxLimitOptions, id: \.self) { limit in
-                    Text(Self.inboxLimitLabel(limit)).tag(limit)
                 }
             }
             .pickerStyle(.menu)
@@ -52,9 +43,5 @@ struct AutoDeleteVideosView: View {
         case 365: return "oneYear"
         default: return LocalizedStringKey("\(days)")
         }
-    }
-
-    static func inboxLimitLabel(_ limit: Int) -> LocalizedStringKey {
-        limit == 0 ? "unlimited" : LocalizedStringKey("\(limit)")
     }
 }

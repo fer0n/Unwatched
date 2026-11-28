@@ -26,6 +26,14 @@ struct SettingsView: View {
                             .fontWeight(.listRow)
                     }
 
+                    NavigationLink(value: LibraryDestination.settingsInbox) {
+                        Label("inbox", systemImage: "tray.fill")
+                    }
+
+                    NavigationLink(value: LibraryDestination.settingsQueue) {
+                        Label("queue", systemImage: "rectangle.stack.fill")
+                    }
+
                     NavigationLink(value: LibraryDestination.settingsSearch) {
                         Label("search", systemImage: "magnifyingglass")
                             .fontWeight(.listRow)

@@ -34,6 +34,10 @@ extension View {
                         NotificationSettingsView()
                     case .settingsNewVideos:
                         GeneralSettingsView()
+                    case .settingsInbox:
+                        InboxSettingsView()
+                    case .settingsQueue:
+                        QueueSettingsView()
                     case .settingsSearch:
                         SearchSettingsView()
                     case .settingsAppearance:
@@ -52,6 +56,8 @@ extension View {
                         FilterSettingsView()
                     case .titleFilter:
                         GlobalTitleFilterWithPreview()
+                    case .chapterFilter:
+                        ChapterFilterView()
                     case .privacy:
                         PrivacySettingsView()
                     case .stats:
@@ -89,6 +95,9 @@ enum LibraryDestination: Codable, Hashable {
          settingsPlayerType,
          settingsPodcastDownloads,
          settingsChapters,
+         chapterFilter,
+         settingsInbox,
+         settingsQueue,
          tag(String)
 }
 

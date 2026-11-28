@@ -32,10 +32,6 @@ public struct TranscriptEntry: Sendable, Identifiable, Codable {
         self.isParagraphEnd = isParagraphEnd
     }
     
-    public var minimalTextRepresentation: String {
-        "\(Int(start)): \(text)"
-    }
-    
     private enum CodingKeys: String, CodingKey {
         case start,
              duration,

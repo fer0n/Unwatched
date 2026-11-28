@@ -7,10 +7,8 @@ import SwiftUI
 import UnwatchedShared
 
 struct ChapterSettingsMenu: View {
-    @Environment(AppNotificationVM.self) var appNotificationVM
     @Environment(\.dismiss) var dismiss
     @CloudStorage(Const.unwatchedPremiumAcknowledged) var premium: Bool = false
-    @State var viewModel = GenerateChaptersButtonViewModel()
     private let cloudProgress = ChapterAutomationProgress.shared
 
     /// The video being shown, which is not always the one playing.
@@ -35,8 +33,6 @@ struct ChapterSettingsMenu: View {
                     Text("shortcut")
                     Image(systemName: "sparkles")
                 }
-                GenerateChaptersMenuButton(viewModel: $viewModel, video: video)
-
             } header: {
                 Text(verbatim: premium
                         ? String(localized: "generateChapters")
@@ -74,11 +70,6 @@ struct ChapterSettingsMenu: View {
         #else
         .buttonStyle(.borderedProminent)
         #endif
-        .task(id: viewModel.errorMessage) {
-            if let message = viewModel.errorMessage {
-                appNotificationVM.show(message, isError: true)
-            }
-        }
     }
 
     /// The chapters the video came with, and the way back to them after an edit.
@@ -169,7 +160,7 @@ struct ChapterSettingsMenu: View {
     /// Read from the progress itself rather than an is-running flag, which drops before the sweep
     /// has finished running out.
     var sweep: (progress: Double, isFadingOut: Bool) {
-        var sources: [any ProgressSweeping] = [viewModel]
+        var sources: [any ProgressSweeping] = []
         if let transcriptVM {
             sources.append(transcriptVM)
         }
@@ -187,8 +178,7 @@ struct ChapterSettingsMenu: View {
     }
 
     var isWorking: Bool {
-        viewModel.isLoading
-            || transcriptVM?.isGenerating == true
+        transcriptVM?.isGenerating == true
             || transcriptVM?.isAligning == true
             || (isCloudVideo && cloudProgress.isRunning)
     }
@@ -220,24 +210,6 @@ struct ChapterSettingsMenu: View {
             Label(title, systemImage: systemImage)
         }
         .tint(Color.automaticBlack)
-    }
-}
-
-struct GenerateChaptersMenuButton: View {
-    @Environment(PlayerManager.self) var player
-    @Binding var viewModel: GenerateChaptersButtonViewModel
-
-    let video: Video?
-
-    var body: some View {
-        let transcriptUrl = video?.youtubeId == player.video?.youtubeId
-            ? player.transcriptUrl
-            : nil
-        GenerateChaptersButton(
-            viewModel: $viewModel,
-            video: video,
-            transcriptUrl: transcriptUrl,
-            )
     }
 }
 

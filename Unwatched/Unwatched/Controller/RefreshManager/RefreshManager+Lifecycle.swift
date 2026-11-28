@@ -135,11 +135,6 @@ extension RefreshManager {
 
     func executeAutoRefresh() async {
         Log.refresh.info("iCloud sync: executeRefreshOnStartup refreshOnStartup")
-        let autoRefresh = UserDefaults.standard.object(forKey: Const.autoRefresh) as? Bool ?? true
-        guard autoRefresh else {
-            return
-        }
-
         let lastAutoRefreshDate = UserDefaults.standard.object(forKey: Const.lastAutoRefreshDate) as? Date
         let shouldRefresh = lastAutoRefreshDate == nil ||
             lastAutoRefreshDate!.timeIntervalSinceNow < -Const.autoRefreshIntervalSeconds

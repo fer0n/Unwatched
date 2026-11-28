@@ -8,12 +8,13 @@ import UnwatchedShared
 
 struct CloudSyncSetting: View {
     @AppStorage(Const.enableIcloudSync) var enableIcloudSync = false
+    @AppStorage(Const.autoRefreshIgnoresSync) var autoRefreshIgnoresSync: Bool = false
 
     @State var showRestartOption = false
 
     var body: some View {
         MySection("icloudSync", footer: "icloudSyncHelper") {
-            Toggle(isOn: $enableIcloudSync) {
+            Toggle(isOn: $enableIcloudSync.animation()) {
                 Text("syncToIcloud")
             }
             .onChange(of: enableIcloudSync) {
@@ -33,5 +34,13 @@ struct CloudSyncSetting: View {
                 Text("icloudSyncHelper")
             }
         )
+
+        if enableIcloudSync {
+            MySection(footer: "allowRefreshDuringSyncFooter") {
+                Toggle(isOn: $autoRefreshIgnoresSync) {
+                    Text("autoRefreshIgnoresSync")
+                }
+            }
+        }
     }
 }

@@ -8,16 +8,22 @@ import UnwatchedShared
 
 struct TitleFilterView: View {
     @CloudStorage(Const.filterVideoTitleText) var filterVideoTitleText: String = ""
+    @CloudStorage(Const.allowOnMatch) var allowOnMatch: Bool = false
 
     var body: some View {
-        MySection(footer: "videoTitleFilterFooter", showPremiumIndicator: true) {
-            TextField("keywords", text: $filterVideoTitleText)
-                .autocorrectionDisabled()
-                #if os(iOS)
-                .textInputAutocapitalization(.never)
-                .submitLabel(.done)
-                #endif
-                .requiresPremium(filterVideoTitleText.isEmpty, feature: "titleFilter")
+        Section {
+            TitleFilterModePicker(allowOnMatch: $allowOnMatch)
+
+            KeywordListEditor(text: $filterVideoTitleText)
+        } header: {
+            HStack {
+                Text("videoTitleFilter")
+                    .fontWeight(.semibold)
+                PremiumIndicator()
+            }
+        } footer: {
+            TitleFilterFooter(allowOnMatch: allowOnMatch)
         }
+        .requiresPremium(filterVideoTitleText.isEmpty, feature: "titleFilter")
     }
 }

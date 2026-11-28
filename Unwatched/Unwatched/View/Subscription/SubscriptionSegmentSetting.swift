@@ -35,12 +35,18 @@ struct SubscriptionSegmentSetting: View {
     var subscription: Subscription
     var category: SegmentCategory
 
+    @State private var pendingSkip: PendingSkip?
+
     var body: some View {
         let selection = Binding(
             get: {
                 subscription[keyPath: category.setting]
             }, set: { value in
-                subscription[keyPath: category.setting] = value
+                if value?.skips == true && !youtubePremium {
+                    pendingSkip = PendingSkip { subscription[keyPath: category.setting] = value }
+                } else {
+                    subscription[keyPath: category.setting] = value
+                }
             }
         )
         let followsDefault = selection.wrappedValue == nil
@@ -57,6 +63,7 @@ struct SubscriptionSegmentSetting: View {
             hidesMenuValue: followsDefault
         )
         .requiresPremium(followsDefault, feature: "sponsorBlock")
+        .youtubePremiumConfirmation($pendingSkip)
     }
 
     private var globalSetting: SponsorBlockSegmentSetting {
@@ -64,8 +71,6 @@ struct SubscriptionSegmentSetting: View {
     }
 
     private var options: [SponsorBlockSegmentSetting?] {
-        let settings = SponsorBlockSegmentSetting.allCases
-            .filter { youtubePremium || !$0.skips }
-        return [nil] + settings.map { $0 }
+        [nil] + SponsorBlockSegmentSetting.allCases.map { $0 }
     }
 }

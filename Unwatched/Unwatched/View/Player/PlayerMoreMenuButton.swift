@@ -105,8 +105,6 @@ struct PlayerMoreMenuContent: View {
     @AppStorage(Const.playerType) var playerType: PlayerTypeSetting = .youtubeEmbedded
     @AppStorage(Const.browserDisplayMode) var browserDisplayMode: BrowserDisplayMode = .inApp
     @AppStorage(Const.preferPlayerType) var preferPlayerType: Bool = false
-    @AppStorage(Const.customUICaptions) var customUICaptions: Bool = false
-    @AppStorage(Const.customUICaptionLanguage) var customUICaptionLanguage: String = ""
 
     @Environment(\.modelContext) var modelContext
     @Environment(NavigationManager.self) var navManager
@@ -176,7 +174,7 @@ struct PlayerMoreMenuContent: View {
 
             bookmarkButton
             deferDateButton
-            if player.showsCustomUICaptionControls {
+            if player.showsCaptionControls {
                 if let captions = player.captions, captions.tracks.count > 1 {
                     captionLanguageMenu(captions)
                 } else {
@@ -251,9 +249,9 @@ struct PlayerMoreMenuContent: View {
 
     var captionsToggle: some View {
         Toggle(isOn: Binding(
-            get: { customUICaptions },
-            set: { isOn in
-                customUICaptions = isOn
+            get: { player.captionsOn },
+            set: { _ in
+                player.toggleCaptions()
                 hapticToggle.toggle()
                 Signal.interaction("Player.MoreMenu", "captions")
             }
@@ -265,16 +263,13 @@ struct PlayerMoreMenuContent: View {
     private static let captionsOffTag = ""
 
     func shownCaptionLanguage(_ tracks: [CaptionOption]) -> String {
-        guard customUICaptions else { return Self.captionsOffTag }
-        let codes = tracks.map(\.code)
-        return [player.captions?.selected, customUICaptionLanguage]
-            .compactMap { $0 }
-            .first(where: codes.contains) ?? codes.first ?? Self.captionsOffTag
+        guard let selected = player.captions?.selected else { return Self.captionsOffTag }
+        return tracks.contains { $0.code == selected } ? selected : tracks.first?.code ?? Self.captionsOffTag
     }
 
     func captionLanguageMenu(_ captions: CaptionReport) -> some View {
         let shown = shownCaptionLanguage(captions.tracks)
-        let groups = captions.grouped(shown: shown, lastPicked: customUICaptionLanguage)
+        let groups = captions.grouped(shown: shown)
         return Menu {
             Section {
                 captionChoice(Self.captionsOffTag, shown: shown, label: Text("off"))
@@ -288,7 +283,7 @@ struct PlayerMoreMenuContent: View {
                 }
             }
         } label: {
-            Label("captions", systemImage: customUICaptions ? "captions.bubble.fill" : "captions.bubble")
+            Label("captions", systemImage: player.captionsOn ? "captions.bubble.fill" : "captions.bubble")
         }
     }
 
@@ -302,10 +297,7 @@ struct PlayerMoreMenuContent: View {
         Toggle(isOn: Binding(
             get: { shown == code },
             set: { _ in
-                customUICaptions = code != Self.captionsOffTag
-                if customUICaptions {
-                    customUICaptionLanguage = code
-                }
+                player.setCaptions(code)
                 hapticToggle.toggle()
                 Signal.interaction("Player.MoreMenu", "captionLanguage")
             }

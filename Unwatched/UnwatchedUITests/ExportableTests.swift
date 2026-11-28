@@ -310,7 +310,6 @@ class ExportableTests: XCTestCase {
                 Const.showClearQueueButton: false,
                 Const.mergeSponsorBlockChapters: true,
                 Const.useNoCookieUrl: false,
-                Const.autoRefresh: false,
                 Const.enableQueueContextMenu: true,
 
                 // Playback

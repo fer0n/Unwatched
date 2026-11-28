@@ -8,35 +8,29 @@ import UnwatchedShared
 
 extension PlayerManager {
     @MainActor
-    private var isCustomUI: Bool {
-        PlayerSwitchManager.shared.activeType
-            .webPlayerType(embeddingDisabled: embeddingDisabled) == .youtubeCustomUI
+    var showsCaptionControls: Bool {
+        guard captions != nil, PlayerSwitchManager.shared.activeType.usesWebPlayer, let video else { return false }
+        return TranscriptDescriptionSelection.canHaveTranscript(
+            video, isCurrentVideo: true, transcriptUrl: transcriptUrl
+        )
     }
 
     @MainActor
-    var showsCustomUICaptionControls: Bool {
-        guard !UserDefaults.standard.bool(forKey: Const.disableCaptions),
-              let video,
-              TranscriptDescriptionSelection.canHaveTranscript(
-                video, isCurrentVideo: true, transcriptUrl: transcriptUrl
-              ) else { return false }
-        return isCustomUI
+    var captionsOn: Bool {
+        captions?.selected != nil
+    }
+
+    /// Empty turns them off.
+    @MainActor
+    func setCaptions(_ languageCode: String) {
+        WebPlayerBackend.shared.setCaptions(languageCode)
     }
 
     @MainActor
-    func toggleCustomUICaptions() -> Bool {
-        let isOn = !UserDefaults.standard.bool(forKey: Const.customUICaptions)
-        UserDefaults.standard.set(isOn, forKey: Const.customUICaptions)
+    @discardableResult
+    func toggleCaptions() -> Bool {
+        let isOn = !captionsOn
+        WebPlayerBackend.shared.toggleCaptions()
         return isOn
-    }
-
-    /// YouTube never sees the intercepted key, so its own players get it passed on.
-    @MainActor
-    func toggleYouTubeCaptions() {
-        guard !UserDefaults.standard.bool(forKey: Const.disableCaptions),
-              video != nil,
-              PlayerSwitchManager.shared.activeType.usesWebPlayer,
-              !isCustomUI else { return }
-        WebPlayerBackend.shared.toggleYouTubeCaptions()
     }
 }

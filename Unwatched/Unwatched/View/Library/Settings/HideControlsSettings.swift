@@ -7,7 +7,6 @@ import SwiftUI
 import UnwatchedShared
 
 struct HideControlsSettings: View {
-    @AppStorage(Const.disableCaptions) var disableCaptions: Bool = false
     @AppStorage(Const.autoCaptionsOnSeekBack) var autoCaptionsOnSeekBack: Bool = false
     @AppStorage(Const.doubleTapSeekDuration) var doubleTapSeekDuration: Double = Const.seekSeconds
     @AppStorage(Const.doubleTapSeekDuration) var storedSeekDuration: Double?
@@ -17,13 +16,6 @@ struct HideControlsSettings: View {
 
     var body: some View {
         MySection("hideControls") {
-            Toggle(isOn: $disableCaptions) {
-                Text("disableCaptions")
-            }
-            .onChange(of: disableCaptions) {
-                reloadPlayer()
-            }
-
             Toggle(isOn: $autoCaptionsOnSeekBack) {
                 Text("autoCaptionsOnSeekBack")
             }

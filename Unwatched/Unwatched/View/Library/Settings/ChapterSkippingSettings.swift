@@ -5,22 +5,16 @@
 
 import SwiftUI
 import UnwatchedShared
-import SwiftData
 
 struct ChapterSkippingSettings: View {
     @CloudStorage(Const.skipChapterText) var skipChapterText: String = ""
     @PremiumCloudStorage(Const.autoSkipRecurringChapters) var autoSkipRecurringChapters = true
     @CloudStorage(Const.mergeSponsorBlockChapters) var mergeSponsorBlockChapters: Bool = false
     @AppStorage(Const.chapterGenerationMode) var generationMode = ChapterGenerationMode.off
-    @CloudStorage(Const.youtubePremium) var youtubePremium: Bool = false
     @CloudStorage(Const.sponsorSegmentSetting)
     var sponsorSegmentSetting: SponsorBlockSegmentSetting = SponsorBlockSegmentSetting.sponsorDefault
     @CloudStorage(Const.selfPromoSegmentSetting)
     var selfPromoSegmentSetting: SponsorBlockSegmentSetting = SponsorBlockSegmentSetting.selfPromoDefault
-
-    @Environment(\.modelContext) var modelContext
-
-    @State var showAlert = false
 
     var body: some View {
         MySection("skippingChapters", footer: "autoSkipRecurringChaptersFooter", showPremiumIndicator: true) {
@@ -28,108 +22,63 @@ struct ChapterSkippingSettings: View {
         }
         .requiresPremium(feature: "skipRecurringChapters")
 
-        MySection(footer: "chapterFilterFooter", showPremiumIndicator: true) {
-            TextField("keywords", text: $skipChapterText)
-                .autocorrectionDisabled()
-                #if os(iOS)
-                .textInputAutocapitalization(.never)
-                .submitLabel(.done)
-            #endif
-        }
-        .requiresPremium(skipChapterText.isEmpty, feature: "skipChapterText")
-
-        MySection(footer: "considerGettingYoutubePremium") {
-            HStack {
-                Text("youtubePremium")
-                Spacer()
-                Image(systemName: "checkmark")
-                    .opacity(youtubePremium ? 1 : 0)
-            }
-            .contentShape(Rectangle())
-            .onTapGesture {
-                if !youtubePremium {
-                    showAlert = true
-                } else {
-                    youtubePremium = false
-                    stopSkipping()
+        MySection {
+            NavigationLink(value: LibraryDestination.chapterFilter) {
+                HStack {
+                    Text("chapterFilter")
+                    Spacer()
+                    if !skipChapterText.isEmpty {
+                        Text(verbatim: "\(skipChapterText.commaSeparatedKeywords.count)")
+                            .foregroundStyle(.secondary)
+                    }
+                    PremiumIndicator()
+                        .foregroundStyle(.secondary)
                 }
             }
         }
-        .confirmationDialog("youtubePremiumTitle",
-                            isPresented: $showAlert,
-                            titleVisibility: .visible,
-                            actions: {
-                                Button("youtubePremiumConfirm", role: .destructive) {
-                                    youtubePremium = true
-                                    showAlert = false
-                                }
-                                Button("youtubePremiumDecline") {
-                                    showAlert = false
-                                }
-                                Button("cancel", role: .cancel) {}
-                            },
-                            message: { Text("considerGettingYoutubePremium") })
+        .containsPremium()
+        .requiresPremium(skipChapterText.isEmpty, feature: "skipChapterText")
 
         MySection(footer: "skipSponsorSegmentsHelper") {
             SegmentSettingPicker(
                 title: "sponsorSegments",
-                selection: $sponsorSegmentSetting,
-                allowsSkipping: youtubePremium
+                selection: $sponsorSegmentSetting
             )
             SegmentSettingPicker(
                 title: "selfPromoSegments",
-                selection: $selfPromoSegmentSetting,
-                allowsSkipping: youtubePremium
+                selection: $selfPromoSegmentSetting
             )
         }
         .disabled(!mergeSponsorBlockChapters && generationMode == .off)
     }
-
-    func stopSkipping() {
-        if sponsorSegmentSetting.skips {
-            sponsorSegmentSetting = .show
-        }
-        if selfPromoSegmentSetting.skips {
-            selfPromoSegmentSetting = .show
-        }
-        SubscriptionService.stopSkippingSegments(modelContext)
-    }
 }
 
-/// Looks like a Form picker row, but a `Picker` ignores `disabled` on its options and
-/// "Show & Skip" has to stay visible while being unselectable without YouTube Premium.
+/// Picking "Show & Skip" asks for YouTube Premium before the selection changes.
 private struct SegmentSettingPicker: View {
-    @Environment(\.isEnabled) var isEnabled
+    @CloudStorage(Const.youtubePremium) var youtubePremium: Bool = false
 
     let title: LocalizedStringKey
     @Binding var selection: SponsorBlockSegmentSetting
-    let allowsSkipping: Bool
+
+    @State private var pendingSkip: PendingSkip?
 
     var body: some View {
-        Menu {
-            ForEach(SponsorBlockSegmentSetting.allCases, id: \.self) { option in
-                Button {
+        Picker(title, selection: Binding(
+            get: { selection },
+            set: { option in
+                if option.skips && !youtubePremium {
+                    pendingSkip = PendingSkip { selection = option }
+                } else {
                     selection = option
-                } label: {
-                    if selection == option {
-                        Label(option.description, systemImage: Const.checkmarkSF)
-                    } else {
-                        Text(option.description)
-                    }
                 }
-                .disabled(option.skips && !allowsSkipping)
             }
-        } label: {
-            HStack {
-                Text(title)
-                    .foregroundStyle(isEnabled ? Color.neutralAccentColor : Color.secondary)
-                Spacer()
-                Text(selection.description)
-                Image(systemName: "chevron.up.chevron.down")
-                    .font(.footnote)
-                    .fontWeight(.medium)
+        )) {
+            ForEach(SponsorBlockSegmentSetting.allCases, id: \.self) { option in
+                Text(option.description)
             }
         }
+        .pickerStyle(.menu)
+        .youtubePremiumConfirmation($pendingSkip)
     }
 }
 

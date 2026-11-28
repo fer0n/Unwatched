@@ -266,7 +266,7 @@ extension VideoActor {
     ) -> [Video] {
         var filtered = videos
 
-        let filterStringsGlobal = VideoService.getVideoTitleFilter(defaultPlacement.filterVideoTitleText)
+        let filterStringsGlobal = defaultPlacement.filterVideoTitleText.commaSeparatedKeywords
         if !filterStringsGlobal.isEmpty {
             filtered = filtered
                 .filter { video in
@@ -278,7 +278,7 @@ extension VideoActor {
                 }
         }
 
-        let filterStringsSub = VideoService.getVideoTitleFilter(sub.filterText)
+        let filterStringsSub = sub.filterText.commaSeparatedKeywords
         if !filterStringsSub.isEmpty {
             filtered = filtered
                 .filter { video in

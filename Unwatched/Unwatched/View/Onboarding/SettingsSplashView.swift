@@ -229,8 +229,8 @@ private struct SplashSettingsPage: View {
                     SplashPickerRow(title: "autoDeleteOrphanedVideos", selection: $autoDeleteOrphanedVideos,
                                     options: AutoDeleteVideosView.dayOptions, label: AutoDeleteVideosView.dayLabel)
                     SplashPickerRow(title: "autoDeleteInboxLimit", selection: $autoDeleteInboxVideosLimit,
-                                    options: AutoDeleteVideosView.inboxLimitOptions,
-                                    label: AutoDeleteVideosView.inboxLimitLabel)
+                                    options: InboxSettingsView.inboxLimitOptions,
+                                    label: InboxSettingsView.inboxLimitLabel)
                     Text("keepVideosSyncFooter")
                         .font(.footnote)
                         .foregroundStyle(.secondary)

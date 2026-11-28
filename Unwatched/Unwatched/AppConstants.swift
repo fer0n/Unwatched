@@ -49,7 +49,6 @@ extension Const {
         // General
         Const.defaultVideoPlacement: VideoPlacement.inbox.rawValue,
         Const.autoClearNew: false,
-        Const.autoRefresh: true,
         Const.requireClearConfirmation: true,
         Const.showClearQueueButton: true,
         Const.enableQueueContextMenu: false,
@@ -73,10 +72,7 @@ extension Const {
         Const.temporarySpeedUp: Const.speedMax,
         Const.temporarySlowDown: Const.speedMin,
         Const.playVideoFullscreen: false,
-        Const.disableCaptions: false,
         Const.autoCaptionsOnSeekBack: false,
-        Const.customUICaptions: false,
-        Const.customUICaptionLanguage: "",
         Const.doubleTapSeekDuration: Const.seekSeconds,
 
         Const.swipeGestureUp: true,

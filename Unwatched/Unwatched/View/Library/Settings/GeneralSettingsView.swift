@@ -11,12 +11,8 @@ struct GeneralSettingsView: View {
     @AppStorage(Const.defaultVideoPlacement) var defaultVideoPlacement: VideoPlacement = .inbox
     @AppStorage(Const.autoClearNew) var autoClearNew: Bool = false
     @AppStorage(Const.requireClearConfirmation) var requireClearConfirmation: Bool = true
-    @AppStorage(Const.showClearQueueButton) var showClearQueueButton: Bool = true
-    @AppStorage(Const.inboxOldestFirst) var inboxOldestFirst: Bool = false
-    @AppStorage(Const.autoRefresh) var autoRefresh: Bool = true
-    @AppStorage(Const.enableQueueContextMenu) var enableQueueContextMenu: Bool = false
-    @AppStorage(Const.autoRefreshIgnoresSync) var autoRefreshIgnoresSync: Bool = false
     @AppStorage(Const.copyAppUrl) var copyAppUrl: Bool = false
+    @AppStorage(Const.suggestVideos) var suggestVideos: Bool = false
     @AppStorage(Const.shareExtensionAction, store: .appGroup)
     var shareExtensionAction: ShareExtensionActionSetting = .askEveryTime
 
@@ -32,44 +28,36 @@ struct GeneralSettingsView: View {
                         }
                     }
                     .pickerStyle(.menu)
+                }
+
+                MySection(footer: "openLinksFooter") {
                     Picker("openLinks", selection: $browserDisplayMode) {
                         ForEach(BrowserDisplayMode.allCases, id: \.self) {
                             Text($0.description)
                         }
                     }
                     .pickerStyle(.menu)
+                }
+
+                MySection(footer: "autoClearNewFooter") {
                     Toggle(isOn: $autoClearNew) {
                         Text("autoClearNew")
                     }
                 }
 
-                MySection("refresh", footer: "allowRefreshDuringSyncFooter") {
-                    Toggle(isOn: $autoRefresh) {
-                        Text("autoRefresh")
-                    }
-                    Toggle(isOn: $autoRefreshIgnoresSync) {
-                        Text("autoRefreshIgnoresSync")
-                    }
-                }
-
-                MySection("videoTriage") {
-                    InboxSortOrderPicker(oldestFirst: $inboxOldestFirst)
-                        .pickerStyle(.menu)
+                MySection {
                     Toggle(isOn: $requireClearConfirmation) {
                         Text("requireClearConfirmation")
                     }
                 }
 
-                MySection("queue") {
-                    Toggle(isOn: $showClearQueueButton) {
-                        Text("showClearQueueButton")
+                #if os(iOS)
+                MySection(footer: "suggestVideosHelper") {
+                    Toggle(isOn: $suggestVideos) {
+                        Text("suggestVideos")
                     }
-                    #if os(iOS)
-                    Toggle(isOn: $enableQueueContextMenu) {
-                        Text("enableQueueContextMenu")
-                    }
-                    #endif
                 }
+                #endif
 
                 MySection(footer: "shareExtensionActionFooter") {
                     Picker("shareExtensionAction", selection: $shareExtensionAction) {

@@ -7,6 +7,12 @@ import Foundation
 import OSLog
 
 public extension String {
+    var commaSeparatedKeywords: [String] {
+        split(separator: ",")
+            .map { $0.trimmingCharacters(in: .whitespacesAndNewlines) }
+            .filter { !$0.isEmpty }
+    }
+
     /// Lowercased and accent-stripped so matching ignores case and diacritics.
     var folded: String {
         folding(options: [.caseInsensitive, .diacriticInsensitive], locale: .current)

@@ -7,7 +7,6 @@ export const BOOL_SETTINGS = [
   ["showNotificationBadge", false, "Notification Badge"],
   // General
   ["autoClearNew", false, "Auto-clear \"New\""],
-  ["refreshOnStartup", true, "Refresh on Startup"],
   ["requireClearConfirmation", true, "Require Clear Confirmation"],
   ["showClearQueueButton", true, "Show Clear-Queue Button"],
   ["showSearchYoutubeButton", true, "Search: YouTube Button"],
@@ -28,9 +27,7 @@ export const BOOL_SETTINGS = [
   ["rotateOnPlay", false, "Rotate on Play"],
   ["markWatchedOnEnded", true, "Mark Watched on Ended"],
   ["playVideoFullscreen", false, "Play Fullscreen"],
-  ["disableCaptions", false, "Disable Captions"],
   ["autoCaptionsOnSeekBack", false, "Auto-captions on Seek Back"],
-  ["customUICaptions", false, "Custom UI Captions"],
   ["swipeGestureUp", true, "Swipe Gesture: Up"],
   ["swipeGestureDown", true, "Swipe Gesture: Down"],
   ["swipeGestureLeft", true, "Swipe Gesture: Left"],

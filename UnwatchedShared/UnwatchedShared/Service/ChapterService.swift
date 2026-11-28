@@ -291,14 +291,7 @@ public struct ChapterService {
     }
 
     static func skipChapterFilters() -> [String] {
-        guard let skipChapterText = CloudKeyValueStore.shared.string(forKey: Const.skipChapterText),
-              !skipChapterText.isEmpty else {
-            return []
-        }
-        return skipChapterText
-            .split(separator: ",")
-            .map { $0.trimmingCharacters(in: .whitespacesAndNewlines) }
-            .filter { !$0.isEmpty }
+        CloudKeyValueStore.shared.string(forKey: Const.skipChapterText)?.commaSeparatedKeywords ?? []
     }
 
     /// The order chapters play in: what the user dragged them into, the incoming start-time order

@@ -17,33 +17,25 @@ struct TitleFilterContent: View {
 
     var body: some View {
         VStack {
-            VStack {
-                Picker("filterMode", selection: $allowOnMatch) {
-                    Text("contains")
-                        .tag(true)
-                    Text("doesNotContain")
-                        .tag(false)
-                }
-                .pickerStyle(.menu)
+            VStack(spacing: 0) {
+                TitleFilterModePicker(allowOnMatch: $allowOnMatch)
+                    .frame(minHeight: KeywordListEditor.cardRowHeight)
 
                 Divider()
 
-                TextField("keywords", text: $filterText)
-                    .autocorrectionDisabled()
-                    #if os(iOS)
-                    .textInputAutocapitalization(.never)
-                    .submitLabel(.done)
-                #endif
+                KeywordListEditor(text: $filterText, showsDividers: true)
             }
-            .padding()
+            .padding(.horizontal)
+            .padding(.vertical, 4)
             #if !os(visionOS)
             .background(Color.insetBackgroundColor)
             .clipShape(RoundedRectangle(cornerRadius: 20))
             #endif
 
-            Text("videoTitleFilterFooter")
-                .foregroundColor(.secondary)
+            TitleFilterFooter(allowOnMatch: allowOnMatch)
+                .foregroundStyle(.secondary)
                 .font(.footnote)
+                .frame(maxWidth: .infinity, alignment: .leading)
                 .padding(.horizontal)
                 .padding(.bottom, 15)
         }
@@ -91,6 +83,31 @@ struct TitleFilterContent: View {
     }
 
     var filterStrings: [String] {
-        VideoService.getVideoTitleFilter(filterText)
+        filterText.commaSeparatedKeywords
+    }
+}
+
+struct TitleFilterFooter: View {
+    var allowOnMatch: Bool
+
+    var body: some View {
+        VStack(alignment: .leading, spacing: 8) {
+            Text("videoTitleFilterFooter")
+            Text(allowOnMatch ? "titleFilterContainsFooter" : "titleFilterDoesNotContainFooter")
+        }
+    }
+}
+
+struct TitleFilterModePicker: View {
+    @Binding var allowOnMatch: Bool
+
+    var body: some View {
+        Picker("filterMode", selection: $allowOnMatch) {
+            Text("contains")
+                .tag(true)
+            Text("doesNotContain")
+                .tag(false)
+        }
+        .pickerStyle(.menu)
     }
 }

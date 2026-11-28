@@ -21,11 +21,10 @@ extension CaptionReport {
 
     func grouped(
         shown: String,
-        lastPicked: String,
         preferredLanguages: [String] = Locale.preferredLanguages
     ) -> (relevant: [CaptionOption], more: [CaptionOption]) {
         guard tracks.count > Self.inlineTrackLimit else { return (tracks, []) }
-        let wanted = ([shown, lastPicked, spokenLanguage].compactMap { $0 } + preferredLanguages)
+        let wanted = ([shown, spokenLanguage].compactMap { $0 } + preferredLanguages)
             .filter { !$0.isEmpty }
             .map(Self.baseLanguage)
         var relevant: [CaptionOption] = []

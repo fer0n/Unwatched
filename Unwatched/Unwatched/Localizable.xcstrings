@@ -805,6 +805,40 @@
         }
       }
     },
+    "addKeyword" : {
+      "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Schlagwort hinzufügen"
+          }
+        },
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Add Keyword"
+          }
+        },
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Añadir palabra clave"
+          }
+        },
+        "fr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Ajouter un mot-clé"
+          }
+        },
+        "pl" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Dodaj słowo kluczowe"
+          }
+        }
+      }
+    },
     "addPlaylistVideos" : {
       "localizations" : {
         "de" : {
@@ -1694,31 +1728,31 @@
         "de" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "App-URL"
+            "value" : "Unwatched-Links teilen"
           }
         },
         "en" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "App URL"
+            "value" : "Share Unwatched Links"
           }
         },
         "es" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "URL de la app"
+            "value" : "Compartir enlaces de Unwatched"
           }
         },
         "fr" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "URL de l'app"
+            "value" : "Partager des liens Unwatched"
           }
         },
         "pl" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "URL aplikacji"
+            "value" : "Udostępniaj linki Unwatched"
           }
         }
       }
@@ -1728,31 +1762,31 @@
         "de" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Geteilte und kopierte Links öffnen sich in Unwatched. Ohne die App zeigen sie eine Webseite mit dem Video."
+            "value" : "Geteilte und kopierte Links führen zu Unwatched statt zu YouTube oder zur Website des Podcasts. Wer die App hat, öffnet sie in Unwatched; alle anderen sehen eine Webseite mit dem Video."
           }
         },
         "en" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Shared and copied links open in Unwatched. Without the app, they show a web page with the video."
+            "value" : "Shared and copied links point to Unwatched instead of YouTube or the podcast’s website. People with the app open them in Unwatched; everyone else sees a web page with the video."
           }
         },
         "es" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Los enlaces compartidos y copiados se abren en Unwatched. Sin la app, muestran una página web con el video."
+            "value" : "Los enlaces compartidos y copiados apuntan a Unwatched en lugar de a YouTube o al sitio web del pódcast. Quien tenga la app los abre en Unwatched; los demás ven una página web con el video."
           }
         },
         "fr" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Les liens partagés et copiés s'ouvrent dans Unwatched. Sans l'app, ils affichent une page web avec la vidéo."
+            "value" : "Les liens partagés et copiés renvoient vers Unwatched plutôt que vers YouTube ou le site du podcast. Ceux qui ont l’app les ouvrent dans Unwatched ; les autres voient une page web avec la vidéo."
           }
         },
         "pl" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Udostępnione i skopiowane linki otwierają się w Unwatched. Bez aplikacji pokazują stronę internetową z wideo."
+            "value" : "Udostępniane i kopiowane linki prowadzą do Unwatched zamiast do YouTube lub strony podcastu. Osoby z aplikacją otwierają je w Unwatched, pozostali widzą stronę internetową z wideo."
           }
         }
       }
@@ -2060,6 +2094,40 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "Automatycznie usuń „Nowe”"
+          }
+        }
+      }
+    },
+    "autoClearNewFooter" : {
+      "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Entfernt die Markierung „Neu“ in Inbox und Queue, sobald du den Tab wechselst."
+          }
+        },
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Clears the “New” badge in your Inbox and Queue when you switch tabs."
+          }
+        },
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Quita la etiqueta “Nuevo” de tu Bandeja de entrada y Cola al cambiar de pestaña."
+          }
+        },
+        "fr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Retire le badge « Nouveau » de l’Inbox et de la file d’attente lorsque vous changez d’onglet."
+          }
+        },
+        "pl" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Usuwa oznaczenie „Nowe” w Skrzynce i Kolejce po przełączeniu karty."
           }
         }
       }
@@ -2434,40 +2502,6 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "Automatyczny"
-          }
-        }
-      }
-    },
-    "autoRefresh" : {
-      "localizations" : {
-        "de" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Automatisch aktualisieren"
-          }
-        },
-        "en" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Automatically Refresh"
-          }
-        },
-        "es" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Actualizar automáticamente"
-          }
-        },
-        "fr" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Actualisation automatique"
-          }
-        },
-        "pl" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Automatyczne odświeżanie"
           }
         }
       }
@@ -4343,36 +4377,70 @@
         }
       }
     },
-    "chapterFilterFooter" : {
+    "chapterFilter" : {
       "localizations" : {
         "de" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Setzt Kapitel, die eines der Schlüsselwörter enthalten, beim Laden des Videos auf inaktiv. Verwende \",\" um mehrere Schlüsselwörter zu trennen. Gilt nicht für SponsorBlock-Segmente (angezeigt mit „[Klammern]“)."
+            "value" : "Kapitelfilter"
           }
         },
         "en" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Sets chapters that include any of the keywords to inactive when the video is loaded into the player. Use “,” to separate multiple keywords. Does not apply to SponsorBlock segments (shown with “[Brackets]”)."
+            "value" : "Chapter Filter"
           }
         },
         "es" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Establece como inactivos los capítulos que incluyan cualquiera de las palabras clave cuando se cargue el vídeo en el reproductor. Usa “,” para separar varias palabras clave. No se aplica a los segmentos de SponsorBlock (mostrados entre “[Corchetes]”)."
+            "value" : "Filtro de capítulos"
           }
         },
         "fr" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Désactive les chapitres contenant l’un des mots-clés lorsque la vidéo est chargée dans le lecteur. Utilisez “,” pour séparer plusieurs mots-clés. Ne s’applique pas aux segments SponsorBlock (affichés entre “[Crochets]”)."
+            "value" : "Filtre de chapitres"
           }
         },
         "pl" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Ustawia rozdziały zawierające dowolne ze słów kluczowych jako nieaktywne po załadowaniu wideo do odtwarzacza. Użyj „,” aby oddzielić wiele słów kluczowych. Nie dotyczy segmentów SponsorBlock (oznaczonych „[Nawiasami]”)."
+            "value" : "Filtr rozdziałów"
+          }
+        }
+      }
+    },
+    "chapterFilterFooter" : {
+      "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Kapitel, deren Titel ein Schlagwort enthält, werden beim Laden des Videos auf inaktiv gesetzt. Gilt nicht für SponsorBlock-Segmente (angezeigt mit „[Klammern]“)."
+          }
+        },
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Chapters whose title contains a keyword are set to inactive when the video is loaded into the player. Doesn’t apply to SponsorBlock segments (shown with “[Brackets]”)."
+          }
+        },
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Los capítulos cuyo título contenga una palabra clave se marcan como inactivos al cargar el vídeo en el reproductor. No se aplica a los segmentos de SponsorBlock (mostrados entre “[Corchetes]”)."
+          }
+        },
+        "fr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Les chapitres dont le titre contient un mot-clé sont désactivés lorsque la vidéo est chargée dans le lecteur. Ne s’applique pas aux segments SponsorBlock (affichés entre « [Crochets] »)."
+          }
+        },
+        "pl" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Rozdziały, których tytuł zawiera słowo kluczowe, są ustawiane jako nieaktywne po załadowaniu wideo do odtwarzacza. Nie dotyczy segmentów SponsorBlock (oznaczonych „[Nawiasami]”)."
           }
         }
       }
@@ -6486,6 +6554,9 @@
         }
       }
     },
+    "date" : {
+
+    },
     "debug" : {
       "localizations" : {
         "de" : {
@@ -7468,40 +7539,6 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "Wyłącz"
-          }
-        }
-      }
-    },
-    "disableCaptions" : {
-      "localizations" : {
-        "de" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Untertitel deaktivieren"
-          }
-        },
-        "en" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Disable Captions"
-          }
-        },
-        "es" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Desactivar subtítulos"
-          }
-        },
-        "fr" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Désactiver les sous-titres"
-          }
-        },
-        "pl" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Wyłącz napisy"
           }
         }
       }
@@ -8490,6 +8527,40 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "Włącz menu kontekstowe"
+          }
+        }
+      }
+    },
+    "enableQueueContextMenuFooter" : {
+      "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Ist das aus, startet langes Drücken auf ein Video direkt das Verschieben, was das Umsortieren erleichtert."
+          }
+        },
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "With this off, long-pressing a video starts dragging it right away, which makes reordering easier."
+          }
+        },
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Si está desactivado, mantener pulsado un video empieza a arrastrarlo enseguida, lo que facilita reordenar."
+          }
+        },
+        "fr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Désactivé, un appui long sur une vidéo la fait glisser immédiatement, ce qui facilite la réorganisation."
+          }
+        },
+        "pl" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Gdy jest wyłączone, przytrzymanie filmu od razu zaczyna przeciąganie, co ułatwia zmianę kolejności."
           }
         }
       }
@@ -11561,6 +11632,9 @@
         }
       }
     },
+    "hours" : {
+
+    },
     "icloudSync" : {
       "localizations" : {
         "de" : {
@@ -11965,6 +12039,74 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "Starsze wpisy ukryte"
+          }
+        }
+      }
+    },
+    "inboxLimit" : {
+      "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Inbox-Limit"
+          }
+        },
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Inbox Limit"
+          }
+        },
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Límite de la Bandeja de entrada"
+          }
+        },
+        "fr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Limite de l’Inbox"
+          }
+        },
+        "pl" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Limit Skrzynki"
+          }
+        }
+      }
+    },
+    "inboxLimitFooter" : {
+      "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Enthält deine Inbox mehr als das, werden die ältesten Einträge entfernt. Wird automatisch mit deinen anderen Geräten synchronisiert."
+          }
+        },
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "When your Inbox holds more than this, the oldest entries are removed. Syncs automatically with your other devices."
+          }
+        },
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Cuando tu Bandeja de entrada supera esta cantidad, se quitan las entradas más antiguas. Se sincroniza automáticamente con tus otros dispositivos."
+          }
+        },
+        "fr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Lorsque votre Inbox en contient davantage, les entrées les plus anciennes sont retirées. Se synchronise automatiquement avec vos autres appareils."
+          }
+        },
+        "pl" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Gdy Skrzynka zawiera więcej elementów, najstarsze są usuwane. Synchronizuje się automatycznie z innymi urządzeniami."
           }
         }
       }
@@ -12616,36 +12758,36 @@
         }
       }
     },
-    "keywords" : {
+    "keyword" : {
       "localizations" : {
         "de" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Schlagwort 1,Schlagwort 2,…"
+            "value" : "Schlagwort"
           }
         },
         "en" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Keyword 1,Keyword 2,…"
+            "value" : "Keyword"
           }
         },
         "es" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Palabra clave 1, Palabra clave 2,…"
+            "value" : "Palabra clave"
           }
         },
         "fr" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Mot-clé 1,Mot-clé 2,…"
+            "value" : "Mot-clé"
           }
         },
         "pl" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Słowo kluczowe 1, słowo kluczowe 2, …"
+            "value" : "Słowo kluczowe"
           }
         }
       }
@@ -17796,31 +17938,65 @@
         "de" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Links öffnen"
+            "value" : "Im Browser öffnen"
           }
         },
         "en" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Open Links"
+            "value" : "Open in Browser"
           }
         },
         "es" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Abrir enlaces"
+            "value" : "Abrir en el navegador"
           }
         },
         "fr" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Ouvrir les liens"
+            "value" : "Ouvrir dans le navigateur"
           }
         },
         "pl" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Otwieranie linków"
+            "value" : "Otwórz w przeglądarce"
+          }
+        }
+      }
+    },
+    "openLinksFooter" : {
+      "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Wo „Im Browser ansehen“ und im Player angetippte Links geöffnet werden. Links in Beschreibungen öffnen sich immer in deinem Standardbrowser."
+          }
+        },
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Where “View in Browser” and links tapped in the player open. Links in descriptions always open in your default browser."
+          }
+        },
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Dónde se abren “Ver en el navegador” y los enlaces que tocas en el reproductor. Los enlaces de las descripciones siempre se abren en tu navegador predeterminado."
+          }
+        },
+        "fr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Où s’ouvrent « Voir dans le navigateur » et les liens touchés dans le lecteur. Les liens des descriptions s’ouvrent toujours dans votre navigateur par défaut."
+          }
+        },
+        "pl" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Gdzie otwiera się „Zobacz w przeglądarce” i linki stuknięte w odtwarzaczu. Linki w opisach zawsze otwierają się w domyślnej przeglądarce."
           }
         }
       }
@@ -29537,6 +29713,9 @@
         }
       }
     },
+    "time" : {
+
+    },
     "timer" : {
       "localizations" : {
         "de" : {
@@ -29900,6 +30079,74 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "Możesz wybrać “Zobacz w przeglądarce” z menu “…” w odtwarzaczu lub przytrzymać tytuł filmu/aktualny rozdział."
+          }
+        }
+      }
+    },
+    "titleFilterContainsFooter" : {
+      "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Nur Medien mit einem Schlagwort im Titel werden hinzugefügt, alles andere wird übersprungen."
+          }
+        },
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Only media with a keyword in its title gets added, everything else is skipped."
+          }
+        },
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Solo se añade el contenido con una palabra clave en el título; el resto se omite."
+          }
+        },
+        "fr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Seuls les médias dont le titre contient un mot-clé sont ajoutés, le reste est ignoré."
+          }
+        },
+        "pl" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Dodawane są tylko multimedia ze słowem kluczowym w tytule, reszta jest pomijana."
+          }
+        }
+      }
+    },
+    "titleFilterDoesNotContainFooter" : {
+      "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Medien mit einem Schlagwort im Titel werden übersprungen, alles andere wird hinzugefügt."
+          }
+        },
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Media with a keyword in its title is skipped, everything else gets added."
+          }
+        },
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Se omite el contenido con una palabra clave en el título; el resto se añade."
+          }
+        },
+        "fr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Les médias dont le titre contient un mot-clé sont ignorés, le reste est ajouté."
+          }
+        },
+        "pl" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Multimedia ze słowem kluczowym w tytule są pomijane, reszta jest dodawana."
           }
         }
       }
@@ -30690,6 +30937,9 @@
           }
         }
       }
+    },
+    "trend" : {
+
     },
     "trimSilence" : {
       "localizations" : {
@@ -32471,31 +32721,31 @@
         "de" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Videotitel-Filter"
+            "value" : "Medientitel-Filter"
           }
         },
         "en" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Video Title Filter"
+            "value" : "Media Title Filter"
           }
         },
         "es" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Filtro de título de video"
+            "value" : "Filtro de título de medios"
           }
         },
         "fr" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Filtre de titre vidéo"
+            "value" : "Filtre de titre des médias"
           }
         },
         "pl" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Filtr tytułu wideo"
+            "value" : "Filtr tytułu multimediów"
           }
         }
       }
@@ -32505,65 +32755,31 @@
         "de" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Dotyczy nowych filmów w twojej Queue/Inbox, gdy ich tytuł zawiera dowolne słowo kluczowe. Użyj „,”, aby oddzielić wiele słów kluczowych."
+            "value" : "Prüft die Titel neuer Videos und Folgen, bevor sie zu Inbox oder Queue hinzugefügt werden."
           }
         },
         "en" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Affects new videos in your Queue/Inbox when their title includes any keyword. Use “,” to separate multiple keywords."
+            "value" : "Checks the titles of new videos and episodes before they’re added to your Inbox or Queue."
           }
         },
         "es" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Afecta a los nuevos videos en tu Queue/Inbox cuando su título incluye alguna palabra clave. Usa “,” para separar varias palabras clave."
+            "value" : "Revisa los títulos de los nuevos videos y episodios antes de añadirlos a tu Bandeja de entrada o Cola."
           }
         },
         "fr" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Betrifft neue Videos in deiner Queue/Inbox, wenn ihr Titel ein Schlüsselwort enthält. Verwende „,“ um mehrere Schlüsselwörter zu trennen.\n"
+            "value" : "Vérifie les titres des nouvelles vidéos et des nouveaux épisodes avant leur ajout à l’Inbox ou à la file d’attente."
           }
         },
         "pl" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Dotyczy nowych filmów w twojej Queue/Inbox, gdy ich tytuł zawiera dowolne słowo kluczowe. Użyj „,”, aby oddzielić wiele słów kluczowych."
-          }
-        }
-      }
-    },
-    "videoTriage" : {
-      "localizations" : {
-        "de" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Triage"
-          }
-        },
-        "en" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Triage"
-          }
-        },
-        "es" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Clasificación"
-          }
-        },
-        "fr" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Triage"
-          }
-        },
-        "pl" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Selekcja"
+            "value" : "Sprawdza tytuły nowych filmów i odcinków, zanim trafią do Skrzynki lub Kolejki."
           }
         }
       }
@@ -33656,40 +33872,6 @@
         }
       }
     },
-    "withAppleIntelligence" : {
-      "localizations" : {
-        "de" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Apple Intelligence"
-          }
-        },
-        "en" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Apple Intelligence"
-          }
-        },
-        "es" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Apple Intelligence"
-          }
-        },
-        "fr" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Apple Intelligence"
-          }
-        },
-        "pl" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Apple Intelligence"
-          }
-        }
-      }
-    },
     "yellow" : {
       "localizations" : {
         "de" : {
@@ -34029,40 +34211,6 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "Nie jesteś już zalogowany na swoim koncie YouTube."
-          }
-        }
-      }
-    },
-    "youtubePremium" : {
-      "localizations" : {
-        "de" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "YouTube Premium bestätigen"
-          }
-        },
-        "en" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Confirm YouTube Premium"
-          }
-        },
-        "es" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Confirmar YouTube Premium"
-          }
-        },
-        "fr" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Confirmer YouTube Premium"
-          }
-        },
-        "pl" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Potwierdź YouTube Premium"
           }
         }
       }

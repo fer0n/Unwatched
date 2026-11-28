@@ -387,8 +387,14 @@ extension WebPlayerBackend {
     }
 
     @MainActor
-    func toggleYouTubeCaptions() {
+    func toggleCaptions() {
         guard let webView = commandTarget("TOGGLE_CAPTIONS") else { return }
-        PlayerWebView.evaluateJavaScript(webView, "document.getElementById('movie_player')?.toggleSubtitles?.();")
+        PlayerWebView.evaluateJavaScript(webView, "toggleCaptions();")
+    }
+
+    @MainActor
+    func setCaptions(_ languageCode: String) {
+        guard let webView = commandTarget("SET_CAPTIONS") else { return }
+        PlayerWebView.evaluateJavaScript(webView, "setCaptions(\(PlayerWebView.jsString(languageCode)));")
     }
 }

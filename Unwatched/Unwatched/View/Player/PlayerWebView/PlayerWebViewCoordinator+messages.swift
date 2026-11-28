@@ -67,6 +67,8 @@ extension PlayerWebViewCoordinator {
             handleTranscriptUrl(payload)
         case "captions":
             handleCaptions(payload)
+        case "captionsMigrated":
+            UserDefaults.standard.removeObject(forKey: Const.disableCaptions)
         case "resize":
             handleResize()
         default:

@@ -173,11 +173,9 @@ enum PlayerShortcut: String, CaseIterable {
         case .hideControls:
             hideControls()
         case .toggleCaptions:
-            if player.showsCustomUICaptionControls {
-                let isOn = player.toggleCustomUICaptions()
+            if player.showsCaptionControls {
+                let isOn = player.toggleCaptions()
                 OverlayFullscreenVM.shared.show(isOn ? .captionsOn : .captionsOff)
-            } else {
-                player.toggleYouTubeCaptions()
             }
         case .temporarySpeedUp:
             _ = player.tempSpeedChange(faster: true)

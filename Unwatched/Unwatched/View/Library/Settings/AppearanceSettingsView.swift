@@ -10,7 +10,6 @@ import UnwatchedShared
 struct AppearanceSettingsView: View {
     @AppStorage(Const.themeColor) var themeColor: ThemeColor = .defaultTheme
     @AppStorage(Const.videoListFormat) var videoListFormat: VideoListFormat = .compact
-    @AppStorage(Const.inboxAppearance) var inboxAppearance: InboxAppearance = .cards
     @AppStorage(Const.hidePlayerPageIndicator) var hidePlayerPageIndicator: Bool = false
 
     @AppStorage(Const.lightModeTheme) var lightModeTheme = AppAppearance.unwatched
@@ -37,13 +36,6 @@ struct AppearanceSettingsView: View {
                 MySection {
                     Picker("videoListFormat", selection: $videoListFormat) {
                         ForEach(VideoListFormat.allCases, id: \.self) {
-                            Text($0.description)
-                        }
-                    }
-                    .pickerStyle(.menu)
-
-                    Picker("inboxAppearance", selection: $inboxAppearance) {
-                        ForEach(InboxAppearance.allCases, id: \.self) {
                             Text($0.description)
                         }
                     }
