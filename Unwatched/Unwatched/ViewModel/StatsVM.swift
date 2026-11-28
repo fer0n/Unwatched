@@ -13,6 +13,7 @@ import SwiftUI
 final class StatsVM {
     var rawStats: [SendableWatchTimeEntry] = []
     var groupedStats: [GroupedStats] = []
+    var channelImages: [String: StatsChannelImage] = [:]
     var isLoading = false
     var scope: StatsScope = .day {
         didSet {
@@ -29,11 +30,11 @@ final class StatsVM {
         await StatsService.shared.flush()?.value
         let task = Task.detached {
             let actor = StatsActor()
-            return try await actor.getStats()
+            return (try await actor.getStats(), try await actor.getChannelImages())
         }
 
         do {
-            rawStats = try await task.value
+            (rawStats, channelImages) = try await task.value
             processStats(showLoading: showLoading)
         } catch {
             Log.error("StatsVM: Failed to load stats: \(error)")
@@ -61,6 +62,9 @@ final class StatsVM {
             let components = calendar.dateComponents([.year], from: date)
             startDate = calendar.date(from: components) ?? date
             endDate = calendar.date(byAdding: .year, value: 1, to: startDate) ?? startDate
+        case .total:
+            startDate = .distantPast
+            endDate = .distantFuture
         }
 
         await StatsService.shared.flush()?.value
@@ -111,6 +115,8 @@ final class StatsVM {
             case .year:
                 let components = calendar.dateComponents([.year], from: stat.date)
                 return calendar.date(from: components) ?? stat.date
+            case .total:
+                return .distantPast
             }
         }
 
@@ -133,13 +139,98 @@ final class StatsVM {
             return GroupedStats(date: date, channels: channelStats, totalWatchTime: totalTime)
         }
     }
+
+    @MainActor
+    func channelWatchTime(channelId: String, scope: ChannelChartScope) -> [WatchTimePoint] {
+        let entries = rawStats
+            .filter { $0.channelId == channelId }
+            .sorted { $0.date < $1.date }
+        guard let component = scope.component else {
+            return cumulative(entries)
+        }
+        var calendar = Calendar.current
+        calendar.timeZone = .gmt
+        let grouped = Dictionary(grouping: entries) {
+            calendar.dateInterval(of: component, for: $0.date)?.start ?? $0.date
+        }
+        guard let first = grouped.keys.min(), let last = grouped.keys.max() else { return [] }
+        var points: [WatchTimePoint] = []
+        var period = first
+        while period <= last {
+            let time = grouped[period]?.reduce(0) { $0 + $1.watchTime } ?? 0
+            points.append(WatchTimePoint(date: period, time: time))
+            guard let next = calendar.date(byAdding: component, value: 1, to: period) else { break }
+            period = next
+        }
+        return points
+    }
+
+    @MainActor
+    private func cumulative(_ entries: [SendableWatchTimeEntry]) -> [WatchTimePoint] {
+        var total: TimeInterval = 0
+        var points = entries.map { entry in
+            total += entry.watchTime
+            return WatchTimePoint(date: entry.date, time: total)
+        }
+        if let last = points.last, let today = StatsService.shared.getNormalizedDate(Date()), last.date < today {
+            points.append(WatchTimePoint(date: today, time: last.time))
+        }
+        return points
+    }
+}
+
+struct WatchTimePoint: Identifiable {
+    var id: Date { date }
+    let date: Date
+    let time: TimeInterval
+}
+
+extension [WatchTimePoint] {
+    var linearTrend: (start: WatchTimePoint, end: WatchTimePoint)? {
+        guard count >= 2, let first, let last else { return nil }
+        let pointCount = Double(count)
+        let positions = indices.map(Double.init)
+        let meanX = positions.reduce(0, +) / pointCount
+        let meanY = reduce(0) { $0 + $1.time } / pointCount
+        let covariance = zip(positions, self).reduce(0) { $0 + ($1.0 - meanX) * ($1.1.time - meanY) }
+        let variance = positions.reduce(0) { $0 + ($1 - meanX) * ($1 - meanX) }
+        let slope = covariance / variance
+        let intercept = meanY - slope * meanX
+        return (
+            WatchTimePoint(date: first.date, time: Swift.max(0, intercept)),
+            WatchTimePoint(date: last.date, time: Swift.max(0, intercept + slope * (pointCount - 1)))
+        )
+    }
+}
+
+enum ChannelChartScope: String, CaseIterable, Identifiable {
+    case week = "Week"
+    case month = "Month"
+    case year = "Year"
+    case total = "Total"
+    var id: Self { self }
+
+    var component: Calendar.Component? {
+        switch self {
+        case .week: .weekOfYear
+        case .month: .month
+        case .year: .year
+        case .total: nil
+        }
+    }
 }
 
 enum StatsScope: String, CaseIterable, Identifiable {
     case day = "Day"
     case month = "Month"
     case year = "Year"
+    case total = "Total"
     var id: Self { self }
+}
+
+struct StatsChannelImage: Sendable {
+    let thumbnailUrl: URL?
+    let isPodcast: Bool
 }
 
 struct ChannelStat: Identifiable, Sendable {

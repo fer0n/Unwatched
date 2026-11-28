@@ -61,6 +61,16 @@ actor StatsActor: SharedContextActor {
         }
     }
 
+    func getChannelImages() throws -> [String: StatsChannelImage] {
+        let subscriptions = try modelContext.fetch(FetchDescriptor<Subscription>())
+        var images: [String: StatsChannelImage] = [:]
+        for sub in subscriptions where sub.youtubePlaylistId == nil {
+            guard let key = sub.isPodcast ? sub.subscriptionKey : sub.youtubeChannelId else { continue }
+            images[key] = StatsChannelImage(thumbnailUrl: sub.thumbnailUrl, isPodcast: sub.isPodcast)
+        }
+        return images
+    }
+
     func addWatchTime(_ pending: [PendingWatchTime: TimeInterval]) throws {
         guard !pending.isEmpty else { return }
 

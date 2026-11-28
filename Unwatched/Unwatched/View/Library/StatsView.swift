@@ -26,7 +26,7 @@ struct StatsView: View {
                     if let stats = currentStats {
                         MySection {
                             HStack {
-                                Text("totalWatchTime")
+                                Label("totalWatchTime", systemImage: "clock")
                                 Spacer()
                                 Text(formatDuration(stats.totalWatchTime))
                                     .foregroundStyle(.secondary)
@@ -36,7 +36,12 @@ struct StatsView: View {
 
                         MySection("channels") {
                             ForEach(stats.channels) { channel in
-                                StatsChannelRow(channel: channel, viewModel: viewModel, selectedDate: selectedDate)
+                                StatsChannelRow(
+                                    channel: channel,
+                                    image: viewModel.channelImages[channel.channelId],
+                                    viewModel: viewModel,
+                                    selectedDate: selectedDate
+                                )
                             }
                         }
                     } else {
@@ -75,38 +80,45 @@ struct StatsView: View {
             }
             .padding(.horizontal)
 
-            HStack {
-                Button(action: previousDate) {
-                    Image(systemName: "arrow.left")
-                        .padding(Device.isMac ? 0 : 10)
-                }
-                .disabled(isPreviousDisabled)
-
-                Spacer()
-
-                Text(formatDate(selectedDate, scope: viewModel.scope))
-                    .font(.headline)
-                    .sensoryFeedback(Const.sensoryFeedback, trigger: resetTrigger)
-                    .onTapGesture {
-                        selectedDate = Date()
-                        resetTrigger.toggle()
-                    }
-
-                Spacer()
-
-                Button(action: nextDate) {
-                    Image(systemName: "arrow.right")
-                        .padding(Device.isMac ? 0 : 10)
-                }
-                .disabled(isNextDisabled)
+            if viewModel.scope != .total {
+                dateStepper
             }
-            #if os(visionOS)
-            .tint(nil)
-            .foregroundStyle(.primary)
-            #endif
-            .padding(.horizontal)
-            .padding(.vertical, 5)
         }
+        .padding(.bottom, viewModel.scope == .total ? 10 : 0)
+    }
+
+    private var dateStepper: some View {
+        HStack {
+            Button(action: previousDate) {
+                Image(systemName: "arrow.left")
+                    .padding(Device.isMac ? 0 : 10)
+            }
+            .disabled(isPreviousDisabled)
+
+            Spacer()
+
+            Text(formatDate(selectedDate, scope: viewModel.scope))
+                .font(.headline)
+                .sensoryFeedback(Const.sensoryFeedback, trigger: resetTrigger)
+                .onTapGesture {
+                    selectedDate = Date()
+                    resetTrigger.toggle()
+                }
+
+            Spacer()
+
+            Button(action: nextDate) {
+                Image(systemName: "arrow.right")
+                    .padding(Device.isMac ? 0 : 10)
+            }
+            .disabled(isNextDisabled)
+        }
+        #if os(visionOS)
+        .tint(nil)
+        .foregroundStyle(.primary)
+        #endif
+        .padding(.horizontal)
+        .padding(.vertical, 5)
     }
 
     private var statsCalendar: Calendar {
@@ -129,12 +141,17 @@ struct StatsView: View {
         case .year:
             let components = statsCalendar.dateComponents([.year], from: normalizedDay)
             return statsCalendar.date(from: components) ?? normalizedDay
+        case .total:
+            return .distantPast
         default:
             return normalizedDay
         }
     }
 
     private var currentStats: GroupedStats? {
+        if viewModel.scope == .total {
+            return viewModel.groupedStats.first
+        }
         let normalized = normalizedSelectedDate
         return viewModel.groupedStats.first {
             // Compare using GMT calendar since groupedStats dates are normalized to GMT
@@ -164,6 +181,7 @@ struct StatsView: View {
         case .day: granularity = .day
         case .month: granularity = .month
         case .year: granularity = .year
+        case .total: return true
         }
 
         return statsCalendar.compare(normalized, to: gmtNow, toGranularity: granularity) != .orderedAscending
@@ -229,6 +247,9 @@ struct StatsView: View {
             formatter.dateFormat = "yyyy"
             formatter.timeZone = statsCalendar.timeZone
             return formatter.string(from: normalized)
+
+        case .total:
+            return ""
         }
     }
 }
