@@ -6,9 +6,11 @@
 import Foundation
 
 extension ITVideo {
-    /// Hidden from the RSS feed and unplayable for non-members. Matched by label: requests are made with `hl: en`.
+    static let membersOnlyBadge = "Members only"
+
+    /// Hidden from the RSS feed and unplayable for non-members.
     public var isMembersOnly: Bool {
-        badges.contains("Members only")
+        badges.contains(Self.membersOnlyBadge)
     }
 
     /// What the RSS feed lists.
@@ -142,8 +144,14 @@ extension InnerTubeAPI {
             .compactMap { text in self.parseRelativeDate(text).map { (text: text, date: $0) } }
             .first
         let byline = channelId == nil ? parts.lazy.compactMap(channelByline).first : nil
+        // the label varies ("Members only", "Members first"); the style doesn't
         let labels = rows.flatMap { $0["badges"] as? [[String: Any]] ?? [] }
-            .compactMap { ($0["badgeViewModel"] as? [String: Any])?["badgeText"] as? String }
+            .compactMap { $0["badgeViewModel"] as? [String: Any] }
+            .compactMap { badge in
+                badge["badgeStyle"] as? String == "BADGE_MEMBERS_ONLY"
+                    ? ITVideo.membersOnlyBadge
+                    : badge["badgeText"] as? String
+            }
 
         let overlays = ((lockup["contentImage"] as? [String: Any])?["thumbnailViewModel"] as? [String: Any])?["overlays"] as? [[String: Any]] ?? []
         let badges = overlays.flatMap {
