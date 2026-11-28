@@ -44,6 +44,7 @@ struct LibraryNavListItem: View {
             Label {
                 VStack(alignment: .leading, spacing: 0) {
                     Text(text)
+                        .fontWeight(.listRow)
                         .foregroundStyle(Color.neutralAccentColor)
                     if let subTitle {
                         Text(subTitle)
@@ -61,6 +62,7 @@ struct LibraryNavListItem: View {
                             .padding(1)
                     }
                 }
+                .fontWeight(.listRow)
                 #if os(macOS)
                 .frame(width: 20, height: 16)
                 #endif
@@ -75,6 +77,10 @@ struct LibraryNavListItem: View {
             }
         }
     }
+}
+
+extension Font.Weight {
+    static let listRow: Font.Weight = .semibold
 }
 
 #Preview {

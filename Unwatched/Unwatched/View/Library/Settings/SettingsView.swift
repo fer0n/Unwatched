@@ -23,34 +23,42 @@ struct SettingsView: View {
                 MySection("app") {
                     NavigationLink(value: LibraryDestination.settingsNewVideos) {
                         Label("generalSettings", systemImage: Const.settingsViewSF)
+                            .fontWeight(.listRow)
                     }
 
                     NavigationLink(value: LibraryDestination.settingsSearch) {
                         Label("search", systemImage: "magnifyingglass")
+                            .fontWeight(.listRow)
                     }
 
                     NavigationLink(value: LibraryDestination.settingsPlayback) {
                         Label("playback", systemImage: Const.playbackSettingsSF)
+                            .fontWeight(.listRow)
                     }
 
                     NavigationLink(value: LibraryDestination.settingsPodcastDownloads) {
                         Label("podcasts", systemImage: Const.downloadedSF)
+                            .fontWeight(.listRow)
                     }
 
                     NavigationLink(value: LibraryDestination.settingsNotifications) {
                         Label("notifications", systemImage: Const.notificationsSettingsSF)
+                            .fontWeight(.listRow)
                     }
 
                     NavigationLink(value: LibraryDestination.filter) {
                         Label("mediaFilter", systemImage: Const.filterSettingsSF)
+                            .fontWeight(.listRow)
                     }
 
                     NavigationLink(value: LibraryDestination.settingsChapters) {
                         Label("chapters", systemImage: Const.chaptersSF)
+                            .fontWeight(.listRow)
                     }
 
                     NavigationLink(value: LibraryDestination.settingsAppearance) {
                         Label("appearance", systemImage: Const.appearanceSettingsSF)
+                            .fontWeight(.listRow)
                     }
                 }
 
@@ -69,9 +77,11 @@ struct SettingsView: View {
                     }
                     NavigationLink(value: LibraryDestination.userData) {
                         Label("userData", systemImage: Const.userDataSettingsSF)
+                            .fontWeight(.listRow)
                     }
                     NavigationLink(value: LibraryDestination.privacy) {
                         Label("privacyPolicy", systemImage: "checkmark.shield.fill")
+                            .fontWeight(.listRow)
                     }
                 }
 
@@ -82,6 +92,7 @@ struct SettingsView: View {
                     .settingsListRow()
                     NavigationLink(value: LibraryDestination.help) {
                         Label("feedbackAndFaq", systemImage: Const.contactMailSF)
+                            .fontWeight(.listRow)
                     }
                     Link(destination: UrlService.githubUrl) {
                         LibraryNavListItem("unwatchedOnGithub", imageName: "github-logo")
@@ -134,6 +145,7 @@ struct SettingsView: View {
 
                 NavigationLink(value: LibraryDestination.debug) {
                     Label("debug", systemImage: Const.debugSettingsSF)
+                        .fontWeight(.listRow)
                 }
                 .myListInsetBackground()
 

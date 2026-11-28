@@ -21,6 +21,7 @@ struct SubscriptionListView: View {
             NavigationLink(value: sub, label: {
                 SubscriptionListItem(subscription: sub, onDelete: onDelete)
             })
+            .listRowInsets(.vertical, 8)
         }
     }
 }

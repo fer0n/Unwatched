@@ -12,9 +12,9 @@ struct SubscriptionListItem: View {
     var onDelete: ((Task<(), Error>) -> Void)?
 
     #if os(macOS)
-    @ScaledMetric var imageSize = 28
+    @ScaledMetric var imageSize = 36
     #else
-    @ScaledMetric var imageSize = 40
+    @ScaledMetric var imageSize = 54
     #endif
 
     func deleteSubscription() {
@@ -34,6 +34,7 @@ struct SubscriptionListItem: View {
                 .accessibilityHidden(true)
 
             Text(subscription.displayTitle)
+                .fontWeight(.listRow)
                 .lineLimit(1)
             if subscription.hasFeedIssue {
                 Image(systemName: Const.errorSF)
